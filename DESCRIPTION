@@ -14,5 +14,18 @@ Description: This package creates printable reports in ASCII text and DOCX
 License: CC0
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests: testthat, 
+          dplyr
+Imports:flextable,
+        ggplot2,
+        glue,
+        graphics,
+        magrittr, 
+        officer,
+        qlcMatrix,
+        readr, 
+        rsvg,
+        stringi, 
+        svglite,
+        zip
 RoxygenNote: 7.1.0

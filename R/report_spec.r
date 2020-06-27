@@ -1,61 +1,57 @@
-library(readr)
-library(magrittr)
-library(glue)
-library(stringi)
-library(sjlabelled)
-library(zip)
+
 
 # Report Spec Assembly Functions -----------------------------------------------
 
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Create a docx report
-#' 
-#' @description 
+#'
+#' @description
 #' This function is the constructor for the report_spec object.  The report_spec
-#' object contains information needed to construct a docx report. The object is 
-#' defined as an S3 object, and is inherited from a list. 
-#' 
+#' object contains information needed to construct a docx report. The object is
+#' defined as an S3 object, and is inherited from a list.
+#'
 #' @param file_path The output path of the desired report. Either a full path or
-#' a relative path is acceptable.  This parameter is not required to create the 
+#' a relative path is acceptable.  This parameter is not required to create the
 #' report_spec object, but will be required to print the report.
-#' @param orientation The page orientation of the desired report.  Valid values 
+#' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
-#' @param font_name The font name to use on the report.  The specified font 
+#' @param font_name The font name to use on the report.  The specified font
 #' will be used on the entire report.  Valid values are "Courier New", "Arial",
 #' "Calibri", or "Times New Roman".  The default font is "Courier New".
+#' @param font_size The font size.  Valid value is 10.
 #' @return A new report_spec S3 object.
-#' @examples 
-#' create_report("mtcars.docx", orientation="portrait") %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#
-#' file.show("mtcars.docx")
+#' @examples
+#' # Here is an example
+# library(magrittr)
+# library(dplyr)
+# create_report("mtcars.docx", orientation="portrait") %>%
+# add_content(create_table(mtcars)) %>%
+# write_report()
+# #file.show("mtcars.docx")
 #' @export
-#'##############################################################################
-create_report <- function(file_path = "", orientation="landscape", 
+create_report <- function(file_path = "", orientation="landscape",
                           font_name="Courier New", font_size=10) {
-  
+
   x <- structure(list(), class = c("report_spec", "list"))
-  
+
   # Trap missing or invalid orientation parameter.
   if (!orientation %in% c("landscape", "portrait")) {
-    
+
     stop(paste0("ERROR: orientation parameter on ",
                 "create_report() function is invalid: '", orientation,
                 "'\n\tValid values are: 'landscape' or 'portrait'."))
-  } 
-  
+  }
+
   # Tramp missing or invalid font_name parameter.
   if (!font_name %in% c("Courier New", "Times New Roman", "Arial", "Calibri")) {
-    
-    stop(paste0("ERROR: font_name parameter on create_report() ", 
-                "function is invalid: '", font_name, 
+
+    stop(paste0("ERROR: font_name parameter on create_report() ",
+                "function is invalid: '", font_name,
                 "'\n\tValid values are: 'Arial', 'Calibri', 'Courier New', ",
                 "and 'Times New Roman'."))
-  } 
-  
+  }
+
   # Populate report_spec fields
   x$file_path <- file_path
   x$font_size <-font_size
@@ -63,40 +59,39 @@ create_report <- function(file_path = "", orientation="landscape",
   x$font_name <- font_name
   x$font_family <- get_font_family(font_name)
   x$content <- list()
-  
+
   # Set default margins
   x <- set_margins(x)
-  
+
   return(x)
-  
+
 }
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Set page margins.
-#' @description Set the page margins on the report spec object. 
-#' @details 
-#' The margins will be used for the entire report.  Units for the margins 
-#' are inches.  The default margins are 1 inch on the left and right, and 
-#' .5 inch on the top and bottom.  
+#' @description Set the page margins on the report spec object.
+#' @details
+#' The margins will be used for the entire report.  Units for the margins
+#' are inches.  The default margins are 1 inch on the left and right, and
+#' .5 inch on the top and bottom.
+#' @param x The report spec object.
 #' @param margin_top The top margin.
 #' @param margin_bottom The bottom margin.
 #' @param margin_left The left margin.
 #' @param margin_right The right margin.
 #' @return The report_spec with margins set as desired.
-#' @example 
-#' create_report("mtcars.docx", orientation="portrait") %>%
-#' set_margins(margin_top = 1, margin_bottom =1)  %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#
-#' file.show("mtcars.docx")
+#' @examples
+#' # Here is an example
+# create_report("mtcars.docx", orientation="portrait") %>%
+# set_margins(margin_top = 1, margin_bottom =1)  %>%
+# add_content(create_table(mtcars)) %>%
+# write_report()
+# file.show("mtcars.docx")
 #' @export
-#'##############################################################################
-set_margins <- function(x, margin_top=.5, margin_bottom=.5, 
+set_margins <- function(x, margin_top=.5, margin_bottom=.5,
                            margin_left=1, margin_right=1) {
-  
-  
+
+
   if (is.na(margin_top) | margin_top < 0 | !is.numeric(margin_top)){
     stop("ERROR: invalid value for margin_top.")
   }
@@ -109,410 +104,414 @@ set_margins <- function(x, margin_top=.5, margin_bottom=.5,
   if (is.na(margin_right) | margin_right < 0| !is.numeric(margin_right)){
     stop("ERROR: invalid value for margin_right.")
   }
-  
+
   # Populate margin value fields
   x$margin_top = margin_top
   x$margin_bottom = margin_bottom
   x$margin_left = margin_left
   x$margin_right = margin_right
 
- 
-  return(x) 
+
+  return(x)
 }
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Add a page header to the report
-#' 
-#' @description 
+#'
+#' @description
 #' This function adds a page header to the report.  The page header will appear
 #' on each page of the report.
-#' 
+#'
 #' @details
 #' The page header may contain text on the left or right. Use the appropriate
-#' parameters to specify the desired text.  The page header may also contain 
-#' titles for the report, if the location of the 
+#' parameters to specify the desired text.  The page header may also contain
+#' titles for the report, if the location of the
 #' the titles has been specified as "header".  See \code{titles()} function
 #' for additional details.
+#' @param x The report spec object.
 #' @param left The left page header text.  May be a single string or a vector
 #' of strings.
 #' @param right The right page header text.  May be a single string or a vector
 #' of strings.
-#' @example 
-#' create_report("mtcars.docx", orientation="portrait") %>%
-#' page_header(left = "Cars Data", right = "Study ABC")  %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#
-#' file.show("mtcars.docx")
+#' @examples
+#' # Here is an example
+# create_report("mtcars.docx", orientation="portrait") %>%
+# page_header(left = "Cars Data", right = "Study ABC")  %>%
+# add_content(create_table(mtcars)) %>%
+# write_report()
+# #file.show("mtcars.docx")
 #' @export
-#'##############################################################################
 page_header <- function(x, left="", right=""){
-  
+
   x$page_header_left <- left
   x$page_header_right <- right
-  
+
   return(x)
 }
 
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Add titles to the report
-#' 
-#' @description 
+#'
+#' @description
 #' This function adds one or more to the report.  The titles will be added to
 #' the page template, and thus appear on each page of the report.
-#' 
+#'
 #' @details
-#' The titles function accepts a set of strings of the desired title text.  
-#' The titles may be aligned center, left or right using the align parameter.  
-#' The titles may be located in the header, page body, or table according to 
-#' the location parameter.   
+#' The titles function accepts a set of strings of the desired title text.
+#' The titles may be aligned center, left or right using the align parameter.
+#' The titles may be located in the header, page body, or table according to
+#' the location parameter.
+#'
 #' @param x The report specification object.
 #' @param ... A set of title strings.
-#' @param location The location to place the titles in the report.  Valid values
-#' are "header", "body", or "table". 
-#' @param align The position to align the titles.  Valid values are: "left", 
-#' "right", or "center".
-#' @example 
-#' create_report("mtcars.docx", orientation="portrait") %>%
-#' titles("Cars Table Title", "All Cars")  %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#
-#' file.show("mtcars.docx")
+#' @param location The location to place the titles in the report.  Valid
+#' @param align The position to align the titles.  Valid values are: "left"
+#' @examples
+#' # Here is a comment
+# create_report("mtcars.docx", orientation="portrait") %>%
+# titles("Cars Table Title", "All Cars")  %>%
+# add_content(create_table(mtcars)) %>%
+# write_report()
+# #file.show("mtcars.docx")
 #' @export
-#'##############################################################################
-titles <- function(x, ..., location = "header", align="center"){
-  
-  
+titles <- function(x, ..., location = "header", align = "center"){
+
+
   tl <- c(...)
-  
+
   if (length(tl) > 5){
     stop("ERROR: titles function is limited to a maximum of five (5) titles.")
   }
-  
+
   x$titles <- tl
   x$titles_location <- location
   x$titles_align <- align
-  
+
   return(x)
-  
+
 }
 
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Add footnotes to the report
-#' 
-#' @description 
-#' This function adds one or more footnotes to the report.  The footnotes will 
+#'
+#' @description
+#' This function adds one or more footnotes to the report.  The footnotes will
 #' be added to the page template, and thus appear on each page of the report.
-#' 
+#'
 #' @details
-#' The footnotes function accepts a set of strings of the desired footnote text.  
-#' The footnotes may be aligned center, left or right using the align parameter.  
-#' The footnotes may be located in the footer, page body, or table according to 
-#' the location parameter. The user is responsible for adding desired symbols. 
-#' Footnote symbols will not be generated automatically.   
+#' The footnotes function accepts a set of strings of the desired footnote text.
+#' The footnotes may be aligned center, left or right using the align parameter.
+#' The footnotes may be located in the footer, page body, or table according to
+#' the location parameter. The user is responsible for adding desired symbols.
+#' Footnote symbols will not be generated automatically.
 #' @param x The report specification object.
 #' @param ... A set of footnotes strings.
-#' @param location The location to place the footnotes in the report.  
-#' Valid values are "header", "body", or "table". 
-#' @param align The position to align the titles.  Valid values are: "left", 
+#' @param location The location to place the footnotes in the report.
+#' Valid values are "header", "body", or "table".
+#' @param align The position to align the titles.  Valid values are: "left",
 #' "right", or "center".
-#' @example 
-#' create_report("mtcars.docx", orientation="portrait") %>%
-#' titles("Cars Table Title", "All Cars")  %>%
-#' footnotes("Source: 1974 Motor Trend US magazine") %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#
-#' file.show("mtcars.docx")
+#' @examples
+#' # Here are some examples.
+# create_report("mtcars.docx", orientation="portrait") %>%
+# titles("Cars Table Title", "All Cars")  %>%
+# footnotes("Source: 1974 Motor Trend US magazine") %>%
+# add_content(create_table(mtcars)) %>%
+# write_report()
+# #file.show("mtcars.docx")
 #' @export
-#'##############################################################################
 footnotes <- function(x, ..., location = "footer", align = "left"){
-  
+
   ft <- c(...)
-  
+
   x$footnotes <- ft
   x$footnotes_location <- location
   x$footnotes_align <- align
-  
+
   return(x)
-  
+
 }
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Add a page footer to the report
-#' 
-#' @description 
+#'
+#' @description
 #' This function adds a page footer to the report.  The page footer will appear
 #' on each page of the report.
-#' 
+#'
 #' @details
-#' The page footer may contain text on the left, right, or center. 
-#' Use the appropriate parameters to specify the desired text.  The page footer 
-#' may also contain footnotes for the report, if the location of the 
-#' the footnotes has been specified as "footer".  See \code{footnotes()} 
+#' The page footer may contain text on the left, right, or center.
+#' Use the appropriate parameters to specify the desired text.  The page footer
+#' may also contain footnotes for the report, if the location of the
+#' the footnotes has been specified as "footer".  See \code{footnotes()}
 #' function for additional details.
+#'
+#' @param x The report spec object.
 #' @param left The left page footer text.  May be a single string or a vector
 #' of strings.
 #' @param right The right page footer text.  May be a single string or a vector
 #' of strings.
-#' @example 
-#' create_report("mtcars.docx", orientation="portrait") %>%
-#' page_header(left = "Cars Data", right = "Study ABC")  %>%
-#' page_footer(left = Sys.time())  %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#
-#' file.show("mtcars.docx")
+#' @param center The center page footer text.  May be a single string or a
+#' vector of strings.
+#' @examples
+#' # Here is an example.
+# create_report("mtcars.docx", orientation="portrait") %>%
+# page_header(left = "Cars Data", right = "Study ABC")  %>%
+# page_footer(left = Sys.time())  %>%
+# add_content(create_table(mtcars)) %>%
+# write_report()
+# #file.show("mtcars.docx")
 #' @export
-#'##############################################################################
 page_footer <- function(x, left="", right="", center=""){
-  
+
   x$page_footer_left <- left
   x$page_footer_right <- right
   x$page_footer_center <- center
-  
+
   return(x)
 }
 
 
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Print the report parameters.
-#' 
-#' @description 
+#'
+#' @description
 #' A function to print the report parameters.  This function is an S3 generic
 #' function.  The class printed is "report_spec".
-#' 
-#' @examples 
-#' #' create_report("mtcars.docx", orientation="portrait") %>%
-#' page_header(left = "Cars Data", right = "Study ABC")  %>%
-#' page_footer(left = Sys.time())  %>%
-#' add_content(create_table(mtcars)) %>%
-#' print()
+#'
+#' @param x The report spec to print.
+#' @param ... Generic arguments
+#' @param full Whether to print the spec or an abbreviated version.
+#' @examples
+#' # Here is an example
+# create_report("mtcars.docx", orientation="portrait") %>%
+# page_header(left = "Cars Data", right = "Study ABC")  %>%
+# page_footer(left = Sys.time())  %>%
+# add_content(create_table(mtcars)) %>%
+# print()
 #' @export
-#'##############################################################################
-print.report_spec <- function(x, full=FALSE){
-  
+print.report_spec <- function(x, ..., full=FALSE){
+
   if (full)
-    print.listof(x)
+    print.listof(x, ...)
   else
-    print.simple.list(x)
-  
+    print.simple.list(x, ...)
+
   invisible(x)
 }
 
-#'##############################################################################
-#' @title 
+#' @title
 #' Add content to a report
-#' 
-#' @description 
+#'
+#' @description
 #' This function adds an object to the report content list. Valid objects
 #' are a table_spec, a flextable, or a plot from ggplot.  Objects will be
 #' appended to the report in order they are added.  By default, a page break
 #' is added after the content.
-#' 
+#'
 #' @param x a report_spec to append content to
 #' @param object the object to append
 #' @param page_break whether to add a page break. Value values are "before",
 #' "after", or "none"
 #' @return The modified report_spec
-#' @example 
-#' create_report("listing_3_0.docx") %>%
-#' add_content(create_table(mtcars)) %>%
-#' write_report()
-#' 
+#' @examples
+#' #library(magrittr)
+#' #create_report("listing_3_0.docx") %>%
+#' #add_content(create_table(mtcars)) %>%
+#' #write_report()
+#'
 #' @export
-#' #'##############################################################################
 add_content <- function(x, object, page_break="after") {
-  
+
   # Add page break before if requested
   if (page_break == "before")
     x$content[[length(x$content) + 1]] <- "page_break"
-  
+
   # Add object to the content list
   x$content[[length(x$content) + 1]] <- object
-  
+
   # Add page break after if requested, and by default
   if (page_break == "after")
     x$content[[length(x$content) + 1]] <- "page_break"
-  
+
   return(x)
 }
 
 
 # Utilities --------------------------------------------------------------------
 
+#' Get the font family
+#' @noRd
 get_font_family <- function(font_name) {
-  
-  
+
+  fam <- ""
   # mono, serif, sans
-  fam <- case_when(font_name == "Courier New" ~ "mono",
-                   font_name == "Arial" ~ "sans",
-                   font_name == "Times New Roman" ~ "serif",
-                   font_name == "Calibri" ~ "sans")
-  
+  if(font_name == "Courier New") {
+    fam <- "mono"
+  } else if (font_name == "Arial") {
+    fam <- "sans"
+  } else if (font_name == "Times New Roman") {
+    fam <- "serif"
+  } else if (font_name == "Calibri") {
+    fam <- "sans"
+  }
+
   return(fam)
-  
+
 }
 
 
 
 # Report Spec Write Functions --------------------------------------------------
 
-#'##############################################################################
+
 #' Generate unique 8 digit keys for use as tag ids
-#' @param count The number of ids to generate
-#' @return A character vector of unique ids
+#' @import stringi
 #' @noRd
-#'##############################################################################
 gen_keys <- function(count = 1){
-  
+
   if(count < 1 | is.na(count)){
-    stop("ERROR: count parameter must be an integer value greater than zero.")  
+    stop("ERROR: count parameter must be an integer value greater than zero.")
   }
-  
+
   ret <- stri_rand_strings(count, 8, pattern = "[A-Z0-9]")
-  
+
   return(ret)
 }
 
 
-#'##############################################################################
-#' @description 
-#' The docx directory contains the Content Types.xml file.  The Content Types 
+#' @title
+#' Create content type file
+#' @description
+#' The docx directory contains the Content Types.xml file.  The Content Types
 #' file is created by this function.  This files exists in the top level folder.
 #' @param docx_path The path to the docx_directory
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_content_type <- function(docx_path){
-  
+
   if (!file.exists(docx_path)) {
-    
+
     stop(paste("Folder does not exist:", docx_path))
   }
-  
+
   path <- file.path(docx_path, "[Content_Types].xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  
-  
-  xml <- gsub("[\r\n]\\s+", "", 
+
+
+  xml <- gsub("[\r\n]\\s+", "",
   '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
      <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
      <Default Extension="xml" ContentType="application/xml"/>
-     <Override PartName="/word/document.xml" 
+     <Override PartName="/word/document.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-     <Override PartName="/word/styles.xml" 
+     <Override PartName="/word/styles.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
-     <Override PartName="/word/settings.xml" 
+     <Override PartName="/word/settings.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
-     <Override PartName="/word/webSettings.xml" 
+     <Override PartName="/word/webSettings.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/>
-     <Override PartName="/word/footnotes.xml" 
+     <Override PartName="/word/footnotes.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/>
-     <Override PartName="/word/endnotes.xml" 
+     <Override PartName="/word/endnotes.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"/>
-     <Override PartName="/word/header1.xml" 
+     <Override PartName="/word/header1.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/>
-     <Override PartName="/word/footer1.xml" 
+     <Override PartName="/word/footer1.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>
-     <Override PartName="/word/fontTable.xml" 
+     <Override PartName="/word/fontTable.xml"
       ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
-     <Override PartName="/word/theme/theme1.xml" 
+     <Override PartName="/word/theme/theme1.xml"
       ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
-     <Override PartName="/docProps/core.xml" 
+     <Override PartName="/docProps/core.xml"
       ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
-     <Override PartName="/docProps/app.xml" 
+     <Override PartName="/docProps/app.xml"
       ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
   </Types>')
-  
+
   cat(xml, file=f)
-  
+
   close(f)
-  
-  
+
+
 }
 
-#'##############################################################################
-#' @description 
-#' The _rels subdirectory contains the .rels file.  The _rels 
+#' @title
+#' Create rels file
+#' @description
+#' The _rels subdirectory contains the .rels file.  The _rels
 #' subdirectory and .rels file is created by this function.
 #' @param docx_path The path to the docx_directory
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_rels <- function(docx_path){
-  
+
   if (!file.exists(docx_path)) {
     stop(paste("Folder does not exist:", docx_path))
   }
-  
+
   # Create _rels subdirectory
   path_rels <- file.path(docx_path, "_rels")
   dir.create(path_rels)
-  
+
   path <- file.path(path_rels, ".rels")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  xml <- gsub("[\r\n]\\s+", "", 
+  xml <- gsub("[\r\n]\\s+", "",
   '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
      <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/
-      officeDocument/2006/relationships/extended-properties" 
+      officeDocument/2006/relationships/extended-properties"
      Target="docProps/app.xml"/>
      <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/
-      package/2006/relationships/metadata/core-properties" 
+      package/2006/relationships/metadata/core-properties"
      Target="docProps/core.xml"/>
      <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/
-      officeDocument/2006/relationships/officeDocument" 
+      officeDocument/2006/relationships/officeDocument"
      Target="word/document.xml"/>
   </Relationships>')
-  
+
   cat(xml, file=f)
-  
+
   close(f)
-  
-  
+
+
 }
 
-#'##############################################################################
-#' @description 
-#' The docProps subdirectory contains the app.xml file.  The docProps 
+#' @description
+#' The docProps subdirectory contains the app.xml file.  The docProps
 #' subdirectory and app.xml file is created by this function.
 #' @param docx_path The path to the docx_directory
 #' @return None
+#' @import glue
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_docProps <- function(docx_path){
-  
+
   if (!file.exists(docx_path)) {
     stop(paste("Folder does not exist:", docx_path))
   }
-  
+
   # Create docProps subdirectory
   path_docProps <- file.path(docx_path, "docProps")
   dir.create(path_docProps)
-  
+
   path <- file.path(path_docProps, "app.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"
     xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
      <Template>Normal.dotm</Template>
      <TotalTime>36</TotalTime>
@@ -531,20 +530,20 @@ create_docProps <- function(docx_path){
      <HyperlinksChanged>false</HyperlinksChanged>
      <AppVersion>16.0000</AppVersion>
   </Properties>')
-  
+
   cat(xml, file=f)
-  
-  
+
+
   close(f)
-  
+
   path <- file.path(path_docProps, "core.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" 
-    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" 
+  xml <- gsub("[\r\n]\\s+", "",
+  '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+    xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
     xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <dc:title></dc:title>
     <dc:subject></dc:subject>
@@ -556,122 +555,119 @@ create_docProps <- function(docx_path){
     <dcterms:created xsi:type="dcterms:W3CDTF">{datetime_now}</dcterms:created>
     <dcterms:modified xsi:type="dcterms:W3CDTF">{datetime_now}</dcterms:modified>
   </cp:coreProperties>')
-  
-  xml <- glue(xml, datetime_now = format(Sys.time(), "%Y-%m-%dT%H:%M%:%SZ"), 
+
+  xml <- glue(xml, datetime_now = format(Sys.time(), "%Y-%m-%dT%H:%M%:%SZ"),
               user=Sys.info()["user"])
-  
+
   cat(xml, file=f)
-  
+
   close(f)
-  
-  
+
+
 }
 
 # Twips per inch #
-# This setting is fixed, but used in several locations in 
+# This setting is fixed, but used in several locations in
 # the functions below.
 tpi <- 1440
 
-#'##############################################################################
-#' @description 
-#' This function calculates the header table widths based on the page 
-#' orientation specified in the page_template.  
+
+#' @description
+#' This function calculates the header table widths based on the page
+#' orientation specified in the page_template.
 #' @param x The page_template
 #' @return A named vector of widths.
 #' @noRd
-#'##############################################################################
 get_header_widths <- function(x){
-  
+
   pg_sz <- if (x$orientation == "landscape") 11 else 8.5
   w <- (pg_sz * tpi) - (x$margin_left * tpi) - (x$margin_right * tpi)
-  ret <- c(header_width = w, 
+  ret <- c(header_width = w,
            header_left_width = w/2,
            header_right_width = w/2)
-  
+
   return(ret)
 }
 
 
-#'##############################################################################
-#' @description 
-#' This function calculates the footer table widths based on the page 
-#' orientation specified in the page_template.  
+#' @description
+#' This function calculates the footer table widths based on the page
+#' orientation specified in the page_template.
 #' @param x The page_template
 #' @return A named vector of widths.
 #' @noRd
-#'##############################################################################
 get_footer_widths <- function(x){
-  
+
   pg_sz <- if (x$orientation == "landscape") 11 else 8.5
   w <- (pg_sz * tpi) - (x$margin_left * tpi) - (x$margin_right * tpi)
-  ret <- c(footer_width = w, 
+  ret <- c(footer_width = w,
            footer_left_width = w/3,
            footer_right_width = w/3,
            footer_center_width = w/3)
-  
+
   return(ret)
 }
 
 
-#'##############################################################################
-#' @description 
+
+#' @description
 #' The header.xml file contains the information that appears on the page header.
-#' This document is dynamically constructed based on user selections such as 
+#' This document is dynamically constructed based on user selections such as
 #' desired titles and page header.  The file is placed in the word
 #' subdirectory.
 #' @param x The page_template object
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import glue
 #' @noRd
-#'##############################################################################
 create_header <- function(x, word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
-  
+
+
   path <- file.path(word_path, "header1.xml")
-  
+
   f <- file(path, open="w")
-  
+
   hw <- get_header_widths(x)
-  
-  
+
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  header_start <- gsub("[\r\n]\\s+", "", 
-  '<w:hdr 
-            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-            xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" 
-            xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" 
-            xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" 
-            xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" 
-            xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" 
-            xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" 
-            xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" 
-            xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" 
-            xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" 
-            xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" 
-            xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" 
-            xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-            xmlns:o="urn:schemas-microsoft-com:office:office" 
-            xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-            xmlns:v="urn:schemas-microsoft-com:vml" 
-            xmlns:w10="urn:schemas-microsoft-com:office:word" 
-            xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-            xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-            xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-            xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-            xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-            xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
-            xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-            xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-            xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-            xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-            xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-            xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-            xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+  header_start <- gsub("[\r\n]\\s+", "",
+  '<w:hdr
+            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+            xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+            xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+            xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+            xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+            xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+            xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+            xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+            xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+            xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+            xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+            xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+            xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+            xmlns:v="urn:schemas-microsoft-com:vml"
+            xmlns:w10="urn:schemas-microsoft-com:office:word"
+            xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+            xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+            xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+            xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+            xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+            xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+            xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+            xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+            xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+            xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+            xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+            xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+            xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
             mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
     <w:tbl>
     <w:tblPr>
@@ -691,17 +687,17 @@ create_header <- function(x, word_path){
        <w:gridCol w:w="{header_left_width}"/>
        <w:gridCol w:w="{header_right_width}"/>
     </w:tblGrid>')
-  
-  
-  
+
+
+
   header_row <- gsub("[\r\n]\\s+", "",
-  '<w:tr w:rsidR="00415629" w:rsidRPr="0072030C" w14:paraId="{paraid_row}" 
+  '<w:tr w:rsidR="00415629" w:rsidRPr="0072030C" w14:paraId="{paraid_row}"
     w14:textId="77777777" w:rsidTr="00987FC6">
      <w:tc>
         <w:tcPr>
            <w:tcW w:w="{header_left_width}" w:type="dxa"/>
         </w:tcPr>
-        <w:p w14:paraId="{paraid_left}" w14:textId="{textid_left}" w:rsidR="00415629" 
+        <w:p w14:paraId="{paraid_left}" w14:textId="{textid_left}" w:rsidR="00415629"
           w:rsidRPr="0072030C" w:rsidRDefault="00415629" w:rsidP="00415629">
            <w:pPr>
               <w:pStyle w:val="Header"/>
@@ -723,7 +719,7 @@ create_header <- function(x, word_path){
         <w:tcPr>
            <w:tcW w:w="{header_right_width}" w:type="dxa"/>
         </w:tcPr>
-        <w:p w14:paraId="{paraid_right}" w14:textId="{textid_right}" w:rsidR="00415629" 
+        <w:p w14:paraId="{paraid_right}" w14:textId="{textid_right}" w:rsidR="00415629"
           w:rsidRPr="0072030C" w:rsidRDefault="00415629" w:rsidP="00415629">
            <w:pPr>
               <w:pStyle w:val="Header"/>
@@ -743,27 +739,27 @@ create_header <- function(x, word_path){
         </w:p>
      </w:tc>
   </w:tr>')
-  
-  
+
+
   header_strings <- c("")
-  max_header_rows <- max(c(length(x$page_header_left), 
+  max_header_rows <- max(c(length(x$page_header_left),
                            length(x$page_header_right)))
-  
+
   for(i in 1:max_header_rows){
     hl <- if (length(x$page_header_left) >= i) x$page_header_left[i] else ""
     hr <- if (length(x$page_header_right) >= i) x$page_header_right[i] else ""
     k <- gen_keys(5)
     header_strings[i] <- glue(header_row, paraid_row=k[1],
-                              paraid_left=k[2], textid_left=k[3], 
-                              paraid_right=k[4], textid_right=k[5], 
-                              header_left=hl, header_right=hr, 
+                              paraid_left=k[2], textid_left=k[3],
+                              paraid_right=k[4], textid_right=k[5],
+                              header_left=hl, header_right=hr,
                               header_left_width=hw["header_left_width"],
                               header_right_width=hw["header_right_width"],
                               font_name=x$font_name)
   }
-  
-  title_block <- gsub("[\r\n]\\s+", "", 
-  '<w:p w14:paraId="{paraid}" w14:textId="{textid}" w:rsidR="002050AC" 
+
+  title_block <- gsub("[\r\n]\\s+", "",
+  '<w:p w14:paraId="{paraid}" w14:textId="{textid}" w:rsidR="002050AC"
     w:rsidRDefault="002050AC" w:rsidP="00281DD7">
     <w:pPr>
        <w:pStyle w:val="Header"/>
@@ -779,18 +775,18 @@ create_header <- function(x, word_path){
        <w:t>{title}</w:t>
     </w:r>
   </w:p>')
-  
+
   # Prepare title blocks
   title_strings <- c("")
   for(i in seq_along(x$titles)){
     k <- gen_keys(2)
-    title_strings[i] <- glue(title_block, paraid=k[1], textid=k[2], 
+    title_strings[i] <- glue(title_block, paraid=k[1], textid=k[2],
                              title=x$titles[i], font_name=x$font_name)
   }
-  
-  
+
+
   header_end <- gsub("[\r\n]\\s+", "",
-  '<w:p w14:paraId="5658A9DF" w14:textId="77777777" w:rsidR="002050AC" 
+  '<w:p w14:paraId="5658A9DF" w14:textId="77777777" w:rsidR="002050AC"
     w:rsidRPr="0072030C" w:rsidRDefault="002050AC" w:rsidP="00281DD7">
     <w:pPr>
     <w:pStyle w:val="Header"/>
@@ -801,91 +797,91 @@ create_header <- function(x, word_path){
     </w:pPr>
     </w:p>
     </w:hdr>')
-  
-  
-  
-  xml <- glue(header_start, 
-              paste(header_strings, sep="", collapse=""), 
+
+
+
+  xml <- glue(header_start,
+              paste(header_strings, sep="", collapse=""),
               '</w:tbl>',
-              paste(title_strings, sep="", collapse=""), 
-              header_end, 
+              paste(title_strings, sep="", collapse=""),
+              header_end,
               header_width = hw["header_width"],
               header_left_width=hw["header_left_width"],
               header_right_width=hw["header_right_width"],
               font_name=x$font_name)
-  
-  
+
+
   cat(xml, file=f)
-  
-  
+
+
   close(f)
-  
+
 }
 
 
-#'##############################################################################
-#' @description 
+#' @description
 #' The footer.xml file contains the information that appears on the page footer.
-#' This document is dynamically constructed based on user selections such as 
+#' This document is dynamically constructed based on user selections such as
 #' desired footnotes and page footers.  The file is placed in the word
 #' subdirectory.
 #' @param x The page_template object
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import glue
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_footer <- function(x, word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "footer1.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  
+
   fw <- get_footer_widths(x)
-  
-  footer_start <- gsub("[\r\n]\\s+", "", 
-  '<w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" 
-    xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" 
-    xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" 
-    xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" 
-    xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" 
-    xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" 
-    xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" 
-    xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" 
-    xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" 
-    xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" 
-    xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" 
-    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:o="urn:schemas-microsoft-com:office:office" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:v="urn:schemas-microsoft-com:vml" 
-    xmlns:w10="urn:schemas-microsoft-com:office:word" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
-    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-    xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-    xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+
+  footer_start <- gsub("[\r\n]\\s+", "",
+  '<w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+    xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+    xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+    xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+    xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+    xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+    xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+    xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+    xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+    xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+    xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:w10="urn:schemas-microsoft-com:office:word"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+    xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+    xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">')
-  
-  
-  
+
+
+
   footnote_block <- gsub("[\r\n]\\s+", "",
-  '<w:p w14:paraId="{paraid}" w14:textId="{textid}" w:rsidR="00C478E4" 
+  '<w:p w14:paraId="{paraid}" w14:textId="{textid}" w:rsidR="00C478E4"
     w:rsidRPr="00C478E4" w:rsidRDefault="00C478E4">
     <w:pPr>
        <w:pStyle w:val="Footer" />
@@ -900,17 +896,17 @@ create_footer <- function(x, word_path){
        <w:t>{footnote}</w:t>
     </w:r>
   </w:p>')
-  
+
   footnote_strings <- c()
   for(i in seq_along(x$footnotes)){
     k <- gen_keys(2)
     footnote_strings[i] <- glue(footnote_block, paraid=k[1],
-                              textid=k[2], footnote=x$footnotes[i], 
+                              textid=k[2], footnote=x$footnotes[i],
                               font_name=x$font_name)
   }
-  
-  
-  table_start <-gsub("[\r\n]\\s+", "", 
+
+
+  table_start <-gsub("[\r\n]\\s+", "",
   '<w:tbl>
   <w:tblPr>
      <w:tblStyle w:val="TableGrid"/>
@@ -927,7 +923,7 @@ create_footer <- function(x, word_path){
         <w:left w:w="0" w:type="dxa"/>
         <w:right w:w="0" w:type="dxa"/>
      </w:tblCellMar>
-     <w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" 
+     <w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1"
       w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
   </w:tblPr>
   <w:tblGrid>
@@ -935,16 +931,16 @@ create_footer <- function(x, word_path){
      <w:gridCol w:w="{footer_center_width}"/>
      <w:gridCol w:w="{footer_right_width}"/>
   </w:tblGrid>')
-  
-  
-  footer_row <- gsub("[\r\n]\\s+", "", 
-  '<w:tr w:rsidR="00415629" w:rsidRPr="0072030C" w14:paraId="{paraid_row}" 
+
+
+  footer_row <- gsub("[\r\n]\\s+", "",
+  '<w:tr w:rsidR="00415629" w:rsidRPr="0072030C" w14:paraId="{paraid_row}"
     w14:textId="77777777" w:rsidTr="00987FC6">
      <w:tc>
         <w:tcPr>
            <w:tcW w:w="{footer_left_width}" w:type="dxa"/>
         </w:tcPr>
-        <w:p w14:paraId="{paraid_left}" w14:textId="{textid_left}" w:rsidR="00415629" 
+        <w:p w14:paraId="{paraid_left}" w14:textId="{textid_left}" w:rsidR="00415629"
           w:rsidRPr="0072030C" w:rsidRDefault="00415629">
            <w:pPr>
               <w:pStyle w:val="Footer"/>
@@ -966,7 +962,7 @@ create_footer <- function(x, word_path){
         <w:tcPr>
            <w:tcW w:w="{footer_center_width}" w:type="dxa"/>
         </w:tcPr>
-        <w:p w14:paraId="{paraid_center}" w14:textId="{textid_center}" w:rsidR="00415629" 
+        <w:p w14:paraId="{paraid_center}" w14:textId="{textid_center}" w:rsidR="00415629"
           w:rsidRPr="0072030C" w:rsidRDefault="00415629" w:rsidP="00415629">
            <w:pPr>
               <w:pStyle w:val="Footer"/>
@@ -989,7 +985,7 @@ create_footer <- function(x, word_path){
         <w:tcPr>
            <w:tcW w:w="{footer_right_width}" w:type="dxa"/>
         </w:tcPr>
-        <w:p w14:paraId="{paraid_right}" w14:textId="{textid_right}" w:rsidR="00415629" 
+        <w:p w14:paraId="{paraid_right}" w14:textId="{textid_right}" w:rsidR="00415629"
           w:rsidRPr="0072030C" w:rsidRDefault="00104915" w:rsidP="00415629">
            <w:pPr>
               <w:pStyle w:val="Footer"/>
@@ -1076,40 +1072,40 @@ create_footer <- function(x, word_path){
         </w:p>
      </w:tc>
   </w:tr>')
-  
-  
+
+
   footer_strings <- c()
-  max_footer_rows <- max(c(length(x$page_footer_left), 
-                           length(x$page_footer_right), 
+  max_footer_rows <- max(c(length(x$page_footer_left),
+                           length(x$page_footer_right),
                            length(x$page_footer_center)))
-  
+
   for(i in 1:max_footer_rows){
     fl <- if (length(x$page_footer_left) >= i) x$page_footer_left[i] else ""
     fr <- if (length(x$page_footer_right) >= i) x$page_footer_right[i] else ""
     fc <- if (length(x$page_footer_center) >= i) x$page_footer_center[i] else ""
     k <- gen_keys(7)
     footer_strings[i] <- glue(footer_row, paraid_row=k[1],
-                              paraid_left=k[2], textid_left=k[3], 
-                              paraid_right=k[4], textid_right=k[5], 
-                              paraid_center=k[4], textid_center=k[5], 
-                              footer_left=fl, footer_right=fr, footer_center=fc, 
+                              paraid_left=k[2], textid_left=k[3],
+                              paraid_right=k[4], textid_right=k[5],
+                              paraid_center=k[4], textid_center=k[5],
+                              footer_left=fl, footer_right=fr, footer_center=fc,
                               footer_left_width=fw["footer_left_width"],
                               footer_center_width=fw["footer_center_width"],
                               footer_right_width=fw["footer_right_width"],
                               font_name=x$font_name)
   }
-  
-  
-  footer_end <- gsub("[\r\n]\\s+", "", 
+
+
+  footer_end <- gsub("[\r\n]\\s+", "",
   '</w:tbl>
-     <w:p w14:paraId="74C661ED" w14:textId="77777777" w:rsidR="00415629" 
+     <w:p w14:paraId="74C661ED" w14:textId="77777777" w:rsidR="00415629"
       w:rsidRDefault="00415629">
         <w:pPr>
            <w:pStyle w:val="Footer"/>
         </w:pPr>
      </w:p>
   </w:ftr>')
-  
+
   xml <- glue(footer_start,
               paste(footnote_strings, sep="", collapse=""),
               table_start,
@@ -1120,51 +1116,50 @@ create_footer <- function(x, word_path){
               footer_right_width=fw["footer_right_width"],
               footer_width=fw["footer_width"],
               font_name=x$font_name)
-  
+
   cat(xml, file = f)
-  
-  
+
+
   close(f)
-  
+
 }
 
-#'##############################################################################
-#' @description 
+#' @description
 #' The fontTable.xml file contains a list of available fonts for the document.
 #' This function creates the file.  For purposes of reporting, there are only
 #' four fonts available: Arial, Calibri, Times New Roman, and Courier New.
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_fontTable <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "fontTable.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:fonts xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:fonts xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex">
      <w:font w:name="Calibri">
         <w:panose1 w:val="020F0502020204030204"/>
         <w:charset w:val="00"/>
         <w:family w:val="swiss"/>
         <w:pitch w:val="variable"/>
-        <w:sig w:usb0="E4002EFF" w:usb1="C000247B" w:usb2="00000009" 
+        <w:sig w:usb0="E4002EFF" w:usb1="C000247B" w:usb2="00000009"
           w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
      </w:font>
      <w:font w:name="Times New Roman">
@@ -1172,7 +1167,7 @@ create_fontTable <- function(word_path){
         <w:charset w:val="00"/>
         <w:family w:val="roman"/>
         <w:pitch w:val="variable"/>
-        <w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009" 
+        <w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009"
           w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
      </w:font>
      <w:font w:name="Courier New">
@@ -1180,7 +1175,7 @@ create_fontTable <- function(word_path){
         <w:charset w:val="00"/>
         <w:family w:val="modern"/>
         <w:pitch w:val="fixed"/>
-        <w:sig w:usb0="E0002EFF" w:usb1="C0007843" w:usb2="00000009" 
+        <w:sig w:usb0="E0002EFF" w:usb1="C0007843" w:usb2="00000009"
           w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
      </w:font>
      <w:font w:name="Arial">
@@ -1188,76 +1183,76 @@ create_fontTable <- function(word_path){
         <w:charset w:val="00"/>
         <w:family w:val="swiss"/>
         <w:pitch w:val="variable"/>
-        <w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009" 
+        <w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009"
           w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
      </w:font>
   </w:fonts>')
-  
+
   cat(xml, file = f)
-  
-  
+
+
   close(f)
-  
+
 }
 
 
-#'##############################################################################
-#' @description 
-#' The footnotes.xml file contains the footnotes for the document.  This 
-#' function creates the footnotes file.  But for purposes of the report, 
+#' @description
+#' The footnotes.xml file contains the footnotes for the document.  This
+#' function creates the footnotes file.  But for purposes of the report,
 #' footnotes are added to the footer file instead of this file so they appear
 #' on every page.
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import glue
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_footnotes <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "footnotes.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:footnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" 
-    xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" 
-    xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" 
-    xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" 
-    xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" 
-    xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" 
-    xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" 
-    xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" 
-    xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" 
-    xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" 
-    xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" 
-    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:o="urn:schemas-microsoft-com:office:office" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:v="urn:schemas-microsoft-com:vml" 
-    xmlns:w10="urn:schemas-microsoft-com:office:word" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
-    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-    xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-    xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:footnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+    xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+    xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+    xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+    xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+    xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+    xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+    xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+    xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+    xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+    xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:w10="urn:schemas-microsoft-com:office:word"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+    xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+    xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
      <w:footnote w:type="separator" w:id="-1">
-        <w:p w14:paraId="4F9B79D5" w14:textId="77777777" w:rsidR="00E6281B" 
+        <w:p w14:paraId="4F9B79D5" w14:textId="77777777" w:rsidR="00E6281B"
           w:rsidRDefault="00E6281B" w:rsidP="00415629">
            <w:pPr>
               <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
@@ -1268,7 +1263,7 @@ create_footnotes <- function(word_path){
         </w:p>
      </w:footnote>
      <w:footnote w:type="continuationSeparator" w:id="0">
-        <w:p w14:paraId="31BB53F9" w14:textId="77777777" w:rsidR="00E6281B" 
+        <w:p w14:paraId="31BB53F9" w14:textId="77777777" w:rsidR="00E6281B"
           w:rsidRDefault="00E6281B" w:rsidP="00415629">
            <w:pPr>
               <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
@@ -1279,115 +1274,115 @@ create_footnotes <- function(word_path){
         </w:p>
      </w:footnote>
   </w:footnotes>')
-  
+
   cat(xml, file = f)
-  
-  
+
+
   close(f)
-  
-  
+
+
 }
 
-#'##############################################################################
-#' @description 
+#' @description
 #' The webSettings.xml file is a file in the word subdirectory.  This function
 #' creates the webSettings.xml file.
-#' @param x 
-#' @return 
+#' @param x The path to the word file
+#' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_webSettings <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "webSettings.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:webSettings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:webSettings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex">
              <w:optimizeForBrowser/>
              <w:relyOnVML/>
              <w:allowPNG/>
           </w:webSettings>')
-  
+
   cat(xml, file = f)
-  
-  
+
+
   close(f)
-  
-  
+
+
 }
 
-#'##############################################################################
-#' @description 
+
+#' @description
 #' The document.xml file contains the document body.  The function creates
-#' an empty document body that will be populated when content is added to the 
+#' an empty document body that will be populated when content is added to the
 #' page template.
 #' @param x The page_template object
 #' @param word_path The path to the word subdirectory
 #' @return None
+#' @import glue
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_document <- function(x, word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "document.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-      xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" 
-      xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" 
-      xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" 
-      xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" 
-      xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" 
-      xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" 
-      xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" 
-      xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" 
-      xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" 
-      xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" 
-      xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" 
-      xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:o="urn:schemas-microsoft-com:office:office" 
-      xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-      xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" 
-      xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-      xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-      xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-      xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-      xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-      xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
-      xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-      xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-      xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-      xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-      xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-      xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-      xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+      xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+      xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+      xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+      xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+      xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+      xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+      xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+      xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+      xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+      xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+      xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+      xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+      xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word"
+      xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+      xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+      xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+      xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+      xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+      xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+      xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+      xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+      xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+      xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+      xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+      xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+      xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
       mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
      <w:body>
-        <w:p w14:paraId="61F53360" w14:textId="042DEE32" w:rsidR="001F5D69" w:rsidRPr="0072030C" 
+        <w:p w14:paraId="61F53360" w14:textId="042DEE32" w:rsidR="001F5D69" w:rsidRPr="0072030C"
              w:rsidRDefault="001F5D69" w:rsidP="001F5D69">
            <w:pPr>
               <w:rPr>
@@ -1399,69 +1394,68 @@ create_document <- function(x, word_path){
            <w:headerReference w:type="default" r:id="rId6"/>
            <w:footerReference w:type="default" r:id="rId7"/>
            <w:pgSz w:w="{page_width}" w:h="{page_height}" w:orient="{orientation}"/>
-           <w:pgMar w:top="{margin_top}" w:right="{margin_right}" w:bottom="{margin_bottom}" w:left="{margin_left}" 
+           <w:pgMar w:top="{margin_top}" w:right="{margin_right}" w:bottom="{margin_bottom}" w:left="{margin_left}"
               w:header="{margin_top}" w:footer="{margin_bottom}" w:gutter="0"/>
            <w:cols w:space="720"/>
            <w:docGrid w:linePitch="360"/>
         </w:sectPr>
      </w:body>
   </w:document>')
-  
+
   pw <- 11 * tpi
   ph <- 8.5 * tpi
   if (x$orientation == "portrait"){
     pw <- 8.5 * tpi
     ph <- 11 * tpi
   }
-  
-  xml <- glue(xml, 
+
+  xml <- glue(xml,
               orientation=x$orientation,
               page_height=ph,
               page_width=pw,
               font_name=x$font_name,
               margin_top=x$margin_top * tpi,
-              margin_bottom=x$margin_bottom * tpi, 
+              margin_bottom=x$margin_bottom * tpi,
               margin_left=x$margin_left * tpi,
               margin_right=x$margin_right * tpi)
-  
+
   cat(xml, file = f)
-  
-  
+
+
   close(f)
 }
 
 
-#'##############################################################################
 #' @description
-#' The styles.xml file is a file in the word subdirectory.  This function 
-#' creates styles.xml.  The styles file does not change based on content or 
-#' user parameters.  
+#' The styles.xml file is a file in the word subdirectory.  This function
+#' creates styles.xml.  The styles file does not change based on content or
+#' user parameters.
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_styles <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "styles.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex">
      <w:docDefaults>
         <w:rPrDefault>
@@ -1951,70 +1945,69 @@ create_styles <- function(word_path){
         </w:tblPr>
      </w:style>
   </w:styles>')
-  
-  
+
+
   cat(xml,file = f)
-  
-  
+
+
   close(f)
 }
 
 
-#'##############################################################################
-#' @description 
+#' @description
 #' The endNotes.xml is a file in the word subdirectory.  This function creates
 #' the endNotes file.
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_endNotes <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "endNotes.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:endnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" 
-    xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" 
-    xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" 
-    xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" 
-    xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" 
-    xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" 
-    xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" 
-    xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" 
-    xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" 
-    xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" 
-    xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" 
-    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:o="urn:schemas-microsoft-com:office:office" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:v="urn:schemas-microsoft-com:vml" 
-    xmlns:w10="urn:schemas-microsoft-com:office:word" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
-    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" 
-    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" 
-    xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" 
-    xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" 
-    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:endnotes xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+    xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+    xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+    xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+    xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+    xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+    xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+    xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+    xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+    xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+    xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:w10="urn:schemas-microsoft-com:office:word"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+    xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+    xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+    xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+    xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
      <w:endnote w:type="separator" w:id="-1">
-        <w:p w14:paraId="301A2E20" w14:textId="77777777" w:rsidR="00E6281B" 
+        <w:p w14:paraId="301A2E20" w14:textId="77777777" w:rsidR="00E6281B"
           w:rsidRDefault="00E6281B" w:rsidP="00415629">
            <w:pPr>
               <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
@@ -2025,7 +2018,7 @@ create_endNotes <- function(word_path){
         </w:p>
      </w:endnote>
      <w:endnote w:type="continuationSeparator" w:id="0">
-        <w:p w14:paraId="761FDD37" w14:textId="77777777" w:rsidR="00E6281B" 
+        <w:p w14:paraId="761FDD37" w14:textId="77777777" w:rsidR="00E6281B"
           w:rsidRDefault="00E6281B" w:rsidP="00415629">
            <w:pPr>
               <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
@@ -2036,42 +2029,41 @@ create_endNotes <- function(word_path){
         </w:p>
      </w:endnote>
   </w:endnotes>')
-  
+
   cat(xml, file=f)
-  
-  
+
+
   close(f)
-  
-  
+
+
 }
 
 
-#'##############################################################################
-#' @description 
+#' @description
 #' The word subdirectory has itself two more subdirectories: _rels and _theme.
-#' This function creates those subdirectories and the associated files. These 
+#' This function creates those subdirectories and the associated files. These
 #' files do not change based on content or user parameters.
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_word_subdirectories <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   # Create _rels subdirectory
   path_rels <- file.path(word_path, "_rels")
   dir.create(path_rels)
-  
+
   path <- file.path(path_rels, "document.xml.rels")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
+
+  xml <- gsub("[\r\n]\\s+", "",
   '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
      <Relationship Id="rId8" Type="http://schemas.openxmlformats.org/
       officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
@@ -2092,24 +2084,24 @@ create_word_subdirectories <- function(word_path){
      <Relationship Id="rId9" Type="http://schemas.openxmlformats.org/
       officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
   </Relationships>')
-  
+
   cat(xml, file = f)
-  
+
   close(f)
-  
-  
+
+
   # Create theme subdirectory
   path_theme <- file.path(word_path, "theme")
   dir.create(path_theme)
-  
-  
+
+
   path <- file.path(path_theme, "theme1.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
+
+  xml <- gsub("[\r\n]\\s+", "",
   '<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="Office Theme">
      <a:themeElements>
         <a:clrScheme name="Office">
@@ -2254,7 +2246,7 @@ create_word_subdirectories <- function(word_path){
               </a:effectStyle>
               <a:effectStyle>
                  <a:effectLst>
-                    <a:outerShdw blurRad="57150" dist="19050" dir="5400000" 
+                    <a:outerShdw blurRad="57150" dist="19050" dir="5400000"
                       algn="ctr" rotWithShape="0">
                        <a:srgbClr val="000000">
                           <a:alpha val="63000"/>
@@ -2307,53 +2299,52 @@ create_word_subdirectories <- function(word_path){
      <a:extraClrSchemeLst/>
      <a:extLst>
         <a:ext uri="{05A4C25C-085E-4340-85A3-A5531E510DB2}">
-           <thm15:themeFamily xmlns:thm15="http://schemas.microsoft.com/office/thememl/2012/main" 
-           name="Office Theme" id="{62F939B6-93AF-4DB8-9C6B-D6C7DFDC589F}" 
+           <thm15:themeFamily xmlns:thm15="http://schemas.microsoft.com/office/thememl/2012/main"
+           name="Office Theme" id="{62F939B6-93AF-4DB8-9C6B-D6C7DFDC589F}"
            vid="{4A3C46E8-61CC-4603-A589-7422A47A8E4A}"/>
         </a:ext>
      </a:extLst>
   </a:theme>')
-  
+
   cat(xml, file = f)
-  
+
   close(f)
-  
+
 }
 
-#'##############################################################################
 #' Create the settings file for the page template.  The settings file will
 #' be written to the word subdirectory.
 #' @param word_path The path to the word subdirectory.
 #' @return None
+#' @import readr
 #' @noRd
-#'##############################################################################
 create_settings <- function(word_path){
-  
+
   if (!file.exists(word_path)) {
     stop(paste("Folder does not exist:", word_path))
   }
-  
+
   path <- file.path(word_path, "settings.xml")
-  
+
   f <- file(path, open="w")
-  
+
   write_lines('<?xml version="1.0" encoding="UTF-8"?>', f)
-  
-  xml <- gsub("[\r\n]\\s+", "", 
-  '<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:o="urn:schemas-microsoft-com:office:office" 
-    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" 
-    xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main" 
-    xmlns:v="urn:schemas-microsoft-com:vml" 
-    xmlns:w10="urn:schemas-microsoft-com:office:word" 
-    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" 
-    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" 
-    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" 
-    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" 
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
+
+  xml <- gsub("[\r\n]\\s+", "",
+  '<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main"
+    xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:w10="urn:schemas-microsoft-com:office:word"
+    xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+    xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+    xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+    xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+    xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
     mc:Ignorable="w14 w15 w16se w16cid w16 w16cex">
      <w:zoom w:percent="100"/>
      <w:proofState w:spelling="clean" w:grammar="clean"/>
@@ -2368,17 +2359,17 @@ create_settings <- function(word_path){
         <w:endnote w:id="0"/>
      </w:endnotePr>
      <w:compat>
-        <w:compatSetting w:name="compatibilityMode" 
+        <w:compatSetting w:name="compatibilityMode"
           w:uri="http://schemas.microsoft.com/office/word" w:val="15"/>
-        <w:compatSetting w:name="overrideTableStyleFontSizeAndJustification" 
+        <w:compatSetting w:name="overrideTableStyleFontSizeAndJustification"
           w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
-        <w:compatSetting w:name="enableOpenTypeFeatures" 
+        <w:compatSetting w:name="enableOpenTypeFeatures"
           w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
-        <w:compatSetting w:name="doNotFlipMirrorIndents" 
+        <w:compatSetting w:name="doNotFlipMirrorIndents"
           w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
-        <w:compatSetting w:name="differentiateMultirowTableHeaders" 
+        <w:compatSetting w:name="differentiateMultirowTableHeaders"
           w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
-        <w:compatSetting w:name="useWord2013TrackBottomHyphenation" 
+        <w:compatSetting w:name="useWord2013TrackBottomHyphenation"
           w:uri="http://schemas.microsoft.com/office/word" w:val="0"/>
      </w:compat>
      <w:rsids>
@@ -2434,9 +2425,9 @@ create_settings <- function(word_path){
         <m:naryLim m:val="undOvr"/>
      </m:mathPr>
      <w:themeFontLang w:val="en-US"/>
-     <w:clrSchemeMapping w:bg1="light1" w:t1="dark1" w:bg2="light2" w:t2="dark2" 
-      w:accent1="accent1" w:accent2="accent2" w:accent3="accent3" 
-      w:accent4="accent4" w:accent5="accent5" w:accent6="accent6" 
+     <w:clrSchemeMapping w:bg1="light1" w:t1="dark1" w:bg2="light2" w:t2="dark2"
+      w:accent1="accent1" w:accent2="accent2" w:accent3="accent3"
+      w:accent4="accent4" w:accent5="accent5" w:accent6="accent6"
       w:hyperlink="hyperlink" w:followedHyperlink="followedHyperlink"/>
      <w:shapeDefaults>
         <o:shapedefaults v:ext="edit" spidmax="1026"/>
@@ -2450,37 +2441,35 @@ create_settings <- function(word_path){
      <w15:chartTrackingRefBased/>
      <w15:docId w15:val="{5835AB14-5A94-48A4-87D7-84244E3CB846}"/>
   </w:settings>')
-  
+
   cat(xml, file = f)
-  
-  
+
+
   close(f)
-  
+
 }
 
-#'##############################################################################
 #' @description
 #' Creates the Word subdirectory for the page template.  This directory contains
 #' the document body, the header file, and footer file.  The word subdirectory
-#' is where all the document content exist.  
+#' is where all the document content exist.
 #' @param x The page_template object
 #' @param docx_path The path to the docx directory.  Typically a temp location.
 #' @return None
 #' @noRd
-#'##############################################################################
 create_word <- function(x, docx_path){
-  
+
   if (!file.exists(docx_path)) {
     stop(paste("Folder does not exist:", docx_path))
   }
-  
+
   # Create Word subdirectory
   path_word <- file.path(docx_path, "word")
   dir.create(path_word)
-  
+
   # Create subdirectories and files
   create_word_subdirectories(path_word)
-  
+
   # Create word doc main files
   create_document(x, path_word)
   create_endNotes(path_word)
@@ -2491,99 +2480,96 @@ create_word <- function(x, docx_path){
   create_settings(path_word)
   create_styles(path_word)
   create_webSettings(path_word)
-  
-  
+
+
 }
 
 
-#'##############################################################################
 #' @description
 #' Creates a combined docx file from separate xml files and folder structure.
 #' Basically this zips everything up and renames according to the target path.
 #' @param source_path The folder path with the files to zip
-#' @param target_path The file path (.docx) for the resulting zip operation.   
+#' @param target_path The file path (.docx) for the resulting zip operation.
 #' @return None.
+#' @import zip
 #' @noRd
-#'##############################################################################
 create_docx_file <- function(source_path, target_path){
-  
-  
+
+
   # Create temporary zip file path
   zip_path <- gsub(".docx", ".zip", target_path)
-  
-  
+
+
   # Clear out any left over files
   if (file.exists(zip_path))
     file.remove(zip_path)
-  
+
   if (file.exists(target_path))
     file.remove(target_path)
-  
-  
+
+
   # Get list of files/folders from source (temp) directory
-  file_list <- list.files(path = source_path, 
+  file_list <- list.files(path = source_path,
                           full.names = TRUE, recursive = FALSE,
                           ignore.case = FALSE, include.dirs = TRUE, no.. = TRUE)
-  
-  
+
+
   # Zip up file list
   zipr(zip_path, include_directories= FALSE, files=file_list, recurse = TRUE)
-  
+
 
   # Put docx extention on zip file
-  file.rename(zip_path, target_path)  
-  
-  
+  file.rename(zip_path, target_path)
+
+
 }
 
 
-#'##############################################################################
 #' Writes the page template to the files system.  The page template is used
 #' by officer to start the document creation process.  The page template
-#' holds the page header/footer, and any titles/footnotes in the page 
+#' holds the page header/footer, and any titles/footnotes in the page
 #' header/footer.
 #' @param x The report spec object to write.
 #' @param file_path The path to write to.
 #' @return The report spec (x) is returned invisibly.
 #' @noRd
-#'##############################################################################
 write_page_template <- function(x, file_path = ""){
-  
-  
+
+
   if(file_path != "")
     x$file_path <- file_path
-  
+
   # Create temp directory
   path_dir <- tempdir()
   if (!dir.exists(path_dir))
     dir.create(path_dir)
-  
+
   #print(path_dir)
-  
+
   # Create docx directory for document container
   path_docx <- file.path(path_dir, "docx")
   if (dir.exists(path_docx))
     unlink(path_docx, recursive = TRUE, force = TRUE)
   dir.create(path_docx)
-  
+
   # Create content type file
   create_content_type(path_docx)
-  
+
   # Create _rels directory and documents
   create_rels(path_docx)
-  
+
   # Create docProps directory and documents
   create_docProps(path_docx)
-  
+
   # Create word subdirectory
   create_word(x, path_docx)
-  
+
   # Create zip/docx file in desired location
   create_docx_file(target_path = x$file_path, source_path = path_docx)
-  
+
   # Delete temp directory/files
   unlink(path_docx, recursive =  TRUE, force = TRUE)
-  
+
   invisible(x)
 }
 
