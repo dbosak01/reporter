@@ -3,9 +3,9 @@ Type: Package
 Title: Creates reports in ASCII text and docx file format
 Version: 0.0.0.9000
 Author: David Bosak
-Author@R: person("David", "Bosak", email = "david.bosak@experis.com",
+Author@R: person("David", "Bosak", email = "dbosak01@gmail.com",
   role = c("aut", "cre"))
-Maintainer: The package maintainer <david.bosak@experis.com>
+Maintainer: The package maintainer <dbosak01@gmail.com>
 Description: This package creates printable reports in ASCII text and DOCX 
     format.  The package specializes in wide and long reports, with high 
     performance.  Reports can be generated with a minimum of function calls, 
