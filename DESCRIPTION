@@ -1,4 +1,4 @@
-Package: reportr
+Package: reporter
 Type: Package
 Title: Creates reports in ASCII text and docx file format
 Version: 0.0.0.9000

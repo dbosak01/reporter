@@ -4,7 +4,9 @@
 #' docx format
 #'
 #' @section reporter functions:
-#' hello()
+#' create_report()
+#' options_text()
+#' options_docx()
 #'
 #' @docType package
 #' @name reporter

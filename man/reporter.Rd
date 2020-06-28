@@ -3,13 +3,15 @@
 \docType{package}
 \name{reporter}
 \alias{reporter}
-\title{Reporter: A package for creating tabular reports}
+\title{reporter: A package for creating tabular reports}
 \description{
 The reporter package creates tabular reports in ASCII text and
 docx format
 }
 \section{reporter functions}{
 
-hello()
+create_report()
+options_text()
+options_docx()
 }
 

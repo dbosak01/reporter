@@ -2,37 +2,32 @@
 % Please edit documentation in R/report_spec.r
 \name{create_report}
 \alias{create_report}
-\title{Create a docx report}
+\title{Create a report}
 \usage{
-create_report(
-  file_path = "",
-  orientation = "landscape",
-  font_name = "Courier New",
-  font_size = 10
-)
+create_report(file_path = "", output_type = "text", orientation = "landscape")
 }
 \arguments{
 \item{file_path}{The output path of the desired report. Either a full path or
 a relative path is acceptable.  This parameter is not required to create the
 report_spec object, but will be required to print the report.}
 
+\item{output_type}{The report output type.  Valid values are "text" and 
+"docx".  Default is "text".}
+
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}
-
-\item{font_name}{The font name to use on the report.  The specified font
-will be used on the entire report.  Valid values are "Courier New", "Arial",
-"Calibri", or "Times New Roman".  The default font is "Courier New".}
-
-\item{font_size}{The font size.  Valid value is 10.}
 }
 \value{
 A new report_spec S3 object.
 }
 \description{
 This function is the constructor for the report_spec object.  The report_spec
-object contains information needed to construct a docx report. The object is
+object contains information needed to construct a report. The object is
 defined as an S3 object, and is inherited from a list.
 }
 \examples{
 # Here is an example
+rpt <- create_report("output/mtcars.docx", orientation="portrait") 
+rpt <- add_content(rpt, create_table(mtcars)) 
+#write_report(rpt)
 }
