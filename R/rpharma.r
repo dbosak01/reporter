@@ -141,11 +141,5 @@ add_blank_rows <- function(x, ..., .var_list = NULL) {
   return(ret)
 
 }
-#
-# b <- add_blank_rows(iris, .var_list = "Species")
-# b
-#
-# c1 <- split(iris, iris[c("Species")])
-# c1[[1]] <- add_blank_row(c1[[1]])
-# c2 <- unsplit(c1, iris[c("Species")])
+
 
