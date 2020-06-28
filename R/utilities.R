@@ -13,7 +13,7 @@
 #' @examples
 #' "Today is " %+% weekdays(Sys.Date()) %+% "."
 #' @seealso [paste0()]
-#' @export
+#' @noRd
 `%+%` <- function(x, y)paste0(x,y)
 
 
@@ -24,9 +24,8 @@
 #'
 #' This function is used to create a vector of group values.  It can use used to
 #' dynamically subset a dataframe based on row counts rather than data values.
-#' The last_indices parameter can be used to return the indices of the last item
-#' in each group.
-#'
+#' The last_indices parameter can be used to return the indexes of the 
+#' last item in each group.
 #'
 #' @param tot Total number of items in return vector.
 #' @param group_cnt Number of items in each group.  This can be a single value
@@ -47,7 +46,7 @@
 #'
 #' gen_groups(12, c(3, 2, 5, 2), last_indices = TRUE)
 #' #>[1] 3 5 10 12
-#' @export
+#' @noRd
 gen_groups <- function(tot, group_cnt, last_indices = FALSE) {
   
   # Create empty return vector
@@ -100,7 +99,7 @@ gen_groups <- function(tot, group_cnt, last_indices = FALSE) {
 #
 # # With identity column
 # split_df_pages(starwars,10, 5, 1)
-#' @export
+#' @noRd
 split_df_pages <- function(df, rows, cols, idcols = NULL) {
   
   # Initialize list of dataframe to return
@@ -206,7 +205,7 @@ get_font_family <- function(font_name) {
 #' @examples
 #' #s <- filter(iris, Species == "setosa")
 #' #b <- add_blank_row(s)
-#' @export
+#' @noRd
 add_blank_row <- function(x, ..., location="below"){
   
   if (!requireNamespace("dplyr", quietly = TRUE)) {
@@ -271,7 +270,7 @@ add_blank_row <- function(x, ..., location="below"){
 #' @return  The input dataset with the blank row added after each by-group.
 #' @examples
 #' b <- add_blank_rows(iris, Species)
-#' @export
+#' @noRd
 add_blank_rows <- function(x, ..., .var_list = NULL) {
   
   if (!requireNamespace("dplyr", quietly = TRUE)) {

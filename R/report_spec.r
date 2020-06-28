@@ -7,9 +7,17 @@
 #' Create a report
 #'
 #' @description
+#' Creates a report shell to which you may add content.
+#' 
+#' @details
 #' This function is the constructor for the report_spec object.  The report_spec
 #' object contains information needed to construct a report. The object is
 #' defined as an S3 object, and is inherited from a list.
+#' 
+#' The report_spec object hold information concerning report page size, font, 
+#' titles, footnotes, page header, page footer, margins, and other options.  
+#' Use the \code{add_content()} function to add content to the report.  
+#' The report may be written using the \code{write_report()} function. 
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -19,10 +27,26 @@
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @return A new report_spec S3 object.
+#' @seealso 
+#' \itemize{
+#'   \item \code{\link{titles}} to add titles to the report.
+#'   \item \code{\link{footnotes}} to add footnotes to the report.
+#'   \item \code{\link{page_header}} to add a page header to the report. 
+#'   \item \code{\link{page_footer}} to add a page_footer to the report. 
+#'   \item \code{\link{add_content}} to add content to the report.
+#'   \item \code{\link{options_text}} to set options for text output.
+#'   \item \code{\link{options_docx}} to set options for docx output.
+#'   \item \code{\link{add_content}} to add content to the report.
+#'   \item \code{\link{write_report}} to write the report to the file system.
+#' }
 #' @examples
-#' # Here is an example
+#' # Create the report object
 #' rpt <- create_report("output/mtcars.docx", orientation="portrait") 
+#' 
+#' # Add content to the report
 #' rpt <- add_content(rpt, create_table(mtcars)) 
+#' 
+#' # Write the report to the file system
 #' #write_report(rpt)
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
