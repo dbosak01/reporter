@@ -1,3 +1,43 @@
+# Formats ----------------------------------------------------------------------
+
+
+#' A function to format the population label
+#' @noRd
+lowcase_parens <- function(x) {
+  
+  ret <- paste0("\n(n=", x, ")")
+  
+  return(ret)
+}
+
+#' A function to format the population label
+#' @noRd
+upcase_parens <- function(x) {
+  
+  ret <- paste0("\n(N=", x, ")")
+  
+  return(ret)
+  
+}
+
+#' A function to format the population label
+#' @noRd
+lowcase_n <- function(x) {
+  
+  ret <- paste0("\nn=", x)
+  
+  return(ret)
+}
+
+#' A function to format the population label
+#' @noRd
+upcase_n <- function(x) {
+  
+  ret <- paste0("\nN=", x)
+  
+  return(ret)
+  
+}
 
 # Utility Functions -------------------------------------------------------
 
@@ -162,7 +202,7 @@ get_font_family <- function(font_name) {
   if (!font_name %in% c("Arial", "Courier New", "Times New Roman", "Calibri")) {
     
     stop(paste0("ERROR: font_name parameter on get_font_family() ",
-                "function is invalid: '", output_type,
+                "function is invalid: '", font_name,
       "'\n\tValid values are: 'Arial', 'Calibri', 'Times New Roman', 'Courier'."
       ))
   }
@@ -311,4 +351,154 @@ add_blank_rows <- function(x, ..., .var_list = NULL) {
   return(ret)
   
 }
+
+#' @noRd
+get_page_size <- function(paper_size, uom) {
+  
+  if (uom == "inches") {
+    if (paper_size == "letter")
+      ret <- c(8.5, 11)
+    else if (paper_size == "legal")
+      ret <- c(8.5, 14)
+    else if (paper_size == "A4")
+      ret <- c(8.27, 11.69)
+    else if (paper_size == "RD4")
+      ret <- c(7.7, 10.7)
+    
+  } else if (uom == "cm") {
+    if (paper_size == "letter")
+      ret <- c(21.59, 27.94)
+    else if (paper_size == "legal")
+      ret <- c(21.59, 35.56)
+    else if (paper_size == "A4")
+      ret <- c(21, 29.7)
+    else if (paper_size == "RD4")
+      ret <- c(19.6, 27.3)
+  }
+}
+
+
+
+
+# Sizing utilities --------------------------------------------------------
+
+#' @noRd
+get_content_size <- function(rs) {
+  
+  
+  # Assume landscape
+  pg_h <- rs$page_size[1]
+  pg_w <- rs$page_size[2]
+  
+  # Change to portrait
+  if(rs$orientation == "portrait") {
+    pg_w <- rs$page_size[1]
+    pg_h <- rs$page_size[2]
+  }
+  
+  # Calculate available space for page body
+  ret <- c(height = pg_h - rs$margin_top - rs$margin_bottom ,
+           width = pg_w - rs$margin_right - rs$margin_left)
+
+  
+  return(ret)
+  
+}
+
+#' @noRd
+get_body_size <- function(rs, cs) {
+  
+
+  # Calculate header and footer heights
+  h_h <- get_header_height(rs)
+  f_h <- get_footer_height(rs)
+  
+  # Calculate available space for page body
+  ret <- c(height = cs[["height"]] - h_h - f_h,
+           width = cs[["width"]])
+  
+
+  
+  return(ret)
+}
+
+#' @noRd
+get_header_height <- function(rs) {
+  
+  # Get height of page header
+  phdr <- rs$page_header_left
+  if(length(rs$page_header_left) < length(rs$page_header_right))
+    phdr <- rs$page_header_right
+  
+  if (rs$output_type == "docx") { 
+    hh <- sum(strheight(phdr, units = "inches", family = rs$font_family))
+    
+    # Get height of titles
+    th <- sum(strheight(rs$titles, units = "inches", family = rs$font_family))
+    
+    # Add buffer for table margins, etc.
+    buff <- .1  # Will need to adjust this
+    
+    if (rs$uom == "cm") {
+      hh <- cm(hh)
+      th <- cm(th)
+      buff <- cm(buff)
+    }
+    
+  } else {
+    
+    hh <- length(phdr) * rs$line_height
+    th <- length(rs$titles) * rs$line_height
+    buff <- 0
+    
+  }
+  
+  # Add all heights
+  ret <- hh + th + buff
+  
+  return(ret)
+}
+
+#' @noRd
+get_footer_height <- function(rs) {
+  
+  # Get height of page header
+  pftr <- rs$page_footer_left
+  if(length(rs$page_footer_left) < length(rs$page_footer_right))
+    pftr <- rs$page_footer_right
+  if(length(pftr) < length(rs$page_footer_center))
+    pftr <- rs$page_footer_center
+  
+  if (rs$output_type == "docx") {
+  
+    fh <- sum(strheight(pftr, units = "inches", family = rs$font_family))
+    
+    # Get height of footnotes
+    fth <- sum(strheight(rs$footnotes, units = "inches", family = rs$font_family))
+    
+    # Add buffer for table margins, etc.
+    buff <- .1  # Need to adjust
+    
+    if (rs$uom == "cm") {
+      fh <- cm(fh)
+      fth <- cm(fth)
+      buff <- cm(buff)
+    }
+    
+  } else {
+    
+    fh <- length(pftr) * rs$line_height
+    fth <- length(rs$footnotes) * rs$line_height
+    buff <- 0
+    
+  }
+  
+  # Add all heights
+  ret <- fh + fth + buff
+  
+  return(ret)
+}
+
+
+
 

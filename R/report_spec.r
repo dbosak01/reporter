@@ -26,6 +26,13 @@
 #' "docx".  Default is "text".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
+#' @param uom Specifies the units of measurement.  This setting will 
+#' set the units for columns widths.  Valid values are "inches"
+#' or "cm".  Default value is "inches".
+#' @param paper_size The expected paper size on which the report may be 
+#' printed.  The \code{paper_size} will determine how much text can fit on
+#' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
+#' "letter".
 #' @return A new report_spec S3 object.
 #' @seealso 
 #' \itemize{
@@ -50,7 +57,8 @@
 #' #write_report(rpt)
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
-                          orientation="landscape") {
+                          orientation ="landscape", uom = "inches",
+                          paper_size = "letter") {
 
   x <- structure(list(), class = c("report_spec", "list"))
 
@@ -69,12 +77,32 @@ create_report <- function(file_path = "", output_type = "text",
                 "create_report() function is invalid: '", orientation,
                 "'\n\tValid values are: 'landscape' or 'portrait'."))
   }
+  
+  # Trap missing or invalid uom parameter.
+  if (!uom %in% c("inches", "cm")) {
+    
+    stop(paste0("ERROR: uom parameter on ",
+                "create_report() function is invalid: '", uom,
+                "'\n\tValid values are: 'inches' or 'cm'."))
+  }
+  
+  # Trap missing or invalid paper_size parameter.
+  if (!paper_size %in% c("letter", "legal", "A4", "RD4")) {
+    
+    stop(paste0("ERROR: paper_size parameter on ",
+                "create_report() function is invalid: '", paper_size,
+                "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4'."))
+  }
 
   # Populate report_spec fields
   x$file_path <- file_path
   x$output_type <- output_type
   x$orientation <- orientation
   x$content <- list()
+  x$uom <- uom
+  x$paper_size <- paper_size
+  x$page_size <- get_page_size(paper_size, uom)
+
   
   if (output_type == "text") {
     
@@ -86,11 +114,10 @@ create_report <- function(file_path = "", output_type = "text",
     # Set default options for docx
     x <- options_docx(x)
     
-    # Set default margins
-    x <- set_margins(x)
   }
 
-
+  # Set default margins
+  x <- set_margins(x)
 
   return(x)
 
@@ -136,23 +163,51 @@ options_docx <- function(x, font_name="Courier New", font_size=10) {
 #' This function sets the options for a report of output type docx.
 #'
 #' @param x The report spec.
-#' @param cpi Characters per inch.  Valid values are between 8 and 14.  Default
-#' value is 12.
+#' @param pitch Pitch of the printed text.  Valid values are between 8 and 14. 
+#' Default is 12, which equals a 10pt font.  This value will be used to 
+#' determine how many characters can fit on a line.  
+#' @param lpi Lines per inch of the printed text.  Valid values are between 
+#' 4.5 and 8.5.  Default is 6, which is average for a 10pt font. This value 
+#' will be used to determine the number of lines that can fit on a page. 
 #' @return The updated report spec.
 #' @examples
 #' # Here is an example
 #' @export
-options_text <- function(x, cpi = 12) {
+options_text <- function(x, pitch = NULL, lpi = NULL) {
   
-  # Trap missing or invalid font_name parameter.
-  if (!(cpi >= 8 & cpi <= 14)) {
+  # Trap missing or invalid cpuom parameter.
+  if (is.null(pitch))
+    x$pitch <- 12
+  else if (!(pitch >= 8 & pitch <= 14)) {
     
-    stop(paste0("ERROR: cpi parameter on create_report() ",
-                "function is invalid: '", cpi,
+    stop(paste0("ERROR: pitch parameter on create_report() ",
+                "function is invalid: '", cpuom,
                 "'\n\tValue must be between 8 and 14."))
   }
-  
-  x$cpi <- cpi
+  else
+    x$pitch <- pitch
+    
+  # Trap missing or invalid font_name parameter.
+  if (is.null(lpi))
+    x$lpi <- 6
+  else if (!(lpi >= 4.5 & lpi <= 8.5)) {
+    
+    stop(paste0("ERROR: lpi parameter on create_report() ",
+                "function is invalid: '", line_height,
+                "'\n\tValue must be between 4.5 and 8.5."))
+  }
+  else
+    x$lpi <- lpi
+    
+
+  if (x$uom == "inches") {
+    x$char_width <- 1 / x$pitch
+    x$line_height <- 1 / x$lpi
+  } else if (x$uom == "cm") {
+    x$char_width <- cm(1 / x$pitch) 
+    x$line_height <- cm(1 / x$lpi)
+  }
+    
   
   return(x)
   
@@ -179,28 +234,48 @@ options_text <- function(x, cpi = 12) {
 # write_report()
 # file.show("mtcars.docx")
 #' @export
-set_margins <- function(x, margin_top=.5, margin_bottom=.5,
-                           margin_left=1, margin_right=1) {
+set_margins <- function(x, top=NULL, bottom=NULL,
+                           left=NULL, right=NULL) {
 
-
-  if (is.na(margin_top) | margin_top < 0 | !is.numeric(margin_top)){
-    stop("ERROR: invalid value for margin_top.")
+  if (!is.null(top)) {
+    if (is.na(top) | top < 0 | !is.numeric(top)){
+      stop("ERROR: invalid value for top")
+    } 
+    else
+      x$margin_top = top
   }
-  if (is.na(margin_bottom) | margin_bottom < 0| !is.numeric(margin_bottom)){
-    stop("ERROR: invalid value for margin_bottom.")
+  else
+    x$margin_top = if (x$uom == "inches") .5 else 1.27
+  
+  if (!is.null(bottom)) {
+    if (is.na(bottom) | bottom < 0| !is.numeric(bottom)){
+      stop("ERROR: invalid value for bottom")
+    }
+    else
+      x$margin_bottom = bottom
   }
-  if (is.na(margin_left) | margin_left < 0| !is.numeric(margin_left)){
-    stop("ERROR: invalid value for margin_left.")
+  else
+    x$margin_bottom = if (x$uom == "inches") .5 else 1.27
+  
+  if (!is.null(left)) {
+    if (is.na(left) | left < 0| !is.numeric(left)){
+      stop("ERROR: invalid value for left")
+    }
+    else
+      x$margin_left = left
   }
-  if (is.na(margin_right) | margin_right < 0| !is.numeric(margin_right)){
-    stop("ERROR: invalid value for margin_right.")
+  else
+    x$margin_left = if (x$uom == "inches") 1 else 2.54
+  
+  if (!is.null(right)) {
+    if (is.na(right) | right < 0| !is.numeric(right)){
+      stop("ERROR: invalid value for right")
+    }
+    else 
+      x$margin_right = right
   }
-
-  # Populate margin value fields
-  x$margin_top = margin_top
-  x$margin_bottom = margin_bottom
-  x$margin_left = margin_left
-  x$margin_right = margin_right
+  else
+    x$margin_right = if (x$uom == "inches") 1 else 2.54
 
 
   return(x)
@@ -383,15 +458,14 @@ page_footer <- function(x, left="", right="", center=""){
 # add_content(create_table(mtcars)) %>%
 # print()
 #' @export
-print.report_spec <- function(x, ..., full=FALSE){
-
-  if (full)
-    print.listof(x, ...)
-  else
-    print.simple.list(x, ...)
-
-  invisible(x)
-}
+# print.report_spec <- function(x, ...){
+# 
+# 
+#     print.l(x, ...)
+# 
+# 
+#   invisible(x)
+# }
 
 #' @title
 #' Add content to a report

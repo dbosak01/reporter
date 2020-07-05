@@ -1,4 +1,4 @@
 library(testthat)
-library(reporter)
+library(rptr)
 
-test_check("reporter")
+test_check("rptr")

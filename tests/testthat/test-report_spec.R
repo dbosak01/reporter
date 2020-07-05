@@ -46,9 +46,9 @@ test_that("options_text changes parameters appropriately", {
   
   ret <- create_report()
   
-  ret <- options_text(ret, cpi = 10)
+  ret <- options_text(ret, cpuom = 10)
   
-  expect_equal(ret$cpi, 10)
+  expect_equal(ret$cpuom, 10)
   
 })
 
@@ -57,7 +57,7 @@ test_that("options_text traps invalid parameters appropriately", {
   
   ret <- create_report()
   
-  expect_error(options_text(ret, cpi = 15))
+  expect_error(options_text(ret, cpuom = 15))
   
   
 })

@@ -32,3 +32,17 @@ test_that("get_font_family() works as expected.", {
   expect_error(get_font_family("Wingdings"))
   
 })
+
+
+test_that("get_page_size() works as expected.", {
+  ret <- get_page_size("letter", "inches")
+  
+  expect_equal(ret[1], 8.5)
+  expect_equal(ret[2], 11)
+  
+  ret <- get_page_size("A4", "cm")
+  expect_equal(ret[1], 21)
+  expect_equal(ret[2], 29.7)
+  
+})
+  
