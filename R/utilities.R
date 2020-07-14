@@ -1,3 +1,60 @@
+
+# Write Registration File -------------------------------------------------
+
+#' @title 
+#' Write a registration file 
+#' 
+#' @description 
+#' This function will create a registration file to help determine
+#' the correct \code{cpi} and \code{lpi} for editor/printer.  
+#' The \code{cpi} and \code{lpi} are 
+#' used in \code{output_type = "text"} to determine available space on
+#' the page.   
+#' @param file_path The full or relative file name and path to create.
+#' @export
+write_registration_file <- function(file_path) {
+  
+  
+  f <- file(file_path, open="w")
+  
+  ln1 <- "0--------+---------+---------+---------+---------+---------+"
+  
+  writeLines(ln1, con = f)
+  
+  ln2 <- "-       10        20        30        40        50        60"
+  
+  writeLines(ln2, con = f)
+  
+  ln3 <- c("-", "-", "-", "-", "-", "-", "-", "+ 10")
+  
+  writeLines(ln3, con = f)
+  
+  ln4 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 20")
+  
+  writeLines(ln4, con = f)
+  
+  ln5 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 30")
+  
+  writeLines(ln5, con = f)
+  
+  ln6 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 40")
+  
+  writeLines(ln6, con = f)
+  
+  ln7 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 50")
+  
+  writeLines(ln7, con = f)
+  
+  ln8 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 60")
+  
+  writeLines(ln8, con = f)
+  
+  close(f)
+}
+
+
+
+
 # Formats ----------------------------------------------------------------------
 
 
@@ -406,7 +463,7 @@ get_content_size <- function(rs) {
 }
 
 #' @noRd
-get_body_size <- function(rs, cs) {
+get_body_size <- function(rs) {
   
 
   # Calculate header and footer heights
@@ -414,8 +471,8 @@ get_body_size <- function(rs, cs) {
   f_h <- get_footer_height(rs)
   
   # Calculate available space for page body
-  ret <- c(height = cs[["height"]] - h_h - f_h,
-           width = cs[["width"]])
+  ret <- c(height = rs$content_size[["height"]] - h_h - f_h,
+           width = rs$content_size[["width"]])
   
 
   
@@ -489,7 +546,7 @@ get_footer_height <- function(rs) {
     
     fh <- length(pftr) * rs$line_height
     fth <- length(rs$footnotes) * rs$line_height
-    buff <- 0
+    buff <- rs$line_height # Space between footnotes and page footer
     
   }
   

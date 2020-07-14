@@ -22,9 +22,12 @@
 #' @param show_cols Whether to show all column by default.  Valid values are
 #' "all", "none", or "some".
 #' @param first_row_blank Whether to place a blank row under the table header.
+#' @param align Aligns the table on the page.  Valid values are "left", 
+#' "right", and "center".  Default value is "center".
 #' @export
 create_table <- function(x, n_format = upcase_parens, page_var = NULL,
-                         show_cols = "all", first_row_blank=FALSE) {
+                         show_cols = "all", first_row_blank=FALSE, 
+                         align = "center") {
 
   ret <- structure(list(), class = c("table_spec", "list"))
 
@@ -42,6 +45,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
   ret$col_spans <- list()
   ret$show_cols <- show_cols
   ret$first_row_blank <- first_row_blank
+  ret$align <- align
 
   return(ret)
 

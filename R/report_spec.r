@@ -1,6 +1,6 @@
 
 
-# Report Spec Assembly Functions -----------------------------------------------
+# Report Spec Constructor -----------------------------------------------
 
 
 #' @title
@@ -123,6 +123,20 @@ create_report <- function(file_path = "", output_type = "text",
 
 }
 
+
+# Options -----------------------------------------------------------------
+
+#' @noRd
+editor_settings <- read.table(header = TRUE, text = '
+                    editor          cpi     cpcm     lpi     lpcm
+                    editplus    14.6565    5.769   6.857   2.7027
+                    notepad          12   4.7619  5.6805   2.2305
+                    notepadpp        12   4.7619   6.531   2.5862
+                    word         11.497   4.5454  6.1146      2.4
+                    wordpad      10.909   4.3165  6.1146      2.4
+                               ') 
+
+
 #' @title
 #' Set options for a docx report
 #'
@@ -163,50 +177,61 @@ options_docx <- function(x, font_name="Courier New", font_size=10) {
 #' This function sets the options for a report of output type docx.
 #'
 #' @param x The report spec.
-#' @param pitch Pitch of the printed text.  Valid values are between 8 and 14. 
-#' Default is 12, which equals a 10pt font.  This value will be used to 
+#' @param cpuom Characters per unit of measure of printed text.    
+#' if uom is inches, 
+#' default is 12, which equals a 10pt font.  This value will be used to 
 #' determine how many characters can fit on a line.  
-#' @param lpi Lines per inch of the printed text.  Valid values are between 
-#' 4.5 and 8.5.  Default is 6, which is average for a 10pt font. This value 
+#' @param lpuom Lines per unit of measure of the printed text. Default for 
+#' inches is 6, which is average for a 10pt font. This value 
 #' will be used to determine the number of lines that can fit on a page. 
 #' @return The updated report spec.
 #' @examples
 #' # Here is an example
 #' @export
-options_text <- function(x, pitch = NULL, lpi = NULL) {
+options_text <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
   
-  # Trap missing or invalid cpuom parameter.
-  if (is.null(pitch))
-    x$pitch <- 12
-  else if (!(pitch >= 8 & pitch <= 14)) {
-    
-    stop(paste0("ERROR: pitch parameter on create_report() ",
-                "function is invalid: '", cpuom,
-                "'\n\tValue must be between 8 and 14."))
-  }
-  else
-    x$pitch <- pitch
-    
-  # Trap missing or invalid font_name parameter.
-  if (is.null(lpi))
-    x$lpi <- 6
-  else if (!(lpi >= 4.5 & lpi <= 8.5)) {
-    
-    stop(paste0("ERROR: lpi parameter on create_report() ",
-                "function is invalid: '", line_height,
-                "'\n\tValue must be between 4.5 and 8.5."))
-  }
-  else
-    x$lpi <- lpi
-    
+  if (is.null(editor)) {
+    # Trap missing or invalid cpuom parameter.
+    if (is.null(cpuom))
+      x$cpuom <- if (x$uom == "inches") 12 else 4.687
+    else if (!(cpuom >= 8 & cpuom <= 14)) {
+      
+      stop(paste0("ERROR: cpi parameter on create_report() ",
+                  "function is invalid: '", cpuom,
+                  "'\n\tValue must be between 0 and 15."))
+    }
+    else
+      x$cpuom <- cpuom
+      
+    # Trap missing or invalid lpuom parameter.
+    if (is.null(lpuom))
+      x$lpuom <- if (x$uom == "inches") 6 else 2.55
+    else if (!(lpuom > 0 & lpuom <= 10)) {
+      
+      stop(paste0("ERROR: lpuom parameter on create_report() ",
+                  "function is invalid: '", lpuom,
+                  "'\n\tValue must be between 0 and 10."))
+    }
+    else
+      x$lpuom <- lpuom
+      
 
-  if (x$uom == "inches") {
-    x$char_width <- 1 / x$pitch
-    x$line_height <- 1 / x$lpi
-  } else if (x$uom == "cm") {
-    x$char_width <- cm(1 / x$pitch) 
-    x$line_height <- cm(1 / x$lpi)
+
+  } else {
+    
+    e <- editor_settings[editor_settings$editor == editor, ]
+    
+    if (x$uom == "inches") {
+      x$cpuom <- e$cpi
+      x$lpuom <- e$lpi
+    } else {
+      x$cpuom <- e$cpcm
+      x$lpuom <- e$lpcm
+    }
   }
+  
+  x$char_width <- 1 / x$cpuom
+  x$line_height <- 1 / x$lpuom
     
   
   return(x)
@@ -235,7 +260,8 @@ options_text <- function(x, pitch = NULL, lpi = NULL) {
 # file.show("mtcars.docx")
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
-                           left=NULL, right=NULL) {
+                           left=NULL, right=NULL, 
+                           min_margin = NULL) {
 
   if (!is.null(top)) {
     if (is.na(top) | top < 0 | !is.numeric(top)){
@@ -277,9 +303,23 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   else
     x$margin_right = if (x$uom == "inches") 1 else 2.54
 
+  if (!is.null(min_margin)) {
+    if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
+      stop("ERROR: invalid value for min_margin")
+    }
+    else 
+      x$min_margin = min_margin
+  }
+  else
+    x$min_margin = if (x$uom == "inches") .394 else 1
 
   return(x)
 }
+
+
+# Page Template Items -----------------------------------------------
+
+
 
 #' @title
 #' Add a page header to the report
@@ -466,6 +506,12 @@ page_footer <- function(x, left="", right="", center=""){
 # 
 #   invisible(x)
 # }
+
+
+
+# Functions ---------------------------------------------------------------
+
+
 
 #' @title
 #' Add content to a report

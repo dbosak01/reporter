@@ -13,67 +13,104 @@
 #' @param x The report_spec object to write.
 #' @return The report spec.
 #' @noRd
-write_report_text <- function(x) {
+write_report_text <- function(rs) {
   
   ret <- ""
   
-  pt <- page_template_text(x)
+  # Kill existing file
+  if (file.exists(rs$file_path))
+    file.remove(rs$file_path)
   
+  # Calculate available space
+  rs$content_size <- get_content_size(rs)
+  rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
+  rs$body_size <- get_body_size(rs)
+  rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
   
-  #print(pt$page_header)
-  #print(pt$titles)
-  print(pt)
-  # 
-  # ls <- x$content
-  # 
-  # counter <- 1
-  # 
-  # for(o in ls){
-  #   
-  #   if (class(o)[1] == "table_spec"){
-  #     # change to flextables
-  #     fts <- create_table_text(o, body_size = bs)  
-  #     my_doc <- body_add_texttables(my_doc, fts)
-  #   }
-  # }
+  # Get page template
+  pt <- page_template_text(rs)
   
+
+  ls <- rs$content
+
+  counter <- 1
+
+  # Write out content
+  for(o in ls){
+    if (class(o)[1] == "table_spec"){
+
+      ttx <- create_table_text(rs, o)
+      print(ttx)
+      rs <- write_table_text(rs, ttx, pt)
+    } else if (class(o)[1] == "character" & o == "page_break"){
+      
+      if (counter < length(ls))
+        rs <- write_page_break(rs)
+    }
+    
+    counter <- counter + 1
+  }
+
   
-  invisible(ret)
+  invisible(rs)
 }
 
 
 
-# Utilities ---------------------------------------------------------------
+write_table_text <- function(rs, ttx, pt) {
+  
+
+  
+  f <- file(rs$file_path, open="a")
+  
+  writeLines(pt$page_header, con = f)
+  writeLines(pt$titles, con = f)
+  
+  writeLines(ttx, con = f)
+  
+  writeLines(pt$footnotes, con = f)
+  writeLines(pt$page_footer, con = f)
+  
+  close(f)
+  
+  return(rs)
+}
+
+write_page_break <- function(rs) {
+  
+  f <- file(rs$file_path, open="a")
+  
+  writeLines("", con = f, sep = "\f")
+  
+  close(f)
+  
+  return(rs)
+
+}
+
+# Page Template Functions ----------------------------------------------
 
 
 page_template_text <- function(rs) {
   
   pt <- structure(list(), class = c("page_template_text", "list"))
   
-  cs <- get_content_size(rs)
   
-  pt$content_size <- cs
-  rs$line_size <- floor(cs[["width"]] / rs$char_width)
-  pt$body_size <- get_body_size(rs, cs)
   pt$page_header <- get_page_header(rs)
   pt$titles <- get_titles(rs)
   pt$footnotes <- get_footnotes(rs)
   pt$page_footer <- get_page_footer(rs)
-
-
+  
+  
   return(pt)
 }
 
 
-# Write Text Write Functions ----------------------------------------------
-
-
-
-get_page_header <- function(x) {
+get_page_header <- function(rs) {
   
-  phdrr <- x$page_header_right
-  phdrl <- x$page_header_left
-  phdr <- x$page_header_left
+  phdrr <- rs$page_header_right
+  phdrl <- rs$page_header_left
+  phdr <- rs$page_header_left
   if(length(phdrl) < length(phdrr))
     phdr <- phdrr
   
@@ -81,21 +118,21 @@ get_page_header <- function(x) {
   
   for (i in seq_along(phdr)) {
     
-    ls <- ""
-    rs <- ""
+    hl <- ""
+    hr <- ""
     
     if (length(phdrl) >= i)
-      ls <- phdrl[[i]]
+      hl <- phdrl[[i]]
     
     if (length(phdrr) >= i)
-      rs <- phdrr[[i]]
+      hr <- phdrr[[i]]
     
-    gp <- x$line_size - (nchar(ls) + nchar(rs))
+    gp <- rs$line_size - (nchar(hl) + nchar(hr))
 
     if (gp >= 0) {
       
-      lw <- x$line_size - nchar(rs)
-      ln <- paste0(stri_pad_right(ls, width = lw), rs) 
+      lw <- rs$line_size - nchar(hr)
+      ln <- paste0(stri_pad_right(hl, width = lw), hr) 
     }
  
     else
@@ -110,24 +147,24 @@ get_page_header <- function(x) {
 
 
 
-get_titles <- function(x) {
+get_titles <- function(rs) {
   
-  ll <- x$line_size
+  ll <- rs$line_size
   ret <- c()
   
-  for (i in seq_along(x$titles)) {
+  for (i in seq_along(rs$titles)) {
     
-    t <- x$titles[i]
+    t <- rs$titles[i]
     
     gp <- ll - nchar(t)
     
     if (gp > 0) {
       
-      if (x$titles_align == "left")
+      if (rs$titles_align == "left")
         ln <- stri_pad_right(t, ll)
-      else if (x$titles_align == "right")
+      else if (rs$titles_align == "right")
         ln <- stri_pad_left(t, ll)
-      else if (x$titles_align == "center")
+      else if (rs$titles_align == "center")
         ln <- stri_pad_both(t, ll)
       
     } else 
@@ -141,38 +178,25 @@ get_titles <- function(x) {
   return(ret)
 }
 
-get_table_header <- function(x) {
-  
-  ret <- "Here is a the table header"
-  
-  return(ret)
-}
 
-get_table_body <- function(x) {
+get_footnotes <- function(rs) {
   
-  ret <- "Here is the body"
-  
-  return(ret)
-}
-
-get_footnotes <- function(x) {
-  
-  ll <- x$line_size
+  ll <- rs$line_size
   ret <- c()
   
-  for (i in seq_along(x$footnotes)) {
+  for (i in seq_along(rs$footnotes)) {
     
-    t <- x$footnotes[i]
+    t <- rs$footnotes[i]
     
     gp <- ll - nchar(t)
     
     if (gp > 0) {
       
-      if (x$footnotes_align == "left")
+      if (rs$footnotes_align == "left")
         ln <- stri_pad_right(t, ll)
-      else if (x$footnotes_align == "right")
+      else if (rs$footnotes_align == "right")
         ln <- stri_pad_left(t, ll)
-      else if (x$footnotes_align == "center")
+      else if (rs$footnotes_align == "center")
         ln <- stri_pad_both(t, ll)
       
     } else 
@@ -185,55 +209,64 @@ get_footnotes <- function(x) {
   return(ret)
 }
 
-get_page_footer <- function(x) {
+
+get_page_footer <- function(rs) {
   
-  pftrr <- x$page_footer_right
-  pftrl <- x$page_footer_left
-  pftrc <- x$page_footer_center
-
+  pftrr <- rs$page_footer_right
+  pftrl <- rs$page_footer_left
+  pftrc <- rs$page_footer_center
+  
   mx <- max(c(length(pftrr), length(pftrl), length(pftrc)))
-
-    ret <- c()
+  
+  # Put blank space above page footer by default
+  ret <- c("")
   
   for (i in 1:mx) {
-    
-    ls <- ""
-    cs <- ""
-    rs <- ""
-    
+  
+    fl <- ""
+    fc <- ""
+    fr <- ""
+  
     if (length(pftrl) >= i)
-      ls <- as.character(pftrl[[i]])
-    
+      fl <- as.character(pftrl[[i]])
+  
     if (length(pftrr) >= i)
-      rs <- as.character(pftrr[[i]])
-    
+      fr <- as.character(pftrr[[i]])
+  
     if (length(pftrc) >= i)
-      cs <- as.character(pftrc[[i]])
-    
-    l_sz <- nchar(ls)
-    r_sz <- nchar(rs)
-    c_sz <- nchar(cs)
-    
-    gp <- x$line_size - (l_sz + r_sz + c_sz)
-
+      fc <- as.character(pftrc[[i]])
+  
+    l_sz <- nchar(fl)
+    r_sz <- nchar(fr)
+    c_sz <- nchar(fc)
+  
+    gp <- rs$line_size - (l_sz + r_sz + c_sz)
+  
     if (gp >= 0) {
       if (l_sz > r_sz)
-        rs <- stri_pad_left(rs, l_sz)
-      else 
-        ls <- stri_pad_right(ls, r_sz)
-        
-      lw <- x$line_size - nchar(rs) - nchar(ls)
-      ln <- paste0(ls, stri_pad_both(cs, width = lw), rs) 
+        fr <- stri_pad_left(fr, l_sz)
+      else
+        fl <- stri_pad_right(fl, r_sz)
+  
+      lw <- rs$line_size - nchar(fr) - nchar(fl)
+      ln <- paste0(fl, stri_pad_both(fc, width = lw), fr)
     }
     else
       stop("Page header exceeds available width")
-    
-    ret[i] <- ln
+  
+    ret[length(ret) + 1] <- ln
   }
   
   
   return(ret)
 }
+
+
+
+
+
+
+
 
 
 asciify <- function(df, pad = 1, ...) {
