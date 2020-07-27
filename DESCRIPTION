@@ -16,7 +16,7 @@ Encoding: UTF-8
 LazyData: true
 Suggests: testthat, 
           dplyr
-Imports:flextable,
+Imports: flextable,
         ggplot2,
         glue,
         graphics,
@@ -27,5 +27,6 @@ Imports:flextable,
         rsvg,
         stringi, 
         svglite,
-        zip
-RoxygenNote: 7.1.0
+        zip,
+        fmtr
+RoxygenNote: 7.1.1

@@ -16,7 +16,7 @@
 write_report_text <- function(rs) {
   
   ret <- ""
-  
+
   # Kill existing file
   if (file.exists(rs$file_path))
     file.remove(rs$file_path)
@@ -29,7 +29,6 @@ write_report_text <- function(rs) {
   
   # Get page template
   pt <- page_template_text(rs)
-  
 
   ls <- rs$content
 
@@ -39,9 +38,10 @@ write_report_text <- function(rs) {
   for(o in ls){
     if (class(o)[1] == "table_spec"){
 
-      ttx <- create_table_text(rs, o)
+      ttx <- create_tables_text(rs, o)
+      print("Here is ttx")
       print(ttx)
-      rs <- write_table_text(rs, ttx, pt)
+      rs <- write_tables_text(rs, ttx, pt)
     } else if (class(o)[1] == "character" & o == "page_break"){
       
       if (counter < length(ls))
@@ -55,6 +55,19 @@ write_report_text <- function(rs) {
   invisible(rs)
 }
 
+
+write_tables_text <- function(rs, ttx, pt) {
+  
+  
+  for (i in seq_along(ttx)) {
+    
+    rs <- write_table_text(rs, ttx[[i]], pt)
+    
+  }
+  
+  
+  return(rs)
+}
 
 
 write_table_text <- function(rs, ttx, pt) {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{add_content}
 \alias{add_content}
-\title{Add content to a report}
+\title{Print the report parameters.}
 \usage{
 add_content(x, object, page_break = "after")
 }
@@ -13,17 +13,25 @@ add_content(x, object, page_break = "after")
 
 \item{page_break}{whether to add a page break. Value values are "before",
 "after", or "none"}
+
+\item{...}{Generic arguments}
+
+\item{full}{Whether to print the spec or an abbreviated version.}
 }
 \value{
 The modified report_spec
 }
 \description{
+A function to print the report parameters.  This function is an S3 generic
+function.  The class printed is "report_spec".
+
 This function adds an object to the report content list. Valid objects
 are a table_spec, a flextable, or a plot from ggplot.  Objects will be
 appended to the report in order they are added.  By default, a page break
 is added after the content.
 }
 \examples{
+# Here is an example
 #library(magrittr)
 #create_report("listing_3_0.docx") \%>\%
 #add_content(create_table(mtcars)) \%>\%

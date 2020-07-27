@@ -9,7 +9,8 @@ create_table(
   n_format = upcase_parens,
   page_var = NULL,
   show_cols = "all",
-  first_row_blank = FALSE
+  first_row_blank = FALSE,
+  align = "center"
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ create_table(
 "all", "none", or "some".}
 
 \item{first_row_blank}{Whether to place a blank row under the table header.}
+
+\item{align}{Aligns the table on the page.  Valid values are "left", 
+"right", and "center".  Default value is "center".}
 }
 \description{
 A function to create a table_spec object

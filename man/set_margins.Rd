@@ -6,10 +6,11 @@
 \usage{
 set_margins(
   x,
-  margin_top = 0.5,
-  margin_bottom = 0.5,
-  margin_left = 1,
-  margin_right = 1
+  top = NULL,
+  bottom = NULL,
+  left = NULL,
+  right = NULL,
+  min_margin = NULL
 )
 }
 \arguments{

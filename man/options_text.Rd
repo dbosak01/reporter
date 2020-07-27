@@ -4,13 +4,19 @@
 \alias{options_text}
 \title{Set options for a docx report}
 \usage{
-options_text(x, cpi = 12)
+options_text(x, editor = NULL, cpuom = NULL, lpuom = NULL)
 }
 \arguments{
 \item{x}{The report spec.}
 
-\item{cpi}{Characters per inch.  Valid values are between 8 and 14.  Default
-value is 12.}
+\item{cpuom}{Characters per unit of measure of printed text.
+if uom is inches, 
+default is 12, which equals a 10pt font.  This value will be used to 
+determine how many characters can fit on a line.}
+
+\item{lpuom}{Lines per unit of measure of the printed text. Default for 
+inches is 6, which is average for a 10pt font. This value 
+will be used to determine the number of lines that can fit on a page.}
 }
 \value{
 The updated report spec.

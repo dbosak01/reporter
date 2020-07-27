@@ -565,7 +565,7 @@ add_content <- function(x, object, page_break="after") {
 write_report <- function(x, ...) {
   
   ret <- ""
-  
+
   if (x$output_type == "text") {
     ret <- write_report_text(x, ...)
   } else if (x$output_type == "docx") {

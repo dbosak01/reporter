@@ -4,7 +4,13 @@
 \alias{create_report}
 \title{Create a report}
 \usage{
-create_report(file_path = "", output_type = "text", orientation = "landscape")
+create_report(
+  file_path = "",
+  output_type = "text",
+  orientation = "landscape",
+  uom = "inches",
+  paper_size = "letter"
+)
 }
 \arguments{
 \item{file_path}{The output path of the desired report. Either a full path or
@@ -16,6 +22,15 @@ report_spec object, but will be required to print the report.}
 
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}
+
+\item{uom}{Specifies the units of measurement.  This setting will 
+set the units for columns widths.  Valid values are "inches"
+or "cm".  Default value is "inches".}
+
+\item{paper_size}{The expected paper size on which the report may be 
+printed.  The \code{paper_size} will determine how much text can fit on
+one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
+"letter".}
 }
 \value{
 A new report_spec S3 object.
