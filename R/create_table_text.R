@@ -100,11 +100,8 @@ get_table_header <- function(rs, ts, pi) {
   lbla <- pi$label_align
   w <- round(pi$col_width / rs$char_width)
   
-  print(lbls)
-  print(lbla)
-  print(w)
-  
   ret <- c()
+  ln <- c()
   
   #for (i in seq_along(pi$label) {
     
@@ -115,11 +112,25 @@ get_table_header <- function(rs, ts, pi) {
                             justify = get_justify(lbla[[nm]])), " ")
     }
     
+
+    ln[[length(ln) + 1]] <- r 
     
-    ret[length(ret) + 1] <- format(r, width = rs$line_size, 
-                                   justify = get_justify(ts$align))
+    sep <- paste0(rep("-", nchar(r)), collapse = "")
+    ln[[length(ln) + 1]] <- sep
     
   #}
+    
+  # Justify entire header
+  for (k in seq_along(ln)) {
+    
+   ret[[k]] <- format(ln[[k]], width = rs$line_size, 
+                    justify = get_justify(ts$align))
+  }
+  
+  if (ts$first_row_blank)
+    ret[[length(ret) + 1]] <- ""
+  
+  ret <- unlist(ret)
   
   return(ret)
 }

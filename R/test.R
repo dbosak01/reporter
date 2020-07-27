@@ -15,6 +15,8 @@ arm <- c(rep("A", 5), rep("B", 5))
 # Create data frame
 df <- data.frame(subjid, name, sex, age, arm)
 df
+df1 <- df[df$arm == "A", ]
+df2 <- df[df$arm == "B", ]
 
 lbls <- c(subjid = "Subject ID",
             name = "Subject Name",
@@ -23,12 +25,13 @@ lbls <- c(subjid = "Subject ID",
             arm = "Arm")
 
 for (nm in names(df)) {
-  attr(df[[nm]], "label") <- lbls[[nm]]
+  attr(df1[[nm]], "label") <- lbls[[nm]]
+  attr(df2[[nm]], "label") <- lbls[[nm]]
 }
-str(df)
+str(df1)
 
-tbl1 <- create_table(df[df$arm == "A", ])
-tbl2 <- create_table(df[df$arm == "B", ])
+tbl1 <- create_table(df1)
+tbl2 <- create_table(df2)
 tbl1
 tbl2
 
