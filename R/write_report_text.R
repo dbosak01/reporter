@@ -39,8 +39,7 @@ write_report_text <- function(rs) {
     if (class(o)[1] == "table_spec"){
 
       ttx <- create_tables_text(rs, o)
-      print("Here is ttx")
-      print(ttx)
+
       rs <- write_tables_text(rs, ttx, pt)
     } else if (class(o)[1] == "character" & o == "page_break"){
       

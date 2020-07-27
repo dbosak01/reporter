@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Creates reports in ASCII text and docx file format
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Author: David Bosak
 Author@R: person("David", "Bosak", email = "dbosak01@gmail.com",
   role = c("aut", "cre"))

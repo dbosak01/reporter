@@ -38,8 +38,7 @@ create_tables_text <- function(rs, ts) {
   # Get column widths
   cwidths <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
 
-  print(cwidths)
-  
+  # Convert to text measurements
   widths(dat) <- round(cwidths / rs$char_width)
   
   fdat <- fdata(dat)
@@ -88,14 +87,39 @@ create_table_text <- function(rs, ts, pi) {
   
  rws <- get_table_body(rs, ts, pi)
  
- ret <- c("", hdrs, rws, "")
+ blnks <- rep("", rs$body_line_count - length(hdrs) - length(rws) - 2)
+ 
+ ret <- c("", hdrs, rws, blnks, "")
  
  return(ret) 
 }
 
 get_table_header <- function(rs, ts, pi) {
   
-  ret <- "Here is a the table header"
+  lbls <- pi$label
+  lbla <- pi$label_align
+  w <- round(pi$col_width / rs$char_width)
+  
+  print(lbls)
+  print(lbla)
+  print(w)
+  
+  ret <- c()
+  
+  #for (i in seq_along(pi$label) {
+    
+    r <- ""
+    for (nm in names(lbls)) {
+      
+      r <- paste0(r, format(lbls[[nm]], width = w[[nm]], 
+                            justify = get_justify(lbla[[nm]])), " ")
+    }
+    
+    
+    ret[length(ret) + 1] <- format(r, width = rs$line_size, 
+                                   justify = get_justify(ts$align))
+    
+  #}
   
   return(ret)
 }
@@ -114,7 +138,9 @@ get_table_body <- function(rs, ts, pi) {
       r <- paste0(r, df[i, j], " ")
     }
     
-    ret[length(ret) + 1] <- r
+    
+    ret[length(ret) + 1] <- format(r, width = rs$line_size, 
+                                   justify = get_justify(ts$align))
   
   }
   
@@ -122,6 +148,18 @@ get_table_body <- function(rs, ts, pi) {
   
 }
 
+get_justify <- function(x) {
+ 
+  ret <- "left"
+  if (is.null(x))
+    ret <- "left"
+  else if (x == "center")
+    ret <- "centre"
+  else if (!is.na(x))
+    ret <- x
+  
+  return(ret)
+}
 
 
 

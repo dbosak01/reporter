@@ -45,7 +45,8 @@ rpt <- create_report("test2.out", uom = "inches", paper_size = "letter") %>%
 
 rpt
 
-write_report(rpt)
+res <- write_report(rpt)
+res
 
 writeLines(readLines(rpt$file_path))
 
