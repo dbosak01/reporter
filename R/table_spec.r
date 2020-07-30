@@ -55,6 +55,9 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' @param x The table spec.
 #' @param var The variable to define a column for.
 #' @param label The label to use for the column header.
+#' @param format The format to use for the column data.  The format can 
+#' be a string format, a formatting function, or a format object from the 
+#' \strong{fmtr} package.
 #' @param col_type The column type.
 #' @param align The column alignment.  Value values are "left", "right", and
 #' "center".
@@ -70,7 +73,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' @param id_var Whether this variable should be considered an ID variable.
 #' ID variables are retained on each page when the page is wrapped.
 #' @export
-define <- function(x, var, label = NULL, col_type = NULL,
+define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE) {
@@ -78,7 +81,8 @@ define <- function(x, var, label = NULL, col_type = NULL,
 
   def <- list(var = deparse(substitute(var)),
               var_c = as.character(substitute(var)),
-              label= label,
+              label = label,
+              format = format,
               col_type = col_type,
               align = align,
               label_align = if (is.null(label_align) & !is.null(align))

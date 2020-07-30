@@ -239,6 +239,20 @@ get_label_aligns <- function(defs, aligns) {
 }
 
 
+get_col_formats <- function(defs) {
+  
+  
+  ret <- list()
+  
+  for (d in defs) {
+    if (!is.null(d$format))
+      ret[[d$var_c]] <-  d$format
+  }
+  
+  return(ret)
+}
+
+
 #' Gets the alignments
 #' @noRd
 get_aligns <- function(dat, defs) {

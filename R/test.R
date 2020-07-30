@@ -7,8 +7,7 @@ library(randomNames)
 # Setup
 subjid <- 100:109
 name <- randomNames(10)
-sex <- factor(c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M"),
-              levels = c("M", "F", "UNK"))
+sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
 age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
 arm <- c(rep("A", 5), rep("B", 5))
 
@@ -30,8 +29,22 @@ for (nm in names(df)) {
 }
 str(df1)
 
-tbl1 <- create_table(df1)
-tbl2 <- create_table(df2)
+afmt <- value(condition(x == "A", "Placebo"),
+              condition(x == "B", "Treatment 1"))
+
+sfmt1 <- value(condition(x == "M", "Male"),
+              condition(x == "F", "Female"),
+              condition(TRUE, "Other"))
+
+sfmt2 <- c(M = "Male", F = "Female")
+
+tbl1 <- create_table(df1) %>%
+  define(sex, width = 2, format = sfmt1) %>%
+  define(age, width = 2)
+tbl2 <- create_table(df2) %>%
+  define(sex, width = .25, format = sfmt2) %>% 
+  define(age, format = "%0d%%") %>% 
+  define(arm, format = afmt)
 tbl1
 tbl2
 
@@ -49,14 +62,16 @@ rpt <- create_report("test2.out", uom = "inches", paper_size = "letter") %>%
 rpt
 
 res <- write_report(rpt)
+
+
 res
 
 writeLines(readLines(rpt$file_path))
 
-
-df[df$arm == "A", ]
-
-df
+#
+# df[df$arm == "A", ]
+#
+# df
 
 
 #

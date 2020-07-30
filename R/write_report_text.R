@@ -37,6 +37,7 @@ write_report_text <- function(rs) {
   # Write out content
   for(o in ls){
     if (class(o)[1] == "table_spec"){
+      print("Here 23")
 
       ttx <- create_tables_text(rs, o)
 

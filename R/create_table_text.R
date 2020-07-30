@@ -2,6 +2,7 @@
 
 #' @import fmtr
 create_tables_text <- function(rs, ts) {
+
   
   if (ts$show_cols == "only" & length(ts$col_defs) == 0) {
     
@@ -34,6 +35,10 @@ create_tables_text <- function(rs, ts) {
   # Follows column alignment by default
   label_aligns <- get_label_aligns(ts$col_defs, aligns)
 
+  # Get column formats
+  formats(dat) <- get_col_formats(ts$col_defs)
+
+  print(formats(dat))
   
   # Get column widths
   cwidths <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
