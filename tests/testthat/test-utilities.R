@@ -56,7 +56,7 @@ test_that("add_blank_rows() works as expected.", {
   
   expect_equal(nrow(res), nrow(iris) + 12)
   
-  expect_equal(".blank" %in% names(res), TRUE) 
+  expect_equal("..blank" %in% names(res), TRUE) 
   
   res2 <- add_blank_rows(tdat, location = "below", vars = c("Species"))
   

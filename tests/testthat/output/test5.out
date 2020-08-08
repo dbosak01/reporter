@@ -1,0 +1,45 @@
+Experis                                                                                            Study ABC
+                                                                                              Status: Closed
+                                                 Table 1.0                                                  
+                                       Analysis Data Subject Listing                                        
+                                             Safety Population                                              
+
+                           subjid name                       sex       age arm                              
+                          --------------------------------------------------------                          
+
+                              100 Quintana, Gabriel          M          41 A                                
+                              101 Allison, Blas              F          53 A                                
+                              102 Minniear, Presley          F          43 A                                
+                              103 al-Kazemi, Najwa           M          39 A                                
+                              104 Schaffer, Ashley           M          47 A                                
+                                                                                                            
+                              105 Laner, Tahma               F          52 B                                
+                              106 Perry, Sean                M          21 B                                
+                              107 Crews, Deshawn Joseph      F          38 B                                
+                              108 Person, Ladon              F          62 B                                
+                              109 Smith, Shaileigh           M          26 B                                
+                                                                                                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Program Name: table1_0.R                                                                                    
+
+2020-08-08 12:15:23                             Confidential                                     Page X of Y

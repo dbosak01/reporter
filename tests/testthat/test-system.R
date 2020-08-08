@@ -42,7 +42,6 @@ test_that("test2: Simplest table with title works as expected.", {
   
 })
 
-
 test_that("test3: Simple table with formats works as expected.", {
   
   
@@ -81,9 +80,11 @@ test_that("test3: Simple table with formats works as expected.", {
   rpt <- create_report(fp) %>%
     options_text(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
-    titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", align = "center") %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", 
+           align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
-    page_footer(left = Sys.time(), center = "Confidential", right = "Page X of Y") %>%
+    page_footer(left = Sys.time(), center = "Confidential", 
+                right = "Page X of Y") %>%
     add_content(tbl1) 
   
   write_report(rpt)
@@ -91,8 +92,6 @@ test_that("test3: Simple table with formats works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
-
-
 
 test_that("test4: Two page report works as expected.", {
   
@@ -144,9 +143,11 @@ test_that("test4: Two page report works as expected.", {
   rpt <- create_report(fp, uom = "inches", paper_size = "letter") %>%
     options_text(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
-    titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", align = "center") %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", 
+           "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
-    page_footer(left = Sys.time(), center = "Confidential", right = "Page X of Y") %>%
+    page_footer(left = Sys.time(), center = "Confidential", 
+                right = "Page X of Y") %>%
     add_content(tbl1) %>%
     add_content(tbl2)
   
@@ -156,4 +157,68 @@ test_that("test4: Two page report works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+test_that("test5: Table with break between sections works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test5.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 5))
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(arm, blank_after = TRUE)
+
+
+  rpt <- create_report(fp) %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", 
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R") %>%
+    page_footer(left = Sys.time(), center = "Confidential", 
+                right = "Page X of Y") %>%
+    add_content(tbl1) 
+  
+  
+  res2 <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+
+# test_that("test6: Table that spans multiple pages breaks as expected.", {
+#   
+#   fp <- file.path(base_path, "output/test5.out")
+#   
+#   if (file.exists(fp))
+#     file.remove(fp)
+#   
+#   rpt <- create_report(fp) %>% 
+#     titles("IRIS Data Frame") %>% 
+#     add_content(create_table(iris))
+#   
+#   
+#   write_report(rpt)
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   
+# })
+
+
 

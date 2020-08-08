@@ -357,17 +357,17 @@ add_blank_row <- function(x, location="below", vars = NULL){
 
   # Add the blank row to the specified location.
   ret <- x
-  ret$.blank <- ""
+  ret$..blank <- ""
   if (location == "below") {
-    rw$.blank <- "B"
+    rw$..blank <- "B"
     ret <- rbind(ret, rw)
   } else if (location == "above") {
-    rw$.blank <- "A"
+    rw$..blank <- "A"
     ret <- rbind(rw, ret)
   } else if (location == "both") {
     rw2 <- rw
-    rw$.blank <- "A"
-    rw2$.blank <- "B"
+    rw$..blank <- "A"
+    rw2$..blank <- "B"
     
     ret <- rbind(rw, ret, rw2)
   }

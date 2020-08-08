@@ -61,3 +61,31 @@ test_that("options_text traps invalid parameters appropriately", {
   
   
 })
+
+test_that("Titles, footnotes, header, and footer limits work as expected.", {
+    
+  rpt <- create_report("fork.out")
+  st <- rep("W", 50)
+  
+  expect_error(titles(rpt, st))
+  expect_error(footnotes(rpt, st))
+  expect_error(page_header(rpt, left=st))
+  expect_error(page_footer(rpt, left=st))
+
+
+})
+
+test_that("add_content works as expected.", {
+  
+  rpt <- create_report("fork.out")
+  
+  rpt <- add_content(rpt, "", page_break = "before")
+  
+  # Should put a page break token before the content
+  expect_equal(rpt$content[[1]], "page_break")
+  expect_equal(rpt$content[[2]], "")
+  
+  # Invalid value
+  expect_error(add_content(rpt, "", page_break = "sam"))
+
+})

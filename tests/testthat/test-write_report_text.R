@@ -47,5 +47,13 @@ test_that("page_template_text() works as expected.", {
   expect_equal(length(ptt2$page_header), 2)
   expect_equal(length(ptt2$page_footer), 2)
   
+  # No line size.  Should get error.
+  rpt3 <- create_report("fork.out") 
+  expect_error(page_template_text(rpt3))
+  
+  rpt4 <- create_report("fork.out") %>% 
+    titles(paste0(rep("W", 200), collapse =""))
+  rpt4$line_size <- 140
+  expect_error(page_template_text(rpt4))
   
 })

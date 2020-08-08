@@ -108,8 +108,10 @@ get_page_wraps <- function(data_size, defs, widths) {
   }
   
   
-  if (length(pg) > 0)
+  if (length(pg) > 0) {
     ret[[length(ret) + 1]] <- names(pg)
+  }
+
   
   return(ret)
   
@@ -433,6 +435,8 @@ get_table_cols <- function(x) {
     
     ret <- unique(ret)
   }
+  
+  ret <- unique(c(ret, control_cols))
   
   return(ret)
   

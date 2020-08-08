@@ -1,5 +1,15 @@
 
 
+# Globals -----------------------------------------------------------------
+
+
+control_cols <- c("..blank", "..page")
+
+
+
+# Create Tables -----------------------------------------------------------
+
+
 #' @import fmtr
 #' @noRd
 create_tables_text <- function(rs, ts) {
@@ -13,15 +23,21 @@ create_tables_text <- function(rs, ts) {
   family <- "mono"
   font_name <- "Courier New"
   
+  # Set up control columns
+  dat <- ts$data
+  dat$..blank <- ""
+  dat$..page <- ""
+  
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
   # depends on show_all parameter on create_table and
   # visible parameter on column definitions
   keys <- get_table_cols(ts)
-  
+  print("keys")
+  print(keys)
 
   # Filter dataset by included columns
-  dat <- ts$data[ , keys]
+  dat <- dat[ , keys]
 
   
   # Get labels
@@ -48,7 +64,7 @@ create_tables_text <- function(rs, ts) {
   widths(dat) <- round(cwidths / rs$char_width)
   
   fdat <- fdata(dat)
-  #print(fdat)
+  print(fdat)
 
   #ret <- get_table_body(rs, ts, fdat)
   
@@ -58,12 +74,13 @@ create_tables_text <- function(rs, ts) {
 
   # Break columns into pages
   wraps <- get_page_wraps(data_size, ts$col_defs, cwidths)
-  #print(wraps)
+  print("Wraps")
+  print(wraps)
 
 
   # Add blank lines as specified
   fdat <- prep_data(fdat, ts$col_defs)
-  #print(fdat)
+  print(fdat)
 
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
@@ -113,9 +130,10 @@ get_table_header <- function(rs, ts, pi) {
   #for (i in seq_along(pi$label) {
     
     r <- ""
+    print(lbls)
     for (nm in names(lbls)) {
-      
-      r <- paste0(r, format(lbls[[nm]], width = w[[nm]], 
+      if (!is.control(nm))
+        r <- paste0(r, format(lbls[[nm]], width = w[[nm]], 
                             justify = get_justify(lbla[[nm]])), " ")
     }
     
@@ -147,6 +165,7 @@ get_table_body <- function(rs, ts, pi) {
   
   df <- pi$data
   ret <- c()
+  nm <- names(df)
   
   for (i in seq_len(nrow(df))) {
     
@@ -156,7 +175,9 @@ get_table_body <- function(rs, ts, pi) {
       p <-df[i, j]
       if (!is.null(p) & !is.na(p))
         v <- p
-      r <- paste0(r, v, " ")
+
+      if (!is.control(nm[j]) & trimws(df[i, "..blank"]) == "")
+        r <- paste0(r, v, " ")
     }
     
     
@@ -169,15 +190,34 @@ get_table_body <- function(rs, ts, pi) {
   
 }
 
+
+
+
+# Utilities ---------------------------------------------------------------
+
+#' @noRd
+is.control <- function(x) {
+  
+ ret <- FALSE
+ if (!is.na(x)) {
+   if (substr(x, 1, 2) == "..")
+     ret <- TRUE
+ }
+ 
+ return(ret)
+  
+}
+
+
 #' @noRd
 get_justify <- function(x) {
- 
+  
   ret <- "left"
-  if (is.null(x))
+  if (is.null(x) | is.na(x))
     ret <- "left"
   else if (x == "center")
     ret <- "centre"
-  else if (!is.na(x))
+  else if (x %in% c("left", "right", "centre"))
     ret <- x
   
   return(ret)

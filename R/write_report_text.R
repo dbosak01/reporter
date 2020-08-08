@@ -128,6 +128,11 @@ page_template_text <- function(rs) {
 #' @noRd
 get_page_header <- function(rs) {
   
+  if (is.null(rs$line_size)) {
+   stop("line_size cannot be null.") 
+    
+  }
+  
   phdrr <- rs$page_header_right
   phdrl <- rs$page_header_left
   phdr <- rs$page_header_left
@@ -170,6 +175,11 @@ get_page_header <- function(rs) {
 
 get_titles <- function(rs) {
   
+  if (is.null(rs$line_size)) {
+    stop("line_size cannot be null.") 
+    
+  }
+  
   ll <- rs$line_size
   ret <- c()
   
@@ -207,6 +217,11 @@ get_titles <- function(rs) {
 
 get_footnotes <- function(rs) {
   
+  if (is.null(rs$line_size)) {
+    stop("line_size cannot be null.") 
+    
+  }
+  
   ll <- rs$line_size
   ret <- c()
   
@@ -240,6 +255,11 @@ get_footnotes <- function(rs) {
 
 
 get_page_footer <- function(rs) {
+  
+  if (is.null(rs$line_size)) {
+    stop("line_size cannot be null.") 
+    
+  }
   
   pftrr <- rs$page_footer_right
   pftrl <- rs$page_footer_left

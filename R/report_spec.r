@@ -353,6 +353,10 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @export
 page_header <- function(x, left="", right=""){
 
+  if (length(left) > 5 | length(right) > 5){
+    stop("ERROR: Header string count exceeds limit of 5 strings per side.")
+  }
+  
   x$page_header_left <- left
   x$page_header_right <- right
 
@@ -390,8 +394,8 @@ titles <- function(x, ..., location = "header", align = "center"){
 
   tl <- c(...)
 
-  if (length(tl) > 5){
-    stop("ERROR: titles function is limited to a maximum of five (5) titles.")
+  if (length(tl) > 10){
+    stop("ERROR: titles function is limited to a maximum of 10 titles.")
   }
 
   x$titles <- tl
@@ -434,6 +438,10 @@ titles <- function(x, ..., location = "header", align = "center"){
 footnotes <- function(x, ..., location = "footer", align = "left"){
 
   ft <- c(...)
+  
+  if (length(ft) > 25){
+    stop("ERROR: footnotes function is limited to a maximum of 25 footnotes.")
+  }
 
   x$footnotes <- ft
   x$footnotes_location <- location
@@ -475,6 +483,10 @@ footnotes <- function(x, ..., location = "footer", align = "left"){
 #' @export
 page_footer <- function(x, left="", right="", center=""){
 
+  if (length(left) > 5 | length(right) > 5 | length(center) > 5){
+    stop("ERROR: Footer string count exceeds limit of 5 strings per section.")
+  }
+  
   x$page_footer_left <- left
   x$page_footer_right <- right
   x$page_footer_center <- center
@@ -510,6 +522,11 @@ page_footer <- function(x, left="", right="", center=""){
 #' #write_report()
 #' @export
 add_content <- function(x, object, page_break="after") {
+  
+  if (!page_break %in% c("after", "before", "none")) {
+   stop(paste("Page break value invalid.",
+              "Valid values are 'before', 'after', and 'none'."))
+  }
 
   # Add page break before if requested
   if (page_break == "before")
