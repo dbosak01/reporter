@@ -130,7 +130,7 @@ editor_settings <- read.table(header = TRUE, text = '
                     editor          cpi     cpcm     lpi     lpcm
                     editplus    14.6565    5.769   6.857   2.7027
                     notepad          12   4.7619  5.6805   2.2305
-                    notepadpp        12   4.7619   6.531   2.5862
+                    notepad++        12   4.7619   6.531   2.5862
                     word         11.497   4.5454  6.1146      2.4
                     wordpad      10.909   4.3165  6.1146      2.4
                                ') 
@@ -179,7 +179,7 @@ options_docx <- function(x, font_name="Courier New", font_size=10) {
 #' @param editor The expected text editor to use for printing.  Assigning
 #' this parameter can reduce the number of other other setting you need
 #' to specify to get a properly printed report.  Valid values are 'notepad',
-#' 'word', 'wordpad', 'notepadpp', and 'editplus'.
+#' 'word', 'wordpad', 'notepad++', and 'editplus'.
 #' @param cpuom Characters per unit of measure of printed text.    
 #' if uom is inches, 
 #' default is 12, which equals a 10pt font.  This value will be used to 

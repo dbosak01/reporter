@@ -12,7 +12,7 @@ options_text(x, editor = NULL, cpuom = NULL, lpuom = NULL)
 \item{editor}{The expected text editor to use for printing.  Assigning
 this parameter can reduce the number of other other setting you need
 to specify to get a properly printed report.  Valid values are 'notepad',
-'word', 'wordpad', 'notepadpp', and 'editplus'.}
+'word', 'wordpad', 'notepad++', and 'editplus'.}
 
 \item{cpuom}{Characters per unit of measure of printed text.
 if uom is inches, 
