@@ -26,7 +26,7 @@ write_report_text <- function(rs) {
   rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
   rs$body_size <- get_body_size(rs)
   rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
-  
+
   # Get page template
   pt <- page_template_text(rs)
 
@@ -75,13 +75,20 @@ write_table_text <- function(rs, ttx, pt) {
   
   f <- file(rs$file_path, open="a")
   
-  writeLines(pt$page_header, con = f)
-  writeLines(pt$titles, con = f)
+  if (!is.null(pt$page_header))
+    writeLines(pt$page_header, con = f)
   
-  writeLines(ttx, con = f)
+  if (!is.null(pt$titles))
+    writeLines(pt$titles, con = f)
   
-  writeLines(pt$footnotes, con = f)
-  writeLines(pt$page_footer, con = f)
+  if (!is.null(ttx))
+    writeLines(ttx, con = f)
+  
+  if (!is.null(pt$footnotes))
+    writeLines(pt$footnotes, con = f)
+  
+  if (!is.null(pt$page_footer))
+    writeLines(pt$page_footer, con = f)
   
   close(f)
   
@@ -128,36 +135,37 @@ get_page_header <- function(rs) {
     phdr <- phdrr
   
   ret <- c()
-  
-  for (i in seq_along(phdr)) {
-    
-    hl <- ""
-    hr <- ""
-    
-    if (length(phdrl) >= i)
-      hl <- phdrl[[i]]
-    
-    if (length(phdrr) >= i)
-      hr <- phdrr[[i]]
-    
-    gp <- rs$line_size - (nchar(hl) + nchar(hr))
 
-    if (gp >= 0) {
+  if (!is.null(phdr)) {
+    for (i in seq_along(phdr)) {
       
-      lw <- rs$line_size - nchar(hr)
-      ln <- paste0(stri_pad_right(hl, width = lw), hr) 
+      hl <- ""
+      hr <- ""
+      
+      if (length(phdrl) >= i)
+        hl <- phdrl[[i]]
+      
+      if (length(phdrr) >= i)
+        hr <- phdrr[[i]]
+      
+      gp <- rs$line_size - (nchar(hl) + nchar(hr))
+  
+      #print("header")
+      if (gp >= 0) {
+        
+        lw <- rs$line_size - nchar(hr)
+        ln <- paste0(stri_pad_right(hl, width = lw), hr) 
+      }
+   
+      else
+        stop("Page header exceeds available width")
+      
+      ret[i] <- ln
     }
- 
-    else
-      stop("Page header exceeds available width")
-    
-    ret[i] <- ln
   }
-
   
   return(ret)
 }
-
 
 
 get_titles <- function(rs) {
@@ -165,26 +173,31 @@ get_titles <- function(rs) {
   ll <- rs$line_size
   ret <- c()
   
-  for (i in seq_along(rs$titles)) {
-    
-    t <- rs$titles[i]
-    
-    gp <- ll - nchar(t)
-    
-    if (gp > 0) {
+  if (!is.null(rs$titles)) { 
+  
+    for (i in seq_along(rs$titles)) {
       
-      if (rs$titles_align == "left")
-        ln <- stri_pad_right(t, ll)
-      else if (rs$titles_align == "right")
-        ln <- stri_pad_left(t, ll)
-      else if (rs$titles_align == "center")
-        ln <- stri_pad_both(t, ll)
+      t <- rs$titles[i]
       
-    } else 
-      stop("Title exceeds available width.")
+      gp <- ll - nchar(t)
+      
+      #print("titles")
+      if (gp > 0) {
+        
+        if (rs$titles_align == "left")
+          ln <- stri_pad_right(t, ll)
+        else if (rs$titles_align == "right")
+          ln <- stri_pad_left(t, ll)
+        else if (rs$titles_align == "center")
+          ln <- stri_pad_both(t, ll)
+        
+      } else 
+        stop("Title exceeds available width.")
+      
+      
+      ret[i] <- ln
+    }
     
-    
-    ret[i] <- ln
   }
   
   
@@ -197,26 +210,29 @@ get_footnotes <- function(rs) {
   ll <- rs$line_size
   ret <- c()
   
-  for (i in seq_along(rs$footnotes)) {
-    
-    t <- rs$footnotes[i]
-    
-    gp <- ll - nchar(t)
-    
-    if (gp > 0) {
+  if (!is.null(rs$footnotes)) {
+    for (i in seq_along(rs$footnotes)) {
       
-      if (rs$footnotes_align == "left")
-        ln <- stri_pad_right(t, ll)
-      else if (rs$footnotes_align == "right")
-        ln <- stri_pad_left(t, ll)
-      else if (rs$footnotes_align == "center")
-        ln <- stri_pad_both(t, ll)
+      t <- rs$footnotes[i]
       
-    } else 
-      stop("Footnote exceeds available width.")
-    
-    
-    ret[i] <- ln
+      gp <- ll - nchar(t)
+      
+      #print("footnotes")
+      if (gp > 0) {
+        
+        if (rs$footnotes_align == "left")
+          ln <- stri_pad_right(t, ll)
+        else if (rs$footnotes_align == "right")
+          ln <- stri_pad_left(t, ll)
+        else if (rs$footnotes_align == "center")
+          ln <- stri_pad_both(t, ll)
+        
+      } else 
+        stop("Footnote exceeds available width.")
+      
+      
+      ret[i] <- ln
+    }
   }
   
   return(ret)
@@ -232,42 +248,48 @@ get_page_footer <- function(rs) {
   mx <- max(c(length(pftrr), length(pftrl), length(pftrc)))
   
   # Put blank space above page footer by default
-  ret <- c("")
+  ret <- NULL
   
-  for (i in 1:mx) {
-  
-    fl <- ""
-    fc <- ""
-    fr <- ""
-  
-    if (length(pftrl) >= i)
-      fl <- as.character(pftrl[[i]])
-  
-    if (length(pftrr) >= i)
-      fr <- as.character(pftrr[[i]])
-  
-    if (length(pftrc) >= i)
-      fc <- as.character(pftrc[[i]])
-  
-    l_sz <- nchar(fl)
-    r_sz <- nchar(fr)
-    c_sz <- nchar(fc)
-  
-    gp <- rs$line_size - (l_sz + r_sz + c_sz)
-  
-    if (gp >= 0) {
-      if (l_sz > r_sz)
-        fr <- stri_pad_left(fr, l_sz)
+  if (mx != 0) {
+    
+    ret <- c("")
+    
+    for (i in 1:mx) {
+    
+      fl <- ""
+      fc <- ""
+      fr <- ""
+    
+      if (length(pftrl) >= i)
+        fl <- as.character(pftrl[[i]])
+    
+      if (length(pftrr) >= i)
+        fr <- as.character(pftrr[[i]])
+    
+      if (length(pftrc) >= i)
+        fc <- as.character(pftrc[[i]])
+    
+      l_sz <- if (is.null(fl)) 0 else nchar(fl)
+      r_sz <- if (is.null(fr)) 0 else nchar(fr)
+      c_sz <- if (is.null(fc)) 0 else nchar(fc)
+    
+      gp <- rs$line_size - (l_sz + r_sz + c_sz)
+      
+      #print("footer")
+      if (gp >= 0) {
+        if (l_sz > r_sz)
+          fr <- stri_pad_left(fr, l_sz)
+        else
+          fl <- stri_pad_right(fl, r_sz)
+    
+        lw <- rs$line_size - nchar(fr) - nchar(fl)
+        ln <- paste0(fl, stri_pad_both(fc, width = lw), fr)
+      }
       else
-        fl <- stri_pad_right(fl, r_sz)
-  
-      lw <- rs$line_size - nchar(fr) - nchar(fl)
-      ln <- paste0(fl, stri_pad_both(fc, width = lw), fr)
+        stop("Page header exceeds available width")
+    
+      ret[length(ret) + 1] <- ln
     }
-    else
-      stop("Page header exceeds available width")
-  
-    ret[length(ret) + 1] <- ln
   }
   
   

@@ -415,19 +415,23 @@ get_table_cols <- function(x) {
     ret <- names(dat)
     show_all <- TRUE
   }
-  else if (length(x$show_cols) == 1 && x$show_cols == "all") {
+  else if (length(x$show_cols) == 1 && x$show_cols == "none") {
     show_all <- FALSE
   }
   else if (all(x$show_cols %in% names(dat)))
     ret <- x$show_cols
   
   # Deal with visible options
-  for (def in x$col_defs) {
+  if (!is.null(x$col_defs)) {
+    for (def in x$col_defs) {
+      
+      if (show_all == FALSE & def$visible)
+        ret[length(ret) + 1] <- def$var_c
+      else if (show_all == TRUE & def$visible == FALSE)
+        ret <- ret[!ret %in% def$var_c]
+    }
     
-    if (show_all == FALSE & def$visible)
-      ret[length(ret) + 1] <- def$var_c
-    else if (show_all == TRUE & def$visible == FALSE)
-      ret <- ret[!ret %in% def$var_c]
+    ret <- unique(ret)
   }
   
   return(ret)

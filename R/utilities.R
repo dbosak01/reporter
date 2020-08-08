@@ -428,7 +428,7 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
 
 #' @noRd
 get_page_size <- function(paper_size, uom) {
-  
+
   if (uom == "inches") {
     if (paper_size == "letter")
       ret <- c(8.5, 11)
@@ -449,8 +449,9 @@ get_page_size <- function(paper_size, uom) {
     else if (paper_size == "RD4")
       ret <- c(19.6, 27.3)
   }
+  
+  return(ret)
 }
-
 
 
 
@@ -478,6 +479,7 @@ get_content_size <- function(rs) {
   return(ret)
   
 }
+
 
 #' @noRd
 get_body_size <- function(rs) {

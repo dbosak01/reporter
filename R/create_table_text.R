@@ -63,7 +63,7 @@ create_tables_text <- function(rs, ts) {
 
   # Add blank lines as specified
   fdat <- prep_data(fdat, ts$col_defs)
-  print(fdat)
+  #print(fdat)
 
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)

@@ -1,10 +1,55 @@
 
 context("System Tests")
 
+base_path <- "c:/packages/rptr/tests/testthat"
 
-test_that("Simple table works as expected.", {
+base_path <- "."
+
+
+test_that("test1: Simplest table works as expected.", {
   
   
+  fp <- file.path(base_path, "output/test1.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  rpt <- create_report(fp) %>% 
+    add_content(create_table(mtcars[1:10, ]))
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test2: Simplest table with title works as expected.", {
+  
+  fp <- file.path(base_path, "output/test2.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  rpt <- create_report(fp) %>% 
+    titles("MTCARS Data Frame") %>% 
+    add_content(create_table(mtcars[1:10, ]))
+
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("test3: Simple table with formats works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test3.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
   
   # Setup
   subjid <- 100:109
@@ -18,21 +63,63 @@ test_that("Simple table works as expected.", {
   
   # Create data frame
   df <- data.frame(subjid, name, sex, age, arm)
-  df
+  
+  
+  afmt <- value(condition(x == "A", "Placebo"),
+                condition(x == "B", "Treatment 1"))
+
+  
+  sfmt2 <- c(M = "Male", F = "Female")
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(sex, width = 2, format = sfmt2) %>%
+    define(age, width = 2) %>% 
+    define(arm, format = afmt)
+  
+
+  
+  rpt <- create_report(fp) %>%
+    options_text(editor = "notepad++") %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R") %>%
+    page_footer(left = Sys.time(), center = "Confidential", right = "Page X of Y") %>%
+    add_content(tbl1) 
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+
+test_that("test4: Two page report works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test4.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 5))
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+
   df1 <- df[df$arm == "A", ]
   df2 <- df[df$arm == "B", ]
   
-  lbls <- c(subjid = "Subject ID",
-            name = "Subject Name",
-            sex = "Sex",
-            age = "Age",
-            arm = "Arm")
   
-  for (nm in names(df)) {
-    attr(df1[[nm]], "label") <- lbls[[nm]]
-    attr(df2[[nm]], "label") <- lbls[[nm]]
-  }
-
+  
   
   afmt <- value(condition(x == "A", "Placebo"),
                 condition(x == "B", "Treatment 1"))
@@ -54,7 +141,7 @@ test_that("Simple table works as expected.", {
   
   
   
-  rpt <- create_report("c:/packages/rptr/tests/testthat/output/test2.out", uom = "inches", paper_size = "letter") %>%
+  rpt <- create_report(fp, uom = "inches", paper_size = "letter") %>%
     options_text(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", align = "center") %>%
@@ -66,5 +153,7 @@ test_that("Simple table works as expected.", {
   
   res2 <- write_report(rpt)
   
-
+  expect_equal(file.exists(fp), TRUE)
+  
 })
+
