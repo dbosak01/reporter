@@ -124,26 +124,31 @@ get_page_wraps <- function(data_size, defs, widths) {
 
 #' Preps the data
 #' @noRd
-prep_data <- function(dat, defs, first_blank) {
+prep_data <- function(dat, defs) {
   
-  
+
   ls <- c()
   for (def in defs) {
     if (def$blank_after)
       ls[length(ls) + 1] <- def$var_c
   }
-  if (length(ls) > 0) {
-    dat <- add_blank_rows(dat, .var_list = ls)
+  
+  if (!is.null(ls)) {
+    if (length(ls) > 0) {
+      ls <- ls[order(ls, decreasing = TRUE)]
+      
+      if (length(ls) > 0) {
+        dat <- add_blank_rows(dat, location = "below", vars = ls)
+      }
+    }
   }
   
-  if (first_blank)
-    dat <- add_blank_row(dat, location = "above")
   
   return(dat)
   
 }
 
-#p <- prep_data(t$data, t$col_defs, first_blank = FALSE)
+#p <- prep_data(tbl1$data, tbl1$col_defs, first_blank = TRUE)
 
 #' Get the column widths
 #' @import graphics

@@ -45,4 +45,26 @@ test_that("get_page_size() works as expected.", {
   expect_equal(ret[2], 29.7)
   
 })
+
+
+test_that("add_blank_rows() works as expected.", {
+  
+  tdat <- iris
+  tdat$cat <- c(rep("A", 25), rep("B", 25))
+  
+  res <- add_blank_rows(tdat, location = "both", vars = c("cat", "Species"))
+  
+  expect_equal(nrow(res), nrow(iris) + 12)
+  
+  expect_equal(".blank" %in% names(res), TRUE) 
+  
+  res2 <- add_blank_rows(tdat, location = "below", vars = c("Species"))
+  
+  expect_equal(nrow(res2), nrow(iris) + 3)
+
+  res3 <- add_blank_rows(iris, location = "above")
+  
+  expect_equal(nrow(res3), nrow(iris) + 1)
+  
+})
   

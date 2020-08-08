@@ -66,7 +66,6 @@ rpt <- add_content(rpt, create_table(mtcars))
   \item \code{\link{page_footer}} to add a page_footer to the report. 
   \item \code{\link{add_content}} to add content to the report.
   \item \code{\link{options_text}} to set options for text output.
-  \item \code{\link{options_docx}} to set options for docx output.
   \item \code{\link{add_content}} to add content to the report.
   \item \code{\link{write_report}} to write the report to the file system.
 }

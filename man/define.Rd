@@ -8,6 +8,7 @@ define(
   x,
   var,
   label = NULL,
+  format = NULL,
   col_type = NULL,
   align = NULL,
   label_align = NULL,
@@ -25,6 +26,10 @@ define(
 \item{var}{The variable to define a column for.}
 
 \item{label}{The label to use for the column header.}
+
+\item{format}{The format to use for the column data.  The format can 
+be a string format, a formatting function, or a format object from the 
+\strong{fmtr} package.}
 
 \item{col_type}{The column type.}
 

@@ -42,7 +42,7 @@
 #'   \item \code{\link{page_footer}} to add a page_footer to the report. 
 #'   \item \code{\link{add_content}} to add content to the report.
 #'   \item \code{\link{options_text}} to set options for text output.
-#'   \item \code{\link{options_docx}} to set options for docx output.
+#   \item \code{\link{options_docx}} to set options for docx output.
 #'   \item \code{\link{add_content}} to add content to the report.
 #'   \item \code{\link{write_report}} to write the report to the file system.
 #' }
@@ -151,7 +151,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @return The updated report spec.
 #' @examples
 #' # Here is an example
-#' @export
+#' @noRd
 options_docx <- function(x, font_name="Courier New", font_size=10) {
   
   # Trap missing or invalid font_name parameter.
@@ -177,6 +177,10 @@ options_docx <- function(x, font_name="Courier New", font_size=10) {
 #' This function sets the options for a report of output type docx.
 #'
 #' @param x The report spec.
+#' @param editor The expected text editor to use for printing.  Assigning
+#' this parameter can reduce the number of other other setting you need
+#' to specify to get a properly printed report.  Valid values are 'notepad',
+#' 'word', 'wordpad', 'notepadpp', and 'editplus'.
 #' @param cpuom Characters per unit of measure of printed text.    
 #' if uom is inches, 
 #' default is 12, which equals a 10pt font.  This value will be used to 
@@ -246,10 +250,11 @@ options_text <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' are inches.  The default margins are 1 inch on the left and right, and
 #' .5 inch on the top and bottom.
 #' @param x The report spec object.
-#' @param margin_top The top margin.
-#' @param margin_bottom The bottom margin.
-#' @param margin_left The left margin.
-#' @param margin_right The right margin.
+#' @param top The top margin.
+#' @param bottom The bottom margin.
+#' @param left The left margin.
+#' @param right The right margin.
+#' @param min_margin The printer minimum margin.
 #' @return The report_spec with margins set as desired.
 #' @examples
 #' # Here is an example
@@ -568,9 +573,12 @@ write_report <- function(x, ...) {
 
   if (x$output_type == "text") {
     ret <- write_report_text(x, ...)
-  } else if (x$output_type == "docx") {
-    ret <- write_report_docx(x, ...)
+  } else {
+   stop(paste("Output type currently not supported:", x$output_type))
   }
+  # } else if (x$output_type == "docx") {
+  #   ret <- write_report_docx(x, ...)
+  # }
   
   invisible(ret)
 }

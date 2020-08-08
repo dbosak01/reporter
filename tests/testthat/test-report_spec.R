@@ -37,7 +37,7 @@ test_that("options_text sets default parameters appropriately", {
   
   ret <- options_text(ret)
   
-  expect_equal(ret$cpi, 12)
+  expect_equal(ret$cpuom, 12)
   
 })
 

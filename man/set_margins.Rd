@@ -16,13 +16,15 @@ set_margins(
 \arguments{
 \item{x}{The report spec object.}
 
-\item{margin_top}{The top margin.}
+\item{top}{The top margin.}
 
-\item{margin_bottom}{The bottom margin.}
+\item{bottom}{The bottom margin.}
 
-\item{margin_left}{The left margin.}
+\item{left}{The left margin.}
 
-\item{margin_right}{The right margin.}
+\item{right}{The right margin.}
+
+\item{min_margin}{The printer minimum margin.}
 }
 \value{
 The report_spec with margins set as desired.

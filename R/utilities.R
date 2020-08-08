@@ -58,8 +58,14 @@ write_registration_file <- function(file_path) {
 # Formats ----------------------------------------------------------------------
 
 
-#' A function to format the population label
-#' @noRd
+#' Functions to format the population label
+#' @usage lowcase_parens(x)
+#' @usage upcase_parens(x)
+#' @usage lowcase_n(x)
+#' @usage upcase_n(x)
+#' @aliases lowcase_parens upcase_parens lowcase_n upcase_n
+#' @param x Population count
+#' @export
 lowcase_parens <- function(x) {
   
   ret <- paste0("\n(n=", x, ")")
@@ -67,8 +73,8 @@ lowcase_parens <- function(x) {
   return(ret)
 }
 
-#' A function to format the population label
-#' @noRd
+#' @aliases lowcase_parens
+#' @export
 upcase_parens <- function(x) {
   
   ret <- paste0("\n(N=", x, ")")
@@ -77,8 +83,8 @@ upcase_parens <- function(x) {
   
 }
 
-#' A function to format the population label
-#' @noRd
+#' @aliases lowcase_parens
+#' @export
 lowcase_n <- function(x) {
   
   ret <- paste0("\nn=", x)
@@ -86,8 +92,8 @@ lowcase_n <- function(x) {
   return(ret)
 }
 
-#' A function to format the population label
-#' @noRd
+#' @aliases lowcase_parens
+#' @export
 upcase_n <- function(x) {
   
   ret <- paste0("\nN=", x)
@@ -303,53 +309,73 @@ get_font_family <- function(font_name) {
 #' #s <- filter(iris, Species == "setosa")
 #' #b <- add_blank_row(s)
 #' @noRd
-add_blank_row <- function(x, ..., location="below"){
-  
-  if (!requireNamespace("dplyr", quietly = TRUE)) {
-    stop(paste("Package \"dplyr\" needed for this function to work.",
-               "Please install it."),
-         call. = FALSE)
-  }
-  
+add_blank_row <- function(x, location="below", vars = NULL){
+
+
   # Create a blank row with the same structure as the incoming dataframe.
   rw <- x[0, ]
   
+  # Get group values
+  if (!is.null(vars)) {
+    gv <- x[1, vars]
+    names(gv) <- vars
+    gn <- names(x)
+  }
+  
+
   # For character columns, add a blank.
   # For numeric columns, NA is generated automatically.
   # For factors, cast to vector if blank is not in level list.
   for (i in seq_along(x)) {
+    rv <- NA
     if ("character" %in% class(rw[[i]])) {
-      rw[1, i] <- ""
-    } else if("factor" %in% class(rw[[i]])) {
       
+      rv <- ""
+      
+    } else if("factor" %in% class(rw[[i]])) {
+
       if (!"" %in% levels(rw[[i]])) {
         levels(x[[i]]) <- c(levels(x[[i]]), "")
         levels(rw[[i]]) <- c(levels(rw[[i]]), "")
       }
-      
-      rw[1, i] <- ""
+
+      rv <- ""
     }
+    
+    if (is.null(vars))
+      rw[1, i] <- rv
+    else if (gn[i] %in% vars) {
+      if (!is.data.frame(gv))
+        rw[1, i] <- gv[1]
+      else
+        rw[1, i] <- gv[1, gn[[i]]]
+    }
+    else
+      rw[1, i] <- rv
   }
-  
-  # Allow the user to seed columns with desired values.
-  # This functionality is desirable for key columns.
-  parms <- list(...)
-  for (n in names(parms)) {
-    if(n %in% names(rw))
-      rw[[n]] <- parms[[n]]
-  }
-  
+
+
   # Add the blank row to the specified location.
-  ret <- NULL
-  if (location == "below")
-    ret <- dplyr::bind_rows(x, rw)
-  else if (location == "above")
-    ret <- dplyr::bind_rows(rw, x)
-  else if (location == "both")
-    ret <- dplyr::bind_rows(rw, x, rw)
-  
+  ret <- x
+  ret$.blank <- ""
+  if (location == "below") {
+    rw$.blank <- "B"
+    ret <- rbind(ret, rw)
+  } else if (location == "above") {
+    rw$.blank <- "A"
+    ret <- rbind(rw, ret)
+  } else if (location == "both") {
+    rw2 <- rw
+    rw$.blank <- "A"
+    rw2$.blank <- "B"
+    
+    ret <- rbind(rw, ret, rw2)
+  }
+
   return(ret)
 }
+
+
 
 
 #' @title
@@ -368,46 +394,37 @@ add_blank_row <- function(x, ..., location="below"){
 #' @examples
 #' b <- add_blank_rows(iris, Species)
 #' @noRd
-add_blank_rows <- function(x, ..., .var_list = NULL) {
-  
-  if (!requireNamespace("dplyr", quietly = TRUE)) {
-    stop(paste("Package \"dplyr\" needed for this function to work.",
-               "Please install it."),
-         call. = FALSE)
-  }
-  
-  # Group dataframe
-  if (is.null(.var_list))
-    grp <- dplyr::group_by(x, ...)
-  else
-    grp <- dplyr::group_by(x, dplyr::across(dplyr::all_of(.var_list)))
-  
-  # Split by group variables
-  lst <- dplyr::group_split(grp)
-  
+add_blank_rows <- function(x, location = "below", vars = NULL) {
+
+
   # Alternate to get rid of tidyverse dependency
-  #lst <- split(x, x[.var_list])
-  
-  
+  if (is.null(vars))
+    lst <- list(x)
+  else
+    lst <- split(x, x[vars])
+
+
   # Create a new list to avoid complaints
   # from tidyverse
   ret <- list()
-  
+
   # Add blank row for each split
   for (i in seq_along(lst)) {
-    
-    ret[[i]] <- add_blank_row(lst[[i]])
-    
+
+    ret[[i]] <- add_blank_row(lst[[i]], location = location, vars = vars)
+
   }
-  
+
+
   # Combine splits
-  ret <- dplyr::bind_rows(ret)
+  ret <- do.call("rbind", ret)
   
-  #ret <- unsplit(ret, x[.var_list])
-  
+  rownames(ret) <- NULL
+
   return(ret)
-  
+
 }
+
 
 #' @noRd
 get_page_size <- function(paper_size, uom) {
@@ -497,9 +514,9 @@ get_header_height <- function(rs) {
     buff <- .1  # Will need to adjust this
     
     if (rs$uom == "cm") {
-      hh <- cm(hh)
-      th <- cm(th)
-      buff <- cm(buff)
+      hh <- ccm(hh)
+      th <- ccm(th)
+      buff <- ccm(buff)
     }
     
   } else {
@@ -537,9 +554,9 @@ get_footer_height <- function(rs) {
     buff <- .1  # Need to adjust
     
     if (rs$uom == "cm") {
-      fh <- cm(fh)
-      fth <- cm(fth)
-      buff <- cm(buff)
+      fh <- ccm(fh)
+      fth <- ccm(fth)
+      buff <- ccm(buff)
     }
     
   } else {
@@ -556,6 +573,11 @@ get_footer_height <- function(rs) {
   return(ret)
 }
 
+#' @noRd
+ccm <- function(x) {
+  
+  return(2.54 * x)
+}
 
 
 

@@ -37,7 +37,6 @@ write_report_text <- function(rs) {
   # Write out content
   for(o in ls){
     if (class(o)[1] == "table_spec"){
-      print("Here 23")
 
       ttx <- create_tables_text(rs, o)
 
@@ -118,7 +117,8 @@ page_template_text <- function(rs) {
   return(pt)
 }
 
-
+#' @import stringi
+#' @noRd
 get_page_header <- function(rs) {
   
   phdrr <- rs$page_header_right
