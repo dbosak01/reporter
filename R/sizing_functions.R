@@ -68,6 +68,7 @@ get_splits <- function(dat, col_widths, data_size, font_family) {
 }
 
 
+
 # b <- get_body_size(rpt)
 # l <- get_labels(tb$data, tb$col_defs, tb$n_format)
 # d <- get_data_size(b, NULL, l, "mono" )
@@ -348,57 +349,58 @@ get_labels <- function(dat, defs, nfmt){
 #' Declare function to calculate pages
 #' @noRd
 get_pages <- function(x, page_size){
-  
-  
+
+
   running_sum <- 0
   page <- 1
-  
+
   get_pages_int <- Vectorize(function(x){
-    
+
     if (running_sum + x > page_size) {
       page <<- page + 1
       running_sum <<- x
     } else {
       running_sum <<- running_sum + x
     }
-    
+
     return(page)
   })
-  
+
   return(get_pages_int(x))
 }
 
 
-#' Function to calculate page breaks
-#' @noRd
-get_page_breaks <- function(x, page_size){
-  
-  
-  running_sum <- 0
-  page_breaks <- c(1)
-  counter <- 0
-  
-  get_pages_int <- Vectorize(function(x){
-    
-    counter <<- counter + 1
-    
-    if (running_sum + x > page_size) {
-      page_breaks[length(page_breaks) + 1] <<- counter
-      running_sum <<- x
-    } else {
-      running_sum <<- running_sum + x
-    }
-    
-    
-  })
-  
-  
-  get_pages_int(x)
-  
-  page_breaks[length(page_breaks) + 1] <- length(x) + 1
-  
-  return(page_breaks)
-}
+# 
+# get_page_breaks <- function(x, page_size){
+#   
+#   
+#   running_sum <- 0
+#   page_breaks <- c(1)
+#   counter <- 0
+#   
+#   get_pages_int <- Vectorize(function(x){
+#     
+#     counter <<- counter + 1
+#     
+#     if (running_sum + x > page_size) {
+#       page_breaks[length(page_breaks) + 1] <<- counter
+#       running_sum <<- x
+#     } else {
+#       running_sum <<- running_sum + x
+#     }
+#     
+#     
+#   })
+#   
+#   
+#   get_pages_int(x)
+#   
+#   page_breaks[length(page_breaks) + 1] <- length(x) + 1
+#   
+#   return(page_breaks)
+# }
+
+
 
 
 #' @title Get the columns for the table
@@ -437,6 +439,77 @@ get_table_cols <- function(x) {
   }
   
   ret <- unique(c(ret, control_cols))
+  
+  return(ret)
+  
+}
+
+
+
+# Text Sizing Functions ---------------------------------------------------
+
+
+
+#' Split the data horizontally by available page size
+#' @param x The data frame to split
+#' @param widths The column widths
+#' @param page_size The size of the available space in rows
+#' @noRd
+get_splits_text <- function(x, widths, page_size) {
+  
+
+  pgs <- get_page_breaks(x, page_size)
+  
+  
+  ret <- split(pgs, pgs$..page)
+  
+  
+  return(ret)
+  
+}
+
+
+#' Function to calculate page breaks
+#' @param x Data frame to page.
+#' @param page_size Available data height in number of rows.
+#' @return Data frame with ..page column populated with page numbers.
+#' @noRd
+get_page_breaks <- function(x, page_size){
+  
+  pg <- 1
+  counter <- 0
+  
+  for (i in seq_len(nrow(x))){
+    
+    counter <- counter + 1
+    
+    if (counter > page_size) {
+      counter <- 1
+      pg <- pg + 1
+    }
+    
+    x$..page[i] <- pg
+    
+  }
+  
+  return(x)
+}
+
+
+get_data_size_text <- function(rs, widths, labels) {
+  
+  
+  sz <- c()
+  for (n in names(labels)) {
+    sz[length(sz) + 1] <- length(strwrap(labels[n], 
+                                 width = floor(widths[n]/ rs$char_width)))
+    
+  }
+  
+  ret <-c(width = rs$line_size)
+  
+  # Available body height minus label height, and underline
+  ret["height"] <- rs$body_line_count - max(sz) - 1
   
   return(ret)
   

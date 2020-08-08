@@ -193,7 +193,7 @@ test_that("test5: Table with break between sections works as expected.", {
                 right = "Page X of Y") %>%
     add_content(tbl1) 
   
-  
+
   res2 <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
@@ -202,23 +202,23 @@ test_that("test5: Table with break between sections works as expected.", {
 
 
 
-# test_that("test6: Table that spans multiple pages breaks as expected.", {
-#   
-#   fp <- file.path(base_path, "output/test5.out")
-#   
-#   if (file.exists(fp))
-#     file.remove(fp)
-#   
-#   rpt <- create_report(fp) %>% 
-#     titles("IRIS Data Frame") %>% 
-#     add_content(create_table(iris))
-#   
-#   
-#   write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-# })
+test_that("test6: Table that spans multiple pages breaks as expected.", {
+
+  fp <- file.path(base_path, "output/test6.out")
+
+  if (file.exists(fp))
+    file.remove(fp)
+
+  rpt <- create_report(fp) %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris))
+
+
+  write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+})
 
 
 

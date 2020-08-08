@@ -69,11 +69,12 @@ create_tables_text <- function(rs, ts) {
   #ret <- get_table_body(rs, ts, fdat)
   
   # Get available space for table data
-  data_size <- get_data_size(rs$body_size, cwidths, labels, font_family = family)
+  data_size <- get_data_size_text(rs, cwidths, labels)
   #print(data_size)
 
   # Break columns into pages
-  wraps <- get_page_wraps(data_size, ts$col_defs, cwidths)
+  #wraps <- get_page_wraps(data_size, ts$col_defs, cwidths)
+  wraps <- list(keys)
   #print("Wraps")
   #print(wraps)
 
@@ -84,8 +85,8 @@ create_tables_text <- function(rs, ts) {
 
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
+  splits <- get_splits_text(fdat, widths, data_size[["height"]])
   #print(splits)
-  splits <- list(fdat)
   
 
   pg_lst <- list()
@@ -105,13 +106,17 @@ create_tables_text <- function(rs, ts) {
 
 #' @noRd
 create_table_text <- function(rs, ts, pi) {
-  
+  #print("Here1")
  hdrs <- get_table_header(rs, ts, pi)  
-  
+ #print("Here2")
  rws <- get_table_body(rs, ts, pi)
+ #print("Here3")
  
- blnks <- rep("", rs$body_line_count - length(hdrs) - length(rws) - 2)
- 
+ #print(length(hdrs))
+ #print(length(rws))
+ #print(rs$body_line_count - length(hdrs) - length(rws) - 2)
+ blnks <- rep("", rs$body_line_count - length(hdrs) - length(rws))
+ #print("Here4")
  ret <- c("", hdrs, rws, blnks, "")
  
  return(ret) 

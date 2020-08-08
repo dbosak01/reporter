@@ -7,3 +7,5 @@ test_that("get_justify() works as expected.", {
   expect_equal(get_justify("center"), "centre")
   expect_equal(get_justify("fork"), "left")
 })
+
+

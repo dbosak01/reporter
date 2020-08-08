@@ -26,7 +26,7 @@ write_report_text <- function(rs) {
   rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
   rs$body_size <- get_body_size(rs)
   rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
-
+  
   # Get page template
   pt <- page_template_text(rs)
 
@@ -61,6 +61,9 @@ write_tables_text <- function(rs, ttx, pt) {
   for (i in seq_along(ttx)) {
     
     rs <- write_table_text(rs, ttx[[i]], pt)
+    
+    if (i < length(ttx))
+      rs <- write_page_break(rs)
     
   }
   
