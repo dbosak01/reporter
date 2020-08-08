@@ -54,7 +54,12 @@ write_report_text <- function(rs) {
   invisible(rs)
 }
 
-
+#' Write a list of tables to the report file
+#' @param rs The Report Spec
+#' @param ttx A list of tables to write
+#' @param pt A page template object
+#' @return The report spec
+#' @noRd
 write_tables_text <- function(rs, ttx, pt) {
   
   
@@ -71,7 +76,12 @@ write_tables_text <- function(rs, ttx, pt) {
   return(rs)
 }
 
-
+#' Write a single table to a file
+#' @param rs The Report Spec
+#' @param ttx A list of tables to write
+#' @param pt A page template object
+#' @return The report spec, unmodified
+#' @noRd
 write_table_text <- function(rs, ttx, pt) {
   
 
@@ -97,7 +107,11 @@ write_table_text <- function(rs, ttx, pt) {
   
   return(rs)
 }
-
+#' Write out a page break to the report file
+#' For text, the page break is a form feed character 
+#' @param rs The report spec
+#' @return The report spec, unmodified
+#' @noRd
 write_page_break <- function(rs) {
   
   f <- file(rs$file_path, open="a")
@@ -112,7 +126,10 @@ write_page_break <- function(rs) {
 
 # Page Template Functions ----------------------------------------------
 
-
+#' Create a page template with header, titles, footnotes, and footer
+#' @param rs The report spec
+#' @return The page template object
+#' @noRd
 page_template_text <- function(rs) {
   
   pt <- structure(list(), class = c("page_template_text", "list"))
@@ -127,7 +144,9 @@ page_template_text <- function(rs) {
   return(pt)
 }
 
-#' @import stringi
+#' Get page header text strings suitable for printing
+#' @param rs The report spec
+#' @return A vector of strings
 #' @noRd
 get_page_header <- function(rs) {
   
@@ -175,7 +194,11 @@ get_page_header <- function(rs) {
   return(ret)
 }
 
-
+#' Get title text strings suitable for printing
+#' @import stringi
+#' @param rs The report spec
+#' @return A vector of strings
+#' @noRd
 get_titles <- function(rs) {
   
   if (is.null(rs$line_size)) {
@@ -217,7 +240,10 @@ get_titles <- function(rs) {
   return(ret)
 }
 
-
+#' Get footnote text strings suitable for printing
+#' @param rs The report spec
+#' @return A vector of strings
+#' @noRd
 get_footnotes <- function(rs) {
   
   if (is.null(rs$line_size)) {
@@ -256,7 +282,10 @@ get_footnotes <- function(rs) {
   return(ret)
 }
 
-
+#' Get page footer text strings suitable for printing
+#' @param rs The report spec
+#' @return A vector of strings
+#' @noRd
 get_page_footer <- function(rs) {
   
   if (is.null(rs$line_size)) {
@@ -325,47 +354,3 @@ get_page_footer <- function(rs) {
 
 
 
-
-
-asciify <- function(df, pad = 1, ...) {
-  ## error checking
-  stopifnot(is.data.frame(df))
-  ## internal functions
-  SepLine <- function(n, pad = 1) {
-    tmp <- lapply(n, function(x, pad) paste(rep("-", x + (2* pad)),
-                                            collapse = ""),
-                  pad = pad)
-    paste0("+", paste(tmp, collapse = "+"), "+")
-  }
-  Row <- function(x, n, pad = 1) {
-    foo <- function(i, x, n) {
-      fmt <- paste0("%", n[i], "s")
-      sprintf(fmt, as.character(x[i]))
-    }
-    rowc <- sapply(seq_along(x), foo, x = x, n = n)
-    paste0("|", paste(paste0(rep(" ", pad), rowc, rep(" ", pad)),
-                      collapse = "|"),
-           "|")
-  }
-  ## convert everything to characters
-  df <- as.matrix(df)
-  ## nchar in data
-  mdf <- apply(df, 2, function(x) max(nchar(x)))
-  ## nchar in names
-  cnames <- nchar(colnames(df))
-  ## max nchar of name+data per elements
-  M <- pmax(mdf, cnames)
-  ## write the header
-  sep <- SepLine(M, pad = pad)
-  writeLines(sep)
-  writeLines(Row(colnames(df), M, pad = pad))
-  writeLines(sep)
-  ## write the rows
-  for(i in seq_len(nrow(df))) {
-    ## write a row
-    writeLines(Row(df[i,], M, pad = pad))
-    ## write separator
-    writeLines(sep)
-  }
-  invisible(df)
-}

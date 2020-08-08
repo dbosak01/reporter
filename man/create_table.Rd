@@ -21,7 +21,12 @@ create_table(
 \item{page_var}{A variable in the data frame to use for a page variable.}
 
 \item{show_cols}{Whether to show all column by default.  Valid values are
-"all", "none", or "some".}
+"all", "none", or a vector of column names.  "all" means show all columns 
+by default, unless overridden by the column definitions.  
+"none" means don't show any 
+columns unless specified in the column definitions.  If a vector of column
+names is supplied, those columns will be shown in the report, whether
+or not a definition is supplied.}
 
 \item{first_row_blank}{Whether to place a blank row under the table header.}
 
