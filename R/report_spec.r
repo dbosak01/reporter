@@ -42,7 +42,6 @@
 #'   \item \code{\link{page_footer}} to add a page_footer to the report. 
 #'   \item \code{\link{add_content}} to add content to the report.
 #'   \item \code{\link{options_text}} to set options for text output.
-#   \item \code{\link{options_docx}} to set options for docx output.
 #'   \item \code{\link{add_content}} to add content to the report.
 #'   \item \code{\link{write_report}} to write the report to the file system.
 #' }
@@ -485,34 +484,6 @@ page_footer <- function(x, left="", right="", center=""){
 
 
 
-#' @title
-#' Print the report parameters.
-#'
-#' @description
-#' A function to print the report parameters.  This function is an S3 generic
-#' function.  The class printed is "report_spec".
-#'
-#' @param x The report spec to print.
-#' @param ... Generic arguments
-#' @param full Whether to print the spec or an abbreviated version.
-#' @examples
-#' # Here is an example
-# create_report("mtcars.docx", orientation="portrait") %>%
-# page_header(left = "Cars Data", right = "Study ABC")  %>%
-# page_footer(left = Sys.time())  %>%
-# add_content(create_table(mtcars)) %>%
-# print()
-#' @export
-# print.report_spec <- function(x, ...){
-# 
-# 
-#     print.l(x, ...)
-# 
-# 
-#   invisible(x)
-# }
-
-
 
 # Functions ---------------------------------------------------------------
 
@@ -537,7 +508,6 @@ page_footer <- function(x, left="", right="", center=""){
 #' #create_report("listing_3_0.docx") %>%
 #' #add_content(create_table(mtcars)) %>%
 #' #write_report()
-#'
 #' @export
 add_content <- function(x, object, page_break="after") {
 

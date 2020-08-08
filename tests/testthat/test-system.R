@@ -54,8 +54,7 @@ test_that("Simple table works as expected.", {
   
   
   
-  rpt <- create_report("./tests/testthat/output/test2.out", uom = "inches", paper_size = "letter") %>%
-    #options_text(cpuom = 10.909, lpuom = 6.075) %>%
+  rpt <- create_report("c:/packages/rptr/tests/testthat/output/test2.out", uom = "inches", paper_size = "letter") %>%
     options_text(editor = "notepadpp") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", align = "center") %>%
