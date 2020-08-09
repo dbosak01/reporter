@@ -129,23 +129,42 @@ get_page_wraps <- function(data_size, defs, widths) {
 #' @noRd
 prep_data <- function(dat, defs) {
   
-
+  # Get vector of columns for blank rows
   ls <- c()
   for (def in defs) {
     if (def$blank_after)
       ls[length(ls) + 1] <- def$var_c
   }
   
+  # Add blanks on requested columns
   if (!is.null(ls)) {
     if (length(ls) > 0) {
+      
+      # Reverse order so groups turn out correct
       ls <- ls[order(ls, decreasing = TRUE)]
       
+      # Add blanks
       if (length(ls) > 0) {
         dat <- add_blank_rows(dat, location = "below", vars = ls)
       }
     }
   }
   
+  # Dedupe variables as requested
+  # Do this after adding blanks
+  # So any group values in blank rows are removed
+  for (def in defs) {
+    if (def$dedupe) {
+      
+      # Fill with blanks as appropriate
+      w <- nchar(dat[[def$var_c]][1])
+      v <- paste0(rep(" ", times = w), collapse = "")
+      
+      dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 
+                                 dat[[def$var_c]], v) 
+
+    }
+  }
   
   return(dat)
   

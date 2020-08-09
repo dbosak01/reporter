@@ -145,7 +145,7 @@ table_options <- function(x, first_row_blank=FALSE){
 #' @export
 print.table_spec <- function(x, ...){
   
-  
+
   for (nm in names(x)) {
     
     cat("$", nm, "\n", sep = "")
@@ -163,3 +163,8 @@ print.table_spec <- function(x, ...){
   
   invisible(x)
 }
+
+# ts <- create_table(mtcars[1:10, ])
+# ts
+# rpt <- create_report("fork.out") %>% add_content(ts)
+# rpt

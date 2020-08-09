@@ -91,3 +91,22 @@ test_that("get_data_size_text works as expected", {
   expect_equal(res[["height"]], 34)
   
 })
+
+
+test_that("prep_data works as expected", {
+  
+  smp <- sample(1:nrow(iris), 20)
+  dat <- iris[smp, ]
+  datx <- dat[order(dat$Species), ]
+  datx$Species <- as.character(datx$Species)
+  
+  
+  tbl <- create_table(datx) %>% 
+    define(Species, blank_after = TRUE, dedupe = TRUE)
+
+  
+  d <- prep_data(datx, tbl$col_defs)
+  
+  expect_equal(sum(!duplicated(d$Species)), 4)
+  
+})

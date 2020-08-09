@@ -181,7 +181,7 @@ test_that("test5: Table with break between sections works as expected.", {
 
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(arm, blank_after = TRUE)
+    define(arm, blank_after = TRUE, dedupe = TRUE)
 
 
   rpt <- create_report(fp) %>%
@@ -199,7 +199,6 @@ test_that("test5: Table with break between sections works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
-
 
 
 test_that("test6: Table that spans multiple pages breaks as expected.", {
