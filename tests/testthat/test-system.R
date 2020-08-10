@@ -5,7 +5,6 @@ base_path <- "c:/packages/rptr/tests/testthat"
 
 base_path <- "."
 
-
 test_that("test1: Simplest table works as expected.", {
   
   
@@ -71,8 +70,8 @@ test_that("test3: Simple table with formats works as expected.", {
   sfmt2 <- c(M = "Male", F = "Female")
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(sex, width = 2, format = sfmt2) %>%
-    define(age, width = 2) %>% 
+    define(sex, width = 1, format = sfmt2) %>%
+    define(age, width = .5) %>% 
     define(arm, format = afmt, width = 1.5)
   
 
@@ -206,7 +205,6 @@ test_that("test5: Table with break between sections works as expected.", {
   
 })
 
-
 test_that("test6: Table that spans multiple pages breaks as expected.", {
 
   fp <- file.path(base_path, "output/test6.out")
@@ -224,8 +222,6 @@ test_that("test6: Table that spans multiple pages breaks as expected.", {
   expect_equal(file.exists(fp), TRUE)
 
 })
-
-
 
 test_that("test7: Table with long cell values wraps as expected.", {
   

@@ -541,8 +541,20 @@ align_cells <- function(x, len) {
   
 }
 
-
-
+#' For any remaining non-character columns, convert to character and
+#' clear the missing values.
+#' @noRd
+clear_missing <- function(x) {
+  
+  for (nm in names(x)) {
+    if (!is.control(nm) & typeof(x[[nm]]) != "character") {    
+      x[[nm]] <- as.character(x[[nm]])
+      x[[nm]] <- ifelse(is.na(x[[nm]]), "", x[[nm]])
+    }
+  }
+  
+  return(x)
+}
 
 
 # Sizing utilities --------------------------------------------------------

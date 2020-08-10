@@ -111,4 +111,16 @@ test_that("align_cells works as expected.", {
   
 })
 
+
+test_that("clear_missing works as expected.", {
+  
+  
+  df <- data.frame(a = c(1, 2, 3), b = c("A", "B", "C"))
+  
+  df2 <- clear_missing(df)
+
+  expect_equal(class(df2$a), "character")
+  expect_equal(sum(is.na(df2$a)), 0)
+  
+})
   

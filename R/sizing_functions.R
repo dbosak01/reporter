@@ -166,6 +166,9 @@ prep_data <- function(dat, defs) {
     }
   }
   
+  # Clear out missing values
+  dat <- clear_missing(dat)
+  
   return(dat)
   
 }

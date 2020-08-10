@@ -45,8 +45,6 @@ create_tables_text <- function(rs, ts) {
 
   # Get column alignments
   aligns <- get_aligns(dat, ts$col_defs)
-
-  justification(dat) <- aligns
     
   # Get alignment for labels
   # Follows column alignment by default
@@ -58,10 +56,10 @@ create_tables_text <- function(rs, ts) {
   #print(formats(dat))
   
   # Get column widths
-  cwidths <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
+  widths_uom <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
 
   # Convert to text measurements
-  widths(dat) <- round(cwidths / rs$char_width)
+  widths_char <- round(widths_uom / rs$char_width)
   
   # Apply formatting
   fdat <- fdata(dat)
@@ -72,17 +70,15 @@ create_tables_text <- function(rs, ts) {
   #print(fdat)
   
   # Split long text strings onto multiple rows
-  fdat <- split_cells(fdat, widths(dat))
+  fdat <- split_cells(fdat, widths_char)
 
-  # Don't like having to redo widths and justification **
-  # But can't yet figure out how to do it only once
-  # Seems like split cells should be part of fmtr
-  widths(fdat) <- widths(dat)
-  justification(fdat) <- justification(dat)
+  # Apply widths and justification
+  widths(fdat) <- widths_char
+  justification(fdat) <- aligns
   fdat <- fdata(fdat)
 
   # Get available space for table data
-  data_size <- get_data_size_text(rs, cwidths, labels)
+  data_size <- get_data_size_text(rs, widths_uom, labels)
   #print(data_size)
 
   # Break columns into pages
@@ -94,7 +90,7 @@ create_tables_text <- function(rs, ts) {
 
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
-  splits <- get_splits_text(fdat, widths, data_size[["height"]])
+  splits <- get_splits_text(fdat, widths_uom, data_size[["height"]])
   #print(splits)
   
 
@@ -102,7 +98,7 @@ create_tables_text <- function(rs, ts) {
   for(s in splits) {
     for(pg in wraps) {
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
-                     col_width = cwidths[pg], col_align = aligns[pg],
+                     col_width = widths_uom[pg], col_align = aligns[pg],
                      font_name = font_name, label_align = label_aligns[pg])
       pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi)
     }
