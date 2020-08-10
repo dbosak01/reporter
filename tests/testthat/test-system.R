@@ -73,7 +73,7 @@ test_that("test3: Simple table with formats works as expected.", {
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
     define(sex, width = 2, format = sfmt2) %>%
     define(age, width = 2) %>% 
-    define(arm, format = afmt)
+    define(arm, format = afmt, width = 1.5)
   
 
   
@@ -136,7 +136,7 @@ test_that("test4: Two page report works as expected.", {
   tbl2 <- create_table(df2) %>%
     define(sex, width = .25, format = sfmt2) %>%
     define(age, format = "%0d%%") %>%
-    define(arm, format = afmt)
+    define(arm, format = afmt, width = 2)
   
   
   
@@ -181,7 +181,13 @@ test_that("test5: Table with break between sections works as expected.", {
 
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(arm, blank_after = TRUE, dedupe = TRUE)
+    define(subjid, label = "Subject ID") %>% 
+    define(name, label = "Subject Name") %>% 
+    define(sex, label = "Sex") %>% 
+    define(age, label = "Age") %>% 
+    define(arm, label = "Arm", 
+           blank_after = TRUE, 
+           dedupe = TRUE)
 
 
   rpt <- create_report(fp) %>%
@@ -220,4 +226,49 @@ test_that("test6: Table that spans multiple pages breaks as expected.", {
 })
 
 
+
+test_that("test7: Table with long cell values wraps as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test7.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  # Setup
+  arm <- c(rep("A", 5), rep("B", 5))
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+
+  
+  # Create data frame
+  df <- data.frame(arm, subjid, name, sex, age)
+  
+
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID", align = "left") %>%
+    define(name, label = "Subject Name", width = 1) %>%
+    define(sex, label = "Sex") %>%
+    define(age, label = "Age") %>%
+    define(arm, label = "Arm",
+           blank_after = TRUE,
+           dedupe = TRUE)
+
+
+  rpt <- create_report(fp) %>%
+    titles("Table 1.0", align = "center") %>%
+
+    add_content(tbl1)
+
+
+  res2 <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+})
 

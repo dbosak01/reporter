@@ -170,7 +170,6 @@ prep_data <- function(dat, defs) {
   
 }
 
-#p <- prep_data(tbl1$data, tbl1$col_defs, first_blank = TRUE)
 
 #' Get the column widths
 #' @import graphics

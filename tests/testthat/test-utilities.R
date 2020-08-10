@@ -67,4 +67,48 @@ test_that("add_blank_rows() works as expected.", {
   expect_equal(nrow(res3), nrow(iris) + 1)
   
 })
+
+
+
+test_that("split_cells works as expected.", {
+  
+  
+  a1 <- c("one", "two", "three")
+  b1 <- c("here is a\n long value", "Some sort of value", 
+          "Another value that goes on and on")
+  c1 <- c("here is a longer value", "Really", "Medium value")
+  ..blank <- ""
+  ..page <- NA
+  ..row <- NA
+  
+  df <- data.frame(a1, b1, c1, ..blank, ..page, ..row)
+  df
+  
+  w <- c(a1 = .5, b1 = 1.5, c1 = 1.25)
+  
+  conversion_factor <- .083333 
+  
+  wc <- floor(w / conversion_factor)
+
+  
+  res1 <- split_cells(df, wc)
+  res1
+  
+  expect_equal(nrow(res1), 7) 
+  
+})
+
+test_that("align_cells works as expected.", {
+  
+  
+  x <- list(a1 = c("a", "b", "c"), 
+            b1  = c("a"), 
+            c1 = c("a", "b", "c", "d", "e"))
+  
+  g <- align_cells(x, 5)
+  
+  expect_equal(nrow(g), 5)
+  
+})
+
   

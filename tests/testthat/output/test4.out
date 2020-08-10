@@ -47,20 +47,20 @@ Experis                                                                         
 
 Program Name: table1_0.R                                                                                    
 
-2020-08-09 00:32:40                             Confidential                                     Page X of Y
+2020-08-10 02:20:37                             Confidential                                     Page X of Y
 Experis                                                                                            Study ABC
                                                                                               Status: Closed
                                                  Table 1.0                                                  
                                        Analysis Data Subject Listing                                        
                                              Safety Population                                              
 
-                            subjid name                       sex    age arm                                
-                           -----------------------------------------------------                            
-                           105 Laner, Tahma               Female    52% Treatment 1                         
-                           106 Perry, Sean                Male      21% Treatment 1                         
-                           107 Crews, Deshawn Joseph      Female    38% Treatment 1                         
-                           108 Person, Ladon              Female    62% Treatment 1                         
-                           109 Smith, Shaileigh           Male      26% Treatment 1                         
+                   subjid name                       sex    age arm                                         
+                  -----------------------------------------------------------------------                   
+                     105 Laner, Tahma               Female    52% Treatment 1                               
+                     106 Perry, Sean                Male      21% Treatment 1                               
+                     107 Crews, Deshawn Joseph      Female    38% Treatment 1                               
+                     108 Person, Ladon              Female    62% Treatment 1                               
+                     109 Smith, Shaileigh           Male      26% Treatment 1                               
 
 
 
@@ -97,4 +97,4 @@ Program Name: table1_0.R
 
 Program Name: table1_0.R                                                                                    
 
-2020-08-09 00:32:40                             Confidential                                     Page X of Y
+2020-08-10 02:20:37                             Confidential                                     Page X of Y

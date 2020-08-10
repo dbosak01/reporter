@@ -454,6 +454,96 @@ get_page_size <- function(paper_size, uom) {
 }
 
 
+#' Split data frame cells into multiple rows based on expected column width.
+#' This is necessary to wrap long values onto multiple lines, and have other
+#' columns stay aligned horizontally.
+#' @param x A data frame
+#' @param col_widths A named vector of columns widths in number of characters
+#' @return The data frame with long values split and added to their own
+#' rows.
+#' @noRd
+split_cells <- function(x, col_widths) {
+  
+  
+  dat <- NULL           # Resulting data frame
+  row_values <- list()  # A list to hold cell values for one row 
+  max_length <- 0       # The maximum number of splits of a cell in that row
+  
+  for (i in seq_len(nrow(x))) {
+    for (nm in names(x)) {
+      
+      if (any(typeof(x[[nm]]) == "character")) {
+
+        cell <- strwrap(unlist(
+          strsplit(x[i, nm], split = "\n", fixed = TRUE)), 
+          width = col_widths[[nm]])
+      
+      } else {
+        cell <- x[i, nm]
+      }
+      
+      if (length(cell) > max_length)
+        max_length <- length(cell)
+      
+      row_values[[length(row_values) + 1]] <- cell
+      
+    }
+    names(row_values) <- names(x)
+    a <- align_cells(row_values, max_length)
+    a$..row <- i
+
+    if (is.null(dat))
+      dat <- a
+    else
+      dat <- rbind(dat, a)
+    max_length <- 0
+    row_values <- list()
+    
+  }
+  
+  
+  return(dat)
+}
+
+
+#' Given a jagged set of vectors, align to the longest by filling with 
+#' empty strings
+#' @param x A list of vectors of varying lengths
+#' @param len The length of the longest vector
+#' @return A data frame with the number of rows equal to len. Missing cell
+#' values are filled with empty strings.
+#' @noRd
+align_cells <- function(x, len) {
+  
+  ret <- list() 
+  
+  for(nm in names(x)) {
+    
+    t <- len - length(x[[nm]])
+    
+    if (t > 0) {
+      if (any(typeof(x[[nm]]) == "character")) 
+        v <- c(rep("", t))
+      else
+        v <- c(rep(NA, t))
+      
+      ret[[nm]] <- c(x[[nm]], v)
+    } else {
+      
+      ret[[nm]] <-  x[[nm]]
+    }
+  }
+  
+  names(ret)  <- names(x)
+  ret <- as.data.frame(ret)
+  
+  return(ret)
+  
+}
+
+
+
+
 
 # Sizing utilities --------------------------------------------------------
 

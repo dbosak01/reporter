@@ -3,7 +3,7 @@
 # Globals -----------------------------------------------------------------
 
 
-control_cols <- c("..blank", "..page")
+control_cols <- c("..blank", "..page", "..row")
 
 
 
@@ -26,7 +26,8 @@ create_tables_text <- function(rs, ts) {
   # Set up control columns
   dat <- ts$data
   dat$..blank <- ""
-  dat$..page <- ""
+  dat$..page <- NA
+  dat$..row <- NA
   
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
@@ -39,7 +40,6 @@ create_tables_text <- function(rs, ts) {
   # Filter dataset by included columns
   dat <- dat[ , keys]
 
-  
   # Get labels
   labels <- get_labels(dat, ts$col_defs, ts$n_format)
 
@@ -63,11 +63,24 @@ create_tables_text <- function(rs, ts) {
   # Convert to text measurements
   widths(dat) <- round(cwidths / rs$char_width)
   
+  # Apply formatting
   fdat <- fdata(dat)
   #print(fdat)
 
-  #ret <- get_table_body(rs, ts, fdat)
+  # Add blank lines as specified
+  fdat <- prep_data(fdat, ts$col_defs)
+  #print(fdat)
   
+  # Split long text strings onto multiple rows
+  fdat <- split_cells(fdat, widths(dat))
+
+  # Don't like having to redo widths and justification **
+  # But can't yet figure out how to do it only once
+  # Seems like split cells should be part of fmtr
+  widths(fdat) <- widths(dat)
+  justification(fdat) <- justification(dat)
+  fdat <- fdata(fdat)
+
   # Get available space for table data
   data_size <- get_data_size_text(rs, cwidths, labels)
   #print(data_size)
@@ -78,10 +91,6 @@ create_tables_text <- function(rs, ts) {
   #print("Wraps")
   #print(wraps)
 
-
-  # Add blank lines as specified
-  fdat <- prep_data(fdat, ts$col_defs)
-  #print(fdat)
 
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
