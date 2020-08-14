@@ -247,7 +247,8 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
   
 
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(subjid, label = "Subject ID", align = "left", width = 1.5) %>%
+    define(subjid, label = "Subject ID for a patient", n = 10, align = "left", 
+           width = 1) %>%
     define(name, label = "Subject Name", width = 1) %>%
     define(sex, label = "Sex", n = 10, align = "center") %>%
     define(age, label = "Age", n = 10) %>%

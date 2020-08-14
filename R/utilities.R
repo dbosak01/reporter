@@ -569,13 +569,11 @@ clear_missing <- function(x) {
 #' @noRd
 push_down <- function(x) {
 
+  tot <- nrow(x)
+
   for (nm in names(x)) {
-   for (i in seq_len(nrow(x) - 1)) {
-     if (x[i + 1, nm] == "") {
-       x[i + 1, nm] <- x[i, nm]
-       x[i, nm] <- ""
-     }
-   }
+    tmp <- x[[nm]][x[[nm]] != ""]
+    x[[nm]] <- c(rep("", tot - length(tmp)), tmp) 
   }
   
   return(x)

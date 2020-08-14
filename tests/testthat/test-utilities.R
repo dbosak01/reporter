@@ -123,4 +123,19 @@ test_that("clear_missing works as expected.", {
   expect_equal(sum(is.na(df2$a)), 0)
   
 })
+
+
+test_that("push_down works as expected.", {
+  
+  x <- data.frame(a1 = c("a", "b", "c", "", ""), 
+            b1  = c("a", rep("", 4)), 
+            c1 = c("a", "b", "c", "d", "e"))
+  
+  res2 <- push_down(x)
+  
+  expect_equal(res2$a1, c("", "", "a", "b", "c"))
+  expect_equal(res2$b1, c("", "", "", "", "a"))
+  expect_equal(res2$c1, c("a", "b", "c", "d", "e"))
+  
+})
   
