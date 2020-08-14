@@ -223,7 +223,7 @@ test_that("test6: Table that spans multiple pages breaks as expected.", {
 
 })
 
-test_that("test7: Table with long cell values wraps as expected.", {
+test_that("test7: Table with long cell and label values wraps as expected.", {
   
   
   fp <- file.path(base_path, "output/test7.out")
@@ -247,10 +247,10 @@ test_that("test7: Table with long cell values wraps as expected.", {
   
 
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(subjid, label = "Subject ID", align = "left") %>%
+    define(subjid, label = "Subject ID", align = "left", width = 1.5) %>%
     define(name, label = "Subject Name", width = 1) %>%
-    define(sex, label = "Sex") %>%
-    define(age, label = "Age") %>%
+    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(age, label = "Age", n = 10) %>%
     define(arm, label = "Arm",
            blank_after = TRUE,
            dedupe = TRUE)

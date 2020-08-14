@@ -11,9 +11,9 @@ test_that("get_justify() works as expected.", {
 
 test_that("get_table_header works as expected.", {
   
+  
   rpt <- create_report("fork.out")
   rpt$line_size <- 108
-  
   
   tbl <- create_table(mtcars)
   
@@ -32,10 +32,11 @@ test_that("get_table_header works as expected.", {
                  col_width = w, 
                  col_align = aln,
                  label = lbl , label_align = aln)
-  p
+  
 
   res1 <- get_table_header(rpt, tbl, p)
   
-  res1
+  expect_equal(length(res1), 3)
+  expect_equal(trimws(res1[[1]]), "vs")
       
 })

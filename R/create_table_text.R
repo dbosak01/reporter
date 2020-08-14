@@ -137,26 +137,27 @@ get_table_header <- function(rs, ts, pi) {
   ret <- c()
   ln <- c()
   
-  #print(lbls)
+  d <- data.frame(as.list(lbls))
+  d <- split_cells(d, w)
+  d <- push_down(d)
   
-  #for (i in seq_along(pi$label) {
+  for (i in seq_len(nrow(d))) {
     
     r <- ""
 
-    for (nm in names(lbls)) {
+    for (nm in names(d)) {
       if (!is.control(nm))
-        r <- paste0(r, format(lbls[[nm]], width = w[[nm]], 
+        r <- paste0(r, format(d[i, nm], width = w[[nm]],
                             justify = get_justify(lbla[[nm]])), " ")
     }
     
-
     ln[[length(ln) + 1]] <- r 
-    
-    # Underline
-    sep <- paste0(rep("-", nchar(r)), collapse = "")
-    ln[[length(ln) + 1]] <- sep
-    
-  #}
+  }
+  
+  
+  # Underline
+  sep <- paste0(rep("-", nchar(r)), collapse = "")
+  ln[[length(ln) + 1]] <- sep
     
   # Justify entire header
   for (k in seq_along(ln)) {

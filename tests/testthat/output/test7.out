@@ -1,33 +1,33 @@
                                                  Table 1.0                                                  
 
-                               Arm    Subject ID Subject Name Sex       Age                                 
-                               ---------------------------------------------                                
+                                                    Subject        Sex       Age                            
+                          Arm    Subject ID         Name         (N=10)   (N=10)                            
+                          -------------------------------------------------------                           
 
-                                A      100      Quintana,    M          41                                  
-                                                Gabriel                                                     
-                                       101      Allison,     F          53                                  
-                                                Blas                                                        
-                                       102      Minniear,    F          43                                  
-                                                Presley                                                     
-                                       103      al-Kazemi,   M          39                                  
-                                                Najwa                                                       
-                                                and more                                                    
-                                                and more                                                    
-                                       104      Schaffer,    M          47                                  
-                                                Ashley                                                      
+                          A      100                Quintana,       M         41                            
+                                                    Gabriel                                                 
+                                 101                Allison,        F         53                            
+                                                    Blas                                                    
+                                 102                Minniear,       F         43                            
+                                                    Presley                                                 
+                                 103                al-Kazemi,      M         39                            
+                                                    Najwa                                                   
+                                                    and more                                                
+                                                    and more                                                
+                                 104                Schaffer,       M         47                            
+                                                    Ashley                                                  
                                                                                                             
-                                B      105      Laner,       F          52                                  
-                                                Tahma                                                       
-                                       106      Perry, Sean  M          21                                  
-                                       107      Crews,       F          38                                  
-                                                Deshawn                                                     
-                                                Joseph                                                      
-                                       108      Person,      F          62                                  
-                                                Ladon                                                       
-                                       109      Smith,       M          26                                  
-                                                Shaileigh                                                   
+                          B      105                Laner,          F         52                            
+                                                    Tahma                                                   
+                                 106                Perry, Sean     M         21                            
+                                 107                Crews,          F         38                            
+                                                    Deshawn                                                 
+                                                    Joseph                                                  
+                                 108                Person,         F         62                            
+                                                    Ladon                                                   
+                                 109                Smith,          M         26                            
+                                                    Shaileigh                                               
                                                                                                             
-
 
 
 
