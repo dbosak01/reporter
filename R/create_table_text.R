@@ -137,7 +137,7 @@ get_table_header <- function(rs, ts, pi) {
   ret <- c()
   ln <- c()
   
-  print(lbls)
+  #print(lbls)
   
   #for (i in seq_along(pi$label) {
     
