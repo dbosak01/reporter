@@ -464,7 +464,6 @@ get_page_size <- function(paper_size, uom) {
 #' @noRd
 split_cells <- function(x, col_widths) {
   
-  
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
   max_length <- 0       # The maximum number of splits of a cell in that row
@@ -474,8 +473,9 @@ split_cells <- function(x, col_widths) {
       
       if (any(typeof(x[[nm]]) == "character")) {
 
+
         cell <- strwrap(unlist(
-          strsplit(x[i, nm], split = "\n", fixed = TRUE)), 
+          strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
           width = col_widths[[nm]])
       
       } else {
@@ -486,9 +486,11 @@ split_cells <- function(x, col_widths) {
         max_length <- length(cell)
       
       row_values[[length(row_values) + 1]] <- cell
-      
+
     }
+
     names(row_values) <- names(x)
+
     a <- align_cells(row_values, max_length)
     a$..row <- i
 
@@ -501,6 +503,13 @@ split_cells <- function(x, col_widths) {
     
   }
   
+  # Reset names
+  if ("..row" %in% names(x)) 
+    names(dat) <- c(names(x))
+  else
+    names(dat) <- c(names(x), "..row")
+
+
   
   return(dat)
 }
@@ -559,7 +568,6 @@ clear_missing <- function(x) {
 #' Push string values down to lowest row in data frame
 #' @noRd
 push_down <- function(x) {
-  
 
   for (nm in names(x)) {
    for (i in seq_len(nrow(x) - 1)) {

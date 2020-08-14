@@ -19,6 +19,7 @@ test_that("get_table_header works as expected.", {
   
   lbl <- names(mtcars)
   names(lbl) <- names(mtcars)
+  lbl
   
   lbl[["vs"]] <- "vs\n(n=25)" 
   
@@ -33,8 +34,9 @@ test_that("get_table_header works as expected.", {
                  col_align = aln,
                  label = lbl , label_align = aln)
   
-
+  tbl$data
   res1 <- get_table_header(rpt, tbl, p)
+  
   
   expect_equal(length(res1), 3)
   expect_equal(trimws(res1[[1]]), "vs")

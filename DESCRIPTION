@@ -15,7 +15,9 @@ License: CC0
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat,
-          magrittr
+          magrittr,
+          tidyverse, 
+          haven
 Imports: fmtr,
          qlcMatrix,
          graphics, 

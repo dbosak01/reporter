@@ -24,7 +24,7 @@ create_tables_text <- function(rs, ts) {
   font_name <- "Courier New"
   
   # Set up control columns
-  dat <- ts$data
+  dat <- as.data.frame(ts$data)  #as.data.frame(ts$data)
   dat$..blank <- ""
   dat$..page <- NA
   dat$..row <- NA
@@ -39,7 +39,7 @@ create_tables_text <- function(rs, ts) {
 
   # Filter dataset by included columns
   dat <- dat[ , keys]
-
+  
   # Get labels
   labels <- get_labels(dat, ts$col_defs, ts$n_format)
 
@@ -60,7 +60,7 @@ create_tables_text <- function(rs, ts) {
 
   # Convert to text measurements
   widths_char <- round(widths_uom / rs$char_width)
-  
+
   # Apply formatting
   fdat <- fdata(dat)
   #print(fdat)
@@ -68,7 +68,7 @@ create_tables_text <- function(rs, ts) {
   # Add blank lines as specified
   fdat <- prep_data(fdat, ts$col_defs)
   #print(fdat)
-  
+
   # Split long text strings onto multiple rows
   fdat <- split_cells(fdat, widths_char)
 
@@ -76,7 +76,7 @@ create_tables_text <- function(rs, ts) {
   widths(fdat) <- widths_char
   justification(fdat) <- aligns
   fdat <- fdata(fdat)
-
+  
   # Get available space for table data
   data_size <- get_data_size_text(rs, widths_uom, labels)
   #print(data_size)
@@ -84,8 +84,7 @@ create_tables_text <- function(rs, ts) {
   # Break columns into pages
   #wraps <- get_page_wraps(data_size, ts$col_defs, cwidths)
   wraps <- list(keys)
-  #print("Wraps")
-  #print(wraps)
+  #print("wraps")
 
 
   # split rows
@@ -93,7 +92,6 @@ create_tables_text <- function(rs, ts) {
   splits <- get_splits_text(fdat, widths_uom, data_size[["height"]])
   #print(splits)
   
-
   pg_lst <- list()
   for(s in splits) {
     for(pg in wraps) {
@@ -103,7 +101,6 @@ create_tables_text <- function(rs, ts) {
       pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi)
     }
   }
-  
   
   return(pg_lst)
   
@@ -136,11 +133,14 @@ get_table_header <- function(rs, ts, pi) {
   
   ret <- c()
   ln <- c()
-  
+
+  # Wrap header labels if needed
   d <- data.frame(as.list(lbls))
+  names(d) <- names(lbls)
   d <- split_cells(d, w)
   d <- push_down(d)
-  
+
+  # Label justification, width, and row concatenation
   for (i in seq_len(nrow(d))) {
     
     r <- ""
