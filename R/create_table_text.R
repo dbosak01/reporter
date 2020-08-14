@@ -137,6 +137,8 @@ get_table_header <- function(rs, ts, pi) {
   ret <- c()
   ln <- c()
   
+  print(lbls)
+  
   #for (i in seq_along(pi$label) {
     
     r <- ""
@@ -150,6 +152,7 @@ get_table_header <- function(rs, ts, pi) {
 
     ln[[length(ln) + 1]] <- r 
     
+    # Underline
     sep <- paste0(rep("-", nchar(r)), collapse = "")
     ln[[length(ln) + 1]] <- sep
     
