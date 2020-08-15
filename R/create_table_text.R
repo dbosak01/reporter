@@ -186,6 +186,7 @@ get_table_header <- function(rs, ts, pi) {
 #' @details Basic idea of this function is to figure out which columns 
 #' the header spans, add widths, then call get_table_header.  Everything
 #' from there is the same.  
+#' @import stats
 #' @noRd
 get_spanning_header <- function(rs, ts, pi) {
   

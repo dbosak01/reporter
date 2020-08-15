@@ -106,7 +106,7 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
 }
 
 #' @title Defines a spanning header
-#' @descrition Create a header that spans multiple columns.
+#' @description Create a header that spans multiple columns.
 #' @details 
 #' A spanning header is a label and underline that spans one or more 
 #' column headers.  A spanning header is defined minimally by identifying 

@@ -273,6 +273,9 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
 
 test_that("test8: Table with spanning headers works as expected.", {
   
+  fp <- file.path(base_path, "output/test8.out")
+  
+
   df <- data.frame(vehicle = rownames(mtcars), mtcars)
   rownames(df) = NULL
   
@@ -290,12 +293,13 @@ test_that("test8: Table with spanning headers works as expected.", {
     define(mpg, format = "%.1f") %>% 
     define(cyl) 
   
-  rpt <- create_report(file.path(base_path, "output/test8.out")) %>% 
+  rpt <- create_report(fp) %>% 
     add_content(tbl) %>% 
     titles("Table 1.0", "MTCARS Subset Test")
   
   write_report(rpt)
   
+  expect_equal(file.exists(fp), TRUE)
 })
 
 

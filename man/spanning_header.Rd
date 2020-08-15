@@ -16,18 +16,37 @@ spanning_header(
 \arguments{
 \item{x}{The table spec.}
 
-\item{span_cols}{The columns to span.}
+\item{span_cols}{The columns to span.  The spanning columns may be defined as
+a vector of column positions or names.  If defined by names, the names
+should be quoted.  You may also supply a named vector, with the names
+"from" and "to" equal to the starting and ending columns to span.}
 
 \item{label}{The label to apply to the spanning header.}
 
-\item{label_align}{The alignment to use for the label.}
+\item{label_align}{The alignment to use for the label.Valid values are 
+"left", "right", "center", and "centre".  The default for text columns is 
+"left", and the default for numeric columns is "right".}
 
-\item{level}{The level to use for the spanning header.  The bottom level is 
-level 1, next level above is level 2, and so on.  By default, the level
-is set to 1.}
+\item{level}{The level to use for the spanning header.  The lowest
+spanning level is level 1, the next level above is level 2, and so on.  
+By default, the level is set to 1.}
 
 \item{n}{The n value to use for the n label on the spanning header.}
 }
+\value{
+The modified table spec.
+}
 \description{
-Defines a spanning header
+Create a header that spans multiple columns.
+}
+\details{
+A spanning header is a label and underline that spans one or more 
+column headers.  A spanning header is defined minimally by identifying 
+the columns to be spanned, and spanning header label.  A label alignment 
+value may also be specified.
+
+There are three ways to identify the columns to span: by a sequence of 
+column positions, by a vector of column names, or by a named vector 
+indicating "from" and "to" column names.  When identifying the spanning
+column names, all names should be quoted.
 }
