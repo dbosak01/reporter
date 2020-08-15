@@ -5,7 +5,7 @@ Experis                                                                         
                                              Safety Population                                              
 
            subjid name                  sex                                           age arm               
-           --------------------------------------------------------------------------------------           
+          --------------------------------------------------------------------------------------            
 
               100 Quintana, Gabriel     Male                                           41 A                 
               101 Allison, Blas         Female                                         53 A                 
@@ -47,7 +47,7 @@ Experis                                                                         
 
 Program Name: table1_0.R                                                                                    
 
-2020-08-15 17:16:14                             Confidential                                     Page X of Y
+2020-08-15 19:13:20                             Confidential                                     Page X of Y
 Experis                                                                                            Study ABC
                                                                                               Status: Closed
                                                  Table 1.0                                                  
@@ -55,7 +55,7 @@ Program Name: table1_0.R
                                              Safety Population                                              
 
                    subjid name                       sex    age arm                                         
-                   ----------------------------------------------------------------------                   
+                  ----------------------------------------------------------------------                    
                      105 Laner, Tahma               Female    52% Treatment 1                               
                      106 Perry, Sean                Male      21% Treatment 1                               
                      107 Crews, Deshawn Joseph      Female    38% Treatment 1                               
@@ -97,4 +97,4 @@ Program Name: table1_0.R
 
 Program Name: table1_0.R                                                                                    
 
-2020-08-15 17:16:14                             Confidential                                     Page X of Y
+2020-08-15 19:13:20                             Confidential                                     Page X of Y

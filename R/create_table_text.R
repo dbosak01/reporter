@@ -163,7 +163,7 @@ get_table_header <- function(rs, ts, pi) {
   
   
   # Underline
-  sep <- paste0(rep("-", nchar(r) - 1), collapse = "")
+  sep <- paste0(paste0(rep("-", nchar(r) - 1), collapse = ""), " ")
   ln[[length(ln) + 1]] <- sep
     
   # Justify entire header
@@ -231,6 +231,14 @@ get_spanning_header <- function(rs, ts, pi) {
     # Otherwise, leave as negative value.
     for (i in 1:length(slvl[[l]])) {
       cl <- slvl[[l]][[i]]$span_cols
+      
+      # Deal with from and to specified spans
+      if ("from" %in% names(cl) & "to" %in% names(cl)) {
+        sq <- seq(from = match(cl["from"], cols), to = match(cl["to"], cols))
+        cl <- cols[sq]
+      }
+      
+      # Span specifications can be a vector of column names or numbers
       if (typeof(cl) == "character")
         t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
       else 

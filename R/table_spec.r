@@ -105,15 +105,32 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
   return(x)
 }
 
-#' Defines a spanning header
+#' @title Defines a spanning header
+#' @descrition Create a header that spans multiple columns.
+#' @details 
+#' A spanning header is a label and underline that spans one or more 
+#' column headers.  A spanning header is defined minimally by identifying 
+#' the columns to be spanned, and spanning header label.  A label alignment 
+#' value may also be specified.
+#' 
+#' There are three ways to identify the columns to span: by a sequence of 
+#' column positions, by a vector of column names, or by a named vector 
+#' indicating "from" and "to" column names.  When identifying the spanning
+#' column names, all names should be quoted.
 #' @param x The table spec.
-#' @param span_cols The columns to span.
+#' @param span_cols The columns to span.  The spanning columns may be defined as
+#' a vector of column positions or names.  If defined by names, the names
+#' should be quoted.  You may also supply a named vector, with the names
+#' "from" and "to" equal to the starting and ending columns to span.
 #' @param label The label to apply to the spanning header.
-#' @param label_align The alignment to use for the label.
-#' @param level The level to use for the spanning header.  The bottom level is 
-#' level 1, next level above is level 2, and so on.  By default, the level
-#' is set to 1.
+#' @param label_align The alignment to use for the label.Valid values are 
+#' "left", "right", "center", and "centre".  The default for text columns is 
+#' "left", and the default for numeric columns is "right".
+#' @param level The level to use for the spanning header.  The lowest
+#' spanning level is level 1, the next level above is level 2, and so on.  
+#' By default, the level is set to 1.
 #' @param n The n value to use for the n label on the spanning header.
+#' @return The modified table spec.
 #' @export
 spanning_header <- function(x, span_cols, label = "",
                             label_align = "center", level = 1, n = NULL) {

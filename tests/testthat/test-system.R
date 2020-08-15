@@ -31,8 +31,8 @@ test_that("test2: Simplest table with title works as expected.", {
     file.remove(fp)
   
   rpt <- create_report(fp) %>% 
-    titles("MTCARS Data Frame") %>% 
-    add_content(create_table(mtcars[1:10, ]))
+    titles("MTCARS Data Frame", align = "left") %>% 
+    add_content(create_table(mtcars[1:10, ], align = "left"))
 
   
   write_report(rpt)
@@ -181,13 +181,14 @@ test_that("test5: Table with break between sections works as expected.", {
 
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(subjid, label = "Subject ID") %>% 
+    define(subjid, label = "Subject ID", align = "left") %>% 
     define(name, label = "Subject Name") %>% 
     define(sex, label = "Sex") %>% 
     define(age, label = "Age") %>% 
     define(arm, label = "Arm", 
            blank_after = TRUE, 
-           dedupe = TRUE)
+           dedupe = TRUE, 
+           align = "right")
 
 
   rpt <- create_report(fp) %>%
@@ -272,18 +273,22 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
 
 test_that("test8: Table with spanning headers works as expected.", {
   
-  tbl <- create_table(mtcars[1:10, ]) %>% 
+  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  rownames(df) = NULL
+  
+  tbl <- create_table(df) %>% 
     spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
                     label = "Span 1", label_align = "center", n = 10) %>% 
     spanning_header(span_cols = c("drat", "wt", "qsec"),
-                    label = "Span 2", label_align = "right", n = 10) %>%
+                    label = "Span 2", label_align = "center", n = 10) %>%
     spanning_header(span_cols = c("vs", "am", "gear", "carb"),
-                    label = "Span 3", label_align = "right", n = 10) %>%
-    spanning_header(span_cols = c(5:11), label = "Super Span", label_align = "center",
+                    label = "Span 3", label_align = "center", n = 10) %>%
+    spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
+                    label_align = "center",
                     level = 2) %>% 
+    define(vehicle, label = "Vehicle") %>% 
     define(mpg, format = "%.1f") %>% 
-    define(cyl, width = 1) %>% 
-    define(hp)
+    define(cyl) 
   
   rpt <- create_report(file.path(base_path, "output/test8.out")) %>% 
     add_content(tbl) %>% 
@@ -292,4 +297,5 @@ test_that("test8: Table with spanning headers works as expected.", {
   write_report(rpt)
   
 })
-  
+
+
