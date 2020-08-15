@@ -22,7 +22,9 @@ spanning_header(
 
 \item{label_align}{The alignment to use for the label.}
 
-\item{level}{The level to use for the spanning header.}
+\item{level}{The level to use for the spanning header.  The bottom level is 
+level 1, next level above is level 2, and so on.  By default, the level
+is set to 1.}
 
 \item{n}{The n value to use for the n label on the spanning header.}
 }

@@ -18,3 +18,24 @@ test_that("table spec constructor operator works as expected.", {
   
   
 })
+
+
+test_that("spanning header constructor works as expected.", {
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    spanning_header(span_cols = c("mpg", "cyl", "disp"),
+                    label = "Span 1", n = 25, label_align = "left") %>% 
+    define(mpg, format = "%.1f") %>% 
+    define(cyl, width = 1) %>% 
+    define(hp)
+  
+  s <- tbl$col_spans
+  
+  expect_equal(length(s), 1)
+  expect_equal(s[[1]]$label, "Span 1")
+  expect_equal(s[[1]]$label_align, "left")
+  expect_equal(s[[1]]$n, 25)
+  expect_equal(s[[1]]$span_cols, c("mpg", "cyl", "disp"))
+  expect_equal(length(tbl$col_defs), 3)
+  
+})

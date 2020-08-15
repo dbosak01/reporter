@@ -4,19 +4,19 @@ Experis                                                                         
                                        Analysis Data Subject Listing                                        
                                              Safety Population                                              
 
-                  subjid name                       sex             age arm                                 
-                 --------------------------------------------------------------------------                 
+                 left   name                       sex             age              right                   
+                  ------------------------------------------------------------------------                  
 
-                     100 Quintana, Gabriel          Male             41 Placebo                             
-                     101 Allison, Blas              Female           53 Placebo                             
-                     102 Minniear, Presley          Female           43 Placebo                             
-                     103 al-Kazemi, Najwa           Male             39 Placebo                             
-                     104 Schaffer, Ashley           Male             47 Placebo                             
-                     105 Laner, Tahma               Female           52 Treatment 1                         
-                     106 Perry, Sean                Male             21 Treatment 1                         
-                     107 Crews, Deshawn Joseph      Female           38 Treatment 1                         
-                     108 Person, Ladon              Female           62 Treatment 1                         
-                     109 Smith, Shaileigh           Male             26 Treatment 1                         
+                 100    Quintana, Gabriel          Male             41            Placebo                   
+                 101    Allison, Blas              Female           53            Placebo                   
+                 102    Minniear, Presley          Female           43            Placebo                   
+                 103    al-Kazemi, Najwa           Male             39            Placebo                   
+                 104    Schaffer, Ashley           Male             47            Placebo                   
+                 105    Laner, Tahma               Female           52        Treatment 1                   
+                 106    Perry, Sean                Male             21        Treatment 1                   
+                 107    Crews, Deshawn Joseph      Female           38        Treatment 1                   
+                 108    Person, Ladon              Female           62        Treatment 1                   
+                 109    Smith, Shaileigh           Male             26        Treatment 1                   
 
 
 
@@ -47,4 +47,4 @@ Experis                                                                         
 
 Program Name: table1_0.R                                                                                    
 
-2020-08-14 11:56:12                             Confidential                                     Page X of Y
+2020-08-15 17:16:14                             Confidential                                     Page X of Y

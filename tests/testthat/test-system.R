@@ -70,9 +70,10 @@ test_that("test3: Simple table with formats works as expected.", {
   sfmt2 <- c(M = "Male", F = "Female")
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, align = "left") %>% 
     define(sex, width = 1, format = sfmt2) %>%
     define(age, width = .5) %>% 
-    define(arm, format = afmt, width = 1.5)
+    define(arm, format = afmt, width = 1.5, align = "right")
   
 
   
@@ -269,3 +270,26 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
 
 })
 
+test_that("test8: Table with spanning headers works as expected.", {
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
+                    label = "Span 1", label_align = "center", n = 10) %>% 
+    spanning_header(span_cols = c("drat", "wt", "qsec"),
+                    label = "Span 2", label_align = "right", n = 10) %>%
+    spanning_header(span_cols = c("vs", "am", "gear", "carb"),
+                    label = "Span 3", label_align = "right", n = 10) %>%
+    spanning_header(span_cols = c(5:11), label = "Super Span", label_align = "center",
+                    level = 2) %>% 
+    define(mpg, format = "%.1f") %>% 
+    define(cyl, width = 1) %>% 
+    define(hp)
+  
+  rpt <- create_report(file.path(base_path, "output/test8.out")) %>% 
+    add_content(tbl) %>% 
+    titles("Table 1.0", "MTCARS Subset Test")
+  
+  write_report(rpt)
+  
+})
+  

@@ -83,21 +83,22 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE) {
 
-
-  def <- list(var = deparse(substitute(var)),
-              var_c = as.character(substitute(var)),
-              label = label,
-              format = format,
-              col_type = col_type,
-              align = align,
-              label_align = if (is.null(label_align) & !is.null(align))
-                                align else label_align,
-              width = width,
-              visible = visible,
-              n = n,
-              blank_after = blank_after,
-              dedupe = dedupe,
-              id_var = id_var)
+  def <- structure(list(), class = c("col_def", "list"))
+  
+  def$var = deparse(substitute(var))
+  def$var_c = as.character(substitute(var))
+  def$label = label
+  def$format = format
+  def$col_type = col_type
+  def$align = align
+  def$label_align = if (is.null(label_align) & !is.null(align))
+                                align else label_align
+  def$width = width
+  def$visible = visible
+  def$n = n
+  def$blank_after = blank_after
+  def$dedupe = dedupe
+  def$id_var = id_var
 
   x$col_defs[[length(x$col_defs) + 1]] <- def
 
@@ -109,17 +110,21 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
 #' @param span_cols The columns to span.
 #' @param label The label to apply to the spanning header.
 #' @param label_align The alignment to use for the label.
-#' @param level The level to use for the spanning header.
+#' @param level The level to use for the spanning header.  The bottom level is 
+#' level 1, next level above is level 2, and so on.  By default, the level
+#' is set to 1.
 #' @param n The n value to use for the n label on the spanning header.
 #' @export
 spanning_header <- function(x, span_cols, label = "",
                             label_align = "center", level = 1, n = NULL) {
-
-  sh <- list(span_cols = span_cols,
-             label = label,
-             label_align = label_align,
-             level = level,
-             n = n)
+  
+  sh <- structure(list(), class = c("span_def", "list"))
+  
+  sh$span_cols = span_cols
+  sh$label = label
+  sh$label_align = label_align
+  sh$level = level
+  sh$n = n
 
   x$col_spans[[length(x$col_spans) + 1]] <- sh
 
