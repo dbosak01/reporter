@@ -82,9 +82,10 @@ create_tables_text <- function(rs, ts) {
   #print(data_size)
 
   # Break columns into pages
-  #wraps <- get_page_wraps(data_size, ts$col_defs, cwidths)
-  wraps <- list(keys)
+  wraps <- get_page_wraps(data_size, ts$col_defs, widths_char)
+  #wraps <- list(keys)
   #print("wraps")
+  #print(wraps)
 
 
   # split rows

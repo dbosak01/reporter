@@ -80,6 +80,8 @@ get_splits <- function(dat, col_widths, data_size, font_family) {
 #' @noRd
 get_page_wraps <- function(data_size, defs, widths) {
   
+  # Get ID variable from definitions
+  # These need to be shown on each page
   id_vars <- c()
   for (def in defs) {
     if (!is.null(def$id_var) && def$id_var)
@@ -93,24 +95,30 @@ get_page_wraps <- function(data_size, defs, widths) {
   tw <- data_size["width"]
   
   for (nm in names(widths)) {
-    if (length(pg) == 0 && length(id_vars) > 0) {
-      pg <- widths[id_vars]
-      names(pg) <- id_vars
+
+    if (!is.control(nm)) {
+      # If ID vars exist, add them to list
+      if (length(pg) == 0 && length(id_vars) > 0) {
+        pg <- widths[id_vars]
+        names(pg) <- id_vars
+      }
+      
+      
+      if (sum(pg, widths[nm]) < tw) {
+        pg[nm] <- widths[nm]
+        #names(pg[length(pg)]) <- nm
+      } else {
+        
+        ret[[length(ret) + 1]] <- c(names(pg), control_cols)
+        pg <- c()
+      }
     }
     
-    if (sum(pg, widths[nm]) < tw) {
-      pg[nm] <- widths[nm]
-      #names(pg[length(pg)]) <- nm
-    } else {
-      
-      ret[[length(ret) + 1]] <- names(pg)
-      pg <- c()
-    }
   }
   
   
   if (length(pg) > 0) {
-    ret[[length(ret) + 1]] <- names(pg)
+    ret[[length(ret) + 1]] <- c(names(pg), control_cols)
   }
 
   
