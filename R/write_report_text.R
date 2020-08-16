@@ -55,6 +55,7 @@ write_report_text <- function(rs) {
     counter <- counter + 1
   }
 
+  rs <- write_page_numbers(rs)
   
   invisible(rs)
 }
@@ -121,6 +122,11 @@ write_page_break <- function(rs) {
   
   f <- file(rs$file_path, open="a")
   
+  if (is.null(rs$pages))
+    rs$pages <- 1
+  else 
+    rs$pages <- rs$pages + 1 
+  
   writeLines("", con = f, sep = "\f")
   
   close(f)
@@ -129,4 +135,82 @@ write_page_break <- function(rs) {
 
 }
 
+#' @description Update page numbers in text file
+#' @noRd
+write_page_numbers <- function(rs) {
+ 
+  # Read file into vector
+  lns <- readLines(rs$file_path)
+  
+  # Set up page variables
+  tpg <- rs$pages
+  pg <- 1
+  
+  # Define vectorized function to replace tokens
+  replace_tokens <- Vectorize(function(x, srch, just) {
+    
+    ret <- x
+  
+    # Update page number if hit a page break
+    if (grepl("\f", x, fixed = TRUE)) {
+      #print("Updated page number")
+      pg <<- pg + 1 
+    }
+    
+    # Replace tokens, but keep overall width the same
+    if (grepl(srch, x, fixed = TRUE)) {
+      #print("found it")
+      
+      tmp <- sub("[tpg]", tpg, srch, fixed = TRUE)
+      tmp <- sub("[pg]", pg, tmp, fixed = TRUE)
+      tmp <- format(tmp, width = nchar(srch), justify = just)
+      ret <- sub(srch, tmp, x, fixed = TRUE)
+    }
+    
+    return(ret)
+  })
+  
+  # Call vectorized function on entire page header/footer segment
+  if (token_check(rs$page_header_left)) {
+    pg <- 1
+    lns <- replace_tokens(lns, rs$page_header_left, "left")
+  }
+  if (token_check(rs$page_header_right)) {
+    pg <- 1
+    lns <- replace_tokens(lns, rs$page_header_right, "right")
+  }
+  if (token_check(rs$page_footer_left)) {
+    pg <- 1
+    lns <- replace_tokens(lns, rs$page_footer_left, "left")
+  }
+  if (token_check(rs$page_footer_center)) {
+    pg <- 1
+    lns <- replace_tokens(lns, rs$page_footer_center, "centre")
+  }
+  if (token_check(rs$page_footer_right)) {
+    pg <- 1
+    lns <- replace_tokens(lns, rs$page_footer_right, "right")
+  }
+  
+  # Replace file with updated lines
+  f <- file(rs$file_path, open="w")
+  writeLines(lns, con = f)
+  close(f)
+  
+  return(rs)
+}
+
+#' @noRd
+token_check <- function(x) {
+  
+  ret <- FALSE
+  
+  if (!is.null(x))
+    if (any(nchar(x) > 0))
+      if (any(grepl("[pg]", x, fixed = TRUE)) |
+          any(grepl("[tpg]", x, fixed = TRUE)))
+            ret <- TRUE
+      
+  return(ret)
+}
 

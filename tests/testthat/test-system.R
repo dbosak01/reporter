@@ -87,7 +87,7 @@ test_that("test3: Simple table with formats works as expected.", {
            align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
     page_footer(left = Sys.time(), center = "Confidential", 
-                right = "Page X of Y") %>%
+                right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
   write_report(rpt)
@@ -150,7 +150,7 @@ test_that("test4: Two page report works as expected.", {
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
     page_footer(left = Sys.time(), center = "Confidential", 
-                right = "Page X of Y") %>%
+                right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) %>%
     add_content(tbl2)
   
@@ -200,7 +200,7 @@ test_that("test5: Table with break between sections works as expected.", {
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
     page_footer(left = Sys.time(), center = "Confidential", 
-                right = "Page X of Y") %>%
+                right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
 
@@ -222,7 +222,7 @@ test_that("test6: Table that spans multiple pages breaks as expected.", {
     add_content(create_table(iris))
 
 
-  write_report(rpt)
+  res2 <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
 
@@ -412,7 +412,7 @@ test_that("test11: Table with break between sections works as expected.", {
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
     page_footer(left = Sys.time(), center = "Confidential", 
-                right = "Page X of Y") %>%
+                right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
   

@@ -111,6 +111,7 @@ create_report <- function(file_path = "", output_type = "text",
   x$uom <- uom
   x$paper_size <- paper_size
   x$page_size <- get_page_size(paper_size, uom)
+  x$pages <- 1
 
   
   if (output_type == "text") {

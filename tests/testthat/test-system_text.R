@@ -62,7 +62,7 @@ test_that("text2: Harder text output works as expected.", {
     add_content(cnt) %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
-                right ="Page X of Y")
+                right ="Page [pg] of [tpg]")
   
   rpt
   
@@ -81,14 +81,14 @@ test_that("text3: Even harder text output works as expected.", {
   
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 3.0", "Even Harder Text Report") %>% 
-    page_header(left = "Client: ABC", right = "Study: 123") %>% 
+    page_header(left = "Page [pg] of [tpg]", right = "Study: 123") %>% 
     add_content(cnt) %>% 
     add_content(cnt) %>% 
     add_content(cnt) %>% 
     add_content(cnt) %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
-                right ="Page X of Y")
+                right =" Total Pages [tpg]")
   
   write_report(rpt)
   
@@ -109,9 +109,9 @@ test_that("text4: Long text output works as expected.", {
     titles("Report 4.0", "Long Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(l) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Page [pg] of [tpg]", 
                 center = "Confidential", 
-                right ="Page X of Y")
+                right = Sys.time())
   
   write_report(rpt)
   
@@ -133,7 +133,30 @@ test_that("text5: Table and Text output works as expected.", {
     add_content(cnt) %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
-                right ="Page X of Y")
+                right ="Page [pg] of [tpg]")
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+})
+
+
+test_that("text6: Very Long text output works as expected.", {
+  
+  fp <- file.path(base_path, "text/text6.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  l <- paste(rep(cnt, 10000), collapse = "\n\n")
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    titles("Report 6.0", "Very long Text Report") %>% 
+    page_header(left = "Client: ABC", right = "Study: 123") %>% 
+    add_content(l) %>% 
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right ="Page [pg] of [tpg]")
   
   write_report(rpt)
   

@@ -1,5 +1,9 @@
 context("Write Report Text Tests")
 
+base_path <- "c:/packages/rptr/tests/testthat"
+
+base_path <- "./"
+
 test_that("page_template_text() works as expected.", {
   
   
@@ -57,3 +61,20 @@ test_that("page_template_text() works as expected.", {
   expect_error(page_template_text(rpt4))
   
 })
+
+
+# test_that("write_page_numbers() works as expected.", {
+#   
+#   fp <- file.path(base_path, "text/text4.out")
+#   
+#   rtp <- create_report(fp) %>% 
+#     page_footer(right = "Page [pg] of [tpg]")
+#   
+#   res2 <- write_page_numbers(rtp)
+#   
+#   res2
+#   
+#   expect_equal(grepl("[pg]", 
+#   
+#   
+# })
