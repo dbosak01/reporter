@@ -355,19 +355,22 @@ get_labels <- function(dat, defs, nfmt){
   # Convert label vector to a list
   #ls <- as.list(v2)
   ls <- v2
+
   
   # Assign names to list
   names(ls) <- v1
+
   
   for (def in defs) {
-    
-    if (!is.null(def$label))
-      ls[[def$var]] <- def$label
+
+    if (!is.null(def[["label"]]))
+      ls[[def$var]] <- def[["label"]]
     
     if (!is.null(def$n) ) {
       ls[[def$var]] <- paste0(ls[[def$var]],  nfmt(def$n))
     }
   }
+  
   
   return(ls)
 }

@@ -471,12 +471,12 @@ split_cells <- function(x, col_widths) {
   for (i in seq_len(nrow(x))) {
     for (nm in names(x)) {
       
-      if (any(typeof(x[[nm]]) == "character")) {
+      if (any(typeof(x[[nm]]) == "character") & !is.control(nm)) {
 
-
-        cell <- strwrap(unlist(
-          strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
-          width = col_widths[[nm]])
+          cell <- stri_wrap(unlist(
+            strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
+            width = col_widths[[nm]], normalize = FALSE)
+        
       
       } else {
         cell <- x[i, nm]

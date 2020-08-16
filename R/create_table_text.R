@@ -42,13 +42,16 @@ create_tables_text <- function(rs, ts) {
   
   # Get labels
   labels <- get_labels(dat, ts$col_defs, ts$n_format)
+  #print(labels)
 
   # Get column alignments
   aligns <- get_aligns(dat, ts$col_defs)
+  #print(aligns)
     
   # Get alignment for labels
   # Follows column alignment by default
   label_aligns <- get_label_aligns(ts$col_defs, aligns)
+  #print(label_aligns)
 
   # Get column formats
   formats(dat) <- get_col_formats(ts$col_defs)
@@ -63,19 +66,25 @@ create_tables_text <- function(rs, ts) {
 
   # Apply formatting
   fdat <- fdata(dat)
+  #print("fdata1")
   #print(fdat)
 
   # Add blank lines as specified
   fdat <- prep_data(fdat, ts$col_defs)
+  #print("prep_data")
   #print(fdat)
 
   # Split long text strings onto multiple rows
   fdat <- split_cells(fdat, widths_char)
+  #print("split_cells")
+  #print(fdat)
 
   # Apply widths and justification
   widths(fdat) <- widths_char
   justification(fdat) <- aligns
   fdat <- fdata(fdat)
+  #print("fdata2")
+  #print(fdat)
   
   # Get available space for table data
   data_size <- get_data_size_text(rs, widths_uom, labels)
@@ -83,7 +92,6 @@ create_tables_text <- function(rs, ts) {
 
   # Break columns into pages
   wraps <- get_page_wraps(data_size, ts$col_defs, widths_char)
-  #wraps <- list(keys)
   #print("wraps")
   #print(wraps)
 
@@ -91,7 +99,9 @@ create_tables_text <- function(rs, ts) {
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
   splits <- get_splits_text(fdat, widths_uom, data_size[["height"]])
+  #print("splits")
   #print(splits)
+
   
   pg_lst <- list()
   for(s in splits) {

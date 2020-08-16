@@ -24,8 +24,8 @@ report_spec object, but will be required to print the report.}
 are "landscape" or "portrait".  The default page orientation is "landscape".}
 
 \item{uom}{Specifies the units of measurement.  This setting will 
-set the units for columns widths.  Valid values are "inches"
-or "cm".  Default value is "inches".}
+indicate the units for columns widths, margins, paper size, and other 
+measurements. Valid values are "inches" or "cm".  Default value is "inches".}
 
 \item{paper_size}{The expected paper size on which the report may be 
 printed.  The \code{paper_size} will determine how much text can fit on
@@ -45,18 +45,28 @@ defined as an S3 object, and is inherited from a list.
 
 The report_spec object hold information concerning report page size, font, 
 titles, footnotes, page header, page footer, margins, and other options.  
-Use the \code{add_content()} function to add content to the report.  
-The report may be written using the \code{write_report()} function.
+Use the \code{\link{add_content}} function to add content to the report.  
+The report may be written to a file using the \code{\link{write_report}} 
+function.
 }
 \examples{
-# Create the report object
-rpt <- create_report("output/mtcars.docx", orientation="portrait") 
+# Create temp file path
+fp <- file.path(tempdir(), "mtcars.txt")
 
-# Add content to the report
+# Create the report object
+rpt <- create_report(fp) 
+
+# Add title
+rpt <- titles(rpt, "MTCARS sample report")
+
+# Add content 
 rpt <- add_content(rpt, create_table(mtcars)) 
 
 # Write the report to the file system
-#write_report(rpt)
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(fp))
 }
 \seealso{
 \itemize{

@@ -1,17 +1,4 @@
 
-## To Do ##
-# Automatic paging and wrapping
-# Spanning header function
-
-# ft <- report_table(final, n_format=NULL, page_var=page) %>%
-#   define(var="variable", label="Variable", align="left", width=1.25, visible=TRUE) %>%
-#   define(var="category", label="", align="left", width=2) %>%
-#   define(var="placebo", label="Placebo", align="center", width=1, n=placebo_pop) %>%
-#   define(var="drug", label="Drug", align="center",  width=1, n=drug_pop) %>%
-#   define(var="overall", label="Overall", align="center", width=1, n=overall_pop, wrap=TRUE) %>%
-#   spanning_header(span_cols=c("placebo", "drug"), label="Treatment Groups", label_align="center")
-
-
 
 
 # Table Spec Functions ---------------------------------------------------------

@@ -30,9 +30,12 @@ test_that("test2: Simplest table with title works as expected.", {
   if (file.exists(fp))
     file.remove(fp)
   
+  tbl <- create_table(mtcars[1:10, ], align = "left") %>% 
+    define(vs, visible = FALSE)
+  
   rpt <- create_report(fp) %>% 
     titles("MTCARS Data Frame", align = "left") %>% 
-    add_content(create_table(mtcars[1:10, ], align = "left"))
+    add_content(tbl)
 
   
   write_report(rpt)
@@ -418,5 +421,4 @@ test_that("test11: Table with break between sections works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
-
 

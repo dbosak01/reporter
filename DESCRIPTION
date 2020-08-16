@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Creates printable reports 
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: This package creates printable reports.  Currently supports 

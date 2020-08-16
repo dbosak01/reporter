@@ -94,7 +94,7 @@ test_that("split_cells works as expected.", {
   res1 <- split_cells(df, wc)
   res1
   
-  expect_equal(nrow(res1), 7) 
+  expect_equal(nrow(res1), 5) 
   
 })
 

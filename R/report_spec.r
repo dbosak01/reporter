@@ -16,8 +16,9 @@
 #' 
 #' The report_spec object hold information concerning report page size, font, 
 #' titles, footnotes, page header, page footer, margins, and other options.  
-#' Use the \code{add_content()} function to add content to the report.  
-#' The report may be written using the \code{write_report()} function. 
+#' Use the \code{\link{add_content}} function to add content to the report.  
+#' The report may be written to a file using the \code{\link{write_report}} 
+#' function. 
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -27,8 +28,8 @@
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param uom Specifies the units of measurement.  This setting will 
-#' set the units for columns widths.  Valid values are "inches"
-#' or "cm".  Default value is "inches".
+#' indicate the units for columns widths, margins, paper size, and other 
+#' measurements. Valid values are "inches" or "cm".  Default value is "inches".
 #' @param paper_size The expected paper size on which the report may be 
 #' printed.  The \code{paper_size} will determine how much text can fit on
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
@@ -46,14 +47,23 @@
 #'   \item \code{\link{write_report}} to write the report to the file system.
 #' }
 #' @examples
-#' # Create the report object
-#' rpt <- create_report("output/mtcars.docx", orientation="portrait") 
+#' # Create temp file path
+#' fp <- file.path(tempdir(), "mtcars.txt")
 #' 
-#' # Add content to the report
+#' # Create the report object
+#' rpt <- create_report(fp) 
+#' 
+#' # Add title
+#' rpt <- titles(rpt, "MTCARS sample report")
+#' 
+#' # Add content 
 #' rpt <- add_content(rpt, create_table(mtcars)) 
 #' 
 #' # Write the report to the file system
-#' #write_report(rpt)
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(fp))
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
                           orientation ="landscape", uom = "inches",
