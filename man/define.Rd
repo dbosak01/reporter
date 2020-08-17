@@ -17,7 +17,8 @@ define(
   n = NULL,
   blank_after = FALSE,
   dedupe = FALSE,
-  id_var = FALSE
+  id_var = FALSE,
+  wrap = FALSE
 )
 }
 \arguments{
@@ -53,6 +54,10 @@ that are deduped only show the value on the first row in a group.}
 
 \item{id_var}{Whether this variable should be considered an ID variable.
 ID variables are retained on each page when the page is wrapped.}
+
+\item{wrap}{Force a page wrap on this variable.  A page wrap is a vertical
+page break necessary when the table is too wide to fit on a single page.
+The excess variables will be wrapped to the next page.}
 }
 \description{
 Defines a column specification

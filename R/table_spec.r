@@ -70,11 +70,14 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' that are deduped only show the value on the first row in a group.
 #' @param id_var Whether this variable should be considered an ID variable.
 #' ID variables are retained on each page when the page is wrapped.
+#' @param wrap Force a page wrap on this variable.  A page wrap is a vertical
+#' page break necessary when the table is too wide to fit on a single page.
+#' The excess variables will be wrapped to the next page.
 #' @export
 define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
-                   dedupe=FALSE, id_var = FALSE) {
+                   dedupe=FALSE, id_var = FALSE, wrap = FALSE) {
   
   # Check that variable exists
   var_c <- as.character(substitute(var))
@@ -101,6 +104,7 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
   def$blank_after = blank_after
   def$dedupe = dedupe
   def$id_var = id_var
+  def$wrap = wrap
 
   x$col_defs[[length(x$col_defs) + 1]] <- def
 

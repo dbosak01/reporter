@@ -82,13 +82,19 @@ get_page_wraps <- function(data_size, defs, widths) {
   
   # Get ID variable from definitions
   # These need to be shown on each page
+  # Also get page wraps
   id_vars <- c()
+  wraps <- c()
+  nms <- c()
   for (def in defs) {
     if (!is.null(def$id_var) && def$id_var)
       id_vars[length(id_vars) + 1] <- def$var_c
     
+    wraps[length(wraps) + 1] <- def$wrap
+    nms[length(nms) + 1] <- def$var_c
   }
-  
+  names(wraps) <- nms
+
   
   ret <- list() # list of columns for each page
   pg <- c()     # columns on a page
@@ -107,19 +113,27 @@ get_page_wraps <- function(data_size, defs, widths) {
         names(pg) <- id_vars
       }
       
+      # Force a page wrap if requested in definition
+      force_wrap <- FALSE
+      if (is.null(wraps) == FALSE) 
+        if (is.na(wraps[nm]) == FALSE) 
+          if (wraps[nm] == TRUE)
+            force_wrap <- TRUE
 
-      if (sum(pg, widths[nm]) < tw) {
-        
-        # If sum of widths does not exceed page size, add to pg and keep going
-        pg[nm] <- widths[nm]
-
-      } else {
+      if (sum(pg, widths[nm]) >  tw | force_wrap) {
         
         # If sum of widths exceed page size, add page to list and reset pg
         # Also add control cols so downstream functions can use them
         ret[[length(ret) + 1]] <- c(names(pg), control_cols)
         pg <- c()
-      }
+        pg[nm] <- widths[nm]
+        
+      } else {
+        
+        # If sum of widths does not exceed page size, add to pg and keep going
+        pg[nm] <- widths[nm]
+
+      } 
     }
     
   }
