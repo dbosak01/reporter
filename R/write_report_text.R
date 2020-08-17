@@ -33,40 +33,68 @@ write_report_text <- function(rs) {
 
   ls <- rs$content
 
-  counter <- 1
+  counter <- 0
+  last_object <- FALSE
 
   # Write out content
   for(o in ls){
+    
+    # Increment counter
+    counter <- counter + 1
+    
+    # Set last_object flag
+    if (counter == length(ls))
+      last_object <- TRUE
+    else 
+      last_object <- FALSE
+    
+    print(last_object)
+    
     if (class(o)[1] == "table_spec"){
 
+      # Break table into multiple pages if needed
+      # This function returns a list of pages
       ttx <- create_tables_text(rs, o)
 
-      rs <- write_tables_text(rs, ttx, pt)
+      # Write pages
+      # This function takes the page template (headers, titles, etc.)
+      # and combines with the table pages and writes to file.
+      rs <- write_tables_text(rs, ttx, pt, last_object)
+      
     } else if (class(o)[1] == "character" & o == "page_break"){
       
-      if (counter < length(ls))
+      # Add page break except for the last page
+      # so there is no empty page at the end
+      if (!last_object) {
         rs <- write_page_break(rs)
+        print("Made it here")
+      }
+      
     } else if (class(o)[1] == "character") {
       
       txt <- create_text(rs, o)
-      rs <- write_tables_text(rs, txt, pt)
+      rs <- write_tables_text(rs, txt, pt, last_object)
     }
     
-    counter <- counter + 1
+
   }
 
+  # After report is written, reopen and fix the page numbers.
+  # Reason is we don't really know how many pages there are 
+  # until the report is written.
   rs <- write_page_numbers(rs)
   
   invisible(rs)
 }
 
 #' Write a list of tables to the report file
-#' @param rs The Report Spec
-#' @param ttx A list of tables to write
-#' @param pt A page template object
+#' @param rs The Report Spec.
+#' @param ttx A list of tables to write.
+#' @param pt A page template object.
+#' @param last_object Whether the table is the last object to be written.
 #' @return The report spec
 #' @noRd
-write_tables_text <- function(rs, ttx, pt) {
+write_tables_text <- function(rs, ttx, pt, last_object) {
   
   
   for (i in seq_along(ttx)) {
@@ -75,6 +103,8 @@ write_tables_text <- function(rs, ttx, pt) {
     
     if (i < length(ttx))
       rs <- write_page_break(rs)
+    else if (last_object == FALSE)
+       rs <- write_page_break(rs)
     
   }
   
@@ -113,8 +143,10 @@ write_table_text <- function(rs, ttx, pt) {
   
   return(rs)
 }
-#' Write out a page break to the report file
-#' For text, the page break is a form feed character 
+#' @description Write out a page break to the report file
+#' @details For text, the page break is a form feed character.  This function
+#' also calculates the total page count and records in the report pages
+#' property.
 #' @param rs The report spec
 #' @return The report spec, unmodified
 #' @noRd
@@ -136,6 +168,10 @@ write_page_break <- function(rs) {
 }
 
 #' @description Update page numbers in text file
+#' @details Logic is to read in each line of the file, loop through and replace
+#' tokens as needed.  Pages numbers are incremented every time a form feed
+#' is encountered.  Total pages is retrieved from the report pages property.
+#' Total pages is calculated in the write_page_break function.
 #' @noRd
 write_page_numbers <- function(rs) {
  

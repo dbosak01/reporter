@@ -511,26 +511,38 @@ page_footer <- function(x, left="", right="", center=""){
 # Functions ---------------------------------------------------------------
 
 
-
-#' @title
-#' Add content to a report
-#'
-#' @description
-#' This function adds an object to the report content list. Valid objects
-#' are a table_spec, a flextable, or a plot from ggplot.  Objects will be
+#' @title Add content to a report
+#' @description This function adds an object to the report content list. 
+#' @details 
+#' For a text report, 
+#' valid objects are free text or a table_spec.  Objects will be
 #' appended to the report in order they are added.  By default, a page break
 #' is added after the content.
-#'
-#' @param x a report_spec to append content to
-#' @param object the object to append
-#' @param page_break whether to add a page break. Value values are "before",
-#' "after", or "none"
-#' @return The modified report_spec
+#' @param x The report_spec to append content to.
+#' @param object The object to append.
+#' @param page_break Whether to add a page break. Value values are "before",
+#' "after", or "none".  You can manipulate the page_break parameter to add
+#' multiple objects to the same page.  
+#' @return The modified report_spec.
 #' @examples
-#' #library(magrittr)
-#' #create_report("listing_3_0.docx") %>%
-#' #add_content(create_table(mtcars)) %>%
-#' #write_report()
+#' # Create temp file path
+#' fp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create the report object
+#' rpt <- create_report(fp) 
+#' 
+#' # Add title
+#' rpt <- titles(rpt, "MTCARS sample report")
+#' 
+#' # Add content 
+#' rpt <- add_content(rpt, create_table(mtcars), page_break = "none")
+#' rpt <- add_content(rpt, "* NOTE: Car information from 1971.") 
+#' 
+#' # Write the report to the file system
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(fp))
 #' @export
 add_content <- function(x, object, page_break="after") {
   
@@ -539,16 +551,9 @@ add_content <- function(x, object, page_break="after") {
               "Valid values are 'before', 'after', and 'none'."))
   }
 
-  # Add page break before if requested
-  if (page_break == "before")
-    x$content[[length(x$content) + 1]] <- "page_break"
-
   # Add object to the content list
   x$content[[length(x$content) + 1]] <- object
 
-  # Add page break after if requested, and by default
-  if (page_break == "after")
-    x$content[[length(x$content) + 1]] <- "page_break"
 
   return(x)
 }

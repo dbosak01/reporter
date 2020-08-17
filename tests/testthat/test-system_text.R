@@ -88,7 +88,7 @@ test_that("text3: Even harder text output works as expected.", {
     add_content(cnt) %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
-                right =" Total Pages [tpg]")
+                right =c("Total Pages [tpg]"))
   
   write_report(rpt)
   
@@ -130,7 +130,7 @@ test_that("text5: Table and Text output works as expected.", {
     titles("Report 5.0", "Table and Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(create_table(mtcars[1:10, ]), page_break = "none") %>% 
-    add_content(cnt) %>% 
+    add_content("* NOTE: Car information from 1971.") %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
@@ -148,7 +148,7 @@ test_that("text6: Very Long text output works as expected.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  l <- paste(rep(cnt, 10000), collapse = "\n\n")
+  l <- paste(rep(cnt, 1000), collapse = "\n\n")
   
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 6.0", "Very long Text Report") %>% 
