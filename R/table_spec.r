@@ -69,11 +69,20 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE) {
+  
+  # Check that variable exists
+  var_c <- as.character(substitute(var))
+  if (!is.null(x$data)) {
+    if (!var_c %in% names(x$data)) {
+      stop(paste0("Variable '", var_c, "' does not exist in data."))
+      
+    }
+  }
 
   def <- structure(list(), class = c("col_def", "list"))
   
   def$var = deparse(substitute(var))
-  def$var_c = as.character(substitute(var))
+  def$var_c = var_c
   def$label = label
   def$format = format
   def$col_type = col_type

@@ -4,7 +4,7 @@ base_path <- "c:/packages/rptr/tests/testthat"
 
 base_path <- "./"
 
-test_that("demo table works.", {
+test_that("user1: demo table works.", {
 
   library(tidyverse)
   library(haven)
@@ -130,7 +130,7 @@ test_that("demo table works.", {
 
 })
 
-test_that("demo table with stub works.", {
+test_that("user2: demo table with stub works.", {
   
   library(tidyverse)
   library(haven)
@@ -257,4 +257,36 @@ test_that("demo table with stub works.", {
 })
 
 
+test_that("user3: listings works.", {
+  
+
+  library(haven)
+  
+  # Data Filepath
+  dir_data <- file.path(base_path, "data")
+  
+  fp <- file.path(base_path, "user/user3.out")
+  
+  
+  # Load Data
+  data_demo   <- file.path(dir_data, "dm.sas7bdat") %>%
+    read_sas() 
+
+  # Define table
+  tbl <- create_table(data_demo, align = "left") %>% 
+    define(USUBJID, id_var = TRUE)
+
+  # Define Report
+  rpt <- create_report(fp) %>%
+    titles("Listing 1.0",
+           "Demographics Dataset") %>%
+    add_content(tbl) %>% 
+    page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")
+  
+  # Write out report
+  res1 <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
 

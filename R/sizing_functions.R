@@ -90,9 +90,9 @@ get_page_wraps <- function(data_size, defs, widths) {
   }
   
   
-  ret <- list()
-  pg <- c()
-  tw <- data_size["width"]
+  ret <- list() # list of columns for each page
+  pg <- c()     # columns on a page
+  tw <- data_size["width"]  # width of the page
   
   for (nm in names(widths)) {
 
@@ -100,15 +100,23 @@ get_page_wraps <- function(data_size, defs, widths) {
       # If ID vars exist, add them to list
       if (length(pg) == 0 && length(id_vars) > 0) {
         pg <- widths[id_vars]
+        
+        if (is.na(pg))
+          stop(paste0("ID column width for '", id_vars, " not found."))
+        
         names(pg) <- id_vars
       }
       
-      
+
       if (sum(pg, widths[nm]) < tw) {
+        
+        # If sum of widths does not exceed page size, add to pg and keep going
         pg[nm] <- widths[nm]
-        #names(pg[length(pg)]) <- nm
+
       } else {
         
+        # If sum of widths exceed page size, add page to list and reset pg
+        # Also add control cols so downstream functions can use them
         ret[[length(ret) + 1]] <- c(names(pg), control_cols)
         pg <- c()
       }
@@ -116,8 +124,9 @@ get_page_wraps <- function(data_size, defs, widths) {
     
   }
   
-  
+  # Pick any remaining columns
   if (length(pg) > 0) {
+    # Add page to list
     ret[[length(ret) + 1]] <- c(names(pg), control_cols)
   }
 
