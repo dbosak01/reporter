@@ -3,13 +3,19 @@
 
 # Sizing Functions --------------------------------------------------------
 
-#' Splits the data according to height
+#' @description Splits the data according to height
+#' @details Logic is to try and estimate the vertical height of each cell
+#' in a row to get the overall row height.  Then break rows into pages based
+#' on available body height.  This function is only used for non-text output.
+#' For text output, get_splits_text is used.
 #' @import graphics
 #' @import qlcMatrix
+#' @import stringi
 #' @noRd
 get_splits <- function(dat, col_widths, data_size, font_family) {
   
-  
+  # Row height fixed for now
+  # Ultimately needs to be dynamic based on font size and letting
   rh <- .3 #strheight("Test String", units = "inches", family = font_family)
   
   ws <- list()
@@ -21,7 +27,6 @@ get_splits <- function(dat, col_widths, data_size, font_family) {
   
   
   m <- matrix(unlist(ws), ncol=length(ws), byrow=FALSE)
-  
   # print(m)
   
   #lin <- ceiling(m /col_widths)
@@ -67,13 +72,6 @@ get_splits <- function(dat, col_widths, data_size, font_family) {
   
 }
 
-
-
-# b <- get_body_size(rpt)
-# l <- get_labels(tb$data, tb$col_defs, tb$n_format)
-# d <- get_data_size(b, NULL, l, "mono" )
-# w <- get_col_widths(tb$data, tb$col_defs, l, "mono")
-# p <- get_splits(tb$data, w, d, "mono")
 
 
 #' Gets the page wraps
@@ -149,12 +147,6 @@ get_page_wraps <- function(data_size, defs, widths) {
   
 }
 
-# b <- get_body_size(rpt)
-# l <- get_labels(tb$data, tb$col_defs, tb$n_format)
-# d <- get_data_size(b, NULL, l, "mono" )
-# w <- get_col_widths(tb$data, tb$col_defs, l, "mono")
-# p <- get_page_wraps(d, tb$col_defs, w)
-# p
 
 #' Preps the data
 #' @noRd
@@ -207,6 +199,7 @@ prep_data <- function(dat, defs) {
 
 #' Get the column widths
 #' @import graphics
+#' @import stringi
 #' @noRd
 get_col_widths <- function(dat, defs, labels, font_family) {
   
@@ -247,7 +240,13 @@ get_col_widths <- function(dat, defs, labels, font_family) {
   # Set default widths
   ret = dwidths
   
-  # Let user settings override defaults
+  # Let widths on orig df override defaults
+  orig <- widths(dat)
+  for (nm in names(orig))
+    ret[[nm]] <- orig[[nm]]
+
+  
+  # Let user definitions override everything
   for (def in defs) {
     
     if (def$var_c %in% names(dat) & !is.null(def$width) && def$width > 0) {
@@ -298,11 +297,12 @@ get_label_aligns <- function(defs, aligns) {
   return(ret)
 }
 
-
-get_col_formats <- function(defs) {
+#' Gets column formats from definitions
+#' @noRd
+get_col_formats <- function(dat, defs) {
   
-  
-  ret <- list()
+  # Get any existing formats
+  ret <- formats(dat)
   
   for (d in defs) {
     if (!is.null(d$format))
@@ -335,6 +335,11 @@ get_aligns <- function(dat, defs) {
   
   # Assign names to vector for easy access to alignment values
   names(ret) <- nms
+
+  # Get any justification from original data frame
+  orig <- justification(dat)
+  for (nm in names(orig))
+    ret[[nm]] <- orig[[nm]]
   
   # Assign alignments from column definitions
   for (d in defs) {

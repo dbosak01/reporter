@@ -23,12 +23,13 @@ create_tables_text <- function(rs, ts) {
   family <- "mono"
   font_name <- "Courier New"
   
+  
   # Set up control columns
   dat <- as.data.frame(ts$data)  #as.data.frame(ts$data)
   dat$..blank <- ""
   dat$..page <- NA
   dat$..row <- NA
-  
+
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
   # depends on show_all parameter on create_table and
@@ -43,10 +44,9 @@ create_tables_text <- function(rs, ts) {
   # Get labels
   labels <- get_labels(dat, ts$col_defs, ts$n_format)
   #print(labels)
-
+  
   # Get column alignments
   aligns <- get_aligns(dat, ts$col_defs)
-  #print(aligns)
     
   # Get alignment for labels
   # Follows column alignment by default
@@ -54,12 +54,12 @@ create_tables_text <- function(rs, ts) {
   #print(label_aligns)
 
   # Get column formats
-  formats(dat) <- get_col_formats(ts$col_defs)
-
+  formats(dat) <- get_col_formats(dat, ts$col_defs)
   #print(formats(dat))
   
   # Get column widths
   widths_uom <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
+  #print(widths_uom)
 
   # Convert to text measurements
   widths_char <- round(widths_uom / rs$char_width)

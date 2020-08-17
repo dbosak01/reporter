@@ -282,6 +282,9 @@ test_that("test8: Table with spanning headers works as expected.", {
   df <- data.frame(vehicle = rownames(mtcars), mtcars)
   rownames(df) = NULL
   
+  df$qsec <- fattr(df$qsec, format = "%.1f")
+  df$wt <- fattr(df$wt, justify = "center", width = .75)
+  
   tbl <- create_table(df) %>% 
     spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
                     label = "Span 1", label_align = "center", n = 10) %>% 
@@ -291,10 +294,9 @@ test_that("test8: Table with spanning headers works as expected.", {
                     label = "Span 3", label_align = "center", n = 10) %>%
     spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
                     label_align = "center",
-                    level = 2) %>% 
+                    level = 2) %>%
     define(vehicle, label = "Vehicle") %>% 
-    define(mpg, format = "%.1f") %>% 
-    define(cyl) 
+    define(mpg, format = "%.1f")
   
   rpt <- create_report(fp) %>% 
     add_content(tbl) %>% 

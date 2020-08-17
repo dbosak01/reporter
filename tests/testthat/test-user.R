@@ -274,7 +274,7 @@ test_that("user3: listings works.", {
 
   # Define table
   tbl <- create_table(data_demo, align = "left") %>% 
-    define(USUBJID, id_var = TRUE)
+    define(USUBJID, id_var = TRUE) 
 
   # Define Report
   rpt <- create_report(fp) %>%
