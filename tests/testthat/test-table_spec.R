@@ -38,4 +38,11 @@ test_that("spanning header constructor works as expected.", {
   expect_equal(s[[1]]$span_cols, c("mpg", "cyl", "disp"))
   expect_equal(length(tbl$col_defs), 3)
   
+  expect_error(spanning_header(tbl, span_cols = c("mpgg", "Cl", "disp")))
+  expect_error(spanning_header(tbl, span_cols = 1:25))
+  expect_error(spanning_header(tbl, span_cols = c("mpg", "cyl", "disp"),
+                               level = "one"))
+  expect_error(spanning_header(tbl, span_cols = c("mpg", "cyl", "disp"),
+                               label_align = "lefty"))
+  
 })

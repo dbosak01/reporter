@@ -20,14 +20,20 @@
 create_table <- function(x, n_format = upcase_parens, page_var = NULL,
                          show_cols = "all", first_row_blank=FALSE, 
                          align = "center") {
-
+  if (is.null(x)) {
+    stop("Data parameter 'x' missing or invalid.") 
+    
+  }
+  
+  if (!"data.frame" %in% class(x)) {
+    stop(paste("ERROR: data parameter 'x' on",
+               "page_template() function is invalid.",
+               "\n\tValid values are a data.frame or tibble."))
+  }
+  
   ret <- structure(list(), class = c("table_spec", "list"))
 
-  if (!"data.frame" %in% class(x)) {
-     stop(paste("ERROR: data parameter 'x' on",
-                 "page_template() function is invalid.",
-                "\n\tValid values are a data.frame or tibble."))
-  }
+
 
 
   ret$data <- x
@@ -130,6 +136,35 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
 #' @export
 spanning_header <- function(x, span_cols, label = "",
                             label_align = "center", level = 1, n = NULL) {
+  
+  nms <- names(x$data)
+  if (is.character(span_cols)) {
+    for (nm in span_cols) {
+      if (!nm %in% nms) {
+        stop(paste0("Variable '", nm, "' does not exist in data."))
+        
+      }
+    }
+  } else if (is.numeric(span_cols)) {
+    s <- seq(from = 1, to = length(nms))
+    for (elem in span_cols) {
+      if (!elem %in% s) {
+        stop(paste0("Variable position '", elem, "' does not exist in data."))
+        
+      }
+    }
+    
+  } else
+    stop("span_cols parameter value is invalid.")
+  
+  if (!label_align %in% c("left", "right", "center", "centre")) {
+   stop(paste0("label_align '", label_align, "' is invalid. ",
+               "Valid values are 'left', 'right', 'center', or 'centre'."))
+  }
+  
+  if (!is.numeric(level) | is.na(level) | is.null(level)) {
+   stop(paste0("level parameter value '", level, "' is invalid.")) 
+  }
   
   sh <- structure(list(), class = c("span_def", "list"))
   
