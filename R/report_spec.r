@@ -520,9 +520,9 @@ page_footer <- function(x, left="", right="", center=""){
 #' is added after the content.
 #' @param x The report_spec to append content to.
 #' @param object The object to append.
-#' @param page_break Whether to add a page break. Value values are "before",
-#' "after", or "none".  You can manipulate the page_break parameter to add
-#' multiple objects to the same page.  
+#' @param page_break Whether to add a page break after the object. 
+#' Valid values are TRUE or FALSE.  You can manipulate the page_break 
+#' parameter to add multiple objects to the same page.  
 #' @return The modified report_spec.
 #' @examples
 #' # Create temp file path
@@ -535,7 +535,7 @@ page_footer <- function(x, left="", right="", center=""){
 #' rpt <- titles(rpt, "MTCARS sample report")
 #' 
 #' # Add content 
-#' rpt <- add_content(rpt, create_table(mtcars), page_break = "none")
+#' rpt <- add_content(rpt, create_table(mtcars), page_break = FALSE)
 #' rpt <- add_content(rpt, "* NOTE: Car information from 1971.") 
 #' 
 #' # Write the report to the file system
@@ -544,15 +544,20 @@ page_footer <- function(x, left="", right="", center=""){
 #' # Write report to console
 #' writeLines(readLines(fp))
 #' @export
-add_content <- function(x, object, page_break="after") {
+add_content <- function(x, object, page_break=TRUE) {
   
-  if (!page_break %in% c("after", "before", "none")) {
+  if (!page_break %in% c(TRUE, FALSE)) {
    stop(paste("Page break value invalid.",
-              "Valid values are 'before', 'after', and 'none'."))
+              "Valid values are TRUE and FALSE."))
   }
+  
+  cont <- structure(list(), class = c("report_content", "list"))
+  
+  cont$object <- object
+  cont$page_break <- page_break
 
   # Add object to the content list
-  x$content[[length(x$content) + 1]] <- object
+  x$content[[length(x$content) + 1]] <- cont
 
 
   return(x)

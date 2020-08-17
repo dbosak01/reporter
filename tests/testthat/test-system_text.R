@@ -129,7 +129,7 @@ test_that("text5: Table and Text output works as expected.", {
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 5.0", "Table and Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
-    add_content(create_table(mtcars[1:10, ]), page_break = "none") %>% 
+    add_content(create_table(mtcars[1:10, ]), page_break = FALSE) %>% 
     add_content("* NOTE: Car information from 1971.") %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 

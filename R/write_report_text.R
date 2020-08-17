@@ -37,7 +37,7 @@ write_report_text <- function(rs) {
   last_object <- FALSE
 
   # Write out content
-  for(o in ls){
+  for(cont in ls){
     
     # Increment counter
     counter <- counter + 1
@@ -48,31 +48,30 @@ write_report_text <- function(rs) {
     else 
       last_object <- FALSE
     
-    print(last_object)
     
-    if (class(o)[1] == "table_spec"){
+    if (class(cont$object)[1] == "table_spec"){
 
       # Break table into multiple pages if needed
       # This function returns a list of pages
-      ttx <- create_tables_text(rs, o)
+      ttx <- create_tables_text(rs, cont$object)
 
       # Write pages
       # This function takes the page template (headers, titles, etc.)
       # and combines with the table pages and writes to file.
       rs <- write_tables_text(rs, ttx, pt, last_object)
       
-    } else if (class(o)[1] == "character" & o == "page_break"){
+    } else if (class(cont$object)[1] == "character" & 
+               cont$object == "page_break"){
       
       # Add page break except for the last page
       # so there is no empty page at the end
       if (!last_object) {
         rs <- write_page_break(rs)
-        print("Made it here")
       }
       
-    } else if (class(o)[1] == "character") {
+    } else if (class(cont$object)[1] == "character") {
       
-      txt <- create_text(rs, o)
+      txt <- create_text(rs, cont$object)
       rs <- write_tables_text(rs, txt, pt, last_object)
     }
     

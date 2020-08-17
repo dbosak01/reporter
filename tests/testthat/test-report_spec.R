@@ -79,11 +79,11 @@ test_that("add_content works as expected.", {
   
   rpt <- create_report("fork.out")
   
-  rpt <- add_content(rpt, "", page_break = "before")
+  rpt <- add_content(rpt, "", page_break = FALSE)
   
   # Should put a page break token before the content
-  expect_equal(rpt$content[[1]], "page_break")
-  expect_equal(rpt$content[[2]], "")
+  expect_equal(length(rpt$content), 1)
+  expect_equal(rpt$content[[1]]$page_break, FALSE)
   
   # Invalid value
   expect_error(add_content(rpt, "", page_break = "sam"))
