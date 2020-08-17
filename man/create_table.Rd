@@ -10,7 +10,8 @@ create_table(
   page_var = NULL,
   show_cols = "all",
   first_row_blank = FALSE,
-  align = "center"
+  align = "center",
+  headerless = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ or not a definition is supplied.}
 
 \item{align}{Aligns the table on the page.  Valid values are "left", 
 "right", and "center".  Default value is "center".}
+
+\item{headerless}{Whether to create a headerless table.  Default is FALSE.}
 }
 \description{
 A function to create a table_spec object

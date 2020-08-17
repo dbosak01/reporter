@@ -424,3 +424,24 @@ test_that("test11: Table with break between sections works as expected.", {
   
 })
 
+test_that("test12: Headerless table with title works as expected.", {
+  
+  fp <- file.path(base_path, "output/test12.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ], align = "left", headerless = TRUE) %>% 
+    define(vs, visible = FALSE)
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl)
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+

@@ -16,10 +16,11 @@
 #' @param first_row_blank Whether to place a blank row under the table header.
 #' @param align Aligns the table on the page.  Valid values are "left", 
 #' "right", and "center".  Default value is "center".
+#' @param headerless Whether to create a headerless table.  Default is FALSE. 
 #' @export
 create_table <- function(x, n_format = upcase_parens, page_var = NULL,
                          show_cols = "all", first_row_blank=FALSE, 
-                         align = "center") {
+                         align = "center", headerless = FALSE) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -33,9 +34,6 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
   
   ret <- structure(list(), class = c("table_spec", "list"))
 
-
-
-
   ret$data <- x
   ret$n_format <- n_format
   ret$page_var <- page_var
@@ -44,6 +42,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
   ret$show_cols <- show_cols
   ret$first_row_blank <- first_row_blank
   ret$align <- align
+  ret$headerless <- headerless
 
   return(ret)
 

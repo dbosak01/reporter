@@ -4,7 +4,7 @@
 \alias{add_content}
 \title{Add content to a report}
 \usage{
-add_content(x, object, page_break = TRUE)
+add_content(x, object, page_break = TRUE, align = "center")
 }
 \arguments{
 \item{x}{The report_spec to append content to.}
@@ -14,6 +14,9 @@ add_content(x, object, page_break = TRUE)
 \item{page_break}{Whether to add a page break after the object. 
 Valid values are TRUE or FALSE.  You can manipulate the page_break 
 parameter to add multiple objects to the same page.}
+
+\item{align}{How to align the content.  Valid values are 'left', 'right',
+'center', and 'centre'.}
 }
 \value{
 The modified report_spec.
@@ -39,7 +42,7 @@ rpt <- titles(rpt, "MTCARS sample report")
 
 # Add content 
 rpt <- add_content(rpt, create_table(mtcars), page_break = FALSE)
-rpt <- add_content(rpt, "* NOTE: Car information from 1971.") 
+rpt <- add_content(rpt, create_text("* NOTE: Car information from 1971.")) 
 
 # Write the report to the file system
 write_report(rpt)

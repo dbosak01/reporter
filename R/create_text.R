@@ -1,5 +1,29 @@
 
-# Create Text Functions ---------------------------------------------------
+# Create Text Constructor     ---------------------------------------------
+
+#' @title Create a text specification
+#' @description Function to create a text specification that can be 
+#' added as content to a report.
+#' @param txt The text to create.
+#' @param blanks Whether to create blanks before or after the object.  Valid
+#' value are 'before', 'after', or 'none'.
+#' @param width The width of the text in the specified units of measure.
+#' @return The text specification.
+#' @export
+create_text <- function(txt, blanks = "after", width = NULL) {
+  
+  ret <- structure(list(), class = c("text_spec", "list"))
+  
+  ret$text <- txt
+  ret$blanks <- blanks
+  ret$width <- width
+  
+  return(ret)
+  
+}
+
+
+# Create Text Pages -------------------------------------------------------
 
 #' @description A function to output strings for plain text content
 #' @details Basic logic is to wrap any text to the available line width, 
@@ -8,7 +32,22 @@
 #' @param txt The text content to output
 #' @import stringi
 #' @noRd
-create_text <- function(rs, txt) {
+create_text_pages_text <- function(rs, txt) {
+  
+  rws <- get_text_body(rs, txt$text)
+  
+  # Get last page 
+  lpg <- rws[[length(rws)]]
+
+  # Append empty strings to fill up body
+  blnks <- rep("", rs$body_line_count - length(lpg))
+  
+  rws[[length(rws)]] <- c(lpg, blnks)
+  
+  return(rws)
+}
+
+get_text_body <- function(rs, txt) {
   
   # Wrap the text 
   a <- stri_wrap(unlist(
@@ -34,13 +73,11 @@ create_text <- function(rs, txt) {
   # Deal with last page
   if (length(tmp) > 0 ) {
     
-    # Append empty strings to fill up body
-    tmp <- append(tmp, rep("", rs$body_line_count - length(tmp)))
-    
     # Add last page
     ret[[length(ret) + 1]] <- tmp
     
   }
   
   return(ret)
+  
 }

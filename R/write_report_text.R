@@ -53,14 +53,19 @@ write_report_text <- function(rs) {
 
       # Break table into multiple pages if needed
       # This function returns a list of pages
-      ttx <- create_tables_text(rs, cont$object)
+      ttx <- create_table_pages_text(rs, cont$object)
 
       # Write pages
       # This function takes the page template (headers, titles, etc.)
       # and combines with the table pages and writes to file.
       rs <- write_tables_text(rs, ttx, pt, last_object)
       
-    } else if (class(cont$object)[1] == "character" & 
+    } else if (class(cont$object)[1] == "text_spec") {
+      
+      txt <- create_text_pages_text(rs, cont$object)
+      rs <- write_tables_text(rs, txt, pt, last_object)
+      
+    } else if (all(class(cont$object)[1] == "character") & 
                cont$object == "page_break"){
       
       # Add page break except for the last page
@@ -69,11 +74,7 @@ write_report_text <- function(rs) {
         rs <- write_page_break(rs)
       }
       
-    } else if (class(cont$object)[1] == "character") {
-      
-      txt <- create_text(rs, cont$object)
-      rs <- write_tables_text(rs, txt, pt, last_object)
-    }
+    } 
     
 
   }

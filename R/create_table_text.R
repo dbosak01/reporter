@@ -12,7 +12,7 @@ control_cols <- c("..blank", "..page", "..row")
 
 #' @import fmtr
 #' @noRd
-create_tables_text <- function(rs, ts) {
+create_table_pages_text <- function(rs, ts) {
 
   
   if (ts$show_cols == "only" & length(ts$col_defs) == 0) {
@@ -120,22 +120,26 @@ create_tables_text <- function(rs, ts) {
 #' @noRd
 create_table_text <- function(rs, ts, pi) {
   
- shdrs <- get_spanning_header(rs, ts, pi)   
- #print(shdrs)
- #print("Here1")
- hdrs <- get_table_header(rs, ts, pi)  
- #print("Here2")
- rws <- get_table_body(rs, ts, pi)
- #print("Here3")
- 
- #print(length(hdrs))
- #print(length(rws))
- #print(rs$body_line_count - length(hdrs) - length(rws) - 2)
- blnks <- rep("", rs$body_line_count - length(shdrs) - length(hdrs) - length(rws))
- #print("Here4")
- ret <- c("", shdrs, hdrs, rws, blnks, "")
- 
- return(ret) 
+  shdrs <- c()
+  hdrs <- c()
+  spc <- NULL
+  
+  if (ts$headerless == FALSE) {
+    shdrs <- get_spanning_header(rs, ts, pi)   
+    hdrs <- get_table_header(rs, ts, pi)  
+    spc <- ""
+  }
+  
+  rws <- get_table_body(rs, ts, pi)
+
+  #print(length(hdrs))
+  #print(length(rws))
+  #print(rs$body_line_count - length(hdrs) - length(rws) - 2)
+  blnks <- rep("", rs$body_line_count - length(shdrs) - length(hdrs) - length(rws))
+  
+  ret <- c(spc, shdrs, hdrs, rws, blnks, spc)
+  
+  return(ret) 
 }
 
 #' @description Return a vector of strings for the table header
