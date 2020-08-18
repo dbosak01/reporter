@@ -122,12 +122,10 @@ create_table_text <- function(rs, ts, pi) {
   
   shdrs <- c()
   hdrs <- c()
-  spc <- NULL
   
   if (ts$headerless == FALSE) {
     shdrs <- get_spanning_header(rs, ts, pi)   
     hdrs <- get_table_header(rs, ts, pi)  
-    spc <- ""
   }
   
   rws <- get_table_body(rs, ts, pi)
@@ -137,7 +135,7 @@ create_table_text <- function(rs, ts, pi) {
   #print(rs$body_line_count - length(hdrs) - length(rws) - 2)
   blnks <- rep("", rs$body_line_count - length(shdrs) - length(hdrs) - length(rws))
   
-  ret <- c(spc, shdrs, hdrs, rws, blnks, spc)
+  ret <- c(shdrs, hdrs, rws, blnks)
   
   return(ret) 
 }

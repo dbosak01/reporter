@@ -379,19 +379,22 @@ page_header <- function(x, left="", right=""){
 #' Add titles to the report
 #'
 #' @description
-#' This function adds one or more to the report.  The titles will be added to
+#' This function adds one or more to the object.  If added to a report, 
+#' the titles will be added to
 #' the page template, and thus appear on each page of the report.
 #'
 #' @details
 #' The titles function accepts a set of strings of the desired title text.
 #' The titles may be aligned center, left or right using the align parameter.
-#' The titles may be located in the header, page body, or table according to
-#' the location parameter.
+#' The titles may be assigned to the report, a table or a text specification.
 #'
-#' @param x The report specification object.
+#' @param x The object to assign titles to.  Valid objects are a report,
+#' a table, or a text specification.
 #' @param ... A set of title strings.
-#' @param location The location to place the titles in the report.  Valid
-#' @param align The position to align the titles.  Valid values are: "left"
+#' @param align The position to align the titles.  Valid values are 'left', 
+#' 'right', 'center' or 'centre'.
+#' @param blank_row Where to place a blank row.  Valid values are 'above',
+#' 'below', 'both', or 'none'.
 #' @examples
 #' # Here is a comment
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -400,19 +403,21 @@ page_header <- function(x, left="", right=""){
 # write_report()
 # #file.show("mtcars.docx")
 #' @export
-titles <- function(x, ..., location = "header", align = "center"){
+titles <- function(x, ..., align = "center", blank_row = "below"){
 
+  # Create title structure
+  ttl <- structure(list(), class = c("title_spec", "list"))
+  
+  if (length(c(...)) > 10)
+    stop("Limit of 10 titles reached.") 
 
-  tl <- c(...)
+  # Assign attributes
+  ttl$titles <-  c(...)
+  ttl$blank_row <- blank_row
+  ttl$align <- align
 
-  if (length(tl) > 10){
-    stop("ERROR: titles function is limited to a maximum of 10 titles.")
-  }
-
-  x$titles <- tl
-  x$titles_location <- location
-  x$titles_align <- align
-
+  x$titles[[length(x$titles) + 1]] <- ttl
+  
   return(x)
 
 }
@@ -431,12 +436,12 @@ titles <- function(x, ..., location = "header", align = "center"){
 #' The footnotes may be located in the footer, page body, or table according to
 #' the location parameter. The user is responsible for adding desired symbols.
 #' Footnote symbols will not be generated automatically.
-#' @param x The report specification object.
+#' @param x The object to assign footnotes to.
 #' @param ... A set of footnotes strings.
-#' @param location The location to place the footnotes in the report.
-#' Valid values are "header", "body", or "table".
 #' @param align The position to align the titles.  Valid values are: "left",
-#' "right", or "center".
+#' "right", "center", or "centre".
+#' @param blank_row Whether to print a blank row above or below the footnote.
+#' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'below'.
 #' @examples
 #' # Here are some examples.
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -446,17 +451,22 @@ titles <- function(x, ..., location = "header", align = "center"){
 # write_report()
 # #file.show("mtcars.docx")
 #' @export
-footnotes <- function(x, ..., location = "footer", align = "left"){
+footnotes <- function(x, ..., align = "left", blank_row = "below"){
 
+  # Create title structure
+  ftn <- structure(list(), class = c("footnote_spec", "list"))
+  
   ft <- c(...)
   
   if (length(ft) > 25){
-    stop("ERROR: footnotes function is limited to a maximum of 25 footnotes.")
+    stop("footnotes function is limited to a maximum of 25 footnotes.")
   }
 
-  x$footnotes <- ft
-  x$footnotes_location <- location
-  x$footnotes_align <- align
+  ftn$footnotes <- ft
+  ftn$blank_row <- blank_row
+  ftn$align <- align
+  
+  x$footnotes[[length(x$footnotes) + 1]] <- ftn
 
   return(x)
 
@@ -525,6 +535,8 @@ page_footer <- function(x, left="", right="", center=""){
 #' parameter to add multiple objects to the same page.  
 #' @param align How to align the content.  Valid values are 'left', 'right',
 #' 'center', and 'centre'.
+#' @param blank_row Whether to put a blank row before or after the content.
+#' Valid values are 'before', 'after', 'both', or 'none'.
 #' @return The modified report_spec.
 #' @examples
 #' # Create temp file path
@@ -546,7 +558,8 @@ page_footer <- function(x, left="", right="", center=""){
 #' # Write report to console
 #' writeLines(readLines(fp))
 #' @export
-add_content <- function(x, object, page_break=TRUE, align = "center") {
+add_content <- function(x, object, page_break=TRUE, align = "center",
+                        blank_row = "after") {
   
   if (!page_break %in% c(TRUE, FALSE)) {
    stop(paste("Page break value invalid.",
@@ -557,6 +570,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center") {
   
   cont$object <- object
   cont$page_break <- page_break
+  cont$blank_row <- blank_row
 
   # Add object to the content list
   x$content[[length(x$content) + 1]] <- cont

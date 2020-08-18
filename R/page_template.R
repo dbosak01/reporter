@@ -11,8 +11,8 @@ page_template_text <- function(rs) {
   
   
   pt$page_header <- get_page_header(rs)
-  pt$titles <- get_titles(rs)
-  pt$footnotes <- get_footnotes(rs)
+  pt$titles <- get_titles(rs$titles, rs$line_size)
+  pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size)
   pt$page_footer <- get_page_footer(rs)
   
   
@@ -71,42 +71,56 @@ get_page_header <- function(rs) {
 
 #' Get title text strings suitable for printing
 #' @import stringi
-#' @param rs The report spec
+#' @param titles A list of title objects
+#' @param width The width to set the title strings to
 #' @return A vector of strings
 #' @noRd
-get_titles <- function(rs) {
+get_titles <- function(titles, width) {
   
-  if (is.null(rs$line_size)) {
-    stop("line_size cannot be null.") 
+  if (is.null(width)) {
+    stop("width cannot be null.") 
     
   }
   
-  ll <- rs$line_size
+
+  ll <- width
   ret <- c()
   
-  if (!is.null(rs$titles)) { 
+  if (!is.null(titles)) { 
     
-    for (i in seq_along(rs$titles)) {
+    for (ttl in titles) {
       
-      t <- rs$titles[i]
+      if (!any(class(ttl) == "title_spec"))
+        stop("titles parameter value is not a title spec.")
+          
+      if (ttl$blank_row %in% c("above", "both"))
+        ret[length(ret) + 1] <- stri_pad(" ", ll)
       
-      gp <- ll - nchar(t)
+      for (i in seq_along(ttl$titles)) {
       
-      #print("titles")
-      if (gp > 0) {
+        t <- ttl$titles[i]
         
-        if (rs$titles_align == "left")
-          ln <- stri_pad_right(t, ll)
-        else if (rs$titles_align == "right")
-          ln <- stri_pad_left(t, ll)
-        else if (rs$titles_align == "center")
-          ln <- stri_pad_both(t, ll)
+        gp <- ll - nchar(t)
         
-      } else 
-        stop("Title exceeds available width.")
+        #print("titles")
+        if (gp > 0) {
+          
+          if (ttl$align == "left")
+            ln <- stri_pad_right(t, ll)
+          else if (ttl$align == "right")
+            ln <- stri_pad_left(t, ll)
+          else if (ttl$align == "center" | ttl$align == "centre")
+            ln <- stri_pad_both(t, ll)
+          
+        } else 
+          stop("Title exceeds available width.")
+        
+        
+        ret[length(ret) + 1] <- ln
+      }
       
-      
-      ret[i] <- ln
+      if (ttl$blank_row %in% c("below", "both"))
+        ret[length(ret) + 1] <- stri_pad(" ", ll)
     }
     
   }
@@ -119,38 +133,50 @@ get_titles <- function(rs) {
 #' @param rs The report spec
 #' @return A vector of strings
 #' @noRd
-get_footnotes <- function(rs) {
+get_footnotes <- function(footnotes, width) {
   
-  if (is.null(rs$line_size)) {
-    stop("line_size cannot be null.") 
+  if (is.null(width)) {
+    stop("width cannot be null.") 
     
   }
   
-  ll <- rs$line_size
+  ll <- width
   ret <- c()
   
-  if (!is.null(rs$footnotes)) {
-    for (i in seq_along(rs$footnotes)) {
+  if (!is.null(footnotes)) {
+    for (ftn in footnotes) {
       
-      t <- rs$footnotes[i]
+      if (!any(class(ftn) == "footnote_spec"))
+        stop("footnotes parameter value is not a footnote spec.")
       
-      gp <- ll - nchar(t)
+      if (ftn$blank_row %in% c("above", "both"))
+        ret[length(ret) + 1] <- stri_pad(" ", ll)
       
-      #print("footnotes")
-      if (gp > 0) {
+      for (i in seq_along(ftn$footnotes)) {
         
-        if (rs$footnotes_align == "left")
-          ln <- stri_pad_right(t, ll)
-        else if (rs$footnotes_align == "right")
-          ln <- stri_pad_left(t, ll)
-        else if (rs$footnotes_align == "center")
-          ln <- stri_pad_both(t, ll)
+        f <- ftn$footnotes[i]
         
-      } else 
-        stop("Footnote exceeds available width.")
+        gp <- ll - nchar(f)
+        
+        #print("footnotes")
+        if (gp > 0) {
+          
+          if (ftn$align == "left")
+            ln <- stri_pad_right(f, ll)
+          else if (ftn$align == "right")
+            ln <- stri_pad_left(f, ll)
+          else if (ftn$align == "center" | ftn$align == "centre")
+            ln <- stri_pad_both(f, ll)
+          
+        } else 
+          stop("Footnote exceeds available width.")
+        
+        
+        ret[length(ret) + 1] <- ln
+      }
       
-      
-      ret[i] <- ln
+      if (ftn$blank_row %in% c("below", "both"))
+        ret[length(ret) + 1] <- stri_pad(" ", ll)
     }
   }
   

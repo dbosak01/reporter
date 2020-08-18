@@ -4,18 +4,18 @@
 \alias{footnotes}
 \title{Add footnotes to the report}
 \usage{
-footnotes(x, ..., location = "footer", align = "left")
+footnotes(x, ..., align = "left", blank_row = "below")
 }
 \arguments{
-\item{x}{The report specification object.}
+\item{x}{The object to assign footnotes to.}
 
 \item{...}{A set of footnotes strings.}
 
-\item{location}{The location to place the footnotes in the report.
-Valid values are "header", "body", or "table".}
-
 \item{align}{The position to align the titles.  Valid values are: "left",
-"right", or "center".}
+"right", "center", or "centre".}
+
+\item{blank_row}{Whether to print a blank row above or below the footnote.
+Valid values are 'above', 'below', 'both', or 'none'.  Default is 'below'.}
 }
 \description{
 This function adds one or more footnotes to the report.  The footnotes will

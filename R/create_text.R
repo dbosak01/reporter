@@ -5,18 +5,22 @@
 #' @description Function to create a text specification that can be 
 #' added as content to a report.
 #' @param txt The text to create.
-#' @param blanks Whether to create blanks before or after the object.  Valid
-#' value are 'before', 'after', or 'none'.
+#' @param blank_row Whether to create blanks above or below the object.  Valid
+#' value are 'above', 'below', 'both', or 'none'.
 #' @param width The width of the text in the specified units of measure.
+#' @param align How to align the text within the text area.  Valid values
+#' are 'left', 'right', 'center', or 'centre'.
 #' @return The text specification.
 #' @export
-create_text <- function(txt, blanks = "after", width = NULL) {
+create_text <- function(txt, width = NULL, align = "left", 
+                        blank_row = "below") {
   
   ret <- structure(list(), class = c("text_spec", "list"))
   
   ret$text <- txt
-  ret$blanks <- blanks
+  ret$align <- align
   ret$width <- width
+  ret$blank_row <- blank_row
   
   return(ret)
   
@@ -34,7 +38,7 @@ create_text <- function(txt, blanks = "after", width = NULL) {
 #' @noRd
 create_text_pages_text <- function(rs, txt) {
   
-  rws <- get_text_body(rs, txt$text)
+  rws <- get_text_body(txt$text, rs$line_size, rs$body_line_count)
   
   # Get last page 
   lpg <- rws[[length(rws)]]
@@ -47,17 +51,18 @@ create_text_pages_text <- function(rs, txt) {
   return(rws)
 }
 
-get_text_body <- function(rs, txt) {
+#' @noRd
+get_text_body <- function(txt, line_width, line_count) {
   
   # Wrap the text 
   a <- stri_wrap(unlist(
     strsplit(txt, split = "\n", fixed = TRUE)), 
-    width = rs$line_size, normalize = FALSE)
+    width = line_width, normalize = FALSE)
   
   ret <- list()  # Page list
   tmp <- c()     # 1 page of content
   for (i in seq_along(a)) {
-    if (length(tmp) < rs$body_line_count) {
+    if (length(tmp) < line_count) {
       
       # Append to existing page
       tmp[length(tmp) + 1] <- a[i]

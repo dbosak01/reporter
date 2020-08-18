@@ -16,8 +16,8 @@ test_that("page_template_text() works as expected.", {
   
   ptt <- page_template_text(rpt)
   
-  expect_equal(length(ptt$titles), 1)
-  expect_equal(length(ptt$footnotes), 1)
+  expect_equal(length(ptt$titles), 2)
+  expect_equal(length(ptt$footnotes), 2)
   expect_equal(length(ptt$page_header), 0)
   expect_equal(length(ptt$page_footer), 0)
   
@@ -46,8 +46,8 @@ test_that("page_template_text() works as expected.", {
   
   ptt2 <- page_template_text(rpt2)
   
-  expect_equal(length(ptt2$titles), 2)
-  expect_equal(length(ptt2$footnotes), 2)
+  expect_equal(length(ptt2$titles), 3)
+  expect_equal(length(ptt2$footnotes), 3)
   expect_equal(length(ptt2$page_header), 2)
   expect_equal(length(ptt2$page_footer), 2)
   

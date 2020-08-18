@@ -4,15 +4,18 @@
 \alias{create_text}
 \title{Create a text specification}
 \usage{
-create_text(txt, blanks = "after", width = NULL)
+create_text(txt, width = NULL, align = "left", blank_row = "below")
 }
 \arguments{
 \item{txt}{The text to create.}
 
-\item{blanks}{Whether to create blanks before or after the object.  Valid
-value are 'before', 'after', or 'none'.}
-
 \item{width}{The width of the text in the specified units of measure.}
+
+\item{align}{How to align the text within the text area.  Valid values
+are 'left', 'right', 'center', or 'centre'.}
+
+\item{blank_row}{Whether to create blanks above or below the object.  Valid
+value are 'above', 'below', 'both', or 'none'.}
 }
 \value{
 The text specification.

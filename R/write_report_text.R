@@ -66,7 +66,9 @@ write_report_text <- function(rs) {
       rs <- write_tables_text(rs, txt, pt, last_object)
       
     } else if (all(class(cont$object)[1] == "character") & 
-               cont$object == "page_break"){
+               cont$object == "page_break"){  
+      
+      # ** Currently Not Used **
       
       # Add page break except for the last page
       # so there is no empty page at the end

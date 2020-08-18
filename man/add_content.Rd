@@ -4,7 +4,13 @@
 \alias{add_content}
 \title{Add content to a report}
 \usage{
-add_content(x, object, page_break = TRUE, align = "center")
+add_content(
+  x,
+  object,
+  page_break = TRUE,
+  align = "center",
+  blank_row = "after"
+)
 }
 \arguments{
 \item{x}{The report_spec to append content to.}
@@ -17,6 +23,9 @@ parameter to add multiple objects to the same page.}
 
 \item{align}{How to align the content.  Valid values are 'left', 'right',
 'center', and 'centre'.}
+
+\item{blank_row}{Whether to put a blank row before or after the content.
+Valid values are 'before', 'after', 'both', or 'none'.}
 }
 \value{
 The modified report_spec.

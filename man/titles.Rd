@@ -4,26 +4,29 @@
 \alias{titles}
 \title{Add titles to the report}
 \usage{
-titles(x, ..., location = "header", align = "center")
+titles(x, ..., align = "center", blank_row = "below")
 }
 \arguments{
-\item{x}{The report specification object.}
+\item{x}{The object to assign titles to.  Valid objects are a report,
+a table, or a text specification.}
 
 \item{...}{A set of title strings.}
 
-\item{location}{The location to place the titles in the report.  Valid}
+\item{align}{The position to align the titles.  Valid values are 'left', 
+'right', 'center' or 'centre'.}
 
-\item{align}{The position to align the titles.  Valid values are: "left"}
+\item{blank_row}{Where to place a blank row.  Valid values are 'above',
+'below', 'both', or 'none'.}
 }
 \description{
-This function adds one or more to the report.  The titles will be added to
+This function adds one or more to the object.  If added to a report, 
+the titles will be added to
 the page template, and thus appear on each page of the report.
 }
 \details{
 The titles function accepts a set of strings of the desired title text.
 The titles may be aligned center, left or right using the align parameter.
-The titles may be located in the header, page body, or table according to
-the location parameter.
+The titles may be assigned to the report, a table or a text specification.
 }
 \examples{
 # Here is a comment
