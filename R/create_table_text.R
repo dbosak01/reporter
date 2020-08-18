@@ -128,14 +128,28 @@ create_table_text <- function(rs, ts, pi) {
     hdrs <- get_table_header(rs, ts, pi)  
   }
   
-  rws <- get_table_body(rs, ts, pi)
+  rws <- get_table_body(pi$data)
 
-  #print(length(hdrs))
-  #print(length(rws))
-  #print(rs$body_line_count - length(hdrs) - length(rws) - 2)
-  blnks <- rep("", rs$body_line_count - length(shdrs) - length(hdrs) - length(rws))
   
-  ret <- c(shdrs, hdrs, rws, blnks)
+  ls <- rs$line_size
+  if (length(rws) > 0)
+    ls <- nchar(rws[1])
+  #print("Actual width")
+  #print(ls)
+  
+  ttls <- get_titles(ts$titles, ls) 
+  ftnts <- get_footnotes(ts$footnotes, ls) 
+
+  # blnks <- c()
+  # bl <- rs$body_line_count - length(ttls) - length(shdrs)
+  #       - length(hdrs) - length(rws) - length(ftnts)
+  # if (bl > 0)
+  #   blnks <- rep("", bl)
+  # else 
+  #   stop("page content too long for available space.")
+  
+  #ret <- c(ttls, shdrs, hdrs, rws, ftnts, blnks)
+  ret <- c(ttls, shdrs, hdrs, rws, ftnts)
   
   return(ret) 
 }
@@ -178,13 +192,9 @@ get_table_header <- function(rs, ts, pi) {
   # Underline
   sep <- paste0(paste0(rep("-", nchar(r) - 1), collapse = ""), " ")
   ln[[length(ln) + 1]] <- sep
-    
-  # Justify entire header
-  for (k in seq_along(ln)) {
-    
-   ret[[k]] <- format(ln[[k]], width = rs$line_size, 
-                    justify = get_justify(ts$align))
-  }
+
+  
+  ret <- ln
   
   if (ts$first_row_blank)
     ret[[length(ret) + 1]] <- ""
@@ -369,22 +379,23 @@ get_spanning_header <- function(rs, ts, pi) {
   #print(ts$align)
   #print(ln)
   # Justify entire header
-  for (k in seq_along(ln)) {
+  # for (k in seq_along(ln)) {
+  # 
+  #   ret[[k]] <- format(ln[[k]], width = rs$line_size,
+  #                      justify = get_justify(ts$align))
+  # }
 
-    ret[[k]] <- format(ln[[k]], width = rs$line_size,
-                       justify = get_justify(ts$align))
-  }
-
-  ret <- unlist(ret)
+  ret <- unlist(ln)
+  #ret <- unlist(ret)
   
   return(ret)
 }
 
 
 #' @noRd
-get_table_body <- function(rs, ts, pi) {
+get_table_body <- function(dat) {
   
-  df <- pi$data
+  df <- dat
   ret <- c()
   nm <- names(df)
   
@@ -401,10 +412,7 @@ get_table_body <- function(rs, ts, pi) {
         r <- paste0(r, v, " ")
     }
     
-    
-    ret[length(ret) + 1] <- format(r, width = rs$line_size, 
-                                   justify = get_justify(ts$align))
-  
+    ret[length(ret) + 1] <- r
   }
   
   return(ret)

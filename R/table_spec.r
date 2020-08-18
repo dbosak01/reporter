@@ -46,7 +46,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 
   return(ret)
 
-  }
+}
 
 #' Defines a column specification
 #' @param x The table spec.

@@ -576,27 +576,7 @@ get_data_size_text <- function(rs, widths, labels) {
 }
 
 
-# Page Info ---------------------------------------------------------------
 
-
-
-page_info <- function(data, keys, font_name, col_width, col_align,
-                      label, label_align) {
-  
-  ret <- structure(list(), class = c("page_info", "list"))
-  
-  ret$data <- data
-  ret$keys <- keys
-  ret$font_name <- font_name
-  ret$col_width <- col_width
-  ret$col_align <- col_align
-  ret$label <- label
-  ret$label_align <- label_align
-  
-  
-  return(ret)
-  
-}
 
 
 
