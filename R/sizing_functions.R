@@ -538,7 +538,9 @@ get_page_breaks <- function(x, page_size, lpg_rows){
   
   pg <- 1
   counter <- 0
-  offset <- 0
+  offset <- lpg_rows
+  # print("Offset table")
+  # print(offset)
   
   for (i in seq_len(nrow(x))){
     

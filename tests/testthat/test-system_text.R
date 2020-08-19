@@ -26,7 +26,7 @@ test_that("create_text function output works as expected.", {
   res1
 
   expect_equal(length(res1), 1)
-  expect_equal(length(res1[[1]]), 55)
+  expect_equal(length(res1[[1]]), 5)
   
 })
 
@@ -132,9 +132,11 @@ test_that("text5: Table and Text output works as expected.", {
     titles("Report 5.0", "Table and Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(create_table(tbl1), page_break = FALSE) %>% 
-    add_content(create_text("* NOTE: Car information from 1971.")) %>% 
+    add_content(create_text("* NOTE: Car information from 1971."), 
+                align = "left") %>% 
     add_content(create_table(tbl2), page_break = FALSE) %>% 
-    add_content(create_text("* NOTE: Car information from 1972.")) %>% 
+    add_content(create_text("* NOTE: Car information from 1972."), 
+                align = "left") %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")

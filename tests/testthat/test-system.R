@@ -445,3 +445,36 @@ test_that("test12: Headerless table with title works as expected.", {
 })
 
 
+
+test_that("test13: Combination with Headerless table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test13.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl1 <- create_table(mtcars[1:10, ],  headerless = FALSE) %>% 
+    titles("MTCARS Combined Table 1.0")
+  tbl2 <- create_table(mtcars[11:20, ], headerless = TRUE) 
+  tbl3 <- create_table(mtcars, headerless =  TRUE) %>% 
+    footnotes("Full cars table") 
+  txt1 <- create_text("These tables are combined!")
+  
+  rpt <- create_report(fp) %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    page_footer(center = "Page [pg] of [tpg]") %>% 
+    add_content(tbl1, page_break = FALSE) %>% 
+    add_content(tbl2, page_break = FALSE) %>% 
+    add_content(txt1) %>% 
+    add_content(tbl1, page_break = FALSE) %>% 
+    add_content(tbl3, page_break = FALSE) %>% 
+    add_content(txt1)
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+

@@ -42,12 +42,12 @@ create_text_pages_text <- function(rs, txt, lpg_rows) {
   rws <- get_text_body(txt$text, rs$line_size, rs$body_line_count, lpg_rows)
   
   # Get last page 
-  lpg <- rws[[length(rws)]]
+  #lpg <- rws[[length(rws)]]
 
   # Append empty strings to fill up body
-  blnks <- rep("", rs$body_line_count - length(lpg))
+  #blnks <- rep("", rs$body_line_count - length(lpg))
   
-  rws[[length(rws)]] <- c(lpg, blnks)
+  #rws[[length(rws)]] <- c(lpg, blnks)
   
   return(rws)
 }
@@ -66,6 +66,9 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows) {
   # Offset the first page with remaining rows from the 
   # last page of the previous content
   offset <- lpg_rows  
+  
+  # print("offset text")
+  # print(offset)
   
   for (i in seq_along(a)) {
     if (length(tmp) < (line_count - offset)) {

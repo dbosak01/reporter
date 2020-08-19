@@ -27,6 +27,8 @@ write_report_text <- function(rs) {
   rs$body_size <- get_body_size(rs)
   #print(rs$body_size)
   rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
+  # print("Body line count")
+  # print(rs$body_line_count)
   
   # Get page template
   pt <- page_template_text(rs)
@@ -51,19 +53,28 @@ write_report_text <- function(rs) {
     ls[[i]]$pages <- pgs
     
     last_page <- pgs[[length(pgs)]]
-    last_page_lines <- length(last_page)
-    print(last_page_lines)
+    last_page_lines <- length(last_page) + last_page_lines
+
+    # print("Last page lines before")
+    # print(length(last_page))
+    # print(last_page_lines)
     
     if (ls[[i]]$page_break) {
       # Fill blanks on last page 
       blnks <- c()
-      bl <- rs$body_line_count - last_page_lines
+      bl <- rs$body_line_count - last_page_lines 
       if (bl > 0)
         blnks <- rep("", bl)
 
       last_page <- append(last_page, blnks)
       last_page_lines <- 0
     } 
+    
+    # print("Last page lines after")
+    # print(length(last_page))
+    # print(last_page_lines)
+    
+
     
     ls[[i]]$pages[[length(pgs)]] <- last_page
   }
@@ -72,6 +83,7 @@ write_report_text <- function(rs) {
   page <- 0
   last_object <- FALSE
   last_page <- FALSE
+  page_open <- FALSE
   
   # Write out content
   for (cont in ls) {
@@ -82,6 +94,7 @@ write_report_text <- function(rs) {
     
     # Increment counter
     counter <- counter + 1
+    page <- 0
     
     # Set last_object flag
     if (counter == length(ls))
@@ -100,14 +113,19 @@ write_report_text <- function(rs) {
         last_page <- FALSE
       
       #print(length(pg))
+      
+
 
       f <- file(rs$file_path, open="a")
       
-      if (!is.null(pt$page_header))
-       writeLines(pt$page_header, con = f)
-      
-      if (!is.null(pt$titles))
-       writeLines(pt$titles, con = f)
+      #print(page_open)
+      if (page_open == FALSE) {
+        if (!is.null(pt$page_header))
+         writeLines(pt$page_header, con = f)
+        
+        if (!is.null(pt$titles))
+         writeLines(pt$titles, con = f)
+      }
       
       if (!is.null(pg)) {
         tmp <- format(pg, width = rs$line_size,
@@ -116,23 +134,34 @@ write_report_text <- function(rs) {
         
       }
       
-      if (!is.null(pt$footnotes))
-       writeLines(pt$footnotes, con = f)
+      # print(paste("last_object", last_object))
+      # print(paste("last_page", last_page))
+      # print(paste("page_break", cont$page_break))
+      if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
+        page_open <- TRUE
+      else 
+        page_open <- FALSE
       
-      if (!is.null(pt$page_footer))
-       writeLines(pt$page_footer, con = f)
+      if (page_open == FALSE) {
       
-      # Do something with page_break property
-      if (last_object == FALSE | last_page == FALSE) {
+        if (!is.null(pt$footnotes))
+         writeLines(pt$footnotes, con = f)
         
-        if (is.null(rs$pages))
-          rs$pages <- 1
-        else 
-          rs$pages <- rs$pages + 1 
+        if (!is.null(pt$page_footer))
+         writeLines(pt$page_footer, con = f)
         
-        writeLines("", con = f, sep = "\f") 
-        
-        
+        # Do something with page_break property
+        if (last_object == FALSE | last_page == FALSE) {
+          
+          if (is.null(rs$pages))
+            rs$pages <- 1
+          else 
+            rs$pages <- rs$pages + 1 
+          
+          writeLines("", con = f, sep = "\f") 
+          
+          
+        }
       }
         #write_page_break(rs)
       
