@@ -4,7 +4,7 @@
 \alias{footnotes}
 \title{Add footnotes to the report}
 \usage{
-footnotes(x, ..., align = "left", blank_row = "below")
+footnotes(x, ..., align = "left", blank_row = "above")
 }
 \arguments{
 \item{x}{The object to assign footnotes to.}
@@ -15,7 +15,7 @@ footnotes(x, ..., align = "left", blank_row = "below")
 "right", "center", or "centre".}
 
 \item{blank_row}{Whether to print a blank row above or below the footnote.
-Valid values are 'above', 'below', 'both', or 'none'.  Default is 'below'.}
+Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
 }
 \description{
 This function adds one or more footnotes to the report.  The footnotes will

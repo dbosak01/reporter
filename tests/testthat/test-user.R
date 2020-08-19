@@ -6,8 +6,10 @@ base_path <- "./"
 
 test_that("user1: demo table works.", {
 
-  library(tidyverse)
+  library(tidyr)
+  library(dplyr)
   library(haven)
+  library(tibble)
 
   source(file.path(base_path, "code/formats.R"))
 
@@ -132,8 +134,10 @@ test_that("user1: demo table works.", {
 
 test_that("user2: demo table with stub works.", {
   
-  library(tidyverse)
+  library(tidyr)
+  library(dplyr)
   library(haven)
+  library(tibble)
   
   source(file.path(base_path, "code/formats.R"))
   

@@ -4,7 +4,7 @@
 \alias{page_header}
 \title{Add a page header to the report}
 \usage{
-page_header(x, left = "", right = "")
+page_header(x, left = "", right = "", blank_row = "none")
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -14,6 +14,12 @@ of strings.}
 
 \item{right}{The right page header text.  May be a single string or a vector
 of strings.}
+
+\item{blank_row}{Whether to create a blank row below the page header.
+Valid values are 'below' and 'none'.  Default is 'none'.}
+}
+\value{
+The modified report specification.
 }
 \description{
 This function adds a page header to the report.  The page header will appear
@@ -21,10 +27,8 @@ on each page of the report.
 }
 \details{
 The page header may contain text on the left or right. Use the appropriate
-parameters to specify the desired text.  The page header may also contain
-titles for the report, if the location of the
-the titles has been specified as "header".  See \code{titles()} function
-for additional details.
+parameters to specify the desired text.  Multiple text values for each side
+may be specified as a vector of strings.
 }
 \examples{
 # Here is an example

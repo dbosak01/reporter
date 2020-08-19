@@ -64,3 +64,42 @@ test_that("get_footnotes function works as expected.", {
   
 })
 
+
+test_that("page_header function works as expected.", {
+  
+  
+  ph <- page_header(list(), left = c("Left 1", "Left 2"), 
+                right = c("Right 1", "Right 2", "Right 3"),
+                blank_row = "below")
+  
+  
+  expect_equal(length(ph$page_header_left), 2)
+  expect_equal(length(ph$page_header_right), 3)
+  expect_equal(ph$page_header_blank_row, "below")
+  
+  expect_error(page_header(list(), left = c("a", "b", "c", "d", "e", "f")))
+  expect_error(page_header(list(), blank_row = "above"))
+               
+  
+})
+
+
+test_that("page_footer function works as expected.", {
+  
+  
+  ph <- page_footer(list(), left = c("Left 1", "Left 2"), 
+                    center = "center",
+                    right = c("Right 1", "Right 2", "Right 3"),
+                    blank_row = "above")
+  
+  
+  expect_equal(length(ph$page_footer_left), 2)
+  expect_equal(length(ph$page_footer_center), 1)
+  expect_equal(length(ph$page_footer_right), 3)
+  expect_equal(ph$page_footer_blank_row, "above")
+  
+  expect_error(page_header(list(), left = c("a", "b", "c", "d", "e", "f")))
+  expect_error(page_header(list(), blank_row = "above"))
+  
+})
+

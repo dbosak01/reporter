@@ -345,15 +345,16 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #'
 #' @details
 #' The page header may contain text on the left or right. Use the appropriate
-#' parameters to specify the desired text.  The page header may also contain
-#' titles for the report, if the location of the
-#' the titles has been specified as "header".  See \code{titles()} function
-#' for additional details.
+#' parameters to specify the desired text.  Multiple text values for each side
+#' may be specified as a vector of strings.
 #' @param x The report spec object.
 #' @param left The left page header text.  May be a single string or a vector
 #' of strings.
 #' @param right The right page header text.  May be a single string or a vector
 #' of strings.
+#' @param blank_row Whether to create a blank row below the page header.
+#' Valid values are 'below' and 'none'.  Default is 'none'.
+#' @return The modified report specification.
 #' @examples
 #' # Here is an example
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -362,14 +363,23 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 # write_report()
 # #file.show("mtcars.docx")
 #' @export
-page_header <- function(x, left="", right=""){
+page_header <- function(x, left="", right="", blank_row = "none"){
 
   if (length(left) > 5 | length(right) > 5){
     stop("ERROR: Header string count exceeds limit of 5 strings per side.")
   }
   
+  if (is.null(blank_row))
+    blank_row <- "none"
+  
+  if (!blank_row %in% c("below", "none")) {
+    stop(paste("blank_row parameter value invalid:", blank_row, "\n", 
+      "Valid values are 'below' and 'none'."))
+  }
+  
   x$page_header_left <- left
   x$page_header_right <- right
+  x$page_header_blank_row <- blank_row
 
   return(x)
 }
@@ -441,7 +451,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' @param align The position to align the titles.  Valid values are: "left",
 #' "right", "center", or "centre".
 #' @param blank_row Whether to print a blank row above or below the footnote.
-#' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'below'.
+#' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.
 #' @examples
 #' # Here are some examples.
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -451,7 +461,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 # write_report()
 # #file.show("mtcars.docx")
 #' @export
-footnotes <- function(x, ..., align = "left", blank_row = "below"){
+footnotes <- function(x, ..., align = "left", blank_row = "above"){
 
   # Create title structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -481,10 +491,12 @@ footnotes <- function(x, ..., align = "left", blank_row = "below"){
 #'
 #' @details
 #' The page footer may contain text on the left, right, or center.
-#' Use the appropriate parameters to specify the desired text.  The page footer
-#' may also contain footnotes for the report, if the location of the
-#' the footnotes has been specified as "footer".  See \code{footnotes()}
-#' function for additional details.
+#' Use the appropriate parameters to specify the desired text.  
+#' 
+#' There are two special tokens to generate page numbers: [pg] and [tpg]. 
+#' Use [pg] to indicate the current page number.  Use [tpg] to indicate the
+#' total number of pages in the report.  These token may be place anywhere 
+#' in the page header or page footer. 
 #'
 #' @param x The report spec object.
 #' @param left The left page footer text.  May be a single string or a vector
@@ -493,24 +505,47 @@ footnotes <- function(x, ..., align = "left", blank_row = "below"){
 #' of strings.
 #' @param center The center page footer text.  May be a single string or a
 #' vector of strings.
+#' @param blank_row Whether to create a blank row above the page footer.
+#' Valid values are 'above' and 'none'.  Default is 'above'.
+#' @seealso \code{\link{page_header}} to add a page header to the report, 
+#' \code{\link{titles}} to add titles, and \code{\link{footnotes}} to
+#' add footnotes.
 #' @examples
-#' # Here is an example.
-# create_report("mtcars.docx", orientation="portrait") %>%
-# page_header(left = "Cars Data", right = "Study ABC")  %>%
-# page_footer(left = Sys.time())  %>%
-# add_content(create_table(mtcars)) %>%
-# write_report()
-# #file.show("mtcars.docx")
+#' library(magrittr)
+#' 
+#' # Create table 
+#' tbl <- create_table(mtcars) %>% 
+#'        titles("MTCARS Sample Data") %>% 
+#'        footnotes("* From Motor Trend, 1973")
+#' 
+#' # Create temp report file name
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#'         
+#' # Create report 
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'        page_header(left = "Cars Data", right = "Sample Report")  %>%
+#'        page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")  %>%
+#'        add_content(tbl)
+#'
+#' # Write out the report        
+#' write_report(rpt)
+#' 
+#' # Send report to console 
+#' writeLines(readLines(tmp))
 #' @export
-page_footer <- function(x, left="", right="", center=""){
+page_footer <- function(x, left="", right="", center="", blank_row = "above"){
 
   if (length(left) > 5 | length(right) > 5 | length(center) > 5){
     stop("ERROR: Footer string count exceeds limit of 5 strings per section.")
   }
   
+  if (is.null(blank_row))
+    blank_row <- "none"
+  
   x$page_footer_left <- left
   x$page_footer_right <- right
   x$page_footer_center <- center
+  x$page_footer_blank_row <- blank_row
 
   return(x)
 }

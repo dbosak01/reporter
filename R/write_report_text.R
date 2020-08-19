@@ -44,7 +44,8 @@ write_report_text <- function(rs) {
       
     } else if (class(ls[[i]]$object)[1] == "text_spec") {
       
-      pgs <- create_text_pages_text(rs, ls[[i]]$object, last_page_lines)
+      pgs <- create_text_pages_text(rs, ls[[i]]$object, last_page_lines,
+                                    ls[[i]]$blank_row)
       
     }
     
@@ -118,9 +119,7 @@ write_report_text <- function(rs) {
         
       }
       
-      # print(paste("last_object", last_object))
-      # print(paste("last_page", last_page))
-      # print(paste("page_break", cont$page_break))
+      # Set page_open flag based on status of page_break and current objects
       if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
         page_open <- TRUE
       else 

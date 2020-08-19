@@ -64,6 +64,10 @@ get_page_header <- function(rs) {
       
       ret[i] <- ln
     }
+    
+    if (rs$page_header_blank_row == "below") {
+     ret[[length(ret) + 1]] <- "" 
+    }
   }
   
   return(ret)
@@ -120,7 +124,7 @@ get_titles <- function(titles, width) {
       }
       
       if (ttl$blank_row %in% c("below", "both"))
-        ret[length(ret) + 1] <- stri_pad(" ", ll)
+        ret[length(ret) + 1] <- ""
     }
     
   }
@@ -150,7 +154,7 @@ get_footnotes <- function(footnotes, width) {
         stop("footnotes parameter value is not a footnote spec.")
       
       if (ftn$blank_row %in% c("above", "both"))
-        ret[length(ret) + 1] <- stri_pad(" ", ll)
+        ret[length(ret) + 1] <- ""
       
       for (i in seq_along(ftn$footnotes)) {
         
@@ -176,7 +180,7 @@ get_footnotes <- function(footnotes, width) {
       }
       
       if (ftn$blank_row %in% c("below", "both"))
-        ret[length(ret) + 1] <- stri_pad(" ", ll)
+        ret[length(ret) + 1] <- ""
     }
   }
   
@@ -205,7 +209,10 @@ get_page_footer <- function(rs) {
   
   if (mx != 0) {
     
-    ret <- c("")
+    if (rs$page_footer_blank_row == "above") 
+      ret <- c("")
+    else 
+      ret <- c()
     
     for (i in 1:mx) {
       
@@ -243,6 +250,8 @@ get_page_footer <- function(rs) {
       
       ret[length(ret) + 1] <- ln
     }
+    
+
   }
   
   

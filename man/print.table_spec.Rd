@@ -11,6 +11,9 @@
 
 \item{...}{Additional parameters.}
 }
+\value{
+The table spec, invisibly.
+}
 \description{
 Prints the table spec
 }

@@ -3,10 +3,10 @@ Experis                                                                         
                                                  Table 1.0                                                  
                                        Analysis Data Subject Listing                                        
                                              Safety Population                                              
-
+                                                                                                            
                  subjid  name                       sex             age                arm                  
                  -------------------------------------------------------------------------                  
-
+                                                                                                            
                  100     Quintana, Gabriel          Male             41            Placebo                  
                  101     Allison, Blas              Female           53            Placebo                  
                  102     Minniear, Presley          Female           43            Placebo                  
@@ -17,34 +17,36 @@ Experis                                                                         
                  107     Crews, Deshawn Joseph      Female           38        Treatment 1                  
                  108     Person, Ladon              Female           62        Treatment 1                  
                  109     Smith, Shaileigh           Male             26        Treatment 1                  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
+                                                                                                            
 Program Name: table1_0.R                                                                                    
+                                                                                                            
 
-2020-08-16 19:44:33                             Confidential                                     Page 1 of 1
+2020-08-19 01:27:19                             Confidential                                     Page 1 of 1

@@ -16,8 +16,10 @@ Encoding: UTF-8
 LazyData: true
 Suggests: testthat,
           magrittr,
-          tidyverse, 
-          haven
+          dplyr,
+          tidyr,
+          haven,
+          tibble
 Imports: fmtr,
          qlcMatrix,
          graphics, 

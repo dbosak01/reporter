@@ -21,7 +21,7 @@ test_that("create_text function output works as expected.", {
   rpt$line_size <- 104
   rpt$body_line_count <- 55
   
-  res1 <- create_text_pages_text(rpt, create_text(cnt), 10)
+  res1 <- create_text_pages_text(rpt, create_text(cnt), 10, "none")
   
   res1
 

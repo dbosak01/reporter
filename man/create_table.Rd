@@ -31,9 +31,6 @@ or not a definition is supplied.}
 \item{first_row_blank}{Whether to place a blank row under the table header.}
 
 \item{headerless}{Whether to create a headerless table.  Default is FALSE.}
-
-\item{align}{Aligns the table on the page.  Valid values are "left", 
-"right", and "center".  Default value is "center".}
 }
 \description{
 A function to create a table_spec object

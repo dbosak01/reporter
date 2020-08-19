@@ -445,8 +445,6 @@ test_that("test12: Headerless table with title works as expected.", {
   
 })
 
-
-
 test_that("test13: Combination with Headerless table works as expected.", {
   
   fp <- file.path(base_path, "output/test13.out")

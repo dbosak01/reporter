@@ -4,7 +4,7 @@
 \alias{create_text}
 \title{Create a text specification}
 \usage{
-create_text(txt, width = NULL, align = "left", blank_row = "below")
+create_text(txt, width = NULL, align = "left")
 }
 \arguments{
 \item{txt}{The text to create.}
@@ -13,9 +13,6 @@ create_text(txt, width = NULL, align = "left", blank_row = "below")
 
 \item{align}{How to align the text within the text area.  Valid values
 are 'left', 'right', 'center', or 'centre'.}
-
-\item{blank_row}{Whether to create blanks above or below the object.  Valid
-value are 'above', 'below', 'both', or 'none'.}
 }
 \value{
 The text specification.

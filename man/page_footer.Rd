@@ -4,7 +4,7 @@
 \alias{page_footer}
 \title{Add a page footer to the report}
 \usage{
-page_footer(x, left = "", right = "", center = "")
+page_footer(x, left = "", right = "", center = "", blank_row = "above")
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -17,6 +17,9 @@ of strings.}
 
 \item{center}{The center page footer text.  May be a single string or a
 vector of strings.}
+
+\item{blank_row}{Whether to create a blank row above the page footer.
+Valid values are 'above' and 'none'.  Default is 'above'.}
 }
 \description{
 This function adds a page footer to the report.  The page footer will appear
@@ -24,11 +27,38 @@ on each page of the report.
 }
 \details{
 The page footer may contain text on the left, right, or center.
-Use the appropriate parameters to specify the desired text.  The page footer
-may also contain footnotes for the report, if the location of the
-the footnotes has been specified as "footer".  See \code{footnotes()}
-function for additional details.
+Use the appropriate parameters to specify the desired text.  
+
+There are two special tokens to generate page numbers: [pg] and [tpg]. 
+Use [pg] to indicate the current page number.  Use [tpg] to indicate the
+total number of pages in the report.  These token may be place anywhere 
+in the page header or page footer.
 }
 \examples{
-# Here is an example.
+library(magrittr)
+
+# Create table 
+tbl <- create_table(mtcars) \%>\% 
+       titles("MTCARS Sample Data") \%>\% 
+       footnotes("* From Motor Trend, 1973")
+
+# Create temp report file name
+tmp <- file.path(tempdir(), "mtcars.txt")
+        
+# Create report 
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+       page_header(left = "Cars Data", right = "Sample Report")  \%>\%
+       page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")  \%>\%
+       add_content(tbl)
+
+# Write out the report        
+write_report(rpt)
+
+# Send report to console 
+writeLines(readLines(tmp))
+}
+\seealso{
+\code{\link{page_header}} to add a page header to the report, 
+\code{\link{titles}} to add titles, and \code{\link{footnotes}} to
+add footnotes.
 }

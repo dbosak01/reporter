@@ -14,8 +14,6 @@
 #' names is supplied, those columns will be shown in the report, whether
 #' or not a definition is supplied.
 #' @param first_row_blank Whether to place a blank row under the table header.
-#' @param align Aligns the table on the page.  Valid values are "left", 
-#' "right", and "center".  Default value is "center".
 #' @param headerless Whether to create a headerless table.  Default is FALSE. 
 #' @export
 create_table <- function(x, n_format = upcase_parens, page_var = NULL,
@@ -197,6 +195,7 @@ table_options <- function(x, first_row_blank=FALSE){
 #' Prints the table spec
 #' @param x The table spec.
 #' @param ... Additional parameters.
+#' @return The table spec, invisibly.
 #' @export
 print.table_spec <- function(x, ...){
   
