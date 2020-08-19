@@ -14,8 +14,6 @@
 #' @return The report spec.
 #' @noRd
 write_report_text <- function(rs) {
-  
-  ret <- ""
 
   # Kill existing file
   if (file.exists(rs$file_path))
@@ -55,9 +53,6 @@ write_report_text <- function(rs) {
     last_page <- pgs[[length(pgs)]]
     last_page_lines <- length(last_page) + last_page_lines
 
-    # print("Last page lines before")
-    # print(length(last_page))
-    # print(last_page_lines)
     
     if (ls[[i]]$page_break) {
       # Fill blanks on last page 
@@ -70,11 +65,6 @@ write_report_text <- function(rs) {
       last_page_lines <- 0
     } 
     
-    # print("Last page lines after")
-    # print(length(last_page))
-    # print(last_page_lines)
-    
-
     
     ls[[i]]$pages[[length(pgs)]] <- last_page
   }
@@ -88,9 +78,6 @@ write_report_text <- function(rs) {
   # Write out content
   for (cont in ls) {
     
-    # print("Page length")
-    # print(length(cont$pages))
-    # print(cont$pages)
     
     # Increment counter
     counter <- counter + 1
@@ -111,9 +98,6 @@ write_report_text <- function(rs) {
         last_page <- TRUE
       else
         last_page <- FALSE
-      
-      #print(length(pg))
-      
 
 
       f <- file(rs$file_path, open="a")
@@ -163,7 +147,6 @@ write_report_text <- function(rs) {
           
         }
       }
-        #write_page_break(rs)
       
       close(f)
       
@@ -179,202 +162,13 @@ write_report_text <- function(rs) {
   invisible(rs)
 }
 
-#' @noRd
-write_report_text2 <- function(rs) {
-  
-  ret <- ""
-  
-  # Kill existing file
-  if (file.exists(rs$file_path))
-    file.remove(rs$file_path)
-  
-  # Calculate available space
-  rs$content_size <- get_content_size(rs)
-  rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
-  rs$body_size <- get_body_size(rs)
-  #print(rs$body_size)
-  rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
-  
-  # Get page template
-  pt <- page_template_text(rs)
-  
-  ls <- rs$content
-  
-  counter <- 0
-  last_object <- FALSE
-  
-  # Write out content
-  for(cont in ls){
-    
-    # Increment counter
-    counter <- counter + 1
-    
-    # Set last_object flag
-    if (counter == length(ls))
-      last_object <- TRUE
-    else 
-      last_object <- FALSE
-    
-    
-    if (class(cont$object)[1] == "table_spec"){
-      
-      # Break table into multiple pages if needed
-      # This function returns a list of pages
-      ttx <- create_table_pages_text(rs, cont$object)
-      
-      # Write pages
-      # This function takes the page template (headers, titles, etc.)
-      # and combines with the table pages and writes to file.
-      rs <- write_tables_text(rs, ttx, pt, last_object)
-      
-    } else if (class(cont$object)[1] == "text_spec") {
-      
-      txt <- create_text_pages_text(rs, cont$object)
-      rs <- write_tables_text(rs, txt, pt, last_object)
-      
-    } else if (all(class(cont$object)[1] == "character") & 
-               cont$object == "page_break"){  
-      
-      # ** Currently Not Used **
-      
-      # Add page break except for the last page
-      # so there is no empty page at the end
-      if (!last_object) {
-        rs <- write_page_break(rs)
-      }
-      
-    } 
-    
-    
-  }
-  
-  # After report is written, reopen and fix the page numbers.
-  # Reason is we don't really know how many pages there are 
-  # until the report is written.
-  rs <- write_page_numbers(rs)
-  
-  invisible(rs)
-}
 
-
-#' Write a list of tables to the report file
-#' @param rs The Report Spec.
-#' @param ttx A list of tables to write.
-#' @param pt A page template object.
-#' @param last_object Whether the table is the last object to be written.
-#' @return The report spec
-#' @noRd
-write_tables_text <- function(rs, ttx, pt, last_object) {
-  
-  
-  for (i in seq_along(ttx)) {
-    
-    rs <- write_table_text(rs, ttx[[i]], pt)
-    
-    if (i < length(ttx))
-      rs <- write_page_break(rs)
-    else if (last_object == FALSE)
-       rs <- write_page_break(rs)
-    
-  }
-  
-  
-  return(rs)
-}
-
-#' Write a single page to a file
-#' @param path The path to the report file 
-#' @param ttx A list of tables to write
-#' @param pt A page template object
-#' @return The report spec, unmodified
-#' @noRd
-write_page <- function(path, ttx, pt) {
-  
-  
-  
-  f <- file(path, open="a")
-  
-  if (!is.null(pt$page_header))
-    writeLines(pt$page_header, con = f)
-  
-  if (!is.null(pt$titles))
-    writeLines(pt$titles, con = f)
-  
-  if (!is.null(ttx))
-    writeLines(ttx, con = f)
-  
-  if (!is.null(pt$footnotes))
-    writeLines(pt$footnotes, con = f)
-  
-  if (!is.null(pt$page_footer))
-    writeLines(pt$page_footer, con = f)
-  
-  close(f)
-  
-  return(rs)
-}
-
-
-#' Write a single table to a file
-#' @param rs The Report Spec
-#' @param ttx A list of tables to write
-#' @param pt A page template object
-#' @return The report spec, unmodified
-#' @noRd
-write_table_text <- function(rs, ttx, pt) {
-  
-
-  
-  f <- file(rs$file_path, open="a")
-  
-  if (!is.null(pt$page_header))
-    writeLines(pt$page_header, con = f)
-  
-  if (!is.null(pt$titles))
-    writeLines(pt$titles, con = f)
-  
-  if (!is.null(ttx))
-    writeLines(ttx, con = f)
-  
-  if (!is.null(pt$footnotes))
-    writeLines(pt$footnotes, con = f)
-  
-  if (!is.null(pt$page_footer))
-    writeLines(pt$page_footer, con = f)
-  
-  close(f)
-  
-  return(rs)
-}
-#' @description Write out a page break to the report file
-#' @details For text, the page break is a form feed character.  This function
-#' also calculates the total page count and records in the report pages
-#' property.
-#' @param rs The report spec
-#' @return The report spec, unmodified
-#' @noRd
-write_page_break <- function(rs) {
-  
-  f <- file(rs$file_path, open="a")
-  
-  if (is.null(rs$pages))
-    rs$pages <- 1
-  else 
-    rs$pages <- rs$pages + 1 
-  
-  writeLines("", con = f, sep = "\f")
-  
-  close(f)
-  
-  return(rs)
-
-}
 
 #' @description Update page numbers in text file
 #' @details Logic is to read in each line of the file, loop through and replace
 #' tokens as needed.  Pages numbers are incremented every time a form feed
 #' is encountered.  Total pages is retrieved from the report pages property.
-#' Total pages is calculated in the write_page_break function.
+#' Total pages is calculated when a page break occurs.
 #' @noRd
 write_page_numbers <- function(rs) {
  

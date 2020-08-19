@@ -39,21 +39,46 @@ create_text <- function(txt, width = NULL, align = "left",
 #' @noRd
 create_text_pages_text <- function(rs, txt, lpg_rows) {
   
-  rws <- get_text_body(txt$text, rs$line_size, rs$body_line_count, lpg_rows)
+  w <- rs$line_size
+  if (!is.null(txt$width))
+    w <- round(txt$width / rs$char_width)
   
-  # Get last page 
-  #lpg <- rws[[length(rws)]]
+  ttls <- get_titles(txt$titles, w) 
+  ftnts <- get_footnotes(txt$footnotes, w) 
+  
+  h <- rs$body_line_count 
+  
+  rws <- get_text_body(txt$text, w, h, 
+                       txt$align, lpg_rows, 
+                       length(ttls))
+  
+  if (length(rws) > 0) {
+    
+    # Append titles to the beginning of the first page
+    rws[[1]] <- c(ttls, rws[[1]])
+    
 
-  # Append empty strings to fill up body
-  #blnks <- rep("", rs$body_line_count - length(lpg))
-  
-  #rws[[length(rws)]] <- c(lpg, blnks)
+    # Problem if addition of footnotes puts the height
+    # over the available line count.
+    # If not, append to end of last page.
+    # If so, create a new page to get overflow.
+    last_page <- rws[[length(rws)]]
+    if (length(last_page) + length(ftnts) <= h)
+      rws[[length(rws)]] <- c(last_page, ftnts)
+    else {
+      d <- length(last_page) + length(ftnts) - h
+      rws[[length(rws)]] <- c(last_page, ftnts[1:d])
+      rws[[length(rws) + 1]] <-  ftnts[(d + 1):length(ftnts)]
+    }
+
+  }
   
   return(rws)
 }
-
+#' Create list of vectors of strings for each page 
 #' @noRd
-get_text_body <- function(txt, line_width, line_count, lpg_rows) {
+get_text_body <- function(txt, line_width, line_count, align, lpg_rows,
+                          title_count) {
   
   # Wrap the text 
   a <- stri_wrap(unlist(
@@ -65,7 +90,8 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows) {
   
   # Offset the first page with remaining rows from the 
   # last page of the previous content
-  offset <- lpg_rows  
+  # plus any titles for the text content
+  offset <- lpg_rows + title_count
   
   # print("offset text")
   # print(offset)
@@ -79,7 +105,8 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows) {
     } else {
       
       # Start a new page
-      ret[[length(ret) + 1]] <- tmp
+      ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
+                                       justify = get_justify(align))
       tmp <- c(a[i])
       
       # Set to zero on second page and leave it that way
@@ -91,7 +118,8 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows) {
   if (length(tmp) > 0 ) {
     
     # Add last page
-    ret[[length(ret) + 1]] <- tmp
+    ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
+                                     justify = get_justify(align))
     
   }
   

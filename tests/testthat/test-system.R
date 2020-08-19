@@ -477,4 +477,36 @@ test_that("test13: Combination with Headerless table works as expected.", {
   
 })
 
-
+test_that("test15: Multi-page table with Titles and Footnotes breaks as expected.", {
+  
+  fp <- file.path(base_path, "output/test15.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                "qui officia deserunt mollit anim id est laborum.")
+                
+  txt <- create_text(cnt, width = 6.25, align = "left") %>% 
+    titles("Introduction to Irises")
+  
+  tbl <- create_table(iris) %>% 
+    titles("My little Iris Table") %>% 
+    footnotes("* Better Gardening, 1973") %>% 
+    define(Species, blank_after = TRUE)
+  
+  rpt <- create_report(fp) %>%
+    add_content(txt, page_break = FALSE) %>% 
+    add_content(tbl)
+  
+  
+  res2 <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
