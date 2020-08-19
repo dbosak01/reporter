@@ -501,7 +501,7 @@ test_that("test15: Multi-page table with Titles and Footnotes breaks as expected
   
   rpt <- create_report(fp) %>%
     add_content(txt, page_break = FALSE) %>% 
-    add_content(tbl)
+    add_content(tbl, blank_row = "none")
   
   
   res2 <- write_report(rpt)

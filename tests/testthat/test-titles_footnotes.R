@@ -109,3 +109,79 @@ test_that("ttfn5: title and footnote assigned to table works.", {
   
 })
 
+
+test_that("ttfn6: no blank_rows on header and footer work as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn6.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    footnotes("Table footnote", align = "left", blank_row = "none") 
+  
+  rpt <- create_report(fp) %>% 
+    page_header(left = "Study: Cars", blank_row = "none") %>% 
+    titles("MTCARS Data Frame 1", align = "left", blank_row = "none") %>% 
+    footnotes("Footer footnote", align = "left", blank_row = "none") %>% 
+    page_footer(left = "Footer", blank_row = "none") %>% 
+    add_content(tbl, align = "left", blank_row = "none", page_break = FALSE) %>% 
+    add_content(create_text("Text content", align = "left"))
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("ttfn7: blank_row on header and footer work as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn7.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    footnotes("Table footnote", align = "left", blank_row = "both") 
+  
+  rpt <- create_report(fp) %>% 
+    page_header(left = "Study: Cars", blank_row = "below") %>% 
+    titles("MTCARS Data Frame 1", align = "left", blank_row = "below") %>% 
+    footnotes("Footer footnote", align = "left", blank_row = "none") %>% 
+    page_footer(left = "Footer", blank_row = "above") %>% 
+    add_content(tbl, align = "left", page_break = FALSE) %>% 
+    add_content(create_text("Here is some text content", align = "left"))
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("ttfn8: blank_row on content works as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn8.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    footnotes("Table footnote", align = "left", blank_row = "none") 
+  
+  rpt <- create_report(fp) %>% 
+    page_header(left = "Study: Cars", blank_row = "none") %>% 
+    titles("MTCARS Data Frame 1", align = "left", blank_row = "both") %>% 
+    footnotes("Footer footnote", align = "left", blank_row = "both") %>% 
+    page_footer(left = "Footer", blank_row = "none") %>% 
+    add_content(tbl, align = "left", page_break = FALSE, blank_row = "none") %>% 
+    add_content(create_text("Here is some text content", align = "left"))
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
