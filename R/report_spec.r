@@ -571,6 +571,8 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
   cont$object <- object
   cont$page_break <- page_break
   cont$blank_row <- blank_row
+  cont$align <- align
+  cont$pages <- list()
 
   # Add object to the content list
   x$content[[length(x$content) + 1]] <- cont

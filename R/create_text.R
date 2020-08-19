@@ -34,11 +34,12 @@ create_text <- function(txt, width = NULL, align = "left",
 #' then then just dump it out.  All formatting is left to the user.
 #' @param rs The Report Spec
 #' @param txt The text content to output
+#' @param lpg_rows Last page rows.
 #' @import stringi
 #' @noRd
-create_text_pages_text <- function(rs, txt) {
+create_text_pages_text <- function(rs, txt, lpg_rows) {
   
-  rws <- get_text_body(txt$text, rs$line_size, rs$body_line_count)
+  rws <- get_text_body(txt$text, rs$line_size, rs$body_line_count, lpg_rows)
   
   # Get last page 
   lpg <- rws[[length(rws)]]
@@ -52,7 +53,7 @@ create_text_pages_text <- function(rs, txt) {
 }
 
 #' @noRd
-get_text_body <- function(txt, line_width, line_count) {
+get_text_body <- function(txt, line_width, line_count, lpg_rows) {
   
   # Wrap the text 
   a <- stri_wrap(unlist(
@@ -61,8 +62,13 @@ get_text_body <- function(txt, line_width, line_count) {
   
   ret <- list()  # Page list
   tmp <- c()     # 1 page of content
+  
+  # Offset the first page with remaining rows from the 
+  # last page of the previous content
+  offset <- lpg_rows  
+  
   for (i in seq_along(a)) {
-    if (length(tmp) < line_count) {
+    if (length(tmp) < (line_count - offset)) {
       
       # Append to existing page
       tmp[length(tmp) + 1] <- a[i]
@@ -72,6 +78,9 @@ get_text_body <- function(txt, line_width, line_count) {
       # Start a new page
       ret[[length(ret) + 1]] <- tmp
       tmp <- c(a[i])
+      
+      # Set to zero on second page and leave it that way
+      offset <- 0  
     }
   }
   

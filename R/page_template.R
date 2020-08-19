@@ -267,6 +267,8 @@ page_info <- function(data, keys, font_name, col_width, col_align,
   ret$col_align <- col_align
   ret$label <- label
   ret$label_align <- label_align
+  ret$total_pages <- 0
+  ret$page_number <- 0
   
   
   return(ret)

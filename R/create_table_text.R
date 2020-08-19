@@ -12,7 +12,7 @@ control_cols <- c("..blank", "..page", "..row")
 
 #' @import fmtr
 #' @noRd
-create_table_pages_text <- function(rs, ts) {
+create_table_pages_text <- function(rs, ts, lpg_rows) {
 
   
   if (ts$show_cols == "only" & length(ts$col_defs) == 0) {
@@ -98,7 +98,7 @@ create_table_pages_text <- function(rs, ts) {
 
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
-  splits <- get_splits_text(fdat, widths_uom, data_size[["height"]])
+  splits <- get_splits_text(fdat, widths_uom, data_size[["height"]], lpg_rows)
   #print("splits")
   #print(splits)
 

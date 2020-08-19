@@ -515,10 +515,10 @@ get_table_cols <- function(x) {
 #' @param widths The column widths
 #' @param page_size The size of the available space in rows
 #' @noRd
-get_splits_text <- function(x, widths, page_size) {
+get_splits_text <- function(x, widths, page_size, lpg_rows) {
   
 
-  pgs <- get_page_breaks(x, page_size)
+  pgs <- get_page_breaks(x, page_size, lpg_rows)
   
   
   ret <- split(pgs, pgs$..page)
@@ -534,18 +534,20 @@ get_splits_text <- function(x, widths, page_size) {
 #' @param page_size Available data height in number of rows.
 #' @return Data frame with ..page column populated with page numbers.
 #' @noRd
-get_page_breaks <- function(x, page_size){
+get_page_breaks <- function(x, page_size, lpg_rows){
   
   pg <- 1
   counter <- 0
+  offset <- 0
   
   for (i in seq_len(nrow(x))){
     
     counter <- counter + 1
     
-    if (counter > page_size) {
+    if (counter > (page_size - offset)) {
       counter <- 1
       pg <- pg + 1
+      offset <- 0
     }
     
     x$..page[i] <- pg

@@ -67,7 +67,7 @@ test_that("ttfn3: single footnote right aligned works.", {
 })
 
 
-test_that("ttfn4: two titles opposite aligned works.", {
+test_that("ttfn4: two footnotes opposite aligned works.", {
   
   fp <- file.path(base_path, "titles/ttfn4.out")
   

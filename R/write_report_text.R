@@ -32,10 +32,148 @@ write_report_text <- function(rs) {
   pt <- page_template_text(rs)
 
   ls <- rs$content
+  last_page_lines <- 0 
+  
+  # Write out content
+  for(i in seq_along(ls)){
 
+    # Break content into multiple pages if needed
+    if (class(ls[[i]]$object)[1] == "table_spec"){
+
+      pgs <- create_table_pages_text(rs, ls[[i]]$object, last_page_lines)
+      
+    } else if (class(ls[[i]]$object)[1] == "text_spec") {
+      
+      pgs <- create_text_pages_text(rs, ls[[i]]$object, last_page_lines)
+      
+    }
+    
+    ls[[i]]$pages <- pgs
+    
+    last_page <- pgs[[length(pgs)]]
+    last_page_lines <- length(last_page)
+    print(last_page_lines)
+    
+    if (ls[[i]]$page_break) {
+      # Fill blanks on last page 
+      blnks <- c()
+      bl <- rs$body_line_count - last_page_lines
+      if (bl > 0)
+        blnks <- rep("", bl)
+
+      last_page <- append(last_page, blnks)
+      last_page_lines <- 0
+    } 
+    
+    ls[[i]]$pages[[length(pgs)]] <- last_page
+  }
+  
+  counter <- 0
+  page <- 0
+  last_object <- FALSE
+  last_page <- FALSE
+  
+  # Write out content
+  for (cont in ls) {
+    
+    # print("Page length")
+    # print(length(cont$pages))
+    # print(cont$pages)
+    
+    # Increment counter
+    counter <- counter + 1
+    
+    # Set last_object flag
+    if (counter == length(ls))
+      last_object <- TRUE
+    else 
+      last_object <- FALSE
+    
+
+    for (pg in cont$pages) {
+      
+      page <- page + 1
+      
+      if (page == length(cont$pages))
+        last_page <- TRUE
+      else
+        last_page <- FALSE
+      
+      #print(length(pg))
+
+      f <- file(rs$file_path, open="a")
+      
+      if (!is.null(pt$page_header))
+       writeLines(pt$page_header, con = f)
+      
+      if (!is.null(pt$titles))
+       writeLines(pt$titles, con = f)
+      
+      if (!is.null(pg)) {
+        tmp <- format(pg, width = rs$line_size,
+               justify = get_justify(cont$align))
+        writeLines(tmp, con = f)
+        
+      }
+      
+      if (!is.null(pt$footnotes))
+       writeLines(pt$footnotes, con = f)
+      
+      if (!is.null(pt$page_footer))
+       writeLines(pt$page_footer, con = f)
+      
+      # Do something with page_break property
+      if (last_object == FALSE | last_page == FALSE) {
+        
+        if (is.null(rs$pages))
+          rs$pages <- 1
+        else 
+          rs$pages <- rs$pages + 1 
+        
+        writeLines("", con = f, sep = "\f") 
+        
+        
+      }
+        #write_page_break(rs)
+      
+      close(f)
+      
+    }
+    
+  }
+
+  # After report is written, reopen and fix the page numbers.
+  # Reason is we don't really know how many pages there are 
+  # until the report is written.
+  rs <- write_page_numbers(rs)
+  
+  invisible(rs)
+}
+
+#' @noRd
+write_report_text2 <- function(rs) {
+  
+  ret <- ""
+  
+  # Kill existing file
+  if (file.exists(rs$file_path))
+    file.remove(rs$file_path)
+  
+  # Calculate available space
+  rs$content_size <- get_content_size(rs)
+  rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
+  rs$body_size <- get_body_size(rs)
+  #print(rs$body_size)
+  rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
+  
+  # Get page template
+  pt <- page_template_text(rs)
+  
+  ls <- rs$content
+  
   counter <- 0
   last_object <- FALSE
-
+  
   # Write out content
   for(cont in ls){
     
@@ -50,11 +188,11 @@ write_report_text <- function(rs) {
     
     
     if (class(cont$object)[1] == "table_spec"){
-
+      
       # Break table into multiple pages if needed
       # This function returns a list of pages
       ttx <- create_table_pages_text(rs, cont$object)
-
+      
       # Write pages
       # This function takes the page template (headers, titles, etc.)
       # and combines with the table pages and writes to file.
@@ -78,9 +216,9 @@ write_report_text <- function(rs) {
       
     } 
     
-
+    
   }
-
+  
   # After report is written, reopen and fix the page numbers.
   # Reason is we don't really know how many pages there are 
   # until the report is written.
@@ -88,6 +226,7 @@ write_report_text <- function(rs) {
   
   invisible(rs)
 }
+
 
 #' Write a list of tables to the report file
 #' @param rs The Report Spec.
@@ -113,6 +252,39 @@ write_tables_text <- function(rs, ttx, pt, last_object) {
   
   return(rs)
 }
+
+#' Write a single page to a file
+#' @param path The path to the report file 
+#' @param ttx A list of tables to write
+#' @param pt A page template object
+#' @return The report spec, unmodified
+#' @noRd
+write_page <- function(path, ttx, pt) {
+  
+  
+  
+  f <- file(path, open="a")
+  
+  if (!is.null(pt$page_header))
+    writeLines(pt$page_header, con = f)
+  
+  if (!is.null(pt$titles))
+    writeLines(pt$titles, con = f)
+  
+  if (!is.null(ttx))
+    writeLines(ttx, con = f)
+  
+  if (!is.null(pt$footnotes))
+    writeLines(pt$footnotes, con = f)
+  
+  if (!is.null(pt$page_footer))
+    writeLines(pt$page_footer, con = f)
+  
+  close(f)
+  
+  return(rs)
+}
+
 
 #' Write a single table to a file
 #' @param rs The Report Spec

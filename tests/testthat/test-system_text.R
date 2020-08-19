@@ -21,7 +21,7 @@ test_that("create_text function output works as expected.", {
   rpt$line_size <- 104
   rpt$body_line_count <- 55
   
-  res1 <- create_text_pages_text(rpt, create_text(cnt))
+  res1 <- create_text_pages_text(rpt, create_text(cnt), 10)
   
   res1
 
@@ -125,12 +125,16 @@ test_that("text5: Table and Text output works as expected.", {
   if (file.exists(fp))
     file.remove(fp)
 
+  tbl1 <- mtcars[1:10, ]
+  tbl2 <- mtcars[11:20, ]
   
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 5.0", "Table and Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
-    add_content(create_table(mtcars[1:10, ]), page_break = FALSE) %>% 
+    add_content(create_table(tbl1), page_break = FALSE) %>% 
     add_content(create_text("* NOTE: Car information from 1971.")) %>% 
+    add_content(create_table(tbl2), page_break = FALSE) %>% 
+    add_content(create_text("* NOTE: Car information from 1972.")) %>% 
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
