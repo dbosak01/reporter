@@ -30,7 +30,7 @@ test_that("test2: Simplest table with title works as expected.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  tbl <- create_table(mtcars[1:10, ], align = "left") %>% 
+  tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
   
   rpt <- create_report(fp) %>% 
@@ -316,6 +316,7 @@ test_that("test9: Page wrap works as expected.", {
   rownames(df) = NULL
   
   tbl <- create_table(df) %>% 
+    # Need to fix bug when spanning header breaks
     # spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
     #                 label = "Span 1", label_align = "center", n = 10) %>% 
     # spanning_header(span_cols = c("drat", "wt", "qsec"),
@@ -431,7 +432,7 @@ test_that("test12: Headerless table with title works as expected.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  tbl <- create_table(mtcars[1:10, ], align = "left", headerless = TRUE) %>% 
+  tbl <- create_table(mtcars[1:10, ], headerless = TRUE) %>% 
     define(vs, visible = FALSE)
   
   rpt <- create_report(fp) %>% 
@@ -498,7 +499,7 @@ test_that("test15: Multi-page table with Titles and Footnotes breaks as expected
   tbl <- create_table(iris) %>% 
     titles("My little Iris Table") %>% 
     footnotes("* Better Gardening, 1973") %>% 
-    define(Species, blank_after = TRUE)
+    define(Species, blank_after = TRUE, dedupe = TRUE)
   
   rpt <- create_report(fp) %>%
     add_content(txt, page_break = FALSE) %>% 

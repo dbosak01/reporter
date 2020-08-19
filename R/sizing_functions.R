@@ -179,6 +179,10 @@ prep_data <- function(dat, defs) {
   for (def in defs) {
     if (def$dedupe) {
       
+      # Convert to character if necessary
+      if (all(dat[[def$var_c]] != "character"))
+        dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+          
       # Fill with blanks as appropriate
       w <- nchar(dat[[def$var_c]][1])
       v <- paste0(rep(" ", times = w), collapse = "")
@@ -539,8 +543,6 @@ get_page_breaks <- function(x, page_size, lpg_rows){
   pg <- 1
   counter <- 0
   offset <- lpg_rows
-  # print("Offset table")
-  # print(offset)
   
   for (i in seq_len(nrow(x))){
     

@@ -273,14 +273,14 @@ test_that("user3: listings works.", {
     read_sas() 
 
   # Define table
-  tbl <- create_table(data_demo, align = "left") %>% 
+  tbl <- create_table(data_demo) %>% 
     define(USUBJID, id_var = TRUE) 
 
   # Define Report
   rpt <- create_report(fp) %>%
     titles("Listing 1.0",
            "Demographics Dataset") %>%
-    add_content(tbl) %>% 
+    add_content(tbl, align = "left") %>% 
     page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")
   
   # Write out report

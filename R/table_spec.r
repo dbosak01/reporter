@@ -20,7 +20,7 @@
 #' @export
 create_table <- function(x, n_format = upcase_parens, page_var = NULL,
                          show_cols = "all", first_row_blank=FALSE, 
-                         align = "center", headerless = FALSE) {
+                         headerless = FALSE) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -41,7 +41,6 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
   ret$col_spans <- list()
   ret$show_cols <- show_cols
   ret$first_row_blank <- first_row_blank
-  ret$align <- align
   ret$headerless <- headerless
 
   return(ret)

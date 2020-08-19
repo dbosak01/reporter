@@ -10,7 +10,7 @@ test_that("ttfn1: single title right aligned works.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  tbl <- create_table(mtcars[1:10, ], align = "right") 
+  tbl <- create_table(mtcars[1:10, ]) 
   
   rpt <- create_report(fp) %>% 
     titles("MTCARS Data Frame", align = "right") %>% 
@@ -31,7 +31,7 @@ test_that("ttfn2: two titles opposite aligned works.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  tbl <- create_table(mtcars[1:10, ], align = "right") 
+  tbl <- create_table(mtcars[1:10, ]) 
   
   rpt <- create_report(fp) %>% 
     titles("MTCARS Data Frame 1", align = "right", blank_row = "above") %>% 
@@ -53,7 +53,7 @@ test_that("ttfn3: single footnote right aligned works.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  tbl <- create_table(mtcars[1:10, ], align = "right") 
+  tbl <- create_table(mtcars[1:10, ]) 
   
   rpt <- create_report(fp) %>% 
     footnotes("MTCARS Data Frame", align = "right") %>% 
@@ -74,7 +74,7 @@ test_that("ttfn4: two footnotes opposite aligned works.", {
   if (file.exists(fp))
     file.remove(fp)
   
-  tbl <- create_table(mtcars[1:10, ], align = "right") 
+  tbl <- create_table(mtcars[1:10, ]) 
   
   rpt <- create_report(fp) %>% 
     footnotes("MTCARS Data Frame 1", align = "right", blank_row = "above") %>% 
