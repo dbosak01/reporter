@@ -29,19 +29,28 @@ create_text <- function(txt, width = NULL, align = "left") {
 #' @details Basic logic is to wrap any text to the available line width, 
 #' then then just dump it out.  All formatting is left to the user.
 #' @param rs The Report Spec
-#' @param txt The text content to output
+#' @param cntnt The text content to output
 #' @param lpg_rows Last page rows.
 #' @import stringi
 #' @noRd
-create_text_pages_text <- function(rs, txt, lpg_rows, content_blank_row) {
+create_text_pages_text <- function(rs, cntnt, lpg_rows) {
   
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  txt <- cntnt$object
+  
+  # Assume width is the overall line size
   w <- rs$line_size
+  
+  # If user supplies a width, override default
   if (!is.null(txt$width))
     w <- round(txt$width / rs$char_width)
   
-  h <- rs$body_line_count 
-  
-  rws <- get_text_body(txt, w, h, lpg_rows, content_blank_row)
+  rws <- get_text_body(txt, w, rs$body_line_count, lpg_rows, cntnt$blank_row)
   
   return(rws)
 }
@@ -83,6 +92,7 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows,
   # Offset the first page with remaining rows from the 
   # last page of the previous content
   offset <- lpg_rows 
+  print(paste("Offset:", offset))
   
   # Assign content to pages
   for (i in seq_along(rws)) {

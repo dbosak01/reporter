@@ -606,6 +606,8 @@ get_content_size <- function(rs) {
 }
 
 
+#' @param rs Report spec
+#' @param pt Page Template
 #' @noRd
 get_body_size <- function(rs) {
   
@@ -617,8 +619,6 @@ get_body_size <- function(rs) {
   # Calculate available space for page body
   ret <- c(height = rs$content_size[["height"]] - h_h - f_h,
            width = rs$content_size[["width"]])
-  
-
   
   return(ret)
 }

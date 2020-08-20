@@ -9,7 +9,7 @@ add_content(
   object,
   page_break = TRUE,
   align = "center",
-  blank_row = "after"
+  blank_row = "below"
 )
 }
 \arguments{
@@ -24,8 +24,8 @@ parameter to add multiple objects to the same page.}
 \item{align}{How to align the content.  Valid values are 'left', 'right',
 'center', and 'centre'.}
 
-\item{blank_row}{Whether to put a blank row before or after the content.
-Valid values are 'before', 'after', 'both', or 'none'.}
+\item{blank_row}{Whether to put a blank row above or below the content.
+Valid values are 'above', 'below', 'both', or 'none'.}
 }
 \value{
 The modified report_spec.

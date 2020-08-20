@@ -65,9 +65,9 @@ get_page_header <- function(rs) {
       ret[i] <- ln
     }
     
-    if (rs$page_header_blank_row == "below") {
-     ret[[length(ret) + 1]] <- "" 
-    }
+    if (length(ret) > 0 & rs$page_header_blank_row == "below") 
+      ret[[length(ret) + 1]] <- "" 
+    
   }
   
   return(ret)
@@ -97,8 +97,8 @@ get_titles <- function(titles, width) {
       if (!any(class(ttl) == "title_spec"))
         stop("titles parameter value is not a title spec.")
           
-      if (ttl$blank_row %in% c("above", "both"))
-        ret[length(ret) + 1] <- stri_pad(" ", ll)
+      if (ttl$blank_row %in% c("above", "both") & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <- ""
       
       for (i in seq_along(ttl$titles)) {
       
@@ -123,7 +123,7 @@ get_titles <- function(titles, width) {
         ret[length(ret) + 1] <- ln
       }
       
-      if (ttl$blank_row %in% c("below", "both"))
+      if (ttl$blank_row %in% c("below", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
     }
     
@@ -153,7 +153,7 @@ get_footnotes <- function(footnotes, width) {
       if (!any(class(ftn) == "footnote_spec"))
         stop("footnotes parameter value is not a footnote spec.")
       
-      if (ftn$blank_row %in% c("above", "both"))
+      if (ftn$blank_row %in% c("above", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""
       
       for (i in seq_along(ftn$footnotes)) {
@@ -179,7 +179,7 @@ get_footnotes <- function(footnotes, width) {
         ret[length(ret) + 1] <- ln
       }
       
-      if (ftn$blank_row %in% c("below", "both"))
+      if (ftn$blank_row %in% c("below", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""
     }
   }

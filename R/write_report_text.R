@@ -19,43 +19,56 @@ write_report_text <- function(rs) {
   if (file.exists(rs$file_path))
     file.remove(rs$file_path)
   
-  # Calculate available space
-  rs$content_size <- get_content_size(rs)
-  rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
-  rs$body_size <- get_body_size(rs)
-  #print(rs$body_size)
-  rs$body_line_count <- floor(rs$body_size[["height"]] / rs$line_height)
-  # print("Body line count")
-  # print(rs$body_line_count)
+  # Calculate available space for content 
+  rs <- page_setup(rs)
   
-  # Get page template
-  pt <- page_template_text(rs)
+  # Get page template for easy access
+  pt <- rs$page_template
 
   ls <- rs$content
   last_page_lines <- 0 
+  last_object <- FALSE
   
-  # Write out content
+  # Paginate content
+  # This loop breaks long content into separate pages.
+  # Tricky part is taking account of a partially filled page with no page break.
+  # Basically we need to track how many lines are on the last page,
+  # and send to next pagination call to use for an offset.
   for(i in seq_along(ls)){
+    
+    if (i == length(ls))
+      last_object <- TRUE
+    else 
+      last_object <- FALSE
 
     # Break content into multiple pages if needed
     if (class(ls[[i]]$object)[1] == "table_spec"){
 
-      pgs <- create_table_pages_text(rs, ls[[i]]$object, last_page_lines)
+      pgs <- create_table_pages_text(rs, ls[[i]], last_page_lines)
       
     } else if (class(ls[[i]]$object)[1] == "text_spec") {
       
-      pgs <- create_text_pages_text(rs, ls[[i]]$object, last_page_lines,
-                                    ls[[i]]$blank_row)
+      pgs <- create_text_pages_text(rs, ls[[i]], last_page_lines)
       
     }
     
+    # Append pages to content page list
+    # These will be written out in following step
     ls[[i]]$pages <- pgs
     
     last_page <- pgs[[length(pgs)]]
     last_page_lines <- length(last_page) + last_page_lines
-
     
-    if (ls[[i]]$page_break) {
+    # If there is more than one page returned, then a page break occurred
+    # and we can reset the last page lines.
+    if (length(pgs) > 1)
+      last_page_lines <- length(last_page)
+
+    print(paste("Last page lines:", last_page_lines))
+    
+    # If there is a requested page break, or it is the last object/last page,
+    # then fill up the remaining page with blanks.
+    if (ls[[i]]$page_break | last_object) {
       # Fill blanks on last page 
       blnks <- c()
       bl <- rs$body_line_count - last_page_lines 
@@ -63,10 +76,10 @@ write_report_text <- function(rs) {
         blnks <- rep("", bl)
 
       last_page <- append(last_page, blnks)
-      last_page_lines <- 0
+      last_page_lines <- 0  # Needed for requested page breaks
     } 
     
-    
+    # Replace last page with any modifications
     ls[[i]]$pages[[length(pgs)]] <- last_page
   }
   
@@ -77,6 +90,7 @@ write_report_text <- function(rs) {
   page_open <- FALSE
   
   # Write out content
+  # This loop writes out pages created in previous loop
   for (cont in ls) {
     
     
@@ -161,7 +175,59 @@ write_report_text <- function(rs) {
   invisible(rs)
 }
 
+#' @description Setup page for content
+#' @details  Calculates available space for content and prepares text lines
+#' for page template.
+#' @noRd
+page_setup <- function(rs) {
+  
+  debug <- TRUE
+  
+  # Content size is the page size minus margins, in uom
+  rs$content_size <- get_content_size(rs)
+  if (debug)
+    print(paste0("Content Size: ", rs$content_size))
+  
+  # Line size is the number of characters that will fit in the content size width
+  rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
+  if (debug)
+    print(paste0("Line Size: ", rs$line_size))
+  
+  # Line count is the number of lines that will fit in the content size height
+  rs$line_count <- floor(rs$content_size[["height"]] / rs$line_height)
+  if (debug)
+    print(paste0("Line Count: ", rs$line_count))
+  
+  # Get page template
+  # Page template is the headers, footers, titles, and footnotes attached to report
+  # Requires the line_size
+  # Returns a page_template_text object
+  pt <- page_template_text(rs)
+  rs$page_template <- pt
+  #print(pt)
+  
+  # Get the page template row count
+  # Include all the rows associated with the page template
+  rs$page_template_header_count <- length(pt$page_header) + length(pt$titles)
+  if (debug)
+    print(paste("Page Template Header Count:", rs$page_template_header_count))
 
+  rs$page_template_footer_count <- length(pt$footnotes) + length(pt$page_footer)
+  if (debug)
+    print(paste("Page Template Footer Count:", rs$page_template_footer_count))
+
+  rs$page_template_row_count <- rs$page_template_header_count + 
+                                rs$page_template_footer_count
+  if (debug)
+    print(paste("Page Template Row Count:", rs$page_template_row_count))
+  
+  # Body line count is the number of rows available for content on each page
+  rs$body_line_count <- rs$line_count - rs$page_template_row_count
+  if (debug)
+    print(paste0("Body Line Count: ", rs$body_line_count))
+  
+  return(rs)
+}
 
 #' @description Update page numbers in text file
 #' @details Logic is to read in each line of the file, loop through and replace

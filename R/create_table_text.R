@@ -12,8 +12,10 @@ control_cols <- c("..blank", "..page", "..row")
 
 #' @import fmtr
 #' @noRd
-create_table_pages_text <- function(rs, ts, lpg_rows) {
+create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
+  ts <- cntnt$object
+  content_blank_row <- cntnt$blank_row
   
   if (ts$show_cols == "only" & length(ts$col_defs) == 0) {
     
@@ -109,7 +111,8 @@ create_table_pages_text <- function(rs, ts, lpg_rows) {
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
                      col_width = widths_uom[pg], col_align = aligns[pg],
                      font_name = font_name, label_align = label_aligns[pg])
-      pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi)
+      pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi, 
+                                                        content_blank_row)
     }
   }
   
@@ -118,7 +121,7 @@ create_table_pages_text <- function(rs, ts, lpg_rows) {
 }
 
 #' @noRd
-create_table_text <- function(rs, ts, pi) {
+create_table_text <- function(rs, ts, pi, content_blank_row) {
   
   shdrs <- c()
   hdrs <- c()
@@ -134,22 +137,20 @@ create_table_text <- function(rs, ts, pi) {
   ls <- rs$line_size
   if (length(rws) > 0)
     ls <- nchar(rws[1])
-  #print("Actual width")
-  #print(ls)
+
   
   ttls <- get_titles(ts$titles, ls) 
   ftnts <- get_footnotes(ts$footnotes, ls) 
-
-  # blnks <- c()
-  # bl <- rs$body_line_count - length(ttls) - length(shdrs)
-  #       - length(hdrs) - length(rws) - length(ftnts)
-  # if (bl > 0)
-  #   blnks <- rep("", bl)
-  # else 
-  #   stop("page content too long for available space.")
   
-  #ret <- c(ttls, shdrs, hdrs, rws, ftnts, blnks)
-  ret <- c(ttls, shdrs, hdrs, rws, ftnts)
+  a <- NULL
+  if (content_blank_row %in% c("above", "both"))
+    a <- ""
+  
+  b <- NULL
+  if (content_blank_row %in% c("below", "both"))
+    b <- ""
+
+  ret <- c(a, ttls, shdrs, hdrs, rws, ftnts, b)
   
   return(ret) 
 }
@@ -372,21 +373,8 @@ get_spanning_header <- function(rs, ts, pi) {
     
     #print(ln)
   }
-  
-  
-  ret <- c()
-  #print(rs$line_size)
-  #print(ts$align)
-  #print(ln)
-  # Justify entire header
-  # for (k in seq_along(ln)) {
-  # 
-  #   ret[[k]] <- format(ln[[k]], width = rs$line_size,
-  #                      justify = get_justify(ts$align))
-  # }
 
   ret <- unlist(ln)
-  #ret <- unlist(ret)
   
   return(ret)
 }

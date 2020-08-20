@@ -17,16 +17,17 @@ test_that("create_text function output works as expected.", {
   
 
   # Create the report object
-  rpt <- create_report("dummy.txt", orientation="portrait") 
+  rpt <- create_report("dummy.txt", orientation="portrait") %>% 
+    add_content(create_text(cnt))
   rpt$line_size <- 104
   rpt$body_line_count <- 55
   
-  res1 <- create_text_pages_text(rpt, create_text(cnt), 10, "none")
+  res1 <- create_text_pages_text(rpt, rpt$content[[1]] , 10)
   
   res1
 
   expect_equal(length(res1), 1)
-  expect_equal(length(res1[[1]]), 5)
+  expect_equal(length(res1[[1]]), 6)
   
 })
 
@@ -168,3 +169,69 @@ test_that("text6: Very Long text output works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
 })
+
+
+test_that("text7: Text page setup landscape works as expected.", {
+  
+  fp <- file.path(base_path, "text/text7.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+
+  
+  txt1 <- create_text(cnt) %>% 
+    titles("Test Title ", "Test Titles 2", "Test Title 3") %>% 
+    footnotes("Footnote 1", "Foonote 2", "Footnote 3", "Footnote 4", "Footnote 5")
+  
+  rpt <- create_report(fp, orientation = "landscape") %>%
+    titles("Report 5.0", "Table and Text Report") %>% 
+    page_header(left = "Client: ABC", right = "Study: 123") %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right ="Page [pg] of [tpg]")
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  expect_equal(length(lns), 135)
+})
+
+test_that("text8: Text page setup portrait works as expected.", {
+  
+  fp <- file.path(base_path, "text/text8.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  
+  txt1 <- create_text(cnt) %>% 
+    titles("Test Title ", "Test Titles 2", "Test Title 3") %>% 
+    footnotes("Footnote 1", "Foonote 2", "Footnote 3", "Footnote 4", "Footnote 5")
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    titles("Report 5.0", "Table and Text Report") %>% 
+    page_header(left = "Client: ABC", right = "Study: 123") %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    add_content(txt1, page_break = FALSE) %>% 
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right ="Page [pg] of [tpg]")
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  expect_equal(length(lns), 120)
+})
+

@@ -117,6 +117,9 @@ create_report <- function(file_path = "", output_type = "text",
   if (output_type == "text") {
     
     # Set default options for text
+    # This sets line_height and char_width
+    # which are needed for all conversions from 
+    # uom to text
     x <- options_text(x)
     
   } else if (output_type == "docx") {
@@ -542,6 +545,9 @@ page_footer <- function(x, left="", right="", center="", blank_row = "above"){
   if (is.null(blank_row))
     blank_row <- "none"
   
+  if (!blank_row %in% c("none", "above"))
+    stop("Invalid value for blank_row.  Valid values are 'above' or 'none'.")
+  
   x$page_footer_left <- left
   x$page_footer_right <- right
   x$page_footer_center <- center
@@ -570,8 +576,8 @@ page_footer <- function(x, left="", right="", center="", blank_row = "above"){
 #' parameter to add multiple objects to the same page.  
 #' @param align How to align the content.  Valid values are 'left', 'right',
 #' 'center', and 'centre'.
-#' @param blank_row Whether to put a blank row before or after the content.
-#' Valid values are 'before', 'after', 'both', or 'none'.
+#' @param blank_row Whether to put a blank row above or below the content.
+#' Valid values are 'above', 'below', 'both', or 'none'.
 #' @return The modified report_spec.
 #' @examples
 #' # Create temp file path
@@ -594,7 +600,7 @@ page_footer <- function(x, left="", right="", center="", blank_row = "above"){
 #' writeLines(readLines(fp))
 #' @export
 add_content <- function(x, object, page_break=TRUE, align = "center",
-                        blank_row = "after") {
+                        blank_row = "below") {
   
   if (!page_break %in% c(TRUE, FALSE)) {
    stop(paste("Page break value invalid.",
