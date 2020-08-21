@@ -13,10 +13,10 @@ test_that("create_report sets default values appropriately", {
 
 test_that("create_report changes parameters appropriately", {
   
-  ret <- create_report(output_type = "docx", orientation = "portrait")
+  ret <- create_report(output_type = "text", orientation = "portrait")
   
   expect_equal(ret$orientation, "portrait")
-  expect_equal(ret$output_type, "docx")
+  expect_equal(ret$output_type, "text")
   
 })
 
@@ -31,33 +31,33 @@ test_that("create_report traps invalid parameters", {
 })
 
 
-test_that("options_text sets default parameters appropriately", {
+test_that("options_fixed sets default parameters appropriately", {
   
   ret <- create_report()
   
-  ret <- options_text(ret)
+  ret <- options_fixed(ret)
   
   expect_equal(ret$cpuom, 12)
   
 })
 
 
-test_that("options_text changes parameters appropriately", {
+test_that("options_fixed changes parameters appropriately", {
   
   ret <- create_report()
   
-  ret <- options_text(ret, cpuom = 10)
+  ret <- options_fixed(ret, cpuom = 10)
   
   expect_equal(ret$cpuom, 10)
   
 })
 
 
-test_that("options_text traps invalid parameters appropriately", {
+test_that("options_fixed traps invalid parameters appropriately", {
   
   ret <- create_report()
   
-  expect_error(options_text(ret, cpuom = 15))
+  expect_error(options_fixed(ret, cpuom = 15))
   
   
 })

@@ -81,7 +81,7 @@ test_that("test3: Simple table with formats works as expected.", {
 
   
   rpt <- create_report(fp) %>%
-    options_text(editor = "notepad++") %>%
+    options_fixed(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", 
            align = "center") %>%
@@ -144,7 +144,7 @@ test_that("test4: Two page report works as expected.", {
   
   
   rpt <- create_report(fp, uom = "inches", paper_size = "letter") %>%
-    options_text(editor = "notepad++") %>%
+    options_fixed(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%
@@ -331,7 +331,7 @@ test_that("test9: Page wrap works as expected.", {
     define(cyl) 
   
   rpt <- create_report(fp, orientation = "portrait") %>%
-    options_text(editor = "wordpad") %>% 
+    options_fixed(editor = "wordpad") %>% 
     add_content(tbl) %>% 
     titles("Table 1.0", "MTCARS Subset Test")
   
@@ -365,7 +365,7 @@ test_that("test10: Page wrap with spanning header works as expected.", {
     define(cyl) 
   
   rpt <- create_report(fp, orientation = "portrait") %>%
-    options_text(editor = "wordpad") %>% 
+    options_fixed(editor = "wordpad") %>% 
     add_content(tbl) %>% 
     titles("Table 1.0", "MTCARS Subset Test")
   

@@ -59,3 +59,15 @@ write_report(rpt)
 # Write report to console
 writeLines(readLines(fp))
 }
+\seealso{
+Other report: 
+\code{\link{create_report}()},
+\code{\link{footnotes}()},
+\code{\link{options_fixed}()},
+\code{\link{page_footer}()},
+\code{\link{page_header}()},
+\code{\link{set_margins}()},
+\code{\link{titles}()},
+\code{\link{write_report}()}
+}
+\concept{report}

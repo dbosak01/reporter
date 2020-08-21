@@ -21,6 +21,9 @@ vector of strings.}
 \item{blank_row}{Whether to create a blank row above the page footer.
 Valid values are 'above' and 'none'.  Default is 'above'.}
 }
+\value{
+The modified report.
+}
 \description{
 This function adds a page footer to the report.  The page footer will appear
 on each page of the report.
@@ -61,4 +64,15 @@ writeLines(readLines(tmp))
 \code{\link{page_header}} to add a page header to the report, 
 \code{\link{titles}} to add titles, and \code{\link{footnotes}} to
 add footnotes.
+
+Other report: 
+\code{\link{add_content}()},
+\code{\link{create_report}()},
+\code{\link{footnotes}()},
+\code{\link{options_fixed}()},
+\code{\link{page_header}()},
+\code{\link{set_margins}()},
+\code{\link{titles}()},
+\code{\link{write_report}()}
 }
+\concept{report}

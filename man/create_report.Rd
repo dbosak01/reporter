@@ -39,11 +39,11 @@ A new report_spec S3 object.
 Creates a report shell to which you may add content.
 }
 \details{
-This function is the constructor for the report_spec object.  The report_spec
+This function is the constructor for the report object.  The report
 object contains information needed to construct a report. The object is
-defined as an S3 object, and is inherited from a list.
+defined as an S3 object, and has a class of 'report_spec'.
 
-The report_spec object hold information concerning report page size, font, 
+The report object holds information concerning report page size, font, 
 titles, footnotes, page header, page footer, margins, and other options.  
 Use the \code{\link{add_content}} function to add content to the report.  
 The report may be written to a file using the \code{\link{write_report}} 
@@ -75,8 +75,19 @@ writeLines(readLines(fp))
   \item \code{\link{page_header}} to add a page header to the report. 
   \item \code{\link{page_footer}} to add a page_footer to the report. 
   \item \code{\link{add_content}} to add content to the report.
-  \item \code{\link{options_text}} to set options for text output.
+  \item \code{\link{options_fixed}} to set options for text output.
   \item \code{\link{add_content}} to add content to the report.
   \item \code{\link{write_report}} to write the report to the file system.
 }
+
+Other report: 
+\code{\link{add_content}()},
+\code{\link{footnotes}()},
+\code{\link{options_fixed}()},
+\code{\link{page_footer}()},
+\code{\link{page_header}()},
+\code{\link{set_margins}()},
+\code{\link{titles}()},
+\code{\link{write_report}()}
 }
+\concept{report}

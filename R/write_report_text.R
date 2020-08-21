@@ -15,35 +15,52 @@
 #' @noRd
 write_report_text <- function(rs) {
 
-  # Kill existing file
-  if (file.exists(rs$file_path))
-    file.remove(rs$file_path)
-  
   # Calculate available space for content 
   rs <- page_setup(rs)
   
   # Get page template for easy access
   pt <- rs$page_template
 
+  # Put content in new variable for easy access
   ls <- rs$content
+
+  # Break content into pages
+  ls <- paginate_content(rs, ls)
+  
+  # Write pages to file
+  rs <- write_content(rs, ls, pt)
+
+  # After report is written, reopen and fix the page numbers.
+  # Reason is we don't really know how many pages there are 
+  # until the report is written.
+  rs <- write_page_numbers(rs)
+  
+  invisible(rs)
+}
+
+
+#' @title Paginate content
+#' @description This loop breaks long content into separate pages.
+#' @details 
+#' Tricky part is taking account of a partially filled page with no page break.
+#' Basically we need to track how many lines are on the last page,
+#' and send to next pagination call to use for an offset.
+#' @noRd
+paginate_content <- function(rs, ls) {
+  
   last_page_lines <- 0 
   last_object <- FALSE
   
-  # Paginate content
-  # This loop breaks long content into separate pages.
-  # Tricky part is taking account of a partially filled page with no page break.
-  # Basically we need to track how many lines are on the last page,
-  # and send to next pagination call to use for an offset.
   for(i in seq_along(ls)){
     
     if (i == length(ls))
       last_object <- TRUE
     else 
       last_object <- FALSE
-
+    
     # Break content into multiple pages if needed
     if (class(ls[[i]]$object)[1] == "table_spec"){
-
+      
       pgs <- create_table_pages_text(rs, ls[[i]], last_page_lines)
       
     } else if (class(ls[[i]]$object)[1] == "text_spec") {
@@ -63,8 +80,8 @@ write_report_text <- function(rs) {
     # and we can reset the last page lines.
     if (length(pgs) > 1)
       last_page_lines <- length(last_page)
-
-    print(paste("Last page lines:", last_page_lines))
+    
+    #print(paste("Last page lines:", last_page_lines))
     
     # If there is a requested page break, or it is the last object/last page,
     # then fill up the remaining page with blanks.
@@ -74,7 +91,7 @@ write_report_text <- function(rs) {
       bl <- rs$body_line_count - last_page_lines 
       if (bl > 0)
         blnks <- rep("", bl)
-
+      
       last_page <- append(last_page, blnks)
       last_page_lines <- 0  # Needed for requested page breaks
     } 
@@ -83,14 +100,25 @@ write_report_text <- function(rs) {
     ls[[i]]$pages[[length(pgs)]] <- last_page
   }
   
+  return(ls)
+}
+
+#' @title Write out content
+#' @description This loop writes out pages created paginate_content
+#' @noRd
+write_content <- function(rs, ls, pt) {
+  
+  # Kill existing file
+  if (file.exists(rs$file_path))
+    file.remove(rs$file_path)
+  
   counter <- 0
   page <- 0
   last_object <- FALSE
   last_page <- FALSE
   page_open <- FALSE
   
-  # Write out content
-  # This loop writes out pages created in previous loop
+
   for (cont in ls) {
     
     
@@ -104,7 +132,7 @@ write_report_text <- function(rs) {
     else 
       last_object <- FALSE
     
-
+    
     for (pg in cont$pages) {
       
       page <- page + 1
@@ -113,22 +141,22 @@ write_report_text <- function(rs) {
         last_page <- TRUE
       else
         last_page <- FALSE
-
-
+      
+      
       f <- file(rs$file_path, open="a")
       
       #print(page_open)
       if (page_open == FALSE) {
         if (!is.null(pt$page_header))
-         writeLines(pt$page_header, con = f)
+          writeLines(pt$page_header, con = f)
         
         if (!is.null(pt$titles))
-         writeLines(pt$titles, con = f)
+          writeLines(pt$titles, con = f)
       }
       
       if (!is.null(pg)) {
         tmp <- format(pg, width = rs$line_size,
-               justify = get_justify(cont$align))
+                      justify = get_justify(cont$align))
         writeLines(tmp, con = f)
         
       }
@@ -140,12 +168,12 @@ write_report_text <- function(rs) {
         page_open <- FALSE
       
       if (page_open == FALSE) {
-      
+        
         if (!is.null(pt$footnotes))
-         writeLines(pt$footnotes, con = f)
+          writeLines(pt$footnotes, con = f)
         
         if (!is.null(pt$page_footer))
-         writeLines(pt$page_footer, con = f)
+          writeLines(pt$page_footer, con = f)
         
         # Do something with page_break property
         if (last_object == FALSE | last_page == FALSE) {
@@ -156,8 +184,7 @@ write_report_text <- function(rs) {
             rs$pages <- rs$pages + 1 
           
           writeLines("", con = f, sep = "\f") 
-          
-          
+        
         }
       }
       
@@ -166,13 +193,9 @@ write_report_text <- function(rs) {
     }
     
   }
-
-  # After report is written, reopen and fix the page numbers.
-  # Reason is we don't really know how many pages there are 
-  # until the report is written.
-  rs <- write_page_numbers(rs)
   
-  invisible(rs)
+  return(rs)
+  
 }
 
 #' @description Setup page for content
@@ -181,7 +204,7 @@ write_report_text <- function(rs) {
 #' @noRd
 page_setup <- function(rs) {
   
-  debug <- TRUE
+  debug <- FALSE
   
   # Content size is the page size minus margins, in uom
   rs$content_size <- get_content_size(rs)

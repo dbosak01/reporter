@@ -4,12 +4,10 @@
 \alias{write_report}
 \title{Write a report to the file system}
 \usage{
-write_report(x, ...)
+write_report(x)
 }
 \arguments{
 \item{x}{The report_spec object to write.}
-
-\item{...}{Any parameters passed to the output-specific write functions.}
 }
 \value{
 The report spec.
@@ -18,3 +16,19 @@ The report spec.
 This function writes a report_spec object to the file system, using the
 parameters provided in the object.
 }
+\details{
+The function renders the report in the requested format, and writes it
+to the location specified in the report \code{file_path} parameter.
+}
+\seealso{
+Other report: 
+\code{\link{add_content}()},
+\code{\link{create_report}()},
+\code{\link{footnotes}()},
+\code{\link{options_fixed}()},
+\code{\link{page_footer}()},
+\code{\link{page_header}()},
+\code{\link{set_margins}()},
+\code{\link{titles}()}
+}
+\concept{report}

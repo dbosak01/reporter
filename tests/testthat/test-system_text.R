@@ -91,9 +91,13 @@ test_that("text3: Even harder text output works as expected.", {
                 center = "Confidential", 
                 right =c("Total Pages [tpg]"))
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+
+  expect_equal(length(lns), res$pages * 60)
 })
 
 
@@ -114,9 +118,14 @@ test_that("text4: Long text output works as expected.", {
                 center = "Confidential", 
                 right = Sys.time())
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * 60)
+  
 })
 
 test_that("text5: Table and Text output works as expected.", {

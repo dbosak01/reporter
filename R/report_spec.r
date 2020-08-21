@@ -10,11 +10,11 @@
 #' Creates a report shell to which you may add content.
 #' 
 #' @details
-#' This function is the constructor for the report_spec object.  The report_spec
+#' This function is the constructor for the report object.  The report
 #' object contains information needed to construct a report. The object is
-#' defined as an S3 object, and is inherited from a list.
+#' defined as an S3 object, and has a class of 'report_spec'.
 #' 
-#' The report_spec object hold information concerning report page size, font, 
+#' The report object holds information concerning report page size, font, 
 #' titles, footnotes, page header, page footer, margins, and other options.  
 #' Use the \code{\link{add_content}} function to add content to the report.  
 #' The report may be written to a file using the \code{\link{write_report}} 
@@ -35,6 +35,7 @@
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
 #' "letter".
 #' @return A new report_spec S3 object.
+#' @family report
 #' @seealso 
 #' \itemize{
 #'   \item \code{\link{titles}} to add titles to the report.
@@ -42,7 +43,7 @@
 #'   \item \code{\link{page_header}} to add a page header to the report. 
 #'   \item \code{\link{page_footer}} to add a page_footer to the report. 
 #'   \item \code{\link{add_content}} to add content to the report.
-#'   \item \code{\link{options_text}} to set options for text output.
+#'   \item \code{\link{options_fixed}} to set options for text output.
 #'   \item \code{\link{add_content}} to add content to the report.
 #'   \item \code{\link{write_report}} to write the report to the file system.
 #' }
@@ -74,7 +75,7 @@ create_report <- function(file_path = "", output_type = "text",
   # Trap missing or invalid output_type parameter
   if (!output_type %in% c("text", "docx")) {
     
-    stop(paste0("ERROR: output_type parameter on create_report() ",
+    stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
                 "'\n\tValid values are: 'text', 'docx'."))
   }
@@ -82,7 +83,7 @@ create_report <- function(file_path = "", output_type = "text",
   # Trap missing or invalid orientation parameter.
   if (!orientation %in% c("landscape", "portrait")) {
 
-    stop(paste0("ERROR: orientation parameter on ",
+    stop(paste0("orientation parameter on ",
                 "create_report() function is invalid: '", orientation,
                 "'\n\tValid values are: 'landscape' or 'portrait'."))
   }
@@ -90,7 +91,7 @@ create_report <- function(file_path = "", output_type = "text",
   # Trap missing or invalid uom parameter.
   if (!uom %in% c("inches", "cm")) {
     
-    stop(paste0("ERROR: uom parameter on ",
+    stop(paste0("uom parameter on ",
                 "create_report() function is invalid: '", uom,
                 "'\n\tValid values are: 'inches' or 'cm'."))
   }
@@ -98,20 +99,26 @@ create_report <- function(file_path = "", output_type = "text",
   # Trap missing or invalid paper_size parameter.
   if (!paper_size %in% c("letter", "legal", "A4", "RD4")) {
     
-    stop(paste0("ERROR: paper_size parameter on ",
+    stop(paste0("paper_size parameter on ",
                 "create_report() function is invalid: '", paper_size,
                 "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4'."))
+  }
+  
+  if (output_type != "text") {
+    
+    stop(paste("Invalid output_type parameter:", output_type,  
+               "\nValid value is 'text'."))
   }
 
   # Populate report_spec fields
   x$file_path <- file_path
   x$output_type <- output_type
   x$orientation <- orientation
-  x$content <- list()
-  x$uom <- uom
+  x$content <- list()           # Initialize content list
+  x$uom <- uom                  # Unit of measure
   x$paper_size <- paper_size
   x$page_size <- get_page_size(paper_size, uom)
-  x$pages <- 1
+  x$pages <- 1                  # Track # of pages in report
 
   
   if (output_type == "text") {
@@ -120,14 +127,16 @@ create_report <- function(file_path = "", output_type = "text",
     # This sets line_height and char_width
     # which are needed for all conversions from 
     # uom to text
-    x <- options_text(x)
+    x <- options_fixed(x)
     
-  } else if (output_type == "docx") {
+  } 
     
-    # Set default options for docx
-    x <- options_docx(x)
-    
-  }
+  # else if (output_type == "docx") {
+  #   
+  #   # Set default options for docx
+  #   #x <- options_docx(x)
+  #   
+  # }
 
   # Set default margins
   x <- set_margins(x)
@@ -151,10 +160,11 @@ editor_settings <- read.table(header = TRUE, text = '
 
 
 #' @title
-#' Set options for a docx report
+#' Set options for a report with a variable width font
 #'
 #' @description
-#' This function sets the options for a report of output type docx.
+#' This function sets the options for a report of output type 
+#' 'rtf', 'docx', or 'pdf'.
 #'
 #' @param x The report spec.
 #' @param font_name The font name to use on the report.  The specified font
@@ -162,10 +172,11 @@ editor_settings <- read.table(header = TRUE, text = '
 #' "Calibri", or "Times New Roman".  The default font is "Courier New".
 #' @param font_size The font size.  Valid value is 10.
 #' @return The updated report spec.
+#' @family report
 #' @examples
 #' # Here is an example
 #' @noRd
-options_docx <- function(x, font_name="Courier New", font_size=10) {
+options_variable <- function(x, font_name="Courier New", font_size=10) {
   
   # Trap missing or invalid font_name parameter.
   if (!font_name %in% c("Courier New", "Times New Roman", "Arial", "Calibri")) {
@@ -184,10 +195,10 @@ options_docx <- function(x, font_name="Courier New", font_size=10) {
 }
 
 #' @title
-#' Set options for a docx report
+#' Set options for a report with a fixed width font
 #'
 #' @description
-#' This function sets the options for a report of output type docx.
+#' This function sets the options for a report of output type 'text'
 #'
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing.  Assigning
@@ -202,10 +213,11 @@ options_docx <- function(x, font_name="Courier New", font_size=10) {
 #' inches is 6, which is average for a 10pt font. This value 
 #' will be used to determine the number of lines that can fit on a page. 
 #' @return The updated report spec.
+#' @family report
 #' @examples
 #' # Here is an example
 #' @export
-options_text <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
+options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
   
   if (is.null(editor)) {
     # Trap missing or invalid cpuom parameter.
@@ -269,6 +281,7 @@ options_text <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @param right The right margin.
 #' @param min_margin The printer minimum margin.
 #' @return The report_spec with margins set as desired.
+#' @family report
 #' @examples
 #' # Here is an example
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -358,6 +371,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @param blank_row Whether to create a blank row below the page header.
 #' Valid values are 'below' and 'none'.  Default is 'none'.
 #' @return The modified report specification.
+#' @family report
 #' @examples
 #' # Here is an example
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -408,6 +422,8 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' 'right', 'center' or 'centre'.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.
+#' @return The modified report.
+#' @family report
 #' @examples
 #' # Here is a comment
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -455,6 +471,8 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' "right", "center", or "centre".
 #' @param blank_row Whether to print a blank row above or below the footnote.
 #' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.
+#' @return The modified report.
+#' @family report
 #' @examples
 #' # Here are some examples.
 # create_report("mtcars.docx", orientation="portrait") %>%
@@ -510,6 +528,8 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' vector of strings.
 #' @param blank_row Whether to create a blank row above the page footer.
 #' Valid values are 'above' and 'none'.  Default is 'above'.
+#' @return The modified report.
+#' @family report
 #' @seealso \code{\link{page_header}} to add a page header to the report, 
 #' \code{\link{titles}} to add titles, and \code{\link{footnotes}} to
 #' add footnotes.
@@ -579,6 +599,7 @@ page_footer <- function(x, left="", right="", center="", blank_row = "above"){
 #' @param blank_row Whether to put a blank row above or below the content.
 #' Valid values are 'above', 'below', 'both', or 'none'.
 #' @return The modified report_spec.
+#' @family report
 #' @examples
 #' # Create temp file path
 #' fp <- file.path(tempdir(), "mtcars.txt")
@@ -625,21 +646,22 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 
 #' @title
 #' Write a report to the file system
-#'
 #' @description
 #' This function writes a report_spec object to the file system, using the
 #' parameters provided in the object.
-#'
+#' @details 
+#' The function renders the report in the requested format, and writes it
+#' to the location specified in the report \code{file_path} parameter.
 #' @param x The report_spec object to write.
-#' @param ... Any parameters passed to the output-specific write functions.
 #' @return The report spec.
+#' @family report
 #' @export
-write_report <- function(x, ...) {
+write_report <- function(x) {
   
   ret <- ""
 
   if (x$output_type == "text") {
-    ret <- write_report_text(x, ...)
+    ret <- write_report_text(x)
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
   }

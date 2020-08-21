@@ -17,6 +17,9 @@ footnotes(x, ..., align = "left", blank_row = "above")
 \item{blank_row}{Whether to print a blank row above or below the footnote.
 Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
 }
+\value{
+The modified report.
+}
 \description{
 This function adds one or more footnotes to the report.  The footnotes will
 be added to the page template, and thus appear on each page of the report.
@@ -31,3 +34,15 @@ Footnote symbols will not be generated automatically.
 \examples{
 # Here are some examples.
 }
+\seealso{
+Other report: 
+\code{\link{add_content}()},
+\code{\link{create_report}()},
+\code{\link{options_fixed}()},
+\code{\link{page_footer}()},
+\code{\link{page_header}()},
+\code{\link{set_margins}()},
+\code{\link{titles}()},
+\code{\link{write_report}()}
+}
+\concept{report}

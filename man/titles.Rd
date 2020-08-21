@@ -18,6 +18,9 @@ a table, or a text specification.}
 \item{blank_row}{Where to place a blank row.  Valid values are 'above',
 'below', 'both', or 'none'.}
 }
+\value{
+The modified report.
+}
 \description{
 This function adds one or more to the object.  If added to a report, 
 the titles will be added to
@@ -31,3 +34,15 @@ The titles may be assigned to the report, a table or a text specification.
 \examples{
 # Here is a comment
 }
+\seealso{
+Other report: 
+\code{\link{add_content}()},
+\code{\link{create_report}()},
+\code{\link{footnotes}()},
+\code{\link{options_fixed}()},
+\code{\link{page_footer}()},
+\code{\link{page_header}()},
+\code{\link{set_margins}()},
+\code{\link{write_report}()}
+}
+\concept{report}

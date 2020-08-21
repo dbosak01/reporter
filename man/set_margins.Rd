@@ -40,3 +40,15 @@ are inches.  The default margins are 1 inch on the left and right, and
 \examples{
 # Here is an example
 }
+\seealso{
+Other report: 
+\code{\link{add_content}()},
+\code{\link{create_report}()},
+\code{\link{footnotes}()},
+\code{\link{options_fixed}()},
+\code{\link{page_footer}()},
+\code{\link{page_header}()},
+\code{\link{titles}()},
+\code{\link{write_report}()}
+}
+\concept{report}
