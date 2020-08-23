@@ -113,7 +113,6 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
   tot_count <- length(splits) * length(wraps)
   counter <- 0
-  wrap_counter <- 0
   wrap_flag <- FALSE
   blnk_ind <- "none"
   
@@ -121,8 +120,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   for(s in splits) {
     for(pg in wraps) {
       counter <- counter + 1
-      wrap_counter <- wrap_counter + 1
-      if (wrap_counter < length(wraps))
+
+      if (counter < tot_count)
         wrap_flag <- TRUE
       else 
         wrap_flag <- FALSE
@@ -134,7 +133,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
                      col_width = widths_uom[pg], col_align = aligns[pg],
                      font_name = font_name, label_align = label_aligns[pg])
       pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi, 
-                                                        blnk_ind, wrap_flag)
+                                                        blnk_ind, wrap_flag,
+                                                        lpg_rows)
     }
   }
   
@@ -157,7 +157,8 @@ get_blank_indicator <- function(pg_num, tot_pg, content_blanks) {
 }
 
 #' @noRd
-create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag) {
+create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag, 
+                              lpg_rows) {
   
   shdrs <- c()
   hdrs <- c()
@@ -193,8 +194,9 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag) {
   ret <- c(a, ttls, shdrs, hdrs, rws, ftnts, b)
   
   blnks <- c()
-  if (wrap_flag & length(ret) < rs$body_line_count) {
-    blnks <- rep("", rs$body_line_count - length(ret))
+  len_diff <- rs$body_line_count - lpg_rows - length(ret)
+  if (wrap_flag & len_diff > 0) {
+    blnks <- rep("", len_diff)
     ret <- c(ret, blnks) 
   }
   
