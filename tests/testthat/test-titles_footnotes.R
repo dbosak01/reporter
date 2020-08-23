@@ -154,9 +154,13 @@ test_that("ttfn7: blank_row on header and footer work as expected.", {
     add_content(create_text("Here is some text content", align = "left"))
   
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * 45)
   
 })
 
@@ -180,9 +184,13 @@ test_that("ttfn8: blank_row on content works as expected.", {
     add_content(create_text("Here is some text content", align = "left"))
   
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * 45)
   
 })
 
@@ -274,8 +282,13 @@ test_that("ttfn11: blank hitting page break works as expected.", {
     add_content(create_text("Text content", align = "left"))
   
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
   
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * 45)
+  
 })
+

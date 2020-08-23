@@ -519,10 +519,10 @@ get_table_cols <- function(x) {
 #' @param widths The column widths
 #' @param page_size The size of the available space in rows
 #' @noRd
-get_splits_text <- function(x, widths, page_size, lpg_rows) {
+get_splits_text <- function(x, widths, page_size, lpg_rows, content_offsets) {
   
 
-  pgs <- get_page_breaks(x, page_size, lpg_rows)
+  pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets)
   
   
   ret <- split(pgs, pgs$..page)
@@ -538,25 +538,53 @@ get_splits_text <- function(x, widths, page_size, lpg_rows) {
 #' @param page_size Available data height in number of rows.
 #' @return Data frame with ..page column populated with page numbers.
 #' @noRd
-get_page_breaks <- function(x, page_size, lpg_rows){
+get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
   
   pg <- 1
   counter <- 0
-  offset <- lpg_rows
+  offset <- lpg_rows + content_offsets["blank_upper"]
+  ttfl <- content_offsets["upper"] + content_offsets["lower"]
+  
+  # print(paste("Content Upper:", content_offsets["upper"]))
+  # print(paste("Content Lower:", content_offsets["lower"]))
+  # print(paste("Page size:", page_size))
+  # print(paste("Last Page Rows:", lpg_rows))
+  # print(paste("Content offset:", offset))
+
   
   for (i in seq_len(nrow(x))){
     
     counter <- counter + 1
     
-    if (counter > (page_size - offset)) {
-      counter <- 1
+    if (i == nrow(x)) {
+      offset <- offset + content_offsets["blank_lower"]
+      #print(paste("Lower Blank:", offset))
+    }
+    #print(paste("Counter:", counter))
+    #print(paste("Condition:", (page_size - offset - ttfl)))
+
+    
+    if (counter > (page_size  - offset - ttfl)) {
+      #print(paste("Page count:", counter))
+      counter <- 0
+      
+      # Don't understand why this adjustment is needed.  But it is.
+      # Have to figure it out, because it seems wrong.
+      if (pg == 1)
+        page_size <- page_size - 1
+      
       pg <- pg + 1
       offset <- 0
+      
     }
+    
+
     
     x$..page[i] <- pg
     
   }
+  
+  #print(paste("Page count:", counter))
   
   return(x)
 }

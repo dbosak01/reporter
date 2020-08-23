@@ -38,9 +38,10 @@ test_that("get_table_cols() works as expected.", {
 
 test_that("get_page_breaks works as expected", {
   
+  off <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   dat <- iris
   dat$..page <- NA
-  mdm <- get_page_breaks(dat, 50, 0)
+  mdm <- get_page_breaks(dat, 50, 0, off)
   
   expect_equal( unique(mdm$..page), c(1, 2, 3))
   
@@ -50,12 +51,15 @@ test_that("get_page_breaks works as expected", {
 
 test_that("get_splits_text works as expected", {
   
+  
+  off <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+  
   dat <- iris
   dat$..page <- NA
   w <- c(Sepal.Length = 1.5, Sepal.Width = 1.5, Petal.Length = 1.5,
          Petal.Width = 1.5, Species = 1.25)
   
-  mdm <- get_splits_text(dat, w, 50, 0)
+  mdm <- get_splits_text(dat, w, 50, 0, off)
   
   expect_equal(length(mdm), 3)
   expect_equal(nrow(mdm[[1]]), 50)
@@ -63,13 +67,13 @@ test_that("get_splits_text works as expected", {
   expect_equal(nrow(mdm[[3]]), 50)
   
   
-  mdm2 <- get_splits_text(dat, w, 60, 0)
+  mdm2 <- get_splits_text(dat, w, 60, 0, off)
   expect_equal(length(mdm2), 3)
   expect_equal(nrow(mdm2[[1]]), 60)
   expect_equal(nrow(mdm2[[2]]), 60)
   expect_equal(nrow(mdm2[[3]]), 30)
   
-  mdm <- get_splits_text(dat, w, 50, 10)
+  mdm <- get_splits_text(dat, w, 50, 10, off)
   
   expect_equal(length(mdm), 4)
   expect_equal(nrow(mdm[[1]]), 40)

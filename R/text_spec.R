@@ -112,9 +112,8 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows,
     } else {
       
       # Start a new page
-      ret[[length(ret) + 1]] <- trimws(format(tmp, width = line_width, 
-                                       justify = get_justify(txt$align)), 
-                                       which = "right")
+      ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
+                                       justify = get_justify(txt$align))
       tmp <- rws[i]
       
       # Set to zero on second page and leave it that way
@@ -126,9 +125,8 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows,
   if (length(tmp) > 0 ) {
     
     # Add last page
-    ret[[length(ret) + 1]] <- trimws(format(tmp, width = line_width, 
-                                     justify = get_justify(txt$align)),
-                                     which = "right")
+    ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
+                                     justify = get_justify(txt$align))
     
   }
   

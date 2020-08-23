@@ -90,9 +90,14 @@ test_that("test3: Simple table with formats works as expected.", {
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -144,7 +149,7 @@ test_that("test4: Two page report works as expected.", {
   
   
   rpt <- create_report(fp, uom = "inches", paper_size = "letter") %>%
-    options_fixed(editor = "notepad++") %>%
+    #options_fixed(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%
@@ -155,9 +160,14 @@ test_that("test4: Two page report works as expected.", {
     add_content(tbl2)
   
   
-  res2 <- write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -204,9 +214,13 @@ test_that("test5: Table with break between sections works as expected.", {
     add_content(tbl1) 
   
 
-  res2 <- write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -219,12 +233,16 @@ test_that("test6: Table that spans multiple pages breaks as expected.", {
 
   rpt <- create_report(fp) %>%
     titles("IRIS Data Frame") %>%
-    add_content(create_table(iris))
+    add_content(create_table(iris)) 
 
 
-  res2 <- write_report(rpt)
+  res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 
 })
 
@@ -268,9 +286,13 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
     add_content(tbl1)
 
 
-  res2 <- write_report(rpt)
+  res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 
 })
 
@@ -302,9 +324,15 @@ test_that("test8: Table with spanning headers works as expected.", {
     add_content(tbl) %>% 
     titles("Table 1.0", "MTCARS Subset Test")
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
 })
 
 test_that("test9: Page wrap works as expected.", {
@@ -337,9 +365,13 @@ test_that("test9: Page wrap works as expected.", {
   
   #print(rpt)
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })
 
 test_that("test10: Page wrap with spanning header works as expected.", {
@@ -371,9 +403,13 @@ test_that("test10: Page wrap with spanning header works as expected.", {
   
   #print(rpt)
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })
 
 test_that("test11: Table with break between sections works as expected.", {
@@ -423,6 +459,11 @@ test_that("test11: Table with break between sections works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
   
+  lns <- readLines(fp)
+
+  expect_equal(length(lns), res2$pages * res2$line_count)
+  expect_equal(nchar(lns[1]), res2$line_size)
+  
 })
 
 test_that("test12: Headerless table with title works as expected.", {
@@ -439,9 +480,13 @@ test_that("test12: Headerless table with title works as expected.", {
     add_content(tbl)
   
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -470,9 +515,13 @@ test_that("test13: Combination with Headerless table works as expected.", {
     add_content(txt1)
   
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -507,5 +556,9 @@ test_that("test15: Multi-page table with Titles and Footnotes breaks as expected
   res2 <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res2$pages * res2$line_count)
   
 })

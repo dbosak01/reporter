@@ -89,6 +89,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   #print(fdat)
   
   # Get available space for table data
+  # ** Not sure if we need this or not **
+  # ** Look into getting rid of it. **
   data_size <- get_data_size_text(rs, widths_uom, labels)
   #print(data_size)
 
@@ -97,22 +99,42 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   #print("wraps")
   #print(wraps)
 
-
+  tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
+                 label_align = label_aligns)
+  
+  content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row)
+  
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
-  splits <- get_splits_text(fdat, widths_uom, data_size[["height"]], lpg_rows)
+  splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
+                            lpg_rows, content_offset)
   #print("splits")
   #print(splits)
 
+  tot_count <- length(splits) * length(wraps)
+  counter <- 0
+  wrap_counter <- 0
+  wrap_flag <- FALSE
+  blnk_ind <- "none"
   
   pg_lst <- list()
   for(s in splits) {
     for(pg in wraps) {
+      counter <- counter + 1
+      wrap_counter <- wrap_counter + 1
+      if (wrap_counter < length(wraps))
+        wrap_flag <- TRUE
+      else 
+        wrap_flag <- FALSE
+      
+      # Ensure content blank rows are added only to the first and page pages
+      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row)
+      
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
                      col_width = widths_uom[pg], col_align = aligns[pg],
                      font_name = font_name, label_align = label_aligns[pg])
       pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi, 
-                                                        content_blank_row)
+                                                        blnk_ind, wrap_flag)
     }
   }
   
@@ -120,8 +142,22 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
 }
 
+get_blank_indicator <- function(pg_num, tot_pg, content_blanks) {
+  
+  if (pg_num == 1 & pg_num == tot_pg & content_blanks == "both")
+    blnk_ind <- "both"
+  else if (pg_num == 1 & content_blanks %in% c("both", "above"))
+    blnk_ind <- "above"
+  else if (pg_num == tot_pg & content_blanks %in% c("both", "below"))
+    blnk_ind <- "below"
+  else 
+    blnk_ind <- "none"
+  
+  return(blnk_ind)
+}
+
 #' @noRd
-create_table_text <- function(rs, ts, pi, content_blank_row) {
+create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag) {
   
   shdrs <- c()
   hdrs <- c()
@@ -141,6 +177,10 @@ create_table_text <- function(rs, ts, pi, content_blank_row) {
   
   ttls <- get_titles(ts$titles, ls) 
   ftnts <- get_footnotes(ts$footnotes, ls) 
+  #print("Titles")
+  #print(ttls)
+  
+
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -148,11 +188,52 @@ create_table_text <- function(rs, ts, pi, content_blank_row) {
   
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
-    b <- ""
+    b <- "B"
 
   ret <- c(a, ttls, shdrs, hdrs, rws, ftnts, b)
   
+  blnks <- c()
+  if (wrap_flag & length(ret) < rs$body_line_count) {
+    blnks <- rep("", rs$body_line_count - length(ret))
+    ret <- c(ret, blnks) 
+  }
+  
   return(ret) 
+}
+
+#' Get content offsets for table header, titles, footnotes, and content blanks.
+#' Needed to calculate page breaks accurately.
+#' @return A vector of upper and lower offsets
+#' @noRd
+get_content_offsets <- function(rs, ts, pi, content_blank_row) {
+  
+  ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+  
+  shdrs <- c()
+  hdrs <- c()
+  
+  if (ts$headerless == FALSE) {
+    shdrs <- get_spanning_header(rs, ts, pi)   
+    hdrs <- get_table_header(rs, ts, pi)  
+  }
+  
+  ttls <- get_titles(ts$titles, rs$line_size) 
+  #print(paste("Table titles:", ttls))
+  
+  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls)
+  
+  if (content_blank_row %in% c("above", "both"))
+      ret["blank_upper"] <- 1
+  
+  ftnts <- get_footnotes(ts$footnotes, rs$line_size) 
+  
+  ret["lower"] <- length(ftnts) 
+
+  if (content_blank_row %in% c("both", "below"))
+    ret["blank_lower"] <- 1
+
+  return(ret)
+
 }
 
 #' @description Return a vector of strings for the table header

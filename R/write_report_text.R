@@ -90,10 +90,11 @@ paginate_content <- function(rs, ls) {
       blnks <- c()
       bl <- rs$body_line_count - last_page_lines 
       if (bl > 0)
-        blnks <- rep("", bl)
+        blnks <- rep("F", bl)
       
       last_page <- append(last_page, blnks)
       last_page_lines <- 0  # Needed for requested page breaks
+      #print(paste("Last Page Line Count:", length(last_page)))
     } 
     
     # Replace last page with any modifications
@@ -151,12 +152,13 @@ write_content <- function(rs, ls, pt) {
           writeLines(pt$page_header, con = f)
         
         if (!is.null(pt$titles))
-          writeLines(pt$titles, con = f)
+          writeLines(trimws(pt$titles, which = "right"), con = f)
       }
       
       if (!is.null(pg)) {
-        tmp <- format(pg, width = rs$line_size,
-                      justify = get_justify(cont$align))
+        tmp <- trimws(format(pg, width = rs$line_size,
+                      justify = get_justify(cont$align)),
+                      which = "right")
         writeLines(tmp, con = f)
         
       }
@@ -170,7 +172,7 @@ write_content <- function(rs, ls, pt) {
       if (page_open == FALSE) {
         
         if (!is.null(pt$footnotes))
-          writeLines(pt$footnotes, con = f)
+          writeLines(trimws(pt$footnotes, which = "right"), con = f)
         
         if (!is.null(pt$page_footer))
           writeLines(pt$page_footer, con = f)
