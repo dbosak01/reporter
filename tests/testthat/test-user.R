@@ -126,9 +126,13 @@ test_that("user1: demo table works.", {
     add_content(tbl)
 
   # Write out report
-  res1 <- write_report(rpt)
+  res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 
 })
 
@@ -254,9 +258,13 @@ test_that("user2: demo table with stub works.", {
     add_content(tbl)
   
   # Write out report
-  res1 <- write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -288,9 +296,13 @@ test_that("user3: listings works.", {
     page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")
   
   # Write out report
-  res1 <- write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 

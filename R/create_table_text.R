@@ -188,7 +188,7 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag) {
   
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
-    b <- "B"
+    b <- ""
 
   ret <- c(a, ttls, shdrs, hdrs, rws, ftnts, b)
   

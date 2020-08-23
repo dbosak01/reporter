@@ -17,9 +17,13 @@ test_that("test1: Simplest table works as expected.", {
     add_content(create_table(mtcars[1:10, ]))
   
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -38,9 +42,13 @@ test_that("test2: Simplest table with title works as expected.", {
     add_content(tbl)
 
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
 
@@ -124,10 +132,7 @@ test_that("test4: Two page report works as expected.", {
 
   df1 <- df[df$arm == "A", ]
   df2 <- df[df$arm == "B", ]
-  
-  
-  
-  
+
   afmt <- value(condition(x == "A", "Placebo"),
                 condition(x == "B", "Treatment 1"))
   
@@ -146,10 +151,9 @@ test_that("test4: Two page report works as expected.", {
     define(age, format = "%0d%%") %>%
     define(arm, format = afmt, width = 2)
   
-  
-  
+
   rpt <- create_report(fp, uom = "inches", paper_size = "letter") %>%
-    #options_fixed(editor = "notepad++") %>%
+    options_fixed(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%

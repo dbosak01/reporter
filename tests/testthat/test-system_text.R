@@ -24,7 +24,6 @@ test_that("create_text function output works as expected.", {
   
   res1 <- create_text_pages_text(rpt, rpt$content[[1]] , 10)
   
-  res1
 
   expect_equal(length(res1), 1)
   expect_equal(length(res1[[1]]), 6)
@@ -43,9 +42,13 @@ test_that("text1: Simplest text output works as expected.", {
     titles("Report 1.0", "Simple Text Report") %>% 
     add_content(create_text(cnt)) 
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })
 
 
@@ -64,12 +67,15 @@ test_that("text2: Harder text output works as expected.", {
     page_footer(left = Sys.time(), 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
+
   
-  rpt
-  
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })
 
 
@@ -151,9 +157,13 @@ test_that("text5: Table and Text output works as expected.", {
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })
 
 
@@ -174,9 +184,13 @@ test_that("text6: Very Long text output works as expected.", {
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   
-  write_report(rpt)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })
 
 

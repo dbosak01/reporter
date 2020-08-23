@@ -90,7 +90,7 @@ paginate_content <- function(rs, ls) {
       blnks <- c()
       bl <- rs$body_line_count - last_page_lines 
       if (bl > 0)
-        blnks <- rep("F", bl)
+        blnks <- rep("", bl)
       
       last_page <- append(last_page, blnks)
       last_page_lines <- 0  # Needed for requested page breaks
