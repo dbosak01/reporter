@@ -18,7 +18,8 @@ define(
   blank_after = FALSE,
   dedupe = FALSE,
   id_var = FALSE,
-  wrap = FALSE
+  wrap = FALSE,
+  indent = NULL
 )
 }
 \arguments{
@@ -58,6 +59,10 @@ ID variables are retained on each page when the page is wrapped.}
 \item{wrap}{Force a page wrap on this variable.  A page wrap is a vertical
 page break necessary when the table is too wide to fit on a single page.
 The excess variables will be wrapped to the next page.}
+
+\item{indent}{How much to indent the column values.  Parameter takes a 
+numeric value that will be interpreted according to the 'uom' 
+(Unit Of Measure) setting on the report.}
 }
 \description{
 Defines a column specification

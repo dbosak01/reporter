@@ -9,7 +9,10 @@ control_cols <- c("..blank", "..page", "..row")
 
 # Create Tables -----------------------------------------------------------
 
-
+#' @details 
+#' Order of these operations is very important.  Any change in the order 
+#' will require considerable thought, and understanding of any potential
+#' effects.
 #' @import fmtr
 #' @noRd
 create_table_pages_text <- function(rs, cntnt, lpg_rows) {
@@ -58,23 +61,27 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # Get column formats
   formats(dat) <- get_col_formats(dat, ts$col_defs)
   #print(formats(dat))
-  
-  # Get column widths
-  widths_uom <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
-  #print(widths_uom)
-
-  # Convert to text measurements
-  widths_char <- round(widths_uom / rs$char_width)
 
   # Apply formatting
   fdat <- fdata(dat)
   #print("fdata1")
   #print(fdat)
-
-  # Add blank lines as specified
-  fdat <- prep_data(fdat, ts$col_defs)
+  
+  # Prep data for blank lines, indents, and stub columns
+  fdat <- prep_data(fdat, ts$col_defs, rs$char_width)
   #print("prep_data")
   #print(fdat)
+  
+  # Reset keys, since prep_data can add/remove columns for stub
+  keys <- names(fdat)
+  
+  # Get column widths
+  widths_uom <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
+  #print(widths_uom)
+  
+  # Convert to text measurements
+  widths_char <- round(widths_uom / rs$char_width)
+  
 
   # Split long text strings onto multiple rows
   fdat <- split_cells(fdat, widths_char)
@@ -88,24 +95,19 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   #print("fdata2")
   #print(fdat)
   
-  # Get available space for table data
-  # ** Not sure if we need this or not **
-  # ** Look into getting rid of it. **
-  data_size <- get_data_size_text(rs, widths_uom, labels)
-  #print(data_size)
-
   # Break columns into pages
-  wraps <- get_page_wraps(data_size, ts$col_defs, widths_char)
+  wraps <- get_page_wraps(rs$line_size, ts$col_defs, widths_char)
   #print("wraps")
   #print(wraps)
 
+  # Create a temporary page info to pass into get_content_offsets
   tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
                  label_align = label_aligns)
   
+  # Offsets are needed to calculate splits and page breaks
   content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row)
   
   # split rows
-  #splits <- get_splits(fdat, widths, data_size, font_family = family)
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
                             lpg_rows, content_offset, ts$col_defs)
   #print("splits")

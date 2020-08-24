@@ -65,15 +65,19 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' @param dedupe Whether to dedupe the values for this variable.  Variables
 #' that are deduped only show the value on the first row in a group.
 #' @param id_var Whether this variable should be considered an ID variable.
-#' ID variables are retained on each page when the page is wrapped.
+#' ID variables are retained on each page when the page is wrapped.  
 #' @param wrap Force a page wrap on this variable.  A page wrap is a vertical
 #' page break necessary when the table is too wide to fit on a single page.
 #' The excess variables will be wrapped to the next page.
+#' @param indent How much to indent the column values.  Parameter takes a 
+#' numeric value that will be interpreted according to the 'uom' 
+#' (Unit Of Measure) setting on the report.  
 #' @export
 define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
-                   dedupe=FALSE, id_var = FALSE, wrap = FALSE) {
+                   dedupe=FALSE, id_var = FALSE, wrap = FALSE,
+                   indent = NULL) {
   
   # Check that variable exists
   var_c <- as.character(substitute(var))
@@ -101,6 +105,7 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
   def$dedupe = dedupe
   def$id_var = id_var
   def$wrap = wrap
+  def$indent = indent
 
   x$col_defs[[length(x$col_defs) + 1]] <- def
 
@@ -177,6 +182,37 @@ spanning_header <- function(x, span_cols, label = "",
   x$col_spans[[length(x$col_spans) + 1]] <- sh
 
   return(x)
+}
+
+#' @title Defines a report stub
+#' @description Combine one or more columns into a nested report stub.  
+#' @details 
+#' Here are some details.
+#' @param x The table spec.
+#' @param name The name of the report stub.  This parameter is required, and 
+#' will be used as the stub column name.
+#' @param label The label for the report stub.
+#' @param width The width of the stub, in report units of measure.
+#' @param ... One or more column definitions.
+#' @return The modified table spec.
+#' @export
+stub <- function(x, name, label = "", width = NULL, ...) {
+  
+  def <- structure(list(), class = c("stub_def", "list"))
+  
+  
+  def$name <- name
+  def$label = label
+  def$width = width
+  def$col_defs <- c(...)
+  
+  x$stubs[[length(x$stubs) + 1]] <- def
+  
+  for (cd in def$col_defs) {
+    
+    x$col_defs[length(x$col_defs) + 1] <- cd 
+  }
+  
 }
 
 #' Defines options for the table

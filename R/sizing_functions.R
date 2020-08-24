@@ -76,7 +76,7 @@ get_splits <- function(dat, col_widths, data_size, font_family) {
 
 #' Gets the page wraps
 #' @noRd
-get_page_wraps <- function(data_size, defs, widths) {
+get_page_wraps <- function(line_size, defs, widths) {
   
   # Get ID variable from definitions
   # These need to be shown on each page
@@ -96,7 +96,7 @@ get_page_wraps <- function(data_size, defs, widths) {
   
   ret <- list() # list of columns for each page
   pg <- c()     # columns on a page
-  tw <- data_size["width"]  # width of the page
+  tw <- line_size  # width of the page
   
   for (nm in names(widths)) {
 
@@ -150,7 +150,7 @@ get_page_wraps <- function(data_size, defs, widths) {
 
 #' Preps the data
 #' @noRd
-prep_data <- function(dat, defs) {
+prep_data <- function(dat, defs, char_width) {
   
   # Get vector of columns for blank rows
   ls <- c()
@@ -173,11 +173,11 @@ prep_data <- function(dat, defs) {
     }
   }
   
-  # Dedupe variables as requested
+  # Indent and Dedupe variables as requested
   # Do this after adding blanks
   # So any group values in blank rows are removed
   for (def in defs) {
-    if (def$dedupe) {
+    if (!is.null(def$indent) | def$dedupe) {
       
       # Convert to character if necessary
       if (all(dat[[def$var_c]] != "character"))
@@ -187,9 +187,16 @@ prep_data <- function(dat, defs) {
       # label appears at top of each page
 
     }
+    
+    # Perform Indenting of requested variables
+    if (!is.null(def$indent)) {
+      ind <- floor(def$indent / char_width)
+      blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
+      dat[[def$var_c]] <- paste0(blnks, dat[[def$var_c]])
+    }
   }
   
-  # Clear out missing values
+  # Clear out missing values 
   dat <- clear_missing(dat)
   
   return(dat)
@@ -588,25 +595,6 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
   return(x)
 }
 
-
-get_data_size_text <- function(rs, widths, labels) {
-  
-  
-  sz <- c()
-  for (n in names(labels)) {
-    sz[length(sz) + 1] <- length(strwrap(labels[n], 
-                                 width = floor(widths[n]/ rs$char_width)))
-    
-  }
-  
-  ret <-c(width = rs$line_size)
-  
-  # Available body height minus label height, and underline
-  ret["height"] <- rs$body_line_count - max(sz) - 1
-  
-  return(ret)
-  
-}
 
 
 
