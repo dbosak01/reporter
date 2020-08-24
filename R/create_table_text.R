@@ -107,7 +107,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # split rows
   #splits <- get_splits(fdat, widths, data_size, font_family = family)
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
-                            lpg_rows, content_offset)
+                            lpg_rows, content_offset, ts$col_defs)
   #print("splits")
   #print(splits)
 

@@ -226,6 +226,7 @@ test_that("text7: Text page setup landscape works as expected.", {
   expect_equal(length(lns), 135)
 })
 
+# This test also puts the table footnote block on a page boundary 
 test_that("text8: Text page setup portrait works as expected.", {
   
   fp <- file.path(base_path, "text/text8.out")

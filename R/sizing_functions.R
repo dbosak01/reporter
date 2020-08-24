@@ -183,12 +183,8 @@ prep_data <- function(dat, defs) {
       if (all(dat[[def$var_c]] != "character"))
         dat[[def$var_c]] <- as.character(dat[[def$var_c]])
           
-      # Fill with blanks as appropriate
-      w <- nchar(dat[[def$var_c]][1])
-      v <- paste0(rep(" ", times = w), collapse = "")
-      
-      dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 
-                                 dat[[def$var_c]], v) 
+      # Actual deduping now takes place in get_splits_text, so 
+      # label appears at top of each page
 
     }
   }
@@ -519,13 +515,16 @@ get_table_cols <- function(x) {
 #' @param widths The column widths
 #' @param page_size The size of the available space in rows
 #' @noRd
-get_splits_text <- function(x, widths, page_size, lpg_rows, content_offsets) {
+get_splits_text <- function(x, widths, page_size, lpg_rows, 
+                            content_offsets, defs) {
   
 
   pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets)
   
   
   ret <- split(pgs, pgs$..page)
+  
+  ret <- dedupe_pages(ret, defs)
   
   
   return(ret)

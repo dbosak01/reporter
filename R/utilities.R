@@ -580,6 +580,36 @@ push_down <- function(x) {
 }
 
 
+#' @noRd
+dedupe_pages <- function(pgs, defs) {
+  
+  ret <- list()
+  
+  for (dat in pgs) {
+ 
+    for (def in defs) {
+      if (def$dedupe) {
+        
+        # Convert to character if necessary
+        if (all(dat[[def$var_c]] != "character"))
+          dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+        
+        # Fill with blanks as appropriate
+        w <- nchar(dat[[def$var_c]][1])
+        v <- paste0(rep(" ", times = w), collapse = "")
+        
+        dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 
+                                   dat[[def$var_c]], v) 
+        
+      }
+    }
+    ret[[length(ret) + 1]] <- dat
+  }
+  
+  return(ret)
+}
+
+
 # Sizing utilities --------------------------------------------------------
 
 #' @noRd

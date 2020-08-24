@@ -516,7 +516,7 @@ test_that("test13: Combination with Headerless table works as expected.", {
     add_content(txt1) %>% 
     add_content(tbl1, page_break = FALSE, blank_row = "none") %>% 
     add_content(tbl3, page_break = FALSE) %>% 
-    add_content(txt1)
+    add_content(txt1, page_break = FALSE) # Also test open page at end
   
   
   res <- write_report(rpt)
