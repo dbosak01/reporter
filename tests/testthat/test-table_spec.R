@@ -45,3 +45,32 @@ test_that("spanning header constructor works as expected.", {
                                label_align = "lefty"))
   
 })
+
+test_that("stub function works as expected.", {
+  
+  dat <- mtcars
+  dat$name <- rownames(mtcars)
+  
+  fmt <- value(condition(x >= 20, "High"),
+               condition(TRUE, "Low"))
+  
+  dat$mpg_cat <- fapply(dat$mpg, fmt)
+  rownames(dat) <- NULL
+  
+  dat <- dat[order(dat$mpg_cat), c("mpg_cat", "name", "mpg", "cyl", "disp", "hp")]
+  
+  dat2 <- add_blank_rows(dat, "above", vars = "mpg_cat")
+  
+  dat2$mpg_cat <- ifelse(!duplicated(dat2$mpg_cat ), 
+                        dat2$mpg_cat, NA) 
+  
+  dat2$stub <- ifelse(is.na(dat2$mpg_cat), paste0("  ", dat2$name), dat2$mpg_cat)
+  
+  dat2$stub <- fapply(dat2$stub,  justify = "left")
+  
+  dat3 <- dat2[, c("stub", "mpg", "cyl", "disp", "hp")]
+  
+  
+
+  
+})

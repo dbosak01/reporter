@@ -1,16 +1,18 @@
 Package: rptr
 Type: Package
-Title: Creates printable reports 
-Version: 0.0.0.9006
+Title: Create regulatory-style tabular reports
+Version: 0.0.0.9007
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
-Description: This package creates printable reports.  Currently supports 
-    ASCII text file format, with plans to support DOCX, RTF, and PDF in 
-    future releases.  The package specializes in printing
-    wide and long tables, and supports automatic page wrapping and splitting.  
+Description: Contains functions to create regulatory-style reports, such as 
+    those that can be accomplished using SAS® PROC REPORT and ODS.  Primarily
+    used for tabular reports, but also supports mixing tables and text. 
+    Currently generates text file output, with plans to include RTF, PDF, and 
+    DOCX in future releases.  The package specializes in printing
+    wide and long tables with automatic page wrapping and splitting.  
     Reports can be generated with a minimum of function calls, and without 
     relying on RMarkdown or pandoc.  The package supports titles, footnotes, 
-    page header, page footers, and automatic page numbering.
+    page header, page footers, spanning headers, and automatic page numbering.
 License: CC0
 Encoding: UTF-8
 LazyData: true
