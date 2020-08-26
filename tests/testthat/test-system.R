@@ -566,3 +566,34 @@ test_that("test15: Multi-page table with Titles and Footnotes breaks as expected
   expect_equal(length(lns), res2$pages * res2$line_count)
   
 })
+
+
+
+test_that("test16: Simple regulatory listing works as expected.", {
+  
+  fp <- file.path(base_path, "output/test16.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  # Create mtcars listing
+  rpt <- create_report(fp, orientation = "portrait") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Listing 1.0", "MTCARS Data Listing") %>% 
+    add_content(create_table(mtcars)) %>% 
+    footnotes("* Motor Trend, 1973") %>%
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
