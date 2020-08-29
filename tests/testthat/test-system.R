@@ -597,3 +597,92 @@ test_that("test16: Simple regulatory listing works as expected.", {
   
 })
 
+test_that("test17: Simple regulatory table works as expected.", {
+  
+  library(tidyr)
+  library(dplyr)
+ # library(fmtr)
+  source(file.path(base_path, "./code/formats.R"))
+  
+  fp <- file.path(base_path, "output/test17.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  dat <- mtcars
+  
+  dat$group <- replicate(nrow(dat), sample(c("A", "B"), 1), simplify = TRUE)
+  dat$cyl <- factor(dat$cyl, levels = c(8, 6, 4), labels = c("8 Cylinder", "6 Cylinder", "4 Cylinder")) 
+  group_pop <- dat %>% count(group) %>% deframe()
+  
+  
+  dat_mpg <-
+    dat %>%
+    group_by(group) %>%
+    summarise(across(.cols = mpg,
+                     .fns = list(N      = ~ n_fmt(.),
+                                 Mean   = ~ mean_sd(mean(.), sd(.)),
+                                 Median = ~ median_fmt(median(.)),
+                                 `Q1 - Q3` = ~ quantile_range(quantile(., 0.25),
+                                                              quantile(., 0.75)),
+                                 Range  = ~ range_fmt(range(.))
+                     ))) %>%
+    pivot_longer(-group,
+                 names_to  = c("var", "label"),
+                 names_sep = "_",
+                 values_to = "value") %>%
+    pivot_wider(names_from = group,
+                values_from = "value")
+  
+  
+  dat_cyl <-
+    dat %>%
+    add_count(group, cyl,  name = "n_cyl") %>%
+    select(group, cyl, n_cyl) %>%
+    distinct() %>%
+    pivot_longer(cols = c(cyl),
+                 names_to  = "var",
+                 values_to = "label") %>%
+    pivot_wider(names_from  = group,
+                values_from = n_cyl,
+                values_fill = 0) %>%
+    mutate(A = cnt_pct(A, group_pop["A"]),
+           B = cnt_pct(B, group_pop["B"])) %>% 
+    arrange(label)
+  
+  
+  
+  
+  final <- bind_rows(dat_mpg, dat_cyl)
+  
+  tbl <- create_table(final, first_row_blank = TRUE) %>% 
+    stub(c("var", "label")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(mpg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center") %>% 
+    define(B, label = "Group B", align = "center")
+  
+  
+  # Create mtcars table
+  rpt <- create_report(fp, orientation = "portrait") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1973") %>%
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
