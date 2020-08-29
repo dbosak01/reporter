@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 /tests/testthat/output/**
+inst/doc

@@ -670,19 +670,22 @@ get_header_height <- function(rs) {
     phdr <- rs$page_header_right
   
   if (rs$output_type == "docx") { 
-    hh <- sum(strheight(phdr, units = "inches", family = rs$font_family))
     
-    # Get height of titles
-    th <- sum(strheight(rs$titles, units = "inches", family = rs$font_family))
+    # DOCX not available
     
-    # Add buffer for table margins, etc.
-    buff <- .1  # Will need to adjust this
-    
-    if (rs$uom == "cm") {
-      hh <- ccm(hh)
-      th <- ccm(th)
-      buff <- ccm(buff)
-    }
+    # hh <- sum(strheight(phdr, units = "inches", family = rs$font_family))
+    # 
+    # # Get height of titles
+    # th <- sum(strheight(rs$titles, units = "inches", family = rs$font_family))
+    # 
+    # # Add buffer for table margins, etc.
+    # buff <- .1  # Will need to adjust this
+    # 
+    # if (rs$uom == "cm") {
+    #   hh <- ccm(hh)
+    #   th <- ccm(th)
+    #   buff <- ccm(buff)
+    # }
     
   } else {
     
@@ -710,19 +713,21 @@ get_footer_height <- function(rs) {
   
   if (rs$output_type == "docx") {
   
-    fh <- sum(strheight(pftr, units = "inches", family = rs$font_family))
+    # DOCX not available
     
-    # Get height of footnotes
-    fth <- sum(strheight(rs$footnotes, units = "inches", family = rs$font_family))
-    
-    # Add buffer for table margins, etc.
-    buff <- .1  # Need to adjust
-    
-    if (rs$uom == "cm") {
-      fh <- ccm(fh)
-      fth <- ccm(fth)
-      buff <- ccm(buff)
-    }
+    # fh <- sum(strheight(pftr, units = "inches", family = rs$font_family))
+    # 
+    # # Get height of footnotes
+    # fth <- sum(strheight(rs$footnotes, units = "inches", family = rs$font_family))
+    # 
+    # # Add buffer for table margins, etc.
+    # buff <- .1  # Need to adjust
+    # 
+    # if (rs$uom == "cm") {
+    #   fh <- ccm(fh)
+    #   fth <- ccm(fth)
+    #   buff <- ccm(buff)
+    # }
     
   } else {
     

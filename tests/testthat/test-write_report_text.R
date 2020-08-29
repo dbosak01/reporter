@@ -78,3 +78,4 @@ test_that("page_template_text() works as expected.", {
 #   
 #   
 # })
+

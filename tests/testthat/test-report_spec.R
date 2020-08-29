@@ -89,3 +89,4 @@ test_that("add_content works as expected.", {
   expect_error(add_content(rpt, "", page_break = "sam"))
 
 })
+

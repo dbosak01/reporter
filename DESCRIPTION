@@ -16,14 +16,17 @@ Description: Contains functions to create regulatory-style reports, such as
 License: CC0
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat,
-          magrittr,
-          dplyr,
-          tidyr,
-          haven,
-          tibble
+Suggests: 
+    testthat,
+    magrittr,
+    dplyr,
+    tidyr,
+    haven,
+    tibble,
+    knitr,
+    rmarkdown
 Imports: fmtr,
          qlcMatrix,
-         graphics, 
          stringi
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr

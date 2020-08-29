@@ -3,74 +3,74 @@
 
 # Sizing Functions --------------------------------------------------------
 
-#' @description Splits the data according to height
-#' @details Logic is to try and estimate the vertical height of each cell
-#' in a row to get the overall row height.  Then break rows into pages based
-#' on available body height.  This function is only used for non-text output.
-#' For text output, get_splits_text is used.
-#' @import graphics
-#' @import qlcMatrix
-#' @import stringi
-#' @noRd
-get_splits <- function(dat, col_widths, data_size, font_family) {
-  
-  # Row height fixed for now
-  # Ultimately needs to be dynamic based on font size and letting
-  rh <- .3 #strheight("Test String", units = "inches", family = font_family)
-  
-  ws <- list()
-  for (i in seq_along(dat)) {
-    
-    w_all <- strwidth(dat[[i]], units="inches", family=font_family)
-    ws[[length(ws) + 1]] <- w_all
-  }
-  
-  
-  m <- matrix(unlist(ws), ncol=length(ws), byrow=FALSE)
-  # print(m)
-  
-  #lin <- ceiling(m /col_widths)
-  lin <- ceiling(t(t(m) / col_widths))
-  
-  # print(lin)
-  
-  # print(col_widths)
-  
-  # Get counts of carriage returns per cell
-  
-  rs <- list()
-  for (col in seq_along(dat)) {
-    rs[[length(rs)+1]] <- stri_count(dat[[col]], fixed = "\n")
-  }
-  
-  r <- matrix(unlist(rs), ncol=length(rs), byrow=FALSE)
-  
-  # Add carriage returns to line counts
-  lr <- lin + r
-  # print(lr)
-  
-  lr[is.na(lr) | lr == 0] <- 1
-  
-  # print(lr)
-  # print(rowMax(lr)@x)
-  
-  row_heights <- rowMax(lr, ignore.zero = FALSE)@x * rh
-  
-  # print(row_heights)
-  # print(length(row_heights))
-  
-  row_pages <- get_pages(row_heights, data_size["height"])
-  
-  # print(nrow(dat))
-  # print(length(row_pages))
-  # print(row_pages)
-  
-  ret <- split(dat, row_pages)
-  
-  
-  return(ret)
-  
-}
+# @description Splits the data according to height
+# @details Logic is to try and estimate the vertical height of each cell
+# in a row to get the overall row height.  Then break rows into pages based
+# on available body height.  This function is only used for non-text output.
+# For text output, get_splits_text is used.
+# @import graphics
+# @import qlcMatrix
+# @import stringi
+# @noRd
+# get_splits <- function(dat, col_widths, data_size, font_family) {
+#   
+#   # Row height fixed for now
+#   # Ultimately needs to be dynamic based on font size and letting
+#   rh <- .3 #strheight("Test String", units = "inches", family = font_family)
+#   
+#   ws <- list()
+#   for (i in seq_along(dat)) {
+#     
+#     w_all <- strwidth(dat[[i]], units="inches", family=font_family)
+#     ws[[length(ws) + 1]] <- w_all
+#   }
+#   
+#   
+#   m <- matrix(unlist(ws), ncol=length(ws), byrow=FALSE)
+#   # print(m)
+#   
+#   #lin <- ceiling(m /col_widths)
+#   lin <- ceiling(t(t(m) / col_widths))
+#   
+#   # print(lin)
+#   
+#   # print(col_widths)
+#   
+#   # Get counts of carriage returns per cell
+#   
+#   rs <- list()
+#   for (col in seq_along(dat)) {
+#     rs[[length(rs)+1]] <- stri_count(dat[[col]], fixed = "\n")
+#   }
+#   
+#   r <- matrix(unlist(rs), ncol=length(rs), byrow=FALSE)
+#   
+#   # Add carriage returns to line counts
+#   lr <- lin + r
+#   # print(lr)
+#   
+#   lr[is.na(lr) | lr == 0] <- 1
+#   
+#   # print(lr)
+#   # print(rowMax(lr)@x)
+#   
+#   row_heights <- rowMax(lr, ignore.zero = FALSE)@x * rh
+#   
+#   # print(row_heights)
+#   # print(length(row_heights))
+#   
+#   row_pages <- get_pages(row_heights, data_size["height"])
+#   
+#   # print(nrow(dat))
+#   # print(length(row_pages))
+#   # print(row_pages)
+#   
+#   ret <- split(dat, row_pages)
+#   
+#   
+#   return(ret)
+#   
+# }
 
 
 
@@ -285,10 +285,10 @@ create_stub <- function(dat, ts) {
 }
 
 #' Get the column widths
-#' @import graphics
+# @import graphics
 #' @import stringi
 #' @noRd
-get_col_widths <- function(dat, ts, labels, font_family) {
+get_col_widths <- function(dat, ts, labels, char_width) {
   
   defs <- ts$col_defs
   max_col_width = 5
@@ -301,7 +301,13 @@ get_col_widths <- function(dat, ts, labels, font_family) {
   # Set default widths based on length of data
   for (nm in nms) {
   
-    w <- max(strwidth(dat[[nm]], units="inches", family=font_family))
+    
+    #w <- max(strwidth(dat[[nm]], units="inches", family=font_family))
+    if (is.control(nm) | all(is.na(dat[[nm]]) == TRUE))
+      w <- 0
+    else
+      w <- max(nchar(as.character(dat[[nm]])), na.rm = TRUE) * char_width
+     
     if (w > max_col_width)
       w <- max_col_width
     else if (w < min_col_width)
@@ -311,8 +317,9 @@ get_col_widths <- function(dat, ts, labels, font_family) {
     
     
     # Determine width of words in label for this column
-    s <- stri_split(labels[[nm]], fixed=" ")
-    l <- strwidth(s[[1]], units="inches", family=font_family)
+    s <- stri_split(labels[[nm]], fixed=" ", simplify = TRUE)
+    #l <- strwidth(s[[1]], units="inches", family=font_family)
+    l <- max(nchar(as.character(s)), na.rm = TRUE) * char_width
     
     # If the max word width is greater than the data width,
     # set column width to max label word width
@@ -361,27 +368,27 @@ get_col_widths <- function(dat, ts, labels, font_family) {
 
 
 # widths not incorporated yet
-#' Gets the data size
-#' @import graphics
-#' @noRd
-get_data_size <- function(body_size, widths, labels, font_family) {
-  
-  #ppi = 72
-  blank_row <- .3
-  
-  sz <- c()
-  for (n in labels) {
-    sz[length(sz) + 1] <- strheight(n, units="inches", family=font_family)
-    
-  }
-  
-  ret <- body_size
-  
-  ret["height"] <- ret["height"] - max(sz) - blank_row
-  
-  return(ret)
-  
-}
+# Gets the data size
+# @import graphics
+# @noRd
+# get_data_size <- function(body_size, widths, labels, font_family) {
+#   
+#   #ppi = 72
+#   blank_row <- .3
+#   
+#   sz <- c()
+#   for (n in labels) {
+#     sz[length(sz) + 1] <- strheight(n, units="inches", family=font_family)
+#     
+#   }
+#   
+#   ret <- body_size
+#   
+#   ret["height"] <- ret["height"] - max(sz) - blank_row
+#   
+#   return(ret)
+#   
+# }
 
 
 get_label_aligns <- function(ts, aligns) {

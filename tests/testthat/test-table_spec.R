@@ -70,3 +70,4 @@ test_that("stub function works as expected.", {
   
   
 })
+

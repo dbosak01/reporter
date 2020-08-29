@@ -84,7 +84,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
  # widths(fdat) <- widths(dat)
   
   # Get column widths
-  widths_uom <- get_col_widths(fdat, ts, labels, font_family = family)
+  widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width)
   # print("Widths UOM")
   # print(widths_uom)
   
