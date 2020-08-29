@@ -12,7 +12,7 @@ control_cols <- c("..blank", "..page", "..row")
 #' @details 
 #' Order of these operations is very important.  Any change in the order 
 #' will require considerable thought, and understanding of any potential
-#' effects.
+#' consequences.
 #' @import fmtr
 #' @noRd
 create_table_pages_text <- function(rs, cntnt, lpg_rows) {
@@ -47,41 +47,51 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   dat <- dat[ , keys]
   
   # Get labels
-  labels <- get_labels(dat, ts$col_defs, ts$n_format)
+  labels <- get_labels(dat, ts)
   #print(labels)
   
   # Get column alignments
-  aligns <- get_aligns(dat, ts$col_defs)
+  aligns <- get_aligns(dat, ts)
     
   # Get alignment for labels
   # Follows column alignment by default
-  label_aligns <- get_label_aligns(ts$col_defs, aligns)
-  #print(label_aligns)
+  label_aligns <- get_label_aligns(ts, aligns)
+  # print("Label Aligns")
+  # print(label_aligns)
 
   # Get column formats
-  formats(dat) <- get_col_formats(dat, ts$col_defs)
+  formats(dat) <- get_col_formats(dat, ts)
   #print(formats(dat))
 
   # Apply formatting
   fdat <- fdata(dat)
-  #print("fdata1")
-  #print(fdat)
+  # print("fdata1")
+  # print(fdat)
   
   # Prep data for blank lines, indents, and stub columns
-  fdat <- prep_data(fdat, ts$col_defs, rs$char_width)
-  #print("prep_data")
-  #print(fdat)
+  fdat <- prep_data(fdat, ts, rs$char_width)
+  # print("prep_data")
+  # print(fdat)
   
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
+  # print("Keys")
+  # print(keys)
+  # print("Aligns")
+  # print(aligns)
+  
+  # Copy any width attributes to formatted data frame
+ # widths(fdat) <- widths(dat)
   
   # Get column widths
-  widths_uom <- get_col_widths(dat, ts$col_defs, labels, font_family = family)
-  #print(widths_uom)
+  widths_uom <- get_col_widths(fdat, ts, labels, font_family = family)
+  # print("Widths UOM")
+  # print(widths_uom)
   
   # Convert to text measurements
   widths_char <- round(widths_uom / rs$char_width)
-  
+  # print("Widths Char")
+  # print(widths_char)
 
   # Split long text strings onto multiple rows
   fdat <- split_cells(fdat, widths_char)
@@ -97,12 +107,14 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   # Break columns into pages
   wraps <- get_page_wraps(rs$line_size, ts$col_defs, widths_char)
-  #print("wraps")
-  #print(wraps)
+  # print("wraps")
+  # print(wraps)
 
   # Create a temporary page info to pass into get_content_offsets
   tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
                  label_align = label_aligns)
+  # print("Temp PI")
+  # print(tmp_pi)
   
   # Offsets are needed to calculate splits and page breaks
   content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row)
@@ -110,8 +122,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
                             lpg_rows, content_offset, ts$col_defs)
-  #print("splits")
-  #print(splits)
+  # print("splits")
+  # print(splits)
 
   tot_count <- length(splits) * length(wraps)
   counter <- 0
@@ -128,7 +140,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
       else 
         wrap_flag <- FALSE
       
-      # Ensure content blank rows are added only to the first and page pages
+      # Ensure content blank rows are added only to the first and last pages
       blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row)
       
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
@@ -250,7 +262,8 @@ get_table_header <- function(rs, ts, pi) {
   lbls <- pi$label
   lbla <- pi$label_align
   w <- round(pi$col_width / rs$char_width)
-  
+  # print("Label A")
+  # print(lbla)
   ret <- c()
   ln <- c()
 
@@ -481,7 +494,8 @@ get_table_body <- function(dat) {
       if (!is.null(p) & !is.na(p))
         v <- p
 
-      if (!is.control(nm[j]) & trimws(df[i, "..blank"]) == "")
+      if (!is.control(nm[j]) & 
+          (trimws(df[i, "..blank"]) == "" | trimws(df[i, "..blank"]) == "L"))
         r <- paste0(r, v, " ")
     }
     

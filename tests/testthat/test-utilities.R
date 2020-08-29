@@ -138,4 +138,22 @@ test_that("push_down works as expected.", {
   expect_equal(res2$c1, c("a", "b", "c", "d", "e"))
   
 })
+
+test_that("create_stub works as expected.", {
+  
+  x <- data.frame(a1 = c("a", "a", "a", "a", "a", "a"), 
+                  b1  = c(NA, "b", "b", NA, "b", "b"), 
+                  c1 = c(NA, NA, "c", NA, NA, "c"), 
+                  d1 = c("Here", "is", "some", "stuff", "shouldn't", "touch"))
+  
+  
+  v <- c("a1", "b1", "c1")
+  
+  tbl <- create_table(x) %>% stub(v)
+  
+  d <- create_stub(x, tbl)
+  
+  expect_equal(d$stub, c("a", "b", "c", "a", "b", "c"))
+  
+})
   

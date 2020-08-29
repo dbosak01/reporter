@@ -148,17 +148,29 @@ get_page_wraps <- function(line_size, defs, widths) {
 }
 
 
-#' Preps the data
+#' @description Preps the data
+#' @details 
+#' This function performs a variety of tasks needed to prepare the data
+#' for printing.  This function must be called before page wrapping and 
+#' splitting because it will add rows and columns which must be taken into
+#' account during those operations.  Tasks performed include several 
+#' options on the variable define function.  These include blank_after, 
+#' label_row, indenting, and creating stub columns. 
 #' @noRd
-prep_data <- function(dat, defs, char_width) {
+prep_data <- function(dat, ts, char_width) {
+  
+  defs <- ts$col_defs
+  # print("Before prep data")
+  # print(dat)
   
   # Get vector of columns for blank rows
   ls <- c()
   for (def in defs) {
+
     if (def$blank_after)
       ls[length(ls) + 1] <- def$var_c
   }
-  
+
   # Add blanks on requested columns
   if (!is.null(ls)) {
     if (length(ls) > 0) {
@@ -172,6 +184,25 @@ prep_data <- function(dat, defs, char_width) {
       }
     }
   }
+  
+  # print("Blanks")
+  # print(dat)
+  
+  # Set up label rows
+  for (def in defs) {
+    if (def$label_row) {
+      
+      # Convert to character if necessary
+      if (all(dat[[def$var_c]] != "character"))
+        dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+      
+      dat <- add_blank_rows(dat, "label", vars = def$var_c)
+    }
+  }
+  
+  
+  # print("Labels")
+  # print(dat)
   
   # Indent and Dedupe variables as requested
   # Do this after adding blanks
@@ -196,30 +227,81 @@ prep_data <- function(dat, defs, char_width) {
     }
   }
   
+  # print("Before stub")
+  # print(dat)
+
+  # Create stub
+  dat <- create_stub(dat, ts)
+  
+  # print("After stub")
+  # print(dat)
+    
   # Clear out missing values 
   dat <- clear_missing(dat)
+
   
   return(dat)
   
 }
 
 
+create_stub <- function(dat, ts) {
+ 
+  if (!is.null(ts$stub)) {
+    
+    s <- ts$stub 
+    v <- s$vars
+    
+    # Initialize with first column 
+    st <- dat[[v[1]]]
+    #print(st)
+    
+    # For each subsequent column, if the value is not NA,
+    # replace first column value.
+    for (i in seq(from = 2, to = length(v), by = 1)) {
+      
+      st <- ifelse(is.na(dat[[v[i]]]) | trimws(dat[[v[i]]]) == "", st, dat[[v[i]]])    
+      
+    }
+    
+    # Remove stub variables from data frame
+    d <-   dat[ , -which(names(dat) %in% v)]
+    
+    # print("Names before")
+    # print(names(d))
+    
+    # Combine with stub column
+    dat <- data.frame(stub = st, d)
+    
+    # Have to restore names, otherwise data.frame will mess them up
+    names(dat) <- c("stub", names(d))
+    
+    # print("Names after")
+    # print(names(dat))
+  }
+  
+  return(dat)
+  
+}
+
 #' Get the column widths
 #' @import graphics
 #' @import stringi
 #' @noRd
-get_col_widths <- function(dat, defs, labels, font_family) {
+get_col_widths <- function(dat, ts, labels, font_family) {
   
+  defs <- ts$col_defs
   max_col_width = 5
   min_col_width = .5
   padding_buffer = .05
-  
+  nms <- names(labels)
+  #print(nms)
   dwidths <- c()
   
   # Set default widths based on length of data
-  for (i in seq_along(dat)) {
-    
-    w <- max(strwidth(dat[[i]], units="inches", family=font_family))
+  for (nm in nms) {
+  
+    w <- max(strwidth(dat[[nm]], units="inches", family=font_family))
     if (w > max_col_width)
       w <- max_col_width
     else if (w < min_col_width)
@@ -227,22 +309,23 @@ get_col_widths <- function(dat, defs, labels, font_family) {
     else
       w <- (ceiling(w * 100)/100) + padding_buffer
     
+    
     # Determine width of words in label for this column
-    s <- stri_split(labels[[i]], fixed=" ")
+    s <- stri_split(labels[[nm]], fixed=" ")
     l <- strwidth(s[[1]], units="inches", family=font_family)
     
     # If the max word width is greater than the data width,
     # set column width to max label word width
     # so as not to break any words in the label
     if (max(l) > w)
-      dwidths[length(dwidths) + 1] <- max(l)
+      dwidths[[nm]] <- max(l)
     else
-      dwidths[length(dwidths) + 1] <- w
+      dwidths[[nm]] <- w
     
   }
   
   # Set names for easy access
-  names(dwidths) <- names(dat)
+  #names(dwidths) <- names(dat)
   
   # Set default widths
   ret = dwidths
@@ -257,10 +340,21 @@ get_col_widths <- function(dat, defs, labels, font_family) {
   for (def in defs) {
     
     if (def$var_c %in% names(dat) & !is.null(def$width) && def$width > 0) {
-      ret[def$var_c] <- def$width
+      ret[[def$var_c]] <- def$width
     }
     
   }
+  
+  # Deal with stub
+  if (!is.null(ts$stub)) {
+ 
+    # Add stub width if exists   
+    if (!is.null(ts$stub$width))
+      ret[["stub"]] <- ts$stub$width
+    
+  }
+  
+  ret <- unlist(ret)
   
   return(ret)
 }
@@ -272,7 +366,7 @@ get_col_widths <- function(dat, defs, labels, font_family) {
 #' @noRd
 get_data_size <- function(body_size, widths, labels, font_family) {
   
-  ppi = 72
+  #ppi = 72
   blank_row <- .3
   
   sz <- c()
@@ -290,14 +384,25 @@ get_data_size <- function(body_size, widths, labels, font_family) {
 }
 
 
-get_label_aligns <- function(defs, aligns) {
+get_label_aligns <- function(ts, aligns) {
   
-  
+  defs <- ts$col_defs
   ret <- aligns
-  
+
   for (d in defs) {
     if (!is.null(d$label_align) & d$var_c %in% names(aligns))
-      ret[d$var_c] <-  d$label_align
+      ret[[d$var_c]] <-  d$label_align
+    
+  }
+  
+  # Deal with stub
+  if (!is.null(ts$stub)) {
+  
+    # Assing label align if exists
+    if (is.null(ts$stub$label_align))
+      ret[["stub"]] <- ts$stub[["align"]] 
+    else
+      ret[["stub"]] <- ts$stub[["label_align"]] 
     
   }
   
@@ -306,14 +411,40 @@ get_label_aligns <- function(defs, aligns) {
 
 #' Gets column formats from definitions
 #' @noRd
-get_col_formats <- function(dat, defs) {
+get_col_formats <- function(dat, ts) {
+  
+  defs <- ts$col_defs
   
   # Get any existing formats
   ret <- formats(dat)
-  
+
   for (d in defs) {
     if (!is.null(d$format))
       ret[[d$var_c]] <-  d$format
+  }
+
+  
+  # Deal with stub
+  if (!is.null(ts$stub)) {
+    
+    # Don't take out formats until they have been applied
+    # Keep code anyway in case it is needed somewhere else
+    
+    # print(paste("Names in vars:", names(ret) %in% ts$stub$vars))
+    # # Remove variables associated with stub
+    # if (any(names(ret) %in% ts$stub$vars) == TRUE) {
+    #   
+    #   for (nm in ts$stub$vars) 
+    #     ret[[nm]] <- NULL
+    #   
+    # }
+    
+    
+    # Add stub format
+    if (!is.null(ts$stub$format))
+      ret$stub <- ts$stub$format
+    
+    
   }
   
   return(ret)
@@ -322,8 +453,9 @@ get_col_formats <- function(dat, defs) {
 
 #' Gets the alignments
 #' @noRd
-get_aligns <- function(dat, defs) {
+get_aligns <- function(dat, ts) {
   
+  defs <- ts$col_defs
   nms <- names(dat)
   ret <- c()
   
@@ -354,6 +486,17 @@ get_aligns <- function(dat, defs) {
       ret[d$var_c] <- d$align
   }
   
+  # Deal with stub
+  if (!is.null(ts$stub)) {
+    
+    # Remove variables associated with stub
+    ret <- ret[-which(names(ret) %in% ts$stub$vars)]  
+    
+    # Assign alignment from stub definition
+    ret[["stub"]] <- ts$stub$align 
+    
+  }
+  
   return(ret)
   
 }
@@ -361,10 +504,15 @@ get_aligns <- function(dat, defs) {
 
 #' Gets the labels
 #' @noRd
-get_labels <- function(dat, defs, nfmt){
+get_labels <- function(dat, ts){
+  
+  defs <- ts$col_defs
+  nfmt <- ts$n_format
   
   # Get the column names from the dataframe
+  #print("Names in label function")
   v1 <- names(dat)
+  #print(v1)
   
   # Get the labels from the dataframe
   # Not so easy because not all columns have labels.
@@ -391,11 +539,12 @@ get_labels <- function(dat, defs, nfmt){
   #ls <- as.list(v2)
   ls <- v2
 
-  
+
   # Assign names to list
   names(ls) <- v1
-
+  #print(ls)
   
+  # Let any defined labels override any attribute labels
   for (def in defs) {
 
     if (!is.null(def[["label"]]))
@@ -404,6 +553,17 @@ get_labels <- function(dat, defs, nfmt){
     if (!is.null(def$n) ) {
       ls[[def$var]] <- paste0(ls[[def$var]],  nfmt(def$n))
     }
+  }
+  
+  # Deal with stub
+  if (!is.null(ts$stub)) {
+    
+    # Remove variables associated with stub
+    ls <- ls[-which(names(ls) %in% ts$stub$vars)]  
+    
+    # Assign label from stub definition
+    ls <- c(stub = ts$stub$label, ls)
+    
   }
   
   

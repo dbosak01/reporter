@@ -98,9 +98,120 @@ test_that("prep_data works as expected", {
     define(Species, blank_after = TRUE, dedupe = TRUE, indent = .25)
 
   
-  d <- prep_data(datx, tbl$col_defs, .0833333)
+  d <- prep_data(datx, tbl, .0833333)
+
   
   expect_equal(sum(d$..blank != ""), 3)
   expect_equal(max(nchar(d$Species)) > mw, TRUE)
   
 })
+
+
+test_that("get_labels works as expected", {
+  
+  dat <- mtcars
+  dat$name <- rownames(mtcars)
+  
+  fmt <- value(condition(x >= 20, "High"),
+               condition(TRUE, "Low"))
+  
+  dat$mpg_cat <- fapply(dat$mpg, fmt)
+  
+  dat
+  
+  tbl <- create_table(dat) %>% 
+    stub(c("mpg_cat", "name"), label = "Stub") %>% 
+    define(cyl, label = "Cylinders") %>% 
+    define(disp, label = "Displacement")
+  
+  lbls <- get_labels(dat, tbl)
+  
+  expect_equal(lbls[["cyl"]], "Cylinders")
+  expect_equal(lbls[["hp"]], "hp")
+  expect_equal(lbls[["disp"]], "Displacement")
+  expect_equal(lbls[["stub"]], "Stub")
+  
+})
+
+test_that("get_aligns works as expected", {
+  
+  dat <- mtcars
+  dat$name <- rownames(mtcars)
+  
+  fmt <- value(condition(x >= 20, "High"),
+               condition(TRUE, "Low"))
+  
+  dat$mpg_cat <- fapply(dat$mpg, fmt)
+  
+  dat
+  
+  tbl <- create_table(dat) %>% 
+    stub(c("mpg_cat", "name"), label = "Stub") %>% 
+    define(cyl, label = "Cylinders", align = "right") %>% 
+    define(disp, label = "Displacement", align = "center")
+  
+  algn <- get_aligns(dat, tbl)
+  
+  expect_equal(algn[["cyl"]], "right")
+  expect_equal(algn[["stub"]], "left")
+  expect_equal(algn[["disp"]], "center")
+
+  
+})
+
+test_that("get_label_aligns works as expected", {
+  
+  dat <- mtcars
+  dat$name <- rownames(mtcars)
+  
+  fmt <- value(condition(x >= 20, "High"),
+               condition(TRUE, "Low"))
+  
+  dat$mpg_cat <- fapply(dat$mpg, fmt)
+  
+  dat
+  
+  tbl <- create_table(dat) %>% 
+    stub(c("mpg_cat", "name"), label = "Stub", label_align = "center") %>% 
+    define(cyl, label = "Cylinders", label_align = "left") %>% 
+    define(disp, label = "Displacement", label_align = "center")
+  
+  ls <- rep("right", 13) 
+  names(ls) <- names(dat)
+  
+  lbls <- get_label_aligns(tbl, ls)
+  
+  expect_equal(lbls[["cyl"]], "left")
+  expect_equal(lbls[["hp"]], "right")
+  expect_equal(lbls[["disp"]], "center")
+  expect_equal(lbls[["stub"]], "center")
+  
+})
+
+test_that("get_col_formats works as expected", {
+  
+  dat <- mtcars
+  dat$name <- rownames(mtcars)
+  
+  fmt <- value(condition(x >= 20, "High"),
+               condition(TRUE, "Low"))
+  
+  dat$mpg_cat <- fapply(dat$mpg, fmt)
+  
+  dat
+  
+  tbl <- create_table(dat) %>% 
+    stub(c("mpg_cat", "name"), label = "Stub", format = "%s") %>% 
+    define(cyl, label = "Cylinders", format = "%.1f") %>% 
+    define(disp, label = "Displacement", format = "%.2f")
+  
+  lbls <- get_col_formats(dat, tbl)
+  
+  
+  expect_equal(lbls[["cyl"]], "%.1f")
+  expect_equal(is.null(lbls[["hp"]]), TRUE)
+  expect_equal(lbls[["disp"]], "%.2f")
+  expect_equal(lbls[["stub"]], "%s")
+  
+})
+

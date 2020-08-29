@@ -242,9 +242,10 @@ test_that("user2: demo table with stub works.", {
   
   # Define table
   tbl <- create_table(demo, first_row_blank = TRUE) %>%
-    define(var, blank_after = TRUE, dedupe = TRUE,
-           format = block_fmt, label = "") %>%
-    define(label, label = "") %>%
+    stub(c("var", "label")) %>% 
+    define(var, blank_after = TRUE, 
+           format = block_fmt, label = "", label_row = TRUE) %>%
+    define(label, label = "", indent = .25) %>%
     define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
     define(`ARM B`, align = "center", label = "Drug 10mg", n = 38) %>%
     define(`ARM C`, align = "center", label = "Drug 20mg", n = 38) %>%

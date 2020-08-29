@@ -19,7 +19,8 @@ define(
   dedupe = FALSE,
   id_var = FALSE,
   wrap = FALSE,
-  indent = NULL
+  indent = NULL,
+  label_row = FALSE
 )
 }
 \arguments{
@@ -63,6 +64,10 @@ The excess variables will be wrapped to the next page.}
 \item{indent}{How much to indent the column values.  Parameter takes a 
 numeric value that will be interpreted according to the 'uom' 
 (Unit Of Measure) setting on the report.}
+
+\item{label_row}{Whether the values of the variable should be used to
+create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
+If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.}
 }
 \description{
 Defines a column specification

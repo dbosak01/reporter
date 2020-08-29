@@ -12,7 +12,8 @@
 The **rptr** package creates regulatory-style, tabular reports. It was designed
 for use in the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
-for any industry.  
+for any industry.  The package is written in Base R, and has no dependencies on
+any other reporting package.
 
 The package is intended to give R programmers 
 report layout capabilities such as those found in SAS® PROC REPORT, 
@@ -23,8 +24,10 @@ provide tabular reporting in HTML.
 The current version supports TEXT output.  Future releases will 
 incorporate RTF, DOCX, and PDF file formats.  
 
+## Examples
+
 Here is an example of 
-a regulatory-style listing using `rptr` and the `mtcars` sample data frame:
+a regulatory-style listing using **rptr** and the mtcars sample data frame:
 
 ```
 # Create temp file name
@@ -45,7 +48,6 @@ write_report(rpt)
 
 # Send report to console for viewing
 writeLines(readLines(tmp))
-
 
 # Client: Motor Trend                                                Study: Cars
 #                                  Listing 1.0
@@ -94,7 +96,7 @@ writeLines(readLines(tmp))
 
 
 ```
-Here is an example of a regulatory-style table:
+Here is an example of a regulatory-style table of summary statistics:
 
 ```
 
@@ -117,3 +119,29 @@ and intermingling of text and tables
 
 
 ...
+
+
+## Glossary of Functions
+
+### Report Functions
+
+* `create_report()`
+** `options_fixed()`
+** `set_margins()`
+** `page_header()`
+** `page_footer()`
+** `titles()`
+** `footnotes()`
+** `add_content()`
+** `write_report()`
+
+### Table functions
+
+* `create_table()`
+** `table_options()`
+** `spanning_header()`
+** `stub()`
+** `define()`
+
+
+

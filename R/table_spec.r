@@ -40,6 +40,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
   ret$show_cols <- show_cols
   ret$first_row_blank <- first_row_blank
   ret$headerless <- headerless
+  ret$stub <- NULL
 
   return(ret)
 
@@ -72,15 +73,18 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' @param indent How much to indent the column values.  Parameter takes a 
 #' numeric value that will be interpreted according to the 'uom' 
 #' (Unit Of Measure) setting on the report.  
+#' @param label_row Whether the values of the variable should be used to
+#' create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
+#' If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.
 #' @export
 define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE, wrap = FALSE,
-                   indent = NULL) {
+                   indent = NULL, label_row = FALSE) {
   
   # Check that variable exists
-  var_c <- as.character(substitute(var))
+  var_c <- as.character(substitute(var, env = environment()))
   if (!is.null(x$data)) {
     if (!var_c %in% names(x$data)) {
       stop(paste0("Variable '", var_c, "' does not exist in data."))
@@ -90,7 +94,7 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
 
   def <- structure(list(), class = c("col_def", "list"))
   
-  def$var = deparse(substitute(var))
+  def$var = deparse(substitute(var, env = environment()))
   def$var_c = var_c
   def$label = label
   def$format = format
@@ -106,6 +110,9 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
   def$id_var = id_var
   def$wrap = wrap
   def$indent = indent
+  def$label_row = label_row
+  if (label_row == TRUE)
+    def$dedupe <- TRUE
 
   x$col_defs[[length(x$col_defs) + 1]] <- def
 
@@ -189,30 +196,31 @@ spanning_header <- function(x, span_cols, label = "",
 #' @details 
 #' Here are some details.
 #' @param x The table spec.
-#' @param name The name of the report stub.  This parameter is required, and 
-#' will be used as the stub column name.
+#' @param vars A vector of quoted variable names from which to create the stub.
 #' @param label The label for the report stub.
+#' @param label_align The alignment for the label.  Valid values are 'left', 
+#' 'right', 'center', and 'centre'.  Default is 'left'.
 #' @param width The width of the stub, in report units of measure.
-#' @param ... One or more column definitions.
+#' @param align How to align the stub column.  Valid values are 'left', 
+#' 'right', 'center', and 'centre'.  Default is 'left'.
+#' @param format A format to apply to the stub column.
 #' @return The modified table spec.
 #' @export
-stub <- function(x, name, label = "", width = NULL, ...) {
+stub <- function(x, vars, label = "", label_align = NULL, 
+                 align = "left", width = NULL, format = NULL) {
   
   def <- structure(list(), class = c("stub_def", "list"))
   
+  def$label <- label
+  def$label_align <- label_align
+  def$align <- align
+  def$vars <- vars
+  def$width <- width
+  def$format <- format
   
-  def$name <- name
-  def$label = label
-  def$width = width
-  def$col_defs <- c(...)
+  x$stub <- def
   
-  x$stubs[[length(x$stubs) + 1]] <- def
-  
-  for (cd in def$col_defs) {
-    
-    x$col_defs[length(x$col_defs) + 1] <- cd 
-  }
-  
+  return(x)
 }
 
 #' Defines options for the table

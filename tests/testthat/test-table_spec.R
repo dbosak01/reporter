@@ -59,18 +59,14 @@ test_that("stub function works as expected.", {
   
   dat <- dat[order(dat$mpg_cat), c("mpg_cat", "name", "mpg", "cyl", "disp", "hp")]
   
-  dat2 <- add_blank_rows(dat, "above", vars = "mpg_cat")
-  
-  dat2$mpg_cat <- ifelse(!duplicated(dat2$mpg_cat ), 
-                        dat2$mpg_cat, NA) 
-  
-  dat2$stub <- ifelse(is.na(dat2$mpg_cat), paste0("  ", dat2$name), dat2$mpg_cat)
-  
-  dat2$stub <- fapply(dat2$stub,  justify = "left")
-  
-  dat3 <- dat2[, c("stub", "mpg", "cyl", "disp", "hp")]
+  tbl <- create_table(dat) %>%
+    stub(label = "Stub", vars = c("mpg_cat", "name")) %>% 
+      define(mpg_cat, label_row = TRUE, dedupe = TRUE) %>% 
+      define(name, indent = .25)
   
   
-
+  expect_equal(tbl$col_defs[[1]]$label_row, TRUE)
+  expect_equal(is.null(tbl$stub), FALSE)
+  
   
 })
