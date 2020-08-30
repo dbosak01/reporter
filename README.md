@@ -24,7 +24,65 @@ provide tabular reporting in HTML.
 The current version supports TEXT output.  Future releases will 
 incorporate RTF, DOCX, and PDF file formats.  
 
+## Key Features
+
+**rptr** contains the following key features:
+
+* Titles, footnotes, page header, and page footer are repeated on each page
+* Supports header labels and spanning headers 
+* Calculates default columns widths automatically
+* Includes automatic wrapping and splitting of wide and long tables
+* Integrates with the **fmtr** package to format numeric, date, and character data
+* Allows appending multiple tables to a report, multiple tables to a page, 
+and intermingling of text and tables
+* Supports in-report date/time stamps and "Page X of Y" page numbering
+
+
+
+## How to use **rptr**
+
+
+...
+
+
+## Glossary of Functions
+
+Below are the public functions available in **rptr** package, and a brief
+description of their use.  For additional information, see the help text:
+
+### Report Functions
+
+* `create_report()`: Define a report object  
+** `options_fixed()`: Set options for fixed width (text) reports  
+** `set_margins()`: Set margins for the report  
+** `page_header()`: Define a page header  
+** `page_footer()`: Define a page footer  
+** `titles()`: Set titles for the report  
+** `footnotes()`: Set footnotes for the report  
+** `add_content()`: Add content to the report  
+** `write_report()`: Write the report to a file  
+
+### Table functions
+
+* `create_table()`: Define a table object
+** `table_options()`: Set options for the table
+** `titles()`: Set titles for the table
+** `footnotes()`: Set footnotes for the table
+** `spanning_header()`: Define a spanning header
+** `stub()`: Define a stub column
+** `define()`: Specify settings for a column
+
+### Text functions
+
+* `create_text()`: Define a text object
+** `titles()`: Set titles for the text
+** `footnotes()`: Set footnotes for the text
+
+
+
 ## Examples
+
+### Example 1: Listing
 
 Here is an example of 
 a regulatory-style listing using **rptr** and the mtcars sample data frame:
@@ -96,6 +154,8 @@ writeLines(readLines(tmp))
 
 
 ```
+### Example 2: Summary table
+
 Here is an example of a regulatory-style table of summary statistics:
 
 ```
@@ -169,56 +229,14 @@ writeLines(readLines(tmp))
 
 ```
 
-## Key Features
+### Example 3: Text and Table on same page
 
-**rptr** contains the following key features:
-
-* Titles, footnotes, page header, and page footer are repeated on each page
-* Supports header labels and spanning headers 
-* Calculates default columns widths automatically
-* Includes automatic wrapping and splitting of wide and long tables
-* Integrates with the **fmtr** package to format numeric, date, and character data
-* Allows appending multiple tables to a report, multiple tables to a page, 
-and intermingling of text and tables
-* Supports in-report date/time stamps and "Page X of Y" page numbering
-
-## How to use **rptr**
+```
 
 
-...
+```
 
 
-## Glossary of Functions
 
-Below are the public functions available in **rptr** package, and a brief
-description of their use.  For additional information, see the help text:
-
-### Report Functions
-
-* `create_report()`: Define a report object
-** `options_fixed()`: Set options for fixed width (text) reports
-** `set_margins()`: Set margins for the report
-** `page_header()`: Define a page header
-** `page_footer()`: Define a page footer
-** `titles()`: Set titles for the report
-** `footnotes()`: Set footnotes for the report
-** `add_content()`: Add content to the report
-** `write_report()`: Write the report to a file
-
-### Table functions
-
-* `create_table()`: Define a table object
-** `table_options()`: Set options for the table
-** `titles()`: Set titles for the table
-** `footnotes()`: Set footnotes for the table
-** `spanning_header()`: Define a spanning header
-** `stub()`: Define a stub column
-** `define()`: Specify settings for a column
-
-### Text functions
-
-* `create_text()`: Define a text object
-** `titles()`: Set titles for the text
-** `footnotes()`: Set footnotes for the text
 
 
