@@ -26,7 +26,7 @@ incorporate RTF, DOCX, and PDF file formats.
 
 ## Key Features
 
-**rptr** contains the following key features:
+The **rptr** package contains the following key features:
 
 * Titles, footnotes, page header, and page footer are repeated on each page
 * Supports header labels and spanning headers 
@@ -47,7 +47,7 @@ There are four steps to creating a report:
 * Add content to the report
 * Write out the report 
 
-You will create the report with the `create_report()` function.  Content is
+You can create the report with the `create_report()` function.  Content is
 created with the `create_table()` or `create_text()` functions.  Add content
 to the report with the `add_content()` function. Finally, the report can 
 be written to a file with the `write_report()` function.  
@@ -59,7 +59,7 @@ the subsequent glossary.
 
 ## Glossary of Functions
 
-Below are the functions available in **rptr** package, and a brief
+Below are the functions available in the **rptr** package, and a brief
 description of their use.  For additional information, see the help text:
 
 ### Report Functions
@@ -193,8 +193,8 @@ tbl <- create_table(df, first_row_blank = TRUE) %>%
   define(var, blank_after = TRUE, label_row = TRUE, 
          format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
   define(label, indent = .25) %>% 
-  define(A, label = "Group A", align = "center") %>% 
-  define(B, label = "Group B", align = "center")
+  define(A, label = "Group A", align = "center", n = 19) %>% 
+  define(B, label = "Group B", align = "center", n = 13)
 
 
 # Create report
@@ -217,7 +217,8 @@ writeLines(readLines(tmp))
 #                                   Table 1.0
 #                              MTCARS Summary Table
 # 
-#                                      Group A      Group B
+#                                     Group A      Group B
+#                                      (N=19)       (N=13)
 #                  -------------------------------------------
 # 
 #                  Cylinders
@@ -241,9 +242,9 @@ writeLines(readLines(tmp))
 
 ```
 
-### Example 3: Intermingle Text and Table 
+### Example 3: Intermingle Table and Text 
 
-The below example demonstrates intermingling of text and table content.  This
+The below example demonstrates intermingling of table and text content.  This
 functionality is enabled by the ability to append multiple pieces of content 
 to the same report.  Appending content is useful when you want to create a 
 report with multiple tables, or provide textual analysis of tabular data.
