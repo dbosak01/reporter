@@ -40,43 +40,56 @@ and intermingling of text and tables
 
 
 ## How to use **rptr**
+There are four steps to creating a report:
 
+* Create report 
+* Create report content
+* Add content to the report
+* Write out the report 
 
+You will create the report with the `create_report()` function.  Content is
+created with the `create_table()` or `create_text()` functions.  Add content
+to the report with the `add_content()` function. Finally, the report can 
+be written to a file with the `write_report()` function.  
+
+In addition to these primary functions, there are several secondary functions
+to help you formalize the report.  All available functions are shown in
+the following glossary.
 ...
 
 
 ## Glossary of Functions
 
-Below are the public functions available in **rptr** package, and a brief
+Below are the functions available in **rptr** package, and a brief
 description of their use.  For additional information, see the help text:
 
 ### Report Functions
 
 * `create_report()`: Define a report object  
-** `options_fixed()`: Set options for fixed width (text) reports  
-** `set_margins()`: Set margins for the report  
-** `page_header()`: Define a page header  
-** `page_footer()`: Define a page footer  
-** `titles()`: Set titles for the report  
-** `footnotes()`: Set footnotes for the report  
-** `add_content()`: Add content to the report  
-** `write_report()`: Write the report to a file  
+* `options_fixed()`: Set options for fixed width (text) reports  
+* `set_margins()`: Set margins for the report  
+* `page_header()`: Define a page header  
+* `page_footer()`: Define a page footer  
+* `titles()`: Set titles for the report  
+* `footnotes()`: Set footnotes for the report  
+* `add_content()`: Add content to the report  
+* `write_report()`: Write the report to a file  
 
 ### Table functions
 
-* `create_table()`: Define a table object
-** `table_options()`: Set options for the table
-** `titles()`: Set titles for the table
-** `footnotes()`: Set footnotes for the table
-** `spanning_header()`: Define a spanning header
-** `stub()`: Define a stub column
-** `define()`: Specify settings for a column
+* `create_table()`: Define a table object  
+* `table_options()`: Set options for the table  
+* `titles()`: Set titles for the table  
+* `footnotes()`: Set footnotes for the table  
+* `spanning_header()`: Define a spanning header  
+* `stub()`: Define a stub column  
+* `define()`: Specify settings for a column  
 
 ### Text functions
 
-* `create_text()`: Define a text object
-** `titles()`: Set titles for the text
-** `footnotes()`: Set footnotes for the text
+* `create_text()`: Define a text object  
+* `titles()`: Set titles for the text  
+* `footnotes()`: Set footnotes for the text  
 
 
 
@@ -229,10 +242,88 @@ writeLines(readLines(tmp))
 
 ```
 
-### Example 3: Text and Table on same page
+### Example 3: Intermingle Text and Table 
+
+The below example demonstrate intermingling of text and table content.  This
+functionality is enabled by the ability to append multiple pieces of content 
+to the same report.  Appending content is useful when you want to create a 
+report with multiple tables, or provide textual analysis of tabular data.
 
 ```
 
+# Dummy text
+cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+              "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+              "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+              "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+              "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+              "qui officia deserunt mollit anim id est laborum.")
+
+# Create text content
+txt <- create_text(cnt) %>% 
+  titles("Analysis of MTCARS")
+
+# Prepare data
+dat <- mtcars
+dat$name <- rownames(dat)
+dat <- mtcars[1:10, ]
+
+# Create table content
+tbl <- create_table(dat) %>% 
+  titles("Table 1.0", "MTCARS Sample Data") %>% 
+  footnotes("* Motor Trend, 1973")
+
+# Set up temporary path
+tmp <- file.path(tempdir(), "example3.txt")
+
+# Create report and add both table and text content
+rpt <- create_report(tmp, orientation = "portrait") %>% 
+  page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+  add_content(tbl, page_break = FALSE) %>% 
+  add_content(txt) %>% 
+  page_footer(left = Sys.time(), 
+              center = "Confidential", 
+              right = "Page [pg] of [tpg]")
+
+# Write the report
+write_report(rpt)
+
+# View in console
+writeLines(readLines(tmp))
+
+# Client: Motor Trend                                                Study: Cars
+#                                   Table 1.0
+#                              MTCARS Sample Data
+# 
+#    mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+# ----------------------------------------------------------------------------
+#     21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#     21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#   22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#   21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#   18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#   18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#   14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#   24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#   22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#   19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+# 
+# * Motor Trend, 1973
+# 
+#                               Analysis of MTCARS
+# 
+# Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+# incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+# nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+# Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+# eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+# in culpa qui officia deserunt mollit anim id est laborum.
+# 
+# 
+# ...
+# 
+# 2020-08-30 04:44:53              Confidential                      Page 1 of 1
 
 ```
 
