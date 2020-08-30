@@ -243,7 +243,7 @@ writeLines(readLines(tmp))
 
 ### Example 3: Intermingle Text and Table 
 
-The below example demonstrate intermingling of text and table content.  This
+The below example demonstrates intermingling of text and table content.  This
 functionality is enabled by the ability to append multiple pieces of content 
 to the same report.  Appending content is useful when you want to create a 
 report with multiple tables, or provide textual analysis of tabular data.
@@ -260,8 +260,7 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "qui officia deserunt mollit anim id est laborum.")
 
 # Create text content
-txt <- create_text(cnt) %>% 
-  titles("Analysis of MTCARS")
+txt <- create_text(cnt) 
 
 # Prepare data
 dat <- mtcars
@@ -309,8 +308,6 @@ writeLines(readLines(tmp))
 #   19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 # 
 # * Motor Trend, 1973
-# 
-#                               Analysis of MTCARS
 # 
 # Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 # incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
