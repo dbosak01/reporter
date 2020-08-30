@@ -54,8 +54,7 @@ be written to a file with the `write_report()` function.
 
 In addition to these primary functions, there are several secondary functions
 to help you formalize the report.  All available functions are shown in
-the following glossary.
-...
+the subsequent glossary.
 
 
 ## Glossary of Functions
