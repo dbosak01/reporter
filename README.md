@@ -101,7 +101,7 @@ a regulatory-style listing using **rptr** and the mtcars sample data frame:
 
 ```
 # Create temp file name
-tmp <- file.path(tempdir(), "listing_1_0.txt")
+tmp <- file.path(tempdir(), "example1.txt")
 
 # Create the report
 rpt <- create_report(tmp, orientation = "portrait") %>% 
@@ -173,7 +173,7 @@ Here is an example of a regulatory-style table of summary statistics:
 ```
 
 # Create temporary path
-tmp <- file.path(tempdir(), "table1.txt")
+tmp <- file.path(tempdir(), "example2.txt")
 
 # Read in prepared data
 df <- read.table(header = TRUE, text = '

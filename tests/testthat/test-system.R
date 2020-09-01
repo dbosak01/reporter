@@ -688,3 +688,56 @@ test_that("test17: Simple regulatory table works as expected.", {
 })
 
 
+test_that("test18: Text and table with page breaks works as expected.", {
+  
+  fp <- file.path(base_path, "output/test18.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                "qui officia deserunt mollit anim id est laborum.")
+  
+  # Create text content
+  txt <- create_text(cnt) %>% 
+    titles("My Analysis of the previous table")
+  
+  # Prepare data
+  dat <- mtcars
+  dat$name <- rownames(dat)
+  dat <- mtcars[1:10, ]
+  
+  # Create table content
+  tbl <- create_table(dat) %>% 
+    titles("Table 1.0", "MTCARS Sample Data") %>% 
+    footnotes("* Motor Trend, 1973")
+  
+  
+  # Create report and add both table and text content
+  rpt <- create_report(fp, orientation = "portrait") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    add_content(tbl, page_break = FALSE) %>% 
+    add_content(txt) %>% 
+    add_content(tbl) %>% 
+    add_content(txt) %>% 
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  # Write the report
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+

@@ -88,11 +88,12 @@ get_page_wraps <- function(line_size, defs, widths) {
     if (!is.null(def$id_var) && def$id_var)
       id_vars[length(id_vars) + 1] <- def$var_c
     
-    wraps[length(wraps) + 1] <- def$wrap
+    wraps[length(wraps) + 1] <- def$page_wrap
     nms[length(nms) + 1] <- def$var_c
   }
   names(wraps) <- nms
 
+  #print(id_vars)
   
   ret <- list() # list of columns for each page
   pg <- c()     # columns on a page
@@ -124,6 +125,14 @@ get_page_wraps <- function(line_size, defs, widths) {
         # Also add control cols so downstream functions can use them
         ret[[length(ret) + 1]] <- c(names(pg), control_cols)
         pg <- c()
+        
+        # Add widths for ID vars
+        if (length(id_vars) > 0) {
+          pg <- widths[id_vars]
+          names(pg) <- id_vars
+        }
+        
+        # Add width for current column
         pg[nm] <- widths[nm]
         
       } else {
@@ -576,65 +585,6 @@ get_labels <- function(dat, ts){
   
   return(ls)
 }
-
-# l <- get_labels(final, t$col_defs, t$n_format)
-
-
-#' Declare function to calculate pages
-#' @noRd
-get_pages <- function(x, page_size){
-
-
-  running_sum <- 0
-  page <- 1
-
-  get_pages_int <- Vectorize(function(x){
-
-    if (running_sum + x > page_size) {
-      page <<- page + 1
-      running_sum <<- x
-    } else {
-      running_sum <<- running_sum + x
-    }
-
-    return(page)
-  })
-
-  return(get_pages_int(x))
-}
-
-
-# 
-# get_page_breaks <- function(x, page_size){
-#   
-#   
-#   running_sum <- 0
-#   page_breaks <- c(1)
-#   counter <- 0
-#   
-#   get_pages_int <- Vectorize(function(x){
-#     
-#     counter <<- counter + 1
-#     
-#     if (running_sum + x > page_size) {
-#       page_breaks[length(page_breaks) + 1] <<- counter
-#       running_sum <<- x
-#     } else {
-#       running_sum <<- running_sum + x
-#     }
-#     
-#     
-#   })
-#   
-#   
-#   get_pages_int(x)
-#   
-#   page_breaks[length(page_breaks) + 1] <- length(x) + 1
-#   
-#   return(page_breaks)
-# }
-
-
 
 
 #' @title Get the columns for the table
