@@ -49,7 +49,7 @@ test_that("get_page_size() works as expected.", {
 
 test_that("add_blank_rows() works as expected.", {
   
-  tdat <- iris
+  tdat <- iris[order(iris$Species, decreasing = TRUE), ]
   tdat$cat <- c(rep("A", 25), rep("B", 25))
   
   res <- add_blank_rows(tdat, location = "both", vars = c("cat", "Species"))

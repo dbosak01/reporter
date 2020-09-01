@@ -65,7 +65,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
   # Apply formatting
   fdat <- fdata(dat)
-  # print("fdata1")
+  # print("fdata")
   # print(fdat)
   
   # Prep data for blank lines, indents, and stub columns

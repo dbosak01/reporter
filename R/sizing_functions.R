@@ -185,8 +185,8 @@ prep_data <- function(dat, ts, char_width) {
     }
   }
   
-  # print("Blanks")
-  # print(dat)
+   # print("Blanks")
+   # print(dat)
   
   # Set up label rows
   for (def in defs) {
@@ -263,7 +263,7 @@ create_stub <- function(dat, ts) {
       st <- ifelse(is.na(dat[[v[i]]]) | trimws(dat[[v[i]]]) == "", st, dat[[v[i]]])    
       
     }
-    
+
     # Remove stub variables from data frame
     d <-   dat[ , -which(names(dat) %in% v)]
     

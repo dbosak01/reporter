@@ -20,7 +20,7 @@ report layout capabilities such as those found in SAS® PROC REPORT,
 and a choice of output formats like SAS® ODS. The package will 
 initially focus on printable, file-based 
 output formats, as there are already numerous R packages that 
-provide tabular reporting in HTML.  
+provide tabular reporting in HTML. 
 The current version supports TEXT output.  Future releases will 
 incorporate RTF, DOCX, and PDF file formats.  
 
@@ -221,17 +221,17 @@ writeLines(readLines(tmp))
 #                                      (N=19)       (N=13)
 #                  -------------------------------------------
 # 
-#                  Cylinders
-#                     8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
-#                     6 Cylinder      4 ( 21.1%)   3 ( 23.1%)
-#                     4 Cylinder      5 ( 26.3%)   6 ( 46.2%)
-# 
-#                  Miles Per Gallon
-#                     N                   19           13
-#                     Mean            18.8 (6.5)   22.0 (4.9)
-#                     Median             16.4         21.4
-#                     Q1 - Q3        15.1 - 21.2  19.2 - 22.8
-#                     Range          10.4 - 33.9  14.7 - 32.4
+#                 Miles Per Gallon
+#                    N                   19           13
+#                    Mean            19.3 (6.7)   21.3 (4.8)
+#                    Median             17.3         21.0
+#                    Q1 - Q3        15.2 - 22.1  19.2 - 22.8
+#                    Range          10.4 - 33.9  14.3 - 32.4
+#
+#                 Cylinders
+#                    8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
+#                    6 Cylinder      3 ( 15.8%)   4 ( 30.8%)
+#                    4 Cylinder      6 ( 31.6%)   5 ( 38.5%)
 # 
 # ...
 # 

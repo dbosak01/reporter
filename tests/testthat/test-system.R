@@ -655,7 +655,7 @@ test_that("test17: Simple regulatory table works as expected.", {
   
   
   final <- bind_rows(dat_mpg, dat_cyl)
-  print(final)
+  #print(final)
   
   tbl <- create_table(final, first_row_blank = TRUE) %>% 
     stub(c("var", "label")) %>% 

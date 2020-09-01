@@ -402,6 +402,9 @@ add_blank_row <- function(x, location="below", vars = NULL){
 #' @noRd
 add_blank_rows <- function(x, location = "below", vars = NULL) {
 
+  
+  for (nm in vars)
+    x[[nm]] <- factor(x[[nm]], levels=unique(x[[nm]]))
 
   # Alternate to get rid of tidyverse dependency
   if (is.null(vars))
@@ -409,6 +412,8 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
   else
     lst <- split(x, x[vars])
 
+  # print("Split list")
+  # print(lst)
 
   # Create a new list to avoid complaints
   # from tidyverse
