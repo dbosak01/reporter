@@ -197,7 +197,7 @@ tbl <- create_table(df, first_row_blank = TRUE) %>%
   define(B, label = "Group B", align = "center", n = 13)
 
 
-# Create report
+# Create report and add content
 rpt <- create_report(tmp, orientation = "portrait") %>% 
   page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
   titles("Table 1.0", "MTCARS Summary Table") %>% 
@@ -250,6 +250,8 @@ to the same report.  Appending content is useful when you want to create a
 report with multiple tables, or provide textual analysis of tabular data.
 
 ```
+# Create temporary path
+tmp <- file.path(tempdir(), "example3.txt")
 
 # Dummy text
 cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
@@ -272,9 +274,6 @@ dat <- mtcars[1:10, ]
 tbl <- create_table(dat) %>% 
   titles("Table 1.0", "MTCARS Sample Data") %>% 
   footnotes("* Motor Trend, 1973")
-
-# Set up temporary path
-tmp <- file.path(tempdir(), "example3.txt")
 
 # Create report and add both table and text content
 rpt <- create_report(tmp, orientation = "portrait") %>% 
@@ -324,7 +323,70 @@ writeLines(readLines(tmp))
 
 ```
 
+### Example 4: Spanning Headers
 
+Spanning headers are a common requirement of regulatory tables, yet few 
+reporting packages support them.  **rptr** supports any number of spanning
+levels, along with a flexible and simple syntax to define them.
+
+```
+
+# Create temporary path
+tmp <- file.path(tempdir(), "example4.txt")
+
+# Prepare Data
+dat <- mtcars[1:10, ]
+df <- data.frame(vehicle = rownames(dat), dat)
+
+# Define Table with spanning headers
+tbl <- create_table(df) %>% 
+  spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
+                  label = "Span 1", n = 10) %>%
+  spanning_header(span_cols = c("drat", "wt", "qsec"),
+                  label = "Span 2", n = 10) %>%
+  spanning_header(span_cols = c("vs", "am", "gear", "carb"),
+                  label = "Span 3", n = 10) %>%
+  spanning_header(span_cols = c(from = "drat", to = "carb"), 
+                  label = "Super Span", level = 2) %>%
+  define(vehicle, label = "Vehicle") %>% 
+  define(mpg, format = "%.1f") %>% 
+  define(disp, visible = FALSE) %>% 
+  define(am, visible = FALSE) 
+
+# Create Report and add table 
+rpt <- create_report(tmp, orientation = "portrait") %>%
+  titles("Table 1.0", "MTCARS Spanning Headers") %>% 
+  add_content(tbl) 
+
+# Write the report
+res <- write_report(rpt)
+
+# View in console
+writeLines(readLines(tmp))
+  
+#                                   Table 1.0
+#                             MTCARS Spanning Headers
+# 
+#                                                         Super Span
+#                                         -----------------------------------------
+#                           Span 1               Span 2               Span 3
+#                           (N=10)               (N=10)               (N=10)
+#                    -------------------- -------------------- --------------------
+# Vehicle               mpg    cyl     hp   drat     wt   qsec     vs   gear   carb
+# ---------------------------------------------------------------------------------
+# Mazda RX4            21.0      6    110    3.9   2.62  16.46      0      4      4
+# Mazda RX4 Wag        21.0      6    110    3.9  2.875  17.02      0      4      4
+# Datsun 710           22.8      4     93   3.85   2.32  18.61      1      4      1
+# Hornet 4 Drive       21.4      6    110   3.08  3.215  19.44      1      3      1
+# Hornet Sportabout    18.7      8    175   3.15   3.44  17.02      0      3      2
+# Valiant              18.1      6    105   2.76   3.46  20.22      1      3      1
+# Duster 360           14.3      8    245   3.21   3.57  15.84      0      3      4
+# Merc 240D            24.4      4     62   3.69   3.19     20      1      4      2
+# Merc 230             22.8      4     95   3.92   3.15   22.9      1      4      2
+# Merc 280             19.2      6    123   3.92   3.44   18.3      1      4      4
+
+
+```
 
 
 

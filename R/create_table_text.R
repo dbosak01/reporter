@@ -156,20 +156,6 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
 }
 
-get_blank_indicator <- function(pg_num, tot_pg, content_blanks) {
-  
-  if (pg_num == 1 & pg_num == tot_pg & content_blanks == "both")
-    blnk_ind <- "both"
-  else if (pg_num == 1 & content_blanks %in% c("both", "above"))
-    blnk_ind <- "above"
-  else if (pg_num == tot_pg & content_blanks %in% c("both", "below"))
-    blnk_ind <- "below"
-  else 
-    blnk_ind <- "none"
-  
-  return(blnk_ind)
-}
-
 #' @noRd
 create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag, 
                               lpg_rows) {
@@ -183,19 +169,19 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   }
   
   rws <- get_table_body(pi$data)
-
+  
   
   ls <- rs$line_size
   if (length(rws) > 0)
     ls <- nchar(rws[1])
-
+  
   
   ttls <- get_titles(ts$titles, ls) 
   ftnts <- get_footnotes(ts$footnotes, ls) 
   #print("Titles")
   #print(ttls)
   
-
+  
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -204,7 +190,7 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
     b <- ""
-
+  
   ret <- c(a, ttls, shdrs, hdrs, rws, ftnts, b)
   
   blnks <- c()
@@ -216,6 +202,9 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   return(ret) 
 }
+
+# Sub-Functions -----------------------------------------------------------
+
 
 #' Get content offsets for table header, titles, footnotes, and content blanks.
 #' Needed to calculate page breaks accurately.
@@ -318,7 +307,8 @@ get_spanning_header <- function(rs, ts, pi) {
   w <- round(pi$col_width / rs$char_width)
   w <- w[cols]
   
-  #print(cols)
+  # print("Cols:")
+  # print(cols)
   #print(w)
 
   # Figure out how many levels there are, 
@@ -336,8 +326,11 @@ get_spanning_header <- function(rs, ts, pi) {
   
   # Get unique levels and sort in decreasing order so we go from top down
   lvls <- sort(unique(lvls), decreasing = TRUE)
-  #print(lvls)
-  #print(slvl)
+  # print("Levels:")
+  # print(lvls)
+  # 
+  # print("Spanning levels:")
+  # print(slvl)
   
   # Create data structure to map spans to columns and columns widths by level
   # - Seed span_num with negative index numbers to identify unspanned columns
@@ -357,7 +350,30 @@ get_spanning_header <- function(rs, ts, pi) {
       
       # Deal with from and to specified spans
       if ("from" %in% names(cl) & "to" %in% names(cl)) {
-        sq <- seq(from = match(cl["from"], cols), to = match(cl["to"], cols))
+        
+        mf <- match(cl["from"], cols)
+        #print(paste("Match From:", mf))
+        
+        # If from variable doesn't exist on page, go to earliest 
+        # column that is not the stub or an id_var
+        if (is.na(mf)) {
+          mf <- 1
+          if (!is.null(ts$stub))
+            mf <- mf + 2
+          for (def in ts$col_defs)
+            if (def$id_var)
+              mf <- mf + 1
+        }
+        
+        mt <- match(cl["to"], cols)
+        #print(paste("Match To:", mt))
+        
+        # If to variable doesn't exist on page, go to last col variable
+        if (is.na(mt))
+          mt <- length(cols)
+        
+        # Get sequence of columns from first spanning var to last
+        sq <- seq(from = mf, to = mt)
         cl <- cols[sq]
       }
       
@@ -544,4 +560,18 @@ get_justify <- function(x) {
   return(ret)
 }
 
+
+get_blank_indicator <- function(pg_num, tot_pg, content_blanks) {
+  
+  if (pg_num == 1 & pg_num == tot_pg & content_blanks == "both")
+    blnk_ind <- "both"
+  else if (pg_num == 1 & content_blanks %in% c("both", "above"))
+    blnk_ind <- "above"
+  else if (pg_num == tot_pg & content_blanks %in% c("both", "below"))
+    blnk_ind <- "below"
+  else 
+    blnk_ind <- "none"
+  
+  return(blnk_ind)
+}
 

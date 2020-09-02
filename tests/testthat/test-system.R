@@ -343,31 +343,27 @@ test_that("test9: Page wrap works as expected.", {
   
   fp <- file.path(base_path, "output/test9.out")
   
-  
-  df <- data.frame(vehicle = rownames(mtcars), mtcars)
-  rownames(df) = NULL
+  dat <- mtcars[1:10, ]
+  df <- data.frame(vehicle = rownames(dat), dat)
   
   tbl <- create_table(df) %>% 
-    # Need to fix bug when spanning header breaks
-    # spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
-    #                 label = "Span 1", label_align = "center", n = 10) %>% 
-    # spanning_header(span_cols = c("drat", "wt", "qsec"),
-    #                 label = "Span 2", label_align = "center", n = 10) %>%
-    # spanning_header(span_cols = c("vs", "am", "gear", "carb"),
-    #                 label = "Span 3", label_align = "center", n = 10) %>%
+    spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
+                    label = "Span 1", label_align = "center", n = 10) %>%
+    spanning_header(span_cols = c("drat", "wt", "qsec"),
+                    label = "Span 2", label_align = "center", n = 10) %>%
+    spanning_header(span_cols = c("vs", "am", "gear", "carb"),
+                    label = "Span 3", label_align = "center", n = 10) %>%
     # spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
     #                 label_align = "center",
-    #                 level = 2) %>% 
+    #                 level = 2) %>%
     define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
     define(mpg, format = "%.1f") %>% 
-    define(cyl) 
+    define(am, visible = FALSE) %>% 
+    define(vs, page_wrap = TRUE)
   
   rpt <- create_report(fp, orientation = "portrait") %>%
-    options_fixed(editor = "wordpad") %>% 
-    add_content(tbl) %>% 
-    titles("Table 1.0", "MTCARS Subset Test")
-  
-  #print(rpt)
+    titles("Table 1.0", "MTCARS Spanning Header") %>% 
+    add_content(tbl) 
   
   res <- write_report(rpt)
   
@@ -393,12 +389,15 @@ test_that("test10: Page wrap with spanning header works as expected.", {
                     label = "Span 2", label_align = "center", n = 10) %>%
     spanning_header(span_cols = c("vs", "am", "gear", "carb"),
                     label = "Span 3", label_align = "center", n = 10) %>%
-    # spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
-    #                 label_align = "center",
-    #                 level = 2) %>%
+    # spanning_header(span_cols = c("drat", "wt", "qsec", "vs", "am", "gear", "carb"), 
+    #                 label = "Super Span", level = 2) %>%
+    spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
+                    label_align = "center",
+                    level = 2) %>%
     define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
     define(mpg, format = "%.1f") %>% 
-    define(cyl) 
+    define(wt, page_wrap = TRUE) %>% 
+    define(vs, page_wrap = TRUE)
   
   rpt <- create_report(fp, orientation = "portrait") %>%
     options_fixed(editor = "wordpad") %>% 
