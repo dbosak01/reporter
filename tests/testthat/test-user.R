@@ -43,12 +43,12 @@ test_that("user1: demo table works.", {
     data_demo %>%
     group_by(ARM) %>%
     summarise(across(.cols = AGE,
-                     .fns = list(N      = ~ n_fmt(.),
-                                 Mean   = ~ mean_sd(mean(.), sd(.)),
-                                 Median = ~ median_fmt(median(.)),
-                                 `Q1 - Q3` = ~ quantile_range(quantile(., 0.25),
+                     .fns = list(N      = ~ fmt_n(.),
+                                 Mean   = ~ fmt_mean_sd(mean(.), sd(.)),
+                                 Median = ~ fmt_median(median(.)),
+                                 `Q1 - Q3` = ~ fmt_quantile_rng(quantile(., 0.25),
                                                               quantile(., 0.75)),
-                                 Range  = ~ range_fmt(range(.))
+                                 Range  = ~ fmt_range(range(.))
                      ))) %>%
     pivot_longer(-ARM,
                  names_to  = c("var", "label"),
@@ -72,10 +72,10 @@ test_that("user1: demo table works.", {
                 values_fill = 0) %>%
     mutate(label = factor(label, levels = names(sex_decode),
                           labels = sex_decode),
-           `ARM A` = cnt_pct(`ARM A`, arm_pop["ARM A"]),
-           `ARM B` = cnt_pct(`ARM B`, arm_pop["ARM B"]),
-           `ARM C` = cnt_pct(`ARM C`, arm_pop["ARM C"]),
-           `ARM D` = cnt_pct(`ARM D`, arm_pop["ARM D"]))
+           `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+           `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+           `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+           `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"]))
 
 
 
@@ -92,10 +92,10 @@ test_that("user1: demo table works.", {
                 values_fill = 0) %>%
     mutate(label = factor(label, levels = names(race_decode),
                           labels = race_decode),
-           `ARM A` = cnt_pct(`ARM A`, arm_pop["ARM A"]),
-           `ARM B` = cnt_pct(`ARM B`, arm_pop["ARM B"]),
-           `ARM C` = cnt_pct(`ARM C`, arm_pop["ARM C"]),
-           `ARM D` = cnt_pct(`ARM D`, arm_pop["ARM D"])) %>%
+           `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+           `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+           `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+           `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"])) %>%
     arrange(var, label)
 
 
@@ -175,12 +175,12 @@ test_that("user2: demo table with stub works.", {
     data_demo %>%
     group_by(ARM) %>%
     summarise(across(.cols = AGE,
-                     .fns = list(N      = ~ n_fmt(.),
-                                 Mean   = ~ mean_sd(mean(.), sd(.)),
-                                 Median = ~ median_fmt(median(.)),
-                                 `Q1 - Q3` = ~ quantile_range(quantile(., 0.25),
+                     .fns = list(N      = ~ fmt_n(.),
+                                 Mean   = ~ fmt_mean_sd(mean(.), sd(.)),
+                                 Median = ~ fmt_median(median(.)),
+                                 `Q1 - Q3` = ~ fmt_quantile_rng(quantile(., 0.25),
                                                               quantile(., 0.75)),
-                                 Range  = ~ range_fmt(range(.))
+                                 Range  = ~ fmt_range(range(.))
                      ))) %>%
     pivot_longer(-ARM,
                  names_to  = c("var", "label"),
@@ -204,10 +204,10 @@ test_that("user2: demo table with stub works.", {
                 values_fill = 0) %>%
     mutate(label = factor(label, levels = names(sex_decode),
                           labels = sex_decode),
-           `ARM A` = cnt_pct(`ARM A`, arm_pop["ARM A"]),
-           `ARM B` = cnt_pct(`ARM B`, arm_pop["ARM B"]),
-           `ARM C` = cnt_pct(`ARM C`, arm_pop["ARM C"]),
-           `ARM D` = cnt_pct(`ARM D`, arm_pop["ARM D"]))
+           `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+           `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+           `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+           `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"]))
   
   
   
@@ -224,10 +224,10 @@ test_that("user2: demo table with stub works.", {
                 values_fill = 0) %>%
     mutate(label = factor(label, levels = names(race_decode),
                           labels = race_decode),
-           `ARM A` = cnt_pct(`ARM A`, arm_pop["ARM A"]),
-           `ARM B` = cnt_pct(`ARM B`, arm_pop["ARM B"]),
-           `ARM C` = cnt_pct(`ARM C`, arm_pop["ARM C"]),
-           `ARM D` = cnt_pct(`ARM D`, arm_pop["ARM D"])) %>%
+           `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+           `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+           `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+           `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"])) %>%
     arrange(var, label)
   
   
@@ -306,4 +306,41 @@ test_that("user3: listings works.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
-
+# 
+# test_that("user4: Adverse Events table works.", {
+#   
+#   
+#   
+#   # Data Filepath
+#   dir_data <- file.path(base_path, "data")
+#   
+#   fp <- file.path(base_path, "user/user4.out")
+#   
+#   
+#   # Load Data
+#   data_ae   <- file.path(dir_data, "adae.rds") %>%
+#     readRDS()
+#   
+#   # Define table
+#   tbl <- create_table(data_demo) %>% 
+#     define(USUBJID, id_var = TRUE) 
+#   
+#   # Define Report
+#   rpt <- create_report(fp) %>%
+#     titles("Table 2.0",
+#            "Demographics Dataset") %>%
+#     add_content(tbl, align = "left") %>% 
+#     page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")
+#   
+#   # Write out report
+#   res <- write_report(rpt)
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   
+#   lns <- readLines(fp)
+#   
+#   expect_equal(length(lns), res$pages * res$line_count)
+#   
+# })
+# 
+# 

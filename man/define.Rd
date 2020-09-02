@@ -9,7 +9,6 @@ define(
   var,
   label = NULL,
   format = NULL,
-  col_type = NULL,
   align = NULL,
   label_align = NULL,
   width = NULL,
@@ -33,8 +32,6 @@ define(
 \item{format}{The format to use for the column data.  The format can 
 be a string format, a formatting function, or a format object from the 
 \strong{fmtr} package.}
-
-\item{col_type}{The column type.}
 
 \item{align}{The column alignment.  Value values are "left", "right", and
 "center".}

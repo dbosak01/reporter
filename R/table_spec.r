@@ -53,7 +53,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' @param format The format to use for the column data.  The format can 
 #' be a string format, a formatting function, or a format object from the 
 #' \strong{fmtr} package.
-#' @param col_type The column type.
+# @param col_type The column type.
 #' @param align The column alignment.  Value values are "left", "right", and
 #' "center".
 #' @param label_align How to align the header labels for this column.
@@ -77,7 +77,7 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
 #' If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.
 #' @export
-define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
+define <- function(x, var, label = NULL, format = NULL, #col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
@@ -98,7 +98,7 @@ define <- function(x, var, label = NULL, format = NULL, col_type = NULL,
   def$var_c = var_c
   def$label = label
   def$format = format
-  def$col_type = col_type
+  #def$col_type = col_type  # Not fully defined yet, but not ready to kill
   def$align = align
   def$label_align = if (is.null(label_align) & !is.null(align))
                                 align else label_align

@@ -389,11 +389,12 @@ test_that("test10: Page wrap with spanning header works as expected.", {
                     label = "Span 2", label_align = "center", n = 10) %>%
     spanning_header(span_cols = c("vs", "am", "gear", "carb"),
                     label = "Span 3", label_align = "center", n = 10) %>%
-    # spanning_header(span_cols = c("drat", "wt", "qsec", "vs", "am", "gear", "carb"), 
-    #                 label = "Super Span", level = 2) %>%
     spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
                     label_align = "center",
                     level = 2) %>%
+    # Also works
+    # spanning_header(span_cols = c("drat", "wt", "qsec", "vs", "am", "gear", "carb"), 
+    #                 label = "Super Span", level = 2) %>%
     define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
     define(mpg, format = "%.1f") %>% 
     define(wt, page_wrap = TRUE) %>% 
@@ -620,12 +621,12 @@ test_that("test17: Simple regulatory table works as expected.", {
     dat %>%
     group_by(group) %>%
     summarise(across(.cols = mpg,
-                     .fns = list(N      = ~ n_fmt(.),
-                                 Mean   = ~ mean_sd(mean(.), sd(.)),
-                                 Median = ~ median_fmt(median(.)),
-                                 `Q1 - Q3` = ~ quantile_range(quantile(., 0.25),
+                     .fns = list(N      = ~ fmt_n(.),
+                                 Mean   = ~ fmt_mean_sd(mean(.), sd(.)),
+                                 Median = ~ fmt_median(median(.)),
+                                 `Q1 - Q3` = ~ fmt_quantile_rng(quantile(., 0.25),
                                                               quantile(., 0.75)),
-                                 Range  = ~ range_fmt(range(.))
+                                 Range  = ~ fmt_range(range(.))
                      ))) %>%
     pivot_longer(-group,
                  names_to  = c("var", "label"),
@@ -646,8 +647,8 @@ test_that("test17: Simple regulatory table works as expected.", {
     pivot_wider(names_from  = group,
                 values_from = n_cyl,
                 values_fill = 0) %>%
-    mutate(A = cnt_pct(A, group_pop["A"]),
-           B = cnt_pct(B, group_pop["B"])) %>% 
+    mutate(A = fmt_cnt_pct(A, group_pop["A"]),
+           B = fmt_cnt_pct(B, group_pop["B"])) %>% 
     arrange(label)
   
   

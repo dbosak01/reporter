@@ -13,7 +13,7 @@ race_decode <- c("WHITE" = "White",
 
 
 # Range formatting 
-range_fmt <- function(x) {
+fmt_range <- function(x) {
   
   if (length(x) != 2) {
     stop("Input vector length must be equal to 2.")  
@@ -24,7 +24,7 @@ range_fmt <- function(x) {
   return(ret)
 }
 
-n_fmt <- function(x) {
+fmt_n <- function(x) {
  
   ret <- as.character(sum(!is.na(x)))
   
@@ -32,7 +32,7 @@ n_fmt <- function(x) {
 }
 
 # Range formatting 
-quantile_range <- function(x, y) {
+fmt_quantile_rng <- function(x, y) {
   
   
   ret <- paste(sprintf("%.1f", x), "-", sprintf("%.1f", y))
@@ -40,7 +40,7 @@ quantile_range <- function(x, y) {
   return(ret)
 }
 
-median_fmt <- function(x) {
+fmt_median <- function(x) {
  
   
    ret <- sprintf("%.1f", x)
@@ -51,7 +51,7 @@ median_fmt <- function(x) {
 
 
 # Age categorization
-age_cat <- Vectorize(function(x) {  
+fmt_age_cat <- Vectorize(function(x) {  
   
   ret <- NA
   
@@ -76,7 +76,7 @@ age_cat <- Vectorize(function(x) {
 
 
 ## Generate unique subject id ##
-usubjid_fmt <- function(study, site, subjid) {
+fmt_usubjid <- function(study, site, subjid) {
   
   ret <- paste0(toupper(study), "-", toupper(site), "-", subjid)
   
@@ -85,7 +85,7 @@ usubjid_fmt <- function(study, site, subjid) {
 
 
 # Count and percent function
-cnt_pct <- function(cnt, denom) {
+fmt_cnt_pct <- function(cnt, denom) {
   
   # Calculate Percent
   pcts <- cnt/denom * 100
@@ -100,7 +100,7 @@ cnt_pct <- function(cnt, denom) {
 }
 
 
-mean_sd <- function(x, y) {
+fmt_mean_sd <- function(x, y) {
   
   # Format result
   ret <- sprintf("%.1f (%.1f)", x, y)
@@ -108,7 +108,7 @@ mean_sd <- function(x, y) {
   return(ret)
 }
 
-sex_fmt <- Vectorize(function(x) {
+fmt_sex <- Vectorize(function(x) {
   
   ret <- NA
   
@@ -127,7 +127,7 @@ sex_fmt <- Vectorize(function(x) {
   return(ret)
 })
 
-race_fmt <- Vectorize(function(x) {
+fmt_race <- Vectorize(function(x) {
   
   ret <- NA
   

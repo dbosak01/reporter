@@ -23,8 +23,9 @@
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
 #' report_spec object, but will be required to print the report.
-#' @param output_type The report output type.  Valid values are "text" and 
-#' "docx".  Default is "text".
+#' @param output_type The report output type.  Currently, the only valid value 
+#' is "text".  Default is "text".  Will eventually support "RTF", "PDF", and 
+#' "DOCX".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param uom Specifies the units of measurement.  This setting will 
@@ -280,6 +281,11 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @param left The left margin.
 #' @param right The right margin.
 #' @param min_margin The printer minimum margin.
+#' @param blank_margins When this option is TRUE, **rptr** will use blank 
+#' spaces and blank rows to create left and top margins, rather than rely 
+#' on the editor to set margins.  When used, editor margins
+#' should be set to zero.  Valid values are TRUE and FALSE. Default is
+#' TRUE.
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
@@ -292,7 +298,8 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL, 
-                           min_margin = NULL) {
+                           min_margin = NULL,
+                           blank_margins = TRUE) {
 
   if (!is.null(top)) {
     if (is.na(top) | top < 0 | !is.numeric(top)){
@@ -343,6 +350,8 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   }
   else
     x$min_margin = if (x$uom == "inches") .394 else 1
+  
+  x$blank_margins <- blank_margins
 
   return(x)
 }
@@ -522,10 +531,10 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' @param x The report spec object.
 #' @param left The left page footer text.  May be a single string or a vector
 #' of strings.
-#' @param right The right page footer text.  May be a single string or a vector
-#' of strings.
 #' @param center The center page footer text.  May be a single string or a
 #' vector of strings.
+#' @param right The right page footer text.  May be a single string or a vector
+#' of strings.
 #' @param blank_row Whether to create a blank row above the page footer.
 #' Valid values are 'above' and 'none'.  Default is 'above'.
 #' @return The modified report.
@@ -556,7 +565,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' # Send report to console 
 #' writeLines(readLines(tmp))
 #' @export
-page_footer <- function(x, left="", right="", center="", blank_row = "above"){
+page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 
   if (length(left) > 5 | length(right) > 5 | length(center) > 5){
     stop("ERROR: Footer string count exceeds limit of 5 strings per section.")

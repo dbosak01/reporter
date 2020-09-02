@@ -10,7 +10,8 @@ set_margins(
   bottom = NULL,
   left = NULL,
   right = NULL,
-  min_margin = NULL
+  min_margin = NULL,
+  blank_margins = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,12 @@ set_margins(
 \item{right}{The right margin.}
 
 \item{min_margin}{The printer minimum margin.}
+
+\item{blank_margins}{When this option is TRUE, **rptr** will use blank 
+spaces and blank rows to create left and top margins, rather than rely 
+on the editor to set margins.  When used, editor margins
+should be set to zero.  Valid values are TRUE and FALSE. Default is
+TRUE.}
 }
 \value{
 The report_spec with margins set as desired.

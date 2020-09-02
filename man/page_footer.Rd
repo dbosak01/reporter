@@ -4,7 +4,7 @@
 \alias{page_footer}
 \title{Add a page footer to the report}
 \usage{
-page_footer(x, left = "", right = "", center = "", blank_row = "above")
+page_footer(x, left = "", center = "", right = "", blank_row = "above")
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -12,11 +12,11 @@ page_footer(x, left = "", right = "", center = "", blank_row = "above")
 \item{left}{The left page footer text.  May be a single string or a vector
 of strings.}
 
-\item{right}{The right page footer text.  May be a single string or a vector
-of strings.}
-
 \item{center}{The center page footer text.  May be a single string or a
 vector of strings.}
+
+\item{right}{The right page footer text.  May be a single string or a vector
+of strings.}
 
 \item{blank_row}{Whether to create a blank row above the page footer.
 Valid values are 'above' and 'none'.  Default is 'above'.}

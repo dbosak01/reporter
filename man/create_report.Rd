@@ -17,8 +17,9 @@ create_report(
 a relative path is acceptable.  This parameter is not required to create the
 report_spec object, but will be required to print the report.}
 
-\item{output_type}{The report output type.  Valid values are "text" and 
-"docx".  Default is "text".}
+\item{output_type}{The report output type.  Currently, the only valid value 
+is "text".  Default is "text".  Will eventually support "RTF", "PDF", and 
+"DOCX".}
 
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}
