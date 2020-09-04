@@ -106,7 +106,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   #print(fdat)
   
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts$col_defs, widths_char)
+  wraps <- get_page_wraps(rs$line_size, ts, widths_char)
   # print("wraps")
   # print(wraps)
 

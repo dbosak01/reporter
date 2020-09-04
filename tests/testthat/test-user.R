@@ -296,41 +296,137 @@ test_that("user3: listings works.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
-# 
-# test_that("user4: Adverse Events table works.", {
-#   
-#   
-#   
-#   # Data Filepath
-#   dir_data <- file.path(base_path, "data")
-#   
-#   fp <- file.path(base_path, "user/user4.out")
-#   
-#   
-#   # Load Data
-#   data_ae   <- file.path(dir_data, "adae.rds") %>%
-#     readRDS()
-#   
-#   # Define table
-#   tbl <- create_table(data_demo) %>% 
-#     define(USUBJID, id_var = TRUE) 
-#   
-#   # Define Report
-#   rpt <- create_report(fp) %>%
-#     titles("Table 2.0",
-#            "Demographics Dataset") %>%
-#     add_content(tbl, align = "left") %>% 
-#     page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")
-#   
-#   # Write out report
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   lns <- readLines(fp)
-#   
-#   expect_equal(length(lns), res$pages * res$line_count)
-#   
-# })
-# 
-# 
+
+test_that("user4: Adverse Events table works.", {
+
+  #devtools::install_github("https://github.com/dbosak01/fmtr")
+  library(dplyr)
+  library(tidyr)
+
+  # Data Filepath
+  dir_data <- file.path(base_path, "data")
+
+  fp <- file.path(base_path, "user/user4.out")
+
+  dp <- file.path(dir_data, "ADAE.csv")
+  
+  dat <- read.csv(dp)
+  
+  
+  # Get population counts
+  arm_pop <- table(dat$TRTA)  
+  
+  # Subset ADSL for needed rows and columns
+  df_sub <- dat %>% 
+    select(TRTA, AESEV, AESEVN, AEREL, AESOC, AEDECOD) 
+  
+  
+  # Get counts and percents 
+  df1 <- df_sub %>% 
+    select(-AESEV, -AEREL) %>% 
+    group_by(TRTA, AESOC, AEDECOD, AESEVN) %>% 
+    summarize(cnt = n()) %>% 
+    pivot_wider(names_from = c(TRTA, AESEVN),
+                values_from = cnt, 
+                values_fill = 0) %>% 
+    transmute(AESOC = AESOC, 
+              AEDECOD = stri_trans_totitle(AEDECOD),
+              `ARM A_1` = fmt_cnt_pct(`ARM A_1`, arm_pop["ARM A"]),
+              `ARM A_2` = fmt_cnt_pct(`ARM A_2`, arm_pop["ARM A"]),
+              `ARM A_3` = fmt_cnt_pct(0, arm_pop["ARM A"]),
+              `ARM B_1` = fmt_cnt_pct(`ARM B_1`, arm_pop["ARM B"]),
+              `ARM B_2` = fmt_cnt_pct(`ARM B_2`, arm_pop["ARM B"]),
+              `ARM B_3` = fmt_cnt_pct(0, arm_pop["ARM B"]),
+              `ARM C_1` = fmt_cnt_pct(`ARM C_1`, arm_pop["ARM C"]),
+              `ARM C_2` = fmt_cnt_pct(`ARM C_2`, arm_pop["ARM C"]),
+              `ARM C_3` = fmt_cnt_pct(0, arm_pop["ARM C"]),
+              `ARM D_1` = fmt_cnt_pct(`ARM D_1`, arm_pop["ARM D"]), 
+              `ARM D_2` = fmt_cnt_pct(`ARM D_2`, arm_pop["ARM D"]), 
+              `ARM D_3` = fmt_cnt_pct(`ARM D_3`, arm_pop["ARM D"])) %>% 
+    ungroup() 
+  
+  
+  # Get counts and percents for All Adverse Events
+  df2 <- df_sub %>% 
+    select(-AESEV, -AEREL,-AESOC, -AEDECOD,) %>% 
+    group_by(TRTA, AESEVN) %>% 
+    summarize(cnt = n()) %>% 
+    pivot_wider(names_from = c(TRTA, AESEVN),
+                values_from = cnt, 
+                values_fill = 0) %>% 
+    ungroup() 
+  
+  col_template <- paste0(c(rep("ARM A_", 3), rep("ARM B_", 3), rep("ARM C_", 3),
+                           rep("ARM D_", 3)), rep(c(1, 2, 3), 3))
+  
+  for (nm in col_template) {
+    if (!nm %in% names(df2))
+      df2[[nm]] <- 0
+  }
+  
+  df2 <- df2 %>% 
+    transmute(AESOC = "All System Organ Classes",
+              AEDECOD = "All Adverse Events", 
+              `ARM A_1` = fmt_cnt_pct(`ARM A_1`, arm_pop["ARM A"]),
+              `ARM A_2` = fmt_cnt_pct(`ARM A_2`, arm_pop["ARM A"]),
+              `ARM A_3` = fmt_cnt_pct(`ARM A_3`, arm_pop["ARM A"]),
+              `ARM B_1` = fmt_cnt_pct(`ARM B_1`, arm_pop["ARM B"]),
+              `ARM B_2` = fmt_cnt_pct(`ARM B_2`, arm_pop["ARM B"]),
+              `ARM B_3` = fmt_cnt_pct(`ARM B_3`, arm_pop["ARM B"]),
+              `ARM C_1` = fmt_cnt_pct(`ARM C_1`, arm_pop["ARM C"]),
+              `ARM C_2` = fmt_cnt_pct(`ARM C_2`, arm_pop["ARM C"]),
+              `ARM C_3` = fmt_cnt_pct(`ARM C_3`, arm_pop["ARM C"]),
+              `ARM D_1` = fmt_cnt_pct(`ARM D_1`, arm_pop["ARM D"]), 
+              `ARM D_2` = fmt_cnt_pct(`ARM D_2`, arm_pop["ARM D"]), 
+              `ARM D_3` = fmt_cnt_pct(`ARM D_3`, arm_pop["ARM D"]))
+  
+  
+  final <- bind_rows(df2, df1)
+  
+  tbl <- create_table(final, first_row_blank = TRUE) %>% 
+    spanning_header(c("ARM A_1", "ARM A_2", "ARM A_3"), label = "ARM A", n = arm_pop["ARM A"]) %>% 
+    spanning_header(c("ARM B_1", "ARM B_2", "ARM B_3"), label = "ARM B", n = arm_pop["ARM B"]) %>% 
+    spanning_header(c("ARM C_1", "ARM C_2", "ARM C_3"), label = "ARM C", n = arm_pop["ARM C"]) %>% 
+    spanning_header(c("ARM D_1", "ARM D_2", "ARM D_3"), label = "ARM D", n = arm_pop["ARM D"]) %>% 
+    stub(vars = c("AESOC", "AEDECOD"), label = "System Organ Class\n   Preferred Term") %>% 
+    define(AESOC, blank_after = TRUE, label_row = TRUE) %>% 
+    define(AEDECOD, indent = .25) %>% 
+    define(`ARM A_1`, align = "center", label = "Mild") %>% 
+    define(`ARM A_2`, align = "center", label = "Mod**") %>% 
+    define(`ARM A_3`, align = "center", label = "Severe") %>% 
+    define(`ARM B_1`, align = "center", label = "Mild", page_wrap = TRUE) %>% 
+    define(`ARM B_2`, align = "center", label = "Mod**") %>% 
+    define(`ARM B_3`, align = "center", label = "Severe") %>% 
+    define(`ARM C_1`, align = "center", label = "Mild", page_wrap = TRUE) %>% 
+    define(`ARM C_2`, align = "center", label = "Mod**") %>% 
+    define(`ARM C_3`, align = "center", label = "Severe") %>% 
+    define(`ARM D_1`, align = "center", label = "Mild", page_wrap = TRUE) %>% 
+    define(`ARM D_2`, align = "center", label = "Mod**") %>% 
+    define(`ARM D_3`, align = "center", label = "Severe") 
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client: Experis", "Study: BBC") %>% 
+    titles("Table 1.0", "Adverse Events by Severity", "Safety Population") %>% 
+    add_content(tbl) %>% 
+    footnotes(paste("Date Produced:", Sys.time(), ";  SAS Program: Table3_0.R"),
+              paste("* Total Reporting is defined as number of subjects", 
+                    "who reported at least one adverse event."),
+              "** Mod = Moderate",
+              paste("# Episodes is defined as the total number of occurances",
+                    "of adverse events"),
+              paste("% is defined as Number of Subjects divided by Total Reporting"),
+              "Note: Adverse events were coded using MedDRA Version 9.1") %>% 
+    page_footer(Sys.time(), "Confidential", "Page [pg] of [tpg]")
+  
+  res <- write_report(rpt) 
+  
+
+  expect_equal(file.exists(fp), TRUE)
+
+  lns <- readLines(fp)
+
+  expect_equal(length(lns), res$pages * res$line_count)
+
+})
+
+

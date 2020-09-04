@@ -610,7 +610,8 @@ test_that("test17: Simple regulatory table works as expected.", {
   dat <- mtcars
   
   dat$group <- replicate(nrow(dat), sample(c("A", "B"), 1), simplify = TRUE)
-  dat$cyl <- factor(dat$cyl, levels = c(8, 6, 4), labels = c("8 Cylinder", "6 Cylinder", "4 Cylinder")) 
+  dat$cyl <- factor(dat$cyl, levels = c(8, 6, 4), 
+                    labels = c("8 Cylinder", "6 Cylinder", "4 Cylinder")) 
   group_pop <- table(dat$group)
   
   

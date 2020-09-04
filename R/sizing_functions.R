@@ -76,12 +76,18 @@
 
 #' Gets the page wraps
 #' @noRd
-get_page_wraps <- function(line_size, defs, widths) {
+get_page_wraps <- function(line_size, ts, widths) {
+  
+  defs <- ts$col_defs
   
   # Get ID variable from definitions
   # These need to be shown on each page
   # Also get page wraps
-  id_vars <- c()
+  if (!is.null(ts$stub)) 
+    id_vars <- c("stub")
+  else
+    id_vars <- c()
+  
   wraps <- c()
   nms <- c()
   for (def in defs) {
