@@ -1,10 +1,8 @@
 library(testthat)
 library(rptr)
 library(fmtr)
-library(haven)
 library(dplyr)
 library(tidyr)
 library(magrittr)
-library(tibble)
 
 test_check("rptr")

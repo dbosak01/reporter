@@ -8,11 +8,6 @@ test_that("user1: demo table works.", {
 
   library(tidyr)
   library(dplyr)
-  library(haven)
-  library(tibble)
-
-  source(file.path(base_path, "code/formats.R"))
-
 
   # Data Filepath
   dir_data <- file.path(base_path, "data")
@@ -21,8 +16,9 @@ test_that("user1: demo table works.", {
   
 
   # Load Data
-  data_demo   <- file.path(dir_data, "dm.sas7bdat") %>%
-    read_sas() 
+  data_demo   <- file.path(dir_data, "dm.csv") %>%
+    read.csv() 
+  
   
   data_demo <- subset(data_demo, data_demo$ARM != "SCREEN FAILURE")
 
@@ -36,7 +32,7 @@ test_that("user1: demo table works.", {
                    "NATIVE AMERICAN" = "Native American",
                    "UNKNOWN" = "Unknown")
 
-  arm_pop <- data_demo %>% count(ARM) %>% deframe()
+  arm_pop <- table(data_demo$ARM) 
 
 
   demo_age <-
@@ -44,11 +40,10 @@ test_that("user1: demo table works.", {
     group_by(ARM) %>%
     summarise(across(.cols = AGE,
                      .fns = list(N      = ~ fmt_n(.),
-                                 Mean   = ~ fmt_mean_sd(mean(.), sd(.)),
-                                 Median = ~ fmt_median(median(.)),
-                                 `Q1 - Q3` = ~ fmt_quantile_rng(quantile(., 0.25),
-                                                              quantile(., 0.75)),
-                                 Range  = ~ fmt_range(range(.))
+                                 Mean   = ~ fmt_mean_sd(.),
+                                 Median = ~ fmt_median(.),
+                                 `Q1 - Q3` = ~ fmt_quantile_range(.),
+                                 Range  = ~ fmt_range(.)
                      ))) %>%
     pivot_longer(-ARM,
                  names_to  = c("var", "label"),
@@ -140,10 +135,7 @@ test_that("user2: demo table with stub works.", {
   
   library(tidyr)
   library(dplyr)
-  library(haven)
-  library(tibble)
   
-  source(file.path(base_path, "code/formats.R"))
   
   
   # Data Filepath
@@ -153,8 +145,8 @@ test_that("user2: demo table with stub works.", {
   
   
   # Load Data
-  data_demo   <- file.path(dir_data, "dm.sas7bdat") %>%
-    read_sas() 
+  data_demo   <- file.path(dir_data, "dm.csv") %>%
+    read.csv() 
   
   data_demo <- subset(data_demo, data_demo$ARM != "SCREEN FAILURE")
   
@@ -168,7 +160,7 @@ test_that("user2: demo table with stub works.", {
                    "NATIVE AMERICAN" = "Native American",
                    "UNKNOWN" = "Unknown")
   
-  arm_pop <- data_demo %>% count(ARM) %>% deframe()
+  arm_pop <- table(data_demo$ARM) 
   
   
   demo_age <-
@@ -176,11 +168,10 @@ test_that("user2: demo table with stub works.", {
     group_by(ARM) %>%
     summarise(across(.cols = AGE,
                      .fns = list(N      = ~ fmt_n(.),
-                                 Mean   = ~ fmt_mean_sd(mean(.), sd(.)),
-                                 Median = ~ fmt_median(median(.)),
-                                 `Q1 - Q3` = ~ fmt_quantile_rng(quantile(., 0.25),
-                                                              quantile(., 0.75)),
-                                 Range  = ~ fmt_range(range(.))
+                                 Mean   = ~ fmt_mean_sd(.),
+                                 Median = ~ fmt_median(.),
+                                 `Q1 - Q3` = ~ fmt_quantile_range(.),
+                                 Range  = ~ fmt_range(.)
                      ))) %>%
     pivot_longer(-ARM,
                  names_to  = c("var", "label"),
@@ -273,7 +264,6 @@ test_that("user2: demo table with stub works.", {
 test_that("user3: listings works.", {
   
 
-  library(haven)
   
   # Data Filepath
   dir_data <- file.path(base_path, "data")
@@ -282,8 +272,8 @@ test_that("user3: listings works.", {
   
   
   # Load Data
-  data_demo   <- file.path(dir_data, "dm.sas7bdat") %>%
-    read_sas() 
+  data_demo   <- file.path(dir_data, "dm.csv") %>%
+    read.csv() 
 
   # Define table
   tbl <- create_table(data_demo) %>% 

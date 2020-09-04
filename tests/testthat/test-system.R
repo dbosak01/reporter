@@ -601,9 +601,6 @@ test_that("test17: Simple regulatory table works as expected.", {
   
   library(tidyr)
   library(dplyr)
-  library(tibble)
- # library(fmtr)
-  source(file.path(base_path, "./code/formats.R"))
   
   fp <- file.path(base_path, "output/test17.out")
   
@@ -614,7 +611,7 @@ test_that("test17: Simple regulatory table works as expected.", {
   
   dat$group <- replicate(nrow(dat), sample(c("A", "B"), 1), simplify = TRUE)
   dat$cyl <- factor(dat$cyl, levels = c(8, 6, 4), labels = c("8 Cylinder", "6 Cylinder", "4 Cylinder")) 
-  group_pop <- dat %>% count(group) %>% deframe()
+  group_pop <- table(dat$group)
   
   
   dat_mpg <-
@@ -622,11 +619,10 @@ test_that("test17: Simple regulatory table works as expected.", {
     group_by(group) %>%
     summarise(across(.cols = mpg,
                      .fns = list(N      = ~ fmt_n(.),
-                                 Mean   = ~ fmt_mean_sd(mean(.), sd(.)),
-                                 Median = ~ fmt_median(median(.)),
-                                 `Q1 - Q3` = ~ fmt_quantile_rng(quantile(., 0.25),
-                                                              quantile(., 0.75)),
-                                 Range  = ~ fmt_range(range(.))
+                                 Mean   = ~ fmt_mean_sd(.),
+                                 Median = ~ fmt_median(.),
+                                 `Q1 - Q3` = ~ fmt_quantile_range(.),
+                                 Range  = ~ fmt_range(.)
                      ))) %>%
     pivot_longer(-group,
                  names_to  = c("var", "label"),
