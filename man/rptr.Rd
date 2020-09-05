@@ -3,10 +3,10 @@
 \docType{package}
 \name{rptr}
 \alias{rptr}
-\title{rptr: A package for creating printable reports}
+\title{rptr: A package for creating statistical reports}
 \description{
-The rptr package creates tabular reports in ASCII text.
-    Will soon support docx format.
+The rptr package creates tabular reports in text output format.
+    Will soon support RTF, PDF, and DOCX format.
 }
 \section{rptr functions}{
 

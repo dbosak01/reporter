@@ -90,3 +90,33 @@ test_that("add_content works as expected.", {
 
 })
 
+
+test_that("create_report parameter checks work as expected.", {
+  
+  
+  expect_error(create_report(uom = "fork"))
+  expect_error(create_report(output_type = "fork"))
+  expect_error(create_report(orientation = "fork"))
+  expect_error(create_report(paper_size = "fork"))
+  
+  
+  rpt <- create_report()
+  expect_error(write_report(rpt))
+  
+  expect_error(write_report("fork"))
+  expect_error(write_report(NA))
+  
+})
+
+
+test_that("options_fixed parameter checks work as expected.", {
+  
+  
+  rpt <- create_report()
+  
+  expect_error(options_fixed(rpt, editor = "fork"))
+  expect_error(options_fixed(rpt, cpuom = -2))
+  expect_error(options_fixed(rpt, lpuom = 2356))
+  
+})
+

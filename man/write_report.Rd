@@ -7,10 +7,10 @@
 write_report(x)
 }
 \arguments{
-\item{x}{The report_spec object to write.}
+\item{x}{The report object to write.}
 }
 \value{
-The report spec.
+The report spec, with settings modified during writing.
 }
 \description{
 This function writes a report_spec object to the file system, using the

@@ -77,7 +77,6 @@ description of their use.  For additional information, see the help text:
 ### Table functions
 
 * `create_table()`: Define a table object  
-* `table_options()`: Set options for the table  
 * `titles()`: Set titles for the table  
 * `footnotes()`: Set footnotes for the table  
 * `spanning_header()`: Define a spanning header  

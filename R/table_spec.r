@@ -4,21 +4,19 @@
 # Table Spec Functions ---------------------------------------------------------
 #' A function to create a table_spec object
 #' @param x The data frame to create a table spec for.
-#' @param n_format The format function to apply to the header n label.
-#' @param page_var A variable in the data frame to use for a page variable.
 #' @param show_cols Whether to show all column by default.  Valid values are
 #' "all", "none", or a vector of column names.  "all" means show all columns 
 #' by default, unless overridden by the column definitions.  
 #' "none" means don't show any 
 #' columns unless specified in the column definitions.  If a vector of column
-#' names is supplied, those columns will be shown in the report, whether
-#' or not a definition is supplied.
+#' names is supplied, those columns will be shown in the report in the order
+#' specified, whether or not a definition is supplied.  
 #' @param first_row_blank Whether to place a blank row under the table header.
+#' @param n_format The format function to apply to the header n label.
 #' @param headerless Whether to create a headerless table.  Default is FALSE. 
 #' @export
-create_table <- function(x, n_format = upcase_parens, page_var = NULL,
-                         show_cols = "all", first_row_blank=FALSE, 
-                         headerless = FALSE) {
+create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
+                         n_format = upcase_parens, headerless = FALSE) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -34,7 +32,6 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 
   ret$data <- x
   ret$n_format <- n_format
-  ret$page_var <- page_var
   ret$col_defs <- list()
   ret$col_spans <- list()
   ret$show_cols <- show_cols
@@ -46,7 +43,16 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 
 }
 
-#' Defines a column specification
+#' @title Defines a column specification for a table
+#' @description A function to define the specification for a table column.
+#' @details 
+#' Column definitions are optional.  By default, all columns in the data
+#' are displayed in the order and with the formatting attributes assigned.
+#' The \strong{define} function is used to provide additional control over
+#' the columns.  For example, you may use the \strong{define} function
+#' to assign formatting properties, a label, and an "N=" population count
+#' for the column header. See the parameters below for additional options.
+#' 
 #' @param x The table spec.
 #' @param var The variable to define a column for.
 #' @param label The label to use for the column header.
@@ -76,6 +82,8 @@ create_table <- function(x, n_format = upcase_parens, page_var = NULL,
 #' @param label_row Whether the values of the variable should be used to
 #' create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
 #' If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.
+#' @seealso \code{\link{create_table}} to create a table, and 
+#' \link{table_options} to see define options illustrated.
 #' @export
 define <- function(x, var, label = NULL, format = NULL, #col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
@@ -223,23 +231,72 @@ stub <- function(x, vars, label = "", label_align = NULL,
   return(x)
 }
 
-#' Defines options for the table
+# *Comment out for now.  Basically useless.  Everything is on the create_table()
+# Defines options for the table
+# @param x The table spec.
+# @param first_row_blank Whether to create a blank on the first row after the
+# table header.
+# @export
+# table_options <- function(x, first_row_blank=FALSE){
+# 
+# 
+#   x$first_row_blank = first_row_blank
+# 
+# 
+# }
+
+#' @title Prints the table spec
+#' @description A function to print the table spec.
+#' The \strong{print} function will print the table spec primarily in list 
+#' format.  The exception to list format is the data parameter, which will
+#' be printed in data frame/tibble format.
 #' @param x The table spec.
-#' @param first_row_blank Whether to create a blank on the first row after the
-#' table header.
-#' @export
-table_options <- function(x, first_row_blank=FALSE){
-
-
-  x$first_row_blank = first_row_blank
-
-
-}
-
-#' Prints the table spec
-#' @param x The table spec.
-#' @param ... Additional parameters.
+#' @param ... Additional parameters to pass to the underlying print function.
+#' @seealso 
+#' \code{\link{create_table}} function to create a table specification.
 #' @return The table spec, invisibly.
+#' @examples 
+#' tbl <- create_table(mtcars)
+#' print(tbl)
+#' 
+#' # $data
+#' # mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#' # Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#' # Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#' # Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#' # Hornet 4 Drive    21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+#' # Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+#' # Valiant           18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+#' # Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+#' # Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+#' # Merc 230          22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+#' # Merc 280          19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+#' # [ reached 'max' / getOption("max.print") -- omitted 22 rows ]
+#' # 
+#' # $n_format
+#' # function(x) {
+#' #   
+#' #   ret <- paste0("\n(N=", x, ")")
+#' #   
+#' #   return(ret)
+#' #   
+#' # }
+#' # <environment: namespace:rptr>
+#' #   
+#' #   $col_defs
+#' # list()
+#' # 
+#' # $col_spans
+#' # list()
+#' # 
+#' # $show_cols
+#' # [1] "all"
+#' # 
+#' # $first_row_blank
+#' # [1] FALSE
+#' # 
+#' # $headerless
+#' # [1] FALSE
 #' @export
 print.table_spec <- function(x, ...){
   
@@ -262,7 +319,61 @@ print.table_spec <- function(x, ...){
   invisible(x)
 }
 
-# ts <- create_table(mtcars[1:10, ])
-# ts
-# rpt <- create_report("fork.out") %>% add_content(ts)
-# rpt
+
+# Formats ----------------------------------------------------------------------
+
+
+#' @title Functions to format the population label
+#' @description These functions are used to format the "N=" population label
+#' on column headers.  
+#' @details Which function to use to format the population label is specified
+#' on the \strong{n_format} parameter on the \code{\link{create_table}} function.
+#' These formatting functions provide several options for formatting the "N=", 
+#' including whether the "N" should be upper case or lower case, and whether
+#' or not to put the value in parenthesis.  If one of these options does not 
+#' meet the specifications for your report, you may also write your own 
+#' formatting function and pass it to the \strong{n_format} function.  
+#' @usage lowcase_parens(x)
+#' @usage upcase_parens(x)
+#' @usage lowcase_n(x)
+#' @usage upcase_n(x)
+#' @aliases lowcase_parens upcase_parens lowcase_n upcase_n
+#' @seealso 
+#' \code{\link{create_table}} function to create a table.
+#' @param x Population count
+#' @export
+lowcase_parens <- function(x) {
+  
+  ret <- paste0("\n(n=", x, ")")
+  
+  return(ret)
+}
+
+#' @aliases lowcase_parens
+#' @export
+upcase_parens <- function(x) {
+  
+  ret <- paste0("\n(N=", x, ")")
+  
+  return(ret)
+  
+}
+
+#' @aliases lowcase_parens
+#' @export
+lowcase_n <- function(x) {
+  
+  ret <- paste0("\nn=", x)
+  
+  return(ret)
+}
+
+#' @aliases lowcase_parens
+#' @export
+upcase_n <- function(x) {
+  
+  ret <- paste0("\nN=", x)
+  
+  return(ret)
+  
+}

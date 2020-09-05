@@ -738,3 +738,57 @@ test_that("test18: Text and table with page breaks works as expected.", {
 })
 
 
+
+test_that("test19: show_cols 'none' parameter on table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test19.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ], show_cols = "none") %>%
+    define(mpg) %>% 
+    define(cyl) %>% 
+    define(vs)
+  
+  rpt <- create_report(fp) %>% 
+    titles("MTCARS Data Frame", align = "left") %>% 
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+test_that("test20: show_cols 'some' parameter on table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test20.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ], show_cols = c("vs", "mpg", "cyl", "disp")) 
+  
+  rpt <- create_report(fp) %>% 
+    titles("MTCARS Data Frame", align = "left") %>% 
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+

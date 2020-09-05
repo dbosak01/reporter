@@ -11,7 +11,7 @@
 #' 
 #' @details
 #' This function is the constructor for the report object.  The report
-#' object contains information needed to construct a report. The object is
+#' object contains information needed to create a report. The object is
 #' defined as an S3 object, and has a class of 'report_spec'.
 #' 
 #' The report object holds information concerning report page size, font, 
@@ -19,6 +19,9 @@
 #' Use the \code{\link{add_content}} function to add content to the report.  
 #' The report may be written to a file using the \code{\link{write_report}} 
 #' function. 
+#' 
+#' See the \code{\link{create_table}} and \code{\link{create_text}} functions
+#' to create content for the report.
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -74,11 +77,11 @@ create_report <- function(file_path = "", output_type = "text",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!output_type %in% c("text", "docx")) {
+  if (!output_type %in% c("text")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'text', 'docx'."))
+                "'\n\tValid values are: 'text'."))
   }
   
   # Trap missing or invalid orientation parameter.
@@ -105,11 +108,6 @@ create_report <- function(file_path = "", output_type = "text",
                 "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4'."))
   }
   
-  if (output_type != "text") {
-    
-    stop(paste("Invalid output_type parameter:", output_type,  
-               "\nValid value is 'text'."))
-  }
 
   # Populate report_spec fields
   x$file_path <- file_path
@@ -149,6 +147,8 @@ create_report <- function(file_path = "", output_type = "text",
 
 # Options -----------------------------------------------------------------
 
+#' @description This is a lookup table to get standard settings for various 
+#' editors.
 #' @noRd
 editor_settings <- read.table(header = TRUE, text = '
                     editor          cpi     cpcm     lpi     lpcm
@@ -176,7 +176,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @family report
 #' @examples
 #' # Here is an example
-#' @noRd
+#' # This function commented out for now, until variable width fonts are available.
+#' @noRd  
 options_variable <- function(x, font_name="Courier New", font_size=10) {
   
   # Trap missing or invalid font_name parameter.
@@ -199,13 +200,31 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' Set options for a report with a fixed width font
 #'
 #' @description
-#' This function sets the options for a report of output type 'text'
+#' This function sets the options for a report of output type 'text'.
+#' 
+#' @details The \code{options_fixed} function sets the characters per 
+#' unit of measure (\strong{cpuom}) and lines per unit of measure
+#' (\strong{lpuom}) settings for the report.  These settings determine how 
+#' many characters and lines will fit within one unit of measure (uom), as 
+#' specified on the \code{\link{create_report}} function.  These settings are
+#' important to ensure the report content stays within available page size 
+#' and margins.  Because every text editor allows a different number of 
+#' characters and lines on a page, these settings must be adjusted depending
+#' on the editor.  The function provides a shortcut \code{editor} parameter
+#' to directly specify a common editor.  If this parameter is specified, the
+#' function will set the characters per unit of measure and lines per
+#' unit of measure for you.  If the editor is not available in the 
+#' \code{editor} parameter selections, you must set the \strong{cpuom} and 
+#' \strong{lpuom} parameters manually.  To determine your \strong{cpuom}
+#' and \strong{lpuom}, see the help for \code{\link{write_registration_file}}.
 #'
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing.  Assigning
-#' this parameter can reduce the number of other other setting you need
-#' to specify to get a properly printed report.  Valid values are 'notepad',
-#' 'word', 'wordpad', 'notepad++', and 'editplus'.
+#' this parameter will set the \strong{cpuom} and \strong{lpuom} parameters
+#' appropriately for the editor.  Valid values are 'notepad',
+#' 'word', 'wordpad', 'notepad++', and 'editplus'.  If the editor parameter 
+#' is used, any settings for \strong{cpuom} and \strong{lpuom} will be 
+#' ignored.
 #' @param cpuom Characters per unit of measure of printed text.    
 #' if uom is inches, 
 #' default is 12, which equals a 10pt font.  This value will be used to 
@@ -214,9 +233,30 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' inches is 6, which is average for a 10pt font. This value 
 #' will be used to determine the number of lines that can fit on a page. 
 #' @return The updated report spec.
+#' @seealso \code{\link{create_report}} to create a report and set the unit
+#' of measure, \code{\link{write_registration_file}} to determine the 
+#' characters and lines per unit of measure manually.
 #' @family report
 #' @examples
-#' # Here is an example
+#' # Create temp file path
+#' fp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create the report object
+#' rpt <- create_report(fp) 
+#' 
+#' # Add title
+#' rpt <- titles(rpt, "MTCARS sample report")
+#' 
+#' # Add content and set options editor parameter to notepad++.
+#' # The editor option can optimize the settings for a specific text editor.
+#' rpt <- add_content(rpt, create_table(mtcars)) 
+#' rpt <- options_fixed(rpt, editor = "notepad++")
+#' 
+#' # Write the report to the file system
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(fp))
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
   
@@ -249,6 +289,13 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 
   } else {
     
+    if (!tolower(editor) %in% c("notepad", "word", "wordpad", "notepad++",
+                                "editplus")) {
+      
+     stop(paste("editor parameter invalid.  Valid values are:", 
+                "'notepad', 'word', 'wordpad', 'notepad++','editplus'"))
+    }
+    
     e <- editor_settings[editor_settings$editor == tolower(editor), ]
     
     x$editor <- editor
@@ -276,23 +323,32 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 }
 
 #' @title
-#' Set page margins.
+#' Set page margins
 #' @description Set the page margins on the report spec object.
 #' @details
 #' The margins will be used for the entire report.  Units for the margins
-#' are inches.  The default margins are 1 inch on the left and right, and
-#' .5 inch on the top and bottom.
+#' are specified using the \strong{uom} parameter on the 
+#' \code{\link{create_report}} function.  Available units are 'inches' and 'cm'.
+#' When the unit of measure is inches, default margins are 1 inch on left and 
+#' right, and .5 inches on top and bottom.  When the unit of measure is 
+#' centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
+#' on top and bottom.
+#' 
+# The \strong{min_margin} parameter is used to set the minimum margin allowed
+# by the printer.  This value will be subtracted from the margin settings 
+# when the blank_margins option is used.
+# 
 #' @param x The report spec object.
 #' @param top The top margin.
 #' @param bottom The bottom margin.
 #' @param left The left margin.
 #' @param right The right margin.
-#' @param min_margin The printer minimum margin.
-#' @param blank_margins When this option is TRUE, **rptr** will use blank 
-#' spaces and blank rows to create left and top margins, rather than rely 
-#' on the editor to set margins.  When used, editor margins
-#' should be set to zero.  Valid values are TRUE and FALSE. Default is
-#' TRUE.
+# @param min_margin The printer minimum margin.
+# @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
+# spaces and blank rows to create left and top margins, rather than rely 
+# on the editor to set margins.  When used, editor margins
+# should be set to zero.  Valid values are TRUE and FALSE. Default is
+# TRUE.
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
@@ -304,9 +360,9 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 # file.show("mtcars.docx")
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
-                           left=NULL, right=NULL, 
-                           min_margin = NULL,
-                           blank_margins = TRUE) {
+                           left=NULL, right=NULL 
+                           #min_margin = NULL , blank_margins = TRUE
+                           ) {
 
   if (!is.null(top)) {
     if (is.na(top) | top < 0 | !is.numeric(top)){
@@ -348,17 +404,17 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   else
     x$margin_right = if (x$uom == "inches") 1 else 2.54
 
-  if (!is.null(min_margin)) {
-    if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
-      stop("ERROR: invalid value for min_margin")
-    }
-    else 
-      x$min_margin = min_margin
-  }
-  else
-    x$min_margin = if (x$uom == "inches") .394 else 1
+  # if (!is.null(min_margin)) {
+  #   if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
+  #     stop("ERROR: invalid value for min_margin")
+  #   }
+  #   else 
+  #     x$min_margin = min_margin
+  # }
+  # else
+  #   x$min_margin = if (x$uom == "inches") .394 else 1
   
-  x$blank_margins <- blank_margins
+  #x$blank_margins <- blank_margins
 
   return(x)
 }
@@ -668,12 +724,25 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' @details 
 #' The function renders the report in the requested format, and writes it
 #' to the location specified in the report \code{file_path} parameter.
-#' @param x The report_spec object to write.
-#' @return The report spec.
+#' @param x The report object to write.
+#' @return The report spec, with settings modified during writing.
 #' @family report
 #' @export
 write_report <- function(x) {
   
+  
+  if (!"report_spec" %in% class(x)) {
+    
+    stop(paste0("report object missing or invalid."))
+  }
+  
+  
+  # Trap missing or invalid output_type parameter
+  if (x$file_path == "") {
+    
+    stop(paste0("report file_path missing or invalid."))
+  }
+
   ret <- ""
 
   if (x$output_type == "text") {
@@ -689,6 +758,60 @@ write_report <- function(x) {
 }
 
 
+
+
+# Write Registration File -------------------------------------------------
+
+#' @title 
+#' Write a registration file 
+#' 
+#' @description 
+#' This function will create a registration file to help determine
+#' the correct \code{cpi} and \code{lpi} for editor/printer.  
+#' The \code{cpi} and \code{lpi} are 
+#' used in \code{output_type = "text"} to determine available space on
+#' the page.   
+#' @param file_path The full or relative file name and path to create.
+#' @export
+write_registration_file <- function(file_path) {
+  
+  
+  f <- file(file_path, open="w")
+  
+  ln1 <- "0--------+---------+---------+---------+---------+---------+"
+  
+  writeLines(ln1, con = f)
+  
+  ln2 <- "-       10        20        30        40        50        60"
+  
+  writeLines(ln2, con = f)
+  
+  ln3 <- c("-", "-", "-", "-", "-", "-", "-", "+ 10")
+  
+  writeLines(ln3, con = f)
+  
+  ln4 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 20")
+  
+  writeLines(ln4, con = f)
+  
+  ln5 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 30")
+  
+  writeLines(ln5, con = f)
+  
+  ln6 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 40")
+  
+  writeLines(ln6, con = f)
+  
+  ln7 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 50")
+  
+  writeLines(ln7, con = f)
+  
+  ln8 <- c("-", "-","-", "-", "-", "-", "-", "-", "-", "+ 60")
+  
+  writeLines(ln8, con = f)
+  
+  close(f)
+}
 
 
 

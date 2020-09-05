@@ -22,9 +22,9 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   ts <- cntnt$object
   content_blank_row <- cntnt$blank_row
   
-  if (ts$show_cols == "only" & length(ts$col_defs) == 0) {
+  if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
     
-    stop("ERROR: At least one column must be defined if show_cols = \"only\".")
+    stop("ERROR: At least one column must be defined if show_cols = \"none\".")
   }
 
   font_name <- "Courier New"

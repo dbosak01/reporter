@@ -2,7 +2,7 @@
 % Please edit documentation in R/table_spec.R
 \name{define}
 \alias{define}
-\title{Defines a column specification}
+\title{Defines a column specification for a table}
 \usage{
 define(
   x,
@@ -67,5 +67,17 @@ create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
 If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.}
 }
 \description{
-Defines a column specification
+A function to define the specification for a table column.
+}
+\details{
+Column definitions are optional.  By default, all columns in the data
+are displayed in the order and with the formatting attributes assigned.
+The \strong{define} function is used to provide additional control over
+the columns.  For example, you may use the \strong{define} function
+to assign formatting properties, a label, and an "N=" population count
+for the column header. See the parameters below for additional options.
+}
+\seealso{
+\code{\link{create_table}} to create a table, and 
+\link{table_options} to see define options illustrated.
 }

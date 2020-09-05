@@ -10,9 +10,11 @@ options_fixed(x, editor = NULL, cpuom = NULL, lpuom = NULL)
 \item{x}{The report spec.}
 
 \item{editor}{The expected text editor to use for printing.  Assigning
-this parameter can reduce the number of other other setting you need
-to specify to get a properly printed report.  Valid values are 'notepad',
-'word', 'wordpad', 'notepad++', and 'editplus'.}
+this parameter will set the \strong{cpuom} and \strong{lpuom} parameters
+appropriately for the editor.  Valid values are 'notepad',
+'word', 'wordpad', 'notepad++', and 'editplus'.  If the editor parameter 
+is used, any settings for \strong{cpuom} and \strong{lpuom} will be 
+ignored.}
 
 \item{cpuom}{Characters per unit of measure of printed text.
 if uom is inches, 
@@ -27,12 +29,51 @@ will be used to determine the number of lines that can fit on a page.}
 The updated report spec.
 }
 \description{
-This function sets the options for a report of output type 'text'
+This function sets the options for a report of output type 'text'.
+}
+\details{
+The \code{options_fixed} function sets the characters per 
+unit of measure (\strong{cpuom}) and lines per unit of measure
+(\strong{lpuom}) settings for the report.  These settings determine how 
+many characters and lines will fit within one unit of measure (uom), as 
+specified on the \code{\link{create_report}} function.  These settings are
+important to ensure the report content stays within available page size 
+and margins.  Because every text editor allows a different number of 
+characters and lines on a page, these settings must be adjusted depending
+on the editor.  The function provides a shortcut \code{editor} parameter
+to directly specify a common editor.  If this parameter is specified, the
+function will set the characters per unit of measure and lines per
+unit of measure for you.  If the editor is not available in the 
+\code{editor} parameter selections, you must set the \strong{cpuom} and 
+\strong{lpuom} parameters manually.  To determine your \strong{cpuom}
+and \strong{lpuom}, see the help for \code{\link{write_registration_file}}.
 }
 \examples{
-# Here is an example
+# Create temp file path
+fp <- file.path(tempdir(), "mtcars.txt")
+
+# Create the report object
+rpt <- create_report(fp) 
+
+# Add title
+rpt <- titles(rpt, "MTCARS sample report")
+
+# Add content and set options editor parameter to notepad++.
+# The editor option can optimize the settings for a specific text editor.
+rpt <- add_content(rpt, create_table(mtcars)) 
+rpt <- options_fixed(rpt, editor = "notepad++")
+
+# Write the report to the file system
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(fp))
 }
 \seealso{
+\code{\link{create_report}} to create a report and set the unit
+of measure, \code{\link{write_registration_file}} to determine the 
+characters and lines per unit of measure manually.
+
 Other report: 
 \code{\link{add_content}()},
 \code{\link{create_report}()},

@@ -41,14 +41,17 @@ Creates a report shell to which you may add content.
 }
 \details{
 This function is the constructor for the report object.  The report
-object contains information needed to construct a report. The object is
+object contains information needed to create a report. The object is
 defined as an S3 object, and has a class of 'report_spec'.
 
 The report object holds information concerning report page size, font, 
 titles, footnotes, page header, page footer, margins, and other options.  
 Use the \code{\link{add_content}} function to add content to the report.  
 The report may be written to a file using the \code{\link{write_report}} 
-function.
+function. 
+
+See the \code{\link{create_table}} and \code{\link{create_text}} functions
+to create content for the report.
 }
 \examples{
 # Create temp file path

@@ -453,3 +453,55 @@ test_that("user4: Adverse Events table works.", {
 })
 
 
+
+test_that("user5: large listing works.", {
+  
+  test <- FALSE
+  
+  # Skip except for special testing because it takes too long (+ 5 minutes)
+  if (test) { 
+    
+    startTime <- Sys.time()  
+  
+    # Data Filepath
+    dir_data <- file.path(base_path, "data")
+    
+    fp <- file.path(base_path, "user/user5.out")
+    
+    
+    # Load Data
+    data_lb   <- file.path(dir_data, "ADLB.csv") %>%
+      read.csv() 
+  
+  
+    # Define table
+    tbl <- create_table(data_lb) %>% 
+      define(USUBJID, id_var = TRUE) 
+    
+    # Define Report
+    rpt <- create_report(fp) %>%
+      titles("Listing 2.0",
+             "Analysis Dataset Labs") %>%
+      add_content(tbl, align = "left") %>% 
+      page_footer(left = "Time", right = "Page [pg] of [tpg]")
+    
+    # Write out report
+    res <- write_report(rpt)
+    
+    endTime <- Sys.time()
+    
+    print(endTime - startTime)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    lns <- readLines(fp)
+  
+    expect_equal(length(lns), res$pages * res$line_count)
+  
+  } else {
+    
+   expect_equal(TRUE, TRUE) 
+  }
+  
+})
+

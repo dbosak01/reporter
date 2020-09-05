@@ -2,17 +2,9 @@
 % Please edit documentation in R/report_spec.R
 \name{set_margins}
 \alias{set_margins}
-\title{Set page margins.}
+\title{Set page margins}
 \usage{
-set_margins(
-  x,
-  top = NULL,
-  bottom = NULL,
-  left = NULL,
-  right = NULL,
-  min_margin = NULL,
-  blank_margins = TRUE
-)
+set_margins(x, top = NULL, bottom = NULL, left = NULL, right = NULL)
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -24,14 +16,6 @@ set_margins(
 \item{left}{The left margin.}
 
 \item{right}{The right margin.}
-
-\item{min_margin}{The printer minimum margin.}
-
-\item{blank_margins}{When this option is TRUE, **rptr** will use blank 
-spaces and blank rows to create left and top margins, rather than rely 
-on the editor to set margins.  When used, editor margins
-should be set to zero.  Valid values are TRUE and FALSE. Default is
-TRUE.}
 }
 \value{
 The report_spec with margins set as desired.
@@ -41,8 +25,12 @@ Set the page margins on the report spec object.
 }
 \details{
 The margins will be used for the entire report.  Units for the margins
-are inches.  The default margins are 1 inch on the left and right, and
-.5 inch on the top and bottom.
+are specified using the \strong{uom} parameter on the 
+\code{\link{create_report}} function.  Available units are 'inches' and 'cm'.
+When the unit of measure is inches, default margins are 1 inch on left and 
+right, and .5 inches on top and bottom.  When the unit of measure is 
+centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
+on top and bottom.
 }
 \examples{
 # Here is an example
