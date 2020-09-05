@@ -478,7 +478,7 @@ split_cells <- function(x, col_widths) {
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
   max_length <- 0       # The maximum number of splits of a cell in that row
-  
+
   for (i in seq_len(nrow(x))) {
     for (nm in names(x)) {
 
@@ -492,12 +492,16 @@ split_cells <- function(x, col_widths) {
       } else {
         cell <- x[i, nm]
       }
+      # print(paste("cell: ", cell))
       
       if (length(cell) > max_length)
         max_length <- length(cell)
       
+      if (identical(cell, character(0)))
+          cell <- ""
+    
       row_values[[length(row_values) + 1]] <- cell
-
+      # print(paste("Row:", row_values))
     }
 
     names(row_values) <- names(x)
@@ -590,7 +594,10 @@ push_down <- function(x) {
   return(x)
 }
 
-
+#' @description Dedupe requested columns
+#' @details This function is performed in the page splitting routine
+#' so that groups which span multiple pages retain a label at the top 
+#' of the page.
 #' @noRd
 dedupe_pages <- function(pgs, defs) {
   

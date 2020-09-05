@@ -108,14 +108,17 @@ get_page_wraps <- function(line_size, ts, widths) {
   for (nm in names(widths)) {
 
     if (!is.control(nm)) {
-      # If ID vars exist, add them to list
+      #If ID vars exist, add them to list
       if (length(pg) == 0 && length(id_vars) > 0) {
-        pg <- widths[id_vars]
-        
+
+        # Plus 1 for blank space after
+        pg <- widths[id_vars] + 1
+
         if (is.na(pg))
           stop(paste0("ID column width for '", id_vars, " not found."))
-        
+
         names(pg) <- id_vars
+
       }
       
       # Force a page wrap if requested in definition
@@ -124,8 +127,16 @@ get_page_wraps <- function(line_size, ts, widths) {
         if (is.na(wraps[nm]) == FALSE) 
           if (wraps[nm] == TRUE)
             force_wrap <- TRUE
+      
+      # print(paste("Name:", nm))
+      # print(paste("Force wrap:", force_wrap))
+      # print(paste("Sum of widths:", sum(pg, widths[nm] + 1)))
+      # print(paste("Page:", pg))
+      # print(paste("Widths:", widths[nm]))
+      # print(paste("Total width:", tw))
+      # print("")
 
-      if (sum(pg, widths[nm]) >  tw | force_wrap) {
+      if ((sum(pg, widths[nm] + 1) >=  tw | force_wrap) & (!nm %in% id_vars)) {
         
         # If sum of widths exceed page size, add page to list and reset pg
         # Also add control cols so downstream functions can use them
@@ -134,17 +145,17 @@ get_page_wraps <- function(line_size, ts, widths) {
         
         # Add widths for ID vars
         if (length(id_vars) > 0) {
-          pg <- widths[id_vars]
+          pg <- widths[id_vars] + 1
           names(pg) <- id_vars
         }
         
         # Add width for current column
-        pg[nm] <- widths[nm]
+        pg[nm] <- widths[nm] + 1
         
       } else {
         
         # If sum of widths does not exceed page size, add to pg and keep going
-        pg[nm] <- widths[nm]
+        pg[nm] <- widths[nm] + 1
 
       } 
     }
@@ -648,14 +659,23 @@ get_table_cols <- function(x) {
 get_splits_text <- function(x, widths, page_size, lpg_rows, 
                             content_offsets, defs) {
   
-
+  # Calculate where page breaks should occur
+  # Based on available height, content size, and offsets
+  # Function adds a ..page variable with page indicator
   pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets)
   
+  # Eliminate pages that have only blank lines
+  sb <- subset(pgs, trimws(pgs$..blank) == "")
+  non_blank_pages <- unique(sb$..page)
+  sbst <- subset(pgs, pgs$..page %in% non_blank_pages)
   
-  ret <- split(pgs, pgs$..page)
+  # Split the data frame at the page indicators
+  ret <- split(sbst, sbst$..page)
   
+  # Perform column deduping
   ret <- dedupe_pages(ret, defs)
   
+
   
   return(ret)
   
@@ -665,6 +685,8 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
 #' Function to calculate page breaks
 #' @param x Data frame to page.
 #' @param page_size Available data height in number of rows.
+#' @param lpg_rows Last page rows.  Subtracted from available height.
+#' @param content_offsets Blank rows requested above or below content
 #' @return Data frame with ..page column populated with page numbers.
 #' @noRd
 get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){

@@ -17,6 +17,8 @@ control_cols <- c("..blank", "..page", "..row")
 #' @noRd
 create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
+  #print("Create Table")
+  
   ts <- cntnt$object
   content_blank_row <- cntnt$blank_row
   
@@ -25,7 +27,6 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
     stop("ERROR: At least one column must be defined if show_cols = \"only\".")
   }
 
-  family <- "mono"
   font_name <- "Courier New"
   
   
@@ -440,6 +441,10 @@ get_spanning_header <- function(rs, ts, pi) {
     names(d) <- s$name
     names(w) <- s$name
     names(j) <- s$name
+    
+    # print("Ready for split cells")
+    # print(paste("d:", d))
+    # print(paste("w:", w))
     d <- split_cells(d, w)
     d <- push_down(d)
     

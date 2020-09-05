@@ -249,8 +249,12 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 
   } else {
     
-    e <- editor_settings[editor_settings$editor == editor, ]
+    e <- editor_settings[editor_settings$editor == tolower(editor), ]
     
+    x$editor <- editor
+    
+    # Set columns per unit of measure
+    # and lines per unit of measure
     if (x$uom == "inches") {
       x$cpuom <- e$cpi
       x$lpuom <- e$lpi
@@ -258,6 +262,9 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
       x$cpuom <- e$cpcm
       x$lpuom <- e$lpcm
     }
+    
+    # print(paste("cpuom:", x$cpuom))
+    # print(paste("lpuom:", x$lpuom))
   }
   
   x$char_width <- 1 / x$cpuom

@@ -56,6 +56,7 @@ test_that("get_splits_text works as expected", {
   
   dat <- iris
   dat$..page <- NA
+  dat$..blank <- ""
   w <- c(Sepal.Length = 1.5, Sepal.Width = 1.5, Petal.Length = 1.5,
          Petal.Width = 1.5, Species = 1.25)
   
