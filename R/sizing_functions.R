@@ -341,11 +341,16 @@ get_col_widths <- function(dat, ts, labels, char_width) {
     else
       w <- (ceiling(w * 100)/100) + padding_buffer
     
+    # print(paste("w:", w))
+    # print(paste("Label:", labels[[nm]]))
     
     # Determine width of words in label for this column
-    s <- stri_split(labels[[nm]], fixed=" ", simplify = TRUE)
+    s <- stri_split(labels[[nm]], regex=" |\n|\r|\t", simplify = TRUE)
     #l <- strwidth(s[[1]], units="inches", family=font_family)
     l <- max(nchar(as.character(s)), na.rm = TRUE) * char_width
+    
+    # print(paste("s:", s))
+    # print(paste("l:", l))
     
     # If the max word width is greater than the data width,
     # set column width to max label word width
@@ -362,6 +367,8 @@ get_col_widths <- function(dat, ts, labels, char_width) {
   
   # Set default widths
   ret = dwidths
+  #print("Default Widths")
+  #print(ret)
   
   # Let widths on orig df override defaults
   orig <- widths(dat)

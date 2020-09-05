@@ -83,6 +83,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   # Copy any width attributes to formatted data frame
   widths(fdat) <- widths(dat)
+  # print("Original Widths")
+  # print(widths(dat))
   
   # Get column widths
   widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width)
@@ -96,15 +98,17 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
   # Split long text strings onto multiple rows
   fdat <- split_cells(fdat, widths_char)
-  #print("split_cells")
-  #print(fdat)
+  # print("split_cells")
+  # print(fdat)
 
   # Apply widths and justification
   widths(fdat) <- widths_char
+  # print(widths_char)
   justification(fdat) <- aligns
+  # print(aligns)
   fdat <- fdata(fdat)
-  #print("fdata2")
-  #print(fdat)
+  # print("fdata2")
+  # print(fdat)
   
   # Break columns into pages
   wraps <- get_page_wraps(rs$line_size, ts, widths_char)
