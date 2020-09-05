@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Create regulatory-style tabular reports
-Version: 0.0.0.9011
+Version: 0.0.0.9012
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style reports, such as 
