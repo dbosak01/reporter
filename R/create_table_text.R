@@ -141,8 +141,11 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
       else 
         wrap_flag <- FALSE
       
+      #print(s)
       # Ensure content blank rows are added only to the first and last pages
-      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row)
+      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
+                                      rs$body_line_count, content_offset, nrow(s))
+      #print(blnk_ind)
       
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
                      col_width = widths_uom[pg], col_align = aligns[pg],
@@ -566,15 +569,22 @@ get_justify <- function(x) {
 }
 
 
-get_blank_indicator <- function(pg_num, tot_pg, content_blanks) {
+get_blank_indicator <- function(pg_num, tot_pg, content_blanks,
+                                page_size, content_offset, num_rows) {
   
   if (pg_num == 1 & pg_num == tot_pg & content_blanks == "both")
     blnk_ind <- "both"
   else if (pg_num == 1 & content_blanks %in% c("both", "above"))
     blnk_ind <- "above"
-  else if (pg_num == tot_pg & content_blanks %in% c("both", "below"))
+  else if ((pg_num == tot_pg & content_blanks %in% c("both", "below")) &
+           (num_rows < page_size - content_offset["upper"] - content_offset["lower"])) {
+    # Exception when number of rows exactly equals available space.
+    # Then don't put a blank row below.
+    # print(num_rows)
+    # print( page_size )
+    # print(content_offset)
     blnk_ind <- "below"
-  else 
+  } else 
     blnk_ind <- "none"
   
   return(blnk_ind)

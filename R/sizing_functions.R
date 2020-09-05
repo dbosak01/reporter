@@ -708,13 +708,16 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
     counter <- counter + 1
     
     if (i == nrow(x)) {
-      offset <- offset + content_offsets["blank_lower"]
-      #print(paste("Lower Blank:", offset))
+      # Exception where last line is equal to number of available lines
+      # Don't put the blank row in this case.
+      if (counter < (page_size - ttfl)) {  
+        offset <- offset + content_offsets["blank_lower"]
+        #print(paste("Lower Blank:", offset))
+      }
     }
-    #print(paste("Counter:", counter))
-    #print(paste("Condition:", (page_size - offset - ttfl)))
+    # print(paste("Counter:", counter))
+    # print(paste("Condition:", (page_size - offset - ttfl)))
 
-    
     if (counter > (page_size  - offset - ttfl)) {
       #print(paste("Page count:", counter))
       counter <- 0
@@ -726,13 +729,10 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
       
       pg <- pg + 1
       offset <- 0
-      
     }
-    
-
-    
+  
     x$..page[i] <- pg
-    
+    # print(pg)
   }
   
   #print(paste("Page count:", counter))

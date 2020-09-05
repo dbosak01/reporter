@@ -39,7 +39,7 @@ ABC-03-091  ABC     DM     S:91         12/20/2006                              
 ABC-04-073  ABC     DM     S:73         10/31/2006                                10/10/2006
 ABC-04-074  ABC     DM     S:74         11/1/2006   11/20/2006                    10/16/2006  11/20/2006
 
-Time                                                                                            Page 1 of 15
+Time                                                                                            Page 1 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -81,7 +81,7 @@ ABC-03-091                     3 2/20/1955       51 YEARS  F      WHITE
 ABC-04-073                     4 1/19/1947       59 YEARS  F      WHITE
 ABC-04-074                     4 3/28/1983       23 YEARS  F      WHITE
 
-Time                                                                                            Page 2 of 15
+Time                                                                                            Page 2 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -123,7 +123,7 @@ ABC-03-091  NOT HISPANIC OR LATINO  1         ARM A
 ABC-04-073  NOT HISPANIC OR LATINO  4         ARM D
 ABC-04-074  NOT HISPANIC OR LATINO  3         ARM C
 
-Time                                                                                            Page 3 of 15
+Time                                                                                            Page 3 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -165,7 +165,7 @@ ABC-08-101  ABC     DM     S:101        11/7/2006                               
 ABC-08-102  ABC     DM     S:102        11/9/2006                                 11/1/2006
 ABC-08-103  ABC     DM     S:103        11/9/2006                                 11/2/2006
 
-Time                                                                                            Page 4 of 15
+Time                                                                                            Page 4 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -207,7 +207,7 @@ ABC-08-101                     8 3/16/1952       54 YEARS  F      WHITE
 ABC-08-102                     8 2/23/1952       54 YEARS  F      WHITE
 ABC-08-103                     8 9/17/1973       33 YEARS  M      UNKNOWN
 
-Time                                                                                            Page 5 of 15
+Time                                                                                            Page 5 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -249,7 +249,7 @@ ABC-08-101  NOT HISPANIC OR LATINO  3         ARM C
 ABC-08-102  NOT HISPANIC OR LATINO  4         ARM D
 ABC-08-103  NOT HISPANIC OR LATINO  2         ARM B
 
-Time                                                                                            Page 6 of 15
+Time                                                                                            Page 6 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -291,7 +291,7 @@ ABC-11-096  ABC     DM     S:96         11/27/2006                              
 ABC-11-097  ABC     DM     S:97         11/28/2006                                11/8/2006
 ABC-11-098  ABC     DM     S:98         12/4/2006                                 11/27/2006
 
-Time                                                                                            Page 7 of 15
+Time                                                                                            Page 7 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -333,7 +333,7 @@ ABC-11-096                    11 1/13/1953       53 YEARS  M      WHITE
 ABC-11-097                    11 6/21/1982       24 YEARS  F      WHITE
 ABC-11-098                    11 4/27/1939       67 YEARS  M      WHITE
 
-Time                                                                                            Page 8 of 15
+Time                                                                                            Page 8 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -375,7 +375,7 @@ ABC-11-096  NOT HISPANIC OR LATINO  4         ARM D
 ABC-11-097  NOT HISPANIC OR LATINO  1         ARM A
 ABC-11-098  HISPANIC OR LATINO      3         ARM C
 
-Time                                                                                            Page 9 of 15
+Time                                                                                            Page 9 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -417,7 +417,7 @@ ABC-14-121  ABC     DM     S:121        11/29/2006                              
 ABC-14-122  ABC     DM     S:122        12/18/2006                                12/11/2006
 ABC-14-123  ABC     DM     S:123        12/19/2006                                11/21/2006
 
-Time                                                                                           Page 10 of 15
+Time                                                                                           Page 10 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -459,7 +459,7 @@ ABC-14-121                    14 12/5/1950       55 YEARS  M      WHITE
 ABC-14-122                    14 5/3/1972        34 YEARS  M      WHITE
 ABC-14-123                    14 5/23/1954       52 YEARS  F      ASIAN
 
-Time                                                                                           Page 11 of 15
+Time                                                                                           Page 11 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -501,130 +501,4 @@ ABC-14-121  NOT HISPANIC OR LATINO  3         ARM C
 ABC-14-122  HISPANIC OR LATINO      4         ARM D
 ABC-14-123  NOT HISPANIC OR LATINO  1         ARM A
 
-Time                                                                                           Page 12 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
----------------------------------------------------------------------------------------------------------
-ABC-14-124  ABC     DM     S:124        12/28/2006                                12/19/2006
-ABC-15-153  ABC     DM     S:153        1/4/2007    2/22/2007                     12/21/2006  2/22/2007
-ABC-15-154  ABC     DM     S:154        1/10/2007   2/12/2007                     12/29/2006  2/12/2007
-ABC-15-155  ABC     DM     S:155        1/11/2007                                 12/28/2006
-ABC-15-156  ABC     DM     S:156        1/11/2007                                 12/28/2006
-ABC-16-045  ABC     DM     S:45         12/28/2006                                12/19/2006
-ABC-16-046  ABC     DM     S:46         12/28/2006  1/29/2007                     12/21/2006  1/29/2007
-ABC-16-047  ABC     DM     S:47         1/2/2007    2/1/2007                      12/19/2006  2/1/2007
-ABC-16-157  ABC     DM     S:157        12/14/2006                                12/7/2006
-ABC-16-158  ABC     DM     S:158        12/19/2006                                12/5/2006
-ABC-16-159  ABC     DM     S:159        12/21/2006                                12/14/2006
-ABC-16-160  ABC     DM     S:160        12/28/2006                                12/19/2006
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                           Page 13 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
---------------------------------------------------------------------------------------------
-ABC-14-124                    14 6/29/1951       55 YEARS  M      WHITE
-ABC-15-153                    15 10/22/1941      65 YEARS  F      WHITE
-ABC-15-154                    15 6/5/1936        70 YEARS  F      WHITE
-ABC-15-155                    15 5/27/1950       56 YEARS  F      WHITE
-ABC-15-156                    15 1/9/1972        35 YEARS  F      WHITE
-ABC-16-045                    16 8/18/1938       68 YEARS  M      WHITE
-ABC-16-046                    16 7/21/1935       71 YEARS  F      WHITE
-ABC-16-047                    16 4/20/1932       74 YEARS  M      WHITE
-ABC-16-157                    16 9/4/1944        62 YEARS  M      WHITE
-ABC-16-158                    16 5/22/1935       71 YEARS  M      WHITE
-ABC-16-159                    16 7/19/1948       58 YEARS  F      WHITE
-ABC-16-160                    16 3/8/1962        44 YEARS  M      WHITE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                           Page 14 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
--------------------------------------------------------------------------------------
-ABC-14-124  NOT HISPANIC OR LATINO  2         ARM B
-ABC-15-153  NOT HISPANIC OR LATINO  4         ARM D
-ABC-15-154  NOT HISPANIC OR LATINO  3         ARM C
-ABC-15-155  NOT HISPANIC OR LATINO  1         ARM A
-ABC-15-156  NOT HISPANIC OR LATINO  2         ARM B
-ABC-16-045  NOT HISPANIC OR LATINO  3         ARM C
-ABC-16-046  NOT HISPANIC OR LATINO  4         ARM D
-ABC-16-047  NOT HISPANIC OR LATINO  1         ARM A
-ABC-16-157  HISPANIC OR LATINO      1         ARM A
-ABC-16-158  NOT HISPANIC OR LATINO  2         ARM B
-ABC-16-159  NOT HISPANIC OR LATINO  3         ARM C
-ABC-16-160  HISPANIC OR LATINO      4         ARM D
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                           Page 15 of 15
+Time                                                                                           Page 12 of 12

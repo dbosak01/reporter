@@ -268,10 +268,27 @@ test_that("user3: listings works.", {
   
   fp <- file.path(base_path, "user/user3.out")
   
+  # Removing to make last page exactly equal to available rows on page.
+  # In this case, any added blank rows should be skipped.
+  fil <- c("ABC-14-124",
+  "ABC-15-153",
+  "ABC-15-154",
+  "ABC-15-155",
+  "ABC-15-156",
+  "ABC-16-045",
+  "ABC-16-046",
+  "ABC-16-047",
+  "ABC-16-157",
+  "ABC-16-158",
+  "ABC-16-159", 
+  "ABC-16-160")
   
   # Load Data
   data_demo   <- file.path(dir_data, "dm.csv") %>%
     read.csv() 
+  
+  data_demo <- data_demo[!data_demo$USUBJID %in% fil, ]
+  
   
   # Test that any assigned formats are applied
   attr(data_demo$SUBJID, "width") <- 1
