@@ -124,9 +124,14 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows,
   # Deal with last page
   if (length(tmp) > 0 ) {
     
-    # Add last page
-    ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
-                                     justify = get_justify(txt$align))
+
+    # If page is not empty
+    if (max(nchar(trimws(tmp))) > 0) {
+    
+      # Add last page
+      ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
+                                       justify = get_justify(txt$align))
+    }
     
   }
   

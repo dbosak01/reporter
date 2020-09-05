@@ -288,7 +288,7 @@ test_that("ttfn11: blank hitting page break works as expected.", {
   
   lns <- readLines(fp)
   
-  expect_equal(length(lns), res$pages * 45)
+  expect_equal(length(lns),  45)
   
 })
 
