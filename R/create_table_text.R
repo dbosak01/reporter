@@ -82,7 +82,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(aligns)
   
   # Copy any width attributes to formatted data frame
- # widths(fdat) <- widths(dat)
+  widths(fdat) <- widths(dat)
   
   # Get column widths
   widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width)

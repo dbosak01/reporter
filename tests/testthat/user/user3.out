@@ -1,93 +1,87 @@
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID     STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC    DTHDTC
-----------------------------------------------------------------------------------------------------------
-ABC-01-049  ABC     DM         49 11/7/2006                                 10/25/2006
-ABC-01-050  ABC     DM         50 11/2/2006                                 10/25/2006
-ABC-01-051  ABC     DM         51 11/2/2006                                 10/25/2006
-ABC-01-052  ABC     DM         52 11/6/2006                                 10/31/2006
-ABC-01-053  ABC     DM         53 11/8/2006                                 11/1/2006
-ABC-01-054  ABC     DM         54 11/16/2006                                11/7/2006
-ABC-01-055  ABC     DM         55 12/6/2006                                 10/31/2006
-ABC-01-056  ABC     DM         56 11/28/2006                                11/21/2006
-ABC-01-113  ABC     DM        113 12/5/2006                                 11/28/2006
-ABC-01-114  ABC     DM        114 12/14/2006                                12/1/2006
-ABC-02-033  ABC     DM         33 10/25/2006                                10/16/2006
-ABC-02-034  ABC     DM         34 10/26/2006                                10/16/2006
-ABC-02-035  ABC     DM         35 10/31/2006                                10/16/2006
-ABC-02-036  ABC     DM         36 11/1/2006                                 10/23/2006
-ABC-02-037  ABC     DM         37 11/1/2006                                 10/24/2006
-ABC-02-038  ABC     DM         38 11/13/2006                                10/30/2006
-ABC-02-039  ABC     DM         39 11/15/2006                                11/6/2006
-ABC-02-040  ABC     DM         40 12/7/2006                                 11/29/2006
-ABC-02-109  ABC     DM        109 12/7/2006                                 11/28/2006
-ABC-02-110  ABC     DM        110 12/18/2006                                12/11/2006
-ABC-02-111  ABC     DM        111 12/19/2006                                12/11/2006
-ABC-02-112  ABC     DM        112 12/19/2006                                12/12/2006
-ABC-03-001  ABC     DM          1 10/10/2006                                9/26/2006
-ABC-03-002  ABC     DM          2 10/11/2006                                9/27/2006
-ABC-03-003  ABC     DM          3 10/11/2006                                9/27/2006
-ABC-03-004  ABC     DM          4 10/12/2006                                9/27/2006
-ABC-03-005  ABC     DM          5 10/12/2006                                9/27/2006
-ABC-03-006  ABC     DM          6 10/25/2006                                10/18/2006
-ABC-03-007  ABC     DM          7 10/31/2006                                10/27/2006
-ABC-03-008  ABC     DM          8 11/2/2006   11/9/2006                     10/18/2006  11/9/2006
-ABC-03-089  ABC     DM         89 11/21/2006                                11/15/2006
-ABC-03-090  ABC     DM         90 12/6/2006                                 11/30/2006
-ABC-03-091  ABC     DM         91 12/20/2006                                12/11/2006
-ABC-04-073  ABC     DM         73 10/31/2006                                10/10/2006
-ABC-04-074  ABC     DM         74 11/1/2006   11/20/2006                    10/16/2006  11/20/2006
-ABC-04-075  ABC     DM         75 11/9/2006                                 11/2/2006
-ABC-04-076  ABC     DM         76 11/15/2006                                10/26/2006
-ABC-04-077  ABC     DM         77 11/15/2006                                11/2/2006
+USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
+---------------------------------------------------------------------------------------------------------
+ABC-01-049  ABC     DM     S:49         11/7/2006                                 10/25/2006
+ABC-01-050  ABC     DM     S:50         11/2/2006                                 10/25/2006
+ABC-01-051  ABC     DM     S:51         11/2/2006                                 10/25/2006
+ABC-01-052  ABC     DM     S:52         11/6/2006                                 10/31/2006
+ABC-01-053  ABC     DM     S:53         11/8/2006                                 11/1/2006
+ABC-01-054  ABC     DM     S:54         11/16/2006                                11/7/2006
+ABC-01-055  ABC     DM     S:55         12/6/2006                                 10/31/2006
+ABC-01-056  ABC     DM     S:56         11/28/2006                                11/21/2006
+ABC-01-113  ABC     DM     S:113        12/5/2006                                 11/28/2006
+ABC-01-114  ABC     DM     S:114        12/14/2006                                12/1/2006
+ABC-02-033  ABC     DM     S:33         10/25/2006                                10/16/2006
+ABC-02-034  ABC     DM     S:34         10/26/2006                                10/16/2006
+ABC-02-035  ABC     DM     S:35         10/31/2006                                10/16/2006
+ABC-02-036  ABC     DM     S:36         11/1/2006                                 10/23/2006
+ABC-02-037  ABC     DM     S:37         11/1/2006                                 10/24/2006
+ABC-02-038  ABC     DM     S:38         11/13/2006                                10/30/2006
+ABC-02-039  ABC     DM     S:39         11/15/2006                                11/6/2006
+ABC-02-040  ABC     DM     S:40         12/7/2006                                 11/29/2006
+ABC-02-109  ABC     DM     S:109        12/7/2006                                 11/28/2006
+ABC-02-110  ABC     DM     S:110        12/18/2006                                12/11/2006
+ABC-02-111  ABC     DM     S:111        12/19/2006                                12/11/2006
+ABC-02-112  ABC     DM     S:112        12/19/2006                                12/12/2006
+ABC-03-001  ABC     DM     S:1          10/10/2006                                9/26/2006
+ABC-03-002  ABC     DM     S:2          10/11/2006                                9/27/2006
+ABC-03-003  ABC     DM     S:3          10/11/2006                                9/27/2006
+ABC-03-004  ABC     DM     S:4          10/12/2006                                9/27/2006
+ABC-03-005  ABC     DM     S:5          10/12/2006                                9/27/2006
+ABC-03-006  ABC     DM     S:6          10/25/2006                                10/18/2006
+ABC-03-007  ABC     DM     S:7          10/31/2006                                10/27/2006
+ABC-03-008  ABC     DM     S:8          11/2/2006   11/9/2006                     10/18/2006  11/9/2006
+ABC-03-089  ABC     DM     S:89         11/21/2006                                11/15/2006
+ABC-03-090  ABC     DM     S:90         12/6/2006                                 11/30/2006
+ABC-03-091  ABC     DM     S:91         12/20/2006                                12/11/2006
+ABC-04-073  ABC     DM     S:73         10/31/2006                                10/10/2006
+ABC-04-074  ABC     DM     S:74         11/1/2006   11/20/2006                    10/16/2006  11/20/2006
 
-2020-09-05 03:01:40                                                                             Page 1 of 15
+Time                                                                                            Page 1 of 15
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID      DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
--------------------------------------------------------------------------------------
-ABC-01-049              1 11/12/1966      39 YEARS  M      WHITE
-ABC-01-050              1 12/19/1958      47 YEARS  M      WHITE
-ABC-01-051              1 5/2/1972        34 YEARS  M      WHITE
-ABC-01-052              1 6/27/1961       45 YEARS  F      WHITE
-ABC-01-053              1 4/7/1980        26 YEARS  F      WHITE
-ABC-01-054              1 9/13/1962       44 YEARS  M      WHITE
-ABC-01-055              1 6/11/1959       47 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-01-056              1 5/2/1975        31 YEARS  M      WHITE
-ABC-01-113              1 2/8/1932        74 YEARS  M      WHITE
-ABC-01-114              1 7/9/1934        72 YEARS  F      WHITE
-ABC-02-033              2 2/1/1968        38 YEARS  F      WHITE
-ABC-02-034              2 10/5/1933       73 YEARS  F      WHITE
-ABC-02-035              2 9/25/1960       46 YEARS  M      WHITE
-ABC-02-036              2 1/1/1971        35 YEARS  M      WHITE
-ABC-02-037              2 7/28/1960       46 YEARS  M      WHITE
-ABC-02-038              2 7/2/1947        59 YEARS  M      WHITE
-ABC-02-039              2 4/11/1971       35 YEARS  M      WHITE
-ABC-02-040              2 3/27/1944       62 YEARS  M      WHITE
-ABC-02-109              2 9/3/1969        37 YEARS  M      WHITE
-ABC-02-110              2 8/12/1966       40 YEARS  F      WHITE
-ABC-02-111              2 7/9/1967        39 YEARS  M      WHITE
-ABC-02-112              2 11/1/1976       30 YEARS  F      WHITE
-ABC-03-001              3 6/16/1941       65 YEARS  M      WHITE
-ABC-03-002              3 3/20/1935       71 YEARS  M      WHITE
-ABC-03-003              3 9/14/1942       64 YEARS  M      WHITE
-ABC-03-004              3 7/8/1961        45 YEARS  M      WHITE
-ABC-03-005              3 12/10/1952      53 YEARS  M      WHITE
-ABC-03-006              3 12/12/1958      47 YEARS  M      WHITE
-ABC-03-007              3 12/1/1948       57 YEARS  M      WHITE
-ABC-03-008              3 8/28/1952       54 YEARS  M      WHITE
-ABC-03-089              3 10/2/1975       31 YEARS  F      UNKNOWN
-ABC-03-090              3 6/17/1926       80 YEARS  M      WHITE
-ABC-03-091              3 2/20/1955       51 YEARS  F      WHITE
-ABC-04-073              4 1/19/1947       59 YEARS  F      WHITE
-ABC-04-074              4 3/28/1983       23 YEARS  F      WHITE
-ABC-04-075              4 4/7/1943        63 YEARS  M      WHITE
-ABC-04-076              4 12/9/1954       51 YEARS  M      WHITE
-ABC-04-077              4 2/20/1954       52 YEARS  F      WHITE
+USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
+--------------------------------------------------------------------------------------------
+ABC-01-049                     1 11/12/1966      39 YEARS  M      WHITE
+ABC-01-050                     1 12/19/1958      47 YEARS  M      WHITE
+ABC-01-051                     1 5/2/1972        34 YEARS  M      WHITE
+ABC-01-052                     1 6/27/1961       45 YEARS  F      WHITE
+ABC-01-053                     1 4/7/1980        26 YEARS  F      WHITE
+ABC-01-054                     1 9/13/1962       44 YEARS  M      WHITE
+ABC-01-055                     1 6/11/1959       47 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-01-056                     1 5/2/1975        31 YEARS  M      WHITE
+ABC-01-113                     1 2/8/1932        74 YEARS  M      WHITE
+ABC-01-114                     1 7/9/1934        72 YEARS  F      WHITE
+ABC-02-033                     2 2/1/1968        38 YEARS  F      WHITE
+ABC-02-034                     2 10/5/1933       73 YEARS  F      WHITE
+ABC-02-035                     2 9/25/1960       46 YEARS  M      WHITE
+ABC-02-036                     2 1/1/1971        35 YEARS  M      WHITE
+ABC-02-037                     2 7/28/1960       46 YEARS  M      WHITE
+ABC-02-038                     2 7/2/1947        59 YEARS  M      WHITE
+ABC-02-039                     2 4/11/1971       35 YEARS  M      WHITE
+ABC-02-040                     2 3/27/1944       62 YEARS  M      WHITE
+ABC-02-109                     2 9/3/1969        37 YEARS  M      WHITE
+ABC-02-110                     2 8/12/1966       40 YEARS  F      WHITE
+ABC-02-111                     2 7/9/1967        39 YEARS  M      WHITE
+ABC-02-112                     2 11/1/1976       30 YEARS  F      WHITE
+ABC-03-001                     3 6/16/1941       65 YEARS  M      WHITE
+ABC-03-002                     3 3/20/1935       71 YEARS  M      WHITE
+ABC-03-003                     3 9/14/1942       64 YEARS  M      WHITE
+ABC-03-004                     3 7/8/1961        45 YEARS  M      WHITE
+ABC-03-005                     3 12/10/1952      53 YEARS  M      WHITE
+ABC-03-006                     3 12/12/1958      47 YEARS  M      WHITE
+ABC-03-007                     3 12/1/1948       57 YEARS  M      WHITE
+ABC-03-008                     3 8/28/1952       54 YEARS  M      WHITE
+ABC-03-089                     3 10/2/1975       31 YEARS  F      UNKNOWN
+ABC-03-090                     3 6/17/1926       80 YEARS  M      WHITE
+ABC-03-091                     3 2/20/1955       51 YEARS  F      WHITE
+ABC-04-073                     4 1/19/1947       59 YEARS  F      WHITE
+ABC-04-074                     4 3/28/1983       23 YEARS  F      WHITE
 
-2020-09-05 03:01:40                                                                             Page 2 of 15
+Time                                                                                            Page 2 of 15
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -128,106 +122,100 @@ ABC-03-090  NOT HISPANIC OR LATINO  SCRNFAIL  SCREEN FAILURE
 ABC-03-091  NOT HISPANIC OR LATINO  1         ARM A
 ABC-04-073  NOT HISPANIC OR LATINO  4         ARM D
 ABC-04-074  NOT HISPANIC OR LATINO  3         ARM C
-ABC-04-075  NOT HISPANIC OR LATINO  1         ARM A
-ABC-04-076  NOT HISPANIC OR LATINO  2         ARM B
-ABC-04-077  NOT HISPANIC OR LATINO  3         ARM C
 
-2020-09-05 03:01:40                                                                             Page 3 of 15
+Time                                                                                            Page 3 of 15
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID     STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC    DTHDTC
-----------------------------------------------------------------------------------------------------------
-ABC-04-078  ABC     DM         78 12/13/2006                                11/21/2006
-ABC-04-079  ABC     DM         79 12/18/2006                                12/11/2006
-ABC-04-080  ABC     DM         80 12/21/2006                                12/12/2006
-ABC-04-125  ABC     DM        125 12/29/2006                                12/14/2006
-ABC-04-126  ABC     DM        126 1/2/2007                                  12/13/2006
-ABC-04-127  ABC     DM        127 1/3/2007                                  12/14/2006
-ABC-04-128  ABC     DM        128 1/4/2007                                  12/21/2006
-ABC-04-129  ABC     DM        129 1/5/2007                                  12/19/2006
-ABC-04-130  ABC     DM        130 1/8/2007                                  12/18/2006
-ABC-04-131  ABC     DM        131 1/10/2007                                 12/18/2006
-ABC-06-065  ABC     DM         65 11/8/2006                                 10/27/2006
-ABC-06-066  ABC     DM         66 11/14/2006                                11/6/2006
-ABC-06-067  ABC     DM         67 11/21/2006                                11/14/2006
-ABC-06-068  ABC     DM         68 11/22/2006                                11/16/2006
-ABC-06-069  ABC     DM         69 11/27/2006  1/5/2007                      11/6/2006   1/5/2007
-ABC-06-070  ABC     DM         70 11/29/2006                                11/17/2006
-ABC-06-071  ABC     DM         71 11/29/2006                                11/15/2006
-ABC-06-072  ABC     DM         72 12/5/2006                                 11/28/2006
-ABC-06-161  ABC     DM        161 12/12/2006  1/4/2007                      12/8/2006   1/4/2007
-ABC-06-162  ABC     DM        162 12/28/2006                                12/14/2006
-ABC-06-163  ABC     DM        163 1/8/2007                                  12/21/2006
-ABC-07-009  ABC     DM          9 10/18/2006                                10/11/2006
-ABC-07-010  ABC     DM         10 11/22/2006                                11/15/2006
-ABC-07-011  ABC     DM         11 11/22/2006                                11/15/2006
-ABC-07-012  ABC     DM         12 12/13/2006                                12/6/2006
-ABC-07-013  ABC     DM         13 12/18/2006                                12/11/2006
-ABC-07-014  ABC     DM         14 12/18/2006                                12/11/2006
-ABC-07-015  ABC     DM         15 12/20/2006                                12/13/2006
-ABC-07-016  ABC     DM         16 12/26/2006                                12/18/2006
-ABC-08-101  ABC     DM        101 11/7/2006                                 10/23/2006
-ABC-08-102  ABC     DM        102 11/9/2006                                 11/1/2006
-ABC-08-103  ABC     DM        103 11/9/2006                                 11/2/2006
-ABC-08-104  ABC     DM        104 11/9/2006                                 11/9/2006
-ABC-08-105  ABC     DM        105 11/13/2006                                10/30/2006
-ABC-08-106  ABC     DM        106 11/14/2006                                10/30/2006
-ABC-08-107  ABC     DM        107 11/21/2006  1/3/2007                      11/3/2006   1/3/2007
-ABC-08-108  ABC     DM        108 12/22/2006                                12/4/2006
-ABC-09-017  ABC     DM         17 10/18/2006                                10/6/2006
+USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
+---------------------------------------------------------------------------------------------------------
+ABC-04-075  ABC     DM     S:75         11/9/2006                                 11/2/2006
+ABC-04-076  ABC     DM     S:76         11/15/2006                                10/26/2006
+ABC-04-077  ABC     DM     S:77         11/15/2006                                11/2/2006
+ABC-04-078  ABC     DM     S:78         12/13/2006                                11/21/2006
+ABC-04-079  ABC     DM     S:79         12/18/2006                                12/11/2006
+ABC-04-080  ABC     DM     S:80         12/21/2006                                12/12/2006
+ABC-04-125  ABC     DM     S:125        12/29/2006                                12/14/2006
+ABC-04-126  ABC     DM     S:126        1/2/2007                                  12/13/2006
+ABC-04-127  ABC     DM     S:127        1/3/2007                                  12/14/2006
+ABC-04-128  ABC     DM     S:128        1/4/2007                                  12/21/2006
+ABC-04-129  ABC     DM     S:129        1/5/2007                                  12/19/2006
+ABC-04-130  ABC     DM     S:130        1/8/2007                                  12/18/2006
+ABC-04-131  ABC     DM     S:131        1/10/2007                                 12/18/2006
+ABC-06-065  ABC     DM     S:65         11/8/2006                                 10/27/2006
+ABC-06-066  ABC     DM     S:66         11/14/2006                                11/6/2006
+ABC-06-067  ABC     DM     S:67         11/21/2006                                11/14/2006
+ABC-06-068  ABC     DM     S:68         11/22/2006                                11/16/2006
+ABC-06-069  ABC     DM     S:69         11/27/2006  1/5/2007                      11/6/2006   1/5/2007
+ABC-06-070  ABC     DM     S:70         11/29/2006                                11/17/2006
+ABC-06-071  ABC     DM     S:71         11/29/2006                                11/15/2006
+ABC-06-072  ABC     DM     S:72         12/5/2006                                 11/28/2006
+ABC-06-161  ABC     DM     S:161        12/12/2006  1/4/2007                      12/8/2006   1/4/2007
+ABC-06-162  ABC     DM     S:162        12/28/2006                                12/14/2006
+ABC-06-163  ABC     DM     S:163        1/8/2007                                  12/21/2006
+ABC-07-009  ABC     DM     S:9          10/18/2006                                10/11/2006
+ABC-07-010  ABC     DM     S:10         11/22/2006                                11/15/2006
+ABC-07-011  ABC     DM     S:11         11/22/2006                                11/15/2006
+ABC-07-012  ABC     DM     S:12         12/13/2006                                12/6/2006
+ABC-07-013  ABC     DM     S:13         12/18/2006                                12/11/2006
+ABC-07-014  ABC     DM     S:14         12/18/2006                                12/11/2006
+ABC-07-015  ABC     DM     S:15         12/20/2006                                12/13/2006
+ABC-07-016  ABC     DM     S:16         12/26/2006                                12/18/2006
+ABC-08-101  ABC     DM     S:101        11/7/2006                                 10/23/2006
+ABC-08-102  ABC     DM     S:102        11/9/2006                                 11/1/2006
+ABC-08-103  ABC     DM     S:103        11/9/2006                                 11/2/2006
 
-2020-09-05 03:01:40                                                                             Page 4 of 15
+Time                                                                                            Page 4 of 15
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID      DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
--------------------------------------------------------------------------------------
-ABC-04-078              4 9/11/1953       53 YEARS  F      WHITE
-ABC-04-079              4 11/11/1933      73 YEARS  F      WHITE
-ABC-04-080              4 5/7/1951        55 YEARS  M      WHITE
-ABC-04-125              4 11/16/1937      69 YEARS  M      WHITE
-ABC-04-126              4 5/13/1957       49 YEARS  M      WHITE
-ABC-04-127              4 3/18/1937       69 YEARS  M      ASIAN
-ABC-04-128              4 5/24/1987       19 YEARS  M      WHITE
-ABC-04-129              4 2/21/1960       46 YEARS  M      ASIAN
-ABC-04-130              4 2/28/1937       69 YEARS  M      WHITE
-ABC-04-131              4 3/10/1935       71 YEARS  M      WHITE
-ABC-06-065              6 4/4/1972        34 YEARS  M      WHITE
-ABC-06-066              6 1/1/1945        61 YEARS  F      WHITE
-ABC-06-067              6 9/23/1958       48 YEARS  F      WHITE
-ABC-06-068              6 9/12/1954       52 YEARS  F      WHITE
-ABC-06-069              6 11/15/1934      72 YEARS  F      WHITE
-ABC-06-070              6 2/1/1980        26 YEARS  M      WHITE
-ABC-06-071              6 3/1/1931        75 YEARS  F      WHITE
-ABC-06-072              6 7/12/1960       46 YEARS  M      WHITE
-ABC-06-161              6 2/3/1958        48 YEARS  M      WHITE
-ABC-06-162              6 12/21/1948      58 YEARS  M      WHITE
-ABC-06-163              6 4/13/1942       64 YEARS  M      WHITE
-ABC-07-009              7 4/18/1945       61 YEARS  F      WHITE
-ABC-07-010              7 7/12/1960       46 YEARS  F      WHITE
-ABC-07-011              7 1/18/1985       21 YEARS  M      WHITE
-ABC-07-012              7 8/12/1948       58 YEARS  F      WHITE
-ABC-07-013              7 1/29/1961       45 YEARS  M      WHITE
-ABC-07-014              7 4/19/1935       71 YEARS  M      WHITE
-ABC-07-015              7 4/17/1971       35 YEARS  F      WHITE
-ABC-07-016              7 8/6/1957        49 YEARS  M      WHITE
-ABC-08-101              8 3/16/1952       54 YEARS  F      WHITE
-ABC-08-102              8 2/23/1952       54 YEARS  F      WHITE
-ABC-08-103              8 9/17/1973       33 YEARS  M      UNKNOWN
-ABC-08-104              8 7/1/1958        48 YEARS  M      WHITE
-ABC-08-105              8 5/11/1962       44 YEARS  M      WHITE
-ABC-08-106              8 6/17/1946       60 YEARS  M      WHITE
-ABC-08-107              8 11/3/1952       54 YEARS  M      WHITE
-ABC-08-108              8 3/24/1960       46 YEARS  F      WHITE
-ABC-09-017              9 9/28/1945       61 YEARS  M      BLACK OR AFRICAN AMERICAN
+USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
+--------------------------------------------------------------------------------------------
+ABC-04-075                     4 4/7/1943        63 YEARS  M      WHITE
+ABC-04-076                     4 12/9/1954       51 YEARS  M      WHITE
+ABC-04-077                     4 2/20/1954       52 YEARS  F      WHITE
+ABC-04-078                     4 9/11/1953       53 YEARS  F      WHITE
+ABC-04-079                     4 11/11/1933      73 YEARS  F      WHITE
+ABC-04-080                     4 5/7/1951        55 YEARS  M      WHITE
+ABC-04-125                     4 11/16/1937      69 YEARS  M      WHITE
+ABC-04-126                     4 5/13/1957       49 YEARS  M      WHITE
+ABC-04-127                     4 3/18/1937       69 YEARS  M      ASIAN
+ABC-04-128                     4 5/24/1987       19 YEARS  M      WHITE
+ABC-04-129                     4 2/21/1960       46 YEARS  M      ASIAN
+ABC-04-130                     4 2/28/1937       69 YEARS  M      WHITE
+ABC-04-131                     4 3/10/1935       71 YEARS  M      WHITE
+ABC-06-065                     6 4/4/1972        34 YEARS  M      WHITE
+ABC-06-066                     6 1/1/1945        61 YEARS  F      WHITE
+ABC-06-067                     6 9/23/1958       48 YEARS  F      WHITE
+ABC-06-068                     6 9/12/1954       52 YEARS  F      WHITE
+ABC-06-069                     6 11/15/1934      72 YEARS  F      WHITE
+ABC-06-070                     6 2/1/1980        26 YEARS  M      WHITE
+ABC-06-071                     6 3/1/1931        75 YEARS  F      WHITE
+ABC-06-072                     6 7/12/1960       46 YEARS  M      WHITE
+ABC-06-161                     6 2/3/1958        48 YEARS  M      WHITE
+ABC-06-162                     6 12/21/1948      58 YEARS  M      WHITE
+ABC-06-163                     6 4/13/1942       64 YEARS  M      WHITE
+ABC-07-009                     7 4/18/1945       61 YEARS  F      WHITE
+ABC-07-010                     7 7/12/1960       46 YEARS  F      WHITE
+ABC-07-011                     7 1/18/1985       21 YEARS  M      WHITE
+ABC-07-012                     7 8/12/1948       58 YEARS  F      WHITE
+ABC-07-013                     7 1/29/1961       45 YEARS  M      WHITE
+ABC-07-014                     7 4/19/1935       71 YEARS  M      WHITE
+ABC-07-015                     7 4/17/1971       35 YEARS  F      WHITE
+ABC-07-016                     7 8/6/1957        49 YEARS  M      WHITE
+ABC-08-101                     8 3/16/1952       54 YEARS  F      WHITE
+ABC-08-102                     8 2/23/1952       54 YEARS  F      WHITE
+ABC-08-103                     8 9/17/1973       33 YEARS  M      UNKNOWN
 
-2020-09-05 03:01:40                                                                             Page 5 of 15
+Time                                                                                            Page 5 of 15
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
 -------------------------------------------------------------------------------------
+ABC-04-075  NOT HISPANIC OR LATINO  1         ARM A
+ABC-04-076  NOT HISPANIC OR LATINO  2         ARM B
+ABC-04-077  NOT HISPANIC OR LATINO  3         ARM C
 ABC-04-078  NOT HISPANIC OR LATINO  4         ARM D
 ABC-04-079  NOT HISPANIC OR LATINO  2         ARM B
 ABC-04-080  NOT HISPANIC OR LATINO  1         ARM A
@@ -260,109 +248,103 @@ ABC-07-016  NOT HISPANIC OR LATINO  1         ARM A
 ABC-08-101  NOT HISPANIC OR LATINO  3         ARM C
 ABC-08-102  NOT HISPANIC OR LATINO  4         ARM D
 ABC-08-103  NOT HISPANIC OR LATINO  2         ARM B
+
+Time                                                                                            Page 6 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
+---------------------------------------------------------------------------------------------------------
+ABC-08-104  ABC     DM     S:104        11/9/2006                                 11/9/2006
+ABC-08-105  ABC     DM     S:105        11/13/2006                                10/30/2006
+ABC-08-106  ABC     DM     S:106        11/14/2006                                10/30/2006
+ABC-08-107  ABC     DM     S:107        11/21/2006  1/3/2007                      11/3/2006   1/3/2007
+ABC-08-108  ABC     DM     S:108        12/22/2006                                12/4/2006
+ABC-09-017  ABC     DM     S:17         10/18/2006                                10/6/2006
+ABC-09-018  ABC     DM     S:18         10/18/2006                                10/4/2006
+ABC-09-019  ABC     DM     S:19         10/18/2006                                10/6/2006
+ABC-09-020  ABC     DM     S:20         10/18/2006                                10/4/2006
+ABC-09-021  ABC     DM     S:21         11/1/2006                                 10/5/2006
+ABC-09-022  ABC     DM     S:22         11/16/2006                                11/13/2006
+ABC-09-023  ABC     DM     S:23         11/16/2006                                11/14/2006
+ABC-09-024  ABC     DM     S:24         11/16/2006                                11/9/2006
+ABC-09-137  ABC     DM     S:137        11/21/2006                                11/17/2006
+ABC-09-138  ABC     DM     S:138        11/21/2006                                11/15/2006
+ABC-09-139  ABC     DM     S:139        11/21/2006                                11/17/2006
+ABC-09-140  ABC     DM     S:140        11/28/2006                                11/22/2006
+ABC-10-041  ABC     DM     S:41         12/20/2006                                12/20/2006
+ABC-10-042  ABC     DM     S:42         1/10/2007                                 12/18/2006
+ABC-10-043  ABC     DM     S:43         2/9/2007                                  12/18/2006
+ABC-10-145  ABC     DM     S:145        12/8/2006                                 12/1/2006
+ABC-10-146  ABC     DM     S:146        12/11/2006                                11/29/2006
+ABC-10-147  ABC     DM     S:147        12/12/2006                                12/1/2006
+ABC-10-148  ABC     DM     S:148        12/12/2006                                11/30/2006
+ABC-10-149  ABC     DM     S:149        12/13/2006                                11/30/2006
+ABC-10-150  ABC     DM     S:150        12/14/2006                                11/29/2006
+ABC-10-151  ABC     DM     S:151        12/28/2006                                12/8/2006
+ABC-10-152  ABC     DM     S:152        1/8/2007                                  12/15/2006
+ABC-11-048  ABC     DM     S:48         1/18/2007                                 12/28/2006
+ABC-11-093  ABC     DM     S:93         11/8/2006                                 11/2/2006
+ABC-11-094  ABC     DM     S:94         11/8/2006                                 11/6/2006
+ABC-11-095  ABC     DM     S:95         11/10/2006                                11/7/2006
+ABC-11-096  ABC     DM     S:96         11/27/2006                                11/15/2006
+ABC-11-097  ABC     DM     S:97         11/28/2006                                11/8/2006
+ABC-11-098  ABC     DM     S:98         12/4/2006                                 11/27/2006
+
+Time                                                                                            Page 7 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
+--------------------------------------------------------------------------------------------
+ABC-08-104                     8 7/1/1958        48 YEARS  M      WHITE
+ABC-08-105                     8 5/11/1962       44 YEARS  M      WHITE
+ABC-08-106                     8 6/17/1946       60 YEARS  M      WHITE
+ABC-08-107                     8 11/3/1952       54 YEARS  M      WHITE
+ABC-08-108                     8 3/24/1960       46 YEARS  F      WHITE
+ABC-09-017                     9 9/28/1945       61 YEARS  M      BLACK OR AFRICAN AMERICAN
+ABC-09-018                     9 8/29/1984       22 YEARS  F      WHITE
+ABC-09-019                     9 12/6/1960       45 YEARS  M      WHITE
+ABC-09-020                     9 9/22/1953       53 YEARS  M      WHITE
+ABC-09-021                     9 11/8/1973       32 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-09-022                     9 11/8/1968       38 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-09-023                     9 4/3/1965        41 YEARS  M      BLACK OR AFRICAN AMERICAN
+ABC-09-024                     9 5/3/1953        53 YEARS  M      BLACK OR AFRICAN AMERICAN
+ABC-09-137                     9 10/26/1946      60 YEARS  M      WHITE
+ABC-09-138                     9 8/24/1975       31 YEARS  M      WHITE
+ABC-09-139                     9 11/13/1985      21 YEARS  F      WHITE
+ABC-09-140                     9 1/5/1964        42 YEARS  F      WHITE
+ABC-10-041                    10 2/24/1962       44 YEARS  F      WHITE
+ABC-10-042                    10 1/4/1982        25 YEARS  F      WHITE
+ABC-10-043                    10 9/28/1982       24 YEARS  F      WHITE
+ABC-10-145                    10 10/15/1975      31 YEARS  M      UNKNOWN
+ABC-10-146                    10 10/19/1977      29 YEARS  M      WHITE
+ABC-10-147                    10 7/2/1954        52 YEARS  M      BLACK OR AFRICAN AMERICAN
+ABC-10-148                    10 10/1/1963       43 YEARS  M      WHITE
+ABC-10-149                    10 7/17/1949       57 YEARS  M      BLACK OR AFRICAN AMERICAN
+ABC-10-150                    10 9/7/1981        25 YEARS  M      WHITE
+ABC-10-151                    10 6/21/1940       66 YEARS  M      WHITE
+ABC-10-152                    10 11/3/1943       63 YEARS  M      WHITE
+ABC-11-048                    11 11/12/1968      38 YEARS  F      ASIAN
+ABC-11-093                    11 10/21/1954      52 YEARS  M      WHITE
+ABC-11-094                    11 10/3/1966       40 YEARS  M      WHITE
+ABC-11-095                    11 8/2/1944        62 YEARS  M      WHITE
+ABC-11-096                    11 1/13/1953       53 YEARS  M      WHITE
+ABC-11-097                    11 6/21/1982       24 YEARS  F      WHITE
+ABC-11-098                    11 4/27/1939       67 YEARS  M      WHITE
+
+Time                                                                                            Page 8 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
+-------------------------------------------------------------------------------------
 ABC-08-104  NOT HISPANIC OR LATINO  1         ARM A
 ABC-08-105  NOT HISPANIC OR LATINO  3         ARM C
 ABC-08-106  NOT HISPANIC OR LATINO  1         ARM A
 ABC-08-107  NOT HISPANIC OR LATINO  4         ARM D
 ABC-08-108  NOT HISPANIC OR LATINO  2         ARM B
 ABC-09-017  HISPANIC OR LATINO      3         ARM C
-
-2020-09-05 03:01:40                                                                             Page 6 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC    DTHDTC
-----------------------------------------------------------------------------------------------------------
-ABC-09-018  ABC     DM         18 10/18/2006                                10/4/2006
-ABC-09-019  ABC     DM         19 10/18/2006                                10/6/2006
-ABC-09-020  ABC     DM         20 10/18/2006                                10/4/2006
-ABC-09-021  ABC     DM         21 11/1/2006                                 10/5/2006
-ABC-09-022  ABC     DM         22 11/16/2006                                11/13/2006
-ABC-09-023  ABC     DM         23 11/16/2006                                11/14/2006
-ABC-09-024  ABC     DM         24 11/16/2006                                11/9/2006
-ABC-09-137  ABC     DM        137 11/21/2006                                11/17/2006
-ABC-09-138  ABC     DM        138 11/21/2006                                11/15/2006
-ABC-09-139  ABC     DM        139 11/21/2006                                11/17/2006
-ABC-09-140  ABC     DM        140 11/28/2006                                11/22/2006
-ABC-10-041  ABC     DM         41 12/20/2006                                12/20/2006
-ABC-10-042  ABC     DM         42 1/10/2007                                 12/18/2006
-ABC-10-043  ABC     DM         43 2/9/2007                                  12/18/2006
-ABC-10-145  ABC     DM        145 12/8/2006                                 12/1/2006
-ABC-10-146  ABC     DM        146 12/11/2006                                11/29/2006
-ABC-10-147  ABC     DM        147 12/12/2006                                12/1/2006
-ABC-10-148  ABC     DM        148 12/12/2006                                11/30/2006
-ABC-10-149  ABC     DM        149 12/13/2006                                11/30/2006
-ABC-10-150  ABC     DM        150 12/14/2006                                11/29/2006
-ABC-10-151  ABC     DM        151 12/28/2006                                12/8/2006
-ABC-10-152  ABC     DM        152 1/8/2007                                  12/15/2006
-ABC-11-048  ABC     DM         48 1/18/2007                                 12/28/2006
-ABC-11-093  ABC     DM         93 11/8/2006                                 11/2/2006
-ABC-11-094  ABC     DM         94 11/8/2006                                 11/6/2006
-ABC-11-095  ABC     DM         95 11/10/2006                                11/7/2006
-ABC-11-096  ABC     DM         96 11/27/2006                                11/15/2006
-ABC-11-097  ABC     DM         97 11/28/2006                                11/8/2006
-ABC-11-098  ABC     DM         98 12/4/2006                                 11/27/2006
-ABC-11-099  ABC     DM         99 12/8/2006                                 11/17/2006
-ABC-11-100  ABC     DM        100 1/11/2007                                 12/18/2006
-ABC-12-057  ABC     DM         57 11/14/2006                                10/19/2006
-ABC-12-058  ABC     DM         58 11/15/2006                                10/20/2006
-ABC-12-059  ABC     DM         59 11/17/2006  2/8/2007                      11/3/2006   2/8/2007
-ABC-12-060  ABC     DM         60 12/6/2006                                 10/20/2006
-ABC-12-061  ABC     DM         61 1/4/2007                                  12/13/2006
-ABC-12-062  ABC     DM         62 1/15/2007                                 12/28/2006
-ABC-12-063  ABC     DM         63 1/23/2007                                 12/28/2006
-
-2020-09-05 03:01:40                                                                             Page 7 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID      DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
--------------------------------------------------------------------------------------
-ABC-09-018              9 8/29/1984       22 YEARS  F      WHITE
-ABC-09-019              9 12/6/1960       45 YEARS  M      WHITE
-ABC-09-020              9 9/22/1953       53 YEARS  M      WHITE
-ABC-09-021              9 11/8/1973       32 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-09-022              9 11/8/1968       38 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-09-023              9 4/3/1965        41 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-09-024              9 5/3/1953        53 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-09-137              9 10/26/1946      60 YEARS  M      WHITE
-ABC-09-138              9 8/24/1975       31 YEARS  M      WHITE
-ABC-09-139              9 11/13/1985      21 YEARS  F      WHITE
-ABC-09-140              9 1/5/1964        42 YEARS  F      WHITE
-ABC-10-041             10 2/24/1962       44 YEARS  F      WHITE
-ABC-10-042             10 1/4/1982        25 YEARS  F      WHITE
-ABC-10-043             10 9/28/1982       24 YEARS  F      WHITE
-ABC-10-145             10 10/15/1975      31 YEARS  M      UNKNOWN
-ABC-10-146             10 10/19/1977      29 YEARS  M      WHITE
-ABC-10-147             10 7/2/1954        52 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-10-148             10 10/1/1963       43 YEARS  M      WHITE
-ABC-10-149             10 7/17/1949       57 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-10-150             10 9/7/1981        25 YEARS  M      WHITE
-ABC-10-151             10 6/21/1940       66 YEARS  M      WHITE
-ABC-10-152             10 11/3/1943       63 YEARS  M      WHITE
-ABC-11-048             11 11/12/1968      38 YEARS  F      ASIAN
-ABC-11-093             11 10/21/1954      52 YEARS  M      WHITE
-ABC-11-094             11 10/3/1966       40 YEARS  M      WHITE
-ABC-11-095             11 8/2/1944        62 YEARS  M      WHITE
-ABC-11-096             11 1/13/1953       53 YEARS  M      WHITE
-ABC-11-097             11 6/21/1982       24 YEARS  F      WHITE
-ABC-11-098             11 4/27/1939       67 YEARS  M      WHITE
-ABC-11-099             11 4/20/1942       64 YEARS  M      WHITE
-ABC-11-100             11 6/8/1976        30 YEARS  F      WHITE
-ABC-12-057             12 1/22/1981       25 YEARS  F      WHITE
-ABC-12-058             12 9/15/1931       75 YEARS  F      WHITE
-ABC-12-059             12 10/18/1966      40 YEARS  F      WHITE
-ABC-12-060             12 3/26/1944       62 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-12-061             12 10/29/1959      47 YEARS  F      WHITE
-ABC-12-062             12 12/3/1936       70 YEARS  M      WHITE
-ABC-12-063             12 2/3/1941        65 YEARS  F      WHITE
-
-2020-09-05 03:01:40                                                                             Page 8 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
--------------------------------------------------------------------------------------
 ABC-09-018  NOT HISPANIC OR LATINO  2         ARM B
 ABC-09-019  NOT HISPANIC OR LATINO  4         ARM D
 ABC-09-020  NOT HISPANIC OR LATINO  1         ARM A
@@ -392,6 +374,97 @@ ABC-11-095  HISPANIC OR LATINO      3         ARM C
 ABC-11-096  NOT HISPANIC OR LATINO  4         ARM D
 ABC-11-097  NOT HISPANIC OR LATINO  1         ARM A
 ABC-11-098  HISPANIC OR LATINO      3         ARM C
+
+Time                                                                                            Page 9 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
+---------------------------------------------------------------------------------------------------------
+ABC-11-099  ABC     DM     S:99         12/8/2006                                 11/17/2006
+ABC-11-100  ABC     DM     S:100        1/11/2007                                 12/18/2006
+ABC-12-057  ABC     DM     S:57         11/14/2006                                10/19/2006
+ABC-12-058  ABC     DM     S:58         11/15/2006                                10/20/2006
+ABC-12-059  ABC     DM     S:59         11/17/2006  2/8/2007                      11/3/2006   2/8/2007
+ABC-12-060  ABC     DM     S:60         12/6/2006                                 10/20/2006
+ABC-12-061  ABC     DM     S:61         1/4/2007                                  12/13/2006
+ABC-12-062  ABC     DM     S:62         1/15/2007                                 12/28/2006
+ABC-12-063  ABC     DM     S:63         1/23/2007                                 12/28/2006
+ABC-13-025  ABC     DM     S:25         10/24/2006                                10/17/2006
+ABC-13-026  ABC     DM     S:26         11/2/2006                                 10/25/2006
+ABC-13-027  ABC     DM     S:27         11/2/2006                                 10/26/2006
+ABC-13-028  ABC     DM     S:28         11/7/2006                                 10/30/2006
+ABC-13-029  ABC     DM     S:29         11/15/2006                                11/7/2006
+ABC-13-030  ABC     DM     S:30         11/16/2006                                11/8/2006
+ABC-13-031  ABC     DM     S:31         11/21/2006                                11/14/2006
+ABC-13-032  ABC     DM     S:32         11/21/2006                                11/14/2006
+ABC-13-141  ABC     DM     S:141        11/21/2006  12/6/2006                     11/15/2006  12/6/2006
+ABC-13-142  ABC     DM     S:142        12/14/2006                                12/6/2006
+ABC-13-143  ABC     DM     S:143        12/19/2006                                12/11/2006
+ABC-14-081  ABC     DM     S:81         11/7/2006                                 11/1/2006
+ABC-14-082  ABC     DM     S:82         11/13/2006                                10/30/2006
+ABC-14-083  ABC     DM     S:83         11/14/2006  3/6/2007                      10/31/2006  3/6/2007
+ABC-14-084  ABC     DM     S:84         11/14/2006                                10/31/2006
+ABC-14-085  ABC     DM     S:85         11/15/2006                                10/31/2006
+ABC-14-086  ABC     DM     S:86         11/15/2006                                11/6/2006
+ABC-14-087  ABC     DM     S:87         11/16/2006                                11/1/2006
+ABC-14-088  ABC     DM     S:88         11/20/2006                                10/30/2006
+ABC-14-117  ABC     DM     S:117        11/20/2006                                11/15/2006
+ABC-14-118  ABC     DM     S:118        11/28/2006                                11/13/2006
+ABC-14-119  ABC     DM     S:119        11/28/2006  1/9/2007                      10/31/2006  1/9/2007
+ABC-14-120  ABC     DM     S:120        11/28/2006                                10/30/2006
+ABC-14-121  ABC     DM     S:121        11/29/2006                                10/30/2006
+ABC-14-122  ABC     DM     S:122        12/18/2006                                12/11/2006
+ABC-14-123  ABC     DM     S:123        12/19/2006                                11/21/2006
+
+Time                                                                                           Page 10 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
+--------------------------------------------------------------------------------------------
+ABC-11-099                    11 4/20/1942       64 YEARS  M      WHITE
+ABC-11-100                    11 6/8/1976        30 YEARS  F      WHITE
+ABC-12-057                    12 1/22/1981       25 YEARS  F      WHITE
+ABC-12-058                    12 9/15/1931       75 YEARS  F      WHITE
+ABC-12-059                    12 10/18/1966      40 YEARS  F      WHITE
+ABC-12-060                    12 3/26/1944       62 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-12-061                    12 10/29/1959      47 YEARS  F      WHITE
+ABC-12-062                    12 12/3/1936       70 YEARS  M      WHITE
+ABC-12-063                    12 2/3/1941        65 YEARS  F      WHITE
+ABC-13-025                    13 8/12/1982       24 YEARS  M      WHITE
+ABC-13-026                    13 5/13/1955       51 YEARS  F      WHITE
+ABC-13-027                    13 7/9/1987        19 YEARS  F      WHITE
+ABC-13-028                    13 11/10/1958      47 YEARS  M      WHITE
+ABC-13-029                    13 5/29/1957       49 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-13-030                    13 1/18/1943       63 YEARS  M      WHITE
+ABC-13-031                    13 11/2/1969       37 YEARS  F      WHITE
+ABC-13-032                    13 2/13/1959       47 YEARS  M      BLACK OR AFRICAN AMERICAN
+ABC-13-141                    13 12/16/1941      64 YEARS  F      WHITE
+ABC-13-142                    13 5/19/1951       55 YEARS  M      WHITE
+ABC-13-143                    13 4/12/1973       33 YEARS  M      WHITE
+ABC-14-081                    14 2/1/1944        62 YEARS  F      WHITE
+ABC-14-082                    14 4/21/1940       66 YEARS  M      WHITE
+ABC-14-083                    14 7/16/1967       39 YEARS  F      WHITE
+ABC-14-084                    14 10/11/1934      72 YEARS  M      WHITE
+ABC-14-085                    14 8/18/1950       56 YEARS  M      WHITE
+ABC-14-086                    14 9/26/1957       49 YEARS  M      WHITE
+ABC-14-087                    14 8/31/1952       54 YEARS  F      WHITE
+ABC-14-088                    14 6/22/1950       56 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-14-117                    14 10/14/1962      44 YEARS  F      BLACK OR AFRICAN AMERICAN
+ABC-14-118                    14 6/24/1972       34 YEARS  M      WHITE
+ABC-14-119                    14 8/26/1958       48 YEARS  M      WHITE
+ABC-14-120                    14 5/25/1936       70 YEARS  M      WHITE
+ABC-14-121                    14 12/5/1950       55 YEARS  M      WHITE
+ABC-14-122                    14 5/3/1972        34 YEARS  M      WHITE
+ABC-14-123                    14 5/23/1954       52 YEARS  F      ASIAN
+
+Time                                                                                           Page 11 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
+-------------------------------------------------------------------------------------
 ABC-11-099  NOT HISPANIC OR LATINO  4         ARM D
 ABC-11-100  NOT HISPANIC OR LATINO  2         ARM B
 ABC-12-057  NOT HISPANIC OR LATINO  2         ARM B
@@ -401,103 +474,6 @@ ABC-12-060  NOT HISPANIC OR LATINO  3         ARM C
 ABC-12-061  NOT HISPANIC OR LATINO  2         ARM B
 ABC-12-062  NOT HISPANIC OR LATINO  1         ARM A
 ABC-12-063  NOT HISPANIC OR LATINO  3         ARM C
-
-2020-09-05 03:01:40                                                                             Page 9 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC    DTHDTC
-----------------------------------------------------------------------------------------------------------
-ABC-13-025  ABC     DM         25 10/24/2006                                10/17/2006
-ABC-13-026  ABC     DM         26 11/2/2006                                 10/25/2006
-ABC-13-027  ABC     DM         27 11/2/2006                                 10/26/2006
-ABC-13-028  ABC     DM         28 11/7/2006                                 10/30/2006
-ABC-13-029  ABC     DM         29 11/15/2006                                11/7/2006
-ABC-13-030  ABC     DM         30 11/16/2006                                11/8/2006
-ABC-13-031  ABC     DM         31 11/21/2006                                11/14/2006
-ABC-13-032  ABC     DM         32 11/21/2006                                11/14/2006
-ABC-13-141  ABC     DM        141 11/21/2006  12/6/2006                     11/15/2006  12/6/2006
-ABC-13-142  ABC     DM        142 12/14/2006                                12/6/2006
-ABC-13-143  ABC     DM        143 12/19/2006                                12/11/2006
-ABC-14-081  ABC     DM         81 11/7/2006                                 11/1/2006
-ABC-14-082  ABC     DM         82 11/13/2006                                10/30/2006
-ABC-14-083  ABC     DM         83 11/14/2006  3/6/2007                      10/31/2006  3/6/2007
-ABC-14-084  ABC     DM         84 11/14/2006                                10/31/2006
-ABC-14-085  ABC     DM         85 11/15/2006                                10/31/2006
-ABC-14-086  ABC     DM         86 11/15/2006                                11/6/2006
-ABC-14-087  ABC     DM         87 11/16/2006                                11/1/2006
-ABC-14-088  ABC     DM         88 11/20/2006                                10/30/2006
-ABC-14-117  ABC     DM        117 11/20/2006                                11/15/2006
-ABC-14-118  ABC     DM        118 11/28/2006                                11/13/2006
-ABC-14-119  ABC     DM        119 11/28/2006  1/9/2007                      10/31/2006  1/9/2007
-ABC-14-120  ABC     DM        120 11/28/2006                                10/30/2006
-ABC-14-121  ABC     DM        121 11/29/2006                                10/30/2006
-ABC-14-122  ABC     DM        122 12/18/2006                                12/11/2006
-ABC-14-123  ABC     DM        123 12/19/2006                                11/21/2006
-ABC-14-124  ABC     DM        124 12/28/2006                                12/19/2006
-ABC-15-153  ABC     DM        153 1/4/2007    2/22/2007                     12/21/2006  2/22/2007
-ABC-15-154  ABC     DM        154 1/10/2007   2/12/2007                     12/29/2006  2/12/2007
-ABC-15-155  ABC     DM        155 1/11/2007                                 12/28/2006
-ABC-15-156  ABC     DM        156 1/11/2007                                 12/28/2006
-ABC-16-045  ABC     DM         45 12/28/2006                                12/19/2006
-ABC-16-046  ABC     DM         46 12/28/2006  1/29/2007                     12/21/2006  1/29/2007
-ABC-16-047  ABC     DM         47 1/2/2007    2/1/2007                      12/19/2006  2/1/2007
-ABC-16-157  ABC     DM        157 12/14/2006                                12/7/2006
-ABC-16-158  ABC     DM        158 12/19/2006                                12/5/2006
-ABC-16-159  ABC     DM        159 12/21/2006                                12/14/2006
-
-
-2020-09-05 03:01:40                                                                            Page 10 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID      DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
--------------------------------------------------------------------------------------
-ABC-13-025             13 8/12/1982       24 YEARS  M      WHITE
-ABC-13-026             13 5/13/1955       51 YEARS  F      WHITE
-ABC-13-027             13 7/9/1987        19 YEARS  F      WHITE
-ABC-13-028             13 11/10/1958      47 YEARS  M      WHITE
-ABC-13-029             13 5/29/1957       49 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-13-030             13 1/18/1943       63 YEARS  M      WHITE
-ABC-13-031             13 11/2/1969       37 YEARS  F      WHITE
-ABC-13-032             13 2/13/1959       47 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-13-141             13 12/16/1941      64 YEARS  F      WHITE
-ABC-13-142             13 5/19/1951       55 YEARS  M      WHITE
-ABC-13-143             13 4/12/1973       33 YEARS  M      WHITE
-ABC-14-081             14 2/1/1944        62 YEARS  F      WHITE
-ABC-14-082             14 4/21/1940       66 YEARS  M      WHITE
-ABC-14-083             14 7/16/1967       39 YEARS  F      WHITE
-ABC-14-084             14 10/11/1934      72 YEARS  M      WHITE
-ABC-14-085             14 8/18/1950       56 YEARS  M      WHITE
-ABC-14-086             14 9/26/1957       49 YEARS  M      WHITE
-ABC-14-087             14 8/31/1952       54 YEARS  F      WHITE
-ABC-14-088             14 6/22/1950       56 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-14-117             14 10/14/1962      44 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-14-118             14 6/24/1972       34 YEARS  M      WHITE
-ABC-14-119             14 8/26/1958       48 YEARS  M      WHITE
-ABC-14-120             14 5/25/1936       70 YEARS  M      WHITE
-ABC-14-121             14 12/5/1950       55 YEARS  M      WHITE
-ABC-14-122             14 5/3/1972        34 YEARS  M      WHITE
-ABC-14-123             14 5/23/1954       52 YEARS  F      ASIAN
-ABC-14-124             14 6/29/1951       55 YEARS  M      WHITE
-ABC-15-153             15 10/22/1941      65 YEARS  F      WHITE
-ABC-15-154             15 6/5/1936        70 YEARS  F      WHITE
-ABC-15-155             15 5/27/1950       56 YEARS  F      WHITE
-ABC-15-156             15 1/9/1972        35 YEARS  F      WHITE
-ABC-16-045             16 8/18/1938       68 YEARS  M      WHITE
-ABC-16-046             16 7/21/1935       71 YEARS  F      WHITE
-ABC-16-047             16 4/20/1932       74 YEARS  M      WHITE
-ABC-16-157             16 9/4/1944        62 YEARS  M      WHITE
-ABC-16-158             16 5/22/1935       71 YEARS  M      WHITE
-ABC-16-159             16 7/19/1948       58 YEARS  F      WHITE
-
-
-2020-09-05 03:01:40                                                                            Page 11 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
--------------------------------------------------------------------------------------
 ABC-13-025  NOT HISPANIC OR LATINO  1         ARM A
 ABC-13-026  NOT HISPANIC OR LATINO  2         ARM B
 ABC-13-027  HISPANIC OR LATINO      3         ARM C
@@ -524,6 +500,97 @@ ABC-14-120  NOT HISPANIC OR LATINO  4         ARM D
 ABC-14-121  NOT HISPANIC OR LATINO  3         ARM C
 ABC-14-122  HISPANIC OR LATINO      4         ARM D
 ABC-14-123  NOT HISPANIC OR LATINO  1         ARM A
+
+Time                                                                                           Page 12 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
+---------------------------------------------------------------------------------------------------------
+ABC-14-124  ABC     DM     S:124        12/28/2006                                12/19/2006
+ABC-15-153  ABC     DM     S:153        1/4/2007    2/22/2007                     12/21/2006  2/22/2007
+ABC-15-154  ABC     DM     S:154        1/10/2007   2/12/2007                     12/29/2006  2/12/2007
+ABC-15-155  ABC     DM     S:155        1/11/2007                                 12/28/2006
+ABC-15-156  ABC     DM     S:156        1/11/2007                                 12/28/2006
+ABC-16-045  ABC     DM     S:45         12/28/2006                                12/19/2006
+ABC-16-046  ABC     DM     S:46         12/28/2006  1/29/2007                     12/21/2006  1/29/2007
+ABC-16-047  ABC     DM     S:47         1/2/2007    2/1/2007                      12/19/2006  2/1/2007
+ABC-16-157  ABC     DM     S:157        12/14/2006                                12/7/2006
+ABC-16-158  ABC     DM     S:158        12/19/2006                                12/5/2006
+ABC-16-159  ABC     DM     S:159        12/21/2006                                12/14/2006
+ABC-16-160  ABC     DM     S:160        12/28/2006                                12/19/2006
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Time                                                                                           Page 13 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
+--------------------------------------------------------------------------------------------
+ABC-14-124                    14 6/29/1951       55 YEARS  M      WHITE
+ABC-15-153                    15 10/22/1941      65 YEARS  F      WHITE
+ABC-15-154                    15 6/5/1936        70 YEARS  F      WHITE
+ABC-15-155                    15 5/27/1950       56 YEARS  F      WHITE
+ABC-15-156                    15 1/9/1972        35 YEARS  F      WHITE
+ABC-16-045                    16 8/18/1938       68 YEARS  M      WHITE
+ABC-16-046                    16 7/21/1935       71 YEARS  F      WHITE
+ABC-16-047                    16 4/20/1932       74 YEARS  M      WHITE
+ABC-16-157                    16 9/4/1944        62 YEARS  M      WHITE
+ABC-16-158                    16 5/22/1935       71 YEARS  M      WHITE
+ABC-16-159                    16 7/19/1948       58 YEARS  F      WHITE
+ABC-16-160                    16 3/8/1962        44 YEARS  M      WHITE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Time                                                                                           Page 14 of 15
+                                                Listing 1.0
+                                            Demographics Dataset
+
+USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
+-------------------------------------------------------------------------------------
 ABC-14-124  NOT HISPANIC OR LATINO  2         ARM B
 ABC-15-153  NOT HISPANIC OR LATINO  4         ARM D
 ABC-15-154  NOT HISPANIC OR LATINO  3         ARM C
@@ -535,104 +602,6 @@ ABC-16-047  NOT HISPANIC OR LATINO  1         ARM A
 ABC-16-157  HISPANIC OR LATINO      1         ARM A
 ABC-16-158  NOT HISPANIC OR LATINO  2         ARM B
 ABC-16-159  NOT HISPANIC OR LATINO  3         ARM C
-
-
-2020-09-05 03:01:40                                                                            Page 12 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC    DTHDTC
-----------------------------------------------------------------------------------------------------------
-ABC-16-160  ABC     DM        160 12/28/2006                                12/19/2006
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2020-09-05 03:01:40                                                                            Page 13 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID      DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
--------------------------------------------------------------------------------------
-ABC-16-160             16 3/8/1962        44 YEARS  M      WHITE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2020-09-05 03:01:40                                                                            Page 14 of 15
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
--------------------------------------------------------------------------------------
 ABC-16-160  HISPANIC OR LATINO      4         ARM D
 
 
@@ -658,18 +627,4 @@ ABC-16-160  HISPANIC OR LATINO      4         ARM D
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2020-09-05 03:01:40                                                                            Page 15 of 15
+Time                                                                                           Page 15 of 15

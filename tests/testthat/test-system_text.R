@@ -64,7 +64,7 @@ test_that("text2: Harder text output works as expected.", {
     titles("Report 2.0", "Harder Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(create_text(cnt)) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
 
@@ -93,7 +93,7 @@ test_that("text3: Even harder text output works as expected.", {
     add_content(create_text(cnt)) %>% 
     add_content(create_text(cnt)) %>% 
     add_content(create_text(cnt)) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right =c("Total Pages [tpg]"))
   
@@ -122,7 +122,7 @@ test_that("text4: Long text output works as expected.", {
     add_content(create_text(l)) %>% 
     page_footer(left = "Page [pg] of [tpg]", 
                 center = "Confidential", 
-                right = Sys.time())
+                right = "Time")
   
   res <- write_report(rpt)
   
@@ -153,7 +153,7 @@ test_that("text5: Table and Text output works as expected.", {
     add_content(create_table(tbl2), page_break = FALSE) %>% 
     add_content(create_text("* NOTE: Car information from 1972."), 
                 align = "left") %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   
@@ -180,7 +180,7 @@ test_that("text6: Very Long text output works as expected.", {
     titles("Report 6.0", "Very long Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(create_text(l)) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   
@@ -214,7 +214,7 @@ test_that("text7: Text page setup landscape works as expected.", {
     add_content(txt1, page_break = FALSE) %>% 
     add_content(txt1, page_break = FALSE) %>% 
     add_content(txt1, page_break = FALSE) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   
@@ -247,7 +247,7 @@ test_that("text8: Text page setup portrait works as expected.", {
     add_content(txt1, page_break = FALSE) %>% 
     add_content(txt1, page_break = FALSE) %>% 
     add_content(txt1, page_break = FALSE) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   

@@ -94,7 +94,7 @@ test_that("test3: Simple table with formats works as expected.", {
     titles("Table 1.0", "Analysis Data Subject Listing", "Safety Population", 
            align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
-    page_footer(left = Sys.time(), center = "Confidential", 
+    page_footer(left = "Time", center = "Confidential", 
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
@@ -158,7 +158,7 @@ test_that("test4: Two page report works as expected.", {
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
-    page_footer(left = Sys.time(), center = "Confidential", 
+    page_footer(left = "Time", center = "Confidential", 
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) %>%
     add_content(tbl2)
@@ -213,7 +213,7 @@ test_that("test5: Table with break between sections works as expected.", {
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
-    page_footer(left = Sys.time(), center = "Confidential", 
+    page_footer(left = "Time", center = "Confidential", 
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
@@ -454,7 +454,7 @@ test_that("test11: Table with break between sections works as expected.", {
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R") %>%
-    page_footer(left = Sys.time(), center = "Confidential", 
+    page_footer(left = "Time", center = "Confidential", 
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
@@ -582,7 +582,7 @@ test_that("test16: Simple regulatory listing works as expected.", {
     titles("Listing 1.0", "MTCARS Data Listing") %>% 
     add_content(create_table(mtcars)) %>% 
     footnotes("* Motor Trend, 1973") %>%
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
@@ -669,7 +669,7 @@ test_that("test17: Simple regulatory table works as expected.", {
     titles("Table 1.0", "MTCARS Summary Table") %>% 
     add_content(tbl) %>% 
     footnotes("* Motor Trend, 1973") %>%
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
@@ -722,7 +722,7 @@ test_that("test18: Text and table with page breaks works as expected.", {
     add_content(txt) %>% 
     add_content(tbl) %>% 
     add_content(txt) %>% 
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Time", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   

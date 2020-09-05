@@ -263,8 +263,6 @@ test_that("user2: demo table with stub works.", {
 
 test_that("user3: listings works.", {
   
-
-  
   # Data Filepath
   dir_data <- file.path(base_path, "data")
   
@@ -274,6 +272,12 @@ test_that("user3: listings works.", {
   # Load Data
   data_demo   <- file.path(dir_data, "dm.csv") %>%
     read.csv() 
+  
+  # Test that any assigned formats are applied
+  attr(data_demo$SUBJID, "width") <- 1
+  attr(data_demo$SUBJID, "justify") <- "left"
+  attr(data_demo$SUBJID, "format") <- "S:%s"
+  #print(widths(data_demo))
 
   # Define table
   tbl <- create_table(data_demo) %>% 
@@ -281,10 +285,11 @@ test_that("user3: listings works.", {
 
   # Define Report
   rpt <- create_report(fp) %>%
+    options_fixed(editor = "notepad") %>% 
     titles("Listing 1.0",
            "Demographics Dataset") %>%
     add_content(tbl, align = "left") %>% 
-    page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")
+    page_footer(left = "Time", right = "Page [pg] of [tpg]")
   
   # Write out report
   res <- write_report(rpt)
@@ -409,7 +414,7 @@ test_that("user4: Adverse Events table works.", {
     page_header("Client: Experis", "Study: BBC") %>% 
     titles("Table 1.0", "Adverse Events by Severity", "Safety Population") %>% 
     add_content(tbl) %>% 
-    footnotes(paste("Date Produced:", Sys.time(), ";  SAS Program: Table3_0.R"),
+    footnotes(paste("Date Produced:", "Time", ";  SAS Program: Table3_0.R"),
               paste("* Total Reporting is defined as number of subjects", 
                     "who reported at least one adverse event."),
               "** Mod = Moderate",
@@ -417,7 +422,7 @@ test_that("user4: Adverse Events table works.", {
                     "of adverse events"),
               paste("% is defined as Number of Subjects divided by Total Reporting"),
               "Note: Adverse events were coded using MedDRA Version 9.1") %>% 
-    page_footer(Sys.time(), "Confidential", "Page [pg] of [tpg]")
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   
   res <- write_report(rpt) 
   
