@@ -2,7 +2,7 @@
 % Please edit documentation in R/table_spec.R
 \name{create_table}
 \alias{create_table}
-\title{A function to create a table_spec object}
+\title{Create a table}
 \usage{
 create_table(
   x,
@@ -13,22 +13,123 @@ create_table(
 )
 }
 \arguments{
-\item{x}{The data frame to create a table spec for.}
+\item{x}{The data frame or tibble from which to create the table object.}
 
-\item{show_cols}{Whether to show all column by default.  Valid values are
-"all", "none", or a vector of column names.  "all" means show all columns 
-by default, unless overridden by the column definitions.  
+\item{show_cols}{Whether to show all columns by default.  Valid values are
+"all", "none", or a vector of column names.  "all" means show all columns, 
+unless overridden by the column definitions.  
 "none" means don't show any 
 columns unless specified in the column definitions.  If a vector of column
 names is supplied, those columns will be shown in the report in the order
 specified, whether or not a definition is supplied.}
 
-\item{first_row_blank}{Whether to place a blank row under the table header.}
+\item{first_row_blank}{Whether to place a blank row under the table header.
+Valid values are TRUE or FALSE.  Default is FALSE.}
 
-\item{n_format}{The format function to apply to the header n label.}
+\item{n_format}{The formatting function to apply to the header "N=" label. 
+The default formatting function is \code{\link{upcase_parens}}.}
 
 \item{headerless}{Whether to create a headerless table.  Default is FALSE.}
 }
 \description{
-A function to create a table_spec object
+The \code{create_table} function creates a table object to which 
+further specifications can be added.  The object is implemented as an 
+S3 object of class 'table_spec'. The object can be added to a report
+using the \code{\link{add_content}} function.
 }
+\details{
+A table specification is a container to hold information about a table.  The 
+only required information for a table is the table data.  All other 
+parameters and functions are optional.
+
+By default, the table will display all columns in the data frame.  To change
+this default, use the \code{show_cols} parameter.  Setting this parameter
+to 'none' will display none of the columns in the data, unless they are
+explicitly defined with a \code{\link{define}} function.  
+
+The \code{show_cols} parameter also accepts a vector of quoted column names.
+The column name vector performs two functions.  First, it will display only
+those columns on the report.  Second, it will display them in the order
+specified in the vector.  The \code{show_cols} parameter is the only way to 
+change the column order of the table when using \code{create_table}.
+
+The \code{create_table} function also provides the capabilities to create
+a "headerless" table.  A headerless table useful when combining two tables 
+into one report.
+
+Since the purpose of the \strong{rptr} package is to create statistical 
+reports, the \code{create_table} function makes it easy to add population
+counts to the table header.  These population counts are added to column
+labels and spanning header labels using the function indicated in the 
+\code{n_format} function. The package provides four population count
+formatting functions.  You may create your own formatting function if one of
+these functions does not meet your needs.  See \code{\link{upcase_parens}}
+for further details.
+}
+\examples{
+library(rptr)
+library(magrittr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+#Subset cars data
+dat <- mtcars[1:10, 1:7]
+
+# Calculate means for all columns
+dat_sum <- data.frame(all_cars = "All cars average", as.list(sapply(dat, mean)))
+
+# Get vehicle names into first column
+dat_mod <- data.frame(vehicle = rownames(dat), dat)
+                      
+# Create table for averages
+tbl1 <- create_table(dat_sum) \%>\% 
+        titles("Table 1.0", "MTCARS Sample Data") \%>\% 
+        define(all_cars, label = "", width = 2) \%>\% 
+        define(mpg, format = "\%.1f") \%>\% 
+        define(disp, format = "\%.1f") \%>\% 
+        define(hp, format = "\%.0f") \%>\% 
+        define(qsec, format = "\%.2f")
+
+# Create table for modified data
+tbl2 <- create_table(dat_mod, headerless = TRUE) \%>\% 
+        define(vehicle, width = 2) 
+
+# Create the report object
+rpt <- create_report(tmp) \%>\% 
+  add_content(tbl1, align = "left", page_break = FALSE) \%>\% 
+  add_content(tbl2, align = "left") 
+
+# Write the report to the file system
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(tmp))
+
+#                                 Table 1.0
+#                             MTCARS Sample Data
+# 
+#                             mpg    cyl   disp     hp   drat     wt   qsec
+# -------------------------------------------------------------------------
+# All cars average           20.4    5.8  208.6    123  3.538  3.128  18.58
+# 
+# Mazda RX4                    21      6    160    110    3.9   2.62  16.46
+# Mazda RX4 Wag                21      6    160    110    3.9  2.875  17.02
+# Datsun 710                 22.8      4    108     93   3.85   2.32  18.61
+# Hornet 4 Drive             21.4      6    258    110   3.08  3.215  19.44
+# Hornet Sportabout          18.7      8    360    175   3.15   3.44  17.02
+# Valiant                    18.1      6    225    105   2.76   3.46  20.22
+# Duster 360                 14.3      8    360    245   3.21   3.57  15.84
+# Merc 240D                  24.4      4  146.7     62   3.69   3.19     20
+# Merc 230                   22.8      4  140.8     95   3.92   3.15   22.9
+# Merc 280                   19.2      6  167.6    123   3.92   3.44   18.3
+# 
+}
+\seealso{
+Other table: 
+\code{\link{define}()},
+\code{\link{print.table_spec}()},
+\code{\link{spanning_header}()},
+\code{\link{stub}()}
+}
+\concept{table}

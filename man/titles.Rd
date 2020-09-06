@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{titles}
 \alias{titles}
-\title{Add titles to the report}
+\title{Adds a title block}
 \usage{
 titles(x, ..., align = "center", blank_row = "below")
 }
@@ -16,20 +16,43 @@ a table, or a text specification.}
 'right', 'center' or 'centre'.}
 
 \item{blank_row}{Where to place a blank row.  Valid values are 'above',
-'below', 'both', or 'none'.}
+'below', 'both', or 'none'.  Default is "below".}
 }
 \value{
 The modified report.
 }
 \description{
-This function adds one or more to the object.  If added to a report, 
+This function adds one or more titles to an object as a title block.  
+If added to a report, 
 the titles will be added to
-the page template, and thus appear on each page of the report.
+the page template, and thus appear on each page of the report. Titles may 
+also be added to a table or text object.
 }
 \details{
-The titles function accepts a set of strings of the desired title text.
+The titles function accepts a set of strings of the desired title text. To
+specify multiple titles for the block, pass them to the function 
+as separate strings.
+
 The titles may be aligned center, left or right using the align parameter.
-The titles may be assigned to the report, a table or a text specification.
+The alignment will be applied to all titles contained in the 
+block  To control alignment of titles separately for each title, use 
+multiple titles functions.
+
+Titles may be assigned to a report, a table or a text specification. If 
+assigned to the report, the title will appear at the top of the page, and
+be repeated for every page.  If the titles are assigned to a table or text
+content, the titles will appear above the content, and be repeated if the 
+table or text wraps to the next page.  
+
+If titles are assigned to the report,
+alignment will be oriented to the page body.  If titles are assigned to
+a table or text, alignment will be oriented to the edge of the content.
+
+One title function accepts up to 10 titles.  However, multiple title 
+blocks may be added to the same object.  
+
+Blank rows above or below the title block may be controlled using the 
+\code{blank_row} parameter.
 }
 \examples{
 library(rptr)
@@ -41,13 +64,29 @@ tmp <- file.path(tempdir(), "mtcars.txt")
 # Define report
 rpt <- create_report(tmp, orientation="portrait") \%>\%
   titles("Table 1.0", "MTCARS Report for Motor Trend") \%>\% 
-  add_content(create_table(mtcars)) 
+  add_content(create_table(mtcars[1:10, ])) 
 
 # Write the report
 write_report(rpt)
 
 # Display in console
 writeLines(readLines(tmp))
+
+#                                   Table 1.0
+#                         MTCARS Report for Motor Trend
+#
+#   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#----------------------------------------------------------------------------
+#    21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#    21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 }
 \seealso{
 Other report: 

@@ -10,15 +10,28 @@ write_report(x)
 \item{x}{The report object to write.}
 }
 \value{
-The report spec, with settings modified during writing.
+The report spec, with settings modified during rendering.  These 
+modified settings can sometimes be useful for documentation, and for 
+debugging issues with the procedure.
 }
 \description{
 This function writes a report_spec object to the file system, using the
-parameters provided in the object.
+specifications provided in the object.
 }
 \details{
 The function renders the report in the requested format, and writes it
-to the location specified in the report \code{file_path} parameter.
+to the location specified in the report \code{file_path} parameter.  Attempts
+to write an object that is not of class "report_spec" will generate an error.
+
+The \code{write_report} function is a driver for very complex set of 
+rendering functions. The rendering functions
+perform most of the advanced functionality of the \strong{rptr} package:
+generating spanning headers, page wrapping and breaking, creating stub 
+columns, etc.  When things go wrong, they will usually go wrong during this
+function call.  For that reason, although this function can be part of 
+the pipeline that creates the report object, it is best to call 
+\code{write_report} independently, to help isolate any issues from the 
+report definition procedure.
 }
 \examples{
 library(rptr)
@@ -37,9 +50,12 @@ rpt <- create_report(tmp) \%>\%
   add_content(tbl, align = "left") 
 
 # Write the report to the file system
-write_report(rpt)
+res <- write_report(rpt)
 
-# Write report to console
+# Write the modified report object to the console
+print(res)
+
+# Write the report to console
 writeLines(readLines(tmp))
 }
 \seealso{

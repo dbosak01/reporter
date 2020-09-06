@@ -19,10 +19,11 @@ stub(
 
 \item{vars}{A vector of quoted variable names from which to create the stub.}
 
-\item{label}{The label for the report stub.}
+\item{label}{The label for the report stub.  The default label is an empty
+string ("").}
 
-\item{label_align}{The alignment for the label.  Valid values are 'left', 
-'right', 'center', and 'centre'.  Default is 'left'.}
+\item{label_align}{The alignment for the stub column label.
+Valid values are 'left', 'right', 'center', and 'centre'.  Default is 'left'.}
 
 \item{align}{How to align the stub column.  Valid values are 'left', 
 'right', 'center', and 'centre'.  Default is 'left'.}
@@ -35,8 +36,112 @@ stub(
 The modified table spec.
 }
 \description{
-Combine one or more columns into a nested report stub.
+Combine columns into a nested report stub.  The report stub
+is a common feature of statistical reports.  The stub is created with
+the \code{stub} function in combination with some parameters from the 
+\code{\link{define}} function.
 }
 \details{
-Here are some details.
+The report stub is a nested set of labels that identify rows 
+on the table. The stub is created by combining two or more columns into 
+a single stub column.  The relationship between the columns is typically 
+visualized as a hierarchy, with lower level concepts indented under 
+higher level concepts.  
+
+A typical stub is created with the following steps:
+\itemize{
+  \item Prepare the data with multiple, hierarchical columns.
+  \item Create the table object
+  \item Define the stub on the table using the stub function, and identifying
+  the columns to be combined.
+  \item Identify higher level concepts with the \code{label_row} parameter
+  on the \code{\link{define}} function. 
+  \item Identify lower level concepts using the \code{indent} parameter 
+  on the \code{\link{define}} function.
 }
+
+The stub will be automatically added as an identity column on the report, and
+will always appear as the leftmost column.  There can only be one stub 
+defined on a report.
+}
+\examples{
+library(rptr)
+library(magrittr)
+
+# Create temporary path
+tmp <- file.path(tempdir(), "example2.txt")
+
+# Read in prepared data
+df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"   "8 Cylinder" "10 ( 52.6\%)" "4 ( 30.8\%)" 
+      "cyl"   "6 Cylinder" "4 ( 21.1\%)"  "3 ( 23.1\%)" 
+      "cyl"   "4 Cylinder" "5 ( 26.3\%)"  "6 ( 46.2\%)"')
+
+# Create table
+tbl <- create_table(df, first_row_blank = TRUE) \%>\% 
+  stub(c("var", "label")) \%>\% 
+  define(var, blank_after = TRUE, label_row = TRUE, 
+         format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) \%>\% 
+  define(label, indent = .25) \%>\% 
+  define(A, label = "Group A", align = "center", n = 19) \%>\% 
+  define(B, label = "Group B", align = "center", n = 13)
+
+
+# Create report and add content
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  page_header(left = "Client: Motor Trend", right = "Study: Cars") \%>\% 
+  titles("Table 1.0", "MTCARS Summary Table") \%>\% 
+  add_content(tbl) \%>\% 
+  footnotes("* Motor Trend, 1974") \%>\%
+  page_footer(left = Sys.time(), 
+              center = "Confidential", 
+              right = "Page [pg] of [tpg]")
+
+# Write out report
+write_report(rpt)
+
+# View report in console
+writeLines(readLines(tmp))
+
+# Client: Motor Trend                                                Study: Cars
+#                                   Table 1.0
+#                              MTCARS Summary Table
+# 
+#                                     Group A      Group B
+#                                      (N=19)       (N=13)
+#                  -------------------------------------------
+# 
+#                 Miles Per Gallon
+#                    N                   19           13
+#                    Mean            19.3 (6.7)   21.3 (4.8)
+#                    Median             17.3         21.0
+#                    Q1 - Q3        15.2 - 22.1  19.2 - 22.8
+#                    Range          10.4 - 33.9  14.3 - 32.4
+#
+#                 Cylinders
+#                    8 Cylinder     10 ( 52.6\%)   4 ( 30.8\%)
+#                    6 Cylinder      3 ( 15.8\%)   4 ( 30.8\%)
+#                    4 Cylinder      6 ( 31.6\%)   5 ( 38.5\%)
+# 
+# ...
+# 
+# 
+# * Motor Trend, 1974
+# 
+# 2020-08-30 03:50:02              Confidential                      Page 1 of 1
+#
+}
+\seealso{
+Other table: 
+\code{\link{create_table}()},
+\code{\link{define}()},
+\code{\link{print.table_spec}()},
+\code{\link{spanning_header}()}
+}
+\concept{table}

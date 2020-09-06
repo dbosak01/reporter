@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{footnotes}
 \alias{footnotes}
-\title{Add footnotes to the report}
+\title{Adds a footnote block}
 \usage{
 footnotes(x, ..., align = "left", blank_row = "above")
 }
@@ -11,7 +11,7 @@ footnotes(x, ..., align = "left", blank_row = "above")
 
 \item{...}{A set of footnotes strings.}
 
-\item{align}{The position to align the titles.  Valid values are: "left",
+\item{align}{The position to align the footnotes.  Valid values are: "left",
 "right", "center", or "centre".}
 
 \item{blank_row}{Whether to print a blank row above or below the footnote.
@@ -21,15 +21,26 @@ Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
 The modified report.
 }
 \description{
-This function adds one or more footnotes to the report.  The footnotes will
+This function adds one or more footnotes to the report.  If added to 
+the report specification, the footnotes will
 be added to the page template, and thus appear on each page of the report.
+Footnotes may also be added directly to table or text content.
 }
 \details{
 The footnotes function accepts a set of strings of the desired footnote text.
 The footnotes may be aligned center, left or right using the align parameter.
-The footnotes may be located in the footer, page body, or table according to
-the location parameter. The user is responsible for adding desired symbols.
+The user is responsible for adding desired footnote symbols.
 Footnote symbols will not be generated automatically.
+
+If footnotes are assigned to the report,
+alignment will be oriented to the page body.  If footnotes are assigned to
+a table or text, alignment will be oriented to the edge of the content.
+
+One title function accepts up to 25 footnotes.  However, multiple footnote 
+blocks may be added to the same object.  
+
+Blank rows above or below the footnote block may be controlled using the 
+\code{blank_row} parameter.
 }
 \examples{
 library(rptr)
@@ -38,17 +49,39 @@ library(magrittr)
 # Create a temporary file
 tmp <- file.path(tempdir(), "mtcars.txt")
 
-# Define report
-rpt <- create_report(tmp, orientation="portrait") \%>\%
+# Create table
+tbl <- create_table(mtcars[1:10, ]) \%>\% 
   titles("Table 1.0", "MTCARS Sample Report") \%>\% 
-  add_content(create_table(mtcars)) \%>\%
-  footnotes("* From Motor Trend Magazine, 1974")  
-
+  footnotes("* From Motor Trend Magazine, 1974") 
+  
+# Define report and add table 
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+  add_content(tbl)
+   
 # Write the report
 write_report(rpt)
 
 # Display in console
 writeLines(readLines(tmp))
+
+#                                   Table 1.0
+#                              MTCARS Sample Report
+# 
+# mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+# ----------------------------------------------------------------------------
+#   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#   21      6    160    110    3.9  2.875  17.02      0      1      4      4
+# 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+# 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+# 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+# 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+# 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+# 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+# 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+# 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+
+# * From Motor Trend Magazine, 1974
+#
 }
 \seealso{
 Other report: 

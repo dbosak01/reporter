@@ -65,4 +65,11 @@ print(tbl)
 }
 \seealso{
 \code{\link{create_table}} function to create a table specification.
+
+Other table: 
+\code{\link{create_table}()},
+\code{\link{define}()},
+\code{\link{spanning_header}()},
+\code{\link{stub}()}
 }
+\concept{table}

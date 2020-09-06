@@ -2,12 +2,12 @@
 % Please edit documentation in R/report_spec.R
 \name{page_header}
 \alias{page_header}
-\title{Add a page header to the report}
+\title{Add a page header}
 \usage{
 page_header(x, left = "", right = "", blank_row = "none")
 }
 \arguments{
-\item{x}{The report spec object.}
+\item{x}{The report object.}
 
 \item{left}{The left page header text.  May be a single string or a vector
 of strings.}
@@ -30,7 +30,16 @@ The page header may contain text on the left or right. Use the appropriate
 parameters to specify the desired text.  Only one page header is allowed
 on a report. The page header will be repeated on every page of the report.
 Multiple text values for each side
-may be specified as a vector of strings.
+may be specified as a vector of strings.  
+
+If the width of the page header
+string exceeds the available space, an error will be generated. There is 
+also a limit of 5 page header strings per each side.
+
+#' There are two special tokens to generate page numbers: [pg] and [tpg]. 
+Use [pg] to indicate the current page number.  Use [tpg] to indicate the
+total number of pages in the report.  These tokens may be placed anywhere 
+in the page header or page footer.
 }
 \examples{
 library(rptr)
@@ -43,13 +52,29 @@ tmp <- file.path(tempdir(), "mtcars.txt")
 rpt <- create_report(tmp, orientation = "portrait") \%>\% 
   page_header("Client: Motor Trend", "Study: Cars") \%>\% 
   titles("MTCARS Sample Report") \%>\% 
-  add_content(create_table(mtcars)) 
+  add_content(create_table(mtcars[1:10, ])) 
 
 # Write the report to the file system
 write_report(rpt)
 
 # Write report to console
 writeLines(readLines(tmp))
+
+# Client: Motor Trend                                                Study: Cars
+#                              MTCARS Sample Report
+# 
+#  mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+# ----------------------------------------------------------------------------
+#   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#   21      6    160    110    3.9  2.875  17.02      0      1      4      4
+# 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+# 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+# 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+# 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+# 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+# 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+# 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+# 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 }
 \seealso{
 Other report: 

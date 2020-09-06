@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{page_footer}
 \alias{page_footer}
-\title{Add a page footer to the report}
+\title{Adds a page footer}
 \usage{
 page_footer(x, left = "", center = "", right = "", blank_row = "above")
 }
@@ -26,23 +26,35 @@ The modified report.
 }
 \description{
 This function adds a page footer to the report.  The page footer will appear
-on each page of the report.
+on each page of the report, on the bottom of the page.  The page footer
+contains three sections: left, center, and right.  Content for each section
+may be specified with the appropriate parameter.
 }
 \details{
-The page footer may contain text on the left, right, or center.
-Use the appropriate parameters to specify the desired text.  
+Only one page footer is allowed per report.  The page footer will appear 
+on all pages of the report.  The page footer may contain text on the 
+left, right, or center. Use the appropriate parameters to specify the 
+desired text for each section. Multiple strings may be passed to each section 
+as a vector of strings. 
+
+If the width of the page header
+string exceeds the available space, an error will be generated. In addition,
+there is a limit of 5 strings for each page footer section.  
 
 There are two special tokens to generate page numbers: [pg] and [tpg]. 
 Use [pg] to indicate the current page number.  Use [tpg] to indicate the
-total number of pages in the report.  These token may be place anywhere 
-in the page header or page footer.
+total number of pages in the report.  These tokens may be placed anywhere 
+in the page header or page footer. 
+
+Use the \code{blank_row} parameter to control the blank space above the 
+page footer.
 }
 \examples{
 library(rptr)
 library(magrittr)
 
 # Create table 
-tbl <- create_table(mtcars) \%>\% 
+tbl <- create_table(mtcars[1:10, ]) \%>\% 
        titles("MTCARS Sample Data") \%>\% 
        footnotes("* From Motor Trend, 1974")
 
@@ -60,6 +72,28 @@ write_report(rpt)
 
 # Send report to console 
 writeLines(readLines(tmp))
+
+# Cars Data                                                        Sample Report
+#                            MTCARS Sample Data
+# 
+# mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+# ----------------------------------------------------------------------------
+#   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+# 21      6    160    110    3.9  2.875  17.02      0      1      4      4
+# 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+# 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+# 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+# 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+# 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+# 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+# 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+# 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+# 
+# * From Motor Trend, 1974
+# 
+# ...
+# 
+# 2020-09-06 09:47:43                                                Page 1 of 1
 }
 \seealso{
 \code{\link{page_header}} to add a page header to the report, 

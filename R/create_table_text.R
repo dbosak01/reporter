@@ -91,6 +91,9 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print("Widths UOM")
   # print(widths_uom)
   
+  # Try to figure out a way to put these widths in report spec
+  #rs$column_widths[length(rs$column_widths) + 1] <- widths_uom
+
   # Convert to text measurements
   widths_char <- round(widths_uom / rs$char_width)
   # print("Widths Char")

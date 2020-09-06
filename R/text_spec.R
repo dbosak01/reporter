@@ -1,22 +1,76 @@
 
 # Create Text Constructor     ---------------------------------------------
 
-#' @title Create a text specification
+#' @title Create text content
 #' @description Function to create a text specification that can be 
-#' added as content to a report.
+#' added as content to a report.  The function creates an S3 object of class
+#' 'text_spec'.  The \code{create_text} function can be used to include 
+#' analysis on a statistical report.
 #' @details 
 #' To add plain text to a report, use the \code{create_text} function.  The 
-#' function allows you to set a width and justification for the text.  The
+#' function allows you to set a width and alignment for the text.  The
 #' function will preserve any other formatting you apply to the text.  See
 #' the \code{\link{add_content}} function to control page breaking and 
-#' blanks spaces above or below the text.
+#' blanks spaces above or below the text.  
+#' 
+#' The text specification also accepts titles and footnotes.  See the 
+#' \code{\link{titles}} and \code{\link{footnotes}} functions for further 
+#' details.
+#' 
 #' @param txt The text to create.
 #' @param width The width of the text in the specified units of measure.  If 
 #' no width is specified, the full page width will be used.
-#' @param align How to align the text within the text area.  Valid values
-#' are 'left', 'right', 'center', or 'centre'.
+#' @param align How to align the text on the page.  Valid values
+#' are 'left', 'right', 'center', or 'centre'.  Default is 'left'.
 #' @return The text specification.
 #' @family text
+#' @seealso 
+#' \code{\link{titles}} to add a title block to the text,  
+#' \code{\link{footnotes}} to add footnotes, and \code{\link{add_content}} 
+#' to add the text object to a report.
+#' @examples 
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create dummy text
+#' dt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+#'   "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+#'   "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+#'   "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+#'   "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+#'   "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+#'   "qui officia deserunt mollit anim id est laborum.")
+#' 
+#' # Create the text object
+#' txt <- create_text(dt) %>% 
+#'   titles("Text Content 1.0", "Sample Text Report") %>% 
+#'   footnotes("* Cicero, 1st century BCE")
+#' 
+#' # Create the report object
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   add_content(txt) 
+#' 
+#' # Write the report to the file system
+#' write_report(rpt)
+#' 
+#' # Write the report to console
+#' writeLines(readLines(tmp))
+#' 
+#' #                                Text Content 1.0
+#' #                               Sample Text Report
+#' # 
+#' # Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+#' # incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+#' # nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+#' # Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+#' # eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+#' # in culpa qui officia deserunt mollit anim id est laborum.
+#' # 
+#' # * Cicero, 1st century BCE
+#' #
 #' @export
 create_text <- function(txt, width = NULL, align = "left") {
   

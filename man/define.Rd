@@ -2,7 +2,7 @@
 % Please edit documentation in R/table_spec.R
 \name{define}
 \alias{define}
-\title{Defines a column specification for a table}
+\title{Defines a column}
 \usage{
 define(
   x,
@@ -31,19 +31,22 @@ define(
 
 \item{format}{The format to use for the column data.  The format can 
 be a string format, a formatting function, or a format object from the 
-\strong{fmtr} package.}
+\strong{\link[fmtr]{fmtr}} package.}
 
-\item{align}{The column alignment.  Value values are "left", "right", and
-"center".}
+\item{align}{The column alignment.  Valid values are "left", "right", 
+"center", and "centre".}
 
 \item{label_align}{How to align the header labels for this column.
-Value values are "left", "right", and "center".}
+Valid values are "left", "right", "center", and "centre".}
 
-\item{width}{The width of the column in inches.}
+\item{width}{The width of the column in the specified units of measure.
+The units of measure are specified on the \code{uom} parameter of the
+\code{\link{create_report}} function.}
 
-\item{visible}{Whether or not the column should be visible on the report.}
+\item{visible}{Whether or not the column should be visible on the report.
+This parameter can be used as a simple way to drop columns from the report.}
 
-\item{n}{The n value to place in the n header label.}
+\item{n}{The n value to place in the "N=" header label.}
 
 \item{blank_after}{Whether to place a blank row after unique values of this
 variable.}
@@ -57,29 +60,125 @@ are also moved to the far left of the page.}
 
 \item{page_wrap}{Force a page wrap on this variable.  A page wrap is a vertical
 page break necessary when the table is too wide to fit on a single page.
-The excess variables will be wrapped to the next page.}
+The excess variables will be wrapped to the next page.  Page wraps will
+continue until all variables are displayed.  Use the \code{id_vars}
+parameter to identify rows across wrapped pages.}
 
 \item{indent}{How much to indent the column values.  Parameter takes a 
 numeric value that will be interpreted according to the 'uom' 
-(Unit Of Measure) setting on the report.}
+(Unit Of Measure) setting on the report.  This parameter can be used to 
+help create a stub column.}
 
 \item{label_row}{Whether the values of the variable should be used to
 create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
-If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.}
+If \code{label_row} is set to TRUE, the dedupe parameter will also be 
+set to TRUE.  This parameter is often used in conjuntion with the 
+\code{\link{stub}} function to create a stub column.}
+}
+\value{
+The modified table spec.
 }
 \description{
-A function to define the specification for a table column.
+A function to define the specification for a table column.  The
+\code{define} function contains a variety of a parameters to control the 
+appearance of the report.  Using the \code{define} function, you can control
+simple options like column alignment and format, but also control more 
+sophisticated options like page wrapping and page breaking.
 }
 \details{
 Column definitions are optional.  By default, all columns in the data
 are displayed in the order and with the formatting attributes assigned to 
 the data frame.
-The \strong{define} function is used to provide additional control over
-column appearance.  For example, you may use the \strong{define} function
+
+The \code{define} function is used to provide additional control over
+column appearance.  For example, you may use the \code{define} function
 to assign formatting properties, a label, and an "N=" population count
 for the column header. See the parameters below for additional options.
+
+Some of the parameters on the \code{define} function are used in the 
+creation of a table stub.  See the \code{\link{stub}} function for additional
+details.
+}
+\examples{
+library(rptr)
+library(magrittr)
+ 
+# Create temp file name
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Prepare data
+dat <- mtcars[1:10, ]
+dat <- data.frame(vehicle = rownames(dat), dat)
+
+# Define table
+tbl <- create_table(dat, show_cols = 1:8) \%>\% 
+  define(vehicle, label = "Vehicle", width = 3, id_var = TRUE, align = "left") \%>\% 
+  define(mpg, label = "Miles per Gallon", width = 1) \%>\% 
+  define(cyl, label = "Cylinders", format = "\%.1f") \%>\% 
+  define(disp, label = "Displacement") \%>\% 
+  define(hp, label = "Horsepower", page_wrap = TRUE) \%>\% 
+  define(drat, visible = FALSE) \%>\% 
+  define(wt, label = "Weight") \%>\% 
+  define(qsec, label = "Quarter Mile Time", width = 1.5) 
+
+
+# Create the report
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  titles("Listing 2.0", "MTCARS Data Listing with Page Wrap") \%>\% 
+  add_content(tbl, align = "left") \%>\% 
+  page_footer(right = "Page [pg] of [tpg]")
+
+# Write the report
+write_report(rpt)
+
+# Send report to console for viewing
+writeLines(readLines(tmp))
+
+#                                  Listing 2.0
+#                       MTCARS Data Listing with Page Wrap
+# 
+#                                         Miles per
+# Vehicle                                    Gallon Cylinders Displacement
+# ------------------------------------------------------------------------
+# Mazda RX4                                      21       6.0          160
+# Mazda RX4 Wag                                  21       6.0          160
+# Datsun 710                                   22.8       4.0          108
+# Hornet 4 Drive                               21.4       6.0          258
+# Hornet Sportabout                            18.7       8.0          360
+# Valiant                                      18.1       6.0          225
+# Duster 360                                   14.3       8.0          360
+# Merc 240D                                    24.4       4.0        146.7
+# Merc 230                                     22.8       4.0        140.8
+# Merc 280                                     19.2       6.0        167.6
+# 
+# ...
+# 
+#                                                                    Page 1 of 2
+#                                  Listing 2.0
+#                       MTCARS Data Listing with Page Wrap
+# 
+# Vehicle                              Horsepower Weight  Quarter Mile Time
+# -------------------------------------------------------------------------
+# Mazda RX4                                   110   2.62              16.46
+# Mazda RX4 Wag                               110  2.875              17.02
+# Datsun 710                                   93   2.32              18.61
+# Hornet 4 Drive                              110  3.215              19.44
+# Hornet Sportabout                           175   3.44              17.02
+# Valiant                                     105   3.46              20.22
+# Duster 360                                  245   3.57              15.84
+# Merc 240D                                    62   3.19                 20
+# Merc 230                                     95   3.15               22.9
+# Merc 280                                    123   3.44               18.3
+# 
+# ...
+# 
+#                                                                    Page 2 of 2
 }
 \seealso{
-\code{\link{create_table}} to create a table, and 
-\link{table_options} to see define options illustrated.
+Other table: 
+\code{\link{create_table}()},
+\code{\link{print.table_spec}()},
+\code{\link{spanning_header}()},
+\code{\link{stub}()}
 }
+\concept{table}

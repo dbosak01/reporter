@@ -14,35 +14,37 @@ spanning_header(
 )
 }
 \arguments{
-\item{x}{The table spec.}
+\item{x}{The table object to add spanning headers to.}
 
 \item{span_cols}{The columns to span.  The spanning columns may be defined as
-a vector of column positions or names.  If defined by names, the names
-should be quoted.  You may also supply a named vector, with the names
-"from" and "to" equal to the starting and ending columns to span.}
+a vector of column positions or quoted names. You may also supply a named 
+vector, with the names "from" and "to" equal to the starting and 
+ending columns to span.}
 
 \item{label}{The label to apply to the spanning header.}
 
-\item{label_align}{The alignment to use for the label.Valid values are 
-"left", "right", "center", and "centre".  The default for text columns is 
-"left", and the default for numeric columns is "right".}
+\item{label_align}{The alignment to use for the label. Valid values are 
+"left", "right", "center", and "centre".  The default for spanning columns
+is "center".}
 
 \item{level}{The level to use for the spanning header.  The lowest
 spanning level is level 1, the next level above is level 2, and so on.  
 By default, the level is set to 1.}
 
-\item{n}{The n value to use for the n label on the spanning header.}
+\item{n}{The n value to use for the "N=" label on the spanning header.}
 }
 \value{
 The modified table spec.
 }
 \description{
-Create a header that spans multiple columns.
+Create a header that spans multiple columns.  Spanning headers
+are used to group related columns.  Such groupings are a common 
+feature of statistical reports.
 }
 \details{
 A spanning header is a label and underline that spans one or more 
-column headers.  A spanning header is defined minimally by identifying 
-the columns to be spanned, and spanning header label.  A label alignment 
+columns.  A spanning header is defined minimally by identifying 
+the columns to be spanned, and a label.  A label alignment and "N="
 value may also be specified.
 
 There are three ways to identify the columns to span: by a sequence of 
@@ -50,3 +52,70 @@ column positions, by a vector of column names, or by a named vector
 indicating "from" and "to" column names.  When identifying the spanning
 column names, all names should be quoted.
 }
+\examples{
+library(rptr)
+library(magrittr)
+
+# Create temporary path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Prepare Data
+dat <- mtcars[1:10, ]
+df <- data.frame(vehicle = rownames(dat), dat)
+
+# Define Table with spanning headers
+tbl <- create_table(df) \%>\% 
+  titles("Table 1.0", "MTCARS Spanning Headers") \%>\% 
+  spanning_header(span_cols = c("mpg", "cyl", "hp"),
+                  label = "Span 1", n = 10) \%>\%
+  spanning_header(span_cols = c("drat", "wt", "qsec"),
+                  label = "Span 2", n = 10) \%>\%
+  spanning_header(span_cols = c("vs", "gear", "carb"),
+                  label = "Span 3", n = 10) \%>\%
+  spanning_header(span_cols = c(from = "drat", to = "carb"), 
+                  label = "Super Span", level = 2) \%>\%
+  define(vehicle, label = "Vehicle") \%>\% 
+  define(mpg, format = "\%.1f") \%>\% 
+  define(disp, visible = FALSE) \%>\% 
+  define(am, visible = FALSE) 
+
+# Create Report and add table 
+rpt <- create_report(tmp) \%>\%
+  add_content(tbl, align = "left") 
+
+# Write the report
+res <- write_report(rpt)
+
+# View in console
+writeLines(readLines(tmp))
+
+#                                    Table 1.0
+#                              MTCARS Spanning Headers
+# 
+#                                                         Super Span
+#                                         -----------------------------------------
+#                           Span 1               Span 2               Span 3
+#                           (N=10)               (N=10)               (N=10)
+#                    -------------------- -------------------- --------------------
+# Vehicle               mpg    cyl     hp   drat     wt   qsec     vs   gear   carb
+# ---------------------------------------------------------------------------------
+# Mazda RX4            21.0      6    110    3.9   2.62  16.46      0      4      4
+# Mazda RX4 Wag        21.0      6    110    3.9  2.875  17.02      0      4      4
+# Datsun 710           22.8      4     93   3.85   2.32  18.61      1      4      1
+# Hornet 4 Drive       21.4      6    110   3.08  3.215  19.44      1      3      1
+# Hornet Sportabout    18.7      8    175   3.15   3.44  17.02      0      3      2
+# Valiant              18.1      6    105   2.76   3.46  20.22      1      3      1
+# Duster 360           14.3      8    245   3.21   3.57  15.84      0      3      4
+# Merc 240D            24.4      4     62   3.69   3.19     20      1      4      2
+# Merc 230             22.8      4     95   3.92   3.15   22.9      1      4      2
+# Merc 280             19.2      6    123   3.92   3.44   18.3      1      4      4
+#
+}
+\seealso{
+Other table: 
+\code{\link{create_table}()},
+\code{\link{define}()},
+\code{\link{print.table_spec}()},
+\code{\link{stub}()}
+}
+\concept{table}

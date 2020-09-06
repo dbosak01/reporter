@@ -468,11 +468,11 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 
 
 #' @title
-#' Add a page header to the report
+#' Add a page header
 #'
 #' @description
 #' This function adds a page header to the report.  The page header will appear
-#' on each page of the report.
+#' on each page of the report.  
 #'
 #' @details
 #' The page header may contain text on the left or right. Use the appropriate
@@ -480,7 +480,17 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' on a report. The page header will be repeated on every page of the report.
 #' Multiple text values for each side
 #' may be specified as a vector of strings.  
-#' @param x The report spec object.
+#' 
+#' If the width of the page header
+#' string exceeds the available space, an error will be generated. There is 
+#' also a limit of 5 page header strings per each side.
+#' 
+#' #' There are two special tokens to generate page numbers: [pg] and [tpg]. 
+#' Use [pg] to indicate the current page number.  Use [tpg] to indicate the
+#' total number of pages in the report.  These tokens may be placed anywhere 
+#' in the page header or page footer. 
+#' 
+#' @param x The report object.
 #' @param left The left page header text.  May be a single string or a vector
 #' of strings.
 #' @param right The right page header text.  May be a single string or a vector
@@ -500,13 +510,29 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
 #'   page_header("Client: Motor Trend", "Study: Cars") %>% 
 #'   titles("MTCARS Sample Report") %>% 
-#'   add_content(create_table(mtcars)) 
+#'   add_content(create_table(mtcars[1:10, ])) 
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
 #' # Write report to console
 #' writeLines(readLines(tmp))
+#' 
+#' # Client: Motor Trend                                                Study: Cars
+#' #                              MTCARS Sample Report
+#' # 
+#' #  mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' # ----------------------------------------------------------------------------
+#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' @export
 page_header <- function(x, left="", right="", blank_row = "none"){
 
@@ -531,17 +557,40 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 
 
 #' @title
-#' Add titles to the report
+#' Adds a title block 
 #'
 #' @description
-#' This function adds one or more to the object.  If added to a report, 
+#' This function adds one or more titles to an object as a title block.  
+#' If added to a report, 
 #' the titles will be added to
-#' the page template, and thus appear on each page of the report.
+#' the page template, and thus appear on each page of the report. Titles may 
+#' also be added to a table or text object.
 #'
 #' @details
-#' The titles function accepts a set of strings of the desired title text.
+#' The titles function accepts a set of strings of the desired title text. To
+#' specify multiple titles for the block, pass them to the function 
+#' as separate strings.
+#' 
 #' The titles may be aligned center, left or right using the align parameter.
-#' The titles may be assigned to the report, a table or a text specification.
+#' The alignment will be applied to all titles contained in the 
+#' block  To control alignment of titles separately for each title, use 
+#' multiple titles functions.
+#' 
+#' Titles may be assigned to a report, a table or a text specification. If 
+#' assigned to the report, the title will appear at the top of the page, and
+#' be repeated for every page.  If the titles are assigned to a table or text
+#' content, the titles will appear above the content, and be repeated if the 
+#' table or text wraps to the next page.  
+#' 
+#' If titles are assigned to the report,
+#' alignment will be oriented to the page body.  If titles are assigned to
+#' a table or text, alignment will be oriented to the edge of the content.
+#' 
+#' One title function accepts up to 10 titles.  However, multiple title 
+#' blocks may be added to the same object.  
+#' 
+#' Blank rows above or below the title block may be controlled using the 
+#' \code{blank_row} parameter.
 #'
 #' @param x The object to assign titles to.  Valid objects are a report,
 #' a table, or a text specification.
@@ -549,7 +598,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @param align The position to align the titles.  Valid values are 'left', 
 #' 'right', 'center' or 'centre'.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
-#' 'below', 'both', or 'none'.
+#' 'below', 'both', or 'none'.  Default is "below".
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -562,13 +611,29 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' # Define report
 #' rpt <- create_report(tmp, orientation="portrait") %>%
 #'   titles("Table 1.0", "MTCARS Report for Motor Trend") %>% 
-#'   add_content(create_table(mtcars)) 
+#'   add_content(create_table(mtcars[1:10, ])) 
 #' 
 #' # Write the report
 #' write_report(rpt)
 #' 
 #' # Display in console
 #' writeLines(readLines(tmp))
+#' 
+#' #                                   Table 1.0
+#' #                         MTCARS Report for Motor Trend
+#' #
+#' #   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' #----------------------------------------------------------------------------
+#' #    21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' #    21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' #  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' #  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' #  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' #  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' #  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' #  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' #  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below"){
 
@@ -591,21 +656,33 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 
 
 #' @title
-#' Add footnotes to the report
+#' Adds a footnote block
 #'
 #' @description
-#' This function adds one or more footnotes to the report.  The footnotes will
+#' This function adds one or more footnotes to the report.  If added to 
+#' the report specification, the footnotes will
 #' be added to the page template, and thus appear on each page of the report.
+#' Footnotes may also be added directly to table or text content.
 #'
 #' @details
 #' The footnotes function accepts a set of strings of the desired footnote text.
 #' The footnotes may be aligned center, left or right using the align parameter.
-#' The footnotes may be located in the footer, page body, or table according to
-#' the location parameter. The user is responsible for adding desired symbols.
+#' The user is responsible for adding desired footnote symbols.
 #' Footnote symbols will not be generated automatically.
+#' 
+#' If footnotes are assigned to the report,
+#' alignment will be oriented to the page body.  If footnotes are assigned to
+#' a table or text, alignment will be oriented to the edge of the content.
+#' 
+#' One title function accepts up to 25 footnotes.  However, multiple footnote 
+#' blocks may be added to the same object.  
+#' 
+#' Blank rows above or below the footnote block may be controlled using the 
+#' \code{blank_row} parameter.
+#' 
 #' @param x The object to assign footnotes to.
 #' @param ... A set of footnotes strings.
-#' @param align The position to align the titles.  Valid values are: "left",
+#' @param align The position to align the footnotes.  Valid values are: "left",
 #' "right", "center", or "centre".
 #' @param blank_row Whether to print a blank row above or below the footnote.
 #' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.
@@ -618,17 +695,39 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' # Create a temporary file
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
-#' # Define report
-#' rpt <- create_report(tmp, orientation="portrait") %>%
+#' # Create table
+#' tbl <- create_table(mtcars[1:10, ]) %>% 
 #'   titles("Table 1.0", "MTCARS Sample Report") %>% 
-#'   add_content(create_table(mtcars)) %>%
-#'   footnotes("* From Motor Trend Magazine, 1974")  
-#' 
+#'   footnotes("* From Motor Trend Magazine, 1974") 
+#'   
+#' # Define report and add table 
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   add_content(tbl)
+#'    
 #' # Write the report
 #' write_report(rpt)
 #' 
 #' # Display in console
 #' writeLines(readLines(tmp))
+#' 
+#' #                                   Table 1.0
+#' #                              MTCARS Sample Report
+#' # 
+#' # mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' # ----------------------------------------------------------------------------
+#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' 
+#' # * From Motor Trend Magazine, 1974
+#' #
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above"){
 
@@ -652,20 +751,32 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 }
 
 #' @title
-#' Add a page footer to the report
+#' Adds a page footer 
 #'
 #' @description
 #' This function adds a page footer to the report.  The page footer will appear
-#' on each page of the report.
+#' on each page of the report, on the bottom of the page.  The page footer
+#' contains three sections: left, center, and right.  Content for each section
+#' may be specified with the appropriate parameter.
 #'
 #' @details
-#' The page footer may contain text on the left, right, or center.
-#' Use the appropriate parameters to specify the desired text.  
+#' Only one page footer is allowed per report.  The page footer will appear 
+#' on all pages of the report.  The page footer may contain text on the 
+#' left, right, or center. Use the appropriate parameters to specify the 
+#' desired text for each section. Multiple strings may be passed to each section 
+#' as a vector of strings. 
+#' 
+#' If the width of the page header
+#' string exceeds the available space, an error will be generated. In addition,
+#' there is a limit of 5 strings for each page footer section.  
 #' 
 #' There are two special tokens to generate page numbers: [pg] and [tpg]. 
 #' Use [pg] to indicate the current page number.  Use [tpg] to indicate the
-#' total number of pages in the report.  These token may be place anywhere 
+#' total number of pages in the report.  These tokens may be placed anywhere 
 #' in the page header or page footer. 
+#' 
+#' Use the \code{blank_row} parameter to control the blank space above the 
+#' page footer.
 #'
 #' @param x The report spec object.
 #' @param left The left page footer text.  May be a single string or a vector
@@ -686,7 +797,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' library(magrittr)
 #' 
 #' # Create table 
-#' tbl <- create_table(mtcars) %>% 
+#' tbl <- create_table(mtcars[1:10, ]) %>% 
 #'        titles("MTCARS Sample Data") %>% 
 #'        footnotes("* From Motor Trend, 1974")
 #' 
@@ -704,6 +815,28 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' 
 #' # Send report to console 
 #' writeLines(readLines(tmp))
+#' 
+#' # Cars Data                                                        Sample Report
+#' #                            MTCARS Sample Data
+#' # 
+#' # mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' # ----------------------------------------------------------------------------
+#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' # 21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' # 
+#' # * From Motor Trend, 1974
+#' # 
+#' # ...
+#' # 
+#' # 2020-09-06 09:47:43                                                Page 1 of 1
 #' @export
 page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 
@@ -732,12 +865,22 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 
 
 #' @title Add content to a report
-#' @description This function adds an object to the report content list. 
+#' @description This function adds an object to the report content list. A 
+#' report will accept multiple pieces of content.  The \code{add_content} 
+#' function also controls overall alignment of the content on the page, and
+#' whether there is a page break before or after.
 #' @details 
-#' For a text report, 
-#' valid objects are free text or a table_spec.  Objects will be
-#' appended to the report in order they are added.  By default, a page break
-#' is added after the content.
+#' The \code{add_content} function adds a piece of content to a report. For a 
+#' text report, valid objects are a table or text object.  See 
+#' \code{\link{create_table}} or \code{\link{create_text}} for further 
+#' information on how to create these objects.  
+#' 
+#' Content will be
+#' appended to the report in order it is added.  By default, a page break
+#' is added after the content.  You can stack two pieces of content together
+#' closely by setting the \code{page_break} parameter to FALSE, and 
+#' the \code{blank_row} parameter to "none".
+#' 
 #' @param x The report_spec to append content to.
 #' @param object The object to append.
 #' @param page_break Whether to add a page break after the object. 
@@ -758,15 +901,35 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' 
 #' # Create the report object
 #' rpt <- create_report(tmp) %>% 
-#'   titles("MTCARS Sample Report", align = "left") %>% 
-#'   add_content(create_table(mtcars), page_break = FALSE, align = "left") %>% 
-#'   add_content(create_text("* NOTE: Car information from 1974.")) 
+#'   titles("MTCARS Sample Data", align = "left") %>% 
+#'   add_content(create_table(mtcars[1:5, ]), 
+#'               page_break = FALSE, align = "left", blank_row = "none") %>% 
+#'   add_content(create_table(mtcars[6:10, ], headerless=TRUE), 
+#'               page_break = FALSE, align = "left") %>% 
+#'   add_content(create_text("* NOTE: Above table is actually two tables stacked.")) 
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
 #' # Write report to console
 #' writeLines(readLines(tmp))
+#' 
+#' # MTCARS Sample Data
+#' # 
+#' #  mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' #----------------------------------------------------------------------------
+#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' # 
+#' # * NOTE: Above table is actually two tables stacked.
 #' @export
 add_content <- function(x, object, page_break=TRUE, align = "center",
                         blank_row = "below") {
@@ -796,12 +959,26 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' Write a report to the file system
 #' @description
 #' This function writes a report_spec object to the file system, using the
-#' parameters provided in the object.
+#' specifications provided in the object.
 #' @details 
 #' The function renders the report in the requested format, and writes it
-#' to the location specified in the report \code{file_path} parameter.
+#' to the location specified in the report \code{file_path} parameter.  Attempts
+#' to write an object that is not of class "report_spec" will generate an error.
+#' 
+#' The \code{write_report} function is a driver for very complex set of 
+#' rendering functions. The rendering functions
+#' perform most of the advanced functionality of the \strong{rptr} package:
+#' generating spanning headers, page wrapping and breaking, creating stub 
+#' columns, etc.  When things go wrong, they will usually go wrong during this
+#' function call.  For that reason, although this function can be part of 
+#' the pipeline that creates the report object, it is best to call 
+#' \code{write_report} independently, to help isolate any issues from the 
+#' report definition procedure.
+#' 
 #' @param x The report object to write.
-#' @return The report spec, with settings modified during writing.
+#' @return The report spec, with settings modified during rendering.  These 
+#' modified settings can sometimes be useful for documentation, and for 
+#' debugging issues with the procedure.
 #' @family report
 #' @examples 
 #' library(rptr)
@@ -820,9 +997,12 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #'   add_content(tbl, align = "left") 
 #' 
 #' # Write the report to the file system
-#' write_report(rpt)
+#' res <- write_report(rpt)
 #' 
-#' # Write report to console
+#' # Write the modified report object to the console
+#' print(res)
+#' 
+#' # Write the report to console
 #' writeLines(readLines(tmp))
 #' @export
 write_report <- function(x) {

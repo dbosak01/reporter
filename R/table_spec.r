@@ -2,18 +2,113 @@
 
 
 # Table Spec Functions ---------------------------------------------------------
-#' A function to create a table_spec object
-#' @param x The data frame to create a table spec for.
-#' @param show_cols Whether to show all column by default.  Valid values are
-#' "all", "none", or a vector of column names.  "all" means show all columns 
-#' by default, unless overridden by the column definitions.  
+#' @title Create a table
+#' @description 
+#' The \code{create_table} function creates a table object to which 
+#' further specifications can be added.  The object is implemented as an 
+#' S3 object of class 'table_spec'. The object can be added to a report
+#' using the \code{\link{add_content}} function.
+#' @details 
+#' A table specification is a container to hold information about a table.  The 
+#' only required information for a table is the table data.  All other 
+#' parameters and functions are optional.
+#' 
+#' By default, the table will display all columns in the data frame.  To change
+#' this default, use the \code{show_cols} parameter.  Setting this parameter
+#' to 'none' will display none of the columns in the data, unless they are
+#' explicitly defined with a \code{\link{define}} function.  
+#' 
+#' The \code{show_cols} parameter also accepts a vector of quoted column names.
+#' The column name vector performs two functions.  First, it will display only
+#' those columns on the report.  Second, it will display them in the order
+#' specified in the vector.  The \code{show_cols} parameter is the only way to 
+#' change the column order of the table when using \code{create_table}.
+#' 
+#' The \code{create_table} function also provides the capabilities to create
+#' a "headerless" table.  A headerless table useful when combining two tables 
+#' into one report.
+#' 
+#' Since the purpose of the \strong{rptr} package is to create statistical 
+#' reports, the \code{create_table} function makes it easy to add population
+#' counts to the table header.  These population counts are added to column
+#' labels and spanning header labels using the function indicated in the 
+#' \code{n_format} function. The package provides four population count
+#' formatting functions.  You may create your own formatting function if one of
+#' these functions does not meet your needs.  See \code{\link{upcase_parens}}
+#' for further details.
+#' 
+#' @param x The data frame or tibble from which to create the table object.
+#' @param show_cols Whether to show all columns by default.  Valid values are
+#' "all", "none", or a vector of column names.  "all" means show all columns, 
+#' unless overridden by the column definitions.  
 #' "none" means don't show any 
 #' columns unless specified in the column definitions.  If a vector of column
 #' names is supplied, those columns will be shown in the report in the order
 #' specified, whether or not a definition is supplied.  
 #' @param first_row_blank Whether to place a blank row under the table header.
-#' @param n_format The format function to apply to the header n label.
+#' Valid values are TRUE or FALSE.  Default is FALSE.
+#' @param n_format The formatting function to apply to the header "N=" label. 
+#' The default formatting function is \code{\link{upcase_parens}}. 
 #' @param headerless Whether to create a headerless table.  Default is FALSE. 
+#' @family table
+#' @examples 
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' #Subset cars data
+#' dat <- mtcars[1:10, 1:7]
+#' 
+#' # Calculate means for all columns
+#' dat_sum <- data.frame(all_cars = "All cars average", as.list(sapply(dat, mean)))
+#' 
+#' # Get vehicle names into first column
+#' dat_mod <- data.frame(vehicle = rownames(dat), dat)
+#'                       
+#' # Create table for averages
+#' tbl1 <- create_table(dat_sum) %>% 
+#'         titles("Table 1.0", "MTCARS Sample Data") %>% 
+#'         define(all_cars, label = "", width = 2) %>% 
+#'         define(mpg, format = "%.1f") %>% 
+#'         define(disp, format = "%.1f") %>% 
+#'         define(hp, format = "%.0f") %>% 
+#'         define(qsec, format = "%.2f")
+#' 
+#' # Create table for modified data
+#' tbl2 <- create_table(dat_mod, headerless = TRUE) %>% 
+#'         define(vehicle, width = 2) 
+#' 
+#' # Create the report object
+#' rpt <- create_report(tmp) %>% 
+#'   add_content(tbl1, align = "left", page_break = FALSE) %>% 
+#'   add_content(tbl2, align = "left") 
+#' 
+#' # Write the report to the file system
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(tmp))
+#' 
+#' #                                 Table 1.0
+#' #                             MTCARS Sample Data
+#' # 
+#' #                             mpg    cyl   disp     hp   drat     wt   qsec
+#' # -------------------------------------------------------------------------
+#' # All cars average           20.4    5.8  208.6    123  3.538  3.128  18.58
+#' # 
+#' # Mazda RX4                    21      6    160    110    3.9   2.62  16.46
+#' # Mazda RX4 Wag                21      6    160    110    3.9  2.875  17.02
+#' # Datsun 710                 22.8      4    108     93   3.85   2.32  18.61
+#' # Hornet 4 Drive             21.4      6    258    110   3.08  3.215  19.44
+#' # Hornet Sportabout          18.7      8    360    175   3.15   3.44  17.02
+#' # Valiant                    18.1      6    225    105   2.76   3.46  20.22
+#' # Duster 360                 14.3      8    360    245   3.21   3.57  15.84
+#' # Merc 240D                  24.4      4  146.7     62   3.69   3.19     20
+#' # Merc 230                   22.8      4  140.8     95   3.92   3.15   22.9
+#' # Merc 280                   19.2      6  167.6    123   3.92   3.44   18.3
+#' # 
 #' @export
 create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
                          n_format = upcase_parens, headerless = FALSE) {
@@ -43,31 +138,43 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 
 }
 
-#' @title Defines a column specification for a table
-#' @description A function to define the specification for a table column.
+#' @title Defines a column 
+#' @description A function to define the specification for a table column.  The
+#' \code{define} function contains a variety of a parameters to control the 
+#' appearance of the report.  Using the \code{define} function, you can control
+#' simple options like column alignment and format, but also control more 
+#' sophisticated options like page wrapping and page breaking.
 #' @details 
 #' Column definitions are optional.  By default, all columns in the data
 #' are displayed in the order and with the formatting attributes assigned to 
 #' the data frame.
-#' The \strong{define} function is used to provide additional control over
-#' column appearance.  For example, you may use the \strong{define} function
+#' 
+#' The \code{define} function is used to provide additional control over
+#' column appearance.  For example, you may use the \code{define} function
 #' to assign formatting properties, a label, and an "N=" population count
 #' for the column header. See the parameters below for additional options.
+#' 
+#' Some of the parameters on the \code{define} function are used in the 
+#' creation of a table stub.  See the \code{\link{stub}} function for additional
+#' details.
 #' 
 #' @param x The table spec.
 #' @param var The variable to define a column for.
 #' @param label The label to use for the column header.
 #' @param format The format to use for the column data.  The format can 
 #' be a string format, a formatting function, or a format object from the 
-#' \strong{fmtr} package.
+#' \strong{\link[fmtr]{fmtr}} package.
 # @param col_type The column type.
-#' @param align The column alignment.  Value values are "left", "right", and
-#' "center".
+#' @param align The column alignment.  Valid values are "left", "right", 
+#' "center", and "centre".
 #' @param label_align How to align the header labels for this column.
-#' Value values are "left", "right", and "center".
-#' @param width The width of the column in inches.
+#' Valid values are "left", "right", "center", and "centre".
+#' @param width The width of the column in the specified units of measure.
+#' The units of measure are specified on the \code{uom} parameter of the
+#' \code{\link{create_report}} function.
 #' @param visible Whether or not the column should be visible on the report.
-#' @param n The n value to place in the n header label.
+#' This parameter can be used as a simple way to drop columns from the report.
+#' @param n The n value to place in the "N=" header label.
 #' @param blank_after Whether to place a blank row after unique values of this
 #' variable.
 #' @param dedupe Whether to dedupe the values for this variable.  Variables
@@ -77,15 +184,94 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 #' are also moved to the far left of the page.
 #' @param page_wrap Force a page wrap on this variable.  A page wrap is a vertical
 #' page break necessary when the table is too wide to fit on a single page.
-#' The excess variables will be wrapped to the next page.
+#' The excess variables will be wrapped to the next page.  Page wraps will
+#' continue until all variables are displayed.  Use the \code{id_vars}
+#' parameter to identify rows across wrapped pages. 
 #' @param indent How much to indent the column values.  Parameter takes a 
 #' numeric value that will be interpreted according to the 'uom' 
-#' (Unit Of Measure) setting on the report.  
+#' (Unit Of Measure) setting on the report.  This parameter can be used to 
+#' help create a stub column.
 #' @param label_row Whether the values of the variable should be used to
 #' create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
-#' If label_row is set to TRUE, the dedupe parameter will also be set to TRUE.
-#' @seealso \code{\link{create_table}} to create a table, and 
-#' \link{table_options} to see define options illustrated.
+#' If \code{label_row} is set to TRUE, the dedupe parameter will also be 
+#' set to TRUE.  This parameter is often used in conjuntion with the 
+#' \code{\link{stub}} function to create a stub column.
+#' @return The modified table spec.
+#' @family table
+#' @examples
+#' library(rptr)
+#' library(magrittr)
+#'  
+#' # Create temp file name
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Prepare data
+#' dat <- mtcars[1:10, ]
+#' dat <- data.frame(vehicle = rownames(dat), dat)
+#' 
+#' # Define table
+#' tbl <- create_table(dat, show_cols = 1:8) %>% 
+#'   define(vehicle, label = "Vehicle", width = 3, id_var = TRUE, align = "left") %>% 
+#'   define(mpg, label = "Miles per Gallon", width = 1) %>% 
+#'   define(cyl, label = "Cylinders", format = "%.1f") %>% 
+#'   define(disp, label = "Displacement") %>% 
+#'   define(hp, label = "Horsepower", page_wrap = TRUE) %>% 
+#'   define(drat, visible = FALSE) %>% 
+#'   define(wt, label = "Weight") %>% 
+#'   define(qsec, label = "Quarter Mile Time", width = 1.5) 
+#' 
+#' 
+#' # Create the report
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   titles("Listing 2.0", "MTCARS Data Listing with Page Wrap") %>% 
+#'   add_content(tbl, align = "left") %>% 
+#'   page_footer(right = "Page [pg] of [tpg]")
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Send report to console for viewing
+#' writeLines(readLines(tmp))
+#' 
+#' #                                  Listing 2.0
+#' #                       MTCARS Data Listing with Page Wrap
+#' # 
+#' #                                         Miles per
+#' # Vehicle                                    Gallon Cylinders Displacement
+#' # ------------------------------------------------------------------------
+#' # Mazda RX4                                      21       6.0          160
+#' # Mazda RX4 Wag                                  21       6.0          160
+#' # Datsun 710                                   22.8       4.0          108
+#' # Hornet 4 Drive                               21.4       6.0          258
+#' # Hornet Sportabout                            18.7       8.0          360
+#' # Valiant                                      18.1       6.0          225
+#' # Duster 360                                   14.3       8.0          360
+#' # Merc 240D                                    24.4       4.0        146.7
+#' # Merc 230                                     22.8       4.0        140.8
+#' # Merc 280                                     19.2       6.0        167.6
+#' # 
+#' # ...
+#' # 
+#' #                                                                    Page 1 of 2
+#' #                                  Listing 2.0
+#' #                       MTCARS Data Listing with Page Wrap
+#' # 
+#' # Vehicle                              Horsepower Weight  Quarter Mile Time
+#' # -------------------------------------------------------------------------
+#' # Mazda RX4                                   110   2.62              16.46
+#' # Mazda RX4 Wag                               110  2.875              17.02
+#' # Datsun 710                                   93   2.32              18.61
+#' # Hornet 4 Drive                              110  3.215              19.44
+#' # Hornet Sportabout                           175   3.44              17.02
+#' # Valiant                                     105   3.46              20.22
+#' # Duster 360                                  245   3.57              15.84
+#' # Merc 240D                                    62   3.19                 20
+#' # Merc 230                                     95   3.15               22.9
+#' # Merc 280                                    123   3.44               18.3
+#' # 
+#' # ...
+#' # 
+#' #                                                                    Page 2 of 2
 #' @export
 define <- function(x, var, label = NULL, format = NULL, #col_type = NULL,
                    align=NULL, label_align=NULL, width=NULL,
@@ -130,31 +316,92 @@ define <- function(x, var, label = NULL, format = NULL, #col_type = NULL,
 }
 
 #' @title Defines a spanning header
-#' @description Create a header that spans multiple columns.
+#' @description Create a header that spans multiple columns.  Spanning headers
+#' are used to group related columns.  Such groupings are a common 
+#' feature of statistical reports.
 #' @details 
 #' A spanning header is a label and underline that spans one or more 
-#' column headers.  A spanning header is defined minimally by identifying 
-#' the columns to be spanned, and spanning header label.  A label alignment 
+#' columns.  A spanning header is defined minimally by identifying 
+#' the columns to be spanned, and a label.  A label alignment and "N="
 #' value may also be specified.
 #' 
 #' There are three ways to identify the columns to span: by a sequence of 
 #' column positions, by a vector of column names, or by a named vector 
 #' indicating "from" and "to" column names.  When identifying the spanning
 #' column names, all names should be quoted.
-#' @param x The table spec.
+#' @param x The table object to add spanning headers to.
 #' @param span_cols The columns to span.  The spanning columns may be defined as
-#' a vector of column positions or names.  If defined by names, the names
-#' should be quoted.  You may also supply a named vector, with the names
-#' "from" and "to" equal to the starting and ending columns to span.
+#' a vector of column positions or quoted names. You may also supply a named 
+#' vector, with the names "from" and "to" equal to the starting and 
+#' ending columns to span.
 #' @param label The label to apply to the spanning header.
-#' @param label_align The alignment to use for the label.Valid values are 
-#' "left", "right", "center", and "centre".  The default for text columns is 
-#' "left", and the default for numeric columns is "right".
+#' @param label_align The alignment to use for the label. Valid values are 
+#' "left", "right", "center", and "centre".  The default for spanning columns
+#' is "center".
 #' @param level The level to use for the spanning header.  The lowest
 #' spanning level is level 1, the next level above is level 2, and so on.  
 #' By default, the level is set to 1.
-#' @param n The n value to use for the n label on the spanning header.
+#' @param n The n value to use for the "N=" label on the spanning header.
 #' @return The modified table spec.
+#' @family table
+#' @examples 
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temporary path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Prepare Data
+#' dat <- mtcars[1:10, ]
+#' df <- data.frame(vehicle = rownames(dat), dat)
+#' 
+#' # Define Table with spanning headers
+#' tbl <- create_table(df) %>% 
+#'   titles("Table 1.0", "MTCARS Spanning Headers") %>% 
+#'   spanning_header(span_cols = c("mpg", "cyl", "hp"),
+#'                   label = "Span 1", n = 10) %>%
+#'   spanning_header(span_cols = c("drat", "wt", "qsec"),
+#'                   label = "Span 2", n = 10) %>%
+#'   spanning_header(span_cols = c("vs", "gear", "carb"),
+#'                   label = "Span 3", n = 10) %>%
+#'   spanning_header(span_cols = c(from = "drat", to = "carb"), 
+#'                   label = "Super Span", level = 2) %>%
+#'   define(vehicle, label = "Vehicle") %>% 
+#'   define(mpg, format = "%.1f") %>% 
+#'   define(disp, visible = FALSE) %>% 
+#'   define(am, visible = FALSE) 
+#' 
+#' # Create Report and add table 
+#' rpt <- create_report(tmp) %>%
+#'   add_content(tbl, align = "left") 
+#' 
+#' # Write the report
+#' res <- write_report(rpt)
+#' 
+#' # View in console
+#' writeLines(readLines(tmp))
+#' 
+#' #                                    Table 1.0
+#' #                              MTCARS Spanning Headers
+#' # 
+#' #                                                         Super Span
+#' #                                         -----------------------------------------
+#' #                           Span 1               Span 2               Span 3
+#' #                           (N=10)               (N=10)               (N=10)
+#' #                    -------------------- -------------------- --------------------
+#' # Vehicle               mpg    cyl     hp   drat     wt   qsec     vs   gear   carb
+#' # ---------------------------------------------------------------------------------
+#' # Mazda RX4            21.0      6    110    3.9   2.62  16.46      0      4      4
+#' # Mazda RX4 Wag        21.0      6    110    3.9  2.875  17.02      0      4      4
+#' # Datsun 710           22.8      4     93   3.85   2.32  18.61      1      4      1
+#' # Hornet 4 Drive       21.4      6    110   3.08  3.215  19.44      1      3      1
+#' # Hornet Sportabout    18.7      8    175   3.15   3.44  17.02      0      3      2
+#' # Valiant              18.1      6    105   2.76   3.46  20.22      1      3      1
+#' # Duster 360           14.3      8    245   3.21   3.57  15.84      0      3      4
+#' # Merc 240D            24.4      4     62   3.69   3.19     20      1      4      2
+#' # Merc 230             22.8      4     95   3.92   3.15   22.9      1      4      2
+#' # Merc 280             19.2      6    123   3.92   3.44   18.3      1      4      4
+#' #
 #' @export
 spanning_header <- function(x, span_cols, label = "",
                             label_align = "center", level = 1, n = NULL) {
@@ -202,19 +449,116 @@ spanning_header <- function(x, span_cols, label = "",
 }
 
 #' @title Defines a report stub
-#' @description Combine one or more columns into a nested report stub.  
+#' @description Combine columns into a nested report stub.  The report stub
+#' is a common feature of statistical reports.  The stub is created with
+#' the \code{stub} function in combination with some parameters from the 
+#' \code{\link{define}} function.
 #' @details 
-#' Here are some details.
+#' The report stub is a nested set of labels that identify rows 
+#' on the table. The stub is created by combining two or more columns into 
+#' a single stub column.  The relationship between the columns is typically 
+#' visualized as a hierarchy, with lower level concepts indented under 
+#' higher level concepts.  
+#' 
+#' A typical stub is created with the following steps:
+#' \itemize{
+#'   \item Prepare the data with multiple, hierarchical columns.
+#'   \item Create the table object
+#'   \item Define the stub on the table using the stub function, and identifying
+#'   the columns to be combined.
+#'   \item Identify higher level concepts with the \code{label_row} parameter
+#'   on the \code{\link{define}} function. 
+#'   \item Identify lower level concepts using the \code{indent} parameter 
+#'   on the \code{\link{define}} function.
+#' }
+#' 
+#' The stub will be automatically added as an identity column on the report, and
+#' will always appear as the leftmost column.  There can only be one stub 
+#' defined on a report.
 #' @param x The table spec.
 #' @param vars A vector of quoted variable names from which to create the stub.
-#' @param label The label for the report stub.
-#' @param label_align The alignment for the label.  Valid values are 'left', 
-#' 'right', 'center', and 'centre'.  Default is 'left'.
+#' @param label The label for the report stub.  The default label is an empty
+#' string ("").
+#' @param label_align The alignment for the stub column label.  
+#' Valid values are 'left', 'right', 'center', and 'centre'.  Default is 'left'.
 #' @param width The width of the stub, in report units of measure.
 #' @param align How to align the stub column.  Valid values are 'left', 
 #' 'right', 'center', and 'centre'.  Default is 'left'.
 #' @param format A format to apply to the stub column.
 #' @return The modified table spec.
+#' @family table
+#' @examples 
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temporary path
+#' tmp <- file.path(tempdir(), "example2.txt")
+#' 
+#' # Read in prepared data
+#' df <- read.table(header = TRUE, text = '
+#'       var     label        A             B          
+#'       "ampg"   "N"          "19"          "13"         
+#'       "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+#'       "ampg"   "Median"     "16.4"        "21.4"       
+#'       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+#'       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+#'       "cyl"   "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+#'       "cyl"   "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+#'       "cyl"   "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+#' 
+#' # Create table
+#' tbl <- create_table(df, first_row_blank = TRUE) %>% 
+#'   stub(c("var", "label")) %>% 
+#'   define(var, blank_after = TRUE, label_row = TRUE, 
+#'          format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+#'   define(label, indent = .25) %>% 
+#'   define(A, label = "Group A", align = "center", n = 19) %>% 
+#'   define(B, label = "Group B", align = "center", n = 13)
+#' 
+#' 
+#' # Create report and add content
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+#'   titles("Table 1.0", "MTCARS Summary Table") %>% 
+#'   add_content(tbl) %>% 
+#'   footnotes("* Motor Trend, 1974") %>%
+#'   page_footer(left = Sys.time(), 
+#'               center = "Confidential", 
+#'               right = "Page [pg] of [tpg]")
+#' 
+#' # Write out report
+#' write_report(rpt)
+#' 
+#' # View report in console
+#' writeLines(readLines(tmp))
+#' 
+#' # Client: Motor Trend                                                Study: Cars
+#' #                                   Table 1.0
+#' #                              MTCARS Summary Table
+#' # 
+#' #                                     Group A      Group B
+#' #                                      (N=19)       (N=13)
+#' #                  -------------------------------------------
+#' # 
+#' #                 Miles Per Gallon
+#' #                    N                   19           13
+#' #                    Mean            19.3 (6.7)   21.3 (4.8)
+#' #                    Median             17.3         21.0
+#' #                    Q1 - Q3        15.2 - 22.1  19.2 - 22.8
+#' #                    Range          10.4 - 33.9  14.3 - 32.4
+#' #
+#' #                 Cylinders
+#' #                    8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
+#' #                    6 Cylinder      3 ( 15.8%)   4 ( 30.8%)
+#' #                    4 Cylinder      6 ( 31.6%)   5 ( 38.5%)
+#' # 
+#' # ...
+#' # 
+#' # 
+#' # * Motor Trend, 1974
+#' # 
+#' # 2020-08-30 03:50:02              Confidential                      Page 1 of 1
+#' #
 #' @export
 stub <- function(x, vars, label = "", label_align = NULL, 
                  align = "left", width = NULL, format = NULL) {
@@ -257,6 +601,7 @@ stub <- function(x, vars, label = "", label_align = NULL,
 #' @seealso 
 #' \code{\link{create_table}} function to create a table specification.
 #' @return The table spec, invisibly.
+#' @family table
 #' @examples 
 #' tbl <- create_table(mtcars)
 #' print(tbl)
