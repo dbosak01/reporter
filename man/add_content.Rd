@@ -40,24 +40,23 @@ appended to the report in order they are added.  By default, a page break
 is added after the content.
 }
 \examples{
+library(rptr)
+library(magrittr)
+
 # Create temp file path
-fp <- file.path(tempdir(), "mtcars.txt")
+tmp <- file.path(tempdir(), "mtcars.txt")
 
 # Create the report object
-rpt <- create_report(fp) 
-
-# Add title
-rpt <- titles(rpt, "MTCARS sample report")
-
-# Add content 
-rpt <- add_content(rpt, create_table(mtcars), page_break = FALSE)
-rpt <- add_content(rpt, create_text("* NOTE: Car information from 1971.")) 
+rpt <- create_report(tmp) \%>\% 
+  titles("MTCARS Sample Report", align = "left") \%>\% 
+  add_content(create_table(mtcars), page_break = FALSE, align = "left") \%>\% 
+  add_content(create_text("* NOTE: Car information from 1974.")) 
 
 # Write the report to the file system
 write_report(rpt)
 
 # Write report to console
-writeLines(readLines(fp))
+writeLines(readLines(tmp))
 }
 \seealso{
 Other report: 

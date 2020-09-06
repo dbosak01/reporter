@@ -7,21 +7,38 @@
 #' Create a report
 #'
 #' @description
-#' Creates a report shell to which you may add content.
+#' Creates a report shell to which you may add titles, footnotes, content, etc.
 #' 
 #' @details
 #' This function is the constructor for the report object.  The report
 #' object contains information needed to create a report. The object is
 #' defined as an S3 object, and has a class of 'report_spec'.
 #' 
-#' The report object holds information concerning report page size, font, 
+#' The report object holds information concerning report page size, orientation, 
 #' titles, footnotes, page header, page footer, margins, and other options.  
 #' Use the \code{\link{add_content}} function to add content to the report.  
 #' The report may be written to a file using the \code{\link{write_report}} 
 #' function. 
 #' 
-#' See the \code{\link{create_table}} and \code{\link{create_text}} functions
-#' to create content for the report.
+#' 
+#' @section Report family of functions:
+#' The report is the primary container for report specifications.  The
+#' following functions add additional specifications to the report object 
+#' initialized with \code{create_report}.
+#' \itemize{
+#'   \item \code{\link{titles}} to add titles to the report.
+#'   \item \code{\link{footnotes}} to add footnotes to the report.
+#'   \item \code{\link{page_header}} to add a page header to the report. 
+#'   \item \code{\link{page_footer}} to add a page_footer to the report. 
+#'   \item \code{\link{add_content}} to add content to the report.
+#'   \item \code{\link{options_fixed}} to set options for text output.
+#'   \item \code{\link{add_content}} to add content to the report.
+#'   \item \code{\link{write_report}} to write the report to the file system.
+#' }
+#' 
+#' The report family of functions are pipe-friendly.  After creating the 
+#' report, you may pipe the object to any of the above functions to append
+#' additional options.
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -38,37 +55,27 @@
 #' printed.  The \code{paper_size} will determine how much text can fit on
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
 #' "letter".
-#' @return A new report_spec S3 object.
+#' @return A new report_spec object.
 #' @family report
-#' @seealso 
-#' \itemize{
-#'   \item \code{\link{titles}} to add titles to the report.
-#'   \item \code{\link{footnotes}} to add footnotes to the report.
-#'   \item \code{\link{page_header}} to add a page header to the report. 
-#'   \item \code{\link{page_footer}} to add a page_footer to the report. 
-#'   \item \code{\link{add_content}} to add content to the report.
-#'   \item \code{\link{options_fixed}} to set options for text output.
-#'   \item \code{\link{add_content}} to add content to the report.
-#'   \item \code{\link{write_report}} to write the report to the file system.
-#' }
+#' @seealso \code{\link{create_table}} and \code{\link{create_text}} functions
+#' to create content for the report.
 #' @examples
+#' library(rptr)
+#' library(magrittr)
+#' 
 #' # Create temp file path
-#' fp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
 #' # Create the report object
-#' rpt <- create_report(fp) 
-#' 
-#' # Add title
-#' rpt <- titles(rpt, "MTCARS sample report")
-#' 
-#' # Add content 
-#' rpt <- add_content(rpt, create_table(mtcars)) 
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   titles("MTCARS Sample Report") %>% 
+#'   add_content(create_table(mtcars)) 
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
-#' # Write report to console
-#' writeLines(readLines(fp))
+#' # Write the report to the console
+#' writeLines(readLines(tmp))
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
                           orientation ="landscape", uom = "inches",
@@ -238,25 +245,23 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' characters and lines per unit of measure manually.
 #' @family report
 #' @examples
+#' library(rptr)
+#' library(magrittr)
+#' 
 #' # Create temp file path
-#' fp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
 #' # Create the report object
-#' rpt <- create_report(fp) 
-#' 
-#' # Add title
-#' rpt <- titles(rpt, "MTCARS sample report")
-#' 
-#' # Add content and set options editor parameter to notepad++.
-#' # The editor option can optimize the settings for a specific text editor.
-#' rpt <- add_content(rpt, create_table(mtcars)) 
-#' rpt <- options_fixed(rpt, editor = "notepad++")
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   titles("MTCARS Sample Report") %>% 
+#'   add_content(create_table(mtcars)) %>% 
+#'   options_fixed(editor = "notepad++")
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
 #' # Write report to console
-#' writeLines(readLines(fp))
+#' writeLines(readLines(tmp))
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
   
@@ -337,7 +342,13 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 # The \strong{min_margin} parameter is used to set the minimum margin allowed
 # by the printer.  This value will be subtracted from the margin settings 
 # when the blank_margins option is used.
-# 
+#
+#' Note that when using output type of text, setting the margins only reduces
+#' the area available for content on a page.  You must still set the actual
+#' margins on the available editor to match those specified in 
+#' \code{set_margins}.  Any mismatch may result in content not fitting properly
+#' on the page. For best results, set the right and bottom margins to zero 
+#' to allow for any overflow in spacing.
 #' @param x The report spec object.
 #' @param top The top margin.
 #' @param bottom The bottom margin.
@@ -352,12 +363,23 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
-#' # Here is an example
-# create_report("mtcars.docx", orientation="portrait") %>%
-# set_margins(margin_top = 1, margin_bottom =1)  %>%
-# add_content(create_table(mtcars)) %>%
-# write_report()
-# file.show("mtcars.docx")
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Define report
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   titles("MTCARS Report") %>% 
+#'   set_margins(top = 1, bottom =1) %>% 
+#'   add_content(create_table(mtcars)) 
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Display in console
+#' writeLines(readLines(tmp))
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL 
@@ -433,8 +455,10 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #'
 #' @details
 #' The page header may contain text on the left or right. Use the appropriate
-#' parameters to specify the desired text.  Multiple text values for each side
-#' may be specified as a vector of strings.
+#' parameters to specify the desired text.  Only one page header is allowed
+#' on a report. The page header will be repeated on every page of the report.
+#' Multiple text values for each side
+#' may be specified as a vector of strings.  
 #' @param x The report spec object.
 #' @param left The left page header text.  May be a single string or a vector
 #' of strings.
@@ -445,12 +469,23 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @return The modified report specification.
 #' @family report
 #' @examples
-#' # Here is an example
-# create_report("mtcars.docx", orientation="portrait") %>%
-# page_header(left = "Cars Data", right = "Study ABC")  %>%
-# add_content(create_table(mtcars)) %>%
-# write_report()
-# #file.show("mtcars.docx")
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create the report object
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   page_header("Client: Motor Trend", "Study: Cars") %>% 
+#'   titles("MTCARS Sample Report") %>% 
+#'   add_content(create_table(mtcars)) 
+#' 
+#' # Write the report to the file system
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(tmp))
 #' @export
 page_header <- function(x, left="", right="", blank_row = "none"){
 
@@ -497,12 +532,22 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' # Here is a comment
-# create_report("mtcars.docx", orientation="portrait") %>%
-# titles("Cars Table Title", "All Cars")  %>%
-# add_content(create_table(mtcars)) %>%
-# write_report()
-# #file.show("mtcars.docx")
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Define report
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   titles("Table 1.0", "MTCARS Report for Motor Trend") %>% 
+#'   add_content(create_table(mtcars)) 
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Display in console
+#' writeLines(readLines(tmp))
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below"){
 
@@ -546,13 +591,23 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' # Here are some examples.
-# create_report("mtcars.docx", orientation="portrait") %>%
-# titles("Cars Table Title", "All Cars")  %>%
-# footnotes("Source: 1974 Motor Trend US magazine") %>%
-# add_content(create_table(mtcars)) %>%
-# write_report()
-# #file.show("mtcars.docx")
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Define report
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   titles("Table 1.0", "MTCARS Sample Report") %>% 
+#'   add_content(create_table(mtcars)) %>%
+#'   footnotes("* From Motor Trend Magazine, 1974")  
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Display in console
+#' writeLines(readLines(tmp))
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above"){
 
@@ -606,12 +661,13 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' \code{\link{titles}} to add titles, and \code{\link{footnotes}} to
 #' add footnotes.
 #' @examples
+#' library(rptr)
 #' library(magrittr)
 #' 
 #' # Create table 
 #' tbl <- create_table(mtcars) %>% 
 #'        titles("MTCARS Sample Data") %>% 
-#'        footnotes("* From Motor Trend, 1973")
+#'        footnotes("* From Motor Trend, 1974")
 #' 
 #' # Create temp report file name
 #' tmp <- file.path(tempdir(), "mtcars.txt")
@@ -673,24 +729,23 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' @return The modified report_spec.
 #' @family report
 #' @examples
+#' library(rptr)
+#' library(magrittr)
+#' 
 #' # Create temp file path
-#' fp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
 #' # Create the report object
-#' rpt <- create_report(fp) 
-#' 
-#' # Add title
-#' rpt <- titles(rpt, "MTCARS sample report")
-#' 
-#' # Add content 
-#' rpt <- add_content(rpt, create_table(mtcars), page_break = FALSE)
-#' rpt <- add_content(rpt, create_text("* NOTE: Car information from 1971.")) 
+#' rpt <- create_report(tmp) %>% 
+#'   titles("MTCARS Sample Report", align = "left") %>% 
+#'   add_content(create_table(mtcars), page_break = FALSE, align = "left") %>% 
+#'   add_content(create_text("* NOTE: Car information from 1974.")) 
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
 #' # Write report to console
-#' writeLines(readLines(fp))
+#' writeLines(readLines(tmp))
 #' @export
 add_content <- function(x, object, page_break=TRUE, align = "center",
                         blank_row = "below") {
@@ -727,6 +782,27 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' @param x The report object to write.
 #' @return The report spec, with settings modified during writing.
 #' @family report
+#' @examples 
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create the table
+#' tbl <- create_table(mtcars) %>% 
+#'   titles("Table 1.0", "MTCARS Sample Report") %>% 
+#'   footnotes("* NOTE: Data from 1974")
+#' 
+#' # Create the report object
+#' rpt <- create_report(tmp) %>% 
+#'   add_content(tbl, align = "left") 
+#' 
+#' # Write the report to the file system
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(tmp))
 #' @export
 write_report <- function(x) {
   
@@ -763,15 +839,52 @@ write_report <- function(x) {
 # Write Registration File -------------------------------------------------
 
 #' @title 
-#' Write a registration file 
-#' 
+#' Create a registration file 
 #' @description 
 #' This function will create a registration file to help determine
-#' the correct \code{cpi} and \code{lpi} for editor/printer.  
+#' the correct \code{cpuom} and \code{lpuom} for your editor/printer.  
+#' @details
 #' The \code{cpi} and \code{lpi} are 
 #' used in \code{output_type = "text"} to determine available space on
-#' the page.   
-#' @param file_path The full or relative file name and path to create.
+#' the page. The registration file can help determine the correct settings
+#' for the target text editor and printer.  Failure to set the 
+#' correct characters per 
+#' unit of measure (cpuom) and lines per unit of measure (lpuom) may result
+#' in misalignment of content on the page when printing text output.
+#' 
+#' @section How to Use the Registration File:
+#' To use the registration file, first decide the units of measure you
+#' wish to use, inches or centimeters.  Next, create the registration file
+#' by calling the \code{write_registration_file} function.  Then print the 
+#' registration file.
+#' 
+#' Once the registration file is printed, take a ruler and measure both the 
+#' horizontal and vertical registration lines from zero to 60 in the desired
+#' units of measure.  For example, if your units of measure is 'inches', measure
+#' the registration lines in inches.    
+#' 
+#' Record the 
+#' distance measured in each direction.  For each direction, divide 60 by the 
+#' distance measured, and round to three decimal places.  The horizontal 
+#' result is the characters per unit of measure (cpuom).  The vertical result
+#' is the lines per unit of measure (lpuom).  
+#' 
+#' To get accurate printing of text reports, 
+#' assign these values to the \strong{cpuom} and \strong{lpuom} parameters
+#' on the \code{\link{options_fixed}} function.
+#' @param file_path The full or relative file name and path to create the 
+#' registration file.
+#' @examples 
+#' library(rptr)
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create the registration file 
+#' write_registration_file(tmp)
+#' 
+#' # Write report to console
+#' writeLines(readLines(tmp))
 #' @export
 write_registration_file <- function(file_path) {
   

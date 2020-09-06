@@ -105,7 +105,7 @@ paginate_content <- function(rs, ls) {
 }
 
 #' @title Write out content
-#' @description This loop writes out pages created paginate_content
+#' @description This loop writes out pages created in paginate_content
 #' @noRd
 write_content <- function(rs, ls, pt) {
   

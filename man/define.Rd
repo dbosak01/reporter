@@ -49,10 +49,11 @@ Value values are "left", "right", and "center".}
 variable.}
 
 \item{dedupe}{Whether to dedupe the values for this variable.  Variables
-that are deduped only show the value on the first row in a group.}
+that are deduped only show the value on the first row for each group.}
 
 \item{id_var}{Whether this variable should be considered an ID variable.
-ID variables are retained on each page when the page is wrapped.}
+ID variables are retained on each page when the page is wrapped. ID variables
+are also moved to the far left of the page.}
 
 \item{page_wrap}{Force a page wrap on this variable.  A page wrap is a vertical
 page break necessary when the table is too wide to fit on a single page.
@@ -71,9 +72,10 @@ A function to define the specification for a table column.
 }
 \details{
 Column definitions are optional.  By default, all columns in the data
-are displayed in the order and with the formatting attributes assigned.
+are displayed in the order and with the formatting attributes assigned to 
+the data frame.
 The \strong{define} function is used to provide additional control over
-the columns.  For example, you may use the \strong{define} function
+column appearance.  For example, you may use the \strong{define} function
 to assign formatting properties, a label, and an "N=" population count
 for the column header. See the parameters below for additional options.
 }

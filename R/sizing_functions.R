@@ -114,8 +114,10 @@ get_page_wraps <- function(line_size, ts, widths) {
         # Plus 1 for blank space after
         pg <- widths[id_vars] + 1
 
-        if (is.na(pg))
-          stop(paste0("ID column width for '", id_vars, " not found."))
+        if (any(is.na(pg)))
+          stop(paste0("ID column width for '", 
+                      paste(id_vars[is.na(pg)], sep = " ", collapse = ""),
+                      " not found."))
 
         names(pg) <- id_vars
 

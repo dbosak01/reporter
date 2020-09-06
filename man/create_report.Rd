@@ -34,45 +34,27 @@ one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is
 "letter".}
 }
 \value{
-A new report_spec S3 object.
+A new report_spec object.
 }
 \description{
-Creates a report shell to which you may add content.
+Creates a report shell to which you may add titles, footnotes, content, etc.
 }
 \details{
 This function is the constructor for the report object.  The report
 object contains information needed to create a report. The object is
 defined as an S3 object, and has a class of 'report_spec'.
 
-The report object holds information concerning report page size, font, 
+The report object holds information concerning report page size, orientation, 
 titles, footnotes, page header, page footer, margins, and other options.  
 Use the \code{\link{add_content}} function to add content to the report.  
 The report may be written to a file using the \code{\link{write_report}} 
-function. 
-
-See the \code{\link{create_table}} and \code{\link{create_text}} functions
-to create content for the report.
+function.
 }
-\examples{
-# Create temp file path
-fp <- file.path(tempdir(), "mtcars.txt")
+\section{Report family of functions}{
 
-# Create the report object
-rpt <- create_report(fp) 
-
-# Add title
-rpt <- titles(rpt, "MTCARS sample report")
-
-# Add content 
-rpt <- add_content(rpt, create_table(mtcars)) 
-
-# Write the report to the file system
-write_report(rpt)
-
-# Write report to console
-writeLines(readLines(fp))
-}
-\seealso{
+The report is the primary container for report specifications.  The
+following functions add additional specifications to the report object 
+initialized with \code{create_report}.
 \itemize{
   \item \code{\link{titles}} to add titles to the report.
   \item \code{\link{footnotes}} to add footnotes to the report.
@@ -83,6 +65,33 @@ writeLines(readLines(fp))
   \item \code{\link{add_content}} to add content to the report.
   \item \code{\link{write_report}} to write the report to the file system.
 }
+
+The report family of functions are pipe-friendly.  After creating the 
+report, you may pipe the object to any of the above functions to append
+additional options.
+}
+
+\examples{
+library(rptr)
+library(magrittr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Create the report object
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  titles("MTCARS Sample Report") \%>\% 
+  add_content(create_table(mtcars)) 
+
+# Write the report to the file system
+write_report(rpt)
+
+# Write the report to the console
+writeLines(readLines(tmp))
+}
+\seealso{
+\code{\link{create_table}} and \code{\link{create_text}} functions
+to create content for the report.
 
 Other report: 
 \code{\link{add_content}()},

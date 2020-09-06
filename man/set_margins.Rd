@@ -31,9 +31,32 @@ When the unit of measure is inches, default margins are 1 inch on left and
 right, and .5 inches on top and bottom.  When the unit of measure is 
 centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 on top and bottom.
+
+Note that when using output type of text, setting the margins only reduces
+the area available for content on a page.  You must still set the actual
+margins on the available editor to match those specified in 
+\code{set_margins}.  Any mismatch may result in content not fitting properly
+on the page. For best results, set the right and bottom margins to zero 
+to allow for any overflow in spacing.
 }
 \examples{
-# Here is an example
+library(rptr)
+library(magrittr)
+
+# Create a temporary file
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Define report
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+  titles("MTCARS Report") \%>\% 
+  set_margins(top = 1, bottom =1) \%>\% 
+  add_content(create_table(mtcars)) 
+
+# Write the report
+write_report(rpt)
+
+# Display in console
+writeLines(readLines(tmp))
 }
 \seealso{
 Other report: 

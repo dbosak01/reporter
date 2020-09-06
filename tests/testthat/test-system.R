@@ -792,3 +792,68 @@ test_that("test20: show_cols 'some' parameter on table works as expected.", {
   
 })
 
+
+test_that("test21: Multiple page headers and footers work as expected.", {
+  
+  fp <- file.path(base_path, "output/test21.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    define(vs, visible = FALSE)
+  
+  rpt <- create_report(fp) %>% 
+    page_header(c("Line 1", "Line 2"), "Right Line") %>%  
+    titles("MTCARS Data Frame", align = "left") %>% 
+    page_footer(c("Footer Line 1", "Footer Line 2"), right = "Footer Right Line", 
+                center = c("A", "B", "C")) %>%  
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+test_that("test22: Multiple id_var parameters work as expected.", {
+  
+  fp <- file.path(base_path, "output/test22.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  dat <- data.frame(vehicle = rownames(mtcars), mtcars)
+  
+  tbl <- create_table(dat) %>%
+    define(vehicle, id_var = TRUE, width = 3) %>% 
+    define(mpg, id_var = TRUE, width = 2, align = "left") %>% 
+    define(vs, id_var = TRUE, width = 2, align = "left")
+  
+  rpt <- create_report(fp) %>% 
+    options_fixed(editor = "word") %>% 
+    page_header(c("Line 1", "Line 2"), "Right Line") %>%  
+    titles("MTCARS Data Frame", align = "left") %>% 
+    page_footer(c("Footer Line 1", "Footer Line 2"), 
+                right = "Footer Right Line") %>%  
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+
+
+})
+
+
+

@@ -27,11 +27,29 @@ on each page of the report.
 }
 \details{
 The page header may contain text on the left or right. Use the appropriate
-parameters to specify the desired text.  Multiple text values for each side
+parameters to specify the desired text.  Only one page header is allowed
+on a report. The page header will be repeated on every page of the report.
+Multiple text values for each side
 may be specified as a vector of strings.
 }
 \examples{
-# Here is an example
+library(rptr)
+library(magrittr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Create the report object
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  page_header("Client: Motor Trend", "Study: Cars") \%>\% 
+  titles("MTCARS Sample Report") \%>\% 
+  add_content(create_table(mtcars)) 
+
+# Write the report to the file system
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(tmp))
 }
 \seealso{
 Other report: 

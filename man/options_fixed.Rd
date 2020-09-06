@@ -49,25 +49,23 @@ unit of measure for you.  If the editor is not available in the
 and \strong{lpuom}, see the help for \code{\link{write_registration_file}}.
 }
 \examples{
+library(rptr)
+library(magrittr)
+
 # Create temp file path
-fp <- file.path(tempdir(), "mtcars.txt")
+tmp <- file.path(tempdir(), "mtcars.txt")
 
 # Create the report object
-rpt <- create_report(fp) 
-
-# Add title
-rpt <- titles(rpt, "MTCARS sample report")
-
-# Add content and set options editor parameter to notepad++.
-# The editor option can optimize the settings for a specific text editor.
-rpt <- add_content(rpt, create_table(mtcars)) 
-rpt <- options_fixed(rpt, editor = "notepad++")
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  titles("MTCARS Sample Report") \%>\% 
+  add_content(create_table(mtcars)) \%>\% 
+  options_fixed(editor = "notepad++")
 
 # Write the report to the file system
 write_report(rpt)
 
 # Write report to console
-writeLines(readLines(fp))
+writeLines(readLines(tmp))
 }
 \seealso{
 \code{\link{create_report}} to create a report and set the unit

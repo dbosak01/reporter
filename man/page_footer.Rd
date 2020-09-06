@@ -38,12 +38,13 @@ total number of pages in the report.  These token may be place anywhere
 in the page header or page footer.
 }
 \examples{
+library(rptr)
 library(magrittr)
 
 # Create table 
 tbl <- create_table(mtcars) \%>\% 
        titles("MTCARS Sample Data") \%>\% 
-       footnotes("* From Motor Trend, 1973")
+       footnotes("* From Motor Trend, 1974")
 
 # Create temp report file name
 tmp <- file.path(tempdir(), "mtcars.txt")

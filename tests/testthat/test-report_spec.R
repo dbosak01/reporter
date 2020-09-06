@@ -120,3 +120,4 @@ test_that("options_fixed parameter checks work as expected.", {
   
 })
 
+

@@ -2,17 +2,59 @@
 % Please edit documentation in R/report_spec.R
 \name{write_registration_file}
 \alias{write_registration_file}
-\title{Write a registration file}
+\title{Create a registration file}
 \usage{
 write_registration_file(file_path)
 }
 \arguments{
-\item{file_path}{The full or relative file name and path to create.}
+\item{file_path}{The full or relative file name and path to create the 
+registration file.}
 }
 \description{
 This function will create a registration file to help determine
-the correct \code{cpi} and \code{lpi} for editor/printer.  
+the correct \code{cpuom} and \code{lpuom} for your editor/printer.
+}
+\details{
 The \code{cpi} and \code{lpi} are 
 used in \code{output_type = "text"} to determine available space on
-the page.
+the page. The registration file can help determine the correct settings
+for the target text editor and printer.  Failure to set the 
+correct characters per 
+unit of measure (cpuom) and lines per unit of measure (lpuom) may result
+in misalignment of content on the page when printing text output.
+}
+\section{How to Use the Registration File}{
+
+To use the registration file, first decide the units of measure you
+wish to use, inches or centimeters.  Next, create the registration file
+by calling the \code{write_registration_file} function.  Then print the 
+registration file.
+
+Once the registration file is printed, take a ruler and measure both the 
+horizontal and vertical registration lines from zero to 60 in the desired
+units of measure.  For example, if your units of measure is 'inches', measure
+the registration lines in inches.    
+
+Record the 
+distance measured in each direction.  For each direction, divide 60 by the 
+distance measured, and round to three decimal places.  The horizontal 
+result is the characters per unit of measure (cpuom).  The vertical result
+is the lines per unit of measure (lpuom).  
+
+To get accurate printing of text reports, 
+assign these values to the \strong{cpuom} and \strong{lpuom} parameters
+on the \code{\link{options_fixed}} function.
+}
+
+\examples{
+library(rptr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Create the registration file 
+write_registration_file(tmp)
+
+# Write report to console
+writeLines(readLines(tmp))
 }

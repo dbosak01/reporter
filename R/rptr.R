@@ -1,14 +1,45 @@
 #' @title rptr: A package for creating statistical reports
 #'
-#' @description The rptr package creates tabular reports in text output format.
+#' @description The rptr package creates statistical reports in text file format.
 #'     Will soon support RTF, PDF, and DOCX format.  
-#'
-#' @section rptr functions:
+#'     
+#' @details 
+#' The \strong{rptr} package creates regulatory-style, statistical reports. It was designed
+#' for use in the pharmaceutical, biotechnology, and medical-device industries.
+#' However, the functions are generalized enough to provide statistical reporting
+#' for any industry.  The package is written in Base R, and has no dependencies on
+#' any other reporting package.
+#' 
+#' The package is intended to give R programmers 
+#' report layout capabilities such as those found in SAS® PROC REPORT, 
+#' and a choice of output formats like SAS® ODS. The package will 
+#' initially focus on printable, file-based 
+#' output formats, as there are already numerous R packages that 
+#' provide tabular reporting in HTML. 
+#' The current version supports TEXT output.  Future releases will 
+#' incorporate RTF, DOCX, and PDF file formats. 
+#'     
+#' @section Key Features:
+#' The \strong{rptr} package contains the following key features:
 #' \itemize{
-#'   \item \code{\link{create_report}}
-#'   \item \code{\link{create_table}}
-#'   \item \code{\link{write_report}}
+#'   \item Titles, footnotes, page header, and page footer are repeated on each page
+#'   \item Supports header labels and spanning headers 
+#'   \item Calculates default columns widths automatically
+#'   \item Includes automatic wrapping and splitting of wide and long tables
+#'   \item Integrates with the \strong{fmtr} package to format numeric, date, and character data
+#'   \item Allows appending multiple tables to a report, multiple tables to a page, 
+#'         and intermingling of text and tables
+#'   \item Supports in-report date/time stamps and "Page X of Y" page numbering
 #' }
+#'
+#' @section Key Functions:
+#' \itemize{
+#'   \item \code{\link{create_report}} to define a report
+#'   \item \code{\link{create_table}} to define a table
+#'   \item \code{\link{create_text}} to define text content
+#'   \item \code{\link{write_report}} to write out the report
+#' }
+#' 
 #' @docType package
 #' @name rptr
 NULL

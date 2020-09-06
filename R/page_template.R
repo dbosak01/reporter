@@ -204,6 +204,15 @@ get_page_footer <- function(rs) {
   
   mx <- max(c(length(pftrr), length(pftrl), length(pftrc)))
   
+  if (length(pftrr) < mx)
+    pftrr <- c(rep("", mx - length(pftrr)), pftrr)
+  
+  if (length(pftrl) < mx)
+    pftrl <- c(rep("", mx - length(pftrl)), pftrl)
+  
+  if (length(pftrc) < mx)
+    pftrc <- c(rep("", mx - length(pftrc)), pftrc)
+  
   # Put blank space above page footer by default
   ret <- NULL
   

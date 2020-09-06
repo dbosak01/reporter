@@ -32,7 +32,23 @@ the location parameter. The user is responsible for adding desired symbols.
 Footnote symbols will not be generated automatically.
 }
 \examples{
-# Here are some examples.
+library(rptr)
+library(magrittr)
+
+# Create a temporary file
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Define report
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+  titles("Table 1.0", "MTCARS Sample Report") \%>\% 
+  add_content(create_table(mtcars)) \%>\%
+  footnotes("* From Motor Trend Magazine, 1974")  
+
+# Write the report
+write_report(rpt)
+
+# Display in console
+writeLines(readLines(tmp))
 }
 \seealso{
 Other report: 

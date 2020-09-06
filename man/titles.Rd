@@ -32,7 +32,22 @@ The titles may be aligned center, left or right using the align parameter.
 The titles may be assigned to the report, a table or a text specification.
 }
 \examples{
-# Here is a comment
+library(rptr)
+library(magrittr)
+
+# Create a temporary file
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Define report
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+  titles("Table 1.0", "MTCARS Report for Motor Trend") \%>\% 
+  add_content(create_table(mtcars)) 
+
+# Write the report
+write_report(rpt)
+
+# Display in console
+writeLines(readLines(tmp))
 }
 \seealso{
 Other report: 

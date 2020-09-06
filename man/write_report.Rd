@@ -20,6 +20,28 @@ parameters provided in the object.
 The function renders the report in the requested format, and writes it
 to the location specified in the report \code{file_path} parameter.
 }
+\examples{
+library(rptr)
+library(magrittr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Create the table
+tbl <- create_table(mtcars) \%>\% 
+  titles("Table 1.0", "MTCARS Sample Report") \%>\% 
+  footnotes("* NOTE: Data from 1974")
+
+# Create the report object
+rpt <- create_report(tmp) \%>\% 
+  add_content(tbl, align = "left") 
+
+# Write the report to the file system
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(tmp))
+}
 \seealso{
 Other report: 
 \code{\link{add_content}()},
