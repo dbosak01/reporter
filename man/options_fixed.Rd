@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{options_fixed}
 \alias{options_fixed}
-\title{Set options for a report with a fixed width font}
+\title{Set options for a report (fixed width font)}
 \usage{
 options_fixed(x, editor = NULL, cpuom = NULL, lpuom = NULL)
 }
@@ -17,19 +17,20 @@ is used, any settings for \strong{cpuom} and \strong{lpuom} will be
 ignored.}
 
 \item{cpuom}{Characters per unit of measure of printed text.
-if uom is inches, 
-default is 12, which equals a 10pt font.  This value will be used to 
+If uom is inches, the default is 12.  If uom is centimeters (cm), the 
+default is 4.687.  This value will be used to 
 determine how many characters can fit on a line.}
 
 \item{lpuom}{Lines per unit of measure of the printed text. Default for 
-inches is 6, which is average for a 10pt font. This value 
+inches is 6. The default for centimeters (cm) is 2.55.  This value 
 will be used to determine the number of lines that can fit on a page.}
 }
 \value{
 The updated report spec.
 }
 \description{
-This function sets the options for a report of output type 'text'.
+This function sets the options for a report of 
+an output type such as 'text' that has a fixed width font.
 }
 \details{
 The \code{options_fixed} function sets the characters per 
@@ -40,8 +41,9 @@ specified on the \code{\link{create_report}} function.  These settings are
 important to ensure the report content stays within available page size 
 and margins.  Because every text editor allows a different number of 
 characters and lines on a page, these settings must be adjusted depending
-on the editor.  The function provides a shortcut \code{editor} parameter
-to directly specify a common editor.  If this parameter is specified, the
+on the editor.  The \code{options_fixed} function provides a shortcut 
+\code{editor} parameter
+to directly specify a popular editor.  If this parameter is specified, the
 function will set the characters per unit of measure and lines per
 unit of measure for you.  If the editor is not available in the 
 \code{editor} parameter selections, you must set the \strong{cpuom} and 

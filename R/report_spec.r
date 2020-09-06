@@ -50,7 +50,8 @@
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param uom Specifies the units of measurement.  This setting will 
 #' indicate the units for columns widths, margins, paper size, and other 
-#' measurements. Valid values are "inches" or "cm".  Default value is "inches".
+#' measurements. Valid values are "inches" or "cm" (centimeters).  
+#' Default value is "inches".
 #' @param paper_size The expected paper size on which the report may be 
 #' printed.  The \code{paper_size} will determine how much text can fit on
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
@@ -69,13 +70,28 @@
 #' # Create the report object
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
 #'   titles("MTCARS Sample Report") %>% 
-#'   add_content(create_table(mtcars)) 
+#'   add_content(create_table(mtcars[1:10, ])) 
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
 #' # Write the report to the console
 #' writeLines(readLines(tmp))
+#' 
+#' #                              MTCARS Sample Report
+#' # 
+#' #   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' #  ----------------------------------------------------------------------------
+#' #    21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' #    21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' #  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' #  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' #  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' #  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' #  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' #  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' #  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
                           orientation ="landscape", uom = "inches",
@@ -204,10 +220,11 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 }
 
 #' @title
-#' Set options for a report with a fixed width font
+#' Set options for a report (fixed width font)
 #'
 #' @description
-#' This function sets the options for a report of output type 'text'.
+#' This function sets the options for a report of 
+#' an output type such as 'text' that has a fixed width font.
 #' 
 #' @details The \code{options_fixed} function sets the characters per 
 #' unit of measure (\strong{cpuom}) and lines per unit of measure
@@ -217,8 +234,9 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' important to ensure the report content stays within available page size 
 #' and margins.  Because every text editor allows a different number of 
 #' characters and lines on a page, these settings must be adjusted depending
-#' on the editor.  The function provides a shortcut \code{editor} parameter
-#' to directly specify a common editor.  If this parameter is specified, the
+#' on the editor.  The \code{options_fixed} function provides a shortcut 
+#' \code{editor} parameter
+#' to directly specify a popular editor.  If this parameter is specified, the
 #' function will set the characters per unit of measure and lines per
 #' unit of measure for you.  If the editor is not available in the 
 #' \code{editor} parameter selections, you must set the \strong{cpuom} and 
@@ -233,11 +251,11 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' is used, any settings for \strong{cpuom} and \strong{lpuom} will be 
 #' ignored.
 #' @param cpuom Characters per unit of measure of printed text.    
-#' if uom is inches, 
-#' default is 12, which equals a 10pt font.  This value will be used to 
+#' If uom is inches, the default is 12.  If uom is centimeters (cm), the 
+#' default is 4.687.  This value will be used to 
 #' determine how many characters can fit on a line.  
 #' @param lpuom Lines per unit of measure of the printed text. Default for 
-#' inches is 6, which is average for a 10pt font. This value 
+#' inches is 6. The default for centimeters (cm) is 2.55.  This value 
 #' will be used to determine the number of lines that can fit on a page. 
 #' @return The updated report spec.
 #' @seealso \code{\link{create_report}} to create a report and set the unit
@@ -329,7 +347,9 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 
 #' @title
 #' Set page margins
-#' @description Set the page margins on the report spec object.
+#' @description Sets the page margins for the report.  The units for this 
+#' parameter can be inches or centimeters, depending on the units of measure 
+#' specified on the \code{\link{create_report}} function.  
 #' @details
 #' The margins will be used for the entire report.  Units for the margins
 #' are specified using the \strong{uom} parameter on the 
@@ -339,10 +359,10 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 #' on top and bottom.
 #' 
-# The \strong{min_margin} parameter is used to set the minimum margin allowed
-# by the printer.  This value will be subtracted from the margin settings 
-# when the blank_margins option is used.
-#
+#' The \strong{min_margin} parameter is used to set the minimum margin allowed
+#' by the printer.  This value will be subtracted from the margin settings 
+#' when the \strong{blank_margins} option is used.
+#'
 #' Note that when using output type of text, setting the margins only reduces
 #' the area available for content on a page.  You must still set the actual
 #' margins on the available editor to match those specified in 
@@ -354,12 +374,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @param bottom The bottom margin.
 #' @param left The left margin.
 #' @param right The right margin.
-# @param min_margin The printer minimum margin.
-# @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
-# spaces and blank rows to create left and top margins, rather than rely 
-# on the editor to set margins.  When used, editor margins
-# should be set to zero.  Valid values are TRUE and FALSE. Default is
-# TRUE.
+#' @param min_margin The printer minimum margin.  When the units of measure
+#' is set to centimeters, this parameter defaults to 1.  When the units of 
+#' measure is set to inches, the parameter defaults to .394.
+#' @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
+#' spaces and blank rows to create left and top margins, rather than rely 
+#' on the editor to set margins.  When used, editor margins
+#' should be set to zero.  Valid values are TRUE and FALSE. Default is
+#' FALSE.  This option is only valid for \code{output_type = 'text'}.
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
@@ -382,9 +404,8 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' writeLines(readLines(tmp))
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
-                           left=NULL, right=NULL 
-                           #min_margin = NULL , blank_margins = TRUE
-                           ) {
+                           left=NULL, right=NULL,
+                           min_margin = NULL , blank_margins = FALSE) {
 
   if (!is.null(top)) {
     if (is.na(top) | top < 0 | !is.numeric(top)){
@@ -426,17 +447,17 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   else
     x$margin_right = if (x$uom == "inches") 1 else 2.54
 
-  # if (!is.null(min_margin)) {
-  #   if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
-  #     stop("ERROR: invalid value for min_margin")
-  #   }
-  #   else 
-  #     x$min_margin = min_margin
-  # }
-  # else
-  #   x$min_margin = if (x$uom == "inches") .394 else 1
+  if (!is.null(min_margin)) {
+    if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
+      stop("ERROR: invalid value for min_margin")
+    }
+    else
+      x$min_margin = min_margin
+  }
+  else
+    x$min_margin = if (x$uom == "inches") .394 else 1
   
-  #x$blank_margins <- blank_margins
+  x$blank_margins <- blank_margins
 
   return(x)
 }

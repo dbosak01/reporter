@@ -119,6 +119,9 @@ write_content <- function(rs, ls, pt) {
   last_page <- FALSE
   page_open <- FALSE
   
+  blank_margin_top <- rep("", rs$blank_margin_top)
+  blank_margin_left <- paste0(rep(" ", rs$blank_margin_left), collapse = "")
+  
 
   for (cont in ls) {
     
@@ -146,20 +149,24 @@ write_content <- function(rs, ls, pt) {
       
       f <- file(rs$file_path, open="a")
       
+      if (rs$blank_margins)
+        writeLines(blank_margin_top, con = f)
+      
       #print(page_open)
       if (page_open == FALSE) {
         if (!is.null(pt$page_header))
-          writeLines(pt$page_header, con = f)
+          writeLines(paste0(blank_margin_left, pt$page_header), con = f)
         
         if (!is.null(pt$titles))
-          writeLines(trimws(pt$titles, which = "right"), con = f)
+          writeLines(paste0(blank_margin_left, 
+                            trimws(pt$titles, which = "right")), con = f)
       }
       
       if (!is.null(pg)) {
         tmp <- trimws(format(pg, width = rs$line_size,
                       justify = get_justify(cont$align)),
                       which = "right")
-        writeLines(tmp, con = f)
+        writeLines(paste0(blank_margin_left, tmp), con = f)
         
       }
       
@@ -172,12 +179,13 @@ write_content <- function(rs, ls, pt) {
       if (page_open == FALSE) {
         
         if (!is.null(pt$footnotes))
-          writeLines(trimws(pt$footnotes, which = "right"), con = f)
+          writeLines(paste0(blank_margin_left, 
+                            trimws(pt$footnotes, which = "right")), con = f)
         
         if (!is.null(pt$page_footer))
-          writeLines(pt$page_footer, con = f)
+          writeLines(paste0(blank_margin_left, pt$page_footer), con = f)
         
-        # Do something with page_break property
+        # Add form feed character for text page break
         if (last_object == FALSE | last_page == FALSE) {
           
           if (is.null(rs$pages))
@@ -207,6 +215,11 @@ write_content <- function(rs, ls, pt) {
 page_setup <- function(rs) {
   
   debug <- FALSE
+  
+  if (debug) {
+    print(paste("Line height:", rs$line_height))
+    print(paste("Character width:", rs$char_width))
+  }
   
   # Content size is the page size minus margins, in uom
   rs$content_size <- get_content_size(rs)
@@ -250,6 +263,24 @@ page_setup <- function(rs) {
   rs$body_line_count <- rs$line_count - rs$page_template_row_count
   if (debug)
     print(paste0("Body Line Count: ", rs$body_line_count))
+  
+  
+  # Calculate blank margins, if specified
+  if (rs$blank_margins) {
+    rs$blank_margin_top <- ceiling((rs$margin_top - rs$min_margin) / rs$line_height)
+  } else 
+    rs$blank_margin_top <- 0
+  if (debug)
+    print(paste("Blank Margin Top:", rs$blank_margin_top))
+  
+  if (rs$blank_margins)
+    rs$blank_margin_left <- ceiling((rs$margin_left - rs$min_margin) / rs$char_width)
+  else 
+    rs$blank_margin_left <- 0
+  if (debug)
+    print(paste("Blank Margin Left:", rs$blank_margin_left))
+  
+
   
   return(rs)
 }

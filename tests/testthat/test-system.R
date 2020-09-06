@@ -14,7 +14,7 @@ test_that("test1: Simplest table works as expected.", {
     file.remove(fp)
   
   rpt <- create_report(fp) %>% 
-    add_content(create_table(mtcars[1:10, ]))
+    add_content(create_table(mtcars[1:10, ]), align = "left")
   
   
   res <- write_report(rpt)
@@ -855,5 +855,28 @@ test_that("test22: Multiple id_var parameters work as expected.", {
 
 })
 
-
+test_that("test23: Blank margins setting works as expected.", {
+  
+  # Compare output to test1
+  
+  fp <- file.path(base_path, "output/test23.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  rpt <- create_report(fp) %>% 
+    options_fixed(editor = "word") %>% 
+    set_margins(blank_margins = TRUE, top = 1) %>% 
+    add_content(create_table(mtcars[1:10, ]), align = "left")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), (res$pages * res$line_count) + res$blank_margin_top)
+  
+})
 

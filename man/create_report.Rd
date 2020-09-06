@@ -26,7 +26,8 @@ are "landscape" or "portrait".  The default page orientation is "landscape".}
 
 \item{uom}{Specifies the units of measurement.  This setting will 
 indicate the units for columns widths, margins, paper size, and other 
-measurements. Valid values are "inches" or "cm".  Default value is "inches".}
+measurements. Valid values are "inches" or "cm" (centimeters).  
+Default value is "inches".}
 
 \item{paper_size}{The expected paper size on which the report may be 
 printed.  The \code{paper_size} will determine how much text can fit on
@@ -81,13 +82,28 @@ tmp <- file.path(tempdir(), "mtcars.txt")
 # Create the report object
 rpt <- create_report(tmp, orientation = "portrait") \%>\% 
   titles("MTCARS Sample Report") \%>\% 
-  add_content(create_table(mtcars)) 
+  add_content(create_table(mtcars[1:10, ])) 
 
 # Write the report to the file system
 write_report(rpt)
 
 # Write the report to the console
 writeLines(readLines(tmp))
+
+#                              MTCARS Sample Report
+# 
+#   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#  ----------------------------------------------------------------------------
+#    21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#    21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 }
 \seealso{
 \code{\link{create_table}} and \code{\link{create_text}} functions

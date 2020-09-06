@@ -4,7 +4,15 @@
 \alias{set_margins}
 \title{Set page margins}
 \usage{
-set_margins(x, top = NULL, bottom = NULL, left = NULL, right = NULL)
+set_margins(
+  x,
+  top = NULL,
+  bottom = NULL,
+  left = NULL,
+  right = NULL,
+  min_margin = NULL,
+  blank_margins = FALSE
+)
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -16,12 +24,24 @@ set_margins(x, top = NULL, bottom = NULL, left = NULL, right = NULL)
 \item{left}{The left margin.}
 
 \item{right}{The right margin.}
+
+\item{min_margin}{The printer minimum margin.  When the units of measure
+is set to centimeters, this parameter defaults to 1.  When the units of 
+measure is set to inches, the parameter defaults to .394.}
+
+\item{blank_margins}{When this option is TRUE, \strong{rptr} will use blank 
+spaces and blank rows to create left and top margins, rather than rely 
+on the editor to set margins.  When used, editor margins
+should be set to zero.  Valid values are TRUE and FALSE. Default is
+FALSE.  This option is only valid for \code{output_type = 'text'}.}
 }
 \value{
 The report_spec with margins set as desired.
 }
 \description{
-Set the page margins on the report spec object.
+Sets the page margins for the report.  The units for this 
+parameter can be inches or centimeters, depending on the units of measure 
+specified on the \code{\link{create_report}} function.
 }
 \details{
 The margins will be used for the entire report.  Units for the margins
@@ -31,6 +51,10 @@ When the unit of measure is inches, default margins are 1 inch on left and
 right, and .5 inches on top and bottom.  When the unit of measure is 
 centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 on top and bottom.
+
+The \strong{min_margin} parameter is used to set the minimum margin allowed
+by the printer.  This value will be subtracted from the margin settings 
+when the \strong{blank_margins} option is used.
 
 Note that when using output type of text, setting the margins only reduces
 the area available for content on a page.  You must still set the actual
