@@ -223,32 +223,37 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' Set options for a report (fixed width font)
 #'
 #' @description
-#' This function sets the options for a report of 
-#' an output type such as 'text' that has a fixed width font.
+#' This function sets the options for a report  
+#' with a fixed width font, such as a text report.
 #' 
 #' @details The \code{options_fixed} function sets the characters per 
-#' unit of measure (\strong{cpuom}) and lines per unit of measure
-#' (\strong{lpuom}) settings for the report.  These settings determine how 
+#' unit of measure (\code{cpuom}) and lines per unit of measure
+#' (\code{lpuom}) settings for the report.  These settings determine how 
 #' many characters and lines will fit within one unit of measure (uom), as 
-#' specified on the \code{\link{create_report}} function.  These settings are
-#' important to ensure the report content stays within available page size 
+#' specified on the \code{\link{create_report}} function.  
+#' 
+#' These settings are
+#' important to ensure the report content stays within the available page size 
 #' and margins.  Because every text editor allows a different number of 
 #' characters and lines on a page, these settings must be adjusted depending
-#' on the editor.  The \code{options_fixed} function provides a shortcut 
+#' on the editor.  
+#' 
+#' The \code{options_fixed} function provides a shortcut 
 #' \code{editor} parameter
 #' to directly specify a popular editor.  If this parameter is specified, the
 #' function will set the characters per unit of measure and lines per
 #' unit of measure for you.  If the editor is not available in the 
-#' \code{editor} parameter selections, you must set the \strong{cpuom} and 
-#' \strong{lpuom} parameters manually.  To determine your \strong{cpuom}
-#' and \strong{lpuom}, see the help for \code{\link{write_registration_file}}.
+#' \code{editor} parameter selections, for best results, you should 
+#' set the \code{cpuom} and 
+#' \code{lpuom} parameters manually.  To determine your \code{cpuom}
+#' and \code{lpuom}, see the help for \code{\link{write_registration_file}}.
 #'
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing.  Assigning
-#' this parameter will set the \strong{cpuom} and \strong{lpuom} parameters
+#' this parameter will set the \code{cpuom} and \code{lpuom} parameters
 #' appropriately for the editor.  Valid values are 'notepad',
 #' 'word', 'wordpad', 'notepad++', and 'editplus'.  If the editor parameter 
-#' is used, any settings for \strong{cpuom} and \strong{lpuom} will be 
+#' is used, any settings for \code{cpuom} and \code{lpuom} will be 
 #' ignored.
 #' @param cpuom Characters per unit of measure of printed text.    
 #' If uom is inches, the default is 12.  If uom is centimeters (cm), the 
@@ -278,8 +283,6 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
-#' # Write report to console
-#' writeLines(readLines(tmp))
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
   
@@ -351,19 +354,21 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' parameter can be inches or centimeters, depending on the units of measure 
 #' specified on the \code{\link{create_report}} function.  
 #' @details
-#' The margins will be used for the entire report.  Units for the margins
-#' are specified using the \strong{uom} parameter on the 
+#' The margins set with \code{set_margins} will be used for the entire report.  
+#' Units for the margins
+#' are specified by the \code{uom} parameter on the 
 #' \code{\link{create_report}} function.  Available units are 'inches' and 'cm'.
-#' When the unit of measure is inches, default margins are 1 inch on left and 
+#' When the unit of measure is inches, default margins are 1 inch on the left and 
 #' right, and .5 inches on top and bottom.  When the unit of measure is 
 #' centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 #' on top and bottom.
 #' 
-#' The \strong{min_margin} parameter is used to set the minimum margin allowed
+#' The \code{min_margin} parameter is used to set the minimum margin allowed
 #' by the printer.  This value will be subtracted from the margin settings 
-#' when the \strong{blank_margins} option is used.
+#' when the \code{blank_margins} option is used.  
 #'
-#' Note that when using output type of text, setting the margins only reduces
+#' Note that when using output type of text, and not using the 
+#' \code{blank_margins} option, setting the margins only reduces
 #' the area available for content on a page.  You must still set the actual
 #' margins on the available editor to match those specified in 
 #' \code{set_margins}.  Any mismatch may result in content not fitting properly
@@ -400,8 +405,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' # Write the report
 #' write_report(rpt)
 #' 
-#' # Display in console
-#' writeLines(readLines(tmp))
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL,
@@ -472,7 +475,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #'
 #' @description
 #' This function adds a page header to the report.  The page header will appear
-#' on each page of the report.  
+#' at the top of each page of the report.  
 #'
 #' @details
 #' The page header may contain text on the left or right. Use the appropriate
@@ -485,7 +488,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' string exceeds the available space, an error will be generated. There is 
 #' also a limit of 5 page header strings per each side.
 #' 
-#' #' There are two special tokens to generate page numbers: [pg] and [tpg]. 
+#' There are two special tokens to generate page numbers: [pg] and [tpg]. 
 #' Use [pg] to indicate the current page number.  Use [tpg] to indicate the
 #' total number of pages in the report.  These tokens may be placed anywhere 
 #' in the page header or page footer. 
@@ -573,14 +576,14 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' 
 #' The titles may be aligned center, left or right using the align parameter.
 #' The alignment will be applied to all titles contained in the 
-#' block  To control alignment of titles separately for each title, use 
+#' block.  To control alignment of titles separately for each title, use 
 #' multiple titles functions.
 #' 
 #' Titles may be assigned to a report, a table or a text specification. If 
 #' assigned to the report, the title will appear at the top of the page, and
 #' be repeated for every page.  If the titles are assigned to a table or text
 #' content, the titles will appear above the content, and be repeated if the 
-#' table or text wraps to the next page.  
+#' table or text breaks to the next page.  
 #' 
 #' If titles are assigned to the report,
 #' alignment will be oriented to the page body.  If titles are assigned to
@@ -662,7 +665,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' This function adds one or more footnotes to the report.  If added to 
 #' the report specification, the footnotes will
 #' be added to the page template, and thus appear on each page of the report.
-#' Footnotes may also be added directly to table or text content.
+#' Footnotes may also be added directly to a table or text content.
 #'
 #' @details
 #' The footnotes function accepts a set of strings of the desired footnote text.
@@ -681,7 +684,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' \code{blank_row} parameter.
 #' 
 #' @param x The object to assign footnotes to.
-#' @param ... A set of footnotes strings.
+#' @param ... A set of footnote strings.
 #' @param align The position to align the footnotes.  Valid values are: "left",
 #' "right", "center", or "centre".
 #' @param blank_row Whether to print a blank row above or below the footnote.
@@ -725,7 +728,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
 #' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
 #' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
-#' 
+#' #
 #' # * From Motor Trend Magazine, 1974
 #' #
 #' @export
@@ -789,9 +792,6 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' Valid values are 'above' and 'none'.  Default is 'above'.
 #' @return The modified report.
 #' @family report
-#' @seealso \code{\link{page_header}} to add a page header to the report, 
-#' \code{\link{titles}} to add titles, and \code{\link{footnotes}} to
-#' add footnotes.
 #' @examples
 #' library(rptr)
 #' library(magrittr)
@@ -822,7 +822,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' # mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
 #' # ----------------------------------------------------------------------------
 #' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' # 21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
 #' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
 #' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
 #' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
@@ -876,7 +876,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' information on how to create these objects.  
 #' 
 #' Content will be
-#' appended to the report in order it is added.  By default, a page break
+#' appended to the report in the order it is added.  By default, a page break
 #' is added after the content.  You can stack two pieces of content together
 #' closely by setting the \code{page_break} parameter to FALSE, and 
 #' the \code{blank_row} parameter to "none".
@@ -892,6 +892,8 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' Valid values are 'above', 'below', 'both', or 'none'.
 #' @return The modified report_spec.
 #' @family report
+#' @seealso \code{\link{create_table}} and \code{\link{create_text}} to 
+#' create content for a report. 
 #' @examples
 #' library(rptr)
 #' library(magrittr)
@@ -1068,10 +1070,9 @@ write_report <- function(x) {
 #' distance measured in each direction.  For each direction, divide 60 by the 
 #' distance measured, and round to three decimal places.  The horizontal 
 #' result is the characters per unit of measure (cpuom).  The vertical result
-#' is the lines per unit of measure (lpuom).  
-#' 
-#' To get accurate printing of text reports, 
-#' assign these values to the \strong{cpuom} and \strong{lpuom} parameters
+#' is the lines per unit of measure (lpuom). To get an accurate printing 
+#' of text reports, 
+#' assign these values to the \code{cpuom} and \code{lpuom} parameters
 #' on the \code{\link{options_fixed}} function.
 #' @param file_path The full or relative file name and path to create the 
 #' registration file.
@@ -1079,13 +1080,74 @@ write_report <- function(x) {
 #' library(rptr)
 #' 
 #' # Create temp file path
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "reg.txt")
 #' 
 #' # Create the registration file 
 #' write_registration_file(tmp)
 #' 
-#' # Write report to console
+#' # Write registration file to the console
 #' writeLines(readLines(tmp))
+#' 
+#' # 0--------+---------+---------+---------+---------+---------+
+#' # -       10        20        30        40        50        60
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # + 10
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # + 20
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # + 30
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # + 40
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # + 50
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # -
+#' # + 60
 #' @export
 write_registration_file <- function(file_path) {
   

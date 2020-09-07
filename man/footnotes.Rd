@@ -9,7 +9,7 @@ footnotes(x, ..., align = "left", blank_row = "above")
 \arguments{
 \item{x}{The object to assign footnotes to.}
 
-\item{...}{A set of footnotes strings.}
+\item{...}{A set of footnote strings.}
 
 \item{align}{The position to align the footnotes.  Valid values are: "left",
 "right", "center", or "centre".}
@@ -24,7 +24,7 @@ The modified report.
 This function adds one or more footnotes to the report.  If added to 
 the report specification, the footnotes will
 be added to the page template, and thus appear on each page of the report.
-Footnotes may also be added directly to table or text content.
+Footnotes may also be added directly to a table or text content.
 }
 \details{
 The footnotes function accepts a set of strings of the desired footnote text.
@@ -79,7 +79,7 @@ writeLines(readLines(tmp))
 # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
 # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
 # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
-
+#
 # * From Motor Trend Magazine, 1974
 #
 }

@@ -23,11 +23,13 @@ define(
 )
 }
 \arguments{
-\item{x}{The table spec.}
+\item{x}{The table containing a variable to define.}
 
-\item{var}{The variable to define a column for.}
+\item{var}{The unquoted variable name to define a column for.}
 
-\item{label}{The label to use for the column header.}
+\item{label}{The label to use for the column header.  If a label is assigned
+to the label column attribute, it will be used as a default.  Otherwise,
+the column name will be used.}
 
 \item{format}{The format to use for the column data.  The format can 
 be a string format, a formatting function, or a format object from the 
@@ -41,18 +43,25 @@ Valid values are "left", "right", "center", and "centre".}
 
 \item{width}{The width of the column in the specified units of measure.
 The units of measure are specified on the \code{uom} parameter of the
-\code{\link{create_report}} function.}
+\code{\link{create_report}} function.  If no width is supplied, the
+\code{\link{write_report}} function will assign a default width based on the 
+width of the column data and the label.  \code{write_report} will not set a 
+column width less than the width of the largest word in the data or label.
+In other words, \code{write_report} will not break words.}
 
 \item{visible}{Whether or not the column should be visible on the report.
 This parameter can be used as a simple way to drop columns from the report.}
 
-\item{n}{The n value to place in the "N=" header label.}
+\item{n}{The n value to place in the "N=" header label.  Formatting for
+the n value will be performed by the formatting function assigned to the 
+\code{n_format} parameter on \code{\link{create_table}}.}
 
 \item{blank_after}{Whether to place a blank row after unique values of this
-variable.}
+variable.  Valid values are TRUE or FALSE.  Default is FALSE.}
 
 \item{dedupe}{Whether to dedupe the values for this variable.  Variables
-that are deduped only show the value on the first row for each group.}
+that are deduped only show the value on the first row for each group.  This 
+option is commonly used for grouping variables.}
 
 \item{id_var}{Whether this variable should be considered an ID variable.
 ID variables are retained on each page when the page is wrapped. ID variables
@@ -61,18 +70,19 @@ are also moved to the far left of the page.}
 \item{page_wrap}{Force a page wrap on this variable.  A page wrap is a vertical
 page break necessary when the table is too wide to fit on a single page.
 The excess variables will be wrapped to the next page.  Page wraps will
-continue until all variables are displayed.  Use the \code{id_vars}
+continue until all columns are displayed.  Use the \code{id_vars}
 parameter to identify rows across wrapped pages.}
 
 \item{indent}{How much to indent the column values.  Parameter takes a 
-numeric value that will be interpreted according to the 'uom' 
+numeric value that will be interpreted according to the \code{uom} 
 (Unit Of Measure) setting on the report.  This parameter can be used to 
-help create a stub column.}
+help create a stub column.  The default value is NULL, meaning the column
+should not be indented.}
 
 \item{label_row}{Whether the values of the variable should be used to
 create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
 If \code{label_row} is set to TRUE, the dedupe parameter will also be 
-set to TRUE.  This parameter is often used in conjuntion with the 
+set to TRUE.  This parameter is often used in conjunction with the 
 \code{\link{stub}} function to create a stub column.}
 }
 \value{
@@ -88,12 +98,17 @@ sophisticated options like page wrapping and page breaking.
 \details{
 Column definitions are optional.  By default, all columns in the data
 are displayed in the order and with the formatting attributes assigned to 
-the data frame.
+the data frame.  The report will use attributes assigned to the data frame 
+such as 'width', 'justify', 'label', and 'format'.  In other words, 
+some control over the column 
+formatting is available by manipulating the data frame attributes prior
+to assigning the data frame to \code{\link{create_table}}.
 
 The \code{define} function is used to provide additional control over
 column appearance.  For example, you may use the \code{define} function
-to assign formatting properties, a label, and an "N=" population count
-for the column header. See the parameters below for additional options.
+to assign an "N=" population count, eliminate duplicates from the column,
+or place a blank row after each unique value of the column. 
+See the parameters below for additional options.
 
 Some of the parameters on the \code{define} function are used in the 
 creation of a table stub.  See the \code{\link{stub}} function for additional

@@ -23,7 +23,7 @@ The modified report specification.
 }
 \description{
 This function adds a page header to the report.  The page header will appear
-on each page of the report.
+at the top of each page of the report.
 }
 \details{
 The page header may contain text on the left or right. Use the appropriate
@@ -36,7 +36,7 @@ If the width of the page header
 string exceeds the available space, an error will be generated. There is 
 also a limit of 5 page header strings per each side.
 
-#' There are two special tokens to generate page numbers: [pg] and [tpg]. 
+There are two special tokens to generate page numbers: [pg] and [tpg]. 
 Use [pg] to indicate the current page number.  Use [tpg] to indicate the
 total number of pages in the report.  These tokens may be placed anywhere 
 in the page header or page footer.

@@ -21,11 +21,11 @@
 #' The \code{show_cols} parameter also accepts a vector of quoted column names.
 #' The column name vector performs two functions.  First, it will display only
 #' those columns on the report.  Second, it will display them in the order
-#' specified in the vector.  The \code{show_cols} parameter is the only way to 
-#' change the column order of the table when using \code{create_table}.
+#' specified in the vector.  The \code{show_cols} parameter is the easiest way 
+#' to change the column order of the table.
 #' 
 #' The \code{create_table} function also provides the capabilities to create
-#' a "headerless" table.  A headerless table useful when combining two tables 
+#' a "headerless" table.  A headerless table is useful when combining two tables 
 #' into one report.
 #' 
 #' Since the purpose of the \strong{rptr} package is to create statistical 
@@ -51,6 +51,9 @@
 #' The default formatting function is \code{\link{upcase_parens}}. 
 #' @param headerless Whether to create a headerless table.  Default is FALSE. 
 #' @family table
+#' @seealso \code{\link{create_report}} to create  report, 
+#' \code{\link{create_text}} to create text content, and 
+#' \code{\link{add_content}} to append content to a report.
 #' @examples 
 #' library(rptr)
 #' library(magrittr)
@@ -147,54 +150,68 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 #' @details 
 #' Column definitions are optional.  By default, all columns in the data
 #' are displayed in the order and with the formatting attributes assigned to 
-#' the data frame.
+#' the data frame.  The report will use attributes assigned to the data frame 
+#' such as 'width', 'justify', 'label', and 'format'.  In other words, 
+#' some control over the column 
+#' formatting is available by manipulating the data frame attributes prior
+#' to assigning the data frame to \code{\link{create_table}}.
 #' 
 #' The \code{define} function is used to provide additional control over
 #' column appearance.  For example, you may use the \code{define} function
-#' to assign formatting properties, a label, and an "N=" population count
-#' for the column header. See the parameters below for additional options.
+#' to assign an "N=" population count, eliminate duplicates from the column,
+#' or place a blank row after each unique value of the column. 
+#' See the parameters below for additional options.
 #' 
 #' Some of the parameters on the \code{define} function are used in the 
 #' creation of a table stub.  See the \code{\link{stub}} function for additional
 #' details.
 #' 
-#' @param x The table spec.
-#' @param var The variable to define a column for.
-#' @param label The label to use for the column header.
+#' @param x The table containing a variable to define.
+#' @param var The unquoted variable name to define a column for.  
+#' @param label The label to use for the column header.  If a label is assigned
+#' to the label column attribute, it will be used as a default.  Otherwise,
+#' the column name will be used.
 #' @param format The format to use for the column data.  The format can 
 #' be a string format, a formatting function, or a format object from the 
 #' \strong{\link[fmtr]{fmtr}} package.
-# @param col_type The column type.
 #' @param align The column alignment.  Valid values are "left", "right", 
 #' "center", and "centre".
 #' @param label_align How to align the header labels for this column.
 #' Valid values are "left", "right", "center", and "centre".
 #' @param width The width of the column in the specified units of measure.
 #' The units of measure are specified on the \code{uom} parameter of the
-#' \code{\link{create_report}} function.
+#' \code{\link{create_report}} function.  If no width is supplied, the
+#' \code{\link{write_report}} function will assign a default width based on the 
+#' width of the column data and the label.  \code{write_report} will not set a 
+#' column width less than the width of the largest word in the data or label.
+#' In other words, \code{write_report} will not break words. 
 #' @param visible Whether or not the column should be visible on the report.
 #' This parameter can be used as a simple way to drop columns from the report.
-#' @param n The n value to place in the "N=" header label.
+#' @param n The n value to place in the "N=" header label.  Formatting for
+#' the n value will be performed by the formatting function assigned to the 
+#' \code{n_format} parameter on \code{\link{create_table}}.
 #' @param blank_after Whether to place a blank row after unique values of this
-#' variable.
+#' variable.  Valid values are TRUE or FALSE.  Default is FALSE.
 #' @param dedupe Whether to dedupe the values for this variable.  Variables
-#' that are deduped only show the value on the first row for each group.
+#' that are deduped only show the value on the first row for each group.  This 
+#' option is commonly used for grouping variables.
 #' @param id_var Whether this variable should be considered an ID variable.
 #' ID variables are retained on each page when the page is wrapped. ID variables
 #' are also moved to the far left of the page.
 #' @param page_wrap Force a page wrap on this variable.  A page wrap is a vertical
 #' page break necessary when the table is too wide to fit on a single page.
 #' The excess variables will be wrapped to the next page.  Page wraps will
-#' continue until all variables are displayed.  Use the \code{id_vars}
+#' continue until all columns are displayed.  Use the \code{id_vars}
 #' parameter to identify rows across wrapped pages. 
 #' @param indent How much to indent the column values.  Parameter takes a 
-#' numeric value that will be interpreted according to the 'uom' 
+#' numeric value that will be interpreted according to the \code{uom} 
 #' (Unit Of Measure) setting on the report.  This parameter can be used to 
-#' help create a stub column.
+#' help create a stub column.  The default value is NULL, meaning the column
+#' should not be indented.
 #' @param label_row Whether the values of the variable should be used to
 #' create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
 #' If \code{label_row} is set to TRUE, the dedupe parameter will also be 
-#' set to TRUE.  This parameter is often used in conjuntion with the 
+#' set to TRUE.  This parameter is often used in conjunction with the 
 #' \code{\link{stub}} function to create a stub column.
 #' @return The modified table spec.
 #' @family table
@@ -273,7 +290,7 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 #' # 
 #' #                                                                    Page 2 of 2
 #' @export
-define <- function(x, var, label = NULL, format = NULL, #col_type = NULL,
+define <- function(x, var, label = NULL, format = NULL, 
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
@@ -341,7 +358,9 @@ define <- function(x, var, label = NULL, format = NULL, #col_type = NULL,
 #' @param level The level to use for the spanning header.  The lowest
 #' spanning level is level 1, the next level above is level 2, and so on.  
 #' By default, the level is set to 1.
-#' @param n The n value to use for the "N=" label on the spanning header.
+#' @param n The population count to use for the "N=" label on the spanning 
+#' header. The "N=" label will be formatted according to the \code{n_format}
+#' parameter on the \code{\link{create_table}} function.
 #' @return The modified table spec.
 #' @family table
 #' @examples 
@@ -454,7 +473,7 @@ spanning_header <- function(x, span_cols, label = "",
 #' the \code{stub} function in combination with some parameters from the 
 #' \code{\link{define}} function.
 #' @details 
-#' The report stub is a nested set of labels that identify rows 
+#' The table stub is a nested set of labels that identify rows 
 #' on the table. The stub is created by combining two or more columns into 
 #' a single stub column.  The relationship between the columns is typically 
 #' visualized as a hierarchy, with lower level concepts indented under 
@@ -463,8 +482,8 @@ spanning_header <- function(x, span_cols, label = "",
 #' A typical stub is created with the following steps:
 #' \itemize{
 #'   \item Prepare the data with multiple, hierarchical columns.
-#'   \item Create the table object
-#'   \item Define the stub on the table using the stub function, and identifying
+#'   \item Create the table object.
+#'   \item Define the stub on the table using the stub function, and identify
 #'   the columns to be combined.
 #'   \item Identify higher level concepts with the \code{label_row} parameter
 #'   on the \code{\link{define}} function. 
@@ -472,15 +491,16 @@ spanning_header <- function(x, span_cols, label = "",
 #'   on the \code{\link{define}} function.
 #' }
 #' 
-#' The stub will be automatically added as an identity column on the report, and
-#' will always appear as the leftmost column.  There can only be one stub 
+#' The stub will be automatically added as an identity variable on the report, 
+#' and will always appear as the leftmost column.  There can only be one stub 
 #' defined on a report.
 #' @param x The table spec.
 #' @param vars A vector of quoted variable names from which to create the stub.
 #' @param label The label for the report stub.  The default label is an empty
 #' string ("").
 #' @param label_align The alignment for the stub column label.  
-#' Valid values are 'left', 'right', 'center', and 'centre'.  Default is 'left'.
+#' Valid values are 'left', 'right', 'center', and 'centre'.  Default follows
+#' the \code{align} parameter.
 #' @param width The width of the stub, in report units of measure.
 #' @param align How to align the stub column.  Valid values are 'left', 
 #' 'right', 'center', and 'centre'.  Default is 'left'.
@@ -496,15 +516,15 @@ spanning_header <- function(x, span_cols, label = "",
 #' 
 #' # Read in prepared data
 #' df <- read.table(header = TRUE, text = '
-#'       var     label        A             B          
+#'       var      label        A             B          
 #'       "ampg"   "N"          "19"          "13"         
 #'       "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
 #'       "ampg"   "Median"     "16.4"        "21.4"       
 #'       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
 #'       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-#'       "cyl"   "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-#'       "cyl"   "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
-#'       "cyl"   "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+#'       "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+#'       "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+#'       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
 #' 
 #' # Create table
 #' tbl <- create_table(df, first_row_blank = TRUE) %>% 
@@ -674,12 +694,12 @@ print.table_spec <- function(x, ...){
 #' @description These functions are used to format the "N=" population label
 #' on column headers.  
 #' @details Which function to use to format the population label is specified
-#' on the \strong{n_format} parameter on the \code{\link{create_table}} function.
+#' on the \code{n_format} parameter on the \code{\link{create_table}} function.
 #' These formatting functions provide several options for formatting the "N=", 
 #' including whether the "N" should be upper case or lower case, and whether
-#' or not to put the value in parenthesis.  If one of these options does not 
+#' or not to put the value in parentheses.  If one of these options does not 
 #' meet the specifications for your report, you may also write your own 
-#' formatting function and pass it to the \strong{n_format} function.  
+#' formatting function and pass it to the \code{n_format} function.  
 #' @usage lowcase_parens(x)
 #' @usage upcase_parens(x)
 #' @usage lowcase_n(x)
@@ -688,6 +708,26 @@ print.table_spec <- function(x, ...){
 #' @seealso 
 #' \code{\link{create_table}} function to create a table.
 #' @param x Population count
+#' @examples 
+#' # Create test data
+#' l <- "Label"
+#' n <- 47
+#' 
+#' cat(paste0(l, lowcase_parens(n)))
+#' # Label
+#' # (n=47)
+#' 
+#' cat(paste0(l, upcase_parens(n)))
+#' # Label
+#' # (N=47)
+#' 
+#' cat(paste0(l, lowcase_n(n)))
+#' # Label
+#' # n=47
+#' 
+#' cat(paste0(l, upcase_n(n)))
+#' # Label
+#' # N=47
 #' @export
 lowcase_parens <- function(x) {
   

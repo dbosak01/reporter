@@ -39,10 +39,9 @@ Record the
 distance measured in each direction.  For each direction, divide 60 by the 
 distance measured, and round to three decimal places.  The horizontal 
 result is the characters per unit of measure (cpuom).  The vertical result
-is the lines per unit of measure (lpuom).  
-
-To get accurate printing of text reports, 
-assign these values to the \strong{cpuom} and \strong{lpuom} parameters
+is the lines per unit of measure (lpuom). To get an accurate printing 
+of text reports, 
+assign these values to the \code{cpuom} and \code{lpuom} parameters
 on the \code{\link{options_fixed}} function.
 }
 
@@ -50,11 +49,72 @@ on the \code{\link{options_fixed}} function.
 library(rptr)
 
 # Create temp file path
-tmp <- file.path(tempdir(), "mtcars.txt")
+tmp <- file.path(tempdir(), "reg.txt")
 
 # Create the registration file 
 write_registration_file(tmp)
 
-# Write report to console
+# Write registration file to the console
 writeLines(readLines(tmp))
+
+# 0--------+---------+---------+---------+---------+---------+
+# -       10        20        30        40        50        60
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# + 10
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# + 20
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# + 30
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# + 40
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# + 50
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# -
+# + 60
 }

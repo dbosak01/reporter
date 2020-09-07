@@ -23,7 +23,8 @@ stub(
 string ("").}
 
 \item{label_align}{The alignment for the stub column label.
-Valid values are 'left', 'right', 'center', and 'centre'.  Default is 'left'.}
+Valid values are 'left', 'right', 'center', and 'centre'.  Default follows
+the \code{align} parameter.}
 
 \item{align}{How to align the stub column.  Valid values are 'left', 
 'right', 'center', and 'centre'.  Default is 'left'.}
@@ -42,7 +43,7 @@ the \code{stub} function in combination with some parameters from the
 \code{\link{define}} function.
 }
 \details{
-The report stub is a nested set of labels that identify rows 
+The table stub is a nested set of labels that identify rows 
 on the table. The stub is created by combining two or more columns into 
 a single stub column.  The relationship between the columns is typically 
 visualized as a hierarchy, with lower level concepts indented under 
@@ -51,8 +52,8 @@ higher level concepts.
 A typical stub is created with the following steps:
 \itemize{
   \item Prepare the data with multiple, hierarchical columns.
-  \item Create the table object
-  \item Define the stub on the table using the stub function, and identifying
+  \item Create the table object.
+  \item Define the stub on the table using the stub function, and identify
   the columns to be combined.
   \item Identify higher level concepts with the \code{label_row} parameter
   on the \code{\link{define}} function. 
@@ -60,8 +61,8 @@ A typical stub is created with the following steps:
   on the \code{\link{define}} function.
 }
 
-The stub will be automatically added as an identity column on the report, and
-will always appear as the leftmost column.  There can only be one stub 
+The stub will be automatically added as an identity variable on the report, 
+and will always appear as the leftmost column.  There can only be one stub 
 defined on a report.
 }
 \examples{
@@ -73,15 +74,15 @@ tmp <- file.path(tempdir(), "example2.txt")
 
 # Read in prepared data
 df <- read.table(header = TRUE, text = '
-      var     label        A             B          
+      var      label        A             B          
       "ampg"   "N"          "19"          "13"         
       "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
       "ampg"   "Median"     "16.4"        "21.4"       
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"   "8 Cylinder" "10 ( 52.6\%)" "4 ( 30.8\%)" 
-      "cyl"   "6 Cylinder" "4 ( 21.1\%)"  "3 ( 23.1\%)" 
-      "cyl"   "4 Cylinder" "5 ( 26.3\%)"  "6 ( 46.2\%)"')
+      "cyl"    "8 Cylinder" "10 ( 52.6\%)" "4 ( 30.8\%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1\%)"  "3 ( 23.1\%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3\%)"  "6 ( 46.2\%)"')
 
 # Create table
 tbl <- create_table(df, first_row_blank = TRUE) \%>\% 

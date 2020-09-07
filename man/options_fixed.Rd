@@ -10,10 +10,10 @@ options_fixed(x, editor = NULL, cpuom = NULL, lpuom = NULL)
 \item{x}{The report spec.}
 
 \item{editor}{The expected text editor to use for printing.  Assigning
-this parameter will set the \strong{cpuom} and \strong{lpuom} parameters
+this parameter will set the \code{cpuom} and \code{lpuom} parameters
 appropriately for the editor.  Valid values are 'notepad',
 'word', 'wordpad', 'notepad++', and 'editplus'.  If the editor parameter 
-is used, any settings for \strong{cpuom} and \strong{lpuom} will be 
+is used, any settings for \code{cpuom} and \code{lpuom} will be 
 ignored.}
 
 \item{cpuom}{Characters per unit of measure of printed text.
@@ -29,26 +29,31 @@ will be used to determine the number of lines that can fit on a page.}
 The updated report spec.
 }
 \description{
-This function sets the options for a report of 
-an output type such as 'text' that has a fixed width font.
+This function sets the options for a report  
+with a fixed width font, such as a text report.
 }
 \details{
 The \code{options_fixed} function sets the characters per 
-unit of measure (\strong{cpuom}) and lines per unit of measure
-(\strong{lpuom}) settings for the report.  These settings determine how 
+unit of measure (\code{cpuom}) and lines per unit of measure
+(\code{lpuom}) settings for the report.  These settings determine how 
 many characters and lines will fit within one unit of measure (uom), as 
-specified on the \code{\link{create_report}} function.  These settings are
-important to ensure the report content stays within available page size 
+specified on the \code{\link{create_report}} function.  
+
+These settings are
+important to ensure the report content stays within the available page size 
 and margins.  Because every text editor allows a different number of 
 characters and lines on a page, these settings must be adjusted depending
-on the editor.  The \code{options_fixed} function provides a shortcut 
+on the editor.  
+
+The \code{options_fixed} function provides a shortcut 
 \code{editor} parameter
 to directly specify a popular editor.  If this parameter is specified, the
 function will set the characters per unit of measure and lines per
 unit of measure for you.  If the editor is not available in the 
-\code{editor} parameter selections, you must set the \strong{cpuom} and 
-\strong{lpuom} parameters manually.  To determine your \strong{cpuom}
-and \strong{lpuom}, see the help for \code{\link{write_registration_file}}.
+\code{editor} parameter selections, for best results, you should 
+set the \code{cpuom} and 
+\code{lpuom} parameters manually.  To determine your \code{cpuom}
+and \code{lpuom}, see the help for \code{\link{write_registration_file}}.
 }
 \examples{
 library(rptr)
@@ -66,8 +71,6 @@ rpt <- create_report(tmp, orientation = "portrait") \%>\%
 # Write the report to the file system
 write_report(rpt)
 
-# Write report to console
-writeLines(readLines(tmp))
 }
 \seealso{
 \code{\link{create_report}} to create a report and set the unit

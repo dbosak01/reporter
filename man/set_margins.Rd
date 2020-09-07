@@ -44,19 +44,21 @@ parameter can be inches or centimeters, depending on the units of measure
 specified on the \code{\link{create_report}} function.
 }
 \details{
-The margins will be used for the entire report.  Units for the margins
-are specified using the \strong{uom} parameter on the 
+The margins set with \code{set_margins} will be used for the entire report.  
+Units for the margins
+are specified by the \code{uom} parameter on the 
 \code{\link{create_report}} function.  Available units are 'inches' and 'cm'.
-When the unit of measure is inches, default margins are 1 inch on left and 
+When the unit of measure is inches, default margins are 1 inch on the left and 
 right, and .5 inches on top and bottom.  When the unit of measure is 
 centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 on top and bottom.
 
-The \strong{min_margin} parameter is used to set the minimum margin allowed
+The \code{min_margin} parameter is used to set the minimum margin allowed
 by the printer.  This value will be subtracted from the margin settings 
-when the \strong{blank_margins} option is used.
+when the \code{blank_margins} option is used.  
 
-Note that when using output type of text, setting the margins only reduces
+Note that when using output type of text, and not using the 
+\code{blank_margins} option, setting the margins only reduces
 the area available for content on a page.  You must still set the actual
 margins on the available editor to match those specified in 
 \code{set_margins}.  Any mismatch may result in content not fitting properly
@@ -79,8 +81,6 @@ rpt <- create_report(tmp, orientation="portrait") \%>\%
 # Write the report
 write_report(rpt)
 
-# Display in console
-writeLines(readLines(tmp))
 }
 \seealso{
 Other report: 

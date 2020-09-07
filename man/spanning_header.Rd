@@ -31,7 +31,9 @@ is "center".}
 spanning level is level 1, the next level above is level 2, and so on.  
 By default, the level is set to 1.}
 
-\item{n}{The n value to use for the "N=" label on the spanning header.}
+\item{n}{The population count to use for the "N=" label on the spanning 
+header. The "N=" label will be formatted according to the \code{n_format}
+parameter on the \code{\link{create_table}} function.}
 }
 \value{
 The modified table spec.

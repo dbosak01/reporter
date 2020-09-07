@@ -50,11 +50,11 @@ explicitly defined with a \code{\link{define}} function.
 The \code{show_cols} parameter also accepts a vector of quoted column names.
 The column name vector performs two functions.  First, it will display only
 those columns on the report.  Second, it will display them in the order
-specified in the vector.  The \code{show_cols} parameter is the only way to 
-change the column order of the table when using \code{create_table}.
+specified in the vector.  The \code{show_cols} parameter is the easiest way 
+to change the column order of the table.
 
 The \code{create_table} function also provides the capabilities to create
-a "headerless" table.  A headerless table useful when combining two tables 
+a "headerless" table.  A headerless table is useful when combining two tables 
 into one report.
 
 Since the purpose of the \strong{rptr} package is to create statistical 
@@ -126,6 +126,10 @@ writeLines(readLines(tmp))
 # 
 }
 \seealso{
+\code{\link{create_report}} to create  report, 
+\code{\link{create_text}} to create text content, and 
+\code{\link{add_content}} to append content to a report.
+
 Other table: 
 \code{\link{define}()},
 \code{\link{print.table_spec}()},

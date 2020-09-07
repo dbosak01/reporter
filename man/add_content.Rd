@@ -43,7 +43,7 @@ text report, valid objects are a table or text object.  See
 information on how to create these objects.  
 
 Content will be
-appended to the report in order it is added.  By default, a page break
+appended to the report in the order it is added.  By default, a page break
 is added after the content.  You can stack two pieces of content together
 closely by setting the \code{page_break} parameter to FALSE, and 
 the \code{blank_row} parameter to "none".
@@ -88,6 +88,9 @@ writeLines(readLines(tmp))
 # * NOTE: Above table is actually two tables stacked.
 }
 \seealso{
+\code{\link{create_table}} and \code{\link{create_text}} to 
+create content for a report.
+
 Other report: 
 \code{\link{create_report}()},
 \code{\link{footnotes}()},

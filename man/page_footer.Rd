@@ -79,7 +79,7 @@ writeLines(readLines(tmp))
 # mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
 # ----------------------------------------------------------------------------
 #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-# 21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#   21      6    160    110    3.9  2.875  17.02      0      1      4      4
 # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
 # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
 # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
@@ -96,10 +96,6 @@ writeLines(readLines(tmp))
 # 2020-09-06 09:47:43                                                Page 1 of 1
 }
 \seealso{
-\code{\link{page_header}} to add a page header to the report, 
-\code{\link{titles}} to add titles, and \code{\link{footnotes}} to
-add footnotes.
-
 Other report: 
 \code{\link{add_content}()},
 \code{\link{create_report}()},

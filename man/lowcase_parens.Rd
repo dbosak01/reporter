@@ -24,12 +24,33 @@ on column headers.
 }
 \details{
 Which function to use to format the population label is specified
-on the \strong{n_format} parameter on the \code{\link{create_table}} function.
+on the \code{n_format} parameter on the \code{\link{create_table}} function.
 These formatting functions provide several options for formatting the "N=", 
 including whether the "N" should be upper case or lower case, and whether
-or not to put the value in parenthesis.  If one of these options does not 
+or not to put the value in parentheses.  If one of these options does not 
 meet the specifications for your report, you may also write your own 
-formatting function and pass it to the \strong{n_format} function.
+formatting function and pass it to the \code{n_format} function.
+}
+\examples{
+# Create test data
+l <- "Label"
+n <- 47
+
+cat(paste0(l, lowcase_parens(n)))
+# Label
+# (n=47)
+
+cat(paste0(l, upcase_parens(n)))
+# Label
+# (N=47)
+
+cat(paste0(l, lowcase_n(n)))
+# Label
+# n=47
+
+cat(paste0(l, upcase_n(n)))
+# Label
+# N=47
 }
 \seealso{
 \code{\link{create_table}} function to create a table.

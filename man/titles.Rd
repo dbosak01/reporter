@@ -35,14 +35,14 @@ as separate strings.
 
 The titles may be aligned center, left or right using the align parameter.
 The alignment will be applied to all titles contained in the 
-block  To control alignment of titles separately for each title, use 
+block.  To control alignment of titles separately for each title, use 
 multiple titles functions.
 
 Titles may be assigned to a report, a table or a text specification. If 
 assigned to the report, the title will appear at the top of the page, and
 be repeated for every page.  If the titles are assigned to a table or text
 content, the titles will appear above the content, and be repeated if the 
-table or text wraps to the next page.  
+table or text breaks to the next page.  
 
 If titles are assigned to the report,
 alignment will be oriented to the page body.  If titles are assigned to
