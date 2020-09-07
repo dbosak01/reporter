@@ -188,9 +188,9 @@ df <- read.table(header = TRUE, text = '
       "ampg"   "Median"     "16.4"        "21.4"       
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"   "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"   "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
-      "cyl"   "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
 
 # Create table
 tbl <- create_table(df, first_row_blank = TRUE) %>% 
@@ -262,9 +262,9 @@ df <- read.table(header = TRUE, text = '
       "ampg"   "Median"     "16.4"        "21.4"       
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"   "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"   "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
-      "cyl"   "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
 
 # Create table
 tbl <- create_table(df, first_row_blank = TRUE) %>% 
@@ -418,12 +418,9 @@ df <- data.frame(vehicle = rownames(dat), dat)
 # Define Table with spanning headers
 tbl <- create_table(df) %>% 
   titles("Table 1.0", "MTCARS Spanning Headers") %>% 
-  spanning_header(span_cols = c("mpg", "cyl", "hp"),
-                  label = "Span 1", n = 10) %>%
-  spanning_header(span_cols = c("drat", "wt", "qsec"),
-                  label = "Span 2", n = 10) %>%
-  spanning_header(span_cols = c("vs", "gear", "carb"),
-                  label = "Span 3", n = 10) %>%
+  spanning_header(span_cols = c("mpg", "cyl", "hp"), label = "Span 1", n = 10) %>%
+  spanning_header(span_cols = c("drat", "wt", "qsec"), label = "Span 2", n = 10) %>%
+  spanning_header(span_cols = c("vs", "gear", "carb"), label = "Span 3", n = 10) %>%
   spanning_header(span_cols = c(from = "drat", to = "carb"), 
                   label = "Super Span", level = 2) %>%
   define(vehicle, label = "Vehicle") %>% 
