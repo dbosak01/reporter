@@ -9,7 +9,7 @@
 
 <!-- badges: end -->
 
-The **rptr** package creates regulatory-style, tabular reports. It was designed
+The **rptr** package creates regulatory-style, statistical reports. It was designed
 for use in the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
 for any industry.  The package is written in Base R, and has no dependencies on
@@ -36,7 +36,6 @@ The **rptr** package contains the following key features:
 * Allows appending multiple tables to a report, multiple tables to a page, 
 and intermingling of text and tables
 * Supports in-report date/time stamps and "Page X of Y" page numbering
-
 
 
 ## How to use **rptr**
@@ -188,6 +187,80 @@ df <- read.table(header = TRUE, text = '
 
 # Create table
 tbl <- create_table(df, first_row_blank = TRUE) %>% 
+  define(var, label = "Variable", blank_after = TRUE, dedupe = TRUE,
+         format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+  define(label, label = "") %>% 
+  define(A, label = "Group A", align = "center", n = 19) %>% 
+  define(B, label = "Group B", align = "center", n = 13)
+
+
+# Create report and add content
+rpt <- create_report(tmp, orientation = "portrait") %>% 
+  page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+  titles("Table 1.0", "MTCARS Summary Table") %>% 
+  add_content(tbl) %>% 
+  footnotes("* Motor Trend, 1974") %>%
+  page_footer(left = Sys.time(), 
+              center = "Confidential", 
+              right = "Page [pg] of [tpg]")
+
+# Write out report
+write_report(rpt)
+
+# View report in console
+writeLines(readLines(tmp))
+
+# Client: Motor Trend                                                Study: Cars
+#                                  Table 1.0
+#                             MTCARS Summary Table
+#
+#                                           Group A      Group B
+#           Variable                         (N=19)       (N=13)
+#           -------------------------------------------------------
+#
+#           Miles Per Gallon  N                19           13
+#                             Mean         18.8 (6.5)   22.0 (4.9)
+#                             Median          16.4         21.4
+#                             Q1 - Q3     15.1 - 21.2  19.2 - 22.8
+#                             Range       10.4 - 33.9  14.7 - 32.4
+#
+#           Cylinders         8 Cylinder  10 ( 52.6%)   4 ( 30.8%)
+#                             6 Cylinder   4 ( 21.1%)   3 ( 23.1%)
+#                             4 Cylinder   5 ( 26.3%)   6 ( 46.2%)
+# 
+# ...
+# 
+# 
+# * Motor Trend, 1974
+# 
+# 2020-08-30 03:50:02              Confidential                      Page 1 of 1
+
+```
+
+### Example 3: Summary table with stub column
+
+Here is an example of the same regulatory-style table of summary statistics,
+but with row labels merged into a stub column:
+
+```
+
+# Create temporary path
+tmp <- file.path(tempdir(), "example3.txt")
+
+# Read in prepared data
+df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"   "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"   "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"   "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+
+# Create table
+tbl <- create_table(df, first_row_blank = TRUE) %>% 
   stub(c("var", "label")) %>% 
   define(var, blank_after = TRUE, label_row = TRUE, 
          format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
@@ -241,7 +314,7 @@ writeLines(readLines(tmp))
 
 ```
 
-### Example 3: Intermingle Table and Text 
+### Example 4: Intermingle Table and Text 
 
 The below example demonstrates intermingling of table and text content.  This
 functionality is enabled by the ability to append multiple pieces of content 
@@ -250,7 +323,7 @@ report with multiple tables, or provide textual analysis of tabular data.
 
 ```
 # Create temporary path
-tmp <- file.path(tempdir(), "example3.txt")
+tmp <- file.path(tempdir(), "example4.txt")
 
 # Dummy text
 cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
@@ -265,8 +338,6 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
 txt <- create_text(cnt) 
 
 # Prepare data
-dat <- mtcars
-dat$name <- rownames(dat)
 dat <- mtcars[1:10, ]
 
 # Create table content
@@ -322,7 +393,7 @@ writeLines(readLines(tmp))
 
 ```
 
-### Example 4: Spanning Headers
+### Example 5: Spanning Headers
 
 Spanning headers are a common requirement of regulatory tables, yet few 
 reporting packages support them.  **rptr** supports any number of spanning
@@ -331,7 +402,7 @@ levels, along with a flexible and simple syntax to define them.
 ```
 
 # Create temporary path
-tmp <- file.path(tempdir(), "example4.txt")
+tmp <- file.path(tempdir(), "example5.txt")
 
 # Prepare Data
 dat <- mtcars[1:10, ]
@@ -388,16 +459,17 @@ writeLines(readLines(tmp))
 ```
 
 
-### Example 5: Page Wrap
+### Example 6: Page Wrap
 
 Page wrapping will occur 
 automatically if the table width exceeds the available page width.  But 
 page wrapping can also be controlled using the `page_wrap` parameter on the 
-`define()` function.  Here is an example:
+`define()` function.  Below is an example.  Also note the use of the `id_var` 
+option to cause the vehicle column to be retained on each wrapped page. 
 
 ```
 # Create temp file name
-tmp <- file.path(tempdir(), "example5.txt")
+tmp <- file.path(tempdir(), "example6.txt")
 
 # Prepare data
 dat <- mtcars[1:10, ]

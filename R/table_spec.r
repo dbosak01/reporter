@@ -172,8 +172,9 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 #' to the label column attribute, it will be used as a default.  Otherwise,
 #' the column name will be used.
 #' @param format The format to use for the column data.  The format can 
-#' be a string format, a formatting function, or a format object from the 
-#' \strong{\link[fmtr]{fmtr}} package.
+#' be a string format, a formatting function, a lookup list, or a format object. 
+#' All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
+#' additional information, see the help for that package.
 #' @param align The column alignment.  Valid values are "left", "right", 
 #' "center", and "centre".
 #' @param label_align How to align the header labels for this column.
