@@ -7,6 +7,7 @@
 create_table(
   x,
   show_cols = "all",
+  width = NULL,
   first_row_blank = FALSE,
   n_format = upcase_parens,
   headerless = FALSE
@@ -22,6 +23,14 @@ unless overridden by the column definitions.
 columns unless specified in the column definitions.  If a vector of column
 names is supplied, those columns will be shown in the report in the order
 specified, whether or not a definition is supplied.}
+
+\item{width}{The expected width of the table in the report units of 
+measure.  By default, the width setting is NULL, and columns will be sized
+according to the width of the data and labels.  If the width parameter is 
+set, the function will attempt to size the table to the specified width.
+If the table is wider than the width, excess columns will wrap to the next 
+page. If the table is narrower than the width, columns widths will be adjusted
+to fit the table width.}
 
 \item{first_row_blank}{Whether to place a blank row under the table header.
 Valid values are TRUE or FALSE.  Default is FALSE.}

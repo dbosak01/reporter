@@ -9,7 +9,8 @@ create_report(
   output_type = "text",
   orientation = "landscape",
   uom = "inches",
-  paper_size = "letter"
+  paper_size = "letter",
+  missing = ""
 )
 }
 \arguments{
@@ -33,6 +34,12 @@ Default value is "inches".}
 printed.  The \code{paper_size} will determine how much text can fit on
 one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
 "letter".}
+
+\item{missing}{How to display missing values in the report.  Default is
+to replace them with an empty string, which removes them from the report.
+To display missing values as is, set the missing parameter to NULL.  To
+replace missing values with a character string (such as ".", "-", or "<NA>")
+pass the desired character string to the missing parameter.}
 }
 \value{
 A new report_spec object.

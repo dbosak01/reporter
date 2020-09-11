@@ -31,10 +31,15 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   
   # Set up control columns
-  dat <- as.data.frame(ts$data)  #as.data.frame(ts$data)
+  dat <- as.data.frame(ts$data)  
   dat$..blank <- ""
-  dat$..page <- NA
   dat$..row <- NA
+  
+  # If page_break variable has been defined, use it
+  if (is.null(ts$page_var))
+    dat$..page <- NA
+  else 
+    dat$..page <- dat[[ts$page_var]]
 
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
@@ -99,7 +104,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print("Widths Char")
   # print(widths_char)
 
-  # Split long text strings onto multiple rows
+  # Split long text strings into multiple rows
   fdat <- split_cells(fdat, widths_char)
   # print("split_cells")
   # print(fdat)
@@ -129,7 +134,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
-                            lpg_rows, content_offset, ts$col_defs)
+                            lpg_rows, content_offset, ts)
   # print("splits")
   # print(splits)
 
@@ -163,7 +168,9 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
     }
   }
   
-  return(pg_lst)
+  ret <- list(widths = widths_uom, page_list = pg_lst)
+  
+  return(ret)
   
 }
 

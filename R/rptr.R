@@ -4,7 +4,8 @@
 #'     Will soon support RTF, PDF, and DOCX format.  
 #'     
 #' @details 
-#' The \strong{rptr} package creates regulatory-style, statistical reports. It was designed
+#' The \strong{rptr} package creates regulatory-style, statistical reports. It 
+#' was designed
 #' for use in the pharmaceutical, biotechnology, and medical-device industries.
 #' However, the functions are generalized enough to provide statistical reporting
 #' for any industry.  The package is written in Base R, and has no dependencies on
@@ -45,21 +46,3 @@
 NULL
 
 
-#' @title Illustration of table options
-#'
-#' @description The rptr package provides many options for creating statistical
-#' reports.  The below details describe those options.
-#' 
-#' @section create_report() options:{
-#' Here are the options for create_report()
-#' }
-#' 
-#' @section create_table() options:{
-#' Here are the options for create_report()
-#' }
-#' 
-#' @section define() options:{
-#' Here are the options for the define() function.
-#' }
-#' @name table_options
-NULL

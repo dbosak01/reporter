@@ -880,3 +880,164 @@ test_that("test23: Blank margins setting works as expected.", {
   
 })
 
+
+test_that("test24: Table width parameter works as expected for full width.", {
+  
+  
+  fp <- file.path(base_path, "output/test24.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl1 <- create_table(mtcars[1:10, 1:6], width = 9) 
+  tbl2 <- create_table(mtcars[11:20, 1:6]) 
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    add_content(tbl1, align = "left", page_break = FALSE) %>% 
+    add_content(tbl2, align = "left")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), 1 * res$line_count)
+  
+})
+
+test_that("test25: page_break parameter simple case works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test25.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  dat <- mtcars
+  rownames(dat) <- NULL
+  
+  dat$pg <- c(rep(1, 16), rep(2, 16))
+  
+  tbl <- create_table(dat) %>%
+    define(pg, page_break = TRUE)
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    titles("MTCARS Sample Report") %>% 
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), 2 * res$line_count)
+  
+})
+
+
+test_that("test26: page_break parameter harder case works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test26.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  dat <- iris
+
+  
+  #dat$pg <- c(rep(1, 16), rep(2, 16))
+  
+  tbl <- create_table(dat) %>%
+    define(Species, page_break = TRUE)
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    titles("IRIS Sample Report") %>% 
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages  * res$line_count)
+  
+})
+
+
+
+test_that("test27: page_break parameter even harder case works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test27.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  dat <- iris
+  
+  
+  dat$pg <- c(rep(1, 20), rep(2, 20), rep(3, 20), rep(4, 20), rep(5, 10),
+              rep(6, 20), rep(7, 20), rep(8, 20))
+  
+  tbl <- create_table(dat) %>%
+    define(Species, blank_after = TRUE) %>% 
+    define(pg, page_break = TRUE)
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    titles("IRIS Sample Report") %>% 
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages  * res$line_count)
+  
+})
+
+# 
+# test_that("test28: Table width parameter less than sum of columns works.", {
+#   
+#   
+#   fp <- file.path(base_path, "output/test28.out")
+#   
+#   if (file.exists(fp))
+#     file.remove(fp)
+#   
+#   tbl1 <- create_table(mtcars[1:10, ], width = 9) %>% 
+#     define(mpg, width = 2) %>% 
+#     define(cyl, width = 2) %>% 
+#     define(disp, width = 2) %>% 
+#     define(hp, width = 2) %>% 
+#     define(am, width = 2) %>% 
+#     define(carb, width = 2) 
+#   
+#   rpt <- create_report(fp) %>% 
+#     page_header("Client", "Study") %>% 
+#     add_content(tbl1, align = "left") 
+# 
+#   
+#   
+#   res <- write_report(rpt)
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   
+#   lns <- readLines(fp)
+#   
+#   expect_equal(length(lns), res$pages * res$line_count)
+#   
+# })

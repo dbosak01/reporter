@@ -9,7 +9,8 @@ The rptr package creates statistical reports in text file format.
     Will soon support RTF, PDF, and DOCX format.
 }
 \details{
-The \strong{rptr} package creates regulatory-style, statistical reports. It was designed
+The \strong{rptr} package creates regulatory-style, statistical reports. It 
+was designed
 for use in the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
 for any industry.  The package is written in Base R, and has no dependencies on

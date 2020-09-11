@@ -43,43 +43,43 @@ Time                                                                            
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
---------------------------------------------------------------------------------------------
-ABC-01-049                     1 11/12/1966      39 YEARS  M      WHITE
-ABC-01-050                     1 12/19/1958      47 YEARS  M      WHITE
-ABC-01-051                     1 5/2/1972        34 YEARS  M      WHITE
-ABC-01-052                     1 6/27/1961       45 YEARS  F      WHITE
-ABC-01-053                     1 4/7/1980        26 YEARS  F      WHITE
-ABC-01-054                     1 9/13/1962       44 YEARS  M      WHITE
-ABC-01-055                     1 6/11/1959       47 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-01-056                     1 5/2/1975        31 YEARS  M      WHITE
-ABC-01-113                     1 2/8/1932        74 YEARS  M      WHITE
-ABC-01-114                     1 7/9/1934        72 YEARS  F      WHITE
-ABC-02-033                     2 2/1/1968        38 YEARS  F      WHITE
-ABC-02-034                     2 10/5/1933       73 YEARS  F      WHITE
-ABC-02-035                     2 9/25/1960       46 YEARS  M      WHITE
-ABC-02-036                     2 1/1/1971        35 YEARS  M      WHITE
-ABC-02-037                     2 7/28/1960       46 YEARS  M      WHITE
-ABC-02-038                     2 7/2/1947        59 YEARS  M      WHITE
-ABC-02-039                     2 4/11/1971       35 YEARS  M      WHITE
-ABC-02-040                     2 3/27/1944       62 YEARS  M      WHITE
-ABC-02-109                     2 9/3/1969        37 YEARS  M      WHITE
-ABC-02-110                     2 8/12/1966       40 YEARS  F      WHITE
-ABC-02-111                     2 7/9/1967        39 YEARS  M      WHITE
-ABC-02-112                     2 11/1/1976       30 YEARS  F      WHITE
-ABC-03-001                     3 6/16/1941       65 YEARS  M      WHITE
-ABC-03-002                     3 3/20/1935       71 YEARS  M      WHITE
-ABC-03-003                     3 9/14/1942       64 YEARS  M      WHITE
-ABC-03-004                     3 7/8/1961        45 YEARS  M      WHITE
-ABC-03-005                     3 12/10/1952      53 YEARS  M      WHITE
-ABC-03-006                     3 12/12/1958      47 YEARS  M      WHITE
-ABC-03-007                     3 12/1/1948       57 YEARS  M      WHITE
-ABC-03-008                     3 8/28/1952       54 YEARS  M      WHITE
-ABC-03-089                     3 10/2/1975       31 YEARS  F      UNKNOWN
-ABC-03-090                     3 6/17/1926       80 YEARS  M      WHITE
-ABC-03-091                     3 2/20/1955       51 YEARS  F      WHITE
-ABC-04-073                     4 1/19/1947       59 YEARS  F      WHITE
-ABC-04-074                     4 3/28/1983       23 YEARS  F      WHITE
+USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
+-------------------------------------------------------------------------------------
+ABC-01-049                    1 11/12/1966   39 YEARS  M   WHITE
+ABC-01-050                    1 12/19/1958   47 YEARS  M   WHITE
+ABC-01-051                    1 5/2/1972     34 YEARS  M   WHITE
+ABC-01-052                    1 6/27/1961    45 YEARS  F   WHITE
+ABC-01-053                    1 4/7/1980     26 YEARS  F   WHITE
+ABC-01-054                    1 9/13/1962    44 YEARS  M   WHITE
+ABC-01-055                    1 6/11/1959    47 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-01-056                    1 5/2/1975     31 YEARS  M   WHITE
+ABC-01-113                    1 2/8/1932     74 YEARS  M   WHITE
+ABC-01-114                    1 7/9/1934     72 YEARS  F   WHITE
+ABC-02-033                    2 2/1/1968     38 YEARS  F   WHITE
+ABC-02-034                    2 10/5/1933    73 YEARS  F   WHITE
+ABC-02-035                    2 9/25/1960    46 YEARS  M   WHITE
+ABC-02-036                    2 1/1/1971     35 YEARS  M   WHITE
+ABC-02-037                    2 7/28/1960    46 YEARS  M   WHITE
+ABC-02-038                    2 7/2/1947     59 YEARS  M   WHITE
+ABC-02-039                    2 4/11/1971    35 YEARS  M   WHITE
+ABC-02-040                    2 3/27/1944    62 YEARS  M   WHITE
+ABC-02-109                    2 9/3/1969     37 YEARS  M   WHITE
+ABC-02-110                    2 8/12/1966    40 YEARS  F   WHITE
+ABC-02-111                    2 7/9/1967     39 YEARS  M   WHITE
+ABC-02-112                    2 11/1/1976    30 YEARS  F   WHITE
+ABC-03-001                    3 6/16/1941    65 YEARS  M   WHITE
+ABC-03-002                    3 3/20/1935    71 YEARS  M   WHITE
+ABC-03-003                    3 9/14/1942    64 YEARS  M   WHITE
+ABC-03-004                    3 7/8/1961     45 YEARS  M   WHITE
+ABC-03-005                    3 12/10/1952   53 YEARS  M   WHITE
+ABC-03-006                    3 12/12/1958   47 YEARS  M   WHITE
+ABC-03-007                    3 12/1/1948    57 YEARS  M   WHITE
+ABC-03-008                    3 8/28/1952    54 YEARS  M   WHITE
+ABC-03-089                    3 10/2/1975    31 YEARS  F   UNKNOWN
+ABC-03-090                    3 6/17/1926    80 YEARS  M   WHITE
+ABC-03-091                    3 2/20/1955    51 YEARS  F   WHITE
+ABC-04-073                    4 1/19/1947    59 YEARS  F   WHITE
+ABC-04-074                    4 3/28/1983    23 YEARS  F   WHITE
 
 Time                                                                                            Page 2 of 12
                                                 Listing 1.0
@@ -169,43 +169,43 @@ Time                                                                            
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
---------------------------------------------------------------------------------------------
-ABC-04-075                     4 4/7/1943        63 YEARS  M      WHITE
-ABC-04-076                     4 12/9/1954       51 YEARS  M      WHITE
-ABC-04-077                     4 2/20/1954       52 YEARS  F      WHITE
-ABC-04-078                     4 9/11/1953       53 YEARS  F      WHITE
-ABC-04-079                     4 11/11/1933      73 YEARS  F      WHITE
-ABC-04-080                     4 5/7/1951        55 YEARS  M      WHITE
-ABC-04-125                     4 11/16/1937      69 YEARS  M      WHITE
-ABC-04-126                     4 5/13/1957       49 YEARS  M      WHITE
-ABC-04-127                     4 3/18/1937       69 YEARS  M      ASIAN
-ABC-04-128                     4 5/24/1987       19 YEARS  M      WHITE
-ABC-04-129                     4 2/21/1960       46 YEARS  M      ASIAN
-ABC-04-130                     4 2/28/1937       69 YEARS  M      WHITE
-ABC-04-131                     4 3/10/1935       71 YEARS  M      WHITE
-ABC-06-065                     6 4/4/1972        34 YEARS  M      WHITE
-ABC-06-066                     6 1/1/1945        61 YEARS  F      WHITE
-ABC-06-067                     6 9/23/1958       48 YEARS  F      WHITE
-ABC-06-068                     6 9/12/1954       52 YEARS  F      WHITE
-ABC-06-069                     6 11/15/1934      72 YEARS  F      WHITE
-ABC-06-070                     6 2/1/1980        26 YEARS  M      WHITE
-ABC-06-071                     6 3/1/1931        75 YEARS  F      WHITE
-ABC-06-072                     6 7/12/1960       46 YEARS  M      WHITE
-ABC-06-161                     6 2/3/1958        48 YEARS  M      WHITE
-ABC-06-162                     6 12/21/1948      58 YEARS  M      WHITE
-ABC-06-163                     6 4/13/1942       64 YEARS  M      WHITE
-ABC-07-009                     7 4/18/1945       61 YEARS  F      WHITE
-ABC-07-010                     7 7/12/1960       46 YEARS  F      WHITE
-ABC-07-011                     7 1/18/1985       21 YEARS  M      WHITE
-ABC-07-012                     7 8/12/1948       58 YEARS  F      WHITE
-ABC-07-013                     7 1/29/1961       45 YEARS  M      WHITE
-ABC-07-014                     7 4/19/1935       71 YEARS  M      WHITE
-ABC-07-015                     7 4/17/1971       35 YEARS  F      WHITE
-ABC-07-016                     7 8/6/1957        49 YEARS  M      WHITE
-ABC-08-101                     8 3/16/1952       54 YEARS  F      WHITE
-ABC-08-102                     8 2/23/1952       54 YEARS  F      WHITE
-ABC-08-103                     8 9/17/1973       33 YEARS  M      UNKNOWN
+USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
+-------------------------------------------------------------------------------------
+ABC-04-075                    4 4/7/1943     63 YEARS  M   WHITE
+ABC-04-076                    4 12/9/1954    51 YEARS  M   WHITE
+ABC-04-077                    4 2/20/1954    52 YEARS  F   WHITE
+ABC-04-078                    4 9/11/1953    53 YEARS  F   WHITE
+ABC-04-079                    4 11/11/1933   73 YEARS  F   WHITE
+ABC-04-080                    4 5/7/1951     55 YEARS  M   WHITE
+ABC-04-125                    4 11/16/1937   69 YEARS  M   WHITE
+ABC-04-126                    4 5/13/1957    49 YEARS  M   WHITE
+ABC-04-127                    4 3/18/1937    69 YEARS  M   ASIAN
+ABC-04-128                    4 5/24/1987    19 YEARS  M   WHITE
+ABC-04-129                    4 2/21/1960    46 YEARS  M   ASIAN
+ABC-04-130                    4 2/28/1937    69 YEARS  M   WHITE
+ABC-04-131                    4 3/10/1935    71 YEARS  M   WHITE
+ABC-06-065                    6 4/4/1972     34 YEARS  M   WHITE
+ABC-06-066                    6 1/1/1945     61 YEARS  F   WHITE
+ABC-06-067                    6 9/23/1958    48 YEARS  F   WHITE
+ABC-06-068                    6 9/12/1954    52 YEARS  F   WHITE
+ABC-06-069                    6 11/15/1934   72 YEARS  F   WHITE
+ABC-06-070                    6 2/1/1980     26 YEARS  M   WHITE
+ABC-06-071                    6 3/1/1931     75 YEARS  F   WHITE
+ABC-06-072                    6 7/12/1960    46 YEARS  M   WHITE
+ABC-06-161                    6 2/3/1958     48 YEARS  M   WHITE
+ABC-06-162                    6 12/21/1948   58 YEARS  M   WHITE
+ABC-06-163                    6 4/13/1942    64 YEARS  M   WHITE
+ABC-07-009                    7 4/18/1945    61 YEARS  F   WHITE
+ABC-07-010                    7 7/12/1960    46 YEARS  F   WHITE
+ABC-07-011                    7 1/18/1985    21 YEARS  M   WHITE
+ABC-07-012                    7 8/12/1948    58 YEARS  F   WHITE
+ABC-07-013                    7 1/29/1961    45 YEARS  M   WHITE
+ABC-07-014                    7 4/19/1935    71 YEARS  M   WHITE
+ABC-07-015                    7 4/17/1971    35 YEARS  F   WHITE
+ABC-07-016                    7 8/6/1957     49 YEARS  M   WHITE
+ABC-08-101                    8 3/16/1952    54 YEARS  F   WHITE
+ABC-08-102                    8 2/23/1952    54 YEARS  F   WHITE
+ABC-08-103                    8 9/17/1973    33 YEARS  M   UNKNOWN
 
 Time                                                                                            Page 5 of 12
                                                 Listing 1.0
@@ -295,43 +295,43 @@ Time                                                                            
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
---------------------------------------------------------------------------------------------
-ABC-08-104                     8 7/1/1958        48 YEARS  M      WHITE
-ABC-08-105                     8 5/11/1962       44 YEARS  M      WHITE
-ABC-08-106                     8 6/17/1946       60 YEARS  M      WHITE
-ABC-08-107                     8 11/3/1952       54 YEARS  M      WHITE
-ABC-08-108                     8 3/24/1960       46 YEARS  F      WHITE
-ABC-09-017                     9 9/28/1945       61 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-09-018                     9 8/29/1984       22 YEARS  F      WHITE
-ABC-09-019                     9 12/6/1960       45 YEARS  M      WHITE
-ABC-09-020                     9 9/22/1953       53 YEARS  M      WHITE
-ABC-09-021                     9 11/8/1973       32 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-09-022                     9 11/8/1968       38 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-09-023                     9 4/3/1965        41 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-09-024                     9 5/3/1953        53 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-09-137                     9 10/26/1946      60 YEARS  M      WHITE
-ABC-09-138                     9 8/24/1975       31 YEARS  M      WHITE
-ABC-09-139                     9 11/13/1985      21 YEARS  F      WHITE
-ABC-09-140                     9 1/5/1964        42 YEARS  F      WHITE
-ABC-10-041                    10 2/24/1962       44 YEARS  F      WHITE
-ABC-10-042                    10 1/4/1982        25 YEARS  F      WHITE
-ABC-10-043                    10 9/28/1982       24 YEARS  F      WHITE
-ABC-10-145                    10 10/15/1975      31 YEARS  M      UNKNOWN
-ABC-10-146                    10 10/19/1977      29 YEARS  M      WHITE
-ABC-10-147                    10 7/2/1954        52 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-10-148                    10 10/1/1963       43 YEARS  M      WHITE
-ABC-10-149                    10 7/17/1949       57 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-10-150                    10 9/7/1981        25 YEARS  M      WHITE
-ABC-10-151                    10 6/21/1940       66 YEARS  M      WHITE
-ABC-10-152                    10 11/3/1943       63 YEARS  M      WHITE
-ABC-11-048                    11 11/12/1968      38 YEARS  F      ASIAN
-ABC-11-093                    11 10/21/1954      52 YEARS  M      WHITE
-ABC-11-094                    11 10/3/1966       40 YEARS  M      WHITE
-ABC-11-095                    11 8/2/1944        62 YEARS  M      WHITE
-ABC-11-096                    11 1/13/1953       53 YEARS  M      WHITE
-ABC-11-097                    11 6/21/1982       24 YEARS  F      WHITE
-ABC-11-098                    11 4/27/1939       67 YEARS  M      WHITE
+USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
+-------------------------------------------------------------------------------------
+ABC-08-104                    8 7/1/1958     48 YEARS  M   WHITE
+ABC-08-105                    8 5/11/1962    44 YEARS  M   WHITE
+ABC-08-106                    8 6/17/1946    60 YEARS  M   WHITE
+ABC-08-107                    8 11/3/1952    54 YEARS  M   WHITE
+ABC-08-108                    8 3/24/1960    46 YEARS  F   WHITE
+ABC-09-017                    9 9/28/1945    61 YEARS  M   BLACK OR AFRICAN AMERICAN
+ABC-09-018                    9 8/29/1984    22 YEARS  F   WHITE
+ABC-09-019                    9 12/6/1960    45 YEARS  M   WHITE
+ABC-09-020                    9 9/22/1953    53 YEARS  M   WHITE
+ABC-09-021                    9 11/8/1973    32 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-09-022                    9 11/8/1968    38 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-09-023                    9 4/3/1965     41 YEARS  M   BLACK OR AFRICAN AMERICAN
+ABC-09-024                    9 5/3/1953     53 YEARS  M   BLACK OR AFRICAN AMERICAN
+ABC-09-137                    9 10/26/1946   60 YEARS  M   WHITE
+ABC-09-138                    9 8/24/1975    31 YEARS  M   WHITE
+ABC-09-139                    9 11/13/1985   21 YEARS  F   WHITE
+ABC-09-140                    9 1/5/1964     42 YEARS  F   WHITE
+ABC-10-041                   10 2/24/1962    44 YEARS  F   WHITE
+ABC-10-042                   10 1/4/1982     25 YEARS  F   WHITE
+ABC-10-043                   10 9/28/1982    24 YEARS  F   WHITE
+ABC-10-145                   10 10/15/1975   31 YEARS  M   UNKNOWN
+ABC-10-146                   10 10/19/1977   29 YEARS  M   WHITE
+ABC-10-147                   10 7/2/1954     52 YEARS  M   BLACK OR AFRICAN AMERICAN
+ABC-10-148                   10 10/1/1963    43 YEARS  M   WHITE
+ABC-10-149                   10 7/17/1949    57 YEARS  M   BLACK OR AFRICAN AMERICAN
+ABC-10-150                   10 9/7/1981     25 YEARS  M   WHITE
+ABC-10-151                   10 6/21/1940    66 YEARS  M   WHITE
+ABC-10-152                   10 11/3/1943    63 YEARS  M   WHITE
+ABC-11-048                   11 11/12/1968   38 YEARS  F   ASIAN
+ABC-11-093                   11 10/21/1954   52 YEARS  M   WHITE
+ABC-11-094                   11 10/3/1966    40 YEARS  M   WHITE
+ABC-11-095                   11 8/2/1944     62 YEARS  M   WHITE
+ABC-11-096                   11 1/13/1953    53 YEARS  M   WHITE
+ABC-11-097                   11 6/21/1982    24 YEARS  F   WHITE
+ABC-11-098                   11 4/27/1939    67 YEARS  M   WHITE
 
 Time                                                                                            Page 8 of 12
                                                 Listing 1.0
@@ -421,43 +421,43 @@ Time                                                                            
                                                 Listing 1.0
                                             Demographics Dataset
 
-USUBJID     DTHDTC  DTHFL SITEID BRTHDTC        AGE AGEU   SEX    RACE
---------------------------------------------------------------------------------------------
-ABC-11-099                    11 4/20/1942       64 YEARS  M      WHITE
-ABC-11-100                    11 6/8/1976        30 YEARS  F      WHITE
-ABC-12-057                    12 1/22/1981       25 YEARS  F      WHITE
-ABC-12-058                    12 9/15/1931       75 YEARS  F      WHITE
-ABC-12-059                    12 10/18/1966      40 YEARS  F      WHITE
-ABC-12-060                    12 3/26/1944       62 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-12-061                    12 10/29/1959      47 YEARS  F      WHITE
-ABC-12-062                    12 12/3/1936       70 YEARS  M      WHITE
-ABC-12-063                    12 2/3/1941        65 YEARS  F      WHITE
-ABC-13-025                    13 8/12/1982       24 YEARS  M      WHITE
-ABC-13-026                    13 5/13/1955       51 YEARS  F      WHITE
-ABC-13-027                    13 7/9/1987        19 YEARS  F      WHITE
-ABC-13-028                    13 11/10/1958      47 YEARS  M      WHITE
-ABC-13-029                    13 5/29/1957       49 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-13-030                    13 1/18/1943       63 YEARS  M      WHITE
-ABC-13-031                    13 11/2/1969       37 YEARS  F      WHITE
-ABC-13-032                    13 2/13/1959       47 YEARS  M      BLACK OR AFRICAN AMERICAN
-ABC-13-141                    13 12/16/1941      64 YEARS  F      WHITE
-ABC-13-142                    13 5/19/1951       55 YEARS  M      WHITE
-ABC-13-143                    13 4/12/1973       33 YEARS  M      WHITE
-ABC-14-081                    14 2/1/1944        62 YEARS  F      WHITE
-ABC-14-082                    14 4/21/1940       66 YEARS  M      WHITE
-ABC-14-083                    14 7/16/1967       39 YEARS  F      WHITE
-ABC-14-084                    14 10/11/1934      72 YEARS  M      WHITE
-ABC-14-085                    14 8/18/1950       56 YEARS  M      WHITE
-ABC-14-086                    14 9/26/1957       49 YEARS  M      WHITE
-ABC-14-087                    14 8/31/1952       54 YEARS  F      WHITE
-ABC-14-088                    14 6/22/1950       56 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-14-117                    14 10/14/1962      44 YEARS  F      BLACK OR AFRICAN AMERICAN
-ABC-14-118                    14 6/24/1972       34 YEARS  M      WHITE
-ABC-14-119                    14 8/26/1958       48 YEARS  M      WHITE
-ABC-14-120                    14 5/25/1936       70 YEARS  M      WHITE
-ABC-14-121                    14 12/5/1950       55 YEARS  M      WHITE
-ABC-14-122                    14 5/3/1972        34 YEARS  M      WHITE
-ABC-14-123                    14 5/23/1954       52 YEARS  F      ASIAN
+USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
+-------------------------------------------------------------------------------------
+ABC-11-099                   11 4/20/1942    64 YEARS  M   WHITE
+ABC-11-100                   11 6/8/1976     30 YEARS  F   WHITE
+ABC-12-057                   12 1/22/1981    25 YEARS  F   WHITE
+ABC-12-058                   12 9/15/1931    75 YEARS  F   WHITE
+ABC-12-059                   12 10/18/1966   40 YEARS  F   WHITE
+ABC-12-060                   12 3/26/1944    62 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-12-061                   12 10/29/1959   47 YEARS  F   WHITE
+ABC-12-062                   12 12/3/1936    70 YEARS  M   WHITE
+ABC-12-063                   12 2/3/1941     65 YEARS  F   WHITE
+ABC-13-025                   13 8/12/1982    24 YEARS  M   WHITE
+ABC-13-026                   13 5/13/1955    51 YEARS  F   WHITE
+ABC-13-027                   13 7/9/1987     19 YEARS  F   WHITE
+ABC-13-028                   13 11/10/1958   47 YEARS  M   WHITE
+ABC-13-029                   13 5/29/1957    49 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-13-030                   13 1/18/1943    63 YEARS  M   WHITE
+ABC-13-031                   13 11/2/1969    37 YEARS  F   WHITE
+ABC-13-032                   13 2/13/1959    47 YEARS  M   BLACK OR AFRICAN AMERICAN
+ABC-13-141                   13 12/16/1941   64 YEARS  F   WHITE
+ABC-13-142                   13 5/19/1951    55 YEARS  M   WHITE
+ABC-13-143                   13 4/12/1973    33 YEARS  M   WHITE
+ABC-14-081                   14 2/1/1944     62 YEARS  F   WHITE
+ABC-14-082                   14 4/21/1940    66 YEARS  M   WHITE
+ABC-14-083                   14 7/16/1967    39 YEARS  F   WHITE
+ABC-14-084                   14 10/11/1934   72 YEARS  M   WHITE
+ABC-14-085                   14 8/18/1950    56 YEARS  M   WHITE
+ABC-14-086                   14 9/26/1957    49 YEARS  M   WHITE
+ABC-14-087                   14 8/31/1952    54 YEARS  F   WHITE
+ABC-14-088                   14 6/22/1950    56 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-14-117                   14 10/14/1962   44 YEARS  F   BLACK OR AFRICAN AMERICAN
+ABC-14-118                   14 6/24/1972    34 YEARS  M   WHITE
+ABC-14-119                   14 8/26/1958    48 YEARS  M   WHITE
+ABC-14-120                   14 5/25/1936    70 YEARS  M   WHITE
+ABC-14-121                   14 12/5/1950    55 YEARS  M   WHITE
+ABC-14-122                   14 5/3/1972     34 YEARS  M   WHITE
+ABC-14-123                   14 5/23/1954    52 YEARS  F   ASIAN
 
 Time                                                                                           Page 11 of 12
                                                 Listing 1.0

@@ -25,7 +25,14 @@ write_report_text <- function(rs) {
   ls <- rs$content
 
   # Break content into pages
-  ls <- paginate_content(rs, ls)
+  ret <- paginate_content(rs, ls)
+  
+  # Assign table column widths back to report spec for reference
+  rs$column_widths <- ret[["widths"]]
+  #print(paste("Widths:", ret[["widths"]]))
+  
+  # Assign pages to ls and continue processing
+  ls <- ret[["pages"]]
   
   # Write pages to file
   rs <- write_content(rs, ls, pt)
@@ -50,6 +57,7 @@ paginate_content <- function(rs, ls) {
   
   last_page_lines <- 0 
   last_object <- FALSE
+  table_widths <- list()
   
   for(i in seq_along(ls)){
     
@@ -61,7 +69,10 @@ paginate_content <- function(rs, ls) {
     # Break content into multiple pages if needed
     if (class(ls[[i]]$object)[1] == "table_spec"){
       
-      pgs <- create_table_pages_text(rs, ls[[i]], last_page_lines)
+      ret <- create_table_pages_text(rs, ls[[i]], last_page_lines)
+      
+      table_widths[[length(table_widths) + 1]] <- ret[["widths"]] 
+      pgs <- ret[["page_list"]]
       
     } else if (class(ls[[i]]$object)[1] == "text_spec") {
       
@@ -101,7 +112,9 @@ paginate_content <- function(rs, ls) {
     ls[[i]]$pages[[length(pgs)]] <- last_page
   }
   
-  return(ls)
+  ret <- list(widths = table_widths, pages = ls)
+  
+  return(ret)
 }
 
 #' @title Write out content

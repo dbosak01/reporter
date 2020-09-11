@@ -71,3 +71,24 @@ test_that("stub function works as expected.", {
   
 })
 
+
+
+test_that("page break parameter works as expected.", {
+  
+  dat <- mtcars
+  rownames(dat) <- NULL
+  
+  dat$pg <- c(rep(1, 16), rep(2, 16))
+  
+
+  
+  tbl <- create_table(dat) %>%
+    define(pg, page_break = TRUE)
+
+  
+  expect_equal(tbl$col_defs[[1]]$page_break, TRUE)
+  expect_equal(tbl$page_var, "pg")
+
+  
+  
+})

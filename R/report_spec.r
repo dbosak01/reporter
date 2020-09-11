@@ -56,6 +56,11 @@
 #' printed.  The \code{paper_size} will determine how much text can fit on
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
 #' "letter".
+#' @param missing How to display missing values in the report.  Default is
+#' to replace them with an empty string, which removes them from the report.
+#' To display missing values as is, set the missing parameter to NULL.  To
+#' replace missing values with a character string (such as ".", "-", or "<NA>")
+#' pass the desired character string to the missing parameter.
 #' @return A new report_spec object.
 #' @family report
 #' @seealso \code{\link{create_table}} and \code{\link{create_text}} functions
@@ -95,7 +100,7 @@
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
                           orientation ="landscape", uom = "inches",
-                          paper_size = "letter") {
+                          paper_size = "letter", missing = "") {
 
   x <- structure(list(), class = c("report_spec", "list"))
 
@@ -141,6 +146,7 @@ create_report <- function(file_path = "", output_type = "text",
   x$paper_size <- paper_size
   x$page_size <- get_page_size(paper_size, uom)
   x$pages <- 1                  # Track # of pages in report
+  x$column_widths <- list()      # Capture table column widths for reference
 
   
   if (output_type == "text") {

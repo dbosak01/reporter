@@ -45,6 +45,13 @@
 #' columns unless specified in the column definitions.  If a vector of column
 #' names is supplied, those columns will be shown in the report in the order
 #' specified, whether or not a definition is supplied.  
+#' @param width The expected width of the table in the report units of 
+#' measure.  By default, the width setting is NULL, and columns will be sized
+#' according to the width of the data and labels.  If the width parameter is 
+#' set, the function will attempt to size the table to the specified width.
+#' If the table is wider than the width, excess columns will wrap to the next 
+#' page. If the table is narrower than the width, columns widths will be adjusted
+#' to fit the table width.
 #' @param first_row_blank Whether to place a blank row under the table header.
 #' Valid values are TRUE or FALSE.  Default is FALSE.
 #' @param n_format The formatting function to apply to the header "N=" label. 
@@ -113,7 +120,8 @@
 #' # Merc 280                   19.2      6  167.6    123   3.92   3.44   18.3
 #' # 
 #' @export
-create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
+create_table <- function(x, show_cols = "all", width = NULL, 
+                         first_row_blank=FALSE,
                          n_format = upcase_parens, headerless = FALSE) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
@@ -136,6 +144,8 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
   ret$first_row_blank <- first_row_blank
   ret$headerless <- headerless
   ret$stub <- NULL
+  ret$width <- width
+  ret$page_var <- NULL
 
   return(ret)
 
@@ -166,7 +176,7 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 #' creation of a table stub.  See the \code{\link{stub}} function for additional
 #' details.
 #' 
-#' @param x The table containing a variable to define.
+#' @param x The table spec.
 #' @param var The unquoted variable name to define a column for.  
 #' @param label The label to use for the column header.  If a label is assigned
 #' to the label column attribute, it will be used as a default.  Otherwise,
@@ -204,6 +214,11 @@ create_table <- function(x, show_cols = "all", first_row_blank=FALSE,
 #' The excess variables will be wrapped to the next page.  Page wraps will
 #' continue until all columns are displayed.  Use the \code{id_vars}
 #' parameter to identify rows across wrapped pages. 
+#' @param page_break You may control when page breaks occur by defining
+#' a page break variable yourself, and setting this parameter to TRUE for
+#' that variable.  Only one page break variable can be defined per table.
+#' If two or more variables are defined as a page break, an error will be 
+#' generated.
 #' @param indent How much to indent the column values.  Parameter takes a 
 #' numeric value that will be interpreted according to the \code{uom} 
 #' (Unit Of Measure) setting on the report.  This parameter can be used to 
@@ -295,7 +310,7 @@ define <- function(x, var, label = NULL, format = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
-                   indent = NULL, label_row = FALSE) {
+                   page_break = FALSE, indent = NULL, label_row = FALSE) {
   
   # Check that variable exists
   var_c <- as.character(substitute(var, env = environment()))
@@ -325,10 +340,18 @@ define <- function(x, var, label = NULL, format = NULL,
   def$page_wrap = page_wrap
   def$indent = indent
   def$label_row = label_row
+  def$page_break = page_break
   if (label_row == TRUE)
     def$dedupe <- TRUE
 
   x$col_defs[[length(x$col_defs) + 1]] <- def
+  
+  if (page_break == TRUE) {
+    if (is.null(x$page_var)) {
+      x$page_var <- var_c
+    } else
+      stop("Cannot define more than one page break variable")
+  }
 
   return(x)
 }

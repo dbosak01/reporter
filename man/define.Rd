@@ -18,12 +18,13 @@ define(
   dedupe = FALSE,
   id_var = FALSE,
   page_wrap = FALSE,
+  page_break = FALSE,
   indent = NULL,
   label_row = FALSE
 )
 }
 \arguments{
-\item{x}{The table containing a variable to define.}
+\item{x}{The table spec.}
 
 \item{var}{The unquoted variable name to define a column for.}
 
@@ -32,8 +33,9 @@ to the label column attribute, it will be used as a default.  Otherwise,
 the column name will be used.}
 
 \item{format}{The format to use for the column data.  The format can 
-be a string format, a formatting function, or a format object from the 
-\strong{\link[fmtr]{fmtr}} package.}
+be a string format, a formatting function, a lookup list, or a format object. 
+All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
+additional information, see the help for that package.}
 
 \item{align}{The column alignment.  Valid values are "left", "right", 
 "center", and "centre".}
@@ -72,6 +74,12 @@ page break necessary when the table is too wide to fit on a single page.
 The excess variables will be wrapped to the next page.  Page wraps will
 continue until all columns are displayed.  Use the \code{id_vars}
 parameter to identify rows across wrapped pages.}
+
+\item{page_break}{You may control when page breaks occur by defining
+a page break variable yourself, and setting this parameter to TRUE for
+that variable.  Only one page break variable can be defined per table.
+If two or more variables are defined as a page break, an error will be 
+generated.}
 
 \item{indent}{How much to indent the column values.  Parameter takes a 
 numeric value that will be interpreted according to the \code{uom} 

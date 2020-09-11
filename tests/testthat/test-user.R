@@ -505,3 +505,82 @@ test_that("user5: large listing works.", {
   
 })
 
+
+
+test_that("user6: listings with page break works as expected.", {
+  
+  # Data Filepath
+  dir_data <- file.path(base_path, "data")
+  
+  fp <- file.path(base_path, "user/user6.out")
+  
+  
+  # Load Data
+  data_demo   <- file.path(dir_data, "dm.csv") %>%
+    read.csv() 
+  
+  data_demo <- data_demo[order(data_demo$ARMCD), ]
+  
+  # Define table
+  tbl <- create_table(data_demo) %>% 
+    define(USUBJID, id_var = TRUE) %>% 
+    define(ARMCD, page_break = TRUE, id_var = TRUE) %>% 
+    define(ARM, id_var = TRUE)
+  
+  # Define Report
+  rpt <- create_report(fp) %>%
+    options_fixed(editor = "notepad") %>% 
+    titles("Listing 1.0",
+           "Demographics Dataset") %>%
+    add_content(tbl, align = "left") %>% 
+    page_footer(left = "Time", right = "Page [pg] of [tpg]")
+  
+  # Write out report
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+
+test_that("user7: listings with NA values works.", {
+  
+  library(readr)
+  
+  # Data Filepath
+  dir_data <- file.path(base_path, "data")
+  
+  fp <- file.path(base_path, "user/user7.out")
+  
+  # Load Data
+  dat <- file.path(dir_data, "ADSL.csv") %>%
+    read_csv() 
+  
+  # Define table
+  tbl <- create_table(dat) %>% 
+    define(USUBJID, id_var = TRUE) 
+  
+  # Define Report
+  rpt <- create_report(fp) %>%
+    titles("Listing 1.0",
+           "ADSL Dataset") %>%
+    add_content(tbl, align = "left") %>% 
+    page_footer(left = "Time", right = "Page [pg] of [tpg]")
+  
+  # Write out report
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+

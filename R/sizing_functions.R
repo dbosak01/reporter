@@ -137,8 +137,9 @@ get_page_wraps <- function(line_size, ts, widths) {
       # print(paste("Widths:", widths[nm]))
       # print(paste("Total width:", tw))
       # print("")
+      
 
-      if ((sum(pg, widths[nm] + 1) >=  tw | force_wrap) & (!nm %in% id_vars)) {
+      if ((sum(pg, widths[nm]) >  tw | force_wrap) & (!nm %in% id_vars)) {
         
         # If sum of widths exceed page size, add page to list and reset pg
         # Also add control cols so downstream functions can use them
@@ -320,7 +321,7 @@ get_col_widths <- function(dat, ts, labels, char_width) {
   
   defs <- ts$col_defs
   max_col_width = 5
-  min_col_width = .5
+  min_col_width = .1
   padding_buffer = .05
   nms <- names(labels)
   #print(nms)
@@ -396,7 +397,67 @@ get_col_widths <- function(dat, ts, labels, char_width) {
     
   }
   
+  # Turn into vector if needed
   ret <- unlist(ret)
+  
+  # Remove control columns
+  ret <- ret[!sapply(names(ret), is.control)]
+  
+  # Deal with table width
+
+  if (!is.null(ts$width)) {
+     # print(paste("Table width:", ts$width))
+    
+     blnkw <- (length(ret) - 1) * char_width
+     # print(paste("Blank width:", blnkw))
+     # print(paste("Before:", sum(ret)))
+     # print(ret)
+     
+    if (sum(ret) + blnkw < ts$width) {
+      ret <- ret * ((ts$width - blnkw) / sum(ret))
+    } else {
+      # Come back to this later
+      # print("Here")
+      # ret2 <- c()
+      # pg <- c() 
+      # for (i in seq_along(ret)) {
+      #   print(ret[i])
+      #   print(paste("sumpg:", sum(pg)))
+      #   print(paste("lengthpg:", length(pg)))
+      #   print(paste("char_width:", char_width))
+      #   blnkw <- (length(pg) - 1) * char_width
+      #   tot <- sum(pg) + blnkw
+      #   print(paste("tot:", tot))
+      #   if (tot + ret[i] > ts$width) {
+      # 
+      #     pg <- pg * ((ts$width - blnkw) / sum(pg))
+      #     ret2 <- c(ret2, pg)
+      #     print(ret2)
+      #     pg <- c(ret[[i]])
+      #   } else {
+      #     pg[length(pg) + 1] <- ret[[i]]
+      #     print(paste("pg:", pg))
+      #   }
+      #   
+      # }
+      # 
+      # if (length(pg) > 0) {
+      #   blnkw <- (length(pg) - 1) * char_width
+      #   pg <- pg * ((ts$width - blnkw) / sum(pg))
+      #   ret2 <- c(ret2, pg)
+      #   
+      # }
+      # 
+      # names(ret2) <- names(ret)
+      # print(paste("ret2:", ret2))
+      # ret <- ret2
+    }
+    
+    # print(paste("After:", sum(ret)))
+    # print(ret)
+  }
+  
+
   
   return(ret)
 }
@@ -666,12 +727,16 @@ get_table_cols <- function(x) {
 #' @param page_size The size of the available space in rows
 #' @noRd
 get_splits_text <- function(x, widths, page_size, lpg_rows, 
-                            content_offsets, defs) {
+                            content_offsets, ts) {
   
+  defs <- ts$col_defs
+  
+
   # Calculate where page breaks should occur
   # Based on available height, content size, and offsets
   # Function adds a ..page variable with page indicator
   pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets)
+
   
   # Eliminate pages that have only blank lines
   sb <- subset(pgs, trimws(pgs$..blank) == "")
@@ -705,6 +770,11 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
   offset <- lpg_rows + content_offsets["blank_upper"]
   ttfl <- content_offsets["upper"] + content_offsets["lower"]
   
+  # User Paging variable
+  currentPage <- NA
+  lastPage <- NA
+  userForce <- FALSE
+  
   # print(paste("Content Upper:", content_offsets["upper"]))
   # print(paste("Content Lower:", content_offsets["lower"]))
   # print(paste("Page size:", page_size))
@@ -726,8 +796,26 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
     }
     # print(paste("Counter:", counter))
     # print(paste("Condition:", (page_size - offset - ttfl)))
+    
 
-    if (counter > (page_size  - offset - ttfl)) {
+    # Get current page value
+    currentPage <- x$..page[i]
+    
+    # If last page is not equal to current page, and neither is NA,
+    # force a page break
+    if (!is.na(lastPage) & !is.na(currentPage) & 
+        trimws(lastPage) != "NA" & trimws(currentPage) != "NA" & 
+        trimws(lastPage) != "" & trimws(currentPage) != "" & 
+        currentPage != lastPage) {
+      userForce <- TRUE
+
+    } else
+      userForce <- FALSE
+    
+    # After comparison, set last page value
+    lastPage <- currentPage
+
+    if (counter > (page_size  - offset - ttfl) | userForce) {
       #print(paste("Page count:", counter))
       counter <- 0
       
@@ -743,6 +831,11 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
     x$..page[i] <- pg
     # print(pg)
   }
+
+  
+  # Convert ..page back to number if necessary
+  if (class(x$..page) != "numeric")
+    x$..page <- as.numeric(x$..page)
   
   #print(paste("Page count:", counter))
   
