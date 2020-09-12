@@ -490,8 +490,11 @@ get_col_widths <- function(dat, ts, labels, char_width) {
 get_label_aligns <- function(ts, aligns) {
   
   defs <- ts$col_defs
+  
+  # Default to column aligns
   ret <- aligns
 
+  # Let any defined value override the default
   for (d in defs) {
     if (!is.null(d$label_align) & d$var_c %in% names(aligns))
       ret[[d$var_c]] <-  d$label_align
@@ -517,14 +520,19 @@ get_label_aligns <- function(ts, aligns) {
 get_col_formats <- function(dat, ts) {
   
   defs <- ts$col_defs
+  ret <- c()
+  
   
   # Get any existing formats
-  ret <- formats(dat)
+  if ("format" %in% ts$use_attributes) {
+    ret <- formats(dat)
+  }
 
   for (d in defs) {
     if (!is.null(d$format))
       ret[[d$var_c]] <-  d$format
   }
+  
 
   
   # Deal with stub
@@ -579,9 +587,11 @@ get_aligns <- function(dat, ts) {
   names(ret) <- nms
 
   # Get any justification from original data frame
-  orig <- justification(dat)
-  for (nm in names(orig))
-    ret[[nm]] <- orig[[nm]]
+  if ("justify" %in% ts$use_attributes) {
+    orig <- justification(dat)
+    for (nm in names(orig))
+      ret[[nm]] <- orig[[nm]]
+  }
   
   # Assign alignments from column definitions
   for (d in defs) {
@@ -625,7 +635,7 @@ get_labels <- function(dat, ts){
   counter <- 1
   
   for (col in dat) {
-    if (!is.null(attr(col, "label"))) {
+    if (!is.null(attr(col, "label")) & "label" %in% ts$use_attributes) {
       v2 <- c(v2, attr(col, "label"))
     } else {
       if (is.null( names(col))) {

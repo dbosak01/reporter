@@ -140,6 +140,7 @@ writeLines(readLines(tmp))
 }
 \seealso{
 Other table: 
+\code{\link{column_defaults}()},
 \code{\link{create_table}()},
 \code{\link{define}()},
 \code{\link{print.table_spec}()},

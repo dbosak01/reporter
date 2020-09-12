@@ -39,19 +39,30 @@
 #' 
 #' @param x The data frame or tibble from which to create the table object.
 #' @param show_cols Whether to show all columns by default.  Valid values are
-#' "all", "none", or a vector of column names.  "all" means show all columns, 
+#' 'all', 'none', or a vector of column names.  "all" means show all columns, 
 #' unless overridden by the column definitions.  
-#' "none" means don't show any 
+#' 'none' means don't show any 
 #' columns unless specified in the column definitions.  If a vector of column
 #' names is supplied, those columns will be shown in the report in the order
 #' specified, whether or not a definition is supplied.  
+#' @param use_attributes Whether or not to use any formatting attributes assigned
+#' to the columns on the input data frame.  Valid values are 'all', 'none', or
+#' a vector of attribute names to use.  Possible attributes that may be used
+#' are 'label', 'format', 'width', and 'justify'.  By default, any of these
+#' attribute values will be applied to the table  For example, if you assign
+#' a label to the 'label' attribute of a data frame column, pass that data 
+#' frame into \code{create_table}, and don't override the label value on a 
+#' \code{define} function, the label will appear as a column header on the
+#' table.  The \code{use_attributes} parameter allows you to control the default
+#' behavior, and use or ignore attributes as desired.  
 #' @param width The expected width of the table in the report units of 
 #' measure.  By default, the width setting is NULL, and columns will be sized
 #' according to the width of the data and labels.  If the width parameter is 
 #' set, the function will attempt to size the table to the specified width.
-#' If the table is wider than the width, excess columns will wrap to the next 
-#' page. If the table is narrower than the width, columns widths will be adjusted
-#' to fit the table width.
+#' If the sum of the column widths is less than the specified width, the 
+#' function will adjust the columns widths proportionally to fit the specified
+#' width.  If the sum of the column widths is wider than the table width 
+#' parameter value, the table width parameter will be ignored. 
 #' @param first_row_blank Whether to place a blank row under the table header.
 #' Valid values are TRUE or FALSE.  Default is FALSE.
 #' @param n_format The formatting function to apply to the header "N=" label. 
@@ -120,7 +131,8 @@
 #' # Merc 280                   19.2      6  167.6    123   3.92   3.44   18.3
 #' # 
 #' @export
-create_table <- function(x, show_cols = "all", width = NULL, 
+create_table <- function(x, show_cols = "all", use_attributes = "all",
+                         width = NULL, 
                          first_row_blank=FALSE,
                          n_format = upcase_parens, headerless = FALSE) {
   if (is.null(x)) {
@@ -134,6 +146,17 @@ create_table <- function(x, show_cols = "all", width = NULL,
                "\n\tValid values are a data.frame or tibble."))
   }
   
+  if (is.null(use_attributes))
+    stop("use_attributes parameter cannot be null.")
+  else if (any(use_attributes %in%  
+               c("all", "none", "label", "width", "justify", "format") == FALSE)){
+    
+    stop(paste("Invalid use_attributes value.  Valid values are 'all', 'none'", 
+               "or a vector of any of the following attributes names: 'label',",
+               "'format', 'width', or 'justify'"))
+  }
+    
+  
   ret <- structure(list(), class = c("table_spec", "list"))
 
   ret$data <- x
@@ -146,6 +169,12 @@ create_table <- function(x, show_cols = "all", width = NULL,
   ret$stub <- NULL
   ret$width <- width
   ret$page_var <- NULL
+  if (any(use_attributes == "all"))
+    ret$use_attributes <- c("label", "width", "justify", "format")
+  else if (all(use_attributes == "none"))
+    ret$use_attributes <- c("")
+  else  
+    ret$use_attributes <- use_attributes
 
   return(ret)
 
@@ -177,7 +206,9 @@ create_table <- function(x, show_cols = "all", width = NULL,
 #' details.
 #' 
 #' @param x The table spec.
-#' @param var The unquoted variable name to define a column for.  
+#' @param vars The variable name or names to define a column for.  Names may
+#' be quoted or unquoted.  If defining for multiple variables, 
+#' pass them as a vector of names.
 #' @param label The label to use for the column header.  If a label is assigned
 #' to the label column attribute, it will be used as a default.  Otherwise,
 #' the column name will be used.
@@ -306,31 +337,88 @@ create_table <- function(x, show_cols = "all", width = NULL,
 #' # 
 #' #                                                                    Page 2 of 2
 #' @export
-define <- function(x, var, label = NULL, format = NULL, 
+define <- function(x, vars, label = NULL, format = NULL, 
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
                    page_break = FALSE, indent = NULL, label_row = FALSE) {
   
-  # Check that variable exists
-  var_c <- as.character(substitute(var, env = environment()))
-  if (!is.null(x$data)) {
-    if (!var_c %in% names(x$data)) {
-      stop(paste0("Variable '", var_c, "' does not exist in data."))
-      
+  
+  # Determine if it is a vector or not.  "language" is a vector.
+  if (typeof(substitute(vars, env = environment())) == "language") 
+    v <- substitute(vars, env = environment())
+  else 
+    v <- substitute(list(vars), env = environment())
+  
+  # Turn each item into a character
+  vars_c <- c()
+  if (length(v) > 1) {
+    for (i in 2:length(v)) {
+      vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+    }
+    
+  }
+  
+  # Convert list to vector
+  vars_c <- unlist(vars_c)
+  
+  # Check that variable exists in data frame
+  if (!is.null(x$data) & !is.null(vars_c)) {
+    if (!any(vars_c %in% names(x$data))) {
+      for (nm in vars_c) {
+        if (!nm %in% names(x$data)) 
+          stop(paste0("Variable does not exist in data: ", nm))
+      }
     }
   }
+  
+  # For each passed variable, create an individual definition
+  # This make subsequent processing much easier
+  for (nm in vars_c) {
+    
+    
+   def <- define_c(nm, label = label, format = format, 
+                   align=align, label_align=label_align, width=width,
+                   visible=visible, n = n, blank_after=blank_after,
+                   dedupe=dedupe, id_var = id_var, page_wrap = page_wrap,
+                   page_break = page_break, indent = indent, 
+                   label_row = label_row)
+   
+   x$col_defs[[nm]] <- def
+   
+   if (page_break == TRUE) {
+     if (is.null(x$page_var)) {
+       x$page_var <- nm
+     } else
+       stop("Cannot define more than one page break variable")
+   }
+    
+  }
 
+  return(x)
+}
+
+#' @description Define a variable with a quoted name. Used internally.
+#' @noRd
+define_c <- function(var, label = NULL, format = NULL, 
+                   align=NULL, label_align=NULL, width=NULL,
+                   visible=TRUE, n = NULL, blank_after=FALSE,
+                   dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
+                   page_break = FALSE, indent = NULL, label_row = FALSE) {
+  
+  
+  if (class(var) != "character")
+    stop("class of var must be character.")
+ 
   def <- structure(list(), class = c("col_def", "list"))
   
-  def$var = deparse(substitute(var, env = environment()))
-  def$var_c = var_c
+  def$var = var
+  def$var_c = var
   def$label = label
   def$format = format
-  #def$col_type = col_type  # Not fully defined yet, but not ready to kill
   def$align = align
   def$label_align = if (is.null(label_align) & !is.null(align))
-                                align else label_align
+    align else label_align
   def$width = width
   def$visible = visible
   def$n = n
@@ -343,18 +431,224 @@ define <- function(x, var, label = NULL, format = NULL,
   def$page_break = page_break
   if (label_row == TRUE)
     def$dedupe <- TRUE
-
-  x$col_defs[[length(x$col_defs) + 1]] <- def
   
-  if (page_break == TRUE) {
-    if (is.null(x$page_var)) {
-      x$page_var <- var_c
-    } else
-      stop("Cannot define more than one page break variable")
-  }
+  
+  return(def)
+}
 
+
+#' @title Set default parameters for one or more columns
+#' @description A function to define the specification for a table column.  The
+#' \code{define} function contains a variety of a parameters to control the 
+#' appearance of the report.  Using the \code{define} function, you can control
+#' simple options like column alignment and format, but also control more 
+#' sophisticated options like page wrapping and page breaking.
+#' @details 
+#' Column definitions are optional.  By default, all columns in the data
+#' are displayed in the order and with the formatting attributes assigned to 
+#' the data frame.  The report will use attributes assigned to the data frame 
+#' such as 'width', 'justify', 'label', and 'format'.  In other words, 
+#' some control over the column 
+#' formatting is available by manipulating the data frame attributes prior
+#' to assigning the data frame to \code{\link{create_table}}.
+#' 
+#' The \code{define} function is used to provide additional control over
+#' column appearance.  For example, you may use the \code{define} function
+#' to assign an "N=" population count, eliminate duplicates from the column,
+#' or place a blank row after each unique value of the column. 
+#' See the parameters below for additional options.
+#' 
+#' Some of the parameters on the \code{define} function are used in the 
+#' creation of a table stub.  See the \code{\link{stub}} function for additional
+#' details.
+#' 
+#' @param x The table spec.
+#' @param vars The variable name or names to define defaults for.  Variable
+#' names may be quoted or unquoted.  For multiple variable names, pass them
+#' as a vector. 
+#' The parameter values passed to this function will be applied to all variables 
+#' specified as default values.  Any values specified on a define function
+#' will override the defaults.
+#' @param from The variable name that starts a column range.  The variable name
+#' may be quoted or unquoted.
+#' @param to The variable name that ends a column range. The variable name
+#' may be quoted or unquoted.
+#' @param label The label to use for the column header.  If a label is assigned
+#' to the label column attribute, it will be used as a default.  Otherwise,
+#' the column name will be used.
+#' @param format The format to use for the column data.  The format can 
+#' be a string format, a formatting function, a lookup list, or a format object. 
+#' All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
+#' additional information, see the help for that package.
+#' @param align The column alignment.  Valid values are "left", "right", 
+#' "center", and "centre".
+#' @param label_align How to align the header labels for this column.
+#' Valid values are "left", "right", "center", and "centre".
+#' @param width The width of the column in the specified units of measure.
+#' The units of measure are specified on the \code{uom} parameter of the
+#' \code{\link{create_report}} function.  If no width is supplied, the
+#' \code{\link{write_report}} function will assign a default width based on the 
+#' width of the column data and the label.  \code{write_report} will not set a 
+#' column width less than the width of the largest word in the data or label.
+#' In other words, \code{write_report} will not break words. 
+#' @param n The n value to place in the "N=" header label.  Formatting for
+#' the n value will be performed by the formatting function assigned to the 
+#' \code{n_format} parameter on \code{\link{create_table}}.
+#' @return The modified table spec.
+#' @family table
+#' @examples
+#' library(rptr)
+#' library(magrittr)
+#'  
+#' # Create temp file name
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Prepare data
+#' dat <- mtcars[1:10, ]
+#' dat <- data.frame(vehicle = rownames(dat), dat)
+#' 
+#' # Define table
+#' tbl <- create_table(dat, show_cols = 1:8) %>% 
+#'   define(vehicle, label = "Vehicle", width = 3, id_var = TRUE, align = "left") %>% 
+#'   define(mpg, label = "Miles per Gallon", width = 1) %>% 
+#'   define(cyl, label = "Cylinders", format = "%.1f") %>% 
+#'   define(disp, label = "Displacement") %>% 
+#'   define(hp, label = "Horsepower", page_wrap = TRUE) %>% 
+#'   define(drat, visible = FALSE) %>% 
+#'   define(wt, label = "Weight") %>% 
+#'   define(qsec, label = "Quarter Mile Time", width = 1.5) 
+#' 
+#' 
+#' # Create the report
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   titles("Listing 2.0", "MTCARS Data Listing with Page Wrap") %>% 
+#'   add_content(tbl, align = "left") %>% 
+#'   page_footer(right = "Page [pg] of [tpg]")
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Send report to console for viewing
+#' writeLines(readLines(tmp))
+#' 
+#' #                                  Listing 2.0
+#' #                       MTCARS Data Listing with Page Wrap
+#' # 
+#' #                                         Miles per
+#' # Vehicle                                    Gallon Cylinders Displacement
+#' # ------------------------------------------------------------------------
+#' # Mazda RX4                                      21       6.0          160
+#' # Mazda RX4 Wag                                  21       6.0          160
+#' # Datsun 710                                   22.8       4.0          108
+#' # Hornet 4 Drive                               21.4       6.0          258
+#' # Hornet Sportabout                            18.7       8.0          360
+#' # Valiant                                      18.1       6.0          225
+#' # Duster 360                                   14.3       8.0          360
+#' # Merc 240D                                    24.4       4.0        146.7
+#' # Merc 230                                     22.8       4.0        140.8
+#' # Merc 280                                     19.2       6.0        167.6
+#' # 
+#' # ...
+#' # 
+#' #                                                                    Page 1 of 2
+#' #                                  Listing 2.0
+#' #                       MTCARS Data Listing with Page Wrap
+#' # 
+#' # Vehicle                              Horsepower Weight  Quarter Mile Time
+#' # -------------------------------------------------------------------------
+#' # Mazda RX4                                   110   2.62              16.46
+#' # Mazda RX4 Wag                               110  2.875              17.02
+#' # Datsun 710                                   93   2.32              18.61
+#' # Hornet 4 Drive                              110  3.215              19.44
+#' # Hornet Sportabout                           175   3.44              17.02
+#' # Valiant                                     105   3.46              20.22
+#' # Duster 360                                  245   3.57              15.84
+#' # Merc 240D                                    62   3.19                 20
+#' # Merc 230                                     95   3.15               22.9
+#' # Merc 280                                    123   3.44               18.3
+#' # 
+#' # ...
+#' # 
+#' #                                                                    Page 2 of 2
+#' @export
+column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL, 
+                  format = NULL, align=NULL, label_align=NULL, width=NULL,
+                   n = NULL) {
+  
+  # Determine if it is a vector or not.  "language" is a vector.
+  if (typeof(substitute(vars, env = environment())) == "language") 
+    v <- substitute(vars, env = environment())
+  else 
+    v <- substitute(list(vars), env = environment())
+  
+  # Turn each item into a character
+  vars_c <- c()
+  if (length(v) > 1) {
+    for (i in 2:length(v)) {
+      vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+    }
+    
+  }
+  
+  # Convert list to vector
+  vars_c <- unlist(vars_c)
+  
+  # Check that variable exists in data frame
+  if (!is.null(x$data) & !is.null(vars_c)) {
+    if (!any(vars_c %in% names(x$data))) {
+      for (nm in vars_c) {
+        if (!nm %in% names(x$data)) 
+        stop(paste0("Variable does not exist in data: ", nm))
+      }
+    }
+  }
+  
+  # Create column default object
+  dflt <- structure(list(), class = c("col_dflt", "list"))
+  
+  if (!identical(vars_c, character(0)))
+    dflt$vars = vars_c
+  
+  f <- as.character(substitute(from, env = environment()))
+  if (!identical(f, character(0))) {
+    
+    if (!f %in% names(x$data))
+      stop(paste("Variable does not exist in input data frame:", f))
+    
+    dflt$from =  f
+  }
+  
+  t <- as.character(substitute(to, env = environment()))
+  if (!identical(t, character(0))) {
+  
+    if (!t %in% names(x$data))
+      stop(paste("Variable does not exist in input data frame:", t))
+    
+    dflt$to =  t
+  }
+  
+  if (!is.null(dflt$from) & is.null(dflt$to)) {
+    stop("'to' parameter cannot be null if 'from' is populated.") 
+  }
+  
+  if (is.null(dflt$from) & !is.null(dflt$to)) {
+    stop("'from' parameter cannot be null if 'to' is populated.") 
+  }
+  
+  dflt$label = label
+  dflt$format = format
+  dflt$align = align
+  dflt$label_align = if (is.null(label_align) & !is.null(align))
+    align else label_align
+  dflt$width = width
+  dflt$n = n
+
+  x$col_dflts[[length(x$col_dflts) + 1]] <- dflt
+  
+  
   return(x)
 }
+
 
 #' @title Defines a spanning header
 #' @description Create a header that spans multiple columns.  Spanning headers

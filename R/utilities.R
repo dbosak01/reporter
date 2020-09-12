@@ -528,6 +528,106 @@ dedupe_pages <- function(pgs, defs) {
 }
 
 
+clear_formats <- function(x) {
+  
+  for (nm in names(x)) {
+   attr(x[[nm]], "format") <- NULL 
+  }
+  
+  return(x)
+}
+
+quote_names <- function(x) {
+ 
+  
+  if (typeof(substitute(x, env = environment())) == "language") 
+    v <- substitute(x, env = environment())
+  else 
+    v <- substitute(list(x), env = environment())
+  
+  vars <- c()
+  if (length(v) > 1) {
+    for (i in 2:length(v)) {
+      vars[[length(vars) + 1]] <- as.character(v[[i]]) 
+    }
+    
+  }
+  
+  ret <- unlist(vars)
+  
+  return(ret)
+  
+}
+
+set_column_defaults <- function(ts, keys) {
+  
+  ret <- ts$col_defs
+  dflts <- ts$col_dflts
+  if (!is.null(dflts)) {
+    for (i in seq_along(dflts)) {
+      
+      # A vector of columns names for the defaults
+      v <- c()
+      
+      # An individual default
+      dflt <- dflts[[i]]
+      
+      # Need to get vector of column names whether it is 
+      # passed to the default as a vector or a range
+      if (!is.null(dflt$vars))
+          v <- dflt$vars
+      else if (!is.null(dflt$from) & !is.null(dflt$to)) {
+         startpos <- which(keys == dflt$from)
+         endpos <- which(keys == dflt$to)
+         if (startpos > endpos) {
+           stop(paste("'from' and 'to' parameters on column_defaults",
+                      "must be specified from left to right"))
+           
+         }
+         
+         # Get vector of column names from range
+         v <- keys[seq(from = startpos, to = endpos)]
+        
+      } else 
+        v <- keys[!is.controlv(keys)]
+      
+      
+      
+      for (nm in v) {
+        #print(nm)
+        
+        # if definition doesn't exist, create it
+        if (nm %in% names(ret))
+          def <- ret[[nm]]
+        else 
+          def <- define_c(nm)
+        
+        if (is.null(def$width))
+          def$width <- dflt$width
+        if (is.null(def$align))
+          def$align <- dflt$align
+        # Have to deal with $ partial matching
+        if (is.null(def[["label"]]))
+          def[["label"]] <- dflt[["label"]]
+        if (is.null(def$format))
+          def$format <- dflt$format
+        if (is.null(def$label_align))
+          def$label_align <- dflt$label_align
+        if (is.null(def$n))
+          def$n <- dflt$n
+        
+        ret[[nm]] <- def
+      }
+      
+
+    }
+  
+  }
+  
+  return(ret)
+}
+
+
 # Sizing utilities --------------------------------------------------------
 
 #' @noRd

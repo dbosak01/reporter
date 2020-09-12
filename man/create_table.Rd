@@ -7,6 +7,7 @@
 create_table(
   x,
   show_cols = "all",
+  use_attributes = "all",
   width = NULL,
   first_row_blank = FALSE,
   n_format = upcase_parens,
@@ -17,20 +18,32 @@ create_table(
 \item{x}{The data frame or tibble from which to create the table object.}
 
 \item{show_cols}{Whether to show all columns by default.  Valid values are
-"all", "none", or a vector of column names.  "all" means show all columns, 
+'all', 'none', or a vector of column names.  "all" means show all columns, 
 unless overridden by the column definitions.  
-"none" means don't show any 
+'none' means don't show any 
 columns unless specified in the column definitions.  If a vector of column
 names is supplied, those columns will be shown in the report in the order
 specified, whether or not a definition is supplied.}
+
+\item{use_attributes}{Whether or not to use any formatting attributes assigned
+to the columns on the input data frame.  Valid values are 'all', 'none', or
+a vector of attribute names to use.  Possible attributes that may be used
+are 'label', 'format', 'width', and 'justify'.  By default, any of these
+attribute values will be applied to the table  For example, if you assign
+a label to the 'label' attribute of a data frame column, pass that data 
+frame into \code{create_table}, and don't override the label value on a 
+\code{define} function, the label will appear as a column header on the
+table.  The \code{use_attributes} parameter allows you to control the default
+behavior, and use or ignore attributes as desired.}
 
 \item{width}{The expected width of the table in the report units of 
 measure.  By default, the width setting is NULL, and columns will be sized
 according to the width of the data and labels.  If the width parameter is 
 set, the function will attempt to size the table to the specified width.
-If the table is wider than the width, excess columns will wrap to the next 
-page. If the table is narrower than the width, columns widths will be adjusted
-to fit the table width.}
+If the sum of the column widths is less than the specified width, the 
+function will adjust the columns widths proportionally to fit the specified
+width.  If the sum of the column widths is wider than the table width 
+parameter value, the table width parameter will be ignored.}
 
 \item{first_row_blank}{Whether to place a blank row under the table header.
 Valid values are TRUE or FALSE.  Default is FALSE.}
@@ -140,6 +153,7 @@ writeLines(readLines(tmp))
 \code{\link{add_content}} to append content to a report.
 
 Other table: 
+\code{\link{column_defaults}()},
 \code{\link{define}()},
 \code{\link{print.table_spec}()},
 \code{\link{spanning_header}()},

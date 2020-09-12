@@ -2,6 +2,7 @@
 
 S3method(print,table_spec)
 export(add_content)
+export(column_defaults)
 export(create_report)
 export(create_table)
 export(create_text)

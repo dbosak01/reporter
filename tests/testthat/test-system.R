@@ -1009,6 +1009,131 @@ test_that("test27: page_break parameter even harder case works as expected.", {
   
 })
 
+
+
+test_that("test28: use_attributes parameter table works as expected.", {
+  
+  
+  fp1 <- file.path(base_path, "output/test28a.out")
+  fp2 <- file.path(base_path, "output/test28b.out")
+  fp3 <- file.path(base_path, "output/test28c.out")
+  
+  if (file.exists(fp1))
+    file.remove(fp1)
+  if (file.exists(fp2))
+    file.remove(fp2)
+  if (file.exists(fp3))
+    file.remove(fp3)
+  
+  dat <- mtcars[1:10, ]
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  attr(dat$cyl, "format") <- "%.1f"
+  attr(dat$hp, "width") <- 2
+  fattr(dat$vs) <- list(width = 2, justify = "center")
+  
+  tbl <- create_table(dat) 
+  
+  # Test default 
+  rpt <- create_report(fp1) %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp1), TRUE)
+  
+  lns <- readLines(fp1)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+  # Test none
+  tbl <- create_table(dat, use_attributes = "none") 
+  
+  rpt <- create_report(fp2) %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp2), TRUE)
+  
+  lns <- readLines(fp2)
+  
+  # Test some
+  tbl <- create_table(dat, use_attributes = c("format", "width")) 
+  
+  rpt <- create_report(fp3) %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp3), TRUE)
+  
+  lns <- readLines(fp3)
+
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+
+test_that("test29: column_defaults work as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test29.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    column_defaults(width = .5, align = "right", format = "%.1f",
+                    n = 5) %>% 
+    define(mpg, width = 2, format = "%.2f", align = "left",
+           label_align = "right") %>% 
+    define(wt, width = 2, format = "%.4f", align = "left", n = 6,
+           label_align = "center")
+  
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "left")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+test_that("test30: multiple vars on define work as expected.", {
+
+
+  fp <- file.path(base_path, "output/test30.out")
+
+  if (file.exists(fp))
+    file.remove(fp)
+
+  tbl <- create_table(mtcars[1:10, ]) %>%
+    define(c(mpg, wt), width = 2, format = "%.2f", align = "left",
+           label_align = "right")
+
+
+  rpt <- create_report(fp) %>%
+    add_content(tbl, align = "left")
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+  lns <- readLines(fp)
+
+  expect_equal(length(lns), res$pages * res$line_count)
+
+})
+
 # 
 # test_that("test28: Table width parameter less than sum of columns works.", {
 #   

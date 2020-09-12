@@ -52,9 +52,16 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # Filter dataset by included columns
   dat <- dat[ , keys]
   
+  # Update column definitions with column defaults
+  ts$col_defs <- set_column_defaults(ts, keys)
+  # print("col_defs:")
+  # print(ts$col_defs)
+  
+  
   # Get labels
   labels <- get_labels(dat, ts)
-  #print(labels)
+  # print("Labels:")
+  # print(labels)
   
   # Get column alignments
   aligns <- get_aligns(dat, ts)
@@ -62,16 +69,20 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # Get alignment for labels
   # Follows column alignment by default
   label_aligns <- get_label_aligns(ts, aligns)
-  # print("Label Aligns")
+  # print("Label Aligns:")
   # print(label_aligns)
 
+  # Clear out existing formats
+  cdat <- clear_formats(dat)
+  
   # Get column formats
-  formats(dat) <- get_col_formats(dat, ts)
-  #print(formats(dat))
+  formats(cdat) <- get_col_formats(dat, ts)
+  # print("formats:")
+  # print(formats(cdat))
 
   # Apply formatting
-  fdat <- fdata(dat)
-  # print("fdata")
+  fdat <- fdata(cdat)
+  # print("fdata:")
   # print(fdat)
   
   # Prep data for blank lines, indents, and stub columns
@@ -87,7 +98,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(aligns)
   
   # Copy any width attributes to formatted data frame
-  widths(fdat) <- widths(dat)
+  if ("width" %in% ts$use_attributes)
+    widths(fdat) <- widths(dat)
   # print("Original Widths")
   # print(widths(dat))
   

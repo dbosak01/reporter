@@ -156,4 +156,76 @@ test_that("create_stub works as expected.", {
   expect_equal(d$stub, c("a", "b", "c", "a", "b", "c"))
   
 })
+
+
+test_that("quote_names function works as expected.", {
+
+  expect_equal(quote_names(c("fork")), c("fork"))
+  expect_equal(quote_names(c(fork)), c("fork"))
+  expect_equal(quote_names("fork"), c("fork"))
+  expect_equal(quote_names("fork"), c("fork"))
+  expect_equal(quote_names(c("fork", "bork")), c("fork", "bork"))
+  expect_equal(quote_names(c(fork, bork)), c("fork", "bork"))
   
+})
+
+test_that("set_column_defaults function works as expected.", {
+  
+  tbl <- create_table(mtcars) 
+  tbl <- column_defaults(tbl, c(mpg, cyl, disp), width = 2, format = "%.1f")
+  tbl <- define(tbl, mpg, width = 3, format = "%.2f")
+  
+  res <- set_column_defaults(tbl, names(mtcars))
+
+  
+  expect_equal(length(res), 3)
+  expect_equal(res[["mpg"]]$width, 3)
+  expect_equal(res[["mpg"]]$format, "%.2f")
+  expect_equal(res[["cyl"]]$width, 2)
+  expect_equal(res[["cyl"]]$format, "%.1f")
+  expect_equal(res[["disp"]]$width, 2)
+  expect_equal(res[["disp"]]$format, "%.1f")
+  
+})
+  
+
+test_that("set_column_defaults function with range works as expected.", {
+  
+  tbl <- create_table(mtcars) 
+  tbl <- column_defaults(tbl, from = mpg, to = drat, width = 2, format = "%.1f")
+  tbl <- define(tbl, mpg, width = 3, format = "%.2f")
+  
+  res <- set_column_defaults(tbl, names(mtcars))
+  
+  
+  expect_equal(length(res), 5)
+  expect_equal(res[["mpg"]]$width, 3)
+  expect_equal(res[["mpg"]]$format, "%.2f")
+  expect_equal(res[["cyl"]]$width, 2)
+  expect_equal(res[["cyl"]]$format, "%.1f")
+  expect_equal(is.null(res[["vs"]]$width), TRUE)
+  expect_equal(is.null(res[["vs"]]$format), TRUE)
+  
+})
+
+
+test_that("set_column_defaults function all cols works as expected.", {
+  
+  tbl <- create_table(mtcars) 
+  tbl <- column_defaults(tbl, width = 2, format = "%.1f")
+  tbl <- define(tbl, mpg, width = 3, format = "%.2f")
+  
+  res <- set_column_defaults(tbl, names(mtcars))
+  
+  
+  expect_equal(length(res), 11)
+  expect_equal(res[["mpg"]]$width, 3)
+  expect_equal(res[["mpg"]]$format, "%.2f")
+  expect_equal(res[["cyl"]]$width, 2)
+  expect_equal(res[["cyl"]]$format, "%.1f")
+  expect_equal(res[["vs"]]$width, 2)
+  expect_equal(res[["vs"]]$format, "%.1f")
+  
+})
+
+

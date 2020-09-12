@@ -92,3 +92,92 @@ test_that("page break parameter works as expected.", {
   
   
 })
+
+test_that("use_attributes parameter works as expected.", {
+  
+  # Check default
+  tbl <- create_table(mtcars) 
+  expect_equal(tbl$use_attributes, c("label", "width", "justify", "format" ))
+  
+  # Check none
+  tbl <- create_table(mtcars, use_attributes = "none") 
+  expect_equal(tbl$use_attributes, c(""))
+  
+  # Check some
+  tbl <- create_table(mtcars, use_attributes = c("justify", "format")) 
+  expect_equal(tbl$use_attributes, c("justify", "format"))
+  
+  # Check invalid
+  expect_error(create_table(mtcars, use_attributes = c("justify", "fork")) )
+  
+  
+  
+})
+
+
+
+test_that("column_defaults function works as expected.", {
+  
+  
+  tbl <- create_table(mtcars)
+  cd <- column_defaults(tbl, c(mpg, cyl, disp)) 
+  
+  expect_equal(cd$col_dflts[[1]]$vars, c("mpg", "cyl", "disp"))
+  expect_equal(is.null(cd$col_dflts[[1]]$from), TRUE)
+  expect_equal(is.null(cd$col_dflts[[1]]$to), TRUE)
+  
+  cd <- column_defaults(tbl, from = mpg, to = disp) 
+  
+  expect_equal(is.null(cd$col_dflts[[1]]$vars), TRUE)
+  expect_equal(cd$col_dflts[[1]]$from, "mpg")
+  expect_equal(cd$col_dflts[[1]]$to, "disp")
+  
+  
+  cd <- column_defaults(tbl, c("mpg", "cyl", "disp")) 
+  
+  expect_equal(cd$col_dflts[[1]]$vars, c("mpg", "cyl", "disp"))
+  expect_equal(is.null(cd$col_dflts[[1]]$from), TRUE)
+  expect_equal(is.null(cd$col_dflts[[1]]$to), TRUE)
+  
+  cd <- column_defaults(tbl, from = "mpg", to = "disp") 
+  
+  expect_equal(is.null(cd$col_dflts[[1]]$vars), TRUE)
+  expect_equal(cd$col_dflts[[1]]$from, "mpg")
+  expect_equal(cd$col_dflts[[1]]$to, "disp")
+  
+  
+  expect_error(column_defaults(tbl, fork))
+  expect_error(column_defaults(tbl, from = fork, to = disp))
+  expect_error(column_defaults(tbl, from = mpg, to = fork))
+  expect_error(column_defaults(tbl, from = mpg))
+  expect_error(column_defaults(tbl, to = mpg))
+
+  
+  cd <- column_defaults(tbl, from = "mpg", to = "disp", width = 10,
+                        align = "left", label = "fork", label_align = "right",
+                        format = "%.1f", n = 12)
+  expect_equal(cd$col_dflts[[1]]$width, 10)
+  expect_equal(cd$col_dflts[[1]]$align, "left")
+  expect_equal(cd$col_dflts[[1]]$label, "fork")
+  expect_equal(cd$col_dflts[[1]]$label_align, "right")
+  expect_equal(cd$col_dflts[[1]]$format, "%.1f")
+  expect_equal(cd$col_dflts[[1]]$n, 12)
+  
+  
+  
+})
+
+
+
+
+test_that("define_c function works as expected.", {
+  
+  
+  tbl <- create_table(mtcars)
+  d <- define_c("mpg", width = 2)
+  
+  expect_equal("col_def" %in% class(d), TRUE )
+  expect_equal(d$width, 2)
+  expect_equal(d$var, "mpg")
+  
+})
