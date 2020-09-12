@@ -411,10 +411,10 @@ df <- data.frame(vehicle = rownames(dat), dat)
 # Define Table with spanning headers
 tbl <- create_table(df) %>% 
   titles("Table 1.0", "MTCARS Spanning Headers") %>% 
-  spanning_header(span_cols = c("mpg", "cyl", "hp"), label = "Span 1", n = 10) %>%
-  spanning_header(span_cols = c("drat", "wt", "qsec"), label = "Span 2", n = 10) %>%
-  spanning_header(span_cols = c("vs", "gear", "carb"), label = "Span 3", n = 10) %>%
-  spanning_header(span_cols = c(from = "drat", to = "carb"), 
+  spanning_header(from = "mpg", to = "hp", label = "Span 1", n = 10) %>%
+  spanning_header(from = "drat", to = "qsec"), label = "Span 2", n = 10) %>%
+  spanning_header(from = "vs", to = "carb", label = "Span 3", n = 10) %>%
+  spanning_header(from = "drat", to = "carb", 
                   label = "Super Span", level = 2) %>%
   define(vehicle, label = "Vehicle") %>% 
   define(mpg, format = "%.1f") %>% 

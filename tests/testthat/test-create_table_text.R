@@ -51,15 +51,15 @@ test_that("get_spanning_header works as expected.", {
   rpt$line_size <- 108
   
   tbl <- create_table(dat) %>% 
-    spanning_header(span_cols = c("mpg", "cyl", "disp"), label = "Span 1",
+    spanning_header("mpg","disp", label = "Span 1",
                     label_align = "center", n = 24) %>% 
-    spanning_header(span_cols = c("hp", "drat", "wt"), label = "Span 2",
+    spanning_header("hp", "wt", label = "Span 2",
                     label_align = "center", n = 25)  %>%
-    spanning_header(span_cols = c("qsec", "vs", "am"),
+    spanning_header("qsec", "am",
                     label = "Span 3", label_align = "center", n = 26) %>%
-    spanning_header(span_cols = c(2:5), level = 2,
+    spanning_header(2, 5, level = 2,
                     label = "Span 4", label_align = "center") %>%
-    spanning_header(span_cols = c(6:9), level = 2,
+    spanning_header(6, 9, level = 2,
                     label = "Span 5", label_align = "center")
   
   lbl <- names(mtcars)

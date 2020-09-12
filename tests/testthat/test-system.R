@@ -312,13 +312,13 @@ test_that("test8: Table with spanning headers works as expected.", {
   df$wt <- fattr(df$wt, justify = "center", width = .75)
   
   tbl <- create_table(df) %>% 
-    spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
+    spanning_header("mpg", "hp",
                     label = "Span 1", label_align = "center", n = 10) %>% 
-    spanning_header(span_cols = c("drat", "wt", "qsec"),
+    spanning_header("drat", "qsec",
                     label = "Span 2", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c("vs", "am", "gear", "carb"),
+    spanning_header("vs", "carb",
                     label = "Span 3", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
+    spanning_header(from = "drat", to = "carb", label = "Super Span",
                     label_align = "center",
                     level = 2) %>%
     define(vehicle, label = "Vehicle") %>% 
@@ -347,15 +347,15 @@ test_that("test9: Page wrap works as expected.", {
   df <- data.frame(vehicle = rownames(dat), dat)
   
   tbl <- create_table(df) %>% 
-    spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
+    spanning_header(mpg, hp,
                     label = "Span 1", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c("drat", "wt", "qsec"),
+    spanning_header(drat, qsec,
                     label = "Span 2", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c("vs", "am", "gear", "carb"),
+    spanning_header(vs, carb,
                     label = "Span 3", label_align = "center", n = 10) %>%
-    # spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
-    #                 label_align = "center",
-    #                 level = 2) %>%
+    spanning_header("drat","carb", label = "Super Span",
+                    label_align = "center",
+                    level = 2) %>%
     define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
     define(mpg, format = "%.1f") %>% 
     define(am, visible = FALSE) %>% 
@@ -383,18 +383,15 @@ test_that("test10: Page wrap with spanning header works as expected.", {
   rownames(df) = NULL
   
   tbl <- create_table(df) %>% 
-    spanning_header(span_cols = c("mpg", "cyl", "disp", "hp"),
+    spanning_header(2, 5,
                     label = "Span 1", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c("drat", "wt", "qsec"),
+    spanning_header(6, 8,
                     label = "Span 2", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c("vs", "am", "gear", "carb"),
+    spanning_header(9, 12,
                     label = "Span 3", label_align = "center", n = 10) %>%
-    spanning_header(span_cols = c(from = "drat", to = "carb"), label = "Super Span",
+    spanning_header(6, 12, label = "Super Span",
                     label_align = "center",
                     level = 2) %>%
-    # Also works
-    # spanning_header(span_cols = c("drat", "wt", "qsec", "vs", "am", "gear", "carb"), 
-    #                 label = "Super Span", level = 2) %>%
     define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
     define(mpg, format = "%.1f") %>% 
     define(wt, page_wrap = TRUE) %>% 

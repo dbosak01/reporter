@@ -21,27 +21,48 @@ test_that("table spec constructor operator works as expected.", {
 
 test_that("spanning header constructor works as expected.", {
   
+  # Unquoted names and other parameters
   tbl <- create_table(mtcars[1:10, ]) %>% 
-    spanning_header(span_cols = c("mpg", "cyl", "disp"),
+    spanning_header(from = mpg, to = disp, 
                     label = "Span 1", n = 25, label_align = "left") %>% 
+    spanning_header(from = hp, to = qsec, 
+                    label = "Span 2", n = 30) %>% 
     define(mpg, format = "%.1f") %>% 
     define(cyl, width = 1) %>% 
     define(hp)
   
   s <- tbl$col_spans
   
-  expect_equal(length(s), 1)
+  expect_equal(length(s), 2)
   expect_equal(s[[1]]$label, "Span 1")
   expect_equal(s[[1]]$label_align, "left")
   expect_equal(s[[1]]$n, 25)
-  expect_equal(s[[1]]$span_cols, c("mpg", "cyl", "disp"))
+  expect_equal(s[[1]]$from, "mpg")
+  expect_equal(s[[1]]$to, "disp")
+  expect_equal(s[[2]]$label, "Span 2")
+  expect_equal(s[[2]]$n, 30)
   expect_equal(length(tbl$col_defs), 3)
   
-  expect_error(spanning_header(tbl, span_cols = c("mpgg", "Cl", "disp")))
-  expect_error(spanning_header(tbl, span_cols = 1:25))
-  expect_error(spanning_header(tbl, span_cols = c("mpg", "cyl", "disp"),
+  # Quoted Names
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    spanning_header(from = "mpg", to = "disp")
+  s <- tbl$col_spans
+  expect_equal(s[[1]]$from, "mpg")
+  expect_equal(s[[1]]$to, "disp")
+  
+  # Positions
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    spanning_header(from = 1, to = 3)
+  s <- tbl$col_spans
+  expect_equal(s[[1]]$from, "mpg")
+  expect_equal(s[[1]]$to, "disp")
+  
+  # Parameter checks
+  expect_error(spanning_header(tbl, "mpgg", "disP"))
+  expect_error(spanning_header(tbl, 1, 25))
+  expect_error(spanning_header(tbl, mpg, disp,
                                level = "one"))
-  expect_error(spanning_header(tbl, span_cols = c("mpg", "cyl", "disp"),
+  expect_error(spanning_header(tbl, "mpg", "disp",
                                label_align = "lefty"))
   
 })

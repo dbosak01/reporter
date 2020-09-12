@@ -1,0 +1,60 @@
+Client: Motor Trend                                                Study: Cars
+                                  Table 1.0
+                             MTCARS Summary Table
+
+                                     Group A      Group B
+                 -------------------------------------------
+
+                 Miles Per Gallon
+                    N                   13           19
+                    Mean            22.5 (6.8)   18.4 (5.0)
+                    Median             21.0         18.7
+                    Q1 - Q3        17.3 - 27.3  15.1 - 21.4
+                    Range          14.7 - 33.9  10.4 - 30.4
+
+                 Cylinders
+                    8 Cylinder      4 ( 30.8%)  10 ( 52.6%)
+                    6 Cylinder      4 ( 30.8%)   3 ( 15.8%)
+                    4 Cylinder      5 ( 38.5%)   6 ( 31.6%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* Motor Trend, 1973
+
+Time                             Confidential                      Page 1 of 1

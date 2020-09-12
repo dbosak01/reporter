@@ -665,10 +665,12 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' indicating "from" and "to" column names.  When identifying the spanning
 #' column names, all names should be quoted.
 #' @param x The table object to add spanning headers to.
-#' @param span_cols The columns to span.  The spanning columns may be defined as
-#' a vector of column positions or quoted names. You may also supply a named 
-#' vector, with the names "from" and "to" equal to the starting and 
-#' ending columns to span.
+#' @param from The starting column to span.  The spanning columns are defined as
+#' range of columns 'from' and 'to'. The column names may be quoted or unquoted.
+#' The \code{from} parameter is required.  
+#' @param to The ending column to span.  The spanning columns are defined as
+#' range of columns 'from' and 'to'. The column names may be quoted or unquoted.
+#' The \code{to} parameter is required. 
 #' @param label The label to apply to the spanning header.
 #' @param label_align The alignment to use for the label. Valid values are 
 #' "left", "right", "center", and "centre".  The default for spanning columns
@@ -695,14 +697,10 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' # Define Table with spanning headers
 #' tbl <- create_table(df) %>% 
 #'   titles("Table 1.0", "MTCARS Spanning Headers") %>% 
-#'   spanning_header(span_cols = c("mpg", "cyl", "hp"),
-#'                   label = "Span 1", n = 10) %>%
-#'   spanning_header(span_cols = c("drat", "wt", "qsec"),
-#'                   label = "Span 2", n = 10) %>%
-#'   spanning_header(span_cols = c("vs", "gear", "carb"),
-#'                   label = "Span 3", n = 10) %>%
-#'   spanning_header(span_cols = c(from = "drat", to = "carb"), 
-#'                   label = "Super Span", level = 2) %>%
+#'   spanning_header(mpg, hp, label = "Span 1", n = 10) %>%
+#'   spanning_header(drat, qsec, label = "Span 2", n = 10) %>%
+#'   spanning_header(vs, carb, label = "Span 3", n = 10) %>%
+#'   spanning_header(drat, carb, label = "Super Span", level = 2) %>%
 #'   define(vehicle, label = "Vehicle") %>% 
 #'   define(mpg, format = "%.1f") %>% 
 #'   define(disp, visible = FALSE) %>% 
@@ -740,28 +738,52 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' # Merc 280             19.2      6    123   3.92   3.44   18.3      1      4      4
 #' #
 #' @export
-spanning_header <- function(x, span_cols, label = "",
+spanning_header <- function(x, from, to, label = "",
                             label_align = "center", level = 1, n = NULL) {
   
+  
+  f <- as.character(substitute(from, env = environment()))
+  t <- as.character(substitute(to, env = environment()))
+  
+  if (!is.na(suppressWarnings(as.numeric(f))))
+    f <- as.numeric(f)
+  
+  if (!is.na(suppressWarnings(as.numeric(t))))
+    t <- as.numeric(t)
+  
   nms <- names(x$data)
-  if (is.character(span_cols)) {
-    for (nm in span_cols) {
-      if (!nm %in% nms) {
-        stop(paste0("Variable '", nm, "' does not exist in data."))
-        
-      }
+  
+  if (is.character(f)) {
+    if (!f %in% nms) {
+      stop(paste0("From variable '", f, "' does not exist in data."))
+
     }
-  } else if (is.numeric(span_cols)) {
-    s <- seq(from = 1, to = length(nms))
-    for (elem in span_cols) {
-      if (!elem %in% s) {
-        stop(paste0("Variable position '", elem, "' does not exist in data."))
-        
-      }
+  }
+  
+  if (is.character(t)) {
+    if (!t %in% nms) {
+      stop(paste0("To variable '", t, "' does not exist in data."))
+      
     }
-    
-  } else
-    stop("span_cols parameter value is invalid.")
+  }
+  
+  if (is.numeric(f)) {
+
+      if (!(f > 0 & f <= ncol(x$data))) {
+        stop(paste0("From variable position '", f, "' is invalid."))
+
+      } else
+        f <- nms[[f]]
+  } 
+  
+  if (is.numeric(t)) {
+
+    if (!(t > 0 & t <= ncol(x$data))) {
+      stop(paste0("To variable position '", t, "' is invalid."))
+      
+    } else 
+      t <- nms[[t]]
+  } 
   
   if (!label_align %in% c("left", "right", "center", "centre")) {
    stop(paste0("label_align '", label_align, "' is invalid. ",
@@ -774,7 +796,15 @@ spanning_header <- function(x, span_cols, label = "",
   
   sh <- structure(list(), class = c("span_def", "list"))
   
-  sh$span_cols = span_cols
+  # Get spanning range
+  nms <- names(x$data)
+  startpos <- match(f, nms)
+  endpos <- match(t, nms)
+  spn <- nms[startpos:endpos]
+  
+  sh$span_cols <- spn
+  sh$from = f
+  sh$to = t
   sh$label = label
   sh$label_align = label_align
   sh$level = level

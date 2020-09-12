@@ -406,10 +406,10 @@ test_that("user4: Adverse Events table works.", {
   final <- bind_rows(df2, df1)
   
   tbl <- create_table(final, first_row_blank = TRUE) %>% 
-    spanning_header(c("ARM A_1", "ARM A_2", "ARM A_3"), label = "ARM A", n = arm_pop["ARM A"]) %>%
-    spanning_header(c("ARM B_1", "ARM B_2", "ARM B_3"), label = "ARM B", n = arm_pop["ARM B"]) %>%
-    spanning_header(c("ARM C_1", "ARM C_2", "ARM C_3"), label = "ARM C", n = arm_pop["ARM C"]) %>%
-    spanning_header(c("ARM D_1", "ARM D_2", "ARM D_3"), label = "ARM D", n = arm_pop["ARM D"]) %>%
+    spanning_header("ARM A_1", "ARM A_3", label = "ARM A", n = arm_pop["ARM A"]) %>%
+    spanning_header("ARM B_1", "ARM B_3", label = "ARM B", n = arm_pop["ARM B"]) %>%
+    spanning_header("ARM C_1", "ARM C_3", label = "ARM C", n = arm_pop["ARM C"]) %>%
+    spanning_header("ARM D_1", "ARM D_3", label = "ARM D", n = arm_pop["ARM D"]) %>%
     stub(vars = c("AESOC", "AEDECOD"), label = "System Organ Class\n   Preferred Term", width = 5) %>% 
     define(AESOC, blank_after = TRUE, label_row = TRUE) %>% 
     define(AEDECOD, indent = .25) %>% 

@@ -1,0 +1,120 @@
+                                  Table 1.0
+                            MTCARS Spanning Header
+
+                                                      Super Span
+                                                 -------------------
+                                   Span 1               Span 2
+                                   (N=10)               (N=10)
+                           --------------------- -------------------
+        Vehicle              mpg cyl   disp   hp  drat     wt   qsec
+        ------------------------------------------------------------
+        Mazda RX4           21.0   6    160  110   3.9   2.62  16.46
+        Mazda RX4 Wag       21.0   6    160  110   3.9  2.875  17.02
+        Datsun 710          22.8   4    108   93  3.85   2.32  18.61
+        Hornet 4 Drive      21.4   6    258  110  3.08  3.215  19.44
+        Hornet Sportabout   18.7   8    360  175  3.15   3.44  17.02
+        Valiant             18.1   6    225  105  2.76   3.46  20.22
+        Duster 360          14.3   8    360  245  3.21   3.57  15.84
+        Merc 240D           24.4   4  146.7   62  3.69   3.19     20
+        Merc 230            22.8   4  140.8   95  3.92   3.15   22.9
+        Merc 280            19.2   6  167.6  123  3.92   3.44   18.3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  Table 1.0
+                            MTCARS Spanning Header
+
+                                           Super Span
+                                          ------------
+                                             Span 3
+                                             (N=10)
+                                          ------------
+                       Vehicle            vs gear carb
+                       -------------------------------
+                       Mazda RX4           0    4    4
+                       Mazda RX4 Wag       0    4    4
+                       Datsun 710          1    4    1
+                       Hornet 4 Drive      1    3    1
+                       Hornet Sportabout   0    3    2
+                       Valiant             1    3    1
+                       Duster 360          0    3    4
+                       Merc 240D           1    4    2
+                       Merc 230            1    4    2
+                       Merc 280            1    4    4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

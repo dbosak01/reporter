@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Create statistical reports
-Version: 0.0.0.9015
+Version: 0.0.0.9016
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports, 

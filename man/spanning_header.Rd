@@ -6,7 +6,8 @@
 \usage{
 spanning_header(
   x,
-  span_cols,
+  from,
+  to,
   label = "",
   label_align = "center",
   level = 1,
@@ -16,10 +17,13 @@ spanning_header(
 \arguments{
 \item{x}{The table object to add spanning headers to.}
 
-\item{span_cols}{The columns to span.  The spanning columns may be defined as
-a vector of column positions or quoted names. You may also supply a named 
-vector, with the names "from" and "to" equal to the starting and 
-ending columns to span.}
+\item{from}{The starting column to span.  The spanning columns are defined as
+range of columns 'from' and 'to'. The column names may be quoted or unquoted.
+The \code{from} parameter is required.}
+
+\item{to}{The ending column to span.  The spanning columns are defined as
+range of columns 'from' and 'to'. The column names may be quoted or unquoted.
+The \code{to} parameter is required.}
 
 \item{label}{The label to apply to the spanning header.}
 
@@ -68,14 +72,10 @@ df <- data.frame(vehicle = rownames(dat), dat)
 # Define Table with spanning headers
 tbl <- create_table(df) \%>\% 
   titles("Table 1.0", "MTCARS Spanning Headers") \%>\% 
-  spanning_header(span_cols = c("mpg", "cyl", "hp"),
-                  label = "Span 1", n = 10) \%>\%
-  spanning_header(span_cols = c("drat", "wt", "qsec"),
-                  label = "Span 2", n = 10) \%>\%
-  spanning_header(span_cols = c("vs", "gear", "carb"),
-                  label = "Span 3", n = 10) \%>\%
-  spanning_header(span_cols = c(from = "drat", to = "carb"), 
-                  label = "Super Span", level = 2) \%>\%
+  spanning_header(mpg, hp, label = "Span 1", n = 10) \%>\%
+  spanning_header(drat, qsec, label = "Span 2", n = 10) \%>\%
+  spanning_header(vs, carb, label = "Span 3", n = 10) \%>\%
+  spanning_header(drat, carb, label = "Super Span", level = 2) \%>\%
   define(vehicle, label = "Vehicle") \%>\% 
   define(mpg, format = "\%.1f") \%>\% 
   define(disp, visible = FALSE) \%>\% 
