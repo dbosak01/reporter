@@ -4,7 +4,15 @@
 \alias{options_fixed}
 \title{Set options for a report (fixed width font)}
 \usage{
-options_fixed(x, editor = NULL, cpuom = NULL, lpuom = NULL, min_margin = NULL)
+options_fixed(
+  x,
+  editor = NULL,
+  cpuom = NULL,
+  lpuom = NULL,
+  min_margin = NULL,
+  blank_margins = FALSE,
+  font_size = 12
+)
 }
 \arguments{
 \item{x}{The report spec.}
@@ -28,6 +36,15 @@ will be used to determine the number of lines that can fit on a page.}
 \item{min_margin}{The editor minimum margin.  When the units of measure
 is set to centimeters, this parameter defaults to 1.  When the units of 
 measure is set to inches, the parameter defaults to .394.}
+
+\item{blank_margins}{When this option is TRUE, \strong{rptr} will use blank 
+spaces and blank rows to create left and top margins, rather than rely 
+on the editor to set margins.  When used, editor margins
+should be set to zero.  Valid values are TRUE and FALSE. Default is
+FALSE.  This option is only valid for \code{output_type = 'text'}.}
+
+\item{font_size}{The size of the font in points.  Default is 12pt.  This
+option is only valid for output type PDF.}
 }
 \value{
 The updated report spec.

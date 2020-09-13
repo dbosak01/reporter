@@ -280,7 +280,7 @@ page_setup <- function(rs) {
   
   # Calculate blank margins, if specified
   if (rs$blank_margins) {
-    rs$blank_margin_top <- ceiling((rs$margin_top - rs$min_margin) / rs$line_height)
+    rs$blank_margin_top <- floor((rs$margin_top - rs$min_margin) / rs$line_height)
   } else 
     rs$blank_margin_top <- 0
   if (debug)

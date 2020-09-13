@@ -862,8 +862,8 @@ test_that("test23: Blank margins setting works as expected.", {
     file.remove(fp)
   
   rpt <- create_report(fp) %>% 
-    options_fixed(editor = "word") %>% 
-    set_margins(blank_margins = TRUE, top = 1) %>% 
+    options_fixed(editor = "word", blank_margins = TRUE) %>% 
+    set_margins(top = 1) %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
   
@@ -1163,6 +1163,99 @@ test_that("test31: Table width parameter works for less than full width.", {
 })
 
 
+test_that("test32: Simplest PDF report works as expected.", {
+  
+  fp <- file.path(base_path, "output/test32.pdf")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    column_defaults(width = .5) %>% 
+    define(vs, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF") %>% 
+    titles("MTCARS Data Frame") %>% 
+    set_margins(top = 1) %>% 
+    add_content(tbl, align = "left")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
+
+
+test_that("test33: Two page PDF report works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test33.pdf")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 5))
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+  
+  df1 <- df[df$arm == "A", ]
+  df2 <- df[df$arm == "B", ]
+  
+  afmt <- value(condition(x == "A", "Placebo"),
+                condition(x == "B", "Treatment 1"))
+  
+  sfmt1 <- value(condition(x == "M", "Male"),
+                 condition(x == "F", "Female"),
+                 condition(TRUE, "Other"))
+  
+  sfmt2 <- c(M = "Male", F = "Female")
+  
+  tbl1 <- create_table(df1, width = 7) %>%
+    define(sex, width = 1, format = sfmt1) %>%
+    define(name, width = 2) %>% 
+    define(age, width = 1, align = "left")
+  
+  tbl2 <- create_table(df2, width = 7) %>%
+    define(sex, width = 1, format = sfmt2) %>%
+    define(age, format = "%0d%%", align = "left") %>%
+    define(name, width = 2) %>% 
+    define(arm, format = afmt, width = 2, align = "right")
+  
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    options_fixed(font_size = 12) %>% 
+    set_margins(top = 1, bottom = .8) %>% 
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", 
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R") %>%
+    page_footer(left = "Time", center = "Confidential", 
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1) %>%
+    add_content(tbl2)
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
 
 # 
 # test_that("test28: Table width parameter less than sum of columns works.", {

@@ -4,14 +4,7 @@
 \alias{set_margins}
 \title{Set page margins}
 \usage{
-set_margins(
-  x,
-  top = NULL,
-  bottom = NULL,
-  left = NULL,
-  right = NULL,
-  blank_margins = FALSE
-)
+set_margins(x, top = NULL, bottom = NULL, left = NULL, right = NULL)
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -23,12 +16,6 @@ set_margins(
 \item{left}{The left margin.}
 
 \item{right}{The right margin.}
-
-\item{blank_margins}{When this option is TRUE, \strong{rptr} will use blank 
-spaces and blank rows to create left and top margins, rather than rely 
-on the editor to set margins.  When used, editor margins
-should be set to zero.  Valid values are TRUE and FALSE. Default is
-FALSE.  This option is only valid for \code{output_type = 'text'}.}
 }
 \value{
 The report_spec with margins set as desired.

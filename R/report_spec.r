@@ -176,17 +176,7 @@ create_report <- function(file_path = "", output_type = "text",
 
 # Options -----------------------------------------------------------------
 
-#' @description This is a lookup table to get standard settings for various 
-#' editors.
-#' @noRd
-editor_settings <- read.table(header = TRUE, text = '
-                    editor          cpi     cpcm     lpi     lpcm
-                    editplus    14.6565    5.769   6.857   2.7027
-                    notepad          12   4.7619  5.6805   2.2305
-                    notepad++        12   4.7619   6.531   2.5862
-                    word         11.497   4.5454  6.1146      2.4
-                    wordpad      10.909   4.3165  6.1146      2.4
-                               ') 
+
 
 
 #' @title
@@ -224,6 +214,21 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
   
   return(x)
 }
+
+
+#' @description This is a lookup table to get standard settings for various 
+#' editors.
+#' @noRd
+editor_settings <- read.table(header = TRUE, text = '
+                    editor          cpi     cpcm     lpi     lpcm    mmi   mmcm
+                    editplus    14.6565    5.769   6.857   2.7027      0      0
+                    notepad          12   4.7619  5.6805   2.2305      0      0
+                    notepad++        12   4.7619   6.531   2.5862  0.393      1
+                    word         11.497   4.5454  6.1146      2.4      0      0
+                    wordpad      10.909   4.3165  6.1146      2.4      0      0
+                    pdf12         12.25   4.7430     5.5   2.0565  .1967     .5
+                    pdf10       14.2222   5.6074  6.2337   2.4590  .1967     .5
+                               ') 
 
 #' @title
 #' Set options for a report (fixed width font)
@@ -275,6 +280,13 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' @param min_margin The editor minimum margin.  When the units of measure
 #' is set to centimeters, this parameter defaults to 1.  When the units of 
 #' measure is set to inches, the parameter defaults to .394.
+#' @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
+#' spaces and blank rows to create left and top margins, rather than rely 
+#' on the editor to set margins.  When used, editor margins
+#' should be set to zero.  Valid values are TRUE and FALSE. Default is
+#' FALSE.  This option is only valid for \code{output_type = 'text'}.
+#' @param font_size The size of the font in points.  Default is 12pt.  This
+#' option is only valid for output type PDF.
 #' @return The updated report spec.
 #' @seealso \code{\link{create_report}} to create a report and set the unit
 #' of measure, \code{\link{write_registration_file}} to determine the 
@@ -298,75 +310,103 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' 
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
-                          min_margin = NULL) {
+                          min_margin = NULL, blank_margins = FALSE,
+                          font_size = 12) {
   
-  if (is.null(editor)) {
-    # Trap missing or invalid cpuom parameter.
-    if (is.null(cpuom))
-      x$cpuom <- if (x$units == "inches") 12 else 4.687
-    else if (!(cpuom >= 8 & cpuom <= 14)) {
+  if (x$output_type == "text") {
+    if (is.null(editor)) {
+      # Trap missing or invalid cpuom parameter.
+      if (is.null(cpuom))
+        x$cpuom <- if (x$units == "inches") 12 else 4.687
+      else if (!(cpuom >= 8 & cpuom <= 14)) {
+        
+        stop(paste0("ERROR: cpi parameter on create_report() ",
+                    "function is invalid: '", cpuom,
+                    "'\n\tValue must be between 0 and 15."))
+      }
+      else
+        x$cpuom <- cpuom
+        
+      # Trap missing or invalid lpuom parameter.
+      if (is.null(lpuom))
+        x$lpuom <- if (x$units == "inches") 6 else 2.55
+      else if (!(lpuom > 0 & lpuom <= 10)) {
+        
+        stop(paste0("ERROR: lpuom parameter on create_report() ",
+                    "function is invalid: '", lpuom,
+                    "'\n\tValue must be between 0 and 10."))
+      }
+      else
+        x$lpuom <- lpuom
+        
+      if (!is.null(min_margin)) {
+        if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
+          stop("ERROR: invalid value for min_margin")
+        }
+        else
+          x$min_margin = min_margin
+      }
+  
+    } else {
       
-      stop(paste0("ERROR: cpi parameter on create_report() ",
-                  "function is invalid: '", cpuom,
-                  "'\n\tValue must be between 0 and 15."))
+      if (!tolower(editor) %in% c("notepad", "word", "wordpad", "notepad++",
+                                  "editplus")) {
+        
+       stop(paste("editor parameter invalid.  Valid values are:", 
+                  "'notepad', 'word', 'wordpad', 'notepad++','editplus'"))
+      }
+      
+      e <- editor_settings[editor_settings$editor == tolower(editor), ]
+      
+      x$editor <- editor
+      
+      # Set columns per unit of measure
+      # and lines per unit of measure
+      if (x$units == "inches") {
+        x$cpuom <- e$cpi
+        x$lpuom <- e$lpi
+        x$min_margin <- e$mmi
+      } else {
+        x$cpuom <- e$cpcm
+        x$lpuom <- e$lpcm
+        x$min_margin <- e$mmcm
+      }
+      
+      # print(paste("cpuom:", x$cpuom))
+      # print(paste("lpuom:", x$lpuom))
     }
-    else
-      x$cpuom <- cpuom
-      
-    # Trap missing or invalid lpuom parameter.
-    if (is.null(lpuom))
-      x$lpuom <- if (x$units == "inches") 6 else 2.55
-    else if (!(lpuom > 0 & lpuom <= 10)) {
-      
-      stop(paste0("ERROR: lpuom parameter on create_report() ",
-                  "function is invalid: '", lpuom,
-                  "'\n\tValue must be between 0 and 10."))
-    }
-    else
-      x$lpuom <- lpuom
-      
-
-
-  } else {
     
-    if (!tolower(editor) %in% c("notepad", "word", "wordpad", "notepad++",
-                                "editplus")) {
-      
-     stop(paste("editor parameter invalid.  Valid values are:", 
-                "'notepad', 'word', 'wordpad', 'notepad++','editplus'"))
-    }
+    x$blank_margins <- blank_margins
+  
+  } else if (x$output_type == "PDF") {
     
-    e <- editor_settings[editor_settings$editor == tolower(editor), ]
+    x$font_size = font_size
     
-    x$editor <- editor
+    if (font_size == 12)
+      e <- editor_settings[editor_settings$editor == "pdf12", ]
+    else if (font_size == 10)
+      e <- editor_settings[editor_settings$editor == "pdf10", ]
+    else 
+      stop("Invalid font_size setting.  Valid values are 10 and 12")
     
-    # Set columns per unit of measure
-    # and lines per unit of measure
+    # Set cpuom and lpuom
     if (x$units == "inches") {
       x$cpuom <- e$cpi
       x$lpuom <- e$lpi
+      x$min_margin <- e$mmi
     } else {
       x$cpuom <- e$cpcm
       x$lpuom <- e$lpcm
+      x$min_margin <- e$mmcm
     }
     
-    # print(paste("cpuom:", x$cpuom))
-    # print(paste("lpuom:", x$lpuom))
+    x$blank_margins <- TRUE
+    
   }
-  
-  if (!is.null(min_margin)) {
-    if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
-      stop("ERROR: invalid value for min_margin")
-    }
-    else
-      x$min_margin = min_margin
-  }
-  else
-    x$min_margin = if (x$units == "inches") .394 else 1
   
   x$char_width <- 1 / x$cpuom
   x$line_height <- 1 / x$lpuom
-    
+
   
   return(x)
   
@@ -399,11 +439,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' @param bottom The bottom margin.
 #' @param left The left margin.
 #' @param right The right margin.
-#' @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
-#' spaces and blank rows to create left and top margins, rather than rely 
-#' on the editor to set margins.  When used, editor margins
-#' should be set to zero.  Valid values are TRUE and FALSE. Default is
-#' FALSE.  This option is only valid for \code{output_type = 'text'}.
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
@@ -424,8 +459,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' 
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
-                           left=NULL, right=NULL,
-                           blank_margins = FALSE) {
+                           left=NULL, right=NULL) {
 
   if (!is.null(top)) {
     if (is.na(top) | top < 0 | !is.numeric(top)){
@@ -467,8 +501,6 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   else
     x$margin_right = if (x$units == "inches") 1 else 2.54
 
-  
-  x$blank_margins <- blank_margins
 
   return(x)
 }
@@ -1034,6 +1066,10 @@ write_report <- function(x) {
 
   if (x$output_type == "text") {
     ret <- write_report_text(x)
+  } else if (x$output_type == "PDF") {
+    
+      ret <- write_report_pdf(x)
+
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
   }

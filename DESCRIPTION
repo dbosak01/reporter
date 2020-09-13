@@ -21,10 +21,10 @@ Suggests:
     dplyr,
     tidyr,
     readr,
-    knitr,
-    rmarkdown
+    knitr
 Imports: fmtr,
          qlcMatrix,
-         stringi
+         stringi,
+         rmarkdown
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
