@@ -46,7 +46,7 @@ specified on the \code{\link{create_report}} function.
 \details{
 The margins set with \code{set_margins} will be used for the entire report.  
 Units for the margins
-are specified by the \code{uom} parameter on the 
+are specified by the \code{units} parameter on the 
 \code{\link{create_report}} function.  Available units are 'inches' and 'cm'.
 When the unit of measure is inches, default margins are 1 inch on the left and 
 right, and .5 inches on top and bottom.  When the unit of measure is 

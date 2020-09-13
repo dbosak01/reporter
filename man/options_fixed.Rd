@@ -17,7 +17,7 @@ is used, any settings for \code{cpuom} and \code{lpuom} will be
 ignored.}
 
 \item{cpuom}{Characters per unit of measure of printed text.
-If uom is inches, the default is 12.  If uom is centimeters (cm), the 
+If units is inches, the default is 12.  If units is centimeters (cm), the 
 default is 4.687.  This value will be used to 
 determine how many characters can fit on a line.}
 

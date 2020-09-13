@@ -10,7 +10,7 @@ Description: Contains functions to create regulatory-style statistical reports,
     DOCX in future releases.  The package specializes in printing
     wide and long tables with automatic page wrapping and splitting.  
     Reports can be generated with a minimum of function calls, and without 
-    relying on RMarkdown or pandoc.  The package supports titles, footnotes, 
+    relying on other table packages.  The package supports titles, footnotes, 
     page header, page footers, spanning headers, and automatic page numbering.
 License: CC0
 Encoding: UTF-8

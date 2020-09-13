@@ -336,9 +336,9 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
 
 
 #' @noRd
-get_page_size <- function(paper_size, uom) {
+get_page_size <- function(paper_size, units) {
 
-  if (uom == "inches") {
+  if (units == "inches") {
     if (paper_size == "letter")
       ret <- c(8.5, 11)
     else if (paper_size == "legal")
@@ -348,7 +348,7 @@ get_page_size <- function(paper_size, uom) {
     else if (paper_size == "RD4")
       ret <- c(7.7, 10.7)
     
-  } else if (uom == "cm") {
+  } else if (units == "cm") {
     if (paper_size == "letter")
       ret <- c(21.59, 27.94)
     else if (paper_size == "legal")
@@ -691,7 +691,7 @@ get_header_height <- function(rs) {
     # # Add buffer for table margins, etc.
     # buff <- .1  # Will need to adjust this
     # 
-    # if (rs$uom == "cm") {
+    # if (rs$units == "cm") {
     #   hh <- ccm(hh)
     #   th <- ccm(th)
     #   buff <- ccm(buff)
@@ -733,7 +733,7 @@ get_footer_height <- function(rs) {
     # # Add buffer for table margins, etc.
     # buff <- .1  # Need to adjust
     # 
-    # if (rs$uom == "cm") {
+    # if (rs$units == "cm") {
     #   fh <- ccm(fh)
     #   fth <- ccm(fth)
     #   buff <- ccm(buff)

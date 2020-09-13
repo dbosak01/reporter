@@ -46,7 +46,7 @@ additional information, see the help for that package.}
 Valid values are "left", "right", "center", and "centre".}
 
 \item{width}{The width of the column in the specified units of measure.
-The units of measure are specified on the \code{uom} parameter of the
+The units of measure are specified on the \code{units} parameter of the
 \code{\link{create_report}} function.  If no width is supplied, the
 \code{\link{write_report}} function will assign a default width based on the 
 width of the column data and the label.  \code{write_report} will not set a 
@@ -84,7 +84,7 @@ If two or more variables are defined as a page break, an error will be
 generated.}
 
 \item{indent}{How much to indent the column values.  Parameter takes a 
-numeric value that will be interpreted according to the \code{uom} 
+numeric value that will be interpreted according to the \code{units} 
 (Unit Of Measure) setting on the report.  This parameter can be used to 
 help create a stub column.  The default value is NULL, meaning the column
 should not be indented.}

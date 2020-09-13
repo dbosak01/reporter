@@ -8,7 +8,7 @@ create_report(
   file_path = "",
   output_type = "text",
   orientation = "landscape",
-  uom = "inches",
+  units = "inches",
   paper_size = "letter",
   missing = ""
 )
@@ -25,7 +25,7 @@ is "text".  Default is "text".  Will eventually support "RTF", "PDF", and
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}
 
-\item{uom}{Specifies the units of measurement.  This setting will 
+\item{units}{Specifies the units of measurement.  This setting will 
 indicate the units for columns widths, margins, paper size, and other 
 measurements. Valid values are "inches" or "cm" (centimeters).  
 Default value is "inches".}

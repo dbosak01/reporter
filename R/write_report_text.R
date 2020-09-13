@@ -234,7 +234,7 @@ page_setup <- function(rs) {
     print(paste("Character width:", rs$char_width))
   }
   
-  # Content size is the page size minus margins, in uom
+  # Content size is the page size minus margins, in units of measure
   rs$content_size <- get_content_size(rs)
   if (debug)
     print(paste0("Content Size: ", rs$content_size))

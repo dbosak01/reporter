@@ -9,24 +9,37 @@
 #' S3 object of class 'table_spec'. The object can be added to a report
 #' using the \code{\link{add_content}} function.
 #' @details 
-#' A table specification is a container to hold information about a table.  The 
+#' A table object is a container to hold information about a table.  The 
 #' only required information for a table is the table data.  All other 
 #' parameters and functions are optional.
 #' 
 #' By default, the table will display all columns in the data frame.  To change
 #' this default, use the \code{show_cols} parameter.  Setting this parameter
 #' to 'none' will display none of the columns in the data, unless they are
-#' explicitly defined with a \code{\link{define}} function.  
+#' explicitly defined with a \code{\link{define}} function.  The 
+#' \code{show_cols} parameter also accepts a vector of quoted column names.
+#' When supplied, \code{create_table} will display only
+#' those columns on the report.  
 #' 
-#' The \code{show_cols} parameter also accepts a vector of quoted column names.
-#' The column name vector performs two functions.  First, it will display only
-#' those columns on the report.  Second, it will display them in the order
-#' specified in the vector.  The \code{show_cols} parameter is the easiest way 
-#' to change the column order of the table.
+#' Column parameters can be specified in three ways.  By default, formatting
+#' attributes assigned to the data frame will be passed through to the 
+#' reporting functions.  This default behavior can be modifed with the 
+#' \code{use_attributes} parameter on \code{create_table}.
+#' 
+#' Secondly, parameters can be specified using the \code{\link{column_defaults}}
+#' function.  This function allows the user to apply a default set of parameters
+#' to one or more columns.  If no columns are specified in the \code{var} 
+#' parameter of this function, the defaults will apply to all columns.  Any 
+#' default parameters can be overridden by the \code{\link{define}} function.
+#' 
+#' Lastly, the \code{\link{define}} function provides the most control over 
+#' columns parameters.  This function provides a significant amount of 
+#' functionality that cannot be specified elsewhere.  See the 
+#' \code{\link{define}} function for additional information.
 #' 
 #' The \code{create_table} function also provides the capabilities to create
 #' a "headerless" table.  A headerless table is useful when combining two tables 
-#' into one report.
+#' into one report.  The example below illustrates use of a headerless table.
 #' 
 #' Since the purpose of the \strong{rptr} package is to create statistical 
 #' reports, the \code{create_table} function makes it easy to add population
@@ -54,7 +67,7 @@
 #' frame into \code{create_table}, and don't override the label value on a 
 #' \code{define} function, the label will appear as a column header on the
 #' table.  The \code{use_attributes} parameter allows you to control the default
-#' behavior, and use or ignore attributes as desired.  
+#' behavior, and use or ignore data frame attributes as desired.  
 #' @param width The expected width of the table in the report units of 
 #' measure.  By default, the width setting is NULL, and columns will be sized
 #' according to the width of the data and labels.  If the width parameter is 
@@ -221,7 +234,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @param label_align How to align the header labels for this column.
 #' Valid values are "left", "right", "center", and "centre".
 #' @param width The width of the column in the specified units of measure.
-#' The units of measure are specified on the \code{uom} parameter of the
+#' The units of measure are specified on the \code{units} parameter of the
 #' \code{\link{create_report}} function.  If no width is supplied, the
 #' \code{\link{write_report}} function will assign a default width based on the 
 #' width of the column data and the label.  \code{write_report} will not set a 
@@ -251,7 +264,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' If two or more variables are defined as a page break, an error will be 
 #' generated.
 #' @param indent How much to indent the column values.  Parameter takes a 
-#' numeric value that will be interpreted according to the \code{uom} 
+#' numeric value that will be interpreted according to the \code{units} 
 #' (Unit Of Measure) setting on the report.  This parameter can be used to 
 #' help create a stub column.  The default value is NULL, meaning the column
 #' should not be indented.
@@ -485,7 +498,7 @@ define_c <- function(var, label = NULL, format = NULL,
 #' @param label_align How to align the header labels for this column.
 #' Valid values are "left", "right", "center", and "centre".
 #' @param width The width of the column in the specified units of measure.
-#' The units of measure are specified on the \code{uom} parameter of the
+#' The units of measure are specified on the \code{units} parameter of the
 #' \code{\link{create_report}} function.  If no width is supplied, the
 #' \code{\link{write_report}} function will assign a default width based on the 
 #' width of the column data and the label.  \code{write_report} will not set a 

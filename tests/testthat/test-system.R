@@ -152,7 +152,7 @@ test_that("test4: Two page report works as expected.", {
     define(arm, format = afmt, width = 2)
   
 
-  rpt <- create_report(fp, uom = "inches", paper_size = "letter") %>%
+  rpt <- create_report(fp, units = "inches", paper_size = "letter") %>%
     options_fixed(editor = "notepad++") %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
@@ -1130,6 +1130,39 @@ test_that("test30: multiple vars on define work as expected.", {
   expect_equal(length(lns), res$pages * res$line_count)
 
 })
+
+
+
+
+
+test_that("test31: Table width parameter works for less than full width.", {
+  
+  
+  fp <- file.path(base_path, "output/test31.out")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  tbl1 <- create_table(mtcars[1:10, 1:6], width = 7) 
+  tbl2 <- create_table(mtcars[11:20, 1:6]) 
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    add_content(tbl1, align = "left", page_break = FALSE) %>% 
+    add_content(tbl2, align = "left")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), 1 * res$line_count)
+  
+})
+
+
 
 # 
 # test_that("test28: Table width parameter less than sum of columns works.", {

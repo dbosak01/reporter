@@ -94,7 +94,7 @@ test_that("add_content works as expected.", {
 test_that("create_report parameter checks work as expected.", {
   
   
-  expect_error(create_report(uom = "fork"))
+  expect_error(create_report(units = "fork"))
   expect_error(create_report(output_type = "fork"))
   expect_error(create_report(orientation = "fork"))
   expect_error(create_report(paper_size = "fork"))

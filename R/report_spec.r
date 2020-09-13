@@ -48,7 +48,7 @@
 #' "DOCX".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
-#' @param uom Specifies the units of measurement.  This setting will 
+#' @param units Specifies the units of measurement.  This setting will 
 #' indicate the units for columns widths, margins, paper size, and other 
 #' measurements. Valid values are "inches" or "cm" (centimeters).  
 #' Default value is "inches".
@@ -99,7 +99,7 @@
 #' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' @export
 create_report <- function(file_path = "", output_type = "text", 
-                          orientation ="landscape", uom = "inches",
+                          orientation ="landscape", units = "inches",
                           paper_size = "letter", missing = "") {
 
   x <- structure(list(), class = c("report_spec", "list"))
@@ -120,11 +120,11 @@ create_report <- function(file_path = "", output_type = "text",
                 "'\n\tValid values are: 'landscape' or 'portrait'."))
   }
   
-  # Trap missing or invalid uom parameter.
-  if (!uom %in% c("inches", "cm")) {
+  # Trap missing or invalid units parameter.
+  if (!units %in% c("inches", "cm")) {
     
-    stop(paste0("uom parameter on ",
-                "create_report() function is invalid: '", uom,
+    stop(paste0("units parameter on ",
+                "create_report() function is invalid: '", units,
                 "'\n\tValid values are: 'inches' or 'cm'."))
   }
   
@@ -142,9 +142,9 @@ create_report <- function(file_path = "", output_type = "text",
   x$output_type <- output_type
   x$orientation <- orientation
   x$content <- list()           # Initialize content list
-  x$uom <- uom                  # Unit of measure
+  x$units <- units              # Unit of measure
   x$paper_size <- paper_size
-  x$page_size <- get_page_size(paper_size, uom)
+  x$page_size <- get_page_size(paper_size, units)
   x$pages <- 1                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
 
@@ -154,7 +154,7 @@ create_report <- function(file_path = "", output_type = "text",
     # Set default options for text
     # This sets line_height and char_width
     # which are needed for all conversions from 
-    # uom to text
+    # units to text
     x <- options_fixed(x)
     
   } 
@@ -262,7 +262,7 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' is used, any settings for \code{cpuom} and \code{lpuom} will be 
 #' ignored.
 #' @param cpuom Characters per unit of measure of printed text.    
-#' If uom is inches, the default is 12.  If uom is centimeters (cm), the 
+#' If units is inches, the default is 12.  If units is centimeters (cm), the 
 #' default is 4.687.  This value will be used to 
 #' determine how many characters can fit on a line.  
 #' @param lpuom Lines per unit of measure of the printed text. Default for 
@@ -295,7 +295,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
   if (is.null(editor)) {
     # Trap missing or invalid cpuom parameter.
     if (is.null(cpuom))
-      x$cpuom <- if (x$uom == "inches") 12 else 4.687
+      x$cpuom <- if (x$units == "inches") 12 else 4.687
     else if (!(cpuom >= 8 & cpuom <= 14)) {
       
       stop(paste0("ERROR: cpi parameter on create_report() ",
@@ -307,7 +307,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
       
     # Trap missing or invalid lpuom parameter.
     if (is.null(lpuom))
-      x$lpuom <- if (x$uom == "inches") 6 else 2.55
+      x$lpuom <- if (x$units == "inches") 6 else 2.55
     else if (!(lpuom > 0 & lpuom <= 10)) {
       
       stop(paste0("ERROR: lpuom parameter on create_report() ",
@@ -334,7 +334,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
     
     # Set columns per unit of measure
     # and lines per unit of measure
-    if (x$uom == "inches") {
+    if (x$units == "inches") {
       x$cpuom <- e$cpi
       x$lpuom <- e$lpi
     } else {
@@ -362,7 +362,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @details
 #' The margins set with \code{set_margins} will be used for the entire report.  
 #' Units for the margins
-#' are specified by the \code{uom} parameter on the 
+#' are specified by the \code{units} parameter on the 
 #' \code{\link{create_report}} function.  Available units are 'inches' and 'cm'.
 #' When the unit of measure is inches, default margins are 1 inch on the left and 
 #' right, and .5 inches on top and bottom.  When the unit of measure is 
@@ -424,7 +424,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
       x$margin_top = top
   }
   else
-    x$margin_top = if (x$uom == "inches") .5 else 1.27
+    x$margin_top = if (x$units == "inches") .5 else 1.27
   
   if (!is.null(bottom)) {
     if (is.na(bottom) | bottom < 0| !is.numeric(bottom)){
@@ -434,7 +434,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
       x$margin_bottom = bottom
   }
   else
-    x$margin_bottom = if (x$uom == "inches") .5 else 1.27
+    x$margin_bottom = if (x$units == "inches") .5 else 1.27
   
   if (!is.null(left)) {
     if (is.na(left) | left < 0| !is.numeric(left)){
@@ -444,7 +444,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
       x$margin_left = left
   }
   else
-    x$margin_left = if (x$uom == "inches") 1 else 2.54
+    x$margin_left = if (x$units == "inches") 1 else 2.54
   
   if (!is.null(right)) {
     if (is.na(right) | right < 0| !is.numeric(right)){
@@ -454,7 +454,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
       x$margin_right = right
   }
   else
-    x$margin_right = if (x$uom == "inches") 1 else 2.54
+    x$margin_right = if (x$units == "inches") 1 else 2.54
 
   if (!is.null(min_margin)) {
     if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
@@ -464,7 +464,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
       x$min_margin = min_margin
   }
   else
-    x$min_margin = if (x$uom == "inches") .394 else 1
+    x$min_margin = if (x$units == "inches") .394 else 1
   
   x$blank_margins <- blank_margins
 
