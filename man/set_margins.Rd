@@ -10,7 +10,6 @@ set_margins(
   bottom = NULL,
   left = NULL,
   right = NULL,
-  min_margin = NULL,
   blank_margins = FALSE
 )
 }
@@ -24,10 +23,6 @@ set_margins(
 \item{left}{The left margin.}
 
 \item{right}{The right margin.}
-
-\item{min_margin}{The printer minimum margin.  When the units of measure
-is set to centimeters, this parameter defaults to 1.  When the units of 
-measure is set to inches, the parameter defaults to .394.}
 
 \item{blank_margins}{When this option is TRUE, \strong{rptr} will use blank 
 spaces and blank rows to create left and top margins, rather than rely 
@@ -52,10 +47,6 @@ When the unit of measure is inches, default margins are 1 inch on the left and
 right, and .5 inches on top and bottom.  When the unit of measure is 
 centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 on top and bottom.
-
-The \code{min_margin} parameter is used to set the minimum margin allowed
-by the printer.  This value will be subtracted from the margin settings 
-when the \code{blank_margins} option is used.  
 
 Note that when using output type of text, and not using the 
 \code{blank_margins} option, setting the margins only reduces

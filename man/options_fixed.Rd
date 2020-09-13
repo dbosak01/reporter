@@ -4,7 +4,7 @@
 \alias{options_fixed}
 \title{Set options for a report (fixed width font)}
 \usage{
-options_fixed(x, editor = NULL, cpuom = NULL, lpuom = NULL)
+options_fixed(x, editor = NULL, cpuom = NULL, lpuom = NULL, min_margin = NULL)
 }
 \arguments{
 \item{x}{The report spec.}
@@ -24,6 +24,10 @@ determine how many characters can fit on a line.}
 \item{lpuom}{Lines per unit of measure of the printed text. Default for 
 inches is 6. The default for centimeters (cm) is 2.55.  This value 
 will be used to determine the number of lines that can fit on a page.}
+
+\item{min_margin}{The editor minimum margin.  When the units of measure
+is set to centimeters, this parameter defaults to 1.  When the units of 
+measure is set to inches, the parameter defaults to .394.}
 }
 \value{
 The updated report spec.
@@ -54,6 +58,10 @@ unit of measure for you.  If the editor is not available in the
 set the \code{cpuom} and 
 \code{lpuom} parameters manually.  To determine your \code{cpuom}
 and \code{lpuom}, see the help for \code{\link{write_registration_file}}.
+
+The \code{min_margin} parameter is used to set the minimum margin allowed
+by the editor.  This value will be subtracted from the margin settings 
+when the \code{blank_margins} option is used.
 }
 \examples{
 library(rptr)

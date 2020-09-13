@@ -105,11 +105,11 @@ create_report <- function(file_path = "", output_type = "text",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!output_type %in% c("text")) {
+  if (!output_type %in% c("text", "PDF")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'text'."))
+                "'\n\tValid values are: 'text', 'PDF'."))
   }
   
   # Trap missing or invalid orientation parameter.
@@ -149,7 +149,7 @@ create_report <- function(file_path = "", output_type = "text",
   x$column_widths <- list()      # Capture table column widths for reference
 
   
-  if (output_type == "text") {
+  if (output_type %in% c("text", "PDF")) {
     
     # Set default options for text
     # This sets line_height and char_width
@@ -254,6 +254,10 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' \code{lpuom} parameters manually.  To determine your \code{cpuom}
 #' and \code{lpuom}, see the help for \code{\link{write_registration_file}}.
 #'
+#' The \code{min_margin} parameter is used to set the minimum margin allowed
+#' by the editor.  This value will be subtracted from the margin settings 
+#' when the \code{blank_margins} option is used. 
+#' 
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing.  Assigning
 #' this parameter will set the \code{cpuom} and \code{lpuom} parameters
@@ -268,6 +272,9 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' @param lpuom Lines per unit of measure of the printed text. Default for 
 #' inches is 6. The default for centimeters (cm) is 2.55.  This value 
 #' will be used to determine the number of lines that can fit on a page. 
+#' @param min_margin The editor minimum margin.  When the units of measure
+#' is set to centimeters, this parameter defaults to 1.  When the units of 
+#' measure is set to inches, the parameter defaults to .394.
 #' @return The updated report spec.
 #' @seealso \code{\link{create_report}} to create a report and set the unit
 #' of measure, \code{\link{write_registration_file}} to determine the 
@@ -290,7 +297,8 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' write_report(rpt)
 #' 
 #' @export
-options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
+options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
+                          min_margin = NULL) {
   
   if (is.null(editor)) {
     # Trap missing or invalid cpuom parameter.
@@ -346,6 +354,16 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
     # print(paste("lpuom:", x$lpuom))
   }
   
+  if (!is.null(min_margin)) {
+    if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
+      stop("ERROR: invalid value for min_margin")
+    }
+    else
+      x$min_margin = min_margin
+  }
+  else
+    x$min_margin = if (x$units == "inches") .394 else 1
+  
   x$char_width <- 1 / x$cpuom
   x$line_height <- 1 / x$lpuom
     
@@ -368,10 +386,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' right, and .5 inches on top and bottom.  When the unit of measure is 
 #' centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 #' on top and bottom.
-#' 
-#' The \code{min_margin} parameter is used to set the minimum margin allowed
-#' by the printer.  This value will be subtracted from the margin settings 
-#' when the \code{blank_margins} option is used.  
 #'
 #' Note that when using output type of text, and not using the 
 #' \code{blank_margins} option, setting the margins only reduces
@@ -385,9 +399,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @param bottom The bottom margin.
 #' @param left The left margin.
 #' @param right The right margin.
-#' @param min_margin The printer minimum margin.  When the units of measure
-#' is set to centimeters, this parameter defaults to 1.  When the units of 
-#' measure is set to inches, the parameter defaults to .394.
 #' @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
 #' spaces and blank rows to create left and top margins, rather than rely 
 #' on the editor to set margins.  When used, editor margins
@@ -414,7 +425,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL) {
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL,
-                           min_margin = NULL , blank_margins = FALSE) {
+                           blank_margins = FALSE) {
 
   if (!is.null(top)) {
     if (is.na(top) | top < 0 | !is.numeric(top)){
@@ -456,15 +467,6 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   else
     x$margin_right = if (x$units == "inches") 1 else 2.54
 
-  if (!is.null(min_margin)) {
-    if (is.na(min_margin) | min_margin < 0 | !is.numeric(min_margin)){
-      stop("ERROR: invalid value for min_margin")
-    }
-    else
-      x$min_margin = min_margin
-  }
-  else
-    x$min_margin = if (x$units == "inches") .394 else 1
   
   x$blank_margins <- blank_margins
 
