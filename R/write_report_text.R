@@ -29,7 +29,9 @@ write_report_text <- function(rs) {
   
   # Assign table column widths back to report spec for reference
   rs$column_widths <- ret[["widths"]]
-  #print(paste("Widths:", ret[["widths"]]))
+ 
+  # Assign graphics flag back to report spec
+  rs$has_graphics <- ret[["has_graphics"]]
   
   # Assign pages to ls and continue processing
   ls <- ret[["pages"]]
@@ -59,6 +61,7 @@ paginate_content <- function(rs, ls) {
   last_object <- FALSE
   table_widths <- list()
   tmp_dir <- tempdir()
+  has_graphics <- FALSE
   
   for(i in seq_along(ls)){
     
@@ -82,7 +85,7 @@ paginate_content <- function(rs, ls) {
     } else if (class(ls[[i]]$object)[1] == "plot_spec") {
       
       pgs <- create_plot_pages_text(rs, ls[[i]], last_page_lines, tmp_dir)
-      
+      has_graphics <- TRUE
     }
     
     # Append pages to content page list
@@ -118,7 +121,7 @@ paginate_content <- function(rs, ls) {
 
   }
   
-  ret <- list(widths = table_widths, pages = ls)
+  ret <- list(widths = table_widths, pages = ls, has_graphics = has_graphics)
   
   return(ret)
 }

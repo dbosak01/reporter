@@ -42,7 +42,7 @@ write_report_pdf <- function(rs) {
   rs$file_path <- tmp_path
   
   # Create text output normally to temp location
-  ret <- write_report_text(rs)
+  rs <- write_report_text(rs)
   
   # Read lines from text output
   ls <- readLines(tmp_path)
@@ -59,7 +59,7 @@ write_report_pdf <- function(rs) {
     file.remove(rmd_path)
   }
   
-  return(ret)
+  return(rs)
 }
 
 #' @import rmarkdown
@@ -84,7 +84,18 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path) {
   else if (rs$font_size == 12)
     hdr[length(hdr) + 1] <- "fontsize: 12pt"
   
-  hdr[length(hdr) + 1] <- "geometry: margin=0cm"
+  # "left=3cm,right=3cm,top=2cm,bottom=2cm"
+  if (rs$units == "inches") {
+    geom <- paste0(" \"left=", sprintf("%.3f", rs$margin_left * .80), 
+                   "in, right=", sprintf("%.3f", rs$margin_right * .65), 
+                   "in, top=", sprintf( "%.3f", rs$margin_top * .85), 
+                   "in, bottom=", sprintf("%.3f", rs$margin_bottom/2), "in\"")
+  } else {
+    geom <- paste0("\"left=", rs$margin_left, "cm, right=", 
+                   rs$margin_right/2, "cm, top=", rs$margin_top, 
+                   "cm, bottom=", rs$margin_bottom/2, "cm\"")
+  }
+  hdr[length(hdr) + 1] <- paste("geometry:", geom)
   # Figure out paper size options
   if (rs$paper_size == "letter")
     hdr[length(hdr) + 1] <- "papersize: letter"
@@ -92,58 +103,61 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path) {
     hdr[length(hdr) + 1] <- "papersize: a4"
   hdr[length(hdr) + 1] <- "header-includes:"
   hdr[length(hdr) + 1] <- "  - \\renewcommand{\\familydefault}{\\ttdefault}"
+  hdr[length(hdr) + 1] <- "  - \\thispagestyle{empty}"
   hdr[length(hdr) + 1] <- "---"
+  hdr[length(hdr) + 1] <- "\\pagenumbering{gobble}"
 
   # Start with all lines
   body <- ls
   
-  # Remove fill lines
-  fill_tags <- grep("{{fill}}", body, fixed = TRUE)
-  body <- body[-fill_tags]
-  
-  # Replace any plot tags with latex codes
-  plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
-  
-  for (i in plt_tags) {
+  if (rs$has_graphics) {
+    # Remove fill lines
+    fill_tags <- grep("{{fill}}", body, fixed = TRUE)
+    body <- body[-fill_tags]
     
-    # Remove braces
-    rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))  
+    # Replace any plot tags with latex codes
+    plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
     
-    # Split on pipe
-    spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
-    
-    pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
-
-    # 1 = path
-    # 2 = height
-    # 3 = width
-    # 4 = align
-    
-    # Create latex codes
-    if (spec[[4]] == "left") {
-      ltx <- paste0("\\begin{figure}[h!]\n",
-                    "\\begin{flushleft}\n", 
-                    "\\includegraphics{", pth, "}\n",
-                    "\\end{flushleft}\n",
-                    "\\end{figure}\n"  )
+    for (i in plt_tags) {
       
-    } else if (spec[[4]] == "right") {
-      ltx <- paste0("\\begin{figure}[h!]\n",
-                     "\\begin{flushright}\n", 
-                     "\\includegraphics{", pth, "}\n",
-                     "\\end{flushright}\n",
-                     "\\end{figure}\n"  )
-    } else  {
-    ltx <- paste0("\\begin{figure}[h!]\n",
-                  "\\centering\n", 
-                  "\\includegraphics{", pth, "}\n",
-                  "\\end{figure}"  )
-    }
-    
-    # Replace original line with latex codes
-    body[[i]] <- ltx
-  }
+      # Remove braces
+      rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))  
+      
+      # Split on pipe
+      spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
+      
+      pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
   
+      # 1 = path
+      # 2 = height
+      # 3 = width
+      # 4 = align
+      
+      # Create latex codes
+      if (spec[[4]] == "left") {
+        ltx <- paste0("\\begin{figure}[h!]\n",
+                      "\\begin{flushleft}\n", 
+                      "\\includegraphics{", pth, "}\n",
+                      "\\end{flushleft}\n",
+                      "\\end{figure}\n"  )
+        
+      } else if (spec[[4]] == "right") {
+        ltx <- paste0("\\begin{figure}[h!]\n",
+                       "\\begin{flushright}\n", 
+                       "\\includegraphics{", pth, "}\n",
+                       "\\end{flushright}\n",
+                       "\\end{figure}\n"  )
+      } else  {
+      ltx <- paste0("\\begin{figure}[h!]\n",
+                    "\\centering\n", 
+                    "\\includegraphics{", pth, "}\n",
+                    "\\end{figure}"  )
+      }
+      
+      # Replace original line with latex codes
+      body[[i]] <- ltx
+    }
+  }
   
   # Make body replacements
   if (rs$font_size == 10)
@@ -158,12 +172,13 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path) {
   f <- file(rmd_path, open="a")
 
   writeLines(hdr, con = f)
+
   writeLines(paste0("&nbsp;", body, "\\"), con = f)
   
   close(f)
   
   # Write PDF
-  render(rmd_path, pdf_document(), pdf_path)
+  render(rmd_path, pdf_document(), pdf_path, quiet = TRUE)
 }
 
 

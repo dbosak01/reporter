@@ -400,7 +400,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       x$min_margin <- e$mmcm
     }
     
-    x$blank_margins <- TRUE
+    x$blank_margins <- FALSE
     
   }
   
