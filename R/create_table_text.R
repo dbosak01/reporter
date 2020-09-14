@@ -378,34 +378,6 @@ get_spanning_header <- function(rs, ts, pi) {
     for (i in 1:length(slvl[[l]])) {
       cl <- slvl[[l]][[i]]$span_cols
       
-      # # Deal with from and to specified spans
-      # if ("from" %in% names(cl) & "to" %in% names(cl)) {
-      #   
-      #   mf <- match(cl["from"], cols)
-      #   print(paste("Match From:", mf))
-      #   
-      #   # If from variable doesn't exist on page, go to earliest 
-      #   # column that is not the stub or an id_var
-      #   if (is.na(mf)) {
-      #     mf <- 1
-      #     if (!is.null(ts$stub))
-      #       mf <- mf + 2
-      #     for (def in ts$col_defs)
-      #       if (def$id_var)
-      #         mf <- mf + 1
-      #   }
-      #   
-      #   mt <- match(cl["to"], cols)
-      #   print(paste("Match To:", mt))
-      #   
-      #   # If to variable doesn't exist on page, go to last col variable
-      #   if (is.na(mt))
-      #     mt <- length(cols)
-      #   
-      #   # Get sequence of columns from first spanning var to last
-      #   sq <- seq(from = mf, to = mt)
-      #   cl <- cols[sq]
-      # }
       
       # Span specifications can be a vector of column names or numbers
       if (typeof(cl) == "character")

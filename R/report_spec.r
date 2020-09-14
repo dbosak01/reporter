@@ -226,7 +226,7 @@ editor_settings <- read.table(header = TRUE, text = '
                     notepad++        12   4.7619   6.531   2.5862  0.393      1
                     word         11.497   4.5454  6.1146      2.4      0      0
                     wordpad      10.909   4.3165  6.1146      2.4      0      0
-                    pdf12         12.25   4.7430     5.5   2.0565  .1967     .5
+                    pdf12         12.25   4.7430   5.165   2.0565  .1967     .5
                     pdf10       14.2222   5.6074  6.2337   2.4590  .1967     .5
                                ') 
 
@@ -1065,10 +1065,12 @@ write_report <- function(x) {
   ret <- ""
 
   if (x$output_type == "text") {
-    ret <- write_report_text(x)
-  } else if (x$output_type == "PDF") {
     
-      ret <- write_report_pdf(x)
+    ret <- write_report_text(x)
+
+      } else if (x$output_type == "PDF") {
+    
+    ret <- write_report_pdf(x)
 
   } else {
    stop(paste("Output type currently not supported:", x$output_type))

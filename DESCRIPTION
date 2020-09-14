@@ -25,6 +25,7 @@ Suggests:
 Imports: fmtr,
          qlcMatrix,
          stringi,
-         rmarkdown
+         rmarkdown, 
+         ggplot2
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

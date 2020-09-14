@@ -18,15 +18,22 @@ write_report_pdf <- function(rs) {
   
   # Create temp path for text output
   if (debug) {
+    
     tmp_path <- file.path(base_path, "output/tmp.txt")
     rmd_path <- file.path(base_path, "output/tmp.Rmd")
+    if (file.exists(tmp_path))
+      file.remove(tmp_path)
+    if (file.exists(rmd_path))
+      file.remove(rmd_path)
+    if (file.exists(orig_path))
+      file.remove(orig_path)
   } else {
     tmp_path <- tempfile(fileext = ".txt")
     rmd_path <- tempfile(fileext = ".Rmd")
     #rmd_path <- sub(".pdf", ".Rmd", orig_path)
   }
 
-
+  print(getwd())
   
   if (file.exists(orig_path))
     file.remove(orig_path)
@@ -86,17 +93,66 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path) {
   hdr[length(hdr) + 1] <- "header-includes:"
   hdr[length(hdr) + 1] <- "  - \\renewcommand{\\familydefault}{\\ttdefault}"
   hdr[length(hdr) + 1] <- "---"
+
+  # Start with all lines
+  body <- ls
+  
+  # Remove fill lines
+  fill_tags <- grep("{{fill}}", body, fixed = TRUE)
+  body <- body[-fill_tags]
+  
+  # Replace any plot tags with latex codes
+  plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
+  
+  for (i in plt_tags) {
+    
+    # Remove braces
+    rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))  
+    
+    # Split on pipe
+    spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
+    
+    pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
+
+    # 1 = path
+    # 2 = height
+    # 3 = width
+    # 4 = align
+    
+    # Create latex codes
+    if (spec[[4]] == "left") {
+      ltx <- paste0("\\begin{figure}[h!]\n",
+                    "\\begin{flushleft}\n", 
+                    "\\includegraphics{", pth, "}\n",
+                    "\\end{flushleft}\n",
+                    "\\end{figure}\n"  )
+      
+    } else if (spec[[4]] == "right") {
+      ltx <- paste0("\\begin{figure}[h!]\n",
+                     "\\begin{flushright}\n", 
+                     "\\includegraphics{", pth, "}\n",
+                     "\\end{flushright}\n",
+                     "\\end{figure}\n"  )
+    } else  {
+    ltx <- paste0("\\begin{figure}[h!]\n",
+                  "\\centering\n", 
+                  "\\includegraphics{", pth, "}\n",
+                  "\\end{figure}"  )
+    }
+    
+    # Replace original line with latex codes
+    body[[i]] <- ltx
+  }
   
   
   # Make body replacements
   if (rs$font_size == 10)
-    body <- gsub(" ", "\\hspace{5pt}", ls, fixed = TRUE)
+    body <- gsub(" ", "\\hspace{5pt}", body, fixed = TRUE)
   else if (rs$font_size == 12)
-    body <- gsub(" ", "\\hspace{6pt}", ls, fixed = TRUE)
+    body <- gsub(" ", "\\hspace{6pt}", body, fixed = TRUE)
   
   body <- gsub("\f", "\\newpage\n&nbsp;", body, fixed = TRUE)
   body <- gsub("-", "--", body, fixed = TRUE)
-  
   
   # Write to file  
   f <- file(rmd_path, open="a")

@@ -1175,9 +1175,12 @@ test_that("test32: Simplest PDF report works as expected.", {
     define(vs, visible = FALSE)
   
   rpt <- create_report(fp, output_type = "PDF") %>% 
+    page_header("Client", "Study") %>% 
     titles("MTCARS Data Frame") %>% 
-    set_margins(top = 1) %>% 
-    add_content(tbl, align = "left")
+    set_margins(top = 1, bottom = 1) %>% 
+    add_content(tbl, align = "left") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
   
   
   res <- write_report(rpt)
@@ -1236,7 +1239,7 @@ test_that("test33: Two page PDF report works as expected.", {
   
   rpt <- create_report(fp, output_type = "PDF") %>%
     options_fixed(font_size = 12) %>% 
-    set_margins(top = 1, bottom = .8) %>% 
+    set_margins(top = 1, bottom = 1) %>% 
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
            "Safety Population", align = "center") %>%
@@ -1256,6 +1259,47 @@ test_that("test33: Two page PDF report works as expected.", {
 
   
 })
+
+
+
+
+test_that("test34: Simplest PDF Plot works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "output/test34.pdf")
+
+  if (file.exists(fp))
+    file.remove(fp)
+
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+
+  plt <- create_plot(p, height = 4, width = 8)
+  tbl <- create_table(mtcars[1:10, ])
+  txt <- create_text("Here is some analysis.  I'd like it to be the same width as the plot.")
+
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Client", "Study: XYZ") %>% 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>% 
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974") %>% 
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+  
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+  
+})
+
 
 # 
 # test_that("test28: Table width parameter less than sum of columns works.", {

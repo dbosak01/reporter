@@ -38,6 +38,7 @@ ABC-03-090  ABC     DM     S:90         12/6/2006                               
 ABC-03-091  ABC     DM     S:91         12/20/2006                                12/11/2006
 ABC-04-073  ABC     DM     S:73         10/31/2006                                10/10/2006
 ABC-04-074  ABC     DM     S:74         11/1/2006   11/20/2006                    10/16/2006  11/20/2006
+ABC-04-075  ABC     DM     S:75         11/9/2006                                 11/2/2006
 
 Time                                                                                            Page 1 of 12
                                                 Listing 1.0
@@ -80,6 +81,7 @@ ABC-03-090                    3 6/17/1926    80 YEARS  M   WHITE
 ABC-03-091                    3 2/20/1955    51 YEARS  F   WHITE
 ABC-04-073                    4 1/19/1947    59 YEARS  F   WHITE
 ABC-04-074                    4 3/28/1983    23 YEARS  F   WHITE
+ABC-04-075                    4 4/7/1943     63 YEARS  M   WHITE
 
 Time                                                                                            Page 2 of 12
                                                 Listing 1.0
@@ -122,6 +124,7 @@ ABC-03-090  NOT HISPANIC OR LATINO  SCRNFAIL  SCREEN FAILURE
 ABC-03-091  NOT HISPANIC OR LATINO  1         ARM A
 ABC-04-073  NOT HISPANIC OR LATINO  4         ARM D
 ABC-04-074  NOT HISPANIC OR LATINO  3         ARM C
+ABC-04-075  NOT HISPANIC OR LATINO  1         ARM A
 
 Time                                                                                            Page 3 of 12
                                                 Listing 1.0
@@ -129,7 +132,6 @@ Time                                                                            
 
 USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
 ---------------------------------------------------------------------------------------------------------
-ABC-04-075  ABC     DM     S:75         11/9/2006                                 11/2/2006
 ABC-04-076  ABC     DM     S:76         11/15/2006                                10/26/2006
 ABC-04-077  ABC     DM     S:77         11/15/2006                                11/2/2006
 ABC-04-078  ABC     DM     S:78         12/13/2006                                11/21/2006
@@ -164,6 +166,8 @@ ABC-07-016  ABC     DM     S:16         12/26/2006                              
 ABC-08-101  ABC     DM     S:101        11/7/2006                                 10/23/2006
 ABC-08-102  ABC     DM     S:102        11/9/2006                                 11/1/2006
 ABC-08-103  ABC     DM     S:103        11/9/2006                                 11/2/2006
+ABC-08-104  ABC     DM     S:104        11/9/2006                                 11/9/2006
+ABC-08-105  ABC     DM     S:105        11/13/2006                                10/30/2006
 
 Time                                                                                            Page 4 of 12
                                                 Listing 1.0
@@ -171,7 +175,6 @@ Time                                                                            
 
 USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
 -------------------------------------------------------------------------------------
-ABC-04-075                    4 4/7/1943     63 YEARS  M   WHITE
 ABC-04-076                    4 12/9/1954    51 YEARS  M   WHITE
 ABC-04-077                    4 2/20/1954    52 YEARS  F   WHITE
 ABC-04-078                    4 9/11/1953    53 YEARS  F   WHITE
@@ -206,6 +209,8 @@ ABC-07-016                    7 8/6/1957     49 YEARS  M   WHITE
 ABC-08-101                    8 3/16/1952    54 YEARS  F   WHITE
 ABC-08-102                    8 2/23/1952    54 YEARS  F   WHITE
 ABC-08-103                    8 9/17/1973    33 YEARS  M   UNKNOWN
+ABC-08-104                    8 7/1/1958     48 YEARS  M   WHITE
+ABC-08-105                    8 5/11/1962    44 YEARS  M   WHITE
 
 Time                                                                                            Page 5 of 12
                                                 Listing 1.0
@@ -213,7 +218,6 @@ Time                                                                            
 
 USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
 -------------------------------------------------------------------------------------
-ABC-04-075  NOT HISPANIC OR LATINO  1         ARM A
 ABC-04-076  NOT HISPANIC OR LATINO  2         ARM B
 ABC-04-077  NOT HISPANIC OR LATINO  3         ARM C
 ABC-04-078  NOT HISPANIC OR LATINO  4         ARM D
@@ -248,6 +252,8 @@ ABC-07-016  NOT HISPANIC OR LATINO  1         ARM A
 ABC-08-101  NOT HISPANIC OR LATINO  3         ARM C
 ABC-08-102  NOT HISPANIC OR LATINO  4         ARM D
 ABC-08-103  NOT HISPANIC OR LATINO  2         ARM B
+ABC-08-104  NOT HISPANIC OR LATINO  1         ARM A
+ABC-08-105  NOT HISPANIC OR LATINO  3         ARM C
 
 Time                                                                                            Page 6 of 12
                                                 Listing 1.0
@@ -255,8 +261,6 @@ Time                                                                            
 
 USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
 ---------------------------------------------------------------------------------------------------------
-ABC-08-104  ABC     DM     S:104        11/9/2006                                 11/9/2006
-ABC-08-105  ABC     DM     S:105        11/13/2006                                10/30/2006
 ABC-08-106  ABC     DM     S:106        11/14/2006                                10/30/2006
 ABC-08-107  ABC     DM     S:107        11/21/2006  1/3/2007                      11/3/2006   1/3/2007
 ABC-08-108  ABC     DM     S:108        12/22/2006                                12/4/2006
@@ -290,6 +294,9 @@ ABC-11-095  ABC     DM     S:95         11/10/2006                              
 ABC-11-096  ABC     DM     S:96         11/27/2006                                11/15/2006
 ABC-11-097  ABC     DM     S:97         11/28/2006                                11/8/2006
 ABC-11-098  ABC     DM     S:98         12/4/2006                                 11/27/2006
+ABC-11-099  ABC     DM     S:99         12/8/2006                                 11/17/2006
+ABC-11-100  ABC     DM     S:100        1/11/2007                                 12/18/2006
+ABC-12-057  ABC     DM     S:57         11/14/2006                                10/19/2006
 
 Time                                                                                            Page 7 of 12
                                                 Listing 1.0
@@ -297,8 +304,6 @@ Time                                                                            
 
 USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
 -------------------------------------------------------------------------------------
-ABC-08-104                    8 7/1/1958     48 YEARS  M   WHITE
-ABC-08-105                    8 5/11/1962    44 YEARS  M   WHITE
 ABC-08-106                    8 6/17/1946    60 YEARS  M   WHITE
 ABC-08-107                    8 11/3/1952    54 YEARS  M   WHITE
 ABC-08-108                    8 3/24/1960    46 YEARS  F   WHITE
@@ -332,6 +337,9 @@ ABC-11-095                   11 8/2/1944     62 YEARS  M   WHITE
 ABC-11-096                   11 1/13/1953    53 YEARS  M   WHITE
 ABC-11-097                   11 6/21/1982    24 YEARS  F   WHITE
 ABC-11-098                   11 4/27/1939    67 YEARS  M   WHITE
+ABC-11-099                   11 4/20/1942    64 YEARS  M   WHITE
+ABC-11-100                   11 6/8/1976     30 YEARS  F   WHITE
+ABC-12-057                   12 1/22/1981    25 YEARS  F   WHITE
 
 Time                                                                                            Page 8 of 12
                                                 Listing 1.0
@@ -339,8 +347,6 @@ Time                                                                            
 
 USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
 -------------------------------------------------------------------------------------
-ABC-08-104  NOT HISPANIC OR LATINO  1         ARM A
-ABC-08-105  NOT HISPANIC OR LATINO  3         ARM C
 ABC-08-106  NOT HISPANIC OR LATINO  1         ARM A
 ABC-08-107  NOT HISPANIC OR LATINO  4         ARM D
 ABC-08-108  NOT HISPANIC OR LATINO  2         ARM B
@@ -374,6 +380,9 @@ ABC-11-095  HISPANIC OR LATINO      3         ARM C
 ABC-11-096  NOT HISPANIC OR LATINO  4         ARM D
 ABC-11-097  NOT HISPANIC OR LATINO  1         ARM A
 ABC-11-098  HISPANIC OR LATINO      3         ARM C
+ABC-11-099  NOT HISPANIC OR LATINO  4         ARM D
+ABC-11-100  NOT HISPANIC OR LATINO  2         ARM B
+ABC-12-057  NOT HISPANIC OR LATINO  2         ARM B
 
 Time                                                                                            Page 9 of 12
                                                 Listing 1.0
@@ -381,9 +390,6 @@ Time                                                                            
 
 USUBJID     STUDYID DOMAIN SUBJID       RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC RFICDTC     RFPENDTC
 ---------------------------------------------------------------------------------------------------------
-ABC-11-099  ABC     DM     S:99         12/8/2006                                 11/17/2006
-ABC-11-100  ABC     DM     S:100        1/11/2007                                 12/18/2006
-ABC-12-057  ABC     DM     S:57         11/14/2006                                10/19/2006
 ABC-12-058  ABC     DM     S:58         11/15/2006                                10/20/2006
 ABC-12-059  ABC     DM     S:59         11/17/2006  2/8/2007                      11/3/2006   2/8/2007
 ABC-12-060  ABC     DM     S:60         12/6/2006                                 10/20/2006
@@ -417,15 +423,16 @@ ABC-14-121  ABC     DM     S:121        11/29/2006                              
 ABC-14-122  ABC     DM     S:122        12/18/2006                                12/11/2006
 ABC-14-123  ABC     DM     S:123        12/19/2006                                11/21/2006
 
+
+
+
+
 Time                                                                                           Page 10 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX RACE
 -------------------------------------------------------------------------------------
-ABC-11-099                   11 4/20/1942    64 YEARS  M   WHITE
-ABC-11-100                   11 6/8/1976     30 YEARS  F   WHITE
-ABC-12-057                   12 1/22/1981    25 YEARS  F   WHITE
 ABC-12-058                   12 9/15/1931    75 YEARS  F   WHITE
 ABC-12-059                   12 10/18/1966   40 YEARS  F   WHITE
 ABC-12-060                   12 3/26/1944    62 YEARS  F   BLACK OR AFRICAN AMERICAN
@@ -459,15 +466,16 @@ ABC-14-121                   14 12/5/1950    55 YEARS  M   WHITE
 ABC-14-122                   14 5/3/1972     34 YEARS  M   WHITE
 ABC-14-123                   14 5/23/1954    52 YEARS  F   ASIAN
 
+
+
+
+
 Time                                                                                           Page 11 of 12
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ETHNIC                  ARMCD     ARM             ACTARMCD ACTARM COUNTRY
 -------------------------------------------------------------------------------------
-ABC-11-099  NOT HISPANIC OR LATINO  4         ARM D
-ABC-11-100  NOT HISPANIC OR LATINO  2         ARM B
-ABC-12-057  NOT HISPANIC OR LATINO  2         ARM B
 ABC-12-058  NOT HISPANIC OR LATINO  1         ARM A
 ABC-12-059  NOT HISPANIC OR LATINO  4         ARM D
 ABC-12-060  NOT HISPANIC OR LATINO  3         ARM C
@@ -500,5 +508,9 @@ ABC-14-120  NOT HISPANIC OR LATINO  4         ARM D
 ABC-14-121  NOT HISPANIC OR LATINO  3         ARM C
 ABC-14-122  HISPANIC OR LATINO      4         ARM D
 ABC-14-123  NOT HISPANIC OR LATINO  1         ARM A
+
+
+
+
 
 Time                                                                                           Page 12 of 12

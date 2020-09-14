@@ -58,6 +58,7 @@ paginate_content <- function(rs, ls) {
   last_page_lines <- 0 
   last_object <- FALSE
   table_widths <- list()
+  tmp_dir <- tempdir()
   
   for(i in seq_along(ls)){
     
@@ -77,6 +78,10 @@ paginate_content <- function(rs, ls) {
     } else if (class(ls[[i]]$object)[1] == "text_spec") {
       
       pgs <- create_text_pages_text(rs, ls[[i]], last_page_lines)
+      
+    } else if (class(ls[[i]]$object)[1] == "plot_spec") {
+      
+      pgs <- create_plot_pages_text(rs, ls[[i]], last_page_lines, tmp_dir)
       
     }
     
@@ -107,9 +112,10 @@ paginate_content <- function(rs, ls) {
       last_page_lines <- 0  # Needed for requested page breaks
       #print(paste("Last Page Line Count:", length(last_page)))
     } 
-    
+
     # Replace last page with any modifications
     ls[[i]]$pages[[length(pgs)]] <- last_page
+
   }
   
   ret <- list(widths = table_widths, pages = ls)
@@ -240,12 +246,12 @@ page_setup <- function(rs) {
     print(paste0("Content Size: ", rs$content_size))
   
   # Line size is the number of characters that will fit in the content size width
-  rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width)
+  rs$line_size <- ceiling(rs$content_size[["width"]] / rs$char_width)
   if (debug)
     print(paste0("Line Size: ", rs$line_size))
   
   # Line count is the number of lines that will fit in the content size height
-  rs$line_count <- floor(rs$content_size[["height"]] / rs$line_height)
+  rs$line_count <- ceiling(rs$content_size[["height"]] / rs$line_height)
   if (debug)
     print(paste0("Line Count: ", rs$line_count))
   

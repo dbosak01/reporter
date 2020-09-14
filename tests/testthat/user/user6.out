@@ -38,8 +38,9 @@ ABC-14-117  1         ARM A           ABC     DM        117 11/20/2006
 ABC-14-123  1         ARM A           ABC     DM        123 12/19/2006
 ABC-15-155  1         ARM A           ABC     DM        155 1/11/2007
 ABC-16-047  1         ARM A           ABC     DM         47 1/2/2007    2/1/2007
+ABC-16-157  1         ARM A           ABC     DM        157 12/14/2006
 
-Time                                                                                            Page 1 of 36
+Time                                                                                            Page 1 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -80,8 +81,9 @@ ABC-14-117  1         ARM A           11/15/2006                               1
 ABC-14-123  1         ARM A           11/21/2006                               14 5/23/1954    52 YEARS  F
 ABC-15-155  1         ARM A           12/28/2006                               15 5/27/1950    56 YEARS  F
 ABC-16-047  1         ARM A           12/19/2006  2/1/2007                     16 4/20/1932    74 YEARS  M
+ABC-16-157  1         ARM A           12/7/2006                                16 9/4/1944     62 YEARS  M
 
-Time                                                                                            Page 2 of 36
+Time                                                                                            Page 2 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -122,8 +124,9 @@ ABC-14-117  1         ARM A           BLACK OR AFRICAN AMERICAN  HISPANIC OR LAT
 ABC-14-123  1         ARM A           ASIAN                      NOT HISPANIC OR LATINO
 ABC-15-155  1         ARM A           WHITE                      NOT HISPANIC OR LATINO
 ABC-16-047  1         ARM A           WHITE                      NOT HISPANIC OR LATINO
+ABC-16-157  1         ARM A           WHITE                      HISPANIC OR LATINO
 
-Time                                                                                            Page 3 of 36
+Time                                                                                            Page 3 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -164,176 +167,9 @@ ABC-14-117  1         ARM A
 ABC-14-123  1         ARM A
 ABC-15-155  1         ARM A
 ABC-16-047  1         ARM A
-
-Time                                                                                            Page 4 of 36
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ARMCD     ARM             STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC
------------------------------------------------------------------------------------------------------
-ABC-16-157  1         ARM A           ABC     DM        157 12/14/2006
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                            Page 5 of 36
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ARMCD     ARM             RFICDTC     RFPENDTC    DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX
-------------------------------------------------------------------------------------------------------------
-ABC-16-157  1         ARM A           12/7/2006                                16 9/4/1944     62 YEARS  M
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                            Page 6 of 36
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ARMCD     ARM             RACE                       ETHNIC                  ACTARMCD ACTARM
---------------------------------------------------------------------------------------------------------
-ABC-16-157  1         ARM A           WHITE                      HISPANIC OR LATINO
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                            Page 7 of 36
-                                                Listing 1.0
-                                            Demographics Dataset
-
-USUBJID     ARMCD     ARM             COUNTRY
----------------------------------------------
 ABC-16-157  1         ARM A
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Time                                                                                            Page 8 of 36
+Time                                                                                            Page 4 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -374,8 +210,9 @@ ABC-13-143  2         ARM B           ABC     DM        143 12/19/2006
 ABC-14-081  2         ARM B           ABC     DM         81 11/7/2006
 ABC-14-088  2         ARM B           ABC     DM         88 11/20/2006
 ABC-14-118  2         ARM B           ABC     DM        118 11/28/2006
+ABC-14-124  2         ARM B           ABC     DM        124 12/28/2006
 
-Time                                                                                            Page 9 of 36
+Time                                                                                            Page 5 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -416,8 +253,9 @@ ABC-13-143  2         ARM B           12/11/2006                               1
 ABC-14-081  2         ARM B           11/1/2006                                14 2/1/1944     62 YEARS  F
 ABC-14-088  2         ARM B           10/30/2006                               14 6/22/1950    56 YEARS  F
 ABC-14-118  2         ARM B           11/13/2006                               14 6/24/1972    34 YEARS  M
+ABC-14-124  2         ARM B           12/19/2006                               14 6/29/1951    55 YEARS  M
 
-Time                                                                                           Page 10 of 36
+Time                                                                                            Page 6 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -458,8 +296,9 @@ ABC-13-143  2         ARM B           WHITE                      NOT HISPANIC OR
 ABC-14-081  2         ARM B           WHITE                      NOT HISPANIC OR LATINO
 ABC-14-088  2         ARM B           BLACK OR AFRICAN AMERICAN  NOT HISPANIC OR LATINO
 ABC-14-118  2         ARM B           WHITE                      NOT HISPANIC OR LATINO
+ABC-14-124  2         ARM B           WHITE                      NOT HISPANIC OR LATINO
 
-Time                                                                                           Page 11 of 36
+Time                                                                                            Page 7 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -500,14 +339,14 @@ ABC-13-143  2         ARM B
 ABC-14-081  2         ARM B
 ABC-14-088  2         ARM B
 ABC-14-118  2         ARM B
+ABC-14-124  2         ARM B
 
-Time                                                                                           Page 12 of 36
+Time                                                                                            Page 8 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC
 -----------------------------------------------------------------------------------------------------
-ABC-14-124  2         ARM B           ABC     DM        124 12/28/2006
 ABC-15-156  2         ARM B           ABC     DM        156 1/11/2007
 ABC-16-158  2         ARM B           ABC     DM        158 12/19/2006
 
@@ -543,13 +382,14 @@ ABC-16-158  2         ARM B           ABC     DM        158 12/19/2006
 
 
 
-Time                                                                                           Page 13 of 36
+
+
+Time                                                                                            Page 9 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             RFICDTC     RFPENDTC    DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX
 ------------------------------------------------------------------------------------------------------------
-ABC-14-124  2         ARM B           12/19/2006                               14 6/29/1951    55 YEARS  M
 ABC-15-156  2         ARM B           12/28/2006                               15 1/9/1972     35 YEARS  F
 ABC-16-158  2         ARM B           12/5/2006                                16 5/22/1935    71 YEARS  M
 
@@ -585,13 +425,14 @@ ABC-16-158  2         ARM B           12/5/2006                                1
 
 
 
-Time                                                                                           Page 14 of 36
+
+
+Time                                                                                           Page 10 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             RACE                       ETHNIC                  ACTARMCD ACTARM
 --------------------------------------------------------------------------------------------------------
-ABC-14-124  2         ARM B           WHITE                      NOT HISPANIC OR LATINO
 ABC-15-156  2         ARM B           WHITE                      NOT HISPANIC OR LATINO
 ABC-16-158  2         ARM B           WHITE                      NOT HISPANIC OR LATINO
 
@@ -627,13 +468,14 @@ ABC-16-158  2         ARM B           WHITE                      NOT HISPANIC OR
 
 
 
-Time                                                                                           Page 15 of 36
+
+
+Time                                                                                           Page 11 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             COUNTRY
 ---------------------------------------------
-ABC-14-124  2         ARM B
 ABC-15-156  2         ARM B
 ABC-16-158  2         ARM B
 
@@ -669,7 +511,9 @@ ABC-16-158  2         ARM B
 
 
 
-Time                                                                                           Page 16 of 36
+
+
+Time                                                                                           Page 12 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -710,8 +554,9 @@ ABC-14-083  3         ARM C           ABC     DM         83 11/14/2006  3/6/2007
 ABC-14-086  3         ARM C           ABC     DM         86 11/15/2006
 ABC-14-119  3         ARM C           ABC     DM        119 11/28/2006  1/9/2007
 ABC-14-121  3         ARM C           ABC     DM        121 11/29/2006
+ABC-15-154  3         ARM C           ABC     DM        154 1/10/2007   2/12/2007
 
-Time                                                                                           Page 17 of 36
+Time                                                                                           Page 13 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -752,8 +597,9 @@ ABC-14-083  3         ARM C           10/31/2006  3/6/2007                     1
 ABC-14-086  3         ARM C           11/6/2006                                14 9/26/1957    49 YEARS  M
 ABC-14-119  3         ARM C           10/31/2006  1/9/2007                     14 8/26/1958    48 YEARS  M
 ABC-14-121  3         ARM C           10/30/2006                               14 12/5/1950    55 YEARS  M
+ABC-15-154  3         ARM C           12/29/2006  2/12/2007                    15 6/5/1936     70 YEARS  F
 
-Time                                                                                           Page 18 of 36
+Time                                                                                           Page 14 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -794,8 +640,9 @@ ABC-14-083  3         ARM C           WHITE                      HISPANIC OR LAT
 ABC-14-086  3         ARM C           WHITE                      NOT HISPANIC OR LATINO
 ABC-14-119  3         ARM C           WHITE                      HISPANIC OR LATINO
 ABC-14-121  3         ARM C           WHITE                      NOT HISPANIC OR LATINO
+ABC-15-154  3         ARM C           WHITE                      NOT HISPANIC OR LATINO
 
-Time                                                                                           Page 19 of 36
+Time                                                                                           Page 15 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -836,14 +683,14 @@ ABC-14-083  3         ARM C
 ABC-14-086  3         ARM C
 ABC-14-119  3         ARM C
 ABC-14-121  3         ARM C
+ABC-15-154  3         ARM C
 
-Time                                                                                           Page 20 of 36
+Time                                                                                           Page 16 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC
 -----------------------------------------------------------------------------------------------------
-ABC-15-154  3         ARM C           ABC     DM        154 1/10/2007   2/12/2007
 ABC-16-045  3         ARM C           ABC     DM         45 12/28/2006
 ABC-16-159  3         ARM C           ABC     DM        159 12/21/2006
 
@@ -879,13 +726,14 @@ ABC-16-159  3         ARM C           ABC     DM        159 12/21/2006
 
 
 
-Time                                                                                           Page 21 of 36
+
+
+Time                                                                                           Page 17 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             RFICDTC     RFPENDTC    DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX
 ------------------------------------------------------------------------------------------------------------
-ABC-15-154  3         ARM C           12/29/2006  2/12/2007                    15 6/5/1936     70 YEARS  F
 ABC-16-045  3         ARM C           12/19/2006                               16 8/18/1938    68 YEARS  M
 ABC-16-159  3         ARM C           12/14/2006                               16 7/19/1948    58 YEARS  F
 
@@ -921,13 +769,14 @@ ABC-16-159  3         ARM C           12/14/2006                               1
 
 
 
-Time                                                                                           Page 22 of 36
+
+
+Time                                                                                           Page 18 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             RACE                       ETHNIC                  ACTARMCD ACTARM
 --------------------------------------------------------------------------------------------------------
-ABC-15-154  3         ARM C           WHITE                      NOT HISPANIC OR LATINO
 ABC-16-045  3         ARM C           WHITE                      NOT HISPANIC OR LATINO
 ABC-16-159  3         ARM C           WHITE                      NOT HISPANIC OR LATINO
 
@@ -963,13 +812,14 @@ ABC-16-159  3         ARM C           WHITE                      NOT HISPANIC OR
 
 
 
-Time                                                                                           Page 23 of 36
+
+
+Time                                                                                           Page 19 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             COUNTRY
 ---------------------------------------------
-ABC-15-154  3         ARM C
 ABC-16-045  3         ARM C
 ABC-16-159  3         ARM C
 
@@ -1005,7 +855,9 @@ ABC-16-159  3         ARM C
 
 
 
-Time                                                                                           Page 24 of 36
+
+
+Time                                                                                           Page 20 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1046,8 +898,9 @@ ABC-14-082  4         ARM D           ABC     DM         82 11/13/2006
 ABC-14-087  4         ARM D           ABC     DM         87 11/16/2006
 ABC-14-120  4         ARM D           ABC     DM        120 11/28/2006
 ABC-14-122  4         ARM D           ABC     DM        122 12/18/2006
+ABC-15-153  4         ARM D           ABC     DM        153 1/4/2007    2/22/2007
 
-Time                                                                                           Page 25 of 36
+Time                                                                                           Page 21 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1088,8 +941,9 @@ ABC-14-082  4         ARM D           10/30/2006                               1
 ABC-14-087  4         ARM D           11/1/2006                                14 8/31/1952    54 YEARS  F
 ABC-14-120  4         ARM D           10/30/2006                               14 5/25/1936    70 YEARS  M
 ABC-14-122  4         ARM D           12/11/2006                               14 5/3/1972     34 YEARS  M
+ABC-15-153  4         ARM D           12/21/2006  2/22/2007                    15 10/22/1941   65 YEARS  F
 
-Time                                                                                           Page 26 of 36
+Time                                                                                           Page 22 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1130,8 +984,9 @@ ABC-14-082  4         ARM D           WHITE                      HISPANIC OR LAT
 ABC-14-087  4         ARM D           WHITE                      NOT HISPANIC OR LATINO
 ABC-14-120  4         ARM D           WHITE                      NOT HISPANIC OR LATINO
 ABC-14-122  4         ARM D           WHITE                      HISPANIC OR LATINO
+ABC-15-153  4         ARM D           WHITE                      NOT HISPANIC OR LATINO
 
-Time                                                                                           Page 27 of 36
+Time                                                                                           Page 23 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1172,14 +1027,14 @@ ABC-14-082  4         ARM D
 ABC-14-087  4         ARM D
 ABC-14-120  4         ARM D
 ABC-14-122  4         ARM D
+ABC-15-153  4         ARM D
 
-Time                                                                                           Page 28 of 36
+Time                                                                                           Page 24 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             STUDYID DOMAIN SUBJID RFSTDTC     RFENDTC     RFXSTDTC RFXENDTC
 -----------------------------------------------------------------------------------------------------
-ABC-15-153  4         ARM D           ABC     DM        153 1/4/2007    2/22/2007
 ABC-16-046  4         ARM D           ABC     DM         46 12/28/2006  1/29/2007
 ABC-16-160  4         ARM D           ABC     DM        160 12/28/2006
 
@@ -1215,13 +1070,14 @@ ABC-16-160  4         ARM D           ABC     DM        160 12/28/2006
 
 
 
-Time                                                                                           Page 29 of 36
+
+
+Time                                                                                           Page 25 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             RFICDTC     RFPENDTC    DTHDTC DTHFL SITEID BRTHDTC     AGE AGEU   SEX
 ------------------------------------------------------------------------------------------------------------
-ABC-15-153  4         ARM D           12/21/2006  2/22/2007                    15 10/22/1941   65 YEARS  F
 ABC-16-046  4         ARM D           12/21/2006  1/29/2007                    16 7/21/1935    71 YEARS  F
 ABC-16-160  4         ARM D           12/19/2006                               16 3/8/1962     44 YEARS  M
 
@@ -1257,13 +1113,14 @@ ABC-16-160  4         ARM D           12/19/2006                               1
 
 
 
-Time                                                                                           Page 30 of 36
+
+
+Time                                                                                           Page 26 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             RACE                       ETHNIC                  ACTARMCD ACTARM
 --------------------------------------------------------------------------------------------------------
-ABC-15-153  4         ARM D           WHITE                      NOT HISPANIC OR LATINO
 ABC-16-046  4         ARM D           WHITE                      NOT HISPANIC OR LATINO
 ABC-16-160  4         ARM D           WHITE                      HISPANIC OR LATINO
 
@@ -1299,13 +1156,14 @@ ABC-16-160  4         ARM D           WHITE                      HISPANIC OR LAT
 
 
 
-Time                                                                                           Page 31 of 36
+
+
+Time                                                                                           Page 27 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID     ARMCD     ARM             COUNTRY
 ---------------------------------------------
-ABC-15-153  4         ARM D
 ABC-16-046  4         ARM D
 ABC-16-160  4         ARM D
 
@@ -1341,7 +1199,9 @@ ABC-16-160  4         ARM D
 
 
 
-Time                                                                                           Page 32 of 36
+
+
+Time                                                                                           Page 28 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1383,7 +1243,8 @@ ABC-06-162  SCRNFAIL  SCREEN FAILURE  ABC     DM        162 12/28/2006
 
 
 
-Time                                                                                           Page 33 of 36
+
+Time                                                                                           Page 29 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1425,7 +1286,8 @@ ABC-06-162  SCRNFAIL  SCREEN FAILURE  12/14/2006                                
 
 
 
-Time                                                                                           Page 34 of 36
+
+Time                                                                                           Page 30 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1467,7 +1329,8 @@ ABC-06-162  SCRNFAIL  SCREEN FAILURE  WHITE                      NOT HISPANIC OR
 
 
 
-Time                                                                                           Page 35 of 36
+
+Time                                                                                           Page 31 of 32
                                                 Listing 1.0
                                             Demographics Dataset
 
@@ -1509,4 +1372,5 @@ ABC-06-162  SCRNFAIL  SCREEN FAILURE
 
 
 
-Time                                                                                           Page 36 of 36
+
+Time                                                                                           Page 32 of 32
