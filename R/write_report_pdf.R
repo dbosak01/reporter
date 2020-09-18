@@ -19,7 +19,7 @@ write_report_pdf <- function(rs) {
   # Create temp path for text output
   if (debug) {
     
-    b_path = file.path(getwd(), "tests/testthat")
+    b_path <- file.path(getwd(), "tests/testthat")
     
     tmp_path <- file.path(b_path, "output/tmp.txt")
     rmd_path <- file.path(b_path, "output/tmp.Rmd")
@@ -63,7 +63,7 @@ write_report_pdf <- function(rs) {
   if (!debug) {
     file.remove(tmp_path)
     file.remove(rmd_path)
-    nms <- list.files(tmp_dir, pattern = "(.*)\\.jpg", full.names = TRUE)
+    nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
     file.remove(nms)
     #unlink(tmp_dir, recursive = TRUE)
   }
