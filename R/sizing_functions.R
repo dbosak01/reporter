@@ -186,7 +186,7 @@ get_page_wraps <- function(line_size, ts, widths) {
 #' options on the variable define function.  These include blank_after, 
 #' label_row, indenting, and creating stub columns. 
 #' @noRd
-prep_data <- function(dat, ts, char_width) {
+prep_data <- function(dat, ts, char_width, missing_val) {
   
   defs <- ts$col_defs
   # print("Before prep data")
@@ -266,7 +266,7 @@ prep_data <- function(dat, ts, char_width) {
   # print(dat)
     
   # Clear out missing values 
-  dat <- clear_missing(dat)
+  dat <- clear_missing(dat, missing_val)
 
   
   return(dat)

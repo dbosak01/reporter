@@ -19,8 +19,10 @@ write_report_pdf <- function(rs) {
   # Create temp path for text output
   if (debug) {
     
-    tmp_path <- file.path(base_path, "output/tmp.txt")
-    rmd_path <- file.path(base_path, "output/tmp.Rmd")
+    b_path = file.path(getwd(), "tests/testthat")
+    
+    tmp_path <- file.path(b_path, "output/tmp.txt")
+    rmd_path <- file.path(b_path, "output/tmp.Rmd")
     if (file.exists(tmp_path))
       file.remove(tmp_path)
     if (file.exists(rmd_path))
@@ -28,12 +30,16 @@ write_report_pdf <- function(rs) {
     if (file.exists(orig_path))
       file.remove(orig_path)
   } else {
-    tmp_path <- tempfile(fileext = ".txt")
-    rmd_path <- tempfile(fileext = ".Rmd")
+    tmp_dir <- tempdir()
+    if (!file.exists(tmp_dir))
+      dir.create(tmp_dir)
+    tmp_path <- tempfile(fileext = ".txt", tmpdir = tmp_dir)
+    rmd_path <- tempfile(fileext = ".Rmd", tmpdir = tmp_dir)
     #rmd_path <- sub(".pdf", ".Rmd", orig_path)
   }
-
-  print(getwd())
+  # print(tmp_path)
+  # print(rmd_path)
+  # print(getwd())
   
   if (file.exists(orig_path))
     file.remove(orig_path)
@@ -48,7 +54,7 @@ write_report_pdf <- function(rs) {
   ls <- readLines(tmp_path)
 
   # Revise text and write to pdf
-  write_pdf_output(rs, ls, rmd_path, orig_path)
+  write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
 
   # Restore original path
   rs$file_path <- orig_path
@@ -57,6 +63,9 @@ write_report_pdf <- function(rs) {
   if (!debug) {
     file.remove(tmp_path)
     file.remove(rmd_path)
+    nms <- list.files(tmp_dir, pattern = "(.*)\\.jpg", full.names = TRUE)
+    file.remove(nms)
+    #unlink(tmp_dir, recursive = TRUE)
   }
   
   return(rs)
@@ -64,7 +73,7 @@ write_report_pdf <- function(rs) {
 
 #' @import rmarkdown
 #' @noRd
-write_pdf_output <- function(rs, ls, rmd_path, pdf_path) {
+write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   # Set up vectors
   hdr <- c() 
@@ -177,8 +186,11 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path) {
   
   close(f)
   
-  # Write PDF
-  render(rmd_path, pdf_document(), pdf_path, quiet = TRUE)
+  # Write PDF to tmp directory and then copy to desired folder to avoid errors
+  t <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  render(rmd_path, pdf_document(), t, quiet = TRUE)
+  file.copy(t, pdf_path)
+  file.remove(t)
 }
 
 

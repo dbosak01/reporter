@@ -51,6 +51,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
   # Filter dataset by included columns
   dat <- dat[ , keys]
+  # print("Key columns:")
+  # print(dat)
   
   # Update column definitions with column defaults
   ts$col_defs <- set_column_defaults(ts, keys)
@@ -86,9 +88,10 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   
   # Prep data for blank lines, indents, and stub columns
-  fdat <- prep_data(fdat, ts, rs$char_width)
+  fdat <- prep_data(fdat, ts, rs$char_width, rs$missing)
   # print("prep_data")
   # print(fdat)
+  # str(fdat)
   
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
@@ -149,7 +152,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
                             lpg_rows, content_offset, ts)
   # print("splits")
   # print(splits)
-
+  
   tot_count <- length(splits) * length(wraps)
   counter <- 0
   wrap_flag <- FALSE

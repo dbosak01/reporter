@@ -99,7 +99,7 @@ test_that("prep_data works as expected", {
     define(Species, blank_after = TRUE, dedupe = TRUE, indent = .25)
 
   
-  d <- prep_data(datx, tbl, .0833333)
+  d <- prep_data(datx, tbl, .0833333, "")
 
   
   expect_equal(sum(d$..blank != ""), 3)

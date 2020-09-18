@@ -606,7 +606,11 @@ test_that("test17: Simple regulatory table works as expected.", {
   
   dat <- mtcars
   
-  dat$group <- replicate(nrow(dat), sample(c("A", "B"), 1), simplify = TRUE)
+  # Hard coded this so report would come out the same every time.
+  #dat$group <- replicate(nrow(dat), sample(c("A", "B"), 1), simplify = TRUE)
+  dat$group <- c("B", "B", "B", "B", "B", "B", "A", "A", "B", "A", "A", 
+                 "A", "A", "B", "A", "B", "B", "A", "B", "B", "B", "A",
+                 "A", "A", "A", "A", "A", "B", "B", "A", "B", "B")
   dat$cyl <- factor(dat$cyl, levels = c(8, 6, 4), 
                     labels = c("8 Cylinder", "6 Cylinder", "4 Cylinder")) 
   group_pop <- table(dat$group)
@@ -1166,6 +1170,7 @@ test_that("test31: Table width parameter works for less than full width.", {
 test_that("test32: Simplest PDF report works as expected.", {
   
   fp <- file.path(base_path, "output/test32.pdf")
+  #fp <- "tests/testthat/output/test32.pdf"
   
   if (file.exists(fp))
     file.remove(fp)
@@ -1187,7 +1192,7 @@ test_that("test32: Simplest PDF report works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
   
-
+  
   
 })
 
@@ -1336,6 +1341,69 @@ test_that("test35: PDF Table with Plot works as expected.", {
   
   
 })
+
+
+
+test_that("test36: Report with NAs in data works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test36.txt")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", NA, "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", NA, "M", "F", "F", "M")
+  age <- c(41, 53, 43, NA, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 4), NA)
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+  
+  
+  afmt <- value(condition(x == "A", "Placebo"),
+                condition(x == "B", "Treatment 1"))
+  
+  sfmt1 <- value(condition(x == "M", "Male"),
+                 condition(x == "F", "Female"))
+  
+  
+  tbl1 <- create_table(df, width = 7) %>%
+    define(sex, width = 1, format = sfmt1) %>%
+    define(name, width = 2) %>% 
+    define(age)
+
+  
+  
+  rpt <- create_report(fp, output_type = "text", missing = "-") %>%
+    options_fixed(font_size = 12) %>% 
+    set_margins(top = 1, bottom = 1) %>% 
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", 
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R") %>%
+    page_footer(left = "Time", center = "Confidential", 
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1) 
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+
+
 
 # 
 # test_that("test28: Table width parameter less than sum of columns works.", {

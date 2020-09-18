@@ -466,12 +466,15 @@ align_cells <- function(x, len) {
 #' For any remaining non-character columns, convert to character and
 #' clear the missing values.
 #' @noRd
-clear_missing <- function(x) {
+clear_missing <- function(x, missing_val) {
   
   for (nm in names(x)) {
-    if (!is.control(nm) & typeof(x[[nm]]) != "character") {    
-      x[[nm]] <- as.character(x[[nm]])
-      x[[nm]] <- ifelse(is.na(x[[nm]]), "", x[[nm]])
+    if (!is.control(nm)) { 
+      
+      if (typeof(x[[nm]]) != "character")
+        x[[nm]] <- as.character(x[[nm]])
+      
+      x[[nm]] <- ifelse(is.na(x[[nm]]), missing_val, x[[nm]])
     }
   }
   

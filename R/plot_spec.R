@@ -27,29 +27,33 @@
 #' \code{\link{titles}} to add a title block to the plot,  
 #' \code{\link{footnotes}} to add footnotes, and \code{\link{add_content}} 
 #' to add the plot object to a report.
-#' @examples 
+#' @examples
 #' library(rptr)
+#' library(ggplot2)
 #' library(magrittr)
 #' 
 #' # Create temp file path
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "mtcars.pdf")
 #' 
+#' # Create ggplot
+#' p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+#'
+#' # Create plot object
+#' plt <- create_plot(p, height = 4, width = 8)
+#'
+#' rpt <- create_report(tmp, output_type = "PDF") %>%
+#'   page_header("Client", "Study: XYZ") %>% 
+#'   titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+#'   set_margins(top = 1, bottom = 1) %>%
+#'   add_content(plt, align = "left") %>%
+#'   footnotes("* Motor Trend, 1974") %>% 
+#'   page_footer("Time", "Confidential", "Page [pg] of [tpg]")
 #' 
-#' # Create the text object
-#' txt <- create_text(dt) %>% 
-#'   titles("Text Content 1.0", "Sample Text Report") %>% 
-#'   footnotes("* Cicero, 1st century BCE")
-#' 
-#' # Create the report object
-#' rpt <- create_report(tmp, orientation = "portrait") %>% 
-#'   add_content(txt) 
-#' 
-#' # Write the report to the file system
+#' # Write out report
 #' write_report(rpt)
-#' 
-#' # Write the report to console
-#' writeLines(readLines(tmp))
-#' 
+#'
+#' # Uncomment to view PDF file
+#' # shell.exec(tmp)
 #' @import ggplot2
 #' @export
 create_plot <- function(x, height = NULL, width = NULL) {

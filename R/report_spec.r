@@ -147,6 +147,7 @@ create_report <- function(file_path = "", output_type = "text",
   x$page_size <- get_page_size(paper_size, units)
   x$pages <- 1                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
+  x$missing <- missing
 
   
   if (output_type %in% c("text", "PDF")) {
