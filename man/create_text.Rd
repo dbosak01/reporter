@@ -83,5 +83,8 @@ writeLines(readLines(tmp))
 \code{\link{titles}} to add a title block to the text,  
 \code{\link{footnotes}} to add footnotes, and \code{\link{add_content}} 
 to add the text object to a report.
+
+Other text: 
+\code{\link{print.text_spec}()}
 }
 \concept{text}

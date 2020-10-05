@@ -218,8 +218,8 @@ test_that("text7: Text page setup landscape works as expected.", {
                 center = "Confidential", 
                 right ="Page [pg] of [tpg]")
   
-  write_report(rpt)
-  
+  res <- write_report(rpt)
+
   expect_equal(file.exists(fp), TRUE)
   
   lns <- readLines(fp)

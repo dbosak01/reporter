@@ -202,3 +202,36 @@ test_that("define_c function works as expected.", {
   expect_equal(d$var, "mpg")
   
 })
+
+
+test_that("print.tbl_spec() works as expected.", {
+  
+  tbl <- create_table(mtcars) %>% 
+    titles("Table 1", "My title") %>% 
+    titles("Here is a much longer title to see what happens when I print it") %>% 
+    footnotes("My footnote 1", "My footnote 2") %>% 
+    spanning_header(from = "mpg", to = "disp", label = "My label") %>% 
+    define(mpg, width = 2, label = "Miles per Gallon") %>% 
+    define(cyl, align = "left")
+  
+  tbl
+  
+  tbl2 <- create_table(mtcars) 
+  
+  tbl2
+  
+  
+  tbl3 <- create_table(mtcars) %>% 
+    titles("Table 1", "My title") %>% 
+    titles("Here is a much longer title to see what happens when I print it") %>% 
+    footnotes("My footnote 1", "My footnote 2") %>% 
+    spanning_header(from = "mpg", to = "disp", label = "My label") %>% 
+    spanning_header(from = "vs", to = "carb", label = "My label 2") %>% 
+    define(mpg, width = 2, label = "Miles per Gallon") %>% 
+    define(cyl, align = "left")
+  
+  tbl3
+  
+  expect_equal(TRUE, TRUE)
+
+})

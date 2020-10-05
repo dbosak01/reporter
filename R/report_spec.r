@@ -1084,6 +1084,112 @@ write_report <- function(x) {
 }
 
 
+#' @title Prints the report spec
+#' @description A function to print the report spec.
+#' The \strong{print} function will print the report spec in summary 
+#' form by default.  To print in list form, set the \code{verbose} parameter
+#' to TRUE.
+#' @param x The report spec.
+#' @param ... Additional parameters to pass to the underlying print function.
+#' @param verbose Whether to print the report object in verbose (list) form
+#' or summary form.  The default is FALSE.
+#' @seealso 
+#' \code{\link{create_report}} function to create a report specification.
+#' @return The report spec, invisibly.
+#' @family report
+#' @examples 
+#' # Here is something
+#' @import crayon
+#' @export
+print.report_spec <- function(x, ..., verbose = FALSE){
+  
+  
+  if (verbose == TRUE) {
+    
+    print(unclass(x))
+    
+  } else {
+    
+    grey60 <- make_style(grey60 = "#999999")
+
+    
+    cat(grey60("# A report specification: "))
+    if (!is.null(x$pages))
+      cat(grey60(as.character(x$pages) %+% " pages"))
+    cat("\n")
+    cat("- file_path: '" %+% x$file_path %+% "'\n")
+    cat("- output_type: " %+% x$output_type %+% "\n")
+    cat("- orientation: " %+% x$orientation %+% "\n")
+    if (!is.null(x$page_header_left) |
+        !is.null(x$page_header_right)) {
+      cat("- page_header:")
+      if (!is.null(x$page_header_left)) {
+        cat(" left=")
+        cat(paste0(x$page_header_left, collapse = ", "))
+      }
+      if (!is.null(x$page_header_right)) {
+        cat(" right=")
+        cat(paste0(x$page_header_right, collapse = ", "))
+      }
+      cat("\n")
+    }
+    if (!is.null(x$titles)) {
+      
+      ttlcnt <- 1
+      for (i in seq_along(x$titles)) {
+        
+        for (j in seq_along(x$titles[[i]]$titles)) {
+          cat("- title " %+% as.character(ttlcnt) %+% ": '" 
+              %+% substring(x$titles[[i]]$titles[[j]], 1) %+% "'\n")
+          ttlcnt <- ttlcnt + 1
+        }
+        
+      }
+    }
+    if (!is.null(x$footnotes)) {
+      
+      ftncnt <- 1
+      for (i in seq_along(x$footnotes)) {
+        
+        for (j in seq_along(x$footnotes[[i]]$footnotes)) {
+          cat("- footnote " %+% as.character(ftncnt) %+% ": '" 
+              %+% substring(x$footnotes[[i]]$footnotes[[j]], 1) %+% "'\n")
+          ftncnt <- ftncnt + 1
+        }
+        
+      }
+    }
+    if (!is.null(x$page_footer_left) | 
+        !is.null(x$page_footer_center) |
+        !is.null(x$page_footer_right)) {
+      cat("- page_footer:")
+      if (!is.null(x$page_footer_left)) {
+        cat(" left=")
+        cat(paste0(x$page_footer_left, collapse = ", "))
+      }
+      if (!is.null(x$page_footer_center)) {
+        cat(" center=")
+        cat(paste0(x$page_footer_center, collapse = ", "))
+      }
+      if (!is.null(x$page_footer_right)) {
+        cat(" right=")
+        cat(paste0(x$page_footer_right, collapse = ", "))
+      }
+      cat("\n")
+    }
+    if (!is.null(x$content)) {
+      cat("- content: \n")
+      for (i in seq_along(x$content)) {
+        
+        print(x$content[[i]]$object)
+        
+      }
+    }
+    
+  }
+  
+  invisible(x)
+}
 
 
 # Write Registration File -------------------------------------------------

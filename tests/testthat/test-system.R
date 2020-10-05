@@ -575,7 +575,8 @@ test_that("test16: Simple regulatory listing works as expected.", {
   
   # Create mtcars listing
   rpt <- create_report(fp, orientation = "portrait") %>% 
-    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    page_header(left = "Client: Motor Trend", right = c("Study: Cars", 
+                                                        "Something else")) %>% 
     titles("Listing 1.0", "MTCARS Data Listing") %>% 
     add_content(create_table(mtcars)) %>% 
     footnotes("* Motor Trend, 1973") %>%
@@ -583,8 +584,10 @@ test_that("test16: Simple regulatory listing works as expected.", {
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
-  
+  rpt
   res <- write_report(rpt)
+  
+  res
   
   expect_equal(file.exists(fp), TRUE)
   

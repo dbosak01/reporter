@@ -96,6 +96,7 @@ Other report:
 \code{\link{options_fixed}()},
 \code{\link{page_footer}()},
 \code{\link{page_header}()},
+\code{\link{print.report_spec}()},
 \code{\link{set_margins}()},
 \code{\link{write_report}()}
 }

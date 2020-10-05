@@ -85,6 +85,97 @@ create_text <- function(txt, width = NULL, align = "left") {
 }
 
 
+# Utilities ---------------------------------------------------------------
+
+
+
+
+#' @title Prints the text spec
+#' @description A function to print the text spec.
+#' The \strong{print} function will print the text spec in summary 
+#' form.  To view all parameters, set the \code{verbose} parameter to TRUE.
+#' @param x The text spec.
+#' @param ... Additional parameters to pass to the underlying print function.
+#' @param verbose Whether to print in verbose form.  Default if FALSE.
+#' @seealso 
+#' \code{\link{create_text}} function to create a text specification.
+#' @return The text spec, invisibly.
+#' @family text
+#' @examples 
+#' txt <- create_text("Lorem ipsum dolor sit amet, consectetur...")
+#' print(txt)
+#'
+#' # A text specification:
+#' # - text: data.frame 'mtcars' 32 rows 11 cols
+#' @import crayon
+#' @export
+print.text_spec <- function(x, ..., verbose = FALSE){
+  
+  
+  if (verbose == TRUE) {
+    
+    print(unclass(x))
+    
+  } else {
+    
+    
+    grey60 <- make_style(grey60 = "#999999")
+
+    
+    cat(grey60("# A text specification: "))
+    
+    if (!is.null(x$text)) {
+      
+      wc <- lengths(strsplit(x$text, " "))
+      cat(grey60(wc %+% " words\n"))
+      
+      cat("- text: ")
+      if (nchar(x$text) > 100)
+        cat(paste0(substr(x$text, 1, 100), "..."))
+      else 
+        cat(x$text)
+      
+      cat("\n")
+            
+    } else {
+      
+     cat("\n") 
+    }
+    
+    if (!is.null(x$titles)) {
+      
+      ttlcnt <- 1
+      for (i in seq_along(x$titles)) {
+        
+        for (j in seq_along(x$titles[[i]]$titles)) {
+          cat("- title " %+% as.character(ttlcnt) %+% ": '" 
+              %+% substring(x$titles[[i]]$titles[[j]], 1) %+% "'\n")
+          ttlcnt <- ttlcnt + 1
+        }
+        
+      }
+    }
+    if (!is.null(x$footnotes)) {
+      
+      ftncnt <- 1
+      for (i in seq_along(x$footnotes)) {
+        
+        for (j in seq_along(x$footnotes[[i]]$footnotes)) {
+          cat("- footnote " %+% as.character(ftncnt) %+% ": '" 
+              %+% substring(x$footnotes[[i]]$footnotes[[j]], 1) %+% "'\n")
+          ftncnt <- ftncnt + 1
+        }
+        
+      }
+    }
+    
+    
+  }
+  
+  invisible(x)
+}
+
+
 # Write Functions -------------------------------------------------------
 
 #' @description A function to output strings for plain text content

@@ -51,7 +51,7 @@ rpt <- create_report(tmp, output_type = "PDF") \%>\%
   page_header("Client", "Study: XYZ") \%>\% 
   titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") \%>\%
   set_margins(top = 1, bottom = 1) \%>\%
-  add_content(plt, align = "left") \%>\%
+  add_content(plt) \%>\%
   footnotes("* Motor Trend, 1974") \%>\% 
   page_footer("Time", "Confidential", "Page [pg] of [tpg]")
 

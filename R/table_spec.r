@@ -173,6 +173,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   ret <- structure(list(), class = c("table_spec", "list"))
 
   ret$data <- x
+  ret$dataname <- deparse1(substitute(x, env = environment()))
   ret$n_format <- n_format
   ret$col_defs <- list()
   ret$col_spans <- list()
@@ -974,11 +975,12 @@ stub <- function(x, vars, label = "", label_align = NULL,
 
 #' @title Prints the table spec
 #' @description A function to print the table spec.
-#' The \strong{print} function will print the table spec primarily in list 
-#' format.  The exception to list format is the data parameter, which will
-#' be printed in data frame/tibble format.
+#' The \strong{print} function will print the table spec in summary 
+#' form.  To view all parameters, set the \code{verbose} parameter to TRUE.
 #' @param x The table spec.
 #' @param ... Additional parameters to pass to the underlying print function.
+#' @param verbose Whether to print in verbose form, which is similar to 
+#' a list.  Default is FALSE, which prints in summary form.
 #' @seealso 
 #' \code{\link{create_table}} function to create a table specification.
 #' @return The table spec, invisibly.
@@ -986,66 +988,123 @@ stub <- function(x, vars, label = "", label_align = NULL,
 #' @examples 
 #' tbl <- create_table(mtcars)
 #' print(tbl)
-#' 
-#' # $data
-#' # mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-#' # Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
-#' # Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
-#' # Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-#' # Hornet 4 Drive    21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
-#' # Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
-#' # Valiant           18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
-#' # Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
-#' # Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
-#' # Merc 230          22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
-#' # Merc 280          19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
-#' # [ reached 'max' / getOption("max.print") -- omitted 22 rows ]
-#' # 
-#' # $n_format
-#' # function(x) {
-#' #   
-#' #   ret <- paste0("\n(N=", x, ")")
-#' #   
-#' #   return(ret)
-#' #   
-#' # }
-#' # <environment: namespace:rptr>
-#' #   
-#' #   $col_defs
-#' # list()
-#' # 
-#' # $col_spans
-#' # list()
-#' # 
-#' # $show_cols
-#' # [1] "all"
-#' # 
-#' # $first_row_blank
-#' # [1] FALSE
-#' # 
-#' # $headerless
-#' # [1] FALSE
+#'
+#' # A table specification:
+#' # - data: data.frame 'mtcars' 32 rows 11 cols
+#' @import crayon
 #' @export
-print.table_spec <- function(x, ...){
+print.table_spec <- function(x, ..., verbose = FALSE){
   
 
-  for (nm in names(x)) {
+  if (verbose == TRUE) {
     
-    cat("$", nm, "\n", sep = "")
-    if (nm == "data") {
-
-      m <- ncol(x[[nm]]) * 10
-      print(x[[nm]], ..., max = m)
-    }
-    else  {
+    for (nm in names(x)) {
       
-      print(x[[nm]], ...)
-    }
-    cat("\n")
-  }
+      cat("$", nm, "\n", sep = "")
+      if (nm == "data") {
   
+        m <- ncol(x[[nm]]) * 10
+        print(x[[nm]], ..., max = m)
+      }
+      else  {
+        
+        print(x[[nm]], ...)
+      }
+      cat("\n")
+    }
+    
+  } else {
+    
+    if ("tbl_df" %in% class(x$data))
+      dtyp = "tibble "
+    else 
+      dtyp = "data.frame "
+   
+    grey60 <- make_style(grey60 = "#999999")
+    #pcolor <- make_style("snow")
+    
+    cat(grey60("# A table specification:\n"))
+    cat("- data: " %+% dtyp %+% "'" %+% x$dataname %+% 
+                 "' " %+% nrow(x$data) %+% " rows " %+% ncol(x$data) %+%
+                 " cols\n")
+    if (!is.null(x$titles)) {
+     
+      ttlcnt <- 1
+      for (i in seq_along(x$titles)) {
+      
+        for (j in seq_along(x$titles[[i]]$titles)) {
+          cat("- title " %+% as.character(ttlcnt) %+% ": '" 
+                     %+% substring(x$titles[[i]]$titles[[j]], 1) %+% "'\n")
+          ttlcnt <- ttlcnt + 1
+        }
+      
+      }
+    }
+    if (!is.null(x$footnotes)) {
+      
+      ftncnt <- 1
+      for (i in seq_along(x$footnotes)) {
+        
+        for (j in seq_along(x$footnotes[[i]]$footnotes)) {
+          cat("- footnote " %+% as.character(ftncnt) %+% ": '" 
+                     %+% substring(x$footnotes[[i]]$footnotes[[j]], 1) %+% "'\n")
+          ftncnt <- ftncnt + 1
+        }
+        
+      }
+    }
+    
+    if (!is.null(x$col_spans)) {
+      
+      for (def in x$col_spans) {
+        
+        cat("- spanning_header: from='" %+% def$from %+% 
+            "' to='" %+% def$to %+% "' ")
+        
+        if (!is.null(def[["label"]]))
+          cat("'" %+% def[["label"]] %+% "' ")
+        
+        if (!is.null(def$level)) 
+          cat("level=" %+% def$level %+% " ")
+
+        
+        cat("\n")
+        
+      }
+    }
+    if (!is.null(x$col_defs)) {
+      
+      for (def in x$col_defs) {
+
+        cat("- define: " %+% def$var_c %+% " ")
+        if (!is.null(def[["label"]]))
+          cat("'" %+% def[["label"]] %+% "' ")
+
+        if (!is.null(def$width)) 
+          cat("width=" %+% def$width %+% " ")
+        
+        if (!is.null(def$align)) 
+          cat("align='" %+% def$align %+% "' ")
+        
+        cat("\n")
+        
+      }
+    }
+    
+  }
+
   invisible(x)
 }
+
+# ret$n_format <- n_format
+# ret$col_defs <- list()
+# ret$col_spans <- list()
+# ret$show_cols <- show_cols
+# ret$first_row_blank <- first_row_blank
+# ret$headerless <- headerless
+# ret$stub <- NULL
+# ret$width <- width
+# ret$page_var <- NULL
 
 
 # Formats ----------------------------------------------------------------------
