@@ -71,7 +71,6 @@ write_report_pdf <- function(rs) {
   return(rs)
 }
 
-#' @import rmarkdown
 #' @noRd
 write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
@@ -188,7 +187,7 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   # Write PDF to tmp directory and then copy to desired folder to avoid errors
   t <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
-  render(rmd_path, pdf_document(), t, quiet = TRUE)
+  rmarkdown::render(rmd_path, rmarkdown::pdf_document(), t, quiet = TRUE)
   file.copy(t, pdf_path)
   file.remove(t)
 }

@@ -54,7 +54,6 @@
 #'
 #' # Uncomment to view PDF file
 #' # shell.exec(tmp)
-#' @import ggplot2
 #' @export
 create_plot <- function(x, height = NULL, width = NULL) {
   
@@ -79,7 +78,6 @@ create_plot <- function(x, height = NULL, width = NULL) {
 #' @param rs The Report Spec
 #' @param cntnt The text content to output
 #' @param lpg_rows Last page rows.
-#' @import stringi
 #' @noRd
 create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
   
@@ -98,7 +96,7 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
   # print("Temp plot name:")
   # print(tmp_nm)
   
-  ggsave(tmp_nm, plt$plot, width =  plt$width, height = plt$height, 
+  ggplot2::ggsave(tmp_nm, plt$plot, width =  plt$width, height = plt$height, 
          dpi = 300, units = u)
   
 

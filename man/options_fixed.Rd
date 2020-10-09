@@ -11,7 +11,7 @@ options_fixed(
   lpuom = NULL,
   min_margin = NULL,
   blank_margins = FALSE,
-  font_size = 12
+  font_size = 10
 )
 }
 \arguments{

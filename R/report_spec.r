@@ -105,11 +105,11 @@ create_report <- function(file_path = "", output_type = "text",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!output_type %in% c("text", "PDF")) {
+  if (!output_type %in% c("text", "PDF", "RTF")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'text', 'PDF'."))
+                "'\n\tValid values are: 'text', 'PDF', 'RTF'."))
   }
   
   # Trap missing or invalid orientation parameter.
@@ -150,7 +150,7 @@ create_report <- function(file_path = "", output_type = "text",
   x$missing <- missing
 
   
-  if (output_type %in% c("text", "PDF")) {
+  if (output_type %in% c("text", "PDF", "RTF")) {
     
     # Set default options for text
     # This sets line_height and char_width
@@ -229,6 +229,8 @@ editor_settings <- read.table(header = TRUE, text = '
                     wordpad      10.909   4.3165  6.1146      2.4      0      0
                     pdf12         12.25   4.7430   5.165   2.0565  .1967     .5
                     pdf10       14.2222   5.6074  6.2337   2.4590  .1967     .5
+                    rtf10            12   4.7619    6.4     2.521      0      0
+                    rtf12            10   3.9473  5.3333    2.100      0      0
                                ') 
 
 #' @title
@@ -312,7 +314,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
-                          font_size = 12) {
+                          font_size = 10) {
   
   if (x$output_type == "text") {
     if (is.null(editor)) {
@@ -381,7 +383,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
   
   } else if (x$output_type == "PDF") {
     
-    x$font_size = font_size
     
     if (font_size == 12)
       e <- editor_settings[editor_settings$editor == "pdf12", ]
@@ -403,8 +404,32 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
     
     x$blank_margins <- FALSE
     
+  } else if (x$output_type == "RTF") {
+
+    
+    if (font_size == 12)
+      e <- editor_settings[editor_settings$editor == "rtf12", ]
+    else if (font_size == 10)
+      e <- editor_settings[editor_settings$editor == "rtf10", ]
+    else 
+      stop("Invalid font_size setting.  Valid values are 10 and 12")
+    
+    # Set cpuom and lpuom
+    if (x$units == "inches") {
+      x$cpuom <- e$cpi
+      x$lpuom <- e$lpi
+      x$min_margin <- e$mmi
+    } else {
+      x$cpuom <- e$cpcm
+      x$lpuom <- e$lpcm
+      x$min_margin <- e$mmcm
+    }
+    
+    x$blank_margins <- FALSE
+    
   }
   
+  x$font_size = font_size
   x$char_width <- 1 / x$cpuom
   x$line_height <- 1 / x$lpuom
 
@@ -1019,6 +1044,19 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' report definition procedure.
 #' 
 #' @param x The report object to write.
+#' @param file_path The file name and path to write the report to.  If supplied,
+#' this parameter overrides the \code{file_path} parameter on the 
+#' \code{create_report} function. Default is NULL.
+#' @param output_type The output file type.  This parameter will override
+#' the \code{output_type} on the \code{create_report} function.  This 
+#' parameter can be used to output the same report object to 
+#' multiple file types. Default value is NULL, meaning it will not override
+#' the \code{create_report} value.  Valid values are 'text' and 'RTF'.
+#' @param preview Whether to write the entire report, or a report preview.
+#' A report preview is a subset of pages of the report.  The default value is 
+#' NULL, meaning the entire report should be written.  You may also pass 
+#' a number of pages to write.  For example, passing the number 1 will print
+#' the first page, while passing a 5 will print the first five pages.
 #' @return The report spec, with settings modified during rendering.  These 
 #' modified settings can sometimes be useful for documentation, and for 
 #' debugging issues with the procedure.
@@ -1048,12 +1086,31 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' # Write the report to console
 #' writeLines(readLines(tmp))
 #' @export
-write_report <- function(x) {
+write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL) {
   
   
   if (!"report_spec" %in% class(x)) {
     
     stop(paste0("report object missing or invalid."))
+  }
+  
+  if (!is.null(file_path)) {
+    
+   x$file_path <- file_path
+
+  }
+  
+  # Trap missing or invalid output_type parameter
+  if (!is.null(output_type)) {
+    if (!output_type %in% c("text", "PDF", "RTF")) {
+      
+      stop(paste0("output_type parameter on create_report() ",
+                  "function is invalid: '", output_type,
+                  "'\n\tValid values are: 'text', 'PDF', 'RTF'."))
+    }
+    x$output_type <- output_type
+
+    x <- options_fixed(x, font_size = x$font_size)
   }
   
   
@@ -1068,8 +1125,12 @@ write_report <- function(x) {
   if (x$output_type == "text") {
     
     ret <- write_report_text(x)
-
-      } else if (x$output_type == "PDF") {
+    
+  } else if (x$output_type == "RTF") {
+    
+    ret <- write_report_rtf(x)
+  
+  } else if (x$output_type == "PDF") {
     
     ret <- write_report_pdf(x)
 

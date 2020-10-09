@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Create statistical reports
-Version: 0.0.0.9017
+Version: 0.0.0.9018
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports, 
@@ -21,12 +21,12 @@ Suggests:
     dplyr,
     tidyr,
     readr,
-    knitr
+    knitr,          
+    ggplot2,
+    rmarkdown
 Imports: fmtr,
          qlcMatrix,
          stringi,
-         rmarkdown, 
-         ggplot2,
          crayon
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

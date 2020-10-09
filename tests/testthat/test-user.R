@@ -302,20 +302,26 @@ test_that("user3: listings works.", {
 
   # Define Report
   rpt <- create_report(fp) %>%
-    options_fixed(editor = "notepad") %>% 
+    options_fixed(editor = "notepad", font_size = 10) %>% 
     titles("Listing 1.0",
            "Demographics Dataset") %>%
     add_content(tbl, align = "left") %>% 
     page_footer(left = "Time", right = "Page [pg] of [tpg]")
   
-  # Write out report
+  #Write out report
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
   lns <- readLines(fp)
-  
+
   expect_equal(length(lns), res$pages * res$line_count)
+  
+  
+  rtfpth <- file.path(base_path, "user/user3.rtf")
+  write_report(rpt, file_path = rtfpth, output_type = "RTF")
+  
+  expect_equal(file.exists(rtfpth), TRUE)
   
 })
 
@@ -427,28 +433,32 @@ test_that("user4: Adverse Events table works.", {
     define(`ARM D_3`, align = "center", label = "Severe") 
   
   rpt <- create_report(fp) %>% 
-    #options_fixed(editor = "notepad++") %>% 
+    options_fixed(font_size = 10) %>% 
     page_header("Client: Experis", "Study: BBC") %>% 
     titles("Table 1.0", "Adverse Events by Severity", "Safety Population") %>% 
     add_content(tbl) %>% 
     footnotes(paste("Date Produced:", "Time", ";  SAS Program: Table3_0.R"),
-              paste("* Total Reporting is defined as number of subjects", 
+              paste("* Total Reporting is defined as number of subjects",
                     "who reported at least one adverse event."),
               "** Mod = Moderate",
               paste("# Episodes is defined as the total number of occurances",
                     "of adverse events"),
               paste("% is defined as Number of Subjects divided by Total Reporting"),
-              "Note: Adverse events were coded using MedDRA Version 9.1") %>% 
+              "Note: Adverse events were coded using MedDRA Version 9.1") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   
-  res <- write_report(rpt) 
-  
+  res <- write_report(rpt)
+
 
   expect_equal(file.exists(fp), TRUE)
 
   lns <- readLines(fp)
 
   expect_equal(length(lns), res$pages * res$line_count)
+  
+  
+  rtfpth <- file.path(base_path, "user/user4.rtf")
+  res <- write_report(rpt, file_path = rtfpth, output_type = "RTF")
 
 })
 
@@ -480,6 +490,7 @@ test_that("user5: large listing works.", {
     
     # Define Report
     rpt <- create_report(fp) %>%
+      options_fixed(font_size = 10) %>% 
       titles("Listing 2.0",
              "Analysis Dataset Labs") %>%
       add_content(tbl, align = "left") %>% 
