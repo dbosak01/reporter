@@ -114,54 +114,43 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   # Start with all lines
   body <- ls
   
-  # if (rs$has_graphics) {
-  #   # Remove fill lines
-  #   fill_tags <- grep("{{fill}}", body, fixed = TRUE)
-  #   body <- body[-fill_tags]
-  #   
-  #   # Replace any plot tags with latex codes
-  #   plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
-  #   
-  #   for (i in plt_tags) {
-  #     
-  #     # Remove braces
-  #     rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))  
-  #     
-  #     # Split on pipe
-  #     spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
-  #     
-  #     pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
-  #     
-  #     # 1 = path
-  #     # 2 = height
-  #     # 3 = width
-  #     # 4 = align
-  #     
-  #     # Create latex codes
-  #     if (spec[[4]] == "left") {
-  #       ltx <- paste0("\\begin{figure}[h!]\n",
-  #                     "\\begin{flushleft}\n", 
-  #                     "\\includegraphics{", pth, "}\n",
-  #                     "\\end{flushleft}\n",
-  #                     "\\end{figure}\n"  )
-  #       
-  #     } else if (spec[[4]] == "right") {
-  #       ltx <- paste0("\\begin{figure}[h!]\n",
-  #                     "\\begin{flushright}\n", 
-  #                     "\\includegraphics{", pth, "}\n",
-  #                     "\\end{flushright}\n",
-  #                     "\\end{figure}\n"  )
-  #     } else  {
-  #       ltx <- paste0("\\begin{figure}[h!]\n",
-  #                     "\\centering\n", 
-  #                     "\\includegraphics{", pth, "}\n",
-  #                     "\\end{figure}"  )
-  #     }
-  #     
-  #     # Replace original line with latex codes
-  #     body[[i]] <- ltx
-  #   }
-  # }
+  if (rs$has_graphics) {
+    # Remove fill lines
+    fill_tags <- grep("{{fill}}", body, fixed = TRUE)
+    body <- body[-fill_tags]
+
+    # Replace any plot tags with latex codes
+    plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
+
+    for (i in plt_tags) {
+
+      # Remove braces
+      rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))
+
+      # Split on pipe
+      spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
+
+      # 1 = path
+      # 2 = height
+      # 3 = width
+      # 4 = align
+      
+      img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), as.numeric(spec[[2]]), rs$units)
+      
+      # Create latex codes
+      if (spec[[4]] == "left") {
+        ltx <- paste0("\\par\\ql\n"  )
+
+      } else if (spec[[4]] == "right") {
+        ltx <- paste0("\\par\\qr\n"  )
+      } else  {
+        ltx <- paste0("\\par\\qc\n"  )
+      }
+
+      # Replace original line with latex codes
+      body[[i]] <- paste0(ltx, img)
+    }
+  }
   
   body <- gsub("\f", "\\page ", body, fixed = TRUE)
   
