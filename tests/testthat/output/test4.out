@@ -5,7 +5,7 @@ Experis                                                                         
                                              Safety Population
 
               subjid name               sex                                           age arm
-              -------------------------------------------------------------------------------
+              ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
                  100 Quintana, Gabriel  Male                                           41 A
                  101 Allison, Blas      Female                                         53 A
@@ -54,7 +54,7 @@ Time                                            Confidential                    
                                              Safety Population
 
                       subjid name                   sex  age arm
-                      ---------------------------------------------------------------
+                      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
                        105 Laner, Tahma           Female  52% Treatment 1
                        106 Perry, Sean            Male    21% Treatment 1
                        107 Crews, Deshawn Joseph  Female  38% Treatment 1
