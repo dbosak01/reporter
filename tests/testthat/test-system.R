@@ -1206,7 +1206,7 @@ test_that("test36: Report with NAs in data works as expected.", {
 
   
   
-  rpt <- create_report(fp, output_type = "text", missing = "-") %>%
+  rpt <- create_report(fp, output_type = "TXT", missing = "-") %>%
     options_fixed(font_size = 12) %>% 
     set_margins(top = 1, bottom = 1) %>% 
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%

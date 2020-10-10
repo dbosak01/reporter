@@ -169,7 +169,7 @@ test_that("text5: Table and Text output works as expected.", {
 
 test_that("text6: Very Long text output works as expected.", {
   
-  debug <- FALSE
+  debug <- TRUE
   
   if (debug) {
     fp <- file.path(base_path, "text/text6.out")

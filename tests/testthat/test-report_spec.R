@@ -6,17 +6,17 @@ test_that("create_report sets default values appropriately", {
   ret <- create_report()
   
   expect_equal(ret$orientation, "landscape")
-  expect_equal(ret$output_type, "text")
+  expect_equal(ret$output_type, "TXT")
   
 })
 
 
 test_that("create_report changes parameters appropriately", {
   
-  ret <- create_report(output_type = "text", orientation = "portrait")
+  ret <- create_report(output_type = "TXT", orientation = "portrait")
   
   expect_equal(ret$orientation, "portrait")
-  expect_equal(ret$output_type, "text")
+  expect_equal(ret$output_type, "TXT")
   
 })
 

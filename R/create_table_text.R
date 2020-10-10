@@ -316,7 +316,11 @@ get_table_header <- function(rs, ts, pi) {
   
   
   # Underline
-  sep <- paste0(paste0(rep(uchar, nchar(r) - 1), collapse = ""), " ")
+  if (rs$output_type == "PDF")
+    sep <- paste0(paste0(rep("-", nchar(r) - 1), collapse = ""), " ")
+  else
+    sep <- paste0(paste0(rep(uchar, nchar(r) - 1), collapse = ""), " ")
+  
   ln[[length(ln) + 1]] <- sep
 
   
@@ -491,7 +495,11 @@ get_spanning_header <- function(rs, ts, pi) {
     for (i in seq_len(nrow(s))) {
 
       if (s$span[i] > 0) {
-        r <- paste0(r, paste0(rep(uchar, s$width[i] - 1), collapse = ""), " ")
+        if (rs$output_type == "PDF")
+          r <- paste0(r, paste0(rep("-", s$width[i] - 1), collapse = ""), " ")
+        else
+          r <- paste0(r, paste0(rep(uchar, s$width[i] - 1), collapse = ""), " ")
+          
       } else {
         r <- paste0(r, paste0(rep(" ", s$width[i]), collapse = ""))
       }

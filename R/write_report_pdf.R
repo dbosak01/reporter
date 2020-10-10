@@ -84,7 +84,7 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   if (rs$orientation == "landscape") {
     hdr[length(hdr) + 1] <- "classoption: landscape"
   } else {
-    hdr[length(hdr) + 1] <- "classoption: portrait"
+   # hdr[length(hdr) + 1] <- "classoption: portrait"
   }
   
   if (rs$font_size == 10)

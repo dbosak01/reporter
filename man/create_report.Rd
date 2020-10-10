@@ -6,7 +6,7 @@
 \usage{
 create_report(
   file_path = "",
-  output_type = "text",
+  output_type = "TXT",
   orientation = "landscape",
   units = "inches",
   paper_size = "letter",
@@ -19,7 +19,7 @@ a relative path is acceptable.  This parameter is not required to create the
 report_spec object, but will be required to print the report.}
 
 \item{output_type}{The report output type.  Currently, the only valid value 
-is "text".  Default is "text".  Will eventually support "RTF", "PDF", and 
+is "TXT".  Default is "TXT".  Will eventually support "RTF", "PDF", and 
 "DOCX".}
 
 \item{orientation}{The page orientation of the desired report.  Valid values

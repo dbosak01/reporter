@@ -44,7 +44,7 @@
 #' a relative path is acceptable.  This parameter is not required to create the
 #' report_spec object, but will be required to print the report.
 #' @param output_type The report output type.  Currently, the only valid value 
-#' is "text".  Default is "text".  Will eventually support "RTF", "PDF", and 
+#' is "TXT".  Default is "TXT".  Will eventually support "RTF", "PDF", and 
 #' "DOCX".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
@@ -98,18 +98,18 @@
 #' #  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
 #' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' @export
-create_report <- function(file_path = "", output_type = "text", 
+create_report <- function(file_path = "", output_type = "TXT", 
                           orientation ="landscape", units = "inches",
                           paper_size = "letter", missing = "") {
 
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!output_type %in% c("text", "PDF", "RTF")) {
+  if (!output_type %in% c("TXT", "PDF", "RTF")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'text', 'PDF', 'RTF'."))
+                "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
   }
   
   # Trap missing or invalid orientation parameter.
@@ -150,7 +150,7 @@ create_report <- function(file_path = "", output_type = "text",
   x$missing <- missing
 
   
-  if (output_type %in% c("text", "PDF", "RTF")) {
+  if (output_type %in% c("TXT", "PDF", "RTF")) {
     
     # Set default options for text
     # This sets line_height and char_width
@@ -228,8 +228,8 @@ editor_settings <- read.table(header = TRUE, text = '
                     word         11.497   4.5454  6.1146      2.4      0      0
                     wordpad      10.909   4.3165  6.1146      2.4      0      0
                     pdf12         12.25   4.7430   5.165   2.0565  .1967     .5
-                    pdf10       14.2222   5.6074  6.2337   2.4590  .1967     .5
-                    rtf10            12   4.7619    6.4     2.521      0      0
+                    pdf10       14.2222   5.6074    6.10   2.4590  .1967     .5
+                    rtf10            12   4.7619    6.30    2.521      0      0
                     rtf12            10   3.9473  5.3333    2.100      0      0
                                ') 
 
@@ -287,7 +287,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' spaces and blank rows to create left and top margins, rather than rely 
 #' on the editor to set margins.  When used, editor margins
 #' should be set to zero.  Valid values are TRUE and FALSE. Default is
-#' FALSE.  This option is only valid for \code{output_type = 'text'}.
+#' FALSE.  This option is only valid for \code{output_type = 'TXT'}.
 #' @param font_size The size of the font in points.  Default is 12pt.  This
 #' option is only valid for output type PDF.
 #' @return The updated report spec.
@@ -316,7 +316,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
                           font_size = 10) {
   
-  if (x$output_type == "text") {
+  if (x$output_type == "TXT") {
     if (is.null(editor)) {
       # Trap missing or invalid cpuom parameter.
       if (is.null(cpuom))
@@ -1051,7 +1051,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' the \code{output_type} on the \code{create_report} function.  This 
 #' parameter can be used to output the same report object to 
 #' multiple file types. Default value is NULL, meaning it will not override
-#' the \code{create_report} value.  Valid values are 'text' and 'RTF'.
+#' the \code{create_report} value.  Valid values are 'TXT' and 'RTF'.
 #' @param preview Whether to write the entire report, or a report preview.
 #' A report preview is a subset of pages of the report.  The default value is 
 #' NULL, meaning the entire report should be written.  You may also pass 
@@ -1102,11 +1102,11 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
   
   # Trap missing or invalid output_type parameter
   if (!is.null(output_type)) {
-    if (!output_type %in% c("text", "PDF", "RTF")) {
+    if (!output_type %in% c("TXT", "PDF", "RTF")) {
       
       stop(paste0("output_type parameter on create_report() ",
                   "function is invalid: '", output_type,
-                  "'\n\tValid values are: 'text', 'PDF', 'RTF'."))
+                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
     }
     x$output_type <- output_type
 
@@ -1122,7 +1122,7 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 
   ret <- ""
 
-  if (x$output_type == "text") {
+  if (x$output_type == "TXT") {
     
     ret <- write_report_text(x)
     
@@ -1262,7 +1262,7 @@ print.report_spec <- function(x, ..., verbose = FALSE){
 #' the correct \code{cpuom} and \code{lpuom} for your editor/printer.  
 #' @details
 #' The \code{cpi} and \code{lpi} are 
-#' used in \code{output_type = "text"} to determine available space on
+#' used in \code{output_type = "TXT"} to determine available space on
 #' the page. The registration file can help determine the correct settings
 #' for the target text editor and printer.  Failure to set the 
 #' correct characters per 

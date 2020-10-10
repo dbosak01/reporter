@@ -41,7 +41,7 @@ measure is set to inches, the parameter defaults to .394.}
 spaces and blank rows to create left and top margins, rather than rely 
 on the editor to set margins.  When used, editor margins
 should be set to zero.  Valid values are TRUE and FALSE. Default is
-FALSE.  This option is only valid for \code{output_type = 'text'}.}
+FALSE.  This option is only valid for \code{output_type = 'TXT'}.}
 
 \item{font_size}{The size of the font in points.  Default is 12pt.  This
 option is only valid for output type PDF.}

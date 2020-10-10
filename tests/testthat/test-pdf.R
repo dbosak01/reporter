@@ -1,5 +1,5 @@
 
-context("RTF Tests")
+context("PDF Tests")
 
 base_path <- "c:/packages/rptr/tests/testthat"
 
@@ -13,15 +13,15 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
               "qui officia deserunt mollit anim id est laborum.")
 
-test_that("rtf1: Simplest table works as expected.", {
+test_that("pdf1: Simplest table works as expected.", {
   
   
-  fp <- file.path(base_path, "rtf/test1.rtf")
+  fp <- file.path(base_path, "pdf/test1.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
   
-  rpt <- create_report(fp, output_type = "RTF") %>% 
+  rpt <- create_report(fp, output_type = "PDF") %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
   res <- write_report(rpt)
@@ -30,9 +30,9 @@ test_that("rtf1: Simplest table works as expected.", {
   
 })
 
-test_that("rtf2: Simplest table with title works as expected.", {
+test_that("pdf2: Simplest table with title works as expected.", {
   
-  fp <- file.path(base_path, "rtf/test2.rtf")
+  fp <- file.path(base_path, "pdf/test2.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
@@ -40,7 +40,7 @@ test_that("rtf2: Simplest table with title works as expected.", {
   tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
   
-  rpt <- create_report(fp, output_type = "RTF") %>% 
+  rpt <- create_report(fp, output_type = "PDF") %>% 
     options_fixed(font_size = 10) %>% 
     titles("MTCARS Data Frame", align = "left") %>% 
     add_content(tbl)
@@ -53,11 +53,10 @@ test_that("rtf2: Simplest table with title works as expected.", {
   
 })
 
-
-test_that("rtf3: Table with break between sections works as expected.", {
+test_that("pdf3: Table with break between sections works as expected.", {
   
   
-  fp <- file.path(base_path, "rtf/test3.rtf")
+  fp <- file.path(base_path, "pdf/test3.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
@@ -87,7 +86,7 @@ test_that("rtf3: Table with break between sections works as expected.", {
            align = "right")
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "PDF") %>%
     options_fixed(font_size = 10) %>% 
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
@@ -105,14 +104,14 @@ test_that("rtf3: Table with break between sections works as expected.", {
   
 })
 
-test_that("rtf4: Table that spans multiple pages breaks as expected.", {
+test_that("pdf4: Table that spans multiple pages breaks as expected.", {
   
-  fp <- file.path(base_path, "rtf/test4.rtf")
+  fp <- file.path(base_path, "pdf/test4.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "PDF") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) 
   
@@ -124,10 +123,10 @@ test_that("rtf4: Table that spans multiple pages breaks as expected.", {
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
 
-test_that("rtf5: Table with long cell and label values wraps as expected.", {
+test_that("pdf5: Table with long cell and label values wraps as expected.", {
   
   
-  fp <- file.path(base_path, "rtf/test5.rtf")
+  fp <- file.path(base_path, "pdf/test5.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
@@ -158,7 +157,7 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
            dedupe = TRUE)
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "PDF") %>%
     titles("Table 1.0", align = "center") %>%
     
     add_content(tbl1)
@@ -171,9 +170,9 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
   
 })
 
-test_that("rtf6: Table with spanning headers works as expected.", {
+test_that("pdf6: Table with spanning headers works as expected.", {
   
-  fp <- file.path(base_path, "rtf/test6.rtf")
+  fp <- file.path(base_path, "pdf/test6.pdf")
   
   
   df <- data.frame(vehicle = rownames(mtcars), mtcars)
@@ -195,7 +194,7 @@ test_that("rtf6: Table with spanning headers works as expected.", {
     define(vehicle, label = "Vehicle") %>% 
     define(mpg, format = "%.1f")
   
-  rpt <- create_report(fp, output_type = "RTF") %>% 
+  rpt <- create_report(fp, output_type = "PDF") %>% 
     add_content(tbl) %>% 
     titles("Table 1.0", "MTCARS Subset Test")
   
@@ -209,43 +208,43 @@ test_that("rtf6: Table with spanning headers works as expected.", {
 
 
 
-test_that("rtf7: Simplest RTF report with 1 in margins works as expected.", {
-
-  fp <- file.path(base_path, "rtf/test7.rtf")
-
+test_that("pdf7: Simplest PDF report with 1 in margins works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test7.pdf")
+  
   if (file.exists(fp))
     file.remove(fp)
-
+  
   tbl <- create_table(mtcars[1:10, ]) %>%
     column_defaults(width = .5) %>%
     define(vs, visible = FALSE)
-
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
     page_header("Client", "Study") %>%
     titles("MTCARS Data Frame") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl, align = "left") %>%
     page_footer("Time", right = "Page [pg] of [tpg]")
-
-
-
+  
+  
+  
   res <- write_report(rpt)
-
+  
   expect_equal(file.exists(fp), TRUE)
-
-
-
+  
+  
+  
 })
 
 
-test_that("rtf8: Two page RTF report works as expected.", {
-
-
-  fp <- file.path(base_path, "rtf/test8.rtf")
-
+test_that("pdf8: Two page PDF report works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test8.pdf")
+  
   if (file.exists(fp))
     file.remove(fp)
-
+  
   # Setup
   subjid <- 100:109
   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
@@ -255,35 +254,35 @@ test_that("rtf8: Two page RTF report works as expected.", {
   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
   age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
   arm <- c(rep("A", 5), rep("B", 5))
-
+  
   # Create data frame
   df <- data.frame(subjid, name, sex, age, arm)
-
+  
   df1 <- df[df$arm == "A", ]
   df2 <- df[df$arm == "B", ]
-
+  
   afmt <- value(condition(x == "A", "Placebo"),
                 condition(x == "B", "Treatment 1"))
-
+  
   sfmt1 <- value(condition(x == "M", "Male"),
                  condition(x == "F", "Female"),
                  condition(TRUE, "Other"))
-
+  
   sfmt2 <- c(M = "Male", F = "Female")
-
+  
   tbl1 <- create_table(df1, width = 7) %>%
     define(sex, width = 1, format = sfmt1) %>%
     define(name, width = 2) %>%
     define(age, width = 1, align = "left")
-
+  
   tbl2 <- create_table(df2, width = 7) %>%
     define(sex, width = 1, format = sfmt2) %>%
     define(age, format = "%0d%%", align = "left") %>%
     define(name, width = 2) %>%
     define(arm, format = afmt, width = 2, align = "right")
-
-
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
     options_fixed(font_size = 10) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
@@ -294,76 +293,76 @@ test_that("rtf8: Two page RTF report works as expected.", {
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) %>%
     add_content(tbl2)
-
-
+  
+  
   res <- write_report(rpt)
-
+  
   #print(res)
-
+  
   expect_equal(file.exists(fp), TRUE)
-
-
-
+  
+  
+  
 })
 
 
 
 
-test_that("rtf9: Simplest PDF Plot works as expected.", {
-
+test_that("pdf9: Simplest PDF Plot works as expected.", {
+  
   library(ggplot2)
-
-  fp <- file.path(base_path, "rtf/test9.rtf")
-
+  
+  fp <- file.path(base_path, "pdf/test9.pdf")
+  
   if (file.exists(fp))
     file.remove(fp)
-
-
+  
+  
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-
+  
   plt <- create_plot(p, height = 4, width = 8)
-
-
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, align = "center") %>%
     footnotes("* Motor Trend, 1974") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
+  
+  
   res <- write_report(rpt)
-
+  
   #print(res)
-
+  
   expect_equal(file.exists(fp), TRUE)
-
-
-
+  
+  
+  
 })
 
 
 
 
-test_that("rtf10: RTF Table with Plot works as expected.", {
-
+test_that("pdf10: PDF Table with Plot works as expected.", {
+  
   library(ggplot2)
-
-  fp <- file.path(base_path, "rtf/test10.rtf")
-
+  
+  fp <- file.path(base_path, "pdf/test10.pdf")
+  
   if (file.exists(fp))
     file.remove(fp)
-
-
+  
+  
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-
-
+  
+  
   plt <- create_plot(p, height = 4, width = 8)
   tbl <- create_table(mtcars[1:10, ])
-
-
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -371,26 +370,26 @@ test_that("rtf10: RTF Table with Plot works as expected.", {
     add_content(plt, align = "center") %>%
     footnotes("* Motor Trend, 1974") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
+  
+  
   res <- write_report(rpt)
-
+  
   #print(res)
-
+  
   expect_equal(file.exists(fp), TRUE)
-
-
-
+  
+  
+  
 })
 
 
 
 
-test_that("rtf11: RTF Table with Plot on same page works as expected.", {
+test_that("pdf11: PDF Table with Plot on same page works as expected.", {
   
   library(ggplot2)
   
-  fp <- file.path(base_path, "rtf/test11.rtf")
+  fp <- file.path(base_path, "pdf/test11.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
@@ -402,11 +401,11 @@ test_that("rtf11: RTF Table with Plot on same page works as expected.", {
   tbl <- create_table(mtcars[1:3, ])
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "PDF") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
     set_margins(top = 1, bottom = 1) %>%
-
+    
     add_content(plt, page_break = FALSE, blank_row = "none") %>%
     add_content(tbl) %>%
     footnotes("* Motor Trend, 1974") %>%
@@ -424,9 +423,9 @@ test_that("rtf11: RTF Table with Plot on same page works as expected.", {
 })
 
 
-test_that("rtf12: Table and Text output works as expected.", {
+test_that("pdf12: Table and Text output works as expected.", {
   
-  fp <- file.path(base_path, "rtf/test12.rtf")
+  fp <- file.path(base_path, "pdf/test12.pdf")
   
   if (file.exists(fp))
     file.remove(fp)
@@ -434,7 +433,7 @@ test_that("rtf12: Table and Text output works as expected.", {
   tbl1 <- mtcars[1:10, ]
   tbl2 <- mtcars[11:20, ]
   
-  rpt <- create_report(fp, orientation = "portrait", output_type = "RTF") %>%
+  rpt <- create_report(fp, orientation = "portrait", output_type = "PDF") %>%
     titles("Report 5.0", "Table and Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(create_table(tbl1), page_break = FALSE) %>% 
@@ -451,23 +450,23 @@ test_that("rtf12: Table and Text output works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
   
-
+  
 })
 
 
-test_that("rtf13: Very Long text output works as expected.", {
+test_that("pdf13: Very Long text output works as expected.", {
   
-  debug <- TRUE
+  debug <- FALSE
   
   if (debug) {
-    fp <- file.path(base_path, "rtf/test13.rtf")
+    fp <- file.path(base_path, "pdf/test13.pdf")
     
     if (file.exists(fp))
       file.remove(fp)
     
     l <- paste(rep(cnt, 1000), collapse = "\n\n")
     
-    rpt <- create_report(fp, orientation = "portrait", output_type = "RTF") %>%
+    rpt <- create_report(fp, orientation = "portrait", output_type = "PDF") %>%
       titles("Report 6.0", "Very long Text Report") %>% 
       page_header(left = "Client: ABC", right = "Study: 123") %>% 
       add_content(create_text(l)) %>% 
@@ -479,7 +478,7 @@ test_that("rtf13: Very Long text output works as expected.", {
     
     expect_equal(file.exists(fp), TRUE)
     
-
+    
     
   } else {
     expect_equal(TRUE, TRUE) 
@@ -488,44 +487,4 @@ test_that("rtf13: Very Long text output works as expected.", {
 })
 
 
-test_that("rtf14: Simplest portrait table works as expected.", {
-  
-  
-  fp <- file.path(base_path, "rtf/test14.rtf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
-  rpt <- create_report(fp, output_type = "RTF", orientation = "portrait") %>% 
-    page_header("left", "right") %>% 
-    titles("Table 1.0", "MTCARS Data Frame") %>% 
-    add_content(create_table(mtcars)) %>% 
-    page_footer("Left", right = "right")
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
-  
-})
-
-
-test_that("rtf15: Simplest landscape table works as expected.", {
-  
-  
-  fp <- file.path(base_path, "rtf/test15.rtf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
-  rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>% 
-    page_header("left", "right") %>% 
-    titles("Table 1.0", "MTCARS Data Frame") %>% 
-    add_content(create_table(mtcars)) %>% 
-    page_footer("Left", right = "right")
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
-  
-})
 

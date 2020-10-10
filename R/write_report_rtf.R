@@ -102,7 +102,7 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   }
   
   hdr[length(hdr) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
-                                "\\margr", round(rs$margin_right * conv),
+                                "\\margr", round(rs$margin_right * .9 * conv),
                                 "\\margt", round(rs$margin_top * conv),
                                 "\\margb", round(rs$margin_bottom/2 * conv))
 

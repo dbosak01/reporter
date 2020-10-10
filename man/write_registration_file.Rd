@@ -16,7 +16,7 @@ the correct \code{cpuom} and \code{lpuom} for your editor/printer.
 }
 \details{
 The \code{cpi} and \code{lpi} are 
-used in \code{output_type = "text"} to determine available space on
+used in \code{output_type = "TXT"} to determine available space on
 the page. The registration file can help determine the correct settings
 for the target text editor and printer.  Failure to set the 
 correct characters per 
