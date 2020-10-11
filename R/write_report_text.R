@@ -169,26 +169,30 @@ write_content <- function(rs, ls, pt) {
         last_page <- FALSE
       
       
-      f <- file(rs$file_path, open="a")
+      f <- file(rs$file_path, open="a+", encoding = "native.enc")
       
       if (rs$blank_margins)
-        writeLines(blank_margin_top, con = f)
+        writeLines(enc2utf8(blank_margin_top), con = f, useBytes = TRUE)
+      
       
       #print(page_open)
       if (page_open == FALSE) {
         if (!is.null(pt$page_header))
-          writeLines(paste0(blank_margin_left, pt$page_header), con = f)
+          writeLines(enc2utf8(paste0(blank_margin_left, pt$page_header)), 
+                     con = f, useBytes = TRUE)
         
         if (!is.null(pt$titles))
-          writeLines(paste0(blank_margin_left, 
-                            trimws(pt$titles, which = "right")), con = f)
+           writeLines(enc2utf8(paste0(blank_margin_left, 
+                             trimws(pt$titles, which = "right"))), 
+                      con = f, useBytes = TRUE)
       }
       
       if (!is.null(pg)) {
         tmp <- trimws(format(pg, width = rs$line_size,
                       justify = get_justify(cont$align)),
                       which = "right")
-        writeLines(paste0(blank_margin_left, tmp), con = f)
+        writeLines(enc2utf8(paste0(blank_margin_left, tmp)), 
+                   con = f, useBytes = TRUE)
         
       }
       
@@ -201,11 +205,13 @@ write_content <- function(rs, ls, pt) {
       if (page_open == FALSE) {
         
         if (!is.null(pt$footnotes))
-          writeLines(paste0(blank_margin_left, 
-                            trimws(pt$footnotes, which = "right")), con = f)
+          writeLines(enc2utf8(paste0(blank_margin_left,
+                            trimws(pt$footnotes, which = "right"))), 
+                     con = f, useBytes = TRUE)
         
         if (!is.null(pt$page_footer))
-          writeLines(paste0(blank_margin_left, pt$page_footer), con = f)
+          writeLines(enc2utf8(paste0(blank_margin_left, pt$page_footer)), 
+                     con = f, useBytes = TRUE)
         
         # Add form feed character for text page break
         if (last_object == FALSE | last_page == FALSE) {
@@ -215,7 +221,7 @@ write_content <- function(rs, ls, pt) {
           else 
             rs$pages <- rs$pages + 1 
           
-          writeLines("", con = f, sep = "\f") 
+          writeLines(enc2utf8(""), con = f, sep = "\f", useBytes = TRUE) 
         
         }
       }
@@ -316,7 +322,7 @@ page_setup <- function(rs) {
 write_page_numbers <- function(rs) {
  
   # Read file into vector
-  lns <- readLines(rs$file_path)
+  lns <- readLines(rs$file_path, encoding = "UTF-8")
   
   # Set up page variables
   tpg <- rs$pages
@@ -369,8 +375,10 @@ write_page_numbers <- function(rs) {
   }
   
   # Replace file with updated lines
-  f <- file(rs$file_path, open="w")
-  writeLines(lns, con = f)
+  f <- file(rs$file_path, open="w+", encoding = "native.enc")
+  
+
+  writeLines(enc2utf8(lns), con = f, useBytes = TRUE)
   close(f)
   
   return(rs)

@@ -51,7 +51,7 @@ write_report_pdf <- function(rs) {
   rs <- write_report_text(rs)
   
   # Read lines from text output
-  ls <- readLines(tmp_path)
+  ls <- readLines(tmp_path, encoding = "UTF-8")
 
   # Revise text and write to pdf
   write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
@@ -202,11 +202,13 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
       file.remove(rmd_path)
     
     # Write to file  
-    f <- file(rmd_path, open="w")
+    f <- file(rmd_path, open="w+", encoding = "native.enc")
   
-    writeLines(hdr, con = f)
+
+    writeLines(enc2utf8(hdr), con = f, useBytes = TRUE)
   
-    writeLines(paste0("&nbsp;", body[startpos:endpos], "\\"), con = f)
+    writeLines(enc2utf8(paste0("&nbsp;", body[startpos:endpos], "\\")), 
+               con = f, useBytes = TRUE)
     
     close(f)
     

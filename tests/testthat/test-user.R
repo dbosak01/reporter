@@ -118,7 +118,8 @@ test_that("user1: demo table works.", {
     titles("Table 14.1/4",
            "Demographics and Baseline Characteristics",
            "Specify Population") %>%
-    add_content(tbl)
+    add_content(tbl) %>% 
+    footnotes("Here are some special symbols to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ 鬼")
 
   # Write out report
   res <- write_report(rpt)
@@ -129,18 +130,19 @@ test_that("user1: demo table works.", {
   
   expect_equal(length(lns), res$pages * res$line_count)
   
-  
-  rtfpth <- file.path(base_path, "user/user1.rtf")
-  if (file.exists(rtfpth))
-    file.remove(rtfpth)
-  write_report(rpt, rtfpth, output_type = "RTF")
-  expect_equal(file.exists(rtfpth), TRUE)
-  
-  pdfpth <- file.path(base_path, "user/user1.pdf")
-  if (file.exists(pdfpth))
-    file.remove(pdfpth)
-  write_report(rpt, pdfpth, output_type = "PDF")
-  expect_equal(file.exists(pdfpth), TRUE)
+  if (TRUE) {
+    rtfpth <- file.path(base_path, "user/user1.rtf")
+    if (file.exists(rtfpth))
+      file.remove(rtfpth)
+    write_report(rpt, rtfpth, output_type = "RTF")
+    expect_equal(file.exists(rtfpth), TRUE)
+    
+    pdfpth <- file.path(base_path, "user/user1.pdf")
+    if (file.exists(pdfpth))
+      file.remove(pdfpth)
+    write_report(rpt, pdfpth, output_type = "PDF")
+    expect_equal(file.exists(pdfpth), TRUE)
+  }
   
 })
 
