@@ -20,6 +20,17 @@
 #' The report may be written to a file using the \code{\link{write_report}} 
 #' function. 
 #' 
+#' NOTE: PDF output type requires the \strong(rmarkdown) package, a LaTeX renderer 
+#' like \strong(MiKTeX), and the PDF manipulation program \strong(qpdf).  
+#' \strong(MiKTeX) and \strong(qpdf) must be installed separately, and will
+#' not be installed as part of the \strong(rptr) install.  These programs must
+#' furthermore be added to the _path_ environment variable on the system
+#' where \strong(rptr) will run. 
+#' 
+#' Also note that PDF generation is extremely slow compared to TXT and RTF.  If
+#' you have a very large report, you can improve performance by outputting to
+#' RTF, and then converting to PDF with a document editor or other
+#' conversion program. 
 #' 
 #' @section Report family of functions:
 #' The report is the primary container for report specifications.  The

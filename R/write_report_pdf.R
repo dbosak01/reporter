@@ -173,23 +173,72 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   else if (rs$font_size == 12)
     body <- gsub(" ", "\\hspace{6pt}", body, fixed = TRUE)
   
-  body <- gsub("\f", "\\newpage\n&nbsp;", body, fixed = TRUE)
+  breaks <- grep("\f", body, value = FALSE, fixed = TRUE)
+
+  
+  body <- gsub("\f", "", body, fixed = TRUE)
   body <- gsub("-", "--", body, fixed = TRUE)
   
-  # Write to file  
-  f <- file(rmd_path, open="a")
-
-  writeLines(hdr, con = f)
-
-  writeLines(paste0("&nbsp;", body, "\\"), con = f)
   
-  close(f)
+  ## Break up doc into separate pdfs to prevent render function 
+  ## from running out of memory.  Then stitch them back together 
+  ## with qpdf
   
-  # Write PDF to tmp directory and then copy to desired folder to avoid errors
-  t <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
-  rmarkdown::render(rmd_path, rmarkdown::pdf_document(), t, quiet = TRUE)
-  file.copy(t, pdf_path)
-  file.remove(t)
+  t1 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  t2 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  t3 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  
+  # Add break at end to handle last page
+  breaks[length(breaks) + 1] <- length(body) + 1
+  
+  endpos <- 0
+  
+  for (i in seq_along(breaks)) {
+    
+    startpos <- endpos + 1
+    endpos <- breaks[i] - 1
+    
+    if (file.exists(rmd_path))
+      file.remove(rmd_path)
+    
+    # Write to file  
+    f <- file(rmd_path, open="w")
+  
+    writeLines(hdr, con = f)
+  
+    writeLines(paste0("&nbsp;", body[startpos:endpos], "\\"), con = f)
+    
+    close(f)
+    
+    # Write PDF to tmp directory and then copy to desired folder to avoid errors
+    
+
+    
+    rmarkdown::render(rmd_path, rmarkdown::pdf_document(), t2, quiet = TRUE)
+    
+    if (startpos == 1)
+      file.copy(t2, t1)
+    else {
+      
+      # t1 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test6.pdf"
+      # t2 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test7.pdf"
+      # t3 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test99.pdf"
+      cmd <- paste0("qpdf --empty --pages \"", t1, "\" \"", 
+                    t2, "\" -- \"", t3, "\"") 
+      res <- system(cmd) 
+      
+      if (res == 0) {
+        file.copy(t3, t1, overwrite = TRUE)
+        file.remove(t2)
+        file.remove(t3)
+      } else 
+        stop("PDF concatenation failed.")
+    }
+  
+  }
+  file.copy(t1, pdf_path)
+  file.remove(t1, t2, t3)
+
 }
 
 

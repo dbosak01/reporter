@@ -456,7 +456,7 @@ test_that("pdf12: Table and Text output works as expected.", {
 
 test_that("pdf13: Very Long text output works as expected.", {
   
-  debug <- FALSE
+  debug <- TRUE
   
   if (debug) {
     fp <- file.path(base_path, "pdf/test13.pdf")
