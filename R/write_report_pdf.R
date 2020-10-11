@@ -237,7 +237,13 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   }
   file.copy(t1, pdf_path)
-  file.remove(t1, t2, t3)
+  
+  if (file.exists(t1))
+    file.remove(t1)
+  if (file.exists(t2))
+    file.remove(t2)
+  if (file.exists(t3))
+    file.remove(t3)
 
 }
 

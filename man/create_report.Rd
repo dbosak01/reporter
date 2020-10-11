@@ -56,19 +56,7 @@ The report object holds information concerning report page size, orientation,
 titles, footnotes, page header, page footer, margins, and other options.  
 Use the \code{\link{add_content}} function to add content to the report.  
 The report may be written to a file using the \code{\link{write_report}} 
-function. 
-
-NOTE: PDF output type requires the \strong(rmarkdown) package, a LaTeX renderer 
-like \strong(MiKTeX), and the PDF manipulation program \strong(qpdf).  
-\strong(MiKTeX) and \strong(qpdf) must be installed separately, and will
-not be installed as part of the \strong(rptr) install.  These programs must
-furthermore be added to the _path_ environment variable on the system
-where \strong(rptr) will run. 
-
-Also note that PDF generation is extremely slow compared to TXT and RTF.  If
-you have a very large report, you can improve performance by outputting to
-RTF, and then converting to PDF with a document editor or other
-conversion program.
+function.
 }
 \section{Report family of functions}{
 
@@ -89,6 +77,35 @@ initialized with \code{create_report}.
 The report family of functions are pipe-friendly.  After creating the 
 report, you may pipe the object to any of the above functions to append
 additional options.
+}
+
+\section{Notes on PDF output type}{
+
+
+The PDF output type requires the \strong(rmarkdown) package, a LaTeX renderer 
+like \strong(MiKTeX), and the PDF manipulation program \strong(qpdf).  
+\strong(MiKTeX) and \strong(qpdf) must be installed separately, and will
+not be installed as part of the \strong(rptr) install.  These programs must
+furthermore be added to the _path_ environment variable on the system
+where \strong(rptr) will run. 
+
+Also note that PDF generation is extremely slow compared to TXT and RTF.  If
+you have a very large report, you can improve performance by outputting to
+RTF, and then converting to PDF with a document editor or other
+conversion program. 
+
+PDF output also supports a limited character set.  Non-ASCII characters
+can cause the LaTeX rendering to fail.  Non-ASCII characters can include
+special characters, mathematical symbols, and characters from international
+languages like Chinese, Japanese, and Korean.
+
+Lastly, note that alignment on some styles of PDF report is not rendered
+accurately.  This misalignment is due to LaTeX rendering of plain text
+content.  
+
+Future versions of \strong(rptr) will eliminate the LaTeX 
+intermediary, and increase performance, broaden the allowed character set, 
+and improve alignment.
 }
 
 \examples{

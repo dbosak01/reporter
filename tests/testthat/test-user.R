@@ -128,7 +128,20 @@ test_that("user1: demo table works.", {
   lns <- readLines(fp)
   
   expect_equal(length(lns), res$pages * res$line_count)
-
+  
+  
+  rtfpth <- file.path(base_path, "user/user1.rtf")
+  if (file.exists(rtfpth))
+    file.remove(rtfpth)
+  write_report(rpt, rtfpth, output_type = "RTF")
+  expect_equal(file.exists(rtfpth), TRUE)
+  
+  pdfpth <- file.path(base_path, "user/user1.pdf")
+  if (file.exists(pdfpth))
+    file.remove(pdfpth)
+  write_report(rpt, pdfpth, output_type = "PDF")
+  expect_equal(file.exists(pdfpth), TRUE)
+  
 })
 
 test_that("user2: demo table with stub works.", {
@@ -258,6 +271,13 @@ test_that("user2: demo table with stub works.", {
   
   expect_equal(length(lns), res$pages * res$line_count)
   
+  rtfpth <- file.path(base_path, "user/user2.rtf")
+  if (file.exists(rtfpth))
+    file.remove(rtfpth)
+  write_report(rpt, rtfpth, output_type = "RTF")
+  expect_equal(file.exists(rtfpth), TRUE)
+  
+  
 })
 
 
@@ -322,6 +342,18 @@ test_that("user3: listings works.", {
   write_report(rpt, file_path = rtfpth, output_type = "RTF")
   
   expect_equal(file.exists(rtfpth), TRUE)
+  
+  rtfpth <- file.path(base_path, "user/user3.rtf")
+  if (file.exists(rtfpth))
+    file.remove(rtfpth)
+  write_report(rpt, rtfpth, output_type = "RTF")
+  expect_equal(file.exists(rtfpth), TRUE)
+  
+  pdfpth <- file.path(base_path, "user/user3.pdf")
+  if (file.exists(pdfpth))
+    file.remove(pdfpth)
+  write_report(rpt, pdfpth, output_type = "PDF")
+  expect_equal(file.exists(pdfpth), TRUE)
   
 })
 
@@ -459,6 +491,18 @@ test_that("user4: Adverse Events table works.", {
   
   rtfpth <- file.path(base_path, "user/user4.rtf")
   res <- write_report(rpt, file_path = rtfpth, output_type = "RTF")
+  
+  rtfpth <- file.path(base_path, "user/user4.rtf")
+  if (file.exists(rtfpth))
+    file.remove(rtfpth)
+  write_report(rpt, rtfpth, output_type = "RTF")
+  expect_equal(file.exists(rtfpth), TRUE)
+  
+  pdfpth <- file.path(base_path, "user/user4.pdf")
+  if (file.exists(pdfpth))
+    file.remove(pdfpth)
+  write_report(rpt, pdfpth, output_type = "PDF")
+  expect_equal(file.exists(pdfpth), TRUE)
 
 })
 
@@ -508,6 +552,21 @@ test_that("user5: large listing works.", {
     lns <- readLines(fp)
   
     expect_equal(length(lns), res$pages * res$line_count)
+    
+    rtfpth <- file.path(base_path, "user/user5.rtf")
+    if (file.exists(rtfpth))
+      file.remove(rtfpth)
+    write_report(rpt, rtfpth, output_type = "RTF")
+    expect_equal(file.exists(rtfpth), TRUE)
+    
+    # Very special testing case.
+    if (FALSE) {
+      pdfpth <- file.path(base_path, "user/user5.pdf")
+      if (file.exists(pdfpth))
+        file.remove(pdfpth)
+      write_report(rpt, pdfpth, output_type = "PDF")
+      expect_equal(file.exists(pdfpth), TRUE)
+    }
   
   } else {
     
@@ -555,6 +614,20 @@ test_that("user6: listings with page break works as expected.", {
   
   expect_equal(length(lns), res$pages * res$line_count)
   
+  
+  rtfpth <- file.path(base_path, "user/user6.rtf")
+  if (file.exists(rtfpth))
+    file.remove(rtfpth)
+  write_report(rpt, rtfpth, output_type = "RTF")
+  expect_equal(file.exists(rtfpth), TRUE)
+  
+  pdfpth <- file.path(base_path, "user/user6.pdf")
+  if (file.exists(pdfpth))
+    file.remove(pdfpth)
+  write_report(rpt, pdfpth, output_type = "PDF")
+  expect_equal(file.exists(pdfpth), TRUE)
+  
+  
 })
 
 
@@ -592,6 +665,14 @@ test_that("user7: listings with NA values works.", {
   lns <- readLines(fp)
   
   expect_equal(length(lns), res$pages * res$line_count)
+  
+  rtfpth <- file.path(base_path, "user/user7.rtf")
+  if (file.exists(rtfpth))
+    file.remove(rtfpth)
+  write_report(rpt, rtfpth, output_type = "RTF")
+  expect_equal(file.exists(rtfpth), TRUE)
+  
+
   
 })
 
