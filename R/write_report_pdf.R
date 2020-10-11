@@ -120,16 +120,16 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   if (rs$has_graphics) {
     # Remove fill lines
-    fill_tags <- grep("{{fill}}", body, fixed = TRUE)
+    fill_tags <- grep("```fill```", body, fixed = TRUE)
     body <- body[-fill_tags]
     
     # Replace any plot tags with latex codes
-    plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
+    plt_tags <- grep("```([^}]*)```", body)
     
     for (i in plt_tags) {
       
       # Remove braces
-      rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))  
+      rw <- trimws(gsub("`", "", body[i], fixed = TRUE))  
       
       # Split on pipe
       spec <- strsplit(rw, "|", fixed = TRUE)[[1]]

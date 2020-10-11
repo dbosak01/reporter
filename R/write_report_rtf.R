@@ -51,7 +51,7 @@ write_report_rtf <- function(rs) {
   rs <- write_report_text(rs)
   
   # Read lines from text output
-  ls <- readLines(tmp_path, encoding = "UTF-8")
+  ls <- readLines(tmp_path)
   
   # Revise text and write to pdf
   write_rtf_output(rs, ls, rtf_path, orig_path, tmp_dir)
@@ -112,20 +112,20 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
     hdr[length(hdr) + 1] <- "\\fs24"
   
   # Start with all lines
-  body <- ls
+  body <- encodeRTF(ls)
   
   if (rs$has_graphics) {
     # Remove fill lines
-    fill_tags <- grep("{{fill}}", body, fixed = TRUE)
+    fill_tags <- grep("```fill```", body, fixed = TRUE)
     body <- body[-fill_tags]
 
     # Replace any plot tags with latex codes
-    plt_tags <- grep("\\{\\{([^}]*)\\}\\}", body)
+    plt_tags <- grep("```([^}]*)```", body)
 
     for (i in plt_tags) {
 
       # Remove braces
-      rw <- trimws(gsub("}", "", gsub("{", "", body[i], fixed = TRUE), fixed = TRUE))
+      rw <- trimws(gsub("`", "", body[i], fixed = TRUE))
 
       # Split on pipe
       spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
@@ -147,7 +147,7 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
         ltx <- paste0("\\par\\qc\n"  )
       }
 
-      # Replace original line with latex codes
+      # Replace original line with RTF codes
       body[[i]] <- paste0(ltx, img)
     }
   }
@@ -155,13 +155,13 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   body <- gsub("\f", "\\page ", body, fixed = TRUE)
   
   # Write to file  
-  f <- file(orig_path, open="a", encoding = "native.enc")
+  f <- file(orig_path, open="a")
   
-  writeLines(enc2utf8(hdr), con = f, useBytes = TRUE)
+  writeLines(hdr, con = f)
   
-  writeLines(enc2utf8(paste0(body, "\\line")), con = f, useBytes = TRUE)
+  writeLines(paste0(body, "\\line"), con = f)
   
-  writeLines(enc2utf8("}"), con = f, useBytes = TRUE)
+  writeLines("}", con = f)
   
   close(f)
   
@@ -170,4 +170,32 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
 
 }
 
+#' @noRd
+encodeRTF <- Vectorize(function(x) {
+  
+  
+  ints <- utf8ToInt(x)
+  res <- paste0(encodeRTF_internal(ints), collapse = "")
+  
+  return(res)
+})
+
+#' @noRd
+encodeRTF_internal <- Vectorize(function(x) {
+  
+  ret <- intToUtf8(x, multiple = TRUE)
+  if (ret == "}")
+    ret <- "\\'7d"
+  else if (ret == "{")
+    ret <- "\\'7b"
+  else if (ret == "\\")
+    ret <- "\\'5c"
+  else if (x == 175)
+    ret <- "\\u175\\u175"
+  else if (x > 127)
+    ret <- paste0("\\u", x)
+  
+  return(ret)
+  
+})
 

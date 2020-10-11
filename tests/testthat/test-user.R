@@ -126,7 +126,7 @@ test_that("user1: demo table works.", {
 
   expect_equal(file.exists(fp), TRUE)
   
-  lns <- readLines(fp)
+  lns <- readLines(fp, encoding = "native.enc")
   
   expect_equal(length(lns), res$pages * res$line_count)
   
@@ -137,11 +137,11 @@ test_that("user1: demo table works.", {
     write_report(rpt, rtfpth, output_type = "RTF")
     expect_equal(file.exists(rtfpth), TRUE)
     
-    pdfpth <- file.path(base_path, "user/user1.pdf")
-    if (file.exists(pdfpth))
-      file.remove(pdfpth)
-    write_report(rpt, pdfpth, output_type = "PDF")
-    expect_equal(file.exists(pdfpth), TRUE)
+    # pdfpth <- file.path(base_path, "user/user1.pdf")
+    # if (file.exists(pdfpth))
+    #   file.remove(pdfpth)
+    # write_report(rpt, pdfpth, output_type = "PDF")
+    # expect_equal(file.exists(pdfpth), TRUE)
   }
   
 })

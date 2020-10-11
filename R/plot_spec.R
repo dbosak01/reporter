@@ -118,12 +118,12 @@ get_plot_body <- function(plt, plot_path, align, rs,
   ftnts <- get_footnotes(plt$footnotes, w) 
   
   
-  s <- c(paste0("{{", plot_path, "|", plt$height, 
-                  "|", plt$width, "|", align, "}}"))
+  s <- c(paste0("```", plot_path, "|", plt$height, 
+                  "|", plt$width, "|", align, "```"))
   
   h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed?
 
-  fill <- rep("{{fill}}", h) 
+  fill <- rep("```fill```", h) 
   s <- c(s, fill)
   
   
