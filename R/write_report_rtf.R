@@ -193,7 +193,7 @@ encodeRTF_internal <- Vectorize(function(x) {
   else if (x == 175)
     ret <- "\\u175\\u175"
   else if (x > 127)
-    ret <- paste0("\\u", x)
+    ret <- paste0("\\u", x, "  ")
   
   return(ret)
   

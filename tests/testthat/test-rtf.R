@@ -309,7 +309,7 @@ test_that("rtf8: Two page RTF report works as expected.", {
 
 
 
-test_that("rtf9: Simplest PDF Plot works as expected.", {
+test_that("rtf9: Simplest RTF Plot works as expected.", {
 
   library(ggplot2)
 

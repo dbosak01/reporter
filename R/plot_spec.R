@@ -117,8 +117,10 @@ get_plot_body <- function(plt, plot_path, align, rs,
   ttls <- get_titles(plt$titles, w) 
   ftnts <- get_footnotes(plt$footnotes, w) 
   
+  pltpth <- gsub("\\", "/", plot_path, fixed = TRUE)
   
-  s <- c(paste0("```", plot_path, "|", plt$height, 
+  
+  s <- c(paste0("```", pltpth, "|", plt$height, 
                   "|", plt$width, "|", align, "```"))
   
   h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed?

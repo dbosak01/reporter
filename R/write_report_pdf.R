@@ -78,9 +78,15 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   hdr <- c() 
   body <- c() 
 
+  # output:
+  #   pdf_document:
+  #   latex_engine: xelatex
+  
   # Prepare header
   hdr[length(hdr) + 1] <- "---"
-  hdr[length(hdr) + 1] <- "output: pdf_document"
+  hdr[length(hdr) + 1] <- "output:"
+  hdr[length(hdr) + 1] <- "  pdf_document:"
+  hdr[length(hdr) + 1] <- "    latex_engine: xelatex"
   if (rs$orientation == "landscape") {
     hdr[length(hdr) + 1] <- "classoption: landscape"
   } else {
@@ -112,6 +118,8 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   hdr[length(hdr) + 1] <- "header-includes:"
   hdr[length(hdr) + 1] <- "  - \\renewcommand{\\familydefault}{\\ttdefault}"
   hdr[length(hdr) + 1] <- "  - \\thispagestyle{empty}"
+  #hdr[length(hdr) + 1] <- "  - \\usepackage[mathletters]{ucs}"
+  #hdr[length(hdr) + 1] <- "  - \\usepackage[utf8x]{inputenc}"
   hdr[length(hdr) + 1] <- "---"
   hdr[length(hdr) + 1] <- "\\pagenumbering{gobble}"
 
@@ -177,7 +185,7 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
 
   
   body <- gsub("\f", "", body, fixed = TRUE)
-  body <- gsub("-", "--", body, fixed = TRUE)
+  body <- gsub("-", "--", body, fixed = TRUE) # not necessary with xelatex
   
   
   ## Break up doc into separate pdfs to prevent render function 

@@ -116,10 +116,12 @@ test_that("user1: demo table works.", {
   # Define Report
   rpt <- create_report(fp) %>%
     titles("Table 14.1/4",
-           "Demographics and Baseline Characteristics",
+           "Demographics and Baseline to Characteristics",
            "Specify Population") %>%
     add_content(tbl) %>% 
-    footnotes("Here are some special symbols to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ 鬼")
+    #footnotes("Special symbols \U221e to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%   
+    footnotes("Special symbols µ Ω £ there to mess things up: ") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
 
   # Write out report
   res <- write_report(rpt)
@@ -137,11 +139,11 @@ test_that("user1: demo table works.", {
     write_report(rpt, rtfpth, output_type = "RTF")
     expect_equal(file.exists(rtfpth), TRUE)
     
-    # pdfpth <- file.path(base_path, "user/user1.pdf")
-    # if (file.exists(pdfpth))
-    #   file.remove(pdfpth)
-    # write_report(rpt, pdfpth, output_type = "PDF")
-    # expect_equal(file.exists(pdfpth), TRUE)
+    pdfpth <- file.path(base_path, "user/user1.pdf")
+    if (file.exists(pdfpth))
+      file.remove(pdfpth)
+    write_report(rpt, pdfpth, output_type = "PDF")
+    expect_equal(file.exists(pdfpth), TRUE)
   }
   
 })
