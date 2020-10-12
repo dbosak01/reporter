@@ -72,6 +72,26 @@
 #   
 # }
 
+#' @description Subset the data by row and column. Depends on whether
+#' the user supplied a preview page number.
+#' @noRd
+get_data_subset <- function(dat, keys, pages) {
+ 
+  if (!is.null(pages)) {
+    est <- 60 * pages
+    if (nrow(dat) > est) {
+      ret <- dat[seq(1, est ), keys]
+    } else {
+      ret <- dat[ , keys]
+    }
+    
+  } else {
+    
+    ret <- dat[ , keys]
+  }
+   
+  return(ret)
+}
 
 
 #' Gets the page wraps

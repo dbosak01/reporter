@@ -55,7 +55,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   #print(keys)
 
   # Filter dataset by included columns
-  dat <- dat[ , keys]
+  dat <- get_data_subset(dat, keys, rs$preview)
   # print("Key columns:")
   # print(dat)
   
@@ -63,7 +63,6 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   ts$col_defs <- set_column_defaults(ts, keys)
   # print("col_defs:")
   # print(ts$col_defs)
-  
   
   # Get labels
   labels <- get_labels(dat, ts)
@@ -157,6 +156,12 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
                             lpg_rows, content_offset, ts)
   # print("splits")
   # print(splits)
+  
+  # Subset splits by preview, if requested
+  if (!is.null(rs$preview)) {
+    if (rs$preview < length(splits))
+      splits <- splits[seq(1, rs$preview)] 
+  }
   
   tot_count <- length(splits) * length(wraps)
   counter <- 0

@@ -121,3 +121,12 @@ test_that("options_fixed parameter checks work as expected.", {
 })
 
 
+test_that("preview parameter checks work as expected.", {
+  
+  rpt <- create_report()
+  
+  expect_error(write_report(rpt, preview = - 1))
+  expect_error(write_report(rpt, preview = "a"))
+  
+})
+

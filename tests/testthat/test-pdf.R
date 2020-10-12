@@ -456,9 +456,7 @@ test_that("pdf12: Table and Text output works as expected.", {
 
 test_that("pdf13: Very Long text output works as expected.", {
   
-  debug <- FALSE
-  
-  if (debug) {
+
     fp <- file.path(base_path, "pdf/test13.pdf")
     
     if (file.exists(fp))
@@ -474,16 +472,13 @@ test_that("pdf13: Very Long text output works as expected.", {
                   center = "Confidential", 
                   right ="Page [pg] of [tpg]")
     
-    res <- write_report(rpt)
+    res <- write_report(rpt, preview = 3)
     
     expect_equal(file.exists(fp), TRUE)
     
     
     
-  } else {
-    expect_equal(TRUE, TRUE) 
-  }
-  
+
 })
 
 

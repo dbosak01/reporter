@@ -356,7 +356,7 @@ test_that("user3: listings works.", {
   pdfpth <- file.path(base_path, "user/user3.pdf")
   if (file.exists(pdfpth))
     file.remove(pdfpth)
-  write_report(rpt, pdfpth, output_type = "PDF")
+  write_report(rpt, pdfpth, output_type = "PDF", preview = 3)
   expect_equal(file.exists(pdfpth), TRUE)
   
 })
@@ -469,18 +469,18 @@ test_that("user4: Adverse Events table works.", {
     define(`ARM D_3`, align = "center", label = "Severe") 
   
   rpt <- create_report(fp) %>% 
-    options_fixed(font_size = 12) %>% 
+    options_fixed(font_size = 10) %>% 
     page_header("Client: Experis", "Study: BBC") %>% 
     titles("Table 1.0", "Adverse Events by Severity", "Safety Population") %>% 
     add_content(tbl) %>% 
-    # footnotes(paste("Date Produced:", "Time", ";  SAS Program: Table3_0.R"),
-    #           paste("* Total Reporting is defined as number of subjects",
-    #                 "who reported at least one adverse event."),
-    #           "** Mod = Moderate",
-    #           paste("# Episodes is defined as the total number of occurances",
-    #                 "of adverse events"),
-    #           paste("% is defined as Number of Subjects divided by Total Reporting"),
-    #           "Note: Adverse events were coded using MedDRA Version 9.1") %>%
+    footnotes(paste("Date Produced:", "Time", ";  SAS Program: Table3_0.R"),
+              paste("* Total Reporting is defined as number of subjects",
+                    "who reported at least one adverse event."),
+              "** Mod = Moderate",
+              paste("# Episodes is defined as the total number of occurances",
+                    "of adverse events"),
+              paste("% is defined as Number of Subjects divided by Total Reporting"),
+              "Note: Adverse events were coded using MedDRA Version 9.1") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   
   res <- write_report(rpt)
@@ -628,7 +628,7 @@ test_that("user6: listings with page break works as expected.", {
   pdfpth <- file.path(base_path, "user/user6.pdf")
   if (file.exists(pdfpth))
     file.remove(pdfpth)
-  write_report(rpt, pdfpth, output_type = "PDF")
+  write_report(rpt, pdfpth, output_type = "PDF", preview = 3)
   expect_equal(file.exists(pdfpth), TRUE)
   
   

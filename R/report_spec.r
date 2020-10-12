@@ -1138,6 +1138,15 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
     x <- options_fixed(x, font_size = x$font_size)
   }
   
+  if (!is.null(preview)) {
+    if (is.numeric(preview)) {
+      if (preview > 0)
+        x$preview <- preview
+      else
+        stop("Preview value must be greater than zero.")
+    } else
+      stop("Preview value must be a number")
+  }
   
   # Trap missing or invalid output_type parameter
   if (x$file_path == "") {

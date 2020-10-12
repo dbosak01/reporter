@@ -36,6 +36,12 @@ write_report_text <- function(rs) {
   # Assign pages to ls and continue processing
   ls <- ret[["pages"]]
   
+  # Deal with preview
+  if (!is.null(rs$preview)) {
+    if (rs$preview < length(ls[[1]]$pages))
+      ls[[1]]$pages <- ls[[1]]$pages[seq(1, rs$preview)]
+  }
+  
   # Write pages to file
   rs <- write_content(rs, ls, pt)
 
