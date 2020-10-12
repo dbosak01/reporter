@@ -71,6 +71,12 @@
 #' @param output_type The report output type.  Currently, the only valid value 
 #' is "TXT".  Default is "TXT".  Will eventually support "RTF", "PDF", and 
 #' "DOCX".
+#' @param font_type The font type to use on the report. Valid values are 
+#' 'fixed' and 'variable'.  A font type of 'fixed' will use a fixed-width,
+#' monospace font such as Courier.  Currently, a font type of 'fixed' is the 
+#' only option available.  Future versions will include variable-width fonts
+#' such as Arial and Times New Roman.  To set options for font type 'fixed', 
+#' used the \code{\link{options_fixed}} function.
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param units Specifies the units of measurement.  This setting will 
@@ -124,6 +130,7 @@
 #' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' @export
 create_report <- function(file_path = "", output_type = "TXT", 
+                          font_type = "fixed",
                           orientation ="landscape", units = "inches",
                           paper_size = "letter", missing = "") {
 
@@ -161,7 +168,14 @@ create_report <- function(file_path = "", output_type = "TXT",
                 "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4'."))
   }
   
-
+  # Trap missing or invalid font_type parameter
+  if (is.null(font_type))
+    stop("font_type parameter cannot be null.")
+  else {
+    if (!font_type %in% c("fixed", "variable"))
+      stop("font_type value invalid.  Valid values are 'fixed' and 'variable'.")
+  }
+    
   # Populate report_spec fields
   x$file_path <- file_path
   x$output_type <- output_type
@@ -173,6 +187,7 @@ create_report <- function(file_path = "", output_type = "TXT",
   x$pages <- 1                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
   x$missing <- missing
+  x$font_type <- font_type      # For future use.  Not used now.
 
   
   if (output_type %in% c("TXT", "PDF", "RTF")) {
@@ -1121,7 +1136,7 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
   
   if (!is.null(file_path)) {
     
-   x$file_path <- file_path
+    x$file_path <- file_path
 
   }
   
@@ -1152,6 +1167,14 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
   if (x$file_path == "") {
     
     stop(paste0("report file_path missing or invalid."))
+  } else {
+    
+    if (file.exists(x$file_path))
+      file.remove(x$file_path)
+    
+    if (!dir.exists(dirname(x$file_path)))
+      dir.create(dirname(x$file_path))
+    
   }
 
   ret <- ""

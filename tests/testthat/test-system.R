@@ -10,8 +10,6 @@ test_that("test1: Simplest table works as expected.", {
   
   fp <- file.path(base_path, "output/test1.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   rpt <- create_report(fp) %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
@@ -30,9 +28,7 @@ test_that("test1: Simplest table works as expected.", {
 test_that("test2: Simplest table with title works as expected.", {
   
   fp <- file.path(base_path, "output/test2.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
+
   
   tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
@@ -57,8 +53,6 @@ test_that("test3: Simple table with formats works as expected.", {
   
   fp <- file.path(base_path, "output/test3.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   subjid <- 100:109
@@ -114,8 +108,6 @@ test_that("test4: Two page report works as expected.", {
   
   fp <- file.path(base_path, "output/test4.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   subjid <- 100:109
@@ -179,9 +171,7 @@ test_that("test5: Table with break between sections works as expected.", {
   
   
   fp <- file.path(base_path, "output/test5.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
+
   
   # Setup
   subjid <- 100:109
@@ -232,8 +222,6 @@ test_that("test6: Table that spans multiple pages breaks as expected.", {
 
   fp <- file.path(base_path, "output/test6.out")
 
-  if (file.exists(fp))
-    file.remove(fp)
 
   rpt <- create_report(fp) %>%
     titles("IRIS Data Frame") %>%
@@ -255,8 +243,6 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
   
   fp <- file.path(base_path, "output/test7.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   arm <- c(rep("A", 5), rep("B", 5))
@@ -418,8 +404,6 @@ test_that("test11: Table with break between sections works as expected.", {
   
   fp <- file.path(base_path, "output/test11.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   subjid <- 100:109
@@ -471,8 +455,6 @@ test_that("test12: Headerless table with title works as expected.", {
   
   fp <- file.path(base_path, "output/test12.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ], headerless = TRUE) %>% 
     define(vs, visible = FALSE)
@@ -494,9 +476,7 @@ test_that("test12: Headerless table with title works as expected.", {
 test_that("test13: Combination with Headerless table works as expected.", {
   
   fp <- file.path(base_path, "output/test13.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
+
   
   tbl1 <- create_table(mtcars[1:10, ],  headerless = FALSE) %>% 
     titles("MTCARS Combined Table 1.0")
@@ -530,8 +510,6 @@ test_that("test15: Multi-page table with Titles and Footnotes breaks as expected
   
   fp <- file.path(base_path, "output/test15.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
   
   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -570,9 +548,6 @@ test_that("test16: Simple regulatory listing works as expected.", {
   
   fp <- file.path(base_path, "output/test16.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   # Create mtcars listing
   rpt <- create_report(fp, orientation = "portrait") %>% 
     page_header(left = "Client: Motor Trend", right = c("Study: Cars", 
@@ -603,9 +578,6 @@ test_that("test17: Simple regulatory table works as expected.", {
   library(dplyr)
   
   fp <- file.path(base_path, "output/test17.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   dat <- mtcars
   
@@ -693,9 +665,6 @@ test_that("test18: Text and table with page breaks works as expected.", {
   
   fp <- file.path(base_path, "output/test18.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
@@ -747,9 +716,6 @@ test_that("test19: show_cols 'none' parameter on table works as expected.", {
   
   fp <- file.path(base_path, "output/test19.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ], show_cols = "none") %>%
     define(mpg) %>% 
     define(cyl) %>% 
@@ -775,10 +741,7 @@ test_that("test19: show_cols 'none' parameter on table works as expected.", {
 test_that("test20: show_cols 'some' parameter on table works as expected.", {
   
   fp <- file.path(base_path, "output/test20.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
+
   tbl <- create_table(mtcars[1:10, ], show_cols = c("vs", "mpg", "cyl", "disp")) 
   
   rpt <- create_report(fp) %>% 
@@ -800,9 +763,6 @@ test_that("test20: show_cols 'some' parameter on table works as expected.", {
 test_that("test21: Multiple page headers and footers work as expected.", {
   
   fp <- file.path(base_path, "output/test21.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
@@ -828,9 +788,6 @@ test_that("test21: Multiple page headers and footers work as expected.", {
 test_that("test22: Multiple id_var parameters work as expected.", {
   
   fp <- file.path(base_path, "output/test22.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   dat <- data.frame(vehicle = rownames(mtcars), mtcars)
   
@@ -865,9 +822,6 @@ test_that("test23: Blank margins setting works as expected.", {
   
   fp <- file.path(base_path, "output/test23.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp) %>% 
     options_fixed(editor = "word", blank_margins = TRUE) %>% 
     set_margins(top = 1) %>% 
@@ -889,9 +843,6 @@ test_that("test24: Table width parameter works as expected for full width.", {
   
   
   fp <- file.path(base_path, "output/test24.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl1 <- create_table(mtcars[1:10, 1:6], width = 9) 
   tbl2 <- create_table(mtcars[11:20, 1:6]) 
@@ -916,9 +867,6 @@ test_that("test25: page_break parameter simple case works as expected.", {
   
   
   fp <- file.path(base_path, "output/test25.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   dat <- mtcars
   rownames(dat) <- NULL
@@ -949,13 +897,9 @@ test_that("test26: page_break parameter harder case works as expected.", {
   
   
   fp <- file.path(base_path, "output/test26.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
+ 
   dat <- iris
 
-  
   #dat$pg <- c(rep(1, 16), rep(2, 16))
   
   tbl <- create_table(dat) %>%
@@ -983,9 +927,6 @@ test_that("test27: page_break parameter even harder case works as expected.", {
   
   
   fp <- file.path(base_path, "output/test27.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   dat <- iris
   
@@ -1022,12 +963,6 @@ test_that("test28: use_attributes parameter table works as expected.", {
   fp2 <- file.path(base_path, "output/test28b.out")
   fp3 <- file.path(base_path, "output/test28c.out")
   
-  if (file.exists(fp1))
-    file.remove(fp1)
-  if (file.exists(fp2))
-    file.remove(fp2)
-  if (file.exists(fp3))
-    file.remove(fp3)
   
   dat <- mtcars[1:10, ]
   attr(dat$mpg, "label") <- "Miles per gallon"
@@ -1085,9 +1020,6 @@ test_that("test29: column_defaults work as expected.", {
   
   fp <- file.path(base_path, "output/test29.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ]) %>% 
     column_defaults(width = .5, align = "right", format = "%.1f",
                     n = 5) %>% 
@@ -1115,10 +1047,7 @@ test_that("test30: multiple vars on define work as expected.", {
 
 
   fp <- file.path(base_path, "output/test30.out")
-
-  if (file.exists(fp))
-    file.remove(fp)
-
+  
   tbl <- create_table(mtcars[1:10, ]) %>%
     define(c(mpg, wt), width = 2, format = "%.2f", align = "left",
            label_align = "right")
@@ -1147,9 +1076,6 @@ test_that("test31: Table width parameter works for less than full width.", {
   
   fp <- file.path(base_path, "output/test31.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl1 <- create_table(mtcars[1:10, 1:6], width = 7) 
   tbl2 <- create_table(mtcars[11:20, 1:6]) 
   
@@ -1174,9 +1100,6 @@ test_that("test36: Report with NAs in data works as expected.", {
   
   
   fp <- file.path(base_path, "output/test36.txt")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   subjid <- 100:109

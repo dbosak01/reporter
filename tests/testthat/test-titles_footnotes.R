@@ -7,9 +7,6 @@ test_that("ttfn1: single title right aligned works.", {
   
   fp <- file.path(base_path, "titles/ttfn1.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ]) 
   
   rpt <- create_report(fp) %>% 
@@ -27,9 +24,6 @@ test_that("ttfn1: single title right aligned works.", {
 test_that("ttfn2: two titles opposite aligned works.", {
   
   fp <- file.path(base_path, "titles/ttfn2.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) 
   
@@ -50,9 +44,6 @@ test_that("ttfn3: single footnote right aligned works.", {
   
   fp <- file.path(base_path, "titles/ttfn3.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ]) 
   
   rpt <- create_report(fp) %>% 
@@ -70,9 +61,6 @@ test_that("ttfn3: single footnote right aligned works.", {
 test_that("ttfn4: two footnotes opposite aligned works.", {
   
   fp <- file.path(base_path, "titles/ttfn4.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) 
   
@@ -92,9 +80,6 @@ test_that("ttfn5: title and footnote assigned to table works.", {
   
   fp <- file.path(base_path, "titles/ttfn5.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ]) %>% 
     titles("MTCARS Data Frame 1", align = "center") %>% 
     footnotes("MTCARS Data Frame 2", align = "left") 
@@ -113,9 +98,6 @@ test_that("ttfn5: title and footnote assigned to table works.", {
 test_that("ttfn6: no blank_rows on header and footer work as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn6.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) %>% 
     footnotes("Table footnote", align = "left", blank_row = "none") 
@@ -138,10 +120,7 @@ test_that("ttfn6: no blank_rows on header and footer work as expected.", {
 test_that("ttfn7: blank_row on header and footer work as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn7.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
+
   tbl <- create_table(mtcars[1:10, ]) %>% 
     footnotes("Table footnote", align = "left", blank_row = "both") 
   
@@ -169,9 +148,6 @@ test_that("ttfn8: blank_row on content works as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn8.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ]) %>% 
     footnotes("Table footnote", align = "left", blank_row = "none") 
   
@@ -197,9 +173,6 @@ test_that("ttfn8: blank_row on content works as expected.", {
 test_that("ttfn9: default blank_rows on header and footer work as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn9.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) %>% 
     footnotes("Table footnote",
@@ -229,9 +202,6 @@ test_that("ttfn9: default blank_rows on header and footer work as expected.", {
 test_that("ttfn10: text blank rows work as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn10.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -265,9 +235,6 @@ test_that("ttfn10: text blank rows work as expected.", {
 test_that("ttfn11: blank hitting page break works as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn11.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars) %>% 
     footnotes("Table footnote",

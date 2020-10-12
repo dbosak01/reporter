@@ -18,9 +18,6 @@ test_that("rtf1: Simplest table works as expected.", {
   
   fp <- file.path(base_path, "rtf/test1.rtf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp, output_type = "RTF") %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
@@ -33,9 +30,6 @@ test_that("rtf1: Simplest table works as expected.", {
 test_that("rtf2: Simplest table with title works as expected.", {
   
   fp <- file.path(base_path, "rtf/test2.rtf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
@@ -58,9 +52,6 @@ test_that("rtf3: Table with break between sections works as expected.", {
   
   
   fp <- file.path(base_path, "rtf/test3.rtf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   subjid <- 100:109
@@ -109,9 +100,6 @@ test_that("rtf4: Table that spans multiple pages breaks as expected.", {
   
   fp <- file.path(base_path, "rtf/test4.rtf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp, output_type = "RTF") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) 
@@ -128,9 +116,6 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
   
   
   fp <- file.path(base_path, "rtf/test5.rtf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   arm <- c(rep("A", 5), rep("B", 5))
@@ -213,9 +198,6 @@ test_that("rtf7: Simplest RTF report with 1 in margins works as expected.", {
 
   fp <- file.path(base_path, "rtf/test7.rtf")
 
-  if (file.exists(fp))
-    file.remove(fp)
-
   tbl <- create_table(mtcars[1:10, ]) %>%
     column_defaults(width = .5) %>%
     define(vs, visible = FALSE)
@@ -226,7 +208,6 @@ test_that("rtf7: Simplest RTF report with 1 in margins works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl, align = "left") %>%
     page_footer("Time", right = "Page [pg] of [tpg]")
-
 
 
   res <- write_report(rpt)
@@ -242,9 +223,6 @@ test_that("rtf8: Two page RTF report works as expected.", {
 
 
   fp <- file.path(base_path, "rtf/test8.rtf")
-
-  if (file.exists(fp))
-    file.remove(fp)
 
   # Setup
   subjid <- 100:109
@@ -315,10 +293,6 @@ test_that("rtf9: Simplest RTF Plot works as expected.", {
 
   fp <- file.path(base_path, "rtf/test9.rtf")
 
-  if (file.exists(fp))
-    file.remove(fp)
-
-
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
   plt <- create_plot(p, height = 4, width = 8)
@@ -351,10 +325,6 @@ test_that("rtf10: RTF Table with Plot works as expected.", {
   library(ggplot2)
 
   fp <- file.path(base_path, "rtf/test10.rtf")
-
-  if (file.exists(fp))
-    file.remove(fp)
-
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
@@ -392,10 +362,6 @@ test_that("rtf11: RTF Table with Plot on same page works as expected.", {
   
   fp <- file.path(base_path, "rtf/test11.rtf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
-  
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 4, width = 8)
@@ -428,9 +394,6 @@ test_that("rtf12: Table and Text output works as expected.", {
   
   fp <- file.path(base_path, "rtf/test12.rtf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl1 <- mtcars[1:10, ]
   tbl2 <- mtcars[11:20, ]
   
@@ -462,9 +425,6 @@ test_that("rtf13: Very Long text output works as expected.", {
   if (debug) {
     fp <- file.path(base_path, "rtf/test13.rtf")
     
-    if (file.exists(fp))
-      file.remove(fp)
-    
     l <- paste(rep(cnt, 1000), collapse = "\n\n")
     
     rpt <- create_report(fp, orientation = "portrait", output_type = "RTF") %>%
@@ -493,9 +453,6 @@ test_that("rtf14: Simplest portrait table works as expected.", {
   
   fp <- file.path(base_path, "rtf/test14.rtf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp, output_type = "RTF", orientation = "portrait") %>% 
     page_header("left", "right") %>% 
     titles("Table 1.0", "MTCARS Data Frame") %>% 
@@ -513,9 +470,6 @@ test_that("rtf15: Simplest landscape table works as expected.", {
   
   
   fp <- file.path(base_path, "rtf/test15.rtf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>% 
     page_header("left", "right") %>% 

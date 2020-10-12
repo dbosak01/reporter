@@ -35,9 +35,6 @@ test_that("text1: Simplest text output works as expected.", {
   
   fp <- file.path(base_path, "text/text1.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 1.0", "Simple Text Report") %>% 
     add_content(create_text(cnt)) 
@@ -56,9 +53,6 @@ test_that("text1: Simplest text output works as expected.", {
 test_that("text2: Harder text output works as expected.", {
   
   fp <- file.path(base_path, "text/text2.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 2.0", "Harder Text Report") %>% 
@@ -82,9 +76,6 @@ test_that("text2: Harder text output works as expected.", {
 test_that("text3: Even harder text output works as expected.", {
   
   fp <- file.path(base_path, "text/text3.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   rpt <- create_report(fp, orientation = "portrait") %>%
     titles("Report 3.0", "Even Harder Text Report") %>% 
@@ -110,10 +101,7 @@ test_that("text3: Even harder text output works as expected.", {
 test_that("text4: Long text output works as expected.", {
   
   fp <- file.path(base_path, "text/text4.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
+
   l <- paste(rep(cnt, 10), collapse = "\n\n")
   
   rpt <- create_report(fp, orientation = "portrait") %>%
@@ -138,9 +126,6 @@ test_that("text5: Table and Text output works as expected.", {
   
   fp <- file.path(base_path, "text/text5.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-
   tbl1 <- mtcars[1:10, ]
   tbl2 <- mtcars[11:20, ]
   
@@ -174,9 +159,6 @@ test_that("text6: Very Long text output works as expected.", {
   if (debug) {
     fp <- file.path(base_path, "text/text6.out")
   
-    if (file.exists(fp))
-      file.remove(fp)
-    
     l <- paste(rep(cnt, 1000), collapse = "\n\n")
     
     rpt <- create_report(fp, orientation = "portrait") %>%
@@ -206,10 +188,6 @@ test_that("text7: Text page setup landscape works as expected.", {
   
   fp <- file.path(base_path, "text/text7.out")
   
-  if (file.exists(fp))
-    file.remove(fp)
-
-  
   txt1 <- create_text(cnt) %>% 
     titles("Test Title ", "Test Titles 2", "Test Title 3") %>% 
     footnotes("Footnote 1", "Foonote 2", "Footnote 3", "Footnote 4", "Footnote 5")
@@ -238,10 +216,6 @@ test_that("text7: Text page setup landscape works as expected.", {
 test_that("text8: Text page setup portrait works as expected.", {
   
   fp <- file.path(base_path, "text/text8.out")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
   
   txt1 <- create_text(cnt) %>% 
     titles("Test Title ", "Test Titles 2", "Test Title 3") %>% 

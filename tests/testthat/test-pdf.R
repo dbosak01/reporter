@@ -18,9 +18,6 @@ test_that("pdf1: Simplest table works as expected.", {
   
   fp <- file.path(base_path, "pdf/test1.pdf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp, output_type = "PDF") %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
@@ -33,9 +30,6 @@ test_that("pdf1: Simplest table works as expected.", {
 test_that("pdf2: Simplest table with title works as expected.", {
   
   fp <- file.path(base_path, "pdf/test2.pdf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
@@ -57,10 +51,7 @@ test_that("pdf3: Table with break between sections works as expected.", {
   
   
   fp <- file.path(base_path, "pdf/test3.pdf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
+
   # Setup
   subjid <- 100:109
   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
@@ -108,9 +99,6 @@ test_that("pdf4: Table that spans multiple pages breaks as expected.", {
   
   fp <- file.path(base_path, "pdf/test4.pdf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   rpt <- create_report(fp, output_type = "PDF") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) 
@@ -127,9 +115,6 @@ test_that("pdf5: Table with long cell and label values wraps as expected.", {
   
   
   fp <- file.path(base_path, "pdf/test5.pdf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   arm <- c(rep("A", 5), rep("B", 5))
@@ -212,9 +197,6 @@ test_that("pdf7: Simplest PDF report with 1 in margins works as expected.", {
   
   fp <- file.path(base_path, "pdf/test7.pdf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl <- create_table(mtcars[1:10, ]) %>%
     column_defaults(width = .5) %>%
     define(vs, visible = FALSE)
@@ -241,9 +223,6 @@ test_that("pdf8: Two page PDF report works as expected.", {
   
   
   fp <- file.path(base_path, "pdf/test8.pdf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
   
   # Setup
   subjid <- 100:109
@@ -313,11 +292,7 @@ test_that("pdf9: Simplest PDF Plot works as expected.", {
   library(ggplot2)
   
   fp <- file.path(base_path, "pdf/test9.pdf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
-  
+ 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 4, width = 8)
@@ -350,10 +325,6 @@ test_that("pdf10: PDF Table with Plot works as expected.", {
   library(ggplot2)
   
   fp <- file.path(base_path, "pdf/test10.pdf")
-  
-  if (file.exists(fp))
-    file.remove(fp)
-  
   
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
@@ -391,10 +362,6 @@ test_that("pdf11: PDF Table with Plot on same page works as expected.", {
   
   fp <- file.path(base_path, "pdf/test11.pdf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
-  
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 4, width = 8)
@@ -427,9 +394,6 @@ test_that("pdf12: Table and Text output works as expected.", {
   
   fp <- file.path(base_path, "pdf/test12.pdf")
   
-  if (file.exists(fp))
-    file.remove(fp)
-  
   tbl1 <- mtcars[1:10, ]
   tbl2 <- mtcars[11:20, ]
   
@@ -459,9 +423,6 @@ test_that("pdf13: Very Long text output works as expected.", {
 
     fp <- file.path(base_path, "pdf/test13.pdf")
     
-    if (file.exists(fp))
-      file.remove(fp)
-    
     l <- paste(rep(cnt, 1000), collapse = "\n\n")
     
     rpt <- create_report(fp, orientation = "portrait", output_type = "PDF") %>%
@@ -475,9 +436,6 @@ test_that("pdf13: Very Long text output works as expected.", {
     res <- write_report(rpt, preview = 3)
     
     expect_equal(file.exists(fp), TRUE)
-    
-    
-    
 
 })
 

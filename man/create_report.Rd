@@ -7,6 +7,7 @@
 create_report(
   file_path = "",
   output_type = "TXT",
+  font_type = "fixed",
   orientation = "landscape",
   units = "inches",
   paper_size = "letter",
@@ -21,6 +22,13 @@ report_spec object, but will be required to print the report.}
 \item{output_type}{The report output type.  Currently, the only valid value 
 is "TXT".  Default is "TXT".  Will eventually support "RTF", "PDF", and 
 "DOCX".}
+
+\item{font_type}{The font type to use on the report. Valid values are 
+'fixed' and 'variable'.  A font type of 'fixed' will use a fixed-width,
+monospace font such as Courier.  Currently, a font type of 'fixed' is the 
+only option available.  Future versions will include variable-width fonts
+such as Arial and Times New Roman.  To set options for font type 'fixed', 
+used the \code{\link{options_fixed}} function.}
 
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}
