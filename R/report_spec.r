@@ -40,13 +40,12 @@
 #' additional options.
 #' 
 #' @section Notes on PDF output type:
-#' 
-#' The PDF output type requires the \strong(rmarkdown) package, a LaTeX renderer 
-#' like \strong(MiKTeX), and the PDF manipulation program \strong(qpdf).  
-#' \strong(MiKTeX) and \strong(qpdf) must be installed separately, and will
-#' not be installed as part of the \strong(rptr) install.  These programs must
+#' The PDF output type requires the \strong{rmarkdown} package, a LaTeX renderer 
+#' like \strong{MiKTeX}, and the PDF manipulation program \strong{qpdf}.  
+#' \strong{MiKTeX} and \strong{qpdf} must be installed separately, and will
+#' not be installed as part of the \strong{rptr} install.  These programs must
 #' furthermore be added to the _path_ environment variable on the system
-#' where \strong(rptr) will run. 
+#' where \strong{rptr} will run. 
 #' 
 #' Also note that PDF generation is extremely slow compared to TXT and RTF.  If
 #' you have a very large report, you can improve performance by outputting to
@@ -62,7 +61,7 @@
 #' accurately.  This misalignment is due to LaTeX rendering of plain text
 #' content.  
 #' 
-#' Future versions of \strong(rptr) will eliminate the LaTeX 
+#' Future versions of \strong{rptr} will eliminate the LaTeX 
 #' intermediary, and increase performance, broaden the allowed character set, 
 #' and improve alignment.
 #'
@@ -253,7 +252,7 @@ editor_settings <- read.table(header = TRUE, text = '
                     notepad++        12   4.7619   6.531   2.5862  0.393      1
                     word         11.497   4.5454  6.1146      2.4      0      0
                     wordpad      10.909   4.3165  6.1146      2.4      0      0
-                    pdf12         12.25   4.7430   5.165   2.0565  .1967     .5
+                    pdf12            12   4.7430       5   2.0565  .1967     .5
                     pdf10       14.2222   5.6074    6.10   2.4590  .1967     .5
                     rtf10            12   4.7619    6.30    2.521      0      0
                     rtf12            10   3.9473  5.3333    2.100      0      0

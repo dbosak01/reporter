@@ -177,9 +177,9 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   # Make body replacements
   if (rs$font_size == 10)
-    body <- gsub(" ", "\\hspace{5pt}", body, fixed = TRUE)
+    body <- gsub(" ", "\\hspace{.502em}", body, fixed = TRUE)
   else if (rs$font_size == 12)
-    body <- gsub(" ", "\\hspace{6pt}", body, fixed = TRUE)
+    body <- gsub(" ", "\\hspace{.502em}", body, fixed = TRUE)
   
   breaks <- grep("\f", body, value = FALSE, fixed = TRUE)
 

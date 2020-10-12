@@ -81,13 +81,12 @@ additional options.
 
 \section{Notes on PDF output type}{
 
-
-The PDF output type requires the \strong(rmarkdown) package, a LaTeX renderer 
-like \strong(MiKTeX), and the PDF manipulation program \strong(qpdf).  
-\strong(MiKTeX) and \strong(qpdf) must be installed separately, and will
-not be installed as part of the \strong(rptr) install.  These programs must
+The PDF output type requires the \strong{rmarkdown} package, a LaTeX renderer 
+like \strong{MiKTeX}, and the PDF manipulation program \strong{qpdf}.  
+\strong{MiKTeX} and \strong{qpdf} must be installed separately, and will
+not be installed as part of the \strong{rptr} install.  These programs must
 furthermore be added to the _path_ environment variable on the system
-where \strong(rptr) will run. 
+where \strong{rptr} will run. 
 
 Also note that PDF generation is extremely slow compared to TXT and RTF.  If
 you have a very large report, you can improve performance by outputting to
@@ -103,7 +102,7 @@ Lastly, note that alignment on some styles of PDF report is not rendered
 accurately.  This misalignment is due to LaTeX rendering of plain text
 content.  
 
-Future versions of \strong(rptr) will eliminate the LaTeX 
+Future versions of \strong{rptr} will eliminate the LaTeX 
 intermediary, and increase performance, broaden the allowed character set, 
 and improve alignment.
 }
