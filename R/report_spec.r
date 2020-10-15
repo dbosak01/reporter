@@ -388,7 +388,8 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
         }
         else
           x$min_margin = min_margin
-      }
+      } else
+        x$min_margin = 0
   
     } else {
       

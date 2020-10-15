@@ -820,10 +820,10 @@ test_that("test23: Blank margins setting works as expected.", {
   
   # Compare output to test1
   
-  fp <- file.path(base_path, "output/test23.out")
+  fp <- file.path(base_path, "output/test23.txt")
   
-  rpt <- create_report(fp) %>% 
-    options_fixed(editor = "word", blank_margins = TRUE) %>% 
+  rpt <- create_report(fp, output_type = "TXT") %>% 
+    options_fixed( blank_margins = TRUE) %>% 
     set_margins(top = 1) %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
