@@ -661,7 +661,15 @@ get_labels <- function(dat, ts){
       if (is.null( names(col))) {
         v2 <- c(v2, v1[counter])
       } else {
-        v2 <- c(v2, names(col))
+        
+        # Not actually sure what the situation is when this would be viable.
+        # Consider taking this whole else condition out.
+        # Only time I've seen names directly on the column, 
+        # something is messsed up.
+        if (length(names(col)) == 1)
+          v2 <- c(v2, names(col))
+        else
+          v2 <- c(v2, v1[counter])
       }
       
     }

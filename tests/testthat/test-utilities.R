@@ -228,4 +228,32 @@ test_that("set_column_defaults function all cols works as expected.", {
   
 })
 
-
+test_that("data with extra names on variables doesn't crash labels function.", {
+  
+  # fp <- file.path(base_path, "user/user8.out")
+  # 
+  # dat <- readRDS(file.path(base_path, "./data/dm_final.rds"))
+  # 
+  # #names(dat) 
+  # 
+  # #dat1 <- mtcars
+  # 
+  # #names(dat1$cyl) <- c("fork", "bork", "spork") 
+  # 
+  # names(dat$statistic)
+  # tbl <- create_table(dat)
+  # 
+  # labels <- get_labels(dat, tbl)
+  # 
+  # names(labels)
+  # length(labels)
+  # 
+  # ncol(dat)
+  # 
+  # names(dat)
+  # 
+  # labels[names(dat)]
+  
+  expect_equal(TRUE, TRUE)
+  
+})

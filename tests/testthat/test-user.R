@@ -318,6 +318,7 @@ test_that("user3: listings works.", {
   tbl <- create_table(data_demo) %>% 
     define(USUBJID, id_var = TRUE) 
 
+
   # Define Report
   rpt <- create_report(fp) %>%
     options_fixed(editor = "notepad", font_size = 10) %>% 
@@ -658,4 +659,23 @@ test_that("user7: listings with NA values works.", {
 
   
 })
+
+test_that("user8: table with spaces in column names works.", {
+  
+  fp <- file.path(base_path, "user/user8.out")
+  
+  dat <- readRDS(file.path(base_path, "./data/dm_final.rds"))
+
+  tbl <- create_table(dat)  
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
 
