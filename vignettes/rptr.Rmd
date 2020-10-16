@@ -1,8 +1,10 @@
 ---
-title: "rptr-vignette"
+title: "Create Statistical Reports"
+author: "David Bosak"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rptr-vignette}
+  %\VignetteIndexEntry{Create Statistical Reports}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

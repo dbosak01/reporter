@@ -7,7 +7,8 @@
 create_plot(x, height = NULL, width = NULL)
 }
 \arguments{
-\item{x}{The plot to create.}
+\item{x}{The plot to create.  Specifically, this parameter should be 
+set to an object returned from a call to \code{\link[ggplot2]{ggplot}}.}
 
 \item{height}{The height of the plot in the specified units of measure.}
 
@@ -21,7 +22,8 @@ Function to create a plot specification that can be
 added as content to a report.  The function creates an S3 object of class
 'plot_spec'.  The \code{create_plot} function can be used to include 
 charts, graphs, and figures on a statistical report.  The function
-only supports plot objects returned by \code{\link[ggplot2]{ggplot}}.
+only supports plot objects returned by \code{\link[ggplot2]{ggplot}}.  It
+does not support the Base R \code{\link[base]{plot}} function.
 }
 \details{
 To add a plot to a report, use the \code{create_plot} function.  The 

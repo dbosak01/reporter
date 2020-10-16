@@ -51,8 +51,9 @@ option is only valid for output type PDF.}
 \item{line_size}{The number of character that will fit on a line.  Normally,
 the \code{line_size} is calculated based on the page size, font size, and cpuom.
 You can override the calculated value by setting the \code{line_size}
-directly.  
-#' @param line_count The number of lines that will fit on page.  Normally,
+directly.}
+
+\item{line_count}{The number of lines that will fit on page.  Normally,
 the \code{line_count} is calculated based on the page size, font size, and lpuom.
 You can override the calculated value by setting the \code{line_count}
 directly.}

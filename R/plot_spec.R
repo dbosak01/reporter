@@ -8,7 +8,7 @@
 #' 'plot_spec'.  The \code{create_plot} function can be used to include 
 #' charts, graphs, and figures on a statistical report.  The function
 #' only supports plot objects returned by \code{\link[ggplot2]{ggplot}}.  It
-#' does not support the Base R \code{\link[base]{plot} function.
+#' does not support the Base R \code{\link[base]{plot}} function.
 #' @details 
 #' To add a plot to a report, use the \code{create_plot} function.  The 
 #' function allows you to set a width and height for the plot.  The

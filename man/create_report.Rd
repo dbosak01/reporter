@@ -17,14 +17,16 @@ create_report(
 \arguments{
 \item{file_path}{The output path of the desired report. Either a full path or
 a relative path is acceptable.  This parameter is not required to create the
-report_spec object, but will be required to print the report.}
+report_spec object, but will be required to write the report.  In addition, 
+the file extension is not required.  If the file extension is not supplied,
+the \code{\link{write_report}} function will add a file extension based
+on the \code{output_type} specified.}
 
-\item{output_type}{The report output type.  Currently, the only valid value 
-is "TXT".  Default is "TXT".  Will eventually support "RTF", "PDF", and 
-"DOCX".}
+\item{output_type}{The report output type.  Default is "TXT".  Valid
+values are "TXT", "RTF", and "PDF".}
 
-\item{font_type}{The font type to use on the report. Valid values are 
-'fixed' and 'variable'.  A font type of 'fixed' will use a fixed-width,
+\item{font_type}{The font type to use on the report. The default value 
+'fixed'.  A font type of 'fixed' will use a fixed-width,
 monospace font such as Courier.  Currently, a font type of 'fixed' is the 
 only option available.  Future versions will include variable-width fonts
 such as Arial and Times New Roman.  To set options for font type 'fixed', 
@@ -77,7 +79,7 @@ initialized with \code{create_report}.
   \item \code{\link{page_header}} to add a page header to the report. 
   \item \code{\link{page_footer}} to add a page_footer to the report. 
   \item \code{\link{add_content}} to add content to the report.
-  \item \code{\link{options_fixed}} to set options for text output.
+  \item \code{\link{options_fixed}} to set options for fixed-width output.
   \item \code{\link{add_content}} to add content to the report.
   \item \code{\link{write_report}} to write the report to the file system.
 }
@@ -85,34 +87,9 @@ initialized with \code{create_report}.
 The report family of functions are pipe-friendly.  After creating the 
 report, you may pipe the object to any of the above functions to append
 additional options.
-}
 
-\section{Notes on PDF output type}{
-
-The PDF output type requires the \strong{rmarkdown} package, a LaTeX renderer 
-like \strong{MiKTeX}, and the PDF manipulation program \strong{qpdf}.  
-\strong{MiKTeX} and \strong{qpdf} must be installed separately, and will
-not be installed as part of the \strong{rptr} install.  These programs must
-furthermore be added to the _path_ environment variable on the system
-where \strong{rptr} will run. 
-
-Also note that PDF generation is extremely slow compared to TXT and RTF.  If
-you have a very large report, you can improve performance by outputting to
-RTF, and then converting to PDF with a document editor or other
-conversion program. 
-
-PDF output also supports a limited character set.  Non-ASCII characters
-can cause the LaTeX rendering to fail.  Non-ASCII characters can include
-special characters, mathematical symbols, and characters from international
-languages like Chinese, Japanese, and Korean.
-
-Lastly, note that alignment on some styles of PDF report is not rendered
-accurately.  This misalignment is due to LaTeX rendering of plain text
-content.  
-
-Future versions of \strong{rptr} will eliminate the LaTeX 
-intermediary, and increase performance, broaden the allowed character set, 
-and improve alignment.
+Note that PDF output has some limitations not found in TXT and RTF output.
+See \link{NotesOnPDF} for additional information.
 }
 
 \examples{

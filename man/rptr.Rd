@@ -5,16 +5,20 @@
 \alias{rptr}
 \title{rptr: A package for creating statistical reports}
 \description{
-The rptr package creates statistical reports in text file format.
-    Will soon support RTF, PDF, and DOCX format.
+The \strong{rptr} package creates statistical reports in TXT, 
+RTF, and PDF file formats.  Features include automatic page wrapping and 
+breaking for wide and long tables, spanning headers, titles, footnotes, 
+page headers, page footers, and page numbering.  The package allows mixing
+of multiple tables, text, and plots in a single report, or even on a single
+page.
 }
 \details{
 The \strong{rptr} package creates regulatory-style, statistical reports. It 
 was designed
 for use in the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
-for any industry.  The package is written in Base R, and has no dependencies on
-any other reporting package.
+for any industry.  The package is written primarily in Base R, and has 
+few dependencies on other packages.
 
 The package is intended to give R programmers 
 report layout capabilities such as those found in SAS® PROC REPORT, 
@@ -22,8 +26,10 @@ and a choice of output formats like SAS® ODS. The package will
 initially focus on printable, file-based 
 output formats, as there are already numerous R packages that 
 provide tabular reporting in HTML. 
-The current version supports TEXT output.  Future releases will 
-incorporate RTF, DOCX, and PDF file formats.
+The current version supports TXT, RTF, and PDF output types. 
+
+PDF output has special installation requirements.  See \link{NotesOnPDF}
+for more information.
 }
 \section{Key Features}{
 
@@ -33,9 +39,12 @@ The \strong{rptr} package contains the following key features:
   \item Supports header labels and spanning headers 
   \item Calculates default columns widths automatically
   \item Includes automatic wrapping and splitting of wide and long tables
-  \item Integrates with the \strong{fmtr} package to format numeric, date, and character data
+  \item Integrates with the \strong{fmtr} package to format numeric, date, 
+        and character data
+  \item Plots from the popular \strong{ggplot2} package can be added to RTF 
+        and PDF reports
   \item Allows appending multiple tables to a report, multiple tables to a page, 
-        and intermingling of text and tables
+        and intermingling of text, tables, and plots
   \item Supports in-report date/time stamps and "Page X of Y" page numbering
 }
 }
@@ -46,6 +55,7 @@ The \strong{rptr} package contains the following key features:
   \item \code{\link{create_report}} to define a report
   \item \code{\link{create_table}} to define a table
   \item \code{\link{create_text}} to define text content
+  \item \code{\link{create_plot}} to define a plot 
   \item \code{\link{write_report}} to write out the report
 }
 }
