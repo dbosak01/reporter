@@ -271,8 +271,11 @@ get_page_footer <- function(rs) {
 
 # Page Info ---------------------------------------------------------------
 
-
-
+#' @description A internal class to collect data about a report page.  This 
+#' object is created in create_table_pages_text and passed around to 
+#' different functions so they can make decisions based on the information
+#' contained in this object.
+#' @noRd
 page_info <- function(data, keys, font_name, col_width, col_align,
                       label, label_align) {
   

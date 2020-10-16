@@ -558,18 +558,6 @@ get_col_formats <- function(dat, ts) {
   # Deal with stub
   if (!is.null(ts$stub)) {
     
-    # Don't take out formats until they have been applied
-    # Keep code anyway in case it is needed somewhere else
-    
-    # print(paste("Names in vars:", names(ret) %in% ts$stub$vars))
-    # # Remove variables associated with stub
-    # if (any(names(ret) %in% ts$stub$vars) == TRUE) {
-    #   
-    #   for (nm in ts$stub$vars) 
-    #     ret[[nm]] <- NULL
-    #   
-    # }
-    
     
     # Add stub format
     if (!is.null(ts$stub$format))

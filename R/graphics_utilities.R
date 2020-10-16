@@ -14,7 +14,10 @@ get_image_rtf <- function(file_path, width, height, units) {
     conv <- 566.9291
   }
   
+  # Construct rtf codes
   ret <- paste0("{\\pict\\pngblip\\picwgoal",round(width*conv),"\\pichgoal",round(height*conv)," \n")
+  
+  # Convert image to byte codes
   ret <- paste0(ret, get_image_bytes(file_path), "\n} \\par\\ql")
   
   return(ret)
@@ -48,10 +51,5 @@ get_image_bytes <- function(file_path) {
 }
 
           
-#          
-# img <- "./man/images/cat.png"
-# 
-# dat <- get_image_rtf(img, 3, 3, "inches")
-# writeLines(dat, "bytes.txt")          
           
           

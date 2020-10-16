@@ -589,7 +589,7 @@ get_justify <- function(x) {
   return(ret)
 }
 
-
+#' @noRd
 get_blank_indicator <- function(pg_num, tot_pg, content_blanks,
                                 page_size, content_offset, num_rows) {
   
