@@ -1154,6 +1154,14 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
     x <- options_fixed(x, font_size = x$font_size)
   }
   
+
+  if (nchar(x$file_path) > 0 & length(getExtension(x$file_path)) == 0) {
+      x$modified_path <- paste0(x$file_path, ".", tolower(x$output_type))
+  } else 
+    x$modified_path <- x$file_path
+  
+  #print(x$modified_path)
+  
   if (!is.null(preview)) {
     if (is.numeric(preview)) {
       if (preview > 0)
@@ -1165,16 +1173,16 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
   }
   
   # Trap missing or invalid output_type parameter
-  if (x$file_path == "") {
+  if (x$modified_path == "") {
     
     stop(paste0("report file_path missing or invalid."))
   } else {
     
-    if (file.exists(x$file_path))
-      file.remove(x$file_path)
+    if (file.exists(x$modified_path))
+      file.remove(x$modified_path)
     
-    if (!dir.exists(dirname(x$file_path)))
-      dir.create(dirname(x$file_path))
+    if (!dir.exists(dirname(x$modified_path)))
+      dir.create(dirname(x$modified_path))
     
   }
 

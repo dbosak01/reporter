@@ -820,7 +820,7 @@ test_that("test23: Blank margins setting works as expected.", {
   
   # Compare output to test1
   
-  fp <- file.path(base_path, "output/test23.txt")
+  fp <- file.path(base_path, "output/test23.out")
   
   rpt <- create_report(fp, output_type = "TXT") %>% 
     options_fixed( blank_margins = TRUE) %>% 

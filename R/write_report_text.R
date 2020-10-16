@@ -138,8 +138,8 @@ paginate_content <- function(rs, ls) {
 write_content <- function(rs, ls, pt) {
   
   # Kill existing file
-  if (file.exists(rs$file_path))
-    file.remove(rs$file_path)
+  if (file.exists(rs$modified_path))
+    file.remove(rs$modified_path)
   
   counter <- 0
   page <- 0
@@ -175,7 +175,7 @@ write_content <- function(rs, ls, pt) {
         last_page <- FALSE
       
       
-      f <- file(rs$file_path, open="a+", encoding = "native.enc")
+      f <- file(rs$modified_path, open="a+", encoding = "native.enc")
       
       if (rs$blank_margins)
         writeLines(enc2utf8(blank_margin_top), con = f, useBytes = TRUE)
@@ -328,7 +328,7 @@ page_setup <- function(rs) {
 write_page_numbers <- function(rs) {
  
   # Read file into vector
-  lns <- readLines(rs$file_path, encoding = "UTF-8")
+  lns <- readLines(rs$modified_path, encoding = "UTF-8")
   
   # Set up page variables
   tpg <- rs$pages
@@ -381,7 +381,7 @@ write_page_numbers <- function(rs) {
   }
   
   # Replace file with updated lines
-  f <- file(rs$file_path, open="w+", encoding = "native.enc")
+  f <- file(rs$modified_path, open="w+", encoding = "native.enc")
   
 
   writeLines(enc2utf8(lns), con = f, useBytes = TRUE)

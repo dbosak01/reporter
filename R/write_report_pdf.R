@@ -14,7 +14,7 @@ write_report_pdf <- function(rs) {
   
   debug <- FALSE
   
-  orig_path <- rs$file_path
+  orig_path <- rs$modified_path
   
   # Create temp path for text output
   if (debug) {
@@ -45,7 +45,7 @@ write_report_pdf <- function(rs) {
     file.remove(orig_path)
   
   # Replace original path
-  rs$file_path <- tmp_path
+  rs$modified_path <- tmp_path
   
   # Create text output normally to temp location
   rs <- write_report_text(rs)
@@ -57,7 +57,7 @@ write_report_pdf <- function(rs) {
   write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
 
   # Restore original path
-  rs$file_path <- orig_path
+  rs$modified_path <- orig_path
   
   # Clean up
   if (!debug) {
