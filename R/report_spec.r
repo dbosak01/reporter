@@ -330,6 +330,14 @@ editor_settings <- read.table(header = TRUE, text = '
 #' FALSE.  This option is only valid for \code{output_type = 'TXT'}.
 #' @param font_size The size of the font in points.  Default is 12pt.  This
 #' option is only valid for output type PDF.
+#' @param line_size The number of character that will fit on a line.  Normally,
+#' the \code{line_size} is calculated based on the page size, font size, and cpuom.
+#' You can override the calculated value by setting the \code{line_size}
+#' directly.  
+#' #' @param line_count The number of lines that will fit on page.  Normally,
+#' the \code{line_count} is calculated based on the page size, font size, and lpuom.
+#' You can override the calculated value by setting the \code{line_count}
+#' directly.
 #' @return The updated report spec.
 #' @seealso \code{\link{create_report}} to create a report and set the unit
 #' of measure, \code{\link{write_registration_file}} to determine the 
@@ -354,7 +362,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
-                          font_size = 10) {
+                          font_size = 10, line_size = NULL, line_count = NULL) {
   
   if (x$output_type == "TXT") {
     if (is.null(editor)) {
@@ -470,10 +478,25 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
     
   }
   
+  if (!is.null(line_size)) {
+    if (!is.numeric(line_size))
+      stop("line_size must be a number.")
+    if (line_size <= 0)
+      stop("line_size must be greater than zero.")
+  }
+  
+  if (!is.null(line_count)) {
+    if (!is.numeric(line_count))
+      stop("line_count must be a number.")
+    if (line_count <= 0)
+      stop("line_count must be greater than zero.")
+  }
+  
   x$font_size = font_size
   x$char_width <- 1 / x$cpuom
   x$line_height <- 1 / x$lpuom
-
+  x$user_line_size <- line_size
+  x$user_line_count <- line_count
   
   return(x)
   
@@ -1241,12 +1264,24 @@ print.report_spec <- function(x, ..., verbose = FALSE){
 
     
     cat(grey60("# A report specification: "))
-    if (!is.null(x$pages))
-      cat(grey60(as.character(x$pages) %+% " pages"))
+    if (!is.null(x$pages)) {
+      if (!is.null(x$preview)) {
+        if (x$preview > 0)
+          cat(grey60(as.character(x$pages) %+% " pages") %+% red(" PREVIEW"))
+        else
+          cat(grey60(as.character(x$pages) %+% " pages"))
+      } else {
+        
+        cat(grey60(as.character(x$pages) %+% " pages")) 
+      }
+    }
     cat("\n")
-    cat("- file_path: '" %+% x$file_path %+% "'\n")
+    cat("- file_path: '" %+% x$modified_path %+% "'\n")
     cat("- output_type: " %+% x$output_type %+% "\n")
+    cat("- units: " %+% x$units %+% "\n")
     cat("- orientation: " %+% x$orientation %+% "\n")
+    if (!is.null(x$line_size)) 
+      cat("- line size/count: " %+% x$line_size %+% "/" %+% x$line_count %+% "\n")
     if (!is.null(x$page_header_left) |
         !is.null(x$page_header_right)) {
       cat("- page_header:")

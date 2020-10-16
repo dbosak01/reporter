@@ -108,6 +108,17 @@ test_that("create_report parameter checks work as expected.", {
   
 })
 
+test_that("line_size and line_count parameter checks work as expected.", {
+
+  rpt <- create_report()
+  expect_error(options_fixed(rpt, line_size = "a"))  
+  expect_error(options_fixed(rpt, line_size = -35))
+  expect_error(options_fixed(rpt, line_count = "a"))
+  expect_error(options_fixed(rpt, line_count = -876))
+})
+
+
+
 
 test_that("options_fixed parameter checks work as expected.", {
   

@@ -1151,7 +1151,27 @@ test_that("test36: Report with NAs in data works as expected.", {
   
 })
 
-
+test_that("test37: line_size and line_count overrides work as expected.", {
+  
+  fp <- file.path(base_path, "output/test37.out")
+  
+  
+  rpt <- create_report(fp) %>%
+    options_fixed(line_size = 40, line_count = 30) %>% 
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
 
 
 # 

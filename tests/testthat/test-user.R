@@ -489,12 +489,14 @@ test_that("user4: Adverse Events table works.", {
   res <- write_report(rpt, file_path = rtfpth, output_type = "RTF")
   
   rtfpth <- file.path(base_path, "user/user4.rtf")
-  write_report(rpt, rtfpth, output_type = "RTF")
+  res <- write_report(rpt, rtfpth, output_type = "RTF")
   expect_equal(file.exists(rtfpth), TRUE)
+  #print(res)
   
   pdfpth <- file.path(base_path, "user/user4.pdf")
-  write_report(rpt, pdfpth, output_type = "PDF", preview = 3)
+  res <- write_report(rpt, pdfpth, output_type = "PDF", preview = 3)
   expect_equal(file.exists(pdfpth), TRUE)
+  #print(res)
 
 })
 

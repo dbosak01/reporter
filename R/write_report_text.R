@@ -261,12 +261,18 @@ page_setup <- function(rs) {
     print(paste0("Content Size: ", rs$content_size))
   
   # Line size is the number of characters that will fit in the content size width
-  rs$line_size <- ceiling(rs$content_size[["width"]] / rs$char_width)
+  if (is.null(rs$user_line_size))
+    rs$line_size <- ceiling(rs$content_size[["width"]] / rs$char_width)
+  else 
+    rs$line_size <- rs$user_line_size
   if (debug)
     print(paste0("Line Size: ", rs$line_size))
   
   # Line count is the number of lines that will fit in the content size height
-  rs$line_count <- ceiling(rs$content_size[["height"]] / rs$line_height)
+  if (is.null(rs$user_line_count))
+    rs$line_count <- ceiling(rs$content_size[["height"]] / rs$line_height)
+  else
+    rs$line_count <- rs$user_line_count
   if (debug)
     print(paste0("Line Count: ", rs$line_count))
   
