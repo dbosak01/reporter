@@ -3,18 +3,19 @@
 
 
 #' @title Create plot content
-#' @description Function to create a text specification that can be 
+#' @description Function to create a plot specification that can be 
 #' added as content to a report.  The function creates an S3 object of class
-#' 'text_spec'.  The \code{create_text} function can be used to include 
-#' analysis on a statistical report.
+#' 'plot_spec'.  The \code{create_plot} function can be used to include 
+#' charts, graphs, and figures on a statistical report.  The function
+#' only supports plot objects returned by \code{\link[ggplot2]{ggplot}}.
 #' @details 
-#' To add plain text to a report, use the \code{create_text} function.  The 
-#' function allows you to set a width and alignment for the text.  The
-#' function will preserve any other formatting you apply to the text.  See
+#' To add a plot to a report, use the \code{create_plot} function.  The 
+#' function allows you to set a width and height for the plot.  The
+#' function will preserve any other geometries you apply to the plot.  See
 #' the \code{\link{add_content}} function to control page breaking and 
-#' blanks spaces above or below the text.  
+#' blanks spaces above or below the plot.    
 #' 
-#' The text specification also accepts titles and footnotes.  See the 
+#' The plot specification also accepts titles and footnotes.  See the 
 #' \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 #' details.
 #' 
@@ -72,9 +73,12 @@ create_plot <- function(x, height = NULL, width = NULL) {
 
 # Write Functions -------------------------------------------------------
 
-#' @description A function to output strings for plain text content
-#' @details Basic logic is to wrap any text to the available line width, 
-#' then then just dump it out.  All formatting is left to the user.
+#' @description A function to output strings for plot content
+#' @details Basic logic is to write the plot as a png file to a temporary
+#' location, then put a token in the text that references the temp location.
+#' Later code will pick up the image and insert it into the report.  Blank
+#' lines are generated to fill up the page based on a calculation using
+#' the plot height and width.
 #' @param rs The Report Spec
 #' @param cntnt The text content to output
 #' @param lpg_rows Last page rows.

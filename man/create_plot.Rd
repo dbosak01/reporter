@@ -17,19 +17,20 @@ create_plot(x, height = NULL, width = NULL)
 The plot specification.
 }
 \description{
-Function to create a text specification that can be 
+Function to create a plot specification that can be 
 added as content to a report.  The function creates an S3 object of class
-'text_spec'.  The \code{create_text} function can be used to include 
-analysis on a statistical report.
+'plot_spec'.  The \code{create_plot} function can be used to include 
+charts, graphs, and figures on a statistical report.  The function
+only supports plot objects returned by \code{\link[ggplot2]{ggplot}}.
 }
 \details{
-To add plain text to a report, use the \code{create_text} function.  The 
-function allows you to set a width and alignment for the text.  The
-function will preserve any other formatting you apply to the text.  See
+To add a plot to a report, use the \code{create_plot} function.  The 
+function allows you to set a width and height for the plot.  The
+function will preserve any other geometries you apply to the plot.  See
 the \code{\link{add_content}} function to control page breaking and 
-blanks spaces above or below the text.  
+blanks spaces above or below the plot.    
 
-The text specification also accepts titles and footnotes.  See the 
+The plot specification also accepts titles and footnotes.  See the 
 \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 details.
 }
