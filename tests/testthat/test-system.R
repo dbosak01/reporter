@@ -1173,6 +1173,63 @@ test_that("test37: line_size and line_count overrides work as expected.", {
   
 })
 
+test_that("test38: column_defaults works as expected with multiple tables.", {
+  
+  fp <- file.path(base_path, "output/test38.out")
+  
+  tbl1 <- create_table(mtcars[1:5, ]) %>% 
+    column_defaults(width = .5) 
+  
+  tbl2 <- create_table(mtcars[6:10, ], headerless=TRUE) %>% 
+    column_defaults(width = .5) 
+  
+  # Create the report object
+  rpt <- create_report(fp) %>%
+    titles("MTCARS Sample Data", align = "left") %>%
+    add_content(tbl1, page_break = FALSE, align = "left", blank_row = "none") %>%
+    add_content(tbl2, page_break = FALSE, align = "left") %>%
+    add_content(create_text("* NOTE: Above table is actually two tables stacked."))
+  
+  # Write the report to the file system
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+
+})
+
+
+
+test_that("test39: column_defaults works as expected with column positions.", {
+  
+  fp <- file.path(base_path, "output/test39.out")
+  
+  tbl1 <- create_table(mtcars[1:5, ]) %>% 
+    column_defaults(vars = 1:5, width = .5) %>% 
+    column_defaults(6:11, width = .6)
+  
+  
+  # Create the report object
+  rpt <- create_report(fp) %>%
+    titles("MTCARS Sample Data", align = "left") %>%
+    add_content(tbl1, align = "left", blank_row = "none")
+  
+  # Write the report to the file system
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
 
 # 
 # test_that("test28: Table width parameter less than sum of columns works.", {

@@ -80,33 +80,52 @@
 #' library(magrittr)
 #' 
 #' # Create temp file path
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "airquality.txt")
 #' 
-#' # Create the report object
-#' rpt <- create_report(tmp, orientation = "portrait") %>% 
-#'   titles("MTCARS Sample Report") %>% 
-#'   add_content(create_table(mtcars[1:10, ])) 
+#' # Prepare Data
+#' dat <- airquality[sample(1:153, 15), ]
+#' dat$Month <-  as.Date(paste0("1973-", dat$Month, "-01"))
+#' 
+#' # Define table
+#' tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone")) %>% 
+#'   titles("Table 9.6", "Air Quality Sample Report") %>% 
+#'   column_defaults(width = .5) %>% 
+#'   define(Month, format = "%B", align = "left", width = 1) %>% 
+#'   define(Temp, format = "%.0f°") %>% 
+#'   footnotes("* New York, May to September 1973")
+#' 
+#' # Define report 
+#' rpt <- create_report(tmp, orientation = "portrait",  missing = "-") %>% 
+#'   add_content(tbl) 
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
 #' 
 #' # Write the report to the console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #                              MTCARS Sample Report
-#' # 
-#' #   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' #  ----------------------------------------------------------------------------
-#' #    21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #    21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' #  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' #  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' #  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' #  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' #  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' #  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' #  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' #                      Table 9.6
+#' #              Air Quality Sample Report
+#' #      
+#' #      Month           Day   Wind   Temp  Ozone
+#' #      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #      July              8    6.3    92°     97
+#' #      July              9    5.7    92°     97
+#' #      August            1    6.9    81°     39
+#' #      July             23   11.5    82°      -
+#' #      June              9   13.8    90°     71
+#' #      July             12   14.3    73°     10
+#' #      July              4   10.9    84°      -
+#' #      May              31    7.4    76°     37
+#' #      September        30   11.5    68°     20
+#' #      June             25      8    75°      -
+#' #      June             28   11.5    80°      -
+#' #      August           18    7.4    76°     23
+#' #      June             20   10.3    76°     13
+#' #      July              1    4.1    84°    135
+#' #      May              23    9.7    61°      4
+#' #      
+#' #      * New York, May to September 1973
 #' @export
 create_report <- function(file_path = "", output_type = "TXT", 
                           font_type = "fixed",
@@ -198,7 +217,7 @@ create_report <- function(file_path = "", output_type = "TXT",
 
 
 #' @title
-#' Set options for a report with a variable width font
+#' Set options for a report (variable width font)
 #'
 #' @description
 #' This function sets the options for a report of output type 
@@ -207,9 +226,9 @@ create_report <- function(file_path = "", output_type = "TXT",
 #'
 #' @param x The report spec.
 #' @param font_name The font name to use on the report.  The specified font
-#' will be used on the entire report.  Valid values are "Courier New", "Arial",
-#' "Calibri", or "Times New Roman".  The default font is "Courier New".
-#' @param font_size The font size.  Valid value is 10.
+#' will be used on the entire report.  Valid values are "Courier", "Courier New", 
+#' "Arial", "Calibri", or "Times New Roman".  The default font is "Courier New".
+#' @param font_size The font point size.  Valid values are 10 or 12.
 #' @return The updated report spec.
 #' @family report
 #' @examples
@@ -252,19 +271,22 @@ editor_settings <- read.table(header = TRUE, text = '
                                ') 
 
 #' @title
-#' Set options for a report (fixed width font)
+#' Set options for a report (fixed-width font)
 #'
 #' @description
 #' This function sets the options for a report  
 #' with a fixed width font, such as a text report.
 #' 
-#' @details The \code{options_fixed} function sets the characters per 
+#' @details The \code{options_fixed} function sets options for reports 
+#' with a fixed-width, monospace font.  These reports are based off a 
+#' text report, but may be output as type "RTF" or "PDF".  
+#' 
+#' The \code{options_fixed} function sets
+#' the characters per 
 #' unit of measure (\code{cpuom}) and lines per unit of measure
 #' (\code{lpuom}) settings for the report.  These settings determine how 
 #' many characters and lines will fit within one unit of measure (uom), as 
-#' specified on the \code{\link{create_report}} function.  
-#' 
-#' These settings are
+#' specified on the \code{\link{create_report}} function.  These settings are
 #' important to ensure the report content stays within the available page size 
 #' and margins.  Because every text editor allows a different number of 
 #' characters and lines on a page, these settings must be adjusted depending
@@ -279,6 +301,11 @@ editor_settings <- read.table(header = TRUE, text = '
 #' set the \code{cpuom} and 
 #' \code{lpuom} parameters manually.  To determine your \code{cpuom}
 #' and \code{lpuom}, see the help for \code{\link{write_registration_file}}.
+#' 
+#' Alternatively, using the \code{options_fixed} function, 
+#' you may set the \code{line_size} and \code{line_count} directly.  Note that
+#' the \code{line_size} and \code{line_count} may be different for different
+#' output types and editors. 
 #'
 #' The \code{min_margin} parameter is used to set the minimum margin allowed
 #' by the editor.  This value will be subtracted from the margin settings 
@@ -306,8 +333,9 @@ editor_settings <- read.table(header = TRUE, text = '
 #' on the editor to set margins.  When used, editor margins
 #' should be set to zero.  Valid values are TRUE and FALSE. Default is
 #' FALSE.  This option is only valid for \code{output_type = 'TXT'}.
-#' @param font_size The size of the font in points.  Default is 12pt.  This
-#' option is only valid for output type PDF.
+#' @param font_size The size of the font in points.  Default is 10pt.  This
+#' option is only valid for output types RTF and PDF.  Valid values are 10 and 
+#' 12.
 #' @param line_size The number of character that will fit on a line.  Normally,
 #' the \code{line_size} is calculated based on the page size, font size, and cpuom.
 #' You can override the calculated value by setting the \code{line_size}
@@ -325,18 +353,68 @@ editor_settings <- read.table(header = TRUE, text = '
 #' library(rptr)
 #' library(magrittr)
 #' 
-#' # Create temp file path
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "iris.txt")
 #' 
-#' # Create the report object
-#' rpt <- create_report(tmp, orientation = "portrait") %>% 
-#'   titles("MTCARS Sample Report") %>% 
-#'   add_content(create_table(mtcars)) %>% 
-#'   options_fixed(editor = "notepad++")
+#' # Prepare data
+#' dat <- iris[sample(1:150, 15), c(5, 1, 2, 3, 4)]
+#' dat <- dat[order(dat$Species), ]
+#'
+#' # Define table
+#' tbl <- create_table(dat) %>% 
+#'   titles("Table 3.2", "IRIS Sample Report") %>% 
+#'   spanning_header(2, 3, label = "Sepal") %>% 
+#'   spanning_header(4, 5, label = "Petal") %>% 
+#'   column_defaults(2:5, format = "%.1f") %>% 
+#'   define(Species, align = "left", dedupe = TRUE, blank_after = TRUE) %>% 
+#'   define(Sepal.Length, label = "Length") %>% 
+#'   define(Sepal.Width, label = "Width") %>% 
+#'   define(Petal.Length, label = "Length") %>% 
+#'   define(Petal.Width, label = "Width") %>% 
+#'   footnotes("* From Fisher's Iris Dataset")
+#'        
+#' # Define report
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   options_fixed(blank_margins = TRUE) %>% 
+#'   set_margins(top = 1, bottom =1) %>% 
+#'   add_content(tbl, align = "left") 
 #' 
-#' # Write the report to the file system
+#' # Write the report
 #' write_report(rpt)
 #' 
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
+#' 
+#' #
+#' #
+#' #
+#' #
+#' #                      Table 3.2
+#' #                  IRIS Sample Report
+#' #
+#' #                       Sepal        Petal
+#' #                   ¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
+#' #       Species     Length Width Length Width
+#' #       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #       setosa         5.0   3.0    1.6   0.2
+#' #                      4.6   3.4    1.4   0.3
+#' #                      5.0   3.4    1.6   0.4
+#' #                      5.7   3.8    1.7   0.3
+#' #
+#' #       versicolor     5.7   2.8    4.1   1.3
+#' #                      6.2   2.9    4.3   1.3
+#' #                      7.0   3.2    4.7   1.4
+#' #                      6.6   2.9    4.6   1.3
+#' #
+#' #       virginica      6.2   3.4    5.4   2.3
+#' #                      7.2   3.0    5.8   1.6
+#' #                      6.9   3.1    5.1   2.3
+#' #                      5.6   2.8    4.9   2.0
+#' #                      7.7   2.6    6.9   2.3
+#' #                      6.3   2.8    5.1   1.5
+#' #                      7.7   2.8    6.7   2.0
+#' #
+#' #
+#' #       * From Fisher's Iris Dataset
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
@@ -501,7 +579,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' margins on the available editor to match those specified in 
 #' \code{set_margins}.  Any mismatch may result in content not fitting properly
 #' on the page. For best results, set the right and bottom margins to zero 
-#' to allow for any overflow in spacing.
+#' to allow for slight overflow without causing a page break or wrapping lines.
 #' @param x The report spec object.
 #' @param top The top margin.
 #' @param bottom The bottom margin.
@@ -514,17 +592,45 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' library(magrittr)
 #' 
 #' # Create a temporary file
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "iris.txt")
 #' 
+#' # Define table
+#' tbl <- create_table(iris[1:10, ]) %>% 
+#'   titles("Table 3.2", "IRIS Sample Report") %>% 
+#'   footnotes("* From Fisher's Iris Dataset")
+#'        
 #' # Define report
 #' rpt <- create_report(tmp, orientation="portrait") %>%
-#'   titles("MTCARS Report") %>% 
+#'   options_fixed(blank_margins = TRUE) %>% 
 #'   set_margins(top = 1, bottom =1) %>% 
-#'   add_content(create_table(mtcars)) 
+#'   add_content(tbl, align = "left") 
 #' 
 #' # Write the report
 #' write_report(rpt)
 #' 
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
+#' 
+#' #
+#' #
+#' #
+#' #
+#' #                                  Table 3.2
+#' #                              IRIS Sample Report
+#' #     
+#' #          Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#' #          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #                   5.1         3.5          1.4         0.2  setosa
+#' #                   4.9           3          1.4         0.2  setosa
+#' #                   4.7         3.2          1.3         0.2  setosa
+#' #                   4.6         3.1          1.5         0.2  setosa
+#' #                     5         3.6          1.4         0.2  setosa
+#' #                   5.4         3.9          1.7         0.4  setosa
+#' #                   4.6         3.4          1.4         0.3  setosa
+#' #                     5         3.4          1.5         0.2  setosa
+#' #                   4.4         2.9          1.4         0.2  setosa
+#' #                   4.9         3.1          1.5         0.1  setosa
+#' # 
+#' #          * From Fisher's Iris Dataset
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL) {
@@ -627,23 +733,23 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' write_report(rpt)
 #' 
 #' # Write report to console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' # Client: Motor Trend                                                Study: Cars
-#' #                              MTCARS Sample Report
+#' # Client: Motor Trend                                              Study: Cars
+#' #                             MTCARS Sample Report
 #' # 
-#' #  mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' # ----------------------------------------------------------------------------
-#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' #           mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
+#' #         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #            21   6    160  110   3.9   2.62  16.46  0  1    4    4
+#' #            21   6    160  110   3.9  2.875  17.02  0  1    4    4
+#' #          22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
+#' #          21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
+#' #          18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
+#' #          18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
+#' #          14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
+#' #          24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
+#' #          22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
+#' #          19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
 #' @export
 page_header <- function(x, left="", right="", blank_row = "none"){
 
@@ -675,7 +781,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' If added to a report, 
 #' the titles will be added to
 #' the page template, and thus appear on each page of the report. Titles may 
-#' also be added to a table or text object.
+#' also be added to a table, text, or plot object.
 #'
 #' @details
 #' The titles function accepts a set of strings of the desired title text. To
@@ -687,27 +793,27 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' block.  To control alignment of titles separately for each title, use 
 #' multiple titles functions.
 #' 
-#' Titles may be assigned to a report, a table or a text specification. If 
-#' assigned to the report, the title will appear at the top of the page, and
-#' be repeated for every page.  If the titles are assigned to a table or text
+#' Titles may be assigned to a report, a table, a text specification, or a plot. 
+#' If assigned to the report, the title will appear at the top of the page, and
+#' be repeated for every page of the report.  If the titles are assigned to  
 #' content, the titles will appear above the content, and be repeated if the 
-#' table or text breaks to the next page.  
+#' content breaks to the next page.  
 #' 
 #' If titles are assigned to the report,
 #' alignment will be oriented to the page body.  If titles are assigned to
-#' a table or text, alignment will be oriented to the edge of the content.
+#' content, alignment will be oriented to the edge of the content.
 #' 
 #' One title function accepts up to 10 titles.  However, multiple title 
-#' blocks may be added to the same object.  
+#' blocks may be added to the same object if needed.  
 #' 
 #' Blank rows above or below the title block may be controlled using the 
 #' \code{blank_row} parameter.
 #'
-#' @param x The object to assign titles to.  Valid objects are a report,
-#' a table, or a text specification.
+#' @param x The object to assign titles to.  Valid objects are a report, or
+#' a table, text, or plot specification.
 #' @param ... A set of title strings.
 #' @param align The position to align the titles.  Valid values are 'left', 
-#' 'right', 'center' or 'centre'.
+#' 'right', 'center' or 'centre'.  For titles, the default is 'center'.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is "below".
 #' @return The modified report.
@@ -717,34 +823,46 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' library(magrittr)
 #' 
 #' # Create a temporary file
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "expenses.txt")
+#' 
+#' # Prepare data
+#' dat <- data.frame(category = rownames(USPersonalExpenditure),
+#'                   USPersonalExpenditure)
+#' 
+#' # Define table
+#' tbl <- create_table(dat) %>% 
+#'   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") %>% 
+#'   column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+#'   define(category, label = "Category") %>% 
+#'   define(X1940, label = "1940") %>% 
+#'   define(X1945, label = "1945") %>% 
+#'   define(X1950, label = "1950") %>% 
+#'   define(X1955, label = "1955") %>% 
+#'   define(X1960, label = "1960") %>% 
+#'   footnotes("* In billions of dollars")
 #' 
 #' # Define report
 #' rpt <- create_report(tmp, orientation="portrait") %>%
-#'   titles("Table 1.0", "MTCARS Report for Motor Trend") %>% 
-#'   add_content(create_table(mtcars[1:10, ])) 
+#'   add_content(tbl) 
 #' 
 #' # Write the report
 #' write_report(rpt)
 #' 
 #' # Display in console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #                                   Table 1.0
-#' #                         MTCARS Report for Motor Trend
-#' #
-#' #   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' #----------------------------------------------------------------------------
-#' #    21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #    21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' #  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' #  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' #  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' #  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' #  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' #  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' #  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' #  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' #                               Table 1.0
+#' #               US Personal Expenditures from 1940 - 1960
+#' # 
+#' #     Category                1940    1945    1950    1955    1960
+#' #     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #     Food and Tobacco      $22.20  $44.50  $59.60  $73.20  $86.80
+#' #     Household Operation   $10.50  $15.50  $29.00  $36.50  $46.20
+#' #     Medical and Health     $3.53   $5.76   $9.71  $14.00  $21.10
+#' #     Personal Care          $1.04   $1.98   $2.45   $3.40   $5.40
+#' #     Private Education      $0.34   $0.97   $1.80   $2.60   $3.64
+#' # 
+#' #     * In billions of dollars
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below"){
 
@@ -773,7 +891,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' This function adds one or more footnotes to the report.  If added to 
 #' the report specification, the footnotes will
 #' be added to the page template, and thus appear on each page of the report.
-#' Footnotes may also be added directly to a table or text content.
+#' Footnotes may also be added directly to table, text, or plot content.
 #'
 #' @details
 #' The footnotes function accepts a set of strings of the desired footnote text.
@@ -804,41 +922,46 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' library(magrittr)
 #' 
 #' # Create a temporary file
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "expenses.txt")
 #' 
-#' # Create table
-#' tbl <- create_table(mtcars[1:10, ]) %>% 
-#'   titles("Table 1.0", "MTCARS Sample Report") %>% 
-#'   footnotes("* From Motor Trend Magazine, 1974") 
-#'   
-#' # Define report and add table 
+#' # Prepare data
+#' dat <- data.frame(category = rownames(USPersonalExpenditure),
+#'                   USPersonalExpenditure)
+#' 
+#' # Define table
+#' tbl <- create_table(dat) %>% 
+#'   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") %>% 
+#'   column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+#'   define(category, label = "Category") %>% 
+#'   define(X1940, label = "1940") %>% 
+#'   define(X1945, label = "1945") %>% 
+#'   define(X1950, label = "1950") %>% 
+#'   define(X1955, label = "1955") %>% 
+#'   define(X1960, label = "1960") %>% 
+#'   footnotes("* In billions of dollars")
+#' 
+#' # Define report
 #' rpt <- create_report(tmp, orientation="portrait") %>%
-#'   add_content(tbl)
-#'    
+#'   add_content(tbl) 
+#' 
 #' # Write the report
 #' write_report(rpt)
 #' 
 #' # Display in console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #                                   Table 1.0
-#' #                              MTCARS Sample Report
+#' #                               Table 1.0
+#' #               US Personal Expenditures from 1940 - 1960
 #' # 
-#' # mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' # ----------------------------------------------------------------------------
-#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
-#' #
-#' # * From Motor Trend Magazine, 1974
-#' #
+#' #     Category                1940    1945    1950    1955    1960
+#' #     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #     Food and Tobacco      $22.20  $44.50  $59.60  $73.20  $86.80
+#' #     Household Operation   $10.50  $15.50  $29.00  $36.50  $46.20
+#' #     Medical and Health     $3.53   $5.76   $9.71  $14.00  $21.10
+#' #     Personal Care          $1.04   $1.98   $2.45   $3.40   $5.40
+#' #     Private Education      $0.34   $0.97   $1.80   $2.60   $3.64
+#' # 
+#' #     * In billions of dollars
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above"){
 
@@ -866,7 +989,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #'
 #' @description
 #' This function adds a page footer to the report.  The page footer will appear
-#' on each page of the report, on the bottom of the page.  The page footer
+#' on each page of the report, at the bottom of the page.  The page footer
 #' contains three sections: left, center, and right.  Content for each section
 #' may be specified with the appropriate parameter.
 #'
@@ -903,7 +1026,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' @examples
 #' library(rptr)
 #' library(magrittr)
-#' 
+#' sam
 #' # Create table 
 #' tbl <- create_table(mtcars[1:10, ]) %>% 
 #'        titles("MTCARS Sample Data") %>% 
@@ -922,25 +1045,25 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' write_report(rpt)
 #' 
 #' # Send report to console 
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' # Cars Data                                                        Sample Report
-#' #                            MTCARS Sample Data
+#' #                               MTCARS Sample Data
 #' # 
-#' # mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' # ----------------------------------------------------------------------------
-#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' #             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
+#' #           ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #              21   6    160  110   3.9   2.62  16.46  0  1    4    4
+#' #              21   6    160  110   3.9  2.875  17.02  0  1    4    4
+#' #            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
+#' #            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
+#' #            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
+#' #            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
+#' #            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
+#' #            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
+#' #            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
+#' #            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
 #' # 
-#' # * From Motor Trend, 1974
+#' #           * From Motor Trend, 1974
 #' # 
 #' # ...
 #' # 
@@ -979,9 +1102,11 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' whether there is a page break before or after.
 #' @details 
 #' The \code{add_content} function adds a piece of content to a report. For a 
-#' text report, valid objects are a table or text object.  See 
-#' \code{\link{create_table}} or \code{\link{create_text}} for further 
-#' information on how to create these objects.  
+#' text report, valid objects are a table or text object.  For an RTF or PDF
+#' report, valid objects are a table, text, or plot object.  See 
+#' \code{\link{create_table}}, \code{\link{create_text}}, or 
+#' \code{\link{create_plot}} for further 
+#' information on how to create content objects for a report.  
 #' 
 #' Content will be
 #' appended to the report in the order it is added.  By default, a page break
@@ -1000,8 +1125,8 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' Valid values are 'above', 'below', 'both', or 'none'.
 #' @return The modified report_spec.
 #' @family report
-#' @seealso \code{\link{create_table}} and \code{\link{create_text}} to 
-#' create content for a report. 
+#' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
+#' \code{\link{create_plot}} to create content for a report. 
 #' @examples
 #' library(rptr)
 #' library(magrittr)
@@ -1009,35 +1134,41 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
+#' # Create first table 
+#' tbl1 <- create_table(mtcars[1:5, ]) %>% 
+#'   column_defaults(width = .5) 
+#' 
+#' # Create second table
+#' tbl2 <- create_table(mtcars[6:10, ], headerless=TRUE) %>% 
+#'   column_defaults(width = .5) 
+#' 
 #' # Create the report object
-#' rpt <- create_report(tmp) %>% 
-#'   titles("MTCARS Sample Data", align = "left") %>% 
-#'   add_content(create_table(mtcars[1:5, ]), 
-#'               page_break = FALSE, align = "left", blank_row = "none") %>% 
-#'   add_content(create_table(mtcars[6:10, ], headerless=TRUE), 
-#'               page_break = FALSE, align = "left") %>% 
-#'   add_content(create_text("* NOTE: Above table is actually two tables stacked.")) 
+#' rpt <- create_report(fp) %>%
+#'   titles("MTCARS Sample Data", align = "left") %>%
+#'   add_content(tbl1, page_break = FALSE, align = "left", blank_row = "none") %>%
+#'   add_content(tbl2, page_break = FALSE, align = "left") %>%
+#'   add_content(create_text("* NOTE: Above table is actually two tables stacked."))
 #' 
 #' # Write the report to the file system
-#' write_report(rpt)
+#' res <- write_report(rpt)
 #' 
 #' # Write report to console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' # MTCARS Sample Data
 #' # 
-#' #  mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' #----------------------------------------------------------------------------
-#' #   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' # 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' # 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' # 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' # 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' # 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' # 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' # 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' # 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' #    mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
+#' # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #     21      6    160    110    3.9   2.62  16.46      0      1      4      4
+#' #     21      6    160    110    3.9  2.875  17.02      0      1      4      4
+#' #   22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
+#' #   21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
+#' #   18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
+#' #   18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
+#' #   14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
+#' #   24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
+#' #   22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
+#' #   19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
 #' # 
 #' # * NOTE: Above table is actually two tables stacked.
 #' @export
@@ -1093,10 +1224,10 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' the \code{output_type} on the \code{create_report} function.  This 
 #' parameter can be used to output the same report object to 
 #' multiple file types. Default value is NULL, meaning it will not override
-#' the \code{create_report} value.  Valid values are 'TXT' and 'RTF'.
+#' the \code{create_report} value.  Valid values are 'TXT', 'RTF', and 'PDF'.
 #' @param preview Whether to write the entire report, or a report preview.
 #' A report preview is a subset of pages of the report.  The default value is 
-#' NULL, meaning the entire report should be written.  You may also pass 
+#' NULL, meaning the entire report will be written.  You may also pass 
 #' a number of pages to write.  For example, passing the number 1 will print
 #' the first page, while passing a 5 will print the first five pages.
 #' @return The report spec, with settings modified during rendering.  These 
@@ -1105,15 +1236,28 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' @family report
 #' @examples 
 #' library(rptr)
+#' library(fmtr)
 #' library(magrittr)
 #' 
 #' # Create temp file path
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' tmp <- file.path(tempdir(), "beaver2.txt")
+#' 
+#' # Take Sample of Data
+#' dat <- beaver2[sample(1:100, 15), ]
+#' 
+#' # Create format for active variable
+#' fmt <- value(condition(x == 0, "No"),
+#'              condition(x == 1, "Yes"))
 #' 
 #' # Create the table
-#' tbl <- create_table(mtcars) %>% 
-#'   titles("Table 1.0", "MTCARS Sample Report") %>% 
-#'   footnotes("* NOTE: Data from 1974")
+#' tbl <- create_table(dat) %>% 
+#'   titles("Table 1.0", "BEAVERS Sample Report") %>% 
+#'   column_defaults(width = .75) %>% 
+#'   define(day, label = "Day", format = "Day %s") %>% 
+#'   define(time, label = "Time") %>% 
+#'   define(temp, label = "Temperature", width = 1, format = "%.1f°") %>% 
+#'   define(activ,label = "Active", format = fmt) %>% 
+#'   footnotes("* NOTE: Data on beaver habits")
 #' 
 #' # Create the report object
 #' rpt <- create_report(tmp) %>% 
@@ -1126,7 +1270,30 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' print(res)
 #' 
 #' # Write the report to console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
+#' 
+#' #                 Table 1.0
+#' #           BEAVERS Sample Report
+#' # 
+#' #      Day      Time  Temperature    Active
+#' # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #  Day 307      1020        37.2°        No
+#' #  Day 307      1030        37.2°        No
+#' #  Day 307       940        36.7°        No
+#' #  Day 307      1340        37.1°        No
+#' #  Day 307      1410        37.2°        No
+#' #  Day 307      1400        37.1°        No
+#' #  Day 307      1130        36.9°        No
+#' #  Day 307      1140        37.0°        No
+#' #  Day 307      1120        37.0°        No
+#' #  Day 307      1000        37.1°        No
+#' #  Day 307      1250        37.0°        No
+#' #  Day 307      2100        37.9°       Yes
+#' #  Day 307      1210        37.0°        No
+#' #  Day 307      1740        38.0°       Yes
+#' #  Day 308       130        37.8°       Yes
+#' # 
+#' # * NOTE: Data on beaver habits
 #' @export
 write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL) {
   
@@ -1212,8 +1379,8 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 }
 
 
-#' @title Prints the report spec
-#' @description A function to print the report spec.
+#' @title Prints the report specification
+#' @description A function to print the report specification.
 #' The \strong{print} function will print the report spec in summary 
 #' form by default.  To print in list form, set the \code{verbose} parameter
 #' to TRUE.
@@ -1226,7 +1393,26 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 #' @return The report spec, invisibly.
 #' @family report
 #' @examples 
-#' # Here is something
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' 
+#' # Create the table
+#' tbl <- create_table(mtcars) %>% 
+#'   titles("Table 1.0", "MTCARS Sample Report") %>% 
+#'   footnotes("* NOTE: Data from 1974")
+#' 
+#' # Create the report object
+#' rpt <- create_report(tmp) %>% 
+#'   add_content(tbl, align = "left") 
+#' 
+#' # Write the report to the file system
+#' res <- write_report(rpt)
+#' 
+#' # Write the modified report object to the console
+#' print(res)
 #' @import crayon
 #' @export
 print.report_spec <- function(x, ..., verbose = FALSE){

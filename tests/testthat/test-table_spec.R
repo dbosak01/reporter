@@ -142,7 +142,7 @@ test_that("column_defaults function works as expected.", {
   
   tbl <- create_table(mtcars)
   cd <- column_defaults(tbl, c(mpg, cyl, disp)) 
-  
+
   expect_equal(cd$col_dflts[[1]]$vars, c("mpg", "cyl", "disp"))
   expect_equal(is.null(cd$col_dflts[[1]]$from), TRUE)
   expect_equal(is.null(cd$col_dflts[[1]]$to), TRUE)
@@ -185,6 +185,21 @@ test_that("column_defaults function works as expected.", {
   expect_equal(cd$col_dflts[[1]]$n, 12)
   
   
+  expect_error(column_defaults(create_report()))
+  
+  
+  cd <- column_defaults(tbl, 1:3) 
+  
+  expect_equal(cd$col_dflts[[1]]$vars, c("mpg", "cyl", "disp"))
+  expect_equal(is.null(cd$col_dflts[[1]]$from), TRUE)
+  expect_equal(is.null(cd$col_dflts[[1]]$to), TRUE)
+  
+  
+  cd <- column_defaults(tbl, from = 1, to = 3) 
+  
+  expect_equal(is.null(cd$col_dflts[[1]]$vars), TRUE)
+  expect_equal(cd$col_dflts[[1]]$from, "mpg")
+  expect_equal(cd$col_dflts[[1]]$to, "disp")
   
 })
 

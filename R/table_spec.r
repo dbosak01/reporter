@@ -589,20 +589,42 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
                   format = NULL, align=NULL, label_align=NULL, width=NULL,
                    n = NULL) {
   
+  if (!"table_spec" %in% class(x))
+    stop("Input object must be of class 'table_spec'.")
+
+  
   # Determine if it is a vector or not.  "language" is a vector.
-  if (typeof(substitute(vars, env = environment())) == "language") 
-    v <- substitute(vars, env = environment())
-  else 
+  
+  if (typeof(substitute(vars, env = environment())) == "language") {
+    ret <- tryCatch({
+      if (is.integer(vars)) {
+        names(x$data)[vars]
+        
+      }
+
+    }, error = function(e) {
+      FALSE
+    })
+    
+    if (all(ret == FALSE))
+      v <- substitute(vars, env = environment())
+    else 
+      v <- ret
+    
+  } else 
     v <- substitute(list(vars), env = environment())
   
   # Turn each item into a character
-  vars_c <- c()
-  if (length(v) > 1) {
-    for (i in 2:length(v)) {
-      vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+  if (!is.character(v)) {
+    vars_c <- c()
+    if (length(v) > 1) {
+      for (i in 2:length(v)) {
+        vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+      }
+      
     }
-    
-  }
+  } else 
+    vars_c <- v
   
   # Convert list to vector
   vars_c <- unlist(vars_c)
@@ -626,6 +648,9 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   f <- as.character(substitute(from, env = environment()))
   if (!identical(f, character(0))) {
     
+    if (suppressWarnings(!is.na(as.integer(f))))
+        f <- names(x$data)[as.integer(f)]
+    
     if (!f %in% names(x$data))
       stop(paste("Variable does not exist in input data frame:", f))
     
@@ -634,6 +659,9 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   
   t <- as.character(substitute(to, env = environment()))
   if (!identical(t, character(0))) {
+    
+    if (suppressWarnings(!is.na(as.integer(t))))
+      t <- names(x$data)[as.integer(t)]
   
     if (!t %in% names(x$data))
       stop(paste("Variable does not exist in input data frame:", t))
@@ -701,56 +729,68 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' library(rptr)
 #' library(magrittr)
 #' 
-#' # Create temporary path
-#' tmp <- file.path(tempdir(), "mtcars.txt")
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "iris.txt")
 #' 
-#' # Prepare Data
-#' dat <- mtcars[1:10, ]
-#' df <- data.frame(vehicle = rownames(dat), dat)
-#' 
-#' # Define Table with spanning headers
-#' tbl <- create_table(df) %>% 
-#'   titles("Table 1.0", "MTCARS Spanning Headers") %>% 
-#'   spanning_header(mpg, hp, label = "Span 1", n = 10) %>%
-#'   spanning_header(drat, qsec, label = "Span 2", n = 10) %>%
-#'   spanning_header(vs, carb, label = "Span 3", n = 10) %>%
-#'   spanning_header(drat, carb, label = "Super Span", level = 2) %>%
-#'   define(vehicle, label = "Vehicle") %>% 
-#'   define(mpg, format = "%.1f") %>% 
-#'   define(disp, visible = FALSE) %>% 
-#'   define(am, visible = FALSE) 
-#' 
-#' # Create Report and add table 
-#' rpt <- create_report(tmp) %>%
+#' # Prepare data
+#' dat <- iris[sample(1:150, 15), c(5, 1, 2, 3, 4)]
+#' dat <- dat[order(dat$Species), ]
+#'
+#' # Define table
+#' tbl <- create_table(dat) %>% 
+#'   titles("Table 3.2", "IRIS Sample Report") %>% 
+#'   spanning_header(2, 3, label = "Sepal") %>% 
+#'   spanning_header(4, 5, label = "Petal") %>% 
+#'   column_defaults(2:5, format = "%.1f") %>% 
+#'   define(Species, align = "left", dedupe = TRUE, blank_after = TRUE) %>% 
+#'   define(Sepal.Length, label = "Length") %>% 
+#'   define(Sepal.Width, label = "Width") %>% 
+#'   define(Petal.Length, label = "Length") %>% 
+#'   define(Petal.Width, label = "Width") %>% 
+#'   footnotes("* From Fisher's Iris Dataset")
+#'        
+#' # Define report
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   options_fixed(blank_margins = TRUE) %>% 
+#'   set_margins(top = 1, bottom =1) %>% 
 #'   add_content(tbl, align = "left") 
 #' 
 #' # Write the report
-#' res <- write_report(rpt)
+#' write_report(rpt)
 #' 
-#' # View in console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #                                    Table 1.0
-#' #                              MTCARS Spanning Headers
-#' # 
-#' #                                                         Super Span
-#' #                                         -----------------------------------------
-#' #                           Span 1               Span 2               Span 3
-#' #                           (N=10)               (N=10)               (N=10)
-#' #                    -------------------- -------------------- --------------------
-#' # Vehicle               mpg    cyl     hp   drat     wt   qsec     vs   gear   carb
-#' # ---------------------------------------------------------------------------------
-#' # Mazda RX4            21.0      6    110    3.9   2.62  16.46      0      4      4
-#' # Mazda RX4 Wag        21.0      6    110    3.9  2.875  17.02      0      4      4
-#' # Datsun 710           22.8      4     93   3.85   2.32  18.61      1      4      1
-#' # Hornet 4 Drive       21.4      6    110   3.08  3.215  19.44      1      3      1
-#' # Hornet Sportabout    18.7      8    175   3.15   3.44  17.02      0      3      2
-#' # Valiant              18.1      6    105   2.76   3.46  20.22      1      3      1
-#' # Duster 360           14.3      8    245   3.21   3.57  15.84      0      3      4
-#' # Merc 240D            24.4      4     62   3.69   3.19     20      1      4      2
-#' # Merc 230             22.8      4     95   3.92   3.15   22.9      1      4      2
-#' # Merc 280             19.2      6    123   3.92   3.44   18.3      1      4      4
 #' #
+#' #
+#' #
+#' #
+#' #                      Table 3.2
+#' #                  IRIS Sample Report
+#' #
+#' #                       Sepal        Petal
+#' #                   ¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
+#' #       Species     Length Width Length Width
+#' #       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #       setosa         5.0   3.0    1.6   0.2
+#' #                      4.6   3.4    1.4   0.3
+#' #                      5.0   3.4    1.6   0.4
+#' #                      5.7   3.8    1.7   0.3
+#' #
+#' #       versicolor     5.7   2.8    4.1   1.3
+#' #                      6.2   2.9    4.3   1.3
+#' #                      7.0   3.2    4.7   1.4
+#' #                      6.6   2.9    4.6   1.3
+#' #
+#' #       virginica      6.2   3.4    5.4   2.3
+#' #                      7.2   3.0    5.8   1.6
+#' #                      6.9   3.1    5.1   2.3
+#' #                      5.6   2.8    4.9   2.0
+#' #                      7.7   2.6    6.9   2.3
+#' #                      6.3   2.8    5.1   1.5
+#' #                      7.7   2.8    6.7   2.0
+#' #
+#' #
+#' #       * From Fisher's Iris Dataset
 #' @export
 spanning_header <- function(x, from, to, label = "",
                             label_align = "center", level = 1, n = NULL) {

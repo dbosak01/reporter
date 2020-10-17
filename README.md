@@ -115,46 +115,46 @@ rpt <- create_report(tmp, orientation = "portrait") %>%
 write_report(rpt)
 
 # Send report to console for viewing
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 # Client: Motor Trend                                                Study: Cars
 #                                  Listing 1.0
-#                              MTCARS Data Listing
-# 
-#    mpg    cyl    disp     hp   drat      wt    qsec     vs     am   gear   carb
-# -------------------------------------------------------------------------------
-#     21      6     160    110    3.9    2.62   16.46      0      1      4      4
-#     21      6     160    110    3.9   2.875   17.02      0      1      4      4
-#   22.8      4     108     93   3.85    2.32   18.61      1      1      4      1
-#   21.4      6     258    110   3.08   3.215   19.44      1      0      3      1
-#   18.7      8     360    175   3.15    3.44   17.02      0      0      3      2
-#   18.1      6     225    105   2.76    3.46   20.22      1      0      3      1
-#   14.3      8     360    245   3.21    3.57   15.84      0      0      3      4
-#   24.4      4   146.7     62   3.69    3.19      20      1      0      4      2
-#   22.8      4   140.8     95   3.92    3.15    22.9      1      0      4      2
-#   19.2      6   167.6    123   3.92    3.44    18.3      1      0      4      4
-#   17.8      6   167.6    123   3.92    3.44    18.9      1      0      4      4
-#   16.4      8   275.8    180   3.07    4.07    17.4      0      0      3      3
-#   17.3      8   275.8    180   3.07    3.73    17.6      0      0      3      3
-#   15.2      8   275.8    180   3.07    3.78      18      0      0      3      3
-#   10.4      8     472    205   2.93    5.25   17.98      0      0      3      4
-#   10.4      8     460    215      3   5.424   17.82      0      0      3      4
-#   14.7      8     440    230   3.23   5.345   17.42      0      0      3      4
-#   32.4      4    78.7     66   4.08     2.2   19.47      1      1      4      1
-#   30.4      4    75.7     52   4.93   1.615   18.52      1      1      4      2
-#   33.9      4    71.1     65   4.22   1.835    19.9      1      1      4      1
-#   21.5      4   120.1     97    3.7   2.465   20.01      1      0      3      1
-#   15.5      8     318    150   2.76    3.52   16.87      0      0      3      2
-#   15.2      8     304    150   3.15   3.435    17.3      0      0      3      2
-#   13.3      8     350    245   3.73    3.84   15.41      0      0      3      4
-#   19.2      8     400    175   3.08   3.845   17.05      0      0      3      2
-#   27.3      4      79     66   4.08   1.935    18.9      1      1      4      1
-#     26      4   120.3     91   4.43    2.14    16.7      0      1      5      2
-#   30.4      4    95.1    113   3.77   1.513    16.9      1      1      5      2
-#   15.8      8     351    264   4.22    3.17    14.5      0      1      5      4
-#   19.7      6     145    175   3.62    2.77    15.5      0      1      5      6
-#     15      8     301    335   3.54    3.57    14.6      0      1      5      8
-#   21.4      4     121    109   4.11    2.78    18.6      1      1      4      2
+#                             MTCARS Data Listing
+#
+#            mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
+#          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#             21   6    160  110   3.9   2.62  16.46  0  1    4    4
+#             21   6    160  110   3.9  2.875  17.02  0  1    4    4
+#           22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
+#           21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
+#           18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
+#           18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
+#           14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
+#           24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
+#           22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
+#           19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
+#           17.8   6  167.6  123  3.92   3.44   18.9  1  0    4    4
+#           16.4   8  275.8  180  3.07   4.07   17.4  0  0    3    3
+#           17.3   8  275.8  180  3.07   3.73   17.6  0  0    3    3
+#           15.2   8  275.8  180  3.07   3.78     18  0  0    3    3
+#           10.4   8    472  205  2.93   5.25  17.98  0  0    3    4
+#           10.4   8    460  215     3  5.424  17.82  0  0    3    4
+#           14.7   8    440  230  3.23  5.345  17.42  0  0    3    4
+#           32.4   4   78.7   66  4.08    2.2  19.47  1  1    4    1
+#           30.4   4   75.7   52  4.93  1.615  18.52  1  1    4    2
+#           33.9   4   71.1   65  4.22  1.835   19.9  1  1    4    1
+#           21.5   4  120.1   97   3.7  2.465  20.01  1  0    3    1
+#           15.5   8    318  150  2.76   3.52  16.87  0  0    3    2
+#           15.2   8    304  150  3.15  3.435   17.3  0  0    3    2
+#           13.3   8    350  245  3.73   3.84  15.41  0  0    3    4
+#           19.2   8    400  175  3.08  3.845  17.05  0  0    3    2
+#           27.3   4     79   66  4.08  1.935   18.9  1  1    4    1
+#             26   4  120.3   91  4.43   2.14   16.7  0  1    5    2
+#           30.4   4   95.1  113  3.77  1.513   16.9  1  1    5    2
+#           15.8   8    351  264  4.22   3.17   14.5  0  1    5    4
+#           19.7   6    145  175  3.62   2.77   15.5  0  1    5    6
+#             15   8    301  335  3.54   3.57   14.6  0  1    5    8
+#           21.4   4    121  109  4.11   2.78   18.6  1  1    4    2
 # 
 # ...
 # 
@@ -208,32 +208,33 @@ rpt <- create_report(tmp, orientation = "portrait") %>%
 write_report(rpt)
 
 # View report in console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 # Client: Motor Trend                                                Study: Cars
-#                                  Table 1.0
-#                             MTCARS Summary Table
-#
-#                                           Group A      Group B
-#           Variable                         (N=19)       (N=13)
-#           -------------------------------------------------------
-#
-#           Miles Per Gallon  N                19           13
-#                             Mean         18.8 (6.5)   22.0 (4.9)
-#                             Median          16.4         21.4
-#                             Q1 - Q3     15.1 - 21.2  19.2 - 22.8
-#                             Range       10.4 - 33.9  14.7 - 32.4
-#
-#           Cylinders         8 Cylinder  10 ( 52.6%)   4 ( 30.8%)
-#                             6 Cylinder   4 ( 21.1%)   3 ( 23.1%)
-#                             4 Cylinder   5 ( 26.3%)   6 ( 46.2%)
+#                                   Table 1.0
+#                              MTCARS Summary Table
+# 
+#                                            Group A      Group B
+#            Variable                         (N=19)       (N=13)
+#            ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+# 
+#            Miles Per Gallon  N                19           13
+#                              Mean         18.8 (6.5)   22.0 (4.9)
+#                              Median          16.4         21.4
+#                              Q1 - Q3     15.1 - 21.2  19.2 - 22.8
+#                              Range       10.4 - 33.9  14.7 - 32.4
+# 
+#            Cylinders         8 Cylinder  10 ( 52.6%)   4 ( 30.8%)
+#                              6 Cylinder   4 ( 21.1%)   3 ( 23.1%)
+#                              4 Cylinder   5 ( 26.3%)   6 ( 46.2%)
+# 
 # 
 # ...
 # 
 # 
 # * Motor Trend, 1974
 # 
-# 2020-08-30 03:50:02              Confidential                      Page 1 of 1
+# 2020-10-16 18:57:02              Confidential                      Page 1 of 1
 
 ```
 
@@ -283,34 +284,35 @@ rpt <- create_report(tmp, orientation = "portrait") %>%
 write_report(rpt)
 
 # View report in console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 # Client: Motor Trend                                                Study: Cars
 #                                   Table 1.0
 #                              MTCARS Summary Table
 # 
-#                                     Group A      Group B
-#                                      (N=19)       (N=13)
-#                  -------------------------------------------
+#                                      Group A      Group B
+#                                       (N=19)       (N=13)
+#                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 # 
-#                 Miles Per Gallon
-#                    N                   19           13
-#                    Mean            19.3 (6.7)   21.3 (4.8)
-#                    Median             17.3         21.0
-#                    Q1 - Q3        15.2 - 22.1  19.2 - 22.8
-#                    Range          10.4 - 33.9  14.3 - 32.4
-#
-#                 Cylinders
-#                    8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
-#                    6 Cylinder      3 ( 15.8%)   4 ( 30.8%)
-#                    4 Cylinder      6 ( 31.6%)   5 ( 38.5%)
+#                  Miles Per Gallon
+#                     N                   19           13
+#                     Mean            18.8 (6.5)   22.0 (4.9)
+#                     Median             16.4         21.4
+#                     Q1 - Q3        15.1 - 21.2  19.2 - 22.8
+#                     Range          10.4 - 33.9  14.7 - 32.4
+# 
+#                  Cylinders
+#                     8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
+#                     6 Cylinder      4 ( 21.1%)   3 ( 23.1%)
+#                     4 Cylinder      5 ( 26.3%)   6 ( 46.2%)
+# 
 # 
 # ...
 # 
 # 
 # * Motor Trend, 1974
 # 
-# 2020-08-30 03:50:02              Confidential                      Page 1 of 1
+# 2020-10-16 18:57:02              Confidential                      Page 1 of 1
 
 ```
 
@@ -358,26 +360,26 @@ rpt <- create_report(tmp, orientation = "portrait") %>%
 write_report(rpt)
 
 # View in console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 # Client: Motor Trend                                                Study: Cars
 #                                   Table 1.0
-#                              MTCARS Sample Data
+#                               MTCARS Sample Data
 # 
-#    mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-# ----------------------------------------------------------------------------
-#     21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#     21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#   22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#   21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#   18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#   18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#   14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#   24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#   22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#   19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
+#           ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#              21   6    160  110   3.9   2.62  16.46  0  1    4    4
+#              21   6    160  110   3.9  2.875  17.02  0  1    4    4
+#            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
+#            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
+#            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
+#            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
+#            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
+#            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
+#            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
+#            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
 # 
-# * Motor Trend, 1974
+#           * Motor Trend, 1974
 # 
 # Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 # incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
@@ -412,7 +414,7 @@ df <- data.frame(vehicle = rownames(dat), dat)
 tbl <- create_table(df) %>% 
   titles("Table 1.0", "MTCARS Spanning Headers") %>% 
   spanning_header(from = "mpg", to = "hp", label = "Span 1", n = 10) %>%
-  spanning_header(from = "drat", to = "qsec"), label = "Span 2", n = 10) %>%
+  spanning_header(from = "drat", to = "qsec", label = "Span 2", n = 10) %>%
   spanning_header(from = "vs", to = "carb", label = "Span 3", n = 10) %>%
   spanning_header(from = "drat", to = "carb", 
                   label = "Super Span", level = 2) %>%
@@ -429,28 +431,28 @@ rpt <- create_report(tmp) %>%
 res <- write_report(rpt)
 
 # View in console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
   
-#                                    Table 1.0
-#                              MTCARS Spanning Headers
+#                              Table 1.0
+#                       MTCARS Spanning Headers
 # 
-#                                                         Super Span
-#                                         -----------------------------------------
-#                           Span 1               Span 2               Span 3
-#                           (N=10)               (N=10)               (N=10)
-#                    -------------------- -------------------- --------------------
-# Vehicle               mpg    cyl     hp   drat     wt   qsec     vs   gear   carb
-# ---------------------------------------------------------------------------------
-# Mazda RX4            21.0      6    110    3.9   2.62  16.46      0      4      4
-# Mazda RX4 Wag        21.0      6    110    3.9  2.875  17.02      0      4      4
-# Datsun 710           22.8      4     93   3.85   2.32  18.61      1      4      1
-# Hornet 4 Drive       21.4      6    110   3.08  3.215  19.44      1      3      1
-# Hornet Sportabout    18.7      8    175   3.15   3.44  17.02      0      3      2
-# Valiant              18.1      6    105   2.76   3.46  20.22      1      3      1
-# Duster 360           14.3      8    245   3.21   3.57  15.84      0      3      4
-# Merc 240D            24.4      4     62   3.69   3.19     20      1      4      2
-# Merc 230             22.8      4     95   3.92   3.15   22.9      1      4      2
-# Merc 280             19.2      6    123   3.92   3.44   18.3      1      4      4
+#                                              Super Span
+#                                   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#                        Span 1            Span 2          Span 3
+#                        (N=10)            (N=10)          (N=10)
+#                    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
+# Vehicle              mpg cyl   hp  drat     wt   qsec vs gear carb
+# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+# Mazda RX4           21.0   6  110   3.9   2.62  16.46  0    4    4
+# Mazda RX4 Wag       21.0   6  110   3.9  2.875  17.02  0    4    4
+# Datsun 710          22.8   4   93  3.85   2.32  18.61  1    4    1
+# Hornet 4 Drive      21.4   6  110  3.08  3.215  19.44  1    3    1
+# Hornet Sportabout   18.7   8  175  3.15   3.44  17.02  0    3    2
+# Valiant             18.1   6  105  2.76   3.46  20.22  1    3    1
+# Duster 360          14.3   8  245  3.21   3.57  15.84  0    3    4
+# Merc 240D           24.4   4   62  3.69   3.19     20  1    4    2
+# Merc 230            22.8   4   95  3.92   3.15   22.9  1    4    2
+# Merc 280            19.2   6  123  3.92   3.44   18.3  1    4    4
 
 
 ```
@@ -494,14 +496,14 @@ rpt <- create_report(tmp, orientation = "portrait") %>%
 write_report(rpt)
 
 # Send report to console for viewing
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 #                                  Listing 2.0
 #                       MTCARS Data Listing with Page Wrap
 # 
 #                                         Miles per
 # Vehicle                                    Gallon Cylinders Displacement
-# ------------------------------------------------------------------------
+# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 # Mazda RX4                                      21       6.0          160
 # Mazda RX4 Wag                                  21       6.0          160
 # Datsun 710                                   22.8       4.0          108
@@ -520,7 +522,7 @@ writeLines(readLines(tmp))
 #                       MTCARS Data Listing with Page Wrap
 # 
 # Vehicle                              Horsepower Weight  Quarter Mile Time
-# -------------------------------------------------------------------------
+# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 # Mazda RX4                                   110   2.62              16.46
 # Mazda RX4 Wag                               110  2.875              17.02
 # Datsun 710                                   93   2.32              18.61
