@@ -17,11 +17,11 @@ this parameter overrides the \code{file_path} parameter on the
 the \code{output_type} on the \code{create_report} function.  This 
 parameter can be used to output the same report object to 
 multiple file types. Default value is NULL, meaning it will not override
-the \code{create_report} value.  Valid values are 'TXT' and 'RTF'.}
+the \code{create_report} value.  Valid values are 'TXT', 'RTF', and 'PDF'.}
 
 \item{preview}{Whether to write the entire report, or a report preview.
 A report preview is a subset of pages of the report.  The default value is 
-NULL, meaning the entire report should be written.  You may also pass 
+NULL, meaning the entire report will be written.  You may also pass 
 a number of pages to write.  For example, passing the number 1 will print
 the first page, while passing a 5 will print the first five pages.}
 }
@@ -51,15 +51,28 @@ report definition procedure.
 }
 \examples{
 library(rptr)
+library(fmtr)
 library(magrittr)
 
 # Create temp file path
-tmp <- file.path(tempdir(), "mtcars.txt")
+tmp <- file.path(tempdir(), "beaver2.txt")
+
+# Take Sample of Data
+dat <- beaver2[sample(1:100, 15), ]
+
+# Create format for active variable
+fmt <- value(condition(x == 0, "No"),
+             condition(x == 1, "Yes"))
 
 # Create the table
-tbl <- create_table(mtcars) \%>\% 
-  titles("Table 1.0", "MTCARS Sample Report") \%>\% 
-  footnotes("* NOTE: Data from 1974")
+tbl <- create_table(dat) \%>\% 
+  titles("Table 1.0", "BEAVERS Sample Report") \%>\% 
+  column_defaults(width = .75) \%>\% 
+  define(day, label = "Day", format = "Day \%s") \%>\% 
+  define(time, label = "Time") \%>\% 
+  define(temp, label = "Temperature", width = 1, format = "\%.1fÂ°") \%>\% 
+  define(activ,label = "Active", format = fmt) \%>\% 
+  footnotes("* NOTE: Data on beaver habits")
 
 # Create the report object
 rpt <- create_report(tmp) \%>\% 
@@ -72,7 +85,30 @@ res <- write_report(rpt)
 print(res)
 
 # Write the report to console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
+
+#                 Table 1.0
+#           BEAVERS Sample Report
+# 
+#      Day      Time  Temperature    Active
+# -----------------------------------------
+#  Day 307      1020        37.2Â°        No
+#  Day 307      1030        37.2Â°        No
+#  Day 307       940        36.7Â°        No
+#  Day 307      1340        37.1Â°        No
+#  Day 307      1410        37.2Â°        No
+#  Day 307      1400        37.1Â°        No
+#  Day 307      1130        36.9Â°        No
+#  Day 307      1140        37.0Â°        No
+#  Day 307      1120        37.0Â°        No
+#  Day 307      1000        37.1Â°        No
+#  Day 307      1250        37.0Â°        No
+#  Day 307      2100        37.9Â°       Yes
+#  Day 307      1210        37.0Â°        No
+#  Day 307      1740        38.0Â°       Yes
+#  Day 308       130        37.8Â°       Yes
+# 
+# * NOTE: Data on beaver habits
 }
 \seealso{
 Other report: 

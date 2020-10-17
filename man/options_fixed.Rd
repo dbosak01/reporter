@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{options_fixed}
 \alias{options_fixed}
-\title{Set options for a report (fixed width font)}
+\title{Set options for a report (fixed-width font)}
 \usage{
 options_fixed(
   x,
@@ -45,8 +45,9 @@ on the editor to set margins.  When used, editor margins
 should be set to zero.  Valid values are TRUE and FALSE. Default is
 FALSE.  This option is only valid for \code{output_type = 'TXT'}.}
 
-\item{font_size}{The size of the font in points.  Default is 12pt.  This
-option is only valid for output type PDF.}
+\item{font_size}{The size of the font in points.  Default is 10pt.  This
+option is only valid for output types RTF and PDF.  Valid values are 10 and 
+12.}
 
 \item{line_size}{The number of character that will fit on a line.  Normally,
 the \code{line_size} is calculated based on the page size, font size, and cpuom.
@@ -66,13 +67,16 @@ This function sets the options for a report
 with a fixed width font, such as a text report.
 }
 \details{
-The \code{options_fixed} function sets the characters per 
+The \code{options_fixed} function sets options for reports 
+with a fixed-width, monospace font.  These reports are based off a 
+text report, but may be output as type "RTF" or "PDF".  
+
+The \code{options_fixed} function sets
+the characters per 
 unit of measure (\code{cpuom}) and lines per unit of measure
 (\code{lpuom}) settings for the report.  These settings determine how 
 many characters and lines will fit within one unit of measure (uom), as 
-specified on the \code{\link{create_report}} function.  
-
-These settings are
+specified on the \code{\link{create_report}} function.  These settings are
 important to ensure the report content stays within the available page size 
 and margins.  Because every text editor allows a different number of 
 characters and lines on a page, these settings must be adjusted depending
@@ -88,6 +92,11 @@ set the \code{cpuom} and
 \code{lpuom} parameters manually.  To determine your \code{cpuom}
 and \code{lpuom}, see the help for \code{\link{write_registration_file}}.
 
+Alternatively, using the \code{options_fixed} function, 
+you may set the \code{line_size} and \code{line_count} directly.  Note that
+the \code{line_size} and \code{line_count} may be different for different
+output types and editors. 
+
 The \code{min_margin} parameter is used to set the minimum margin allowed
 by the editor.  This value will be subtracted from the margin settings 
 when the \code{blank_margins} option is used.
@@ -96,18 +105,69 @@ when the \code{blank_margins} option is used.
 library(rptr)
 library(magrittr)
 
-# Create temp file path
-tmp <- file.path(tempdir(), "mtcars.txt")
+# Create a temporary file
+tmp <- file.path(tempdir(), "bod.txt")
 
-# Create the report object
-rpt <- create_report(tmp, orientation = "portrait") \%>\% 
-  titles("MTCARS Sample Report") \%>\% 
-  add_content(create_table(mtcars)) \%>\% 
-  options_fixed(editor = "notepad++")
+# Define table
+tbl <- create_table(BOD, width = 2.3) \%>\% 
+  titles("Table 3.6", "BODÂ¹ Sample Report") \%>\% 
+  define(Time, format = "Day \%s", align = "left") \%>\% 
+  define(demand, format = "\%2.1f mg/l", label = "Demand") \%>\% 
+  footnotes("Â¹ Biochemical Oxygen Demand")
+       
+# Define report #1 - No blank margins
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+  add_content(tbl, align = "left") 
 
-# Write the report to the file system
+# Write the report
 write_report(rpt)
 
+# Write report to console
+writeLines(readLines(tmp, encoding = "UTF-8"))
+
+#           Table 3.6
+#       BODÂ¹ Sample Report
+# 
+# Time                  Demand
+# ----------------------------
+# Day 1               8.3 mg/l
+# Day 2              10.3 mg/l
+# Day 3              19.0 mg/l
+# Day 4              16.0 mg/l
+# Day 5              15.6 mg/l
+# Day 7              19.8 mg/l
+# 
+# Â¹ Biochemical Oxygen Demand
+
+
+# Define report #2 - blank margins
+rpt <- create_report(tmp, orientation="portrait") \%>\%
+  options_fixed(blank_margins = TRUE) \%>\% 
+  set_margins(top = .5, left = 1) \%>\% 
+  add_content(tbl, align = "left") 
+
+# Write the report
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(tmp, encoding = "UTF-8"))
+
+# 
+# 
+# 
+#                       Table 3.6
+#                   BODÂ¹ Sample Report
+# 
+#              Time                  Demand
+#              ----------------------------
+#              Day 1               8.3 mg/l
+#              Day 2              10.3 mg/l
+#              Day 3              19.0 mg/l
+#              Day 4              16.0 mg/l
+#              Day 5              15.6 mg/l
+#              Day 7              19.8 mg/l
+# 
+#              Â¹ Biochemical Oxygen Demand
 }
 \seealso{
 \code{\link{create_report}} to create a report and set the unit

@@ -64,7 +64,7 @@ rpt <- create_report(tmp, orientation = "portrait") \%>\%
 write_report(rpt)
 
 # Write the report to console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 #                                Text Content 1.0
 #                               Sample Text Report

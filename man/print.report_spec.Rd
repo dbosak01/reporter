@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{print.report_spec}
 \alias{print.report_spec}
-\title{Prints the report spec}
+\title{Prints the report specification}
 \usage{
 \method{print}{report_spec}(x, ..., verbose = FALSE)
 }
@@ -18,13 +18,32 @@ or summary form.  The default is FALSE.}
 The report spec, invisibly.
 }
 \description{
-A function to print the report spec.
+A function to print the report specification.
 The \strong{print} function will print the report spec in summary 
 form by default.  To print in list form, set the \code{verbose} parameter
 to TRUE.
 }
 \examples{
-# Here is something
+library(rptr)
+library(magrittr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "mtcars.txt")
+
+# Create the table
+tbl <- create_table(mtcars) \%>\% 
+  titles("Table 1.0", "MTCARS Sample Report") \%>\% 
+  footnotes("* NOTE: Data from 1974")
+
+# Create the report object
+rpt <- create_report(tmp) \%>\% 
+  add_content(tbl, align = "left") 
+
+# Write the report to the file system
+res <- write_report(rpt)
+
+# Write the modified report object to the console
+print(res)
 }
 \seealso{
 \code{\link{create_report}} function to create a report specification.

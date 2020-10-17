@@ -24,7 +24,7 @@ The modified report.
 This function adds one or more footnotes to the report.  If added to 
 the report specification, the footnotes will
 be added to the page template, and thus appear on each page of the report.
-Footnotes may also be added directly to a table or text content.
+Footnotes may also be added directly to table, text, or plot content.
 }
 \details{
 The footnotes function accepts a set of strings of the desired footnote text.
@@ -47,41 +47,46 @@ library(rptr)
 library(magrittr)
 
 # Create a temporary file
-tmp <- file.path(tempdir(), "mtcars.txt")
+tmp <- file.path(tempdir(), "expenses.txt")
 
-# Create table
-tbl <- create_table(mtcars[1:10, ]) \%>\% 
-  titles("Table 1.0", "MTCARS Sample Report") \%>\% 
-  footnotes("* From Motor Trend Magazine, 1974") 
-  
-# Define report and add table 
+# Prepare data
+dat <- data.frame(category = rownames(USPersonalExpenditure),
+                  USPersonalExpenditure)
+
+# Define table
+tbl <- create_table(dat) \%>\% 
+  titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") \%>\% 
+  column_defaults(from = X1940, to = X1960, format = "$\%.2f") \%>\%
+  define(category, label = "Category") \%>\% 
+  define(X1940, label = "1940") \%>\% 
+  define(X1945, label = "1945") \%>\% 
+  define(X1950, label = "1950") \%>\% 
+  define(X1955, label = "1955") \%>\% 
+  define(X1960, label = "1960") \%>\% 
+  footnotes("* In billions of dollars")
+
+# Define report
 rpt <- create_report(tmp, orientation="portrait") \%>\%
-  add_content(tbl)
-   
+  add_content(tbl) 
+
 # Write the report
 write_report(rpt)
 
 # Display in console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
-#                                   Table 1.0
-#                              MTCARS Sample Report
+#                               Table 1.0
+#               US Personal Expenditures from 1940 - 1960
 # 
-# mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-# ----------------------------------------------------------------------------
-#   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-# 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-# 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-# 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-# 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-# 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-# 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-# 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-# 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
-#
-# * From Motor Trend Magazine, 1974
-#
+#     Category                1940    1945    1950    1955    1960
+#     ------------------------------------------------------------
+#     Food and Tobacco      $22.20  $44.50  $59.60  $73.20  $86.80
+#     Household Operation   $10.50  $15.50  $29.00  $36.50  $46.20
+#     Medical and Health     $3.53   $5.76   $9.71  $14.00  $21.10
+#     Personal Care          $1.04   $1.98   $2.45   $3.40   $5.40
+#     Private Education      $0.34   $0.97   $1.80   $2.60   $3.64
+# 
+#     * In billions of dollars
 }
 \seealso{
 Other report: 

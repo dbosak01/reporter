@@ -29,7 +29,9 @@ These formatting functions provide several options for formatting the "N=",
 including whether the "N" should be upper case or lower case, and whether
 or not to put the value in parentheses.  If one of these options does not 
 meet the specifications for your report, you may also write your own 
-formatting function and pass it to the \code{n_format} function.
+formatting function and pass it to the \code{n_format} function.  When an 
+N value is supplied, the output of this function will be concatenated 
+to the header label.
 }
 \examples{
 # Create test data
@@ -51,6 +53,13 @@ cat(paste0(l, lowcase_n(n)))
 cat(paste0(l, upcase_n(n)))
 # Label
 # N=47
+
+customN <- function(n) {
+  return(paste0(": N=", n))
+}
+cat(paste0(l, customN(n)))
+# Label: N=47
+
 }
 \seealso{
 \code{\link{create_table}} function to create a table.

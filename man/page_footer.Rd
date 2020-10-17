@@ -26,7 +26,7 @@ The modified report.
 }
 \description{
 This function adds a page footer to the report.  The page footer will appear
-on each page of the report, on the bottom of the page.  The page footer
+on each page of the report, at the bottom of the page.  The page footer
 contains three sections: left, center, and right.  Content for each section
 may be specified with the appropriate parameter.
 }
@@ -53,47 +53,43 @@ page footer.
 library(rptr)
 library(magrittr)
 
-# Create table 
-tbl <- create_table(mtcars[1:10, ]) \%>\% 
-       titles("MTCARS Sample Data") \%>\% 
-       footnotes("* From Motor Trend, 1974")
-
-# Create temp report file name
+# Create temp file path
 tmp <- file.path(tempdir(), "mtcars.txt")
-        
-# Create report 
-rpt <- create_report(tmp, orientation="portrait") \%>\%
-       page_header(left = "Cars Data", right = "Sample Report")  \%>\%
-       page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")  \%>\%
-       add_content(tbl)
 
-# Write out the report        
+dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+
+# Create the report object
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  page_header("Client: Motor Trend", "Study: Cars") \%>\% 
+  titles("MTCARS Sample Report") \%>\% 
+  add_content(create_table(dat)) \%>\% 
+  page_footer(Sys.time(), right = "Page [pg] of [tpg]")
+
+# Write the report to the file system
 write_report(rpt)
 
-# Send report to console 
-writeLines(readLines(tmp))
+# Write report to console
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
-# Cars Data                                                        Sample Report
-#                            MTCARS Sample Data
+# Client: Motor Trend                                                Study: Cars
+#                              MTCARS Sample Report
 # 
-# mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-# ----------------------------------------------------------------------------
-#   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-# 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-# 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-# 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-# 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-# 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-# 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-# 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-# 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
-# 
-# * From Motor Trend, 1974
+#                name                 mpg cyl   disp   hp  drat
+#                ----------------------------------------------
+#                Mazda RX4             21   6    160  110   3.9
+#                Mazda RX4 Wag         21   6    160  110   3.9
+#                Datsun 710          22.8   4    108   93  3.85
+#                Hornet 4 Drive      21.4   6    258  110  3.08
+#                Hornet Sportabout   18.7   8    360  175  3.15
+#                Valiant             18.1   6    225  105  2.76
+#                Duster 360          14.3   8    360  245  3.21
+#                Merc 240D           24.4   4  146.7   62  3.69
+#                Merc 230            22.8   4  140.8   95  3.92
+#                Merc 280            19.2   6  167.6  123  3.92
 # 
 # ...
 # 
-# 2020-09-06 09:47:43                                                Page 1 of 1
+# 2020-10-17 11:53:51                                                Page 1 of 1
 }
 \seealso{
 Other report: 

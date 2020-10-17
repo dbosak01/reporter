@@ -38,9 +38,11 @@ whether there is a page break before or after.
 }
 \details{
 The \code{add_content} function adds a piece of content to a report. For a 
-text report, valid objects are a table or text object.  See 
-\code{\link{create_table}} or \code{\link{create_text}} for further 
-information on how to create these objects.  
+text report, valid objects are a table or text object.  For an RTF or PDF
+report, valid objects are a table, text, or plot object.  See 
+\code{\link{create_table}}, \code{\link{create_text}}, or 
+\code{\link{create_plot}} for further 
+information on how to create content objects for a report.  
 
 Content will be
 appended to the report in the order it is added.  By default, a page break
@@ -55,41 +57,47 @@ library(magrittr)
 # Create temp file path
 tmp <- file.path(tempdir(), "mtcars.txt")
 
+# Create first table 
+tbl1 <- create_table(mtcars[1:5, 1:6]) \%>\% 
+  column_defaults(width = .5) 
+
+# Create second table
+tbl2 <- create_table(mtcars[6:10, 1:6], headerless=TRUE) \%>\% 
+  column_defaults(width = .5) 
+
 # Create the report object
-rpt <- create_report(tmp) \%>\% 
-  titles("MTCARS Sample Data", align = "left") \%>\% 
-  add_content(create_table(mtcars[1:5, ]), 
-              page_break = FALSE, align = "left", blank_row = "none") \%>\% 
-  add_content(create_table(mtcars[6:10, ], headerless=TRUE), 
-              page_break = FALSE, align = "left") \%>\% 
-  add_content(create_text("* NOTE: Above table is actually two tables stacked.")) 
+rpt <- create_report(tmp) \%>\%
+  titles("MTCARS Sample Data", align = "left") \%>\%
+  add_content(tbl1, page_break = FALSE, align = "left", blank_row = "none") \%>\%
+  add_content(tbl2, page_break = FALSE, align = "left") \%>\%
+  add_content(create_text("* NOTE: Above table is actually two tables stacked."))
 
 # Write the report to the file system
-write_report(rpt)
+res <- write_report(rpt)
 
 # Write report to console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 # MTCARS Sample Data
 # 
-#  mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#----------------------------------------------------------------------------
-#   21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#   21      6    160    110    3.9  2.875  17.02      0      1      4      4
-# 22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-# 21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-# 18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-# 18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-# 14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-# 24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-# 22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-# 19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#    mpg    cyl   disp     hp   drat     wt
+# -----------------------------------------
+#     21      6    160    110    3.9   2.62
+#     21      6    160    110    3.9  2.875
+#   22.8      4    108     93   3.85   2.32
+#   21.4      6    258    110   3.08  3.215
+#   18.7      8    360    175   3.15   3.44
+#   18.1      6    225    105   2.76   3.46
+#   14.3      8    360    245   3.21   3.57  
+#   24.4      4  146.7     62   3.69   3.19
+#   22.8      4  140.8     95   3.92   3.15
+#   19.2      6  167.6    123   3.92   3.44
 # 
 # * NOTE: Above table is actually two tables stacked.
 }
 \seealso{
-\code{\link{create_table}} and \code{\link{create_text}} to 
-create content for a report.
+\code{\link{create_table}}, \code{\link{create_text}}, and
+\code{\link{create_plot}} to create content for a report.
 
 Other report: 
 \code{\link{create_report}()},

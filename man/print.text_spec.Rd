@@ -11,7 +11,7 @@
 
 \item{...}{Additional parameters to pass to the underlying print function.}
 
-\item{verbose}{Whether to print in verbose form.  Default if FALSE.}
+\item{verbose}{Whether to print in verbose form.  Default is FALSE.}
 }
 \value{
 The text spec, invisibly.
@@ -22,11 +22,14 @@ The \strong{print} function will print the text spec in summary
 form.  To view all parameters, set the \code{verbose} parameter to TRUE.
 }
 \examples{
-txt <- create_text("Lorem ipsum dolor sit amet, consectetur...")
-print(txt)
+txt <- create_text("Lorem ipsum dolor sit amet, consectetur...",
+                   align = "left", width = 3)
+txt
 
-# A text specification:
-# - text: data.frame 'mtcars' 32 rows 11 cols
+# A text specification: 6 words
+# - text: Lorem ipsum dolor sit amet, consectetur...
+# - width: 3
+# - align: left
 }
 \seealso{
 \code{\link{create_text}} function to create a text specification.

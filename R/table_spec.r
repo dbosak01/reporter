@@ -5,9 +5,9 @@
 #' @title Create a table
 #' @description 
 #' The \code{create_table} function creates a table object to which 
-#' further specifications can be added.  The object is implemented as an 
-#' S3 object of class 'table_spec'. The object can be added to a report
-#' using the \code{\link{add_content}} function.
+#' further specifications can be added.  The object can be added to a report
+#' using the \code{\link{add_content}} function. The object is implemented as an 
+#' S3 object of class 'table_spec'.
 #' @details 
 #' A table object is a container to hold information about a table.  The 
 #' only required information for a table is the table data.  All other 
@@ -16,27 +16,43 @@
 #' By default, the table will display all columns in the data frame.  To change
 #' this default, use the \code{show_cols} parameter.  Setting this parameter
 #' to 'none' will display none of the columns in the data, unless they are
-#' explicitly defined with a \code{\link{define}} function.  The 
-#' \code{show_cols} parameter also accepts a vector of quoted column names.
-#' When supplied, \code{create_table} will display only
-#' those columns on the report.  
+#' explicitly defined with a \code{\link{define}} function.  
 #' 
-#' Column parameters can be specified in three ways.  By default, formatting
+#' The \code{show_cols} parameter also accepts a vector of column positions
+#' or quoted column names. When a vector is supplied, \code{create_table} will 
+#' display only those columns on the report, in the order encountered in the 
+#' vector.  The \code{show_cols} parameter is the only mechanism in 
+#' \code{create_table} to modify the column order. Otherwise, modify the 
+#' order prior to sending the data to \code{create_table} using the many options
+#' available in Base R or supplemental packages.
+#' 
+#' @section Setting Formatting Attributes:
+#' Formatting attributes can be controlled in three ways.  By default, formatting
 #' attributes assigned to the data frame will be passed through to the 
-#' reporting functions.  This default behavior can be modifed with the 
-#' \code{use_attributes} parameter on \code{create_table}.
+#' reporting functions.  The reporting functions will recognize the 'label',
+#' 'format', 'width', and 'justify' attributes. In other words, you can control 
+#' the column label, width, format, and alignment of your report columns simply by 
+#' assigning those attributes to your data frame. The advantage of using
+#' attributes assigned to data frame columns is that you can store those 
+#' attributes permanently with the data frame, and those attributes will
+#' not have to be re-specified for each report.  To ignore attributes assigned
+#' to the data frame, set the \code{use_attributes} parameter to FALSE.
 #' 
-#' Secondly, parameters can be specified using the \code{\link{column_defaults}}
+#' Secondly, attributes can be specified using the \code{\link{column_defaults}}
 #' function.  This function allows the user to apply a default set of parameters
 #' to one or more columns.  If no columns are specified in the \code{var} 
-#' parameter of this function, the defaults will apply to all columns.  Any 
-#' default parameters can be overridden by the \code{\link{define}} function.
+#' or \code{from} and \code{to} parameter of this function, the defaults 
+#' will apply to all columns.  Any default parameter values can be overridden 
+#' by the \code{\link{define}} function.
 #' 
 #' Lastly, the \code{\link{define}} function provides the most control over 
-#' columns parameters.  This function provides a significant amount of 
+#' column parameters.  This function provides a significant amount of 
 #' functionality that cannot be specified elsewhere.  See the 
-#' \code{\link{define}} function for additional information.
+#' \code{\link{define}} function for additional information.  The \code{define}
+#' function will also override any formatting attributes assigned to the 
+#' data frame, or anything set by the \code{column_defaults} function.
 #' 
+#' @section Additional Functionality:
 #' The \code{create_table} function also provides the capabilities to create
 #' a "headerless" table.  A headerless table is useful when combining two tables 
 #' into one report.  The example below illustrates use of a headerless table.
@@ -45,14 +61,15 @@
 #' reports, the \code{create_table} function makes it easy to add population
 #' counts to the table header.  These population counts are added to column
 #' labels and spanning header labels using the function indicated in the 
-#' \code{n_format} function. The package provides four population count
-#' formatting functions.  You may create your own formatting function if one of
-#' these functions does not meet your needs.  See \code{\link{upcase_parens}}
-#' for further details.
+#' \code{n_format} parameter. The \strong{rptr} package provides four population 
+#' count formatting functions.  You may create your own formatting function 
+#' if one of these functions does not meet your needs.  See 
+#' \code{\link{upcase_parens}} for further details.
 #' 
 #' @param x The data frame or tibble from which to create the table object.
 #' @param show_cols Whether to show all columns by default.  Valid values are
-#' 'all', 'none', or a vector of column names.  "all" means show all columns, 
+#' 'all', 'none', a vector of column names, or a vector of column positions.  
+#' 'all' means show all columns, 
 #' unless overridden by the column definitions.  
 #' 'none' means don't show any 
 #' columns unless specified in the column definitions.  If a vector of column
@@ -104,6 +121,7 @@
 #' # Create table for averages
 #' tbl1 <- create_table(dat_sum) %>% 
 #'         titles("Table 1.0", "MTCARS Sample Data") %>% 
+#'         column_defaults(width = .5) %>% 
 #'         define(all_cars, label = "", width = 2) %>% 
 #'         define(mpg, format = "%.1f") %>% 
 #'         define(disp, format = "%.1f") %>% 
@@ -112,6 +130,7 @@
 #' 
 #' # Create table for modified data
 #' tbl2 <- create_table(dat_mod, headerless = TRUE) %>% 
+#'         column_defaults(width = .5) %>% 
 #'         define(vehicle, width = 2) 
 #' 
 #' # Create the report object
@@ -123,7 +142,7 @@
 #' write_report(rpt)
 #' 
 #' # Write report to console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' #                                 Table 1.0
 #' #                             MTCARS Sample Data
@@ -177,7 +196,13 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   ret$n_format <- n_format
   ret$col_defs <- list()
   ret$col_spans <- list()
-  ret$show_cols <- show_cols
+  if (is.integer(show_cols)) {
+    ret$show_cols <- names(x)[show_cols]
+  } else if (is.null(show_cols)) {
+    ret$show_cols <- "all"
+  } else {
+    ret$show_cols <- show_cols
+  }
   ret$first_row_blank <- first_row_blank
   ret$headerless <- headerless
   ret$stub <- NULL
@@ -768,9 +793,9 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' #                  IRIS Sample Report
 #' #
 #' #                       Sepal        Petal
-#' #                   ¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
+#' #                   ------------ ------------
 #' #       Species     Length Width Length Width
-#' #       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #       -------------------------------------
 #' #       setosa         5.0   3.0    1.6   0.2
 #' #                      4.6   3.4    1.4   0.3
 #' #                      5.0   3.4    1.6   0.4
@@ -1038,6 +1063,7 @@ print.table_spec <- function(x, ..., verbose = FALSE){
 
   if (verbose == TRUE) {
     
+    # If verbose mode is indicated, print values as a list
     for (nm in names(x)) {
       
       cat("$", nm, "\n", sep = "")
@@ -1136,16 +1162,6 @@ print.table_spec <- function(x, ..., verbose = FALSE){
   invisible(x)
 }
 
-# ret$n_format <- n_format
-# ret$col_defs <- list()
-# ret$col_spans <- list()
-# ret$show_cols <- show_cols
-# ret$first_row_blank <- first_row_blank
-# ret$headerless <- headerless
-# ret$stub <- NULL
-# ret$width <- width
-# ret$page_var <- NULL
-
 
 # Formats ----------------------------------------------------------------------
 
@@ -1159,7 +1175,9 @@ print.table_spec <- function(x, ..., verbose = FALSE){
 #' including whether the "N" should be upper case or lower case, and whether
 #' or not to put the value in parentheses.  If one of these options does not 
 #' meet the specifications for your report, you may also write your own 
-#' formatting function and pass it to the \code{n_format} function.  
+#' formatting function and pass it to the \code{n_format} function.  When an 
+#' N value is supplied, the output of this function will be concatenated 
+#' to the header label.
 #' @usage lowcase_parens(x)
 #' @usage upcase_parens(x)
 #' @usage lowcase_n(x)
@@ -1188,6 +1206,13 @@ print.table_spec <- function(x, ..., verbose = FALSE){
 #' cat(paste0(l, upcase_n(n)))
 #' # Label
 #' # N=47
+#' 
+#' customN <- function(n) {
+#'   return(paste0(": N=", n))
+#' }
+#' cat(paste0(l, customN(n)))
+#' # Label: N=47
+#' 
 #' @export
 lowcase_parens <- function(x) {
   

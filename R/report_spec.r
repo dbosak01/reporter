@@ -108,7 +108,7 @@
 #' #              Air Quality Sample Report
 #' #      
 #' #      Month           Day   Wind   Temp  Ozone
-#' #      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #      ----------------------------------------
 #' #      July              8    6.3    92°     97
 #' #      July              9    5.7    92°     97
 #' #      August            1    6.9    81°     39
@@ -354,67 +354,68 @@ editor_settings <- read.table(header = TRUE, text = '
 #' library(magrittr)
 #' 
 #' # Create a temporary file
-#' tmp <- file.path(tempdir(), "iris.txt")
-#' 
-#' # Prepare data
-#' dat <- iris[sample(1:150, 15), c(5, 1, 2, 3, 4)]
-#' dat <- dat[order(dat$Species), ]
+#' tmp <- file.path(tempdir(), "bod.txt")
 #'
 #' # Define table
-#' tbl <- create_table(dat) %>% 
-#'   titles("Table 3.2", "IRIS Sample Report") %>% 
-#'   spanning_header(2, 3, label = "Sepal") %>% 
-#'   spanning_header(4, 5, label = "Petal") %>% 
-#'   column_defaults(2:5, format = "%.1f") %>% 
-#'   define(Species, align = "left", dedupe = TRUE, blank_after = TRUE) %>% 
-#'   define(Sepal.Length, label = "Length") %>% 
-#'   define(Sepal.Width, label = "Width") %>% 
-#'   define(Petal.Length, label = "Length") %>% 
-#'   define(Petal.Width, label = "Width") %>% 
-#'   footnotes("* From Fisher's Iris Dataset")
+#' tbl <- create_table(BOD, width = 2.3) %>% 
+#'   titles("Table 3.6", "BOD¹ Sample Report") %>% 
+#'   define(Time, format = "Day %s", align = "left") %>% 
+#'   define(demand, format = "%2.1f mg/l", label = "Demand") %>% 
+#'   footnotes("¹ Biochemical Oxygen Demand")
 #'        
-#' # Define report
+#' # Define report #1 - No blank margins
 #' rpt <- create_report(tmp, orientation="portrait") %>%
-#'   options_fixed(blank_margins = TRUE) %>% 
-#'   set_margins(top = 1, bottom =1) %>% 
 #'   add_content(tbl, align = "left") 
 #' 
 #' # Write the report
 #' write_report(rpt)
 #' 
+#' # Write report to console
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #
-#' #
-#' #
-#' #
-#' #                      Table 3.2
-#' #                  IRIS Sample Report
-#' #
-#' #                       Sepal        Petal
-#' #                   ¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
-#' #       Species     Length Width Length Width
-#' #       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#' #       setosa         5.0   3.0    1.6   0.2
-#' #                      4.6   3.4    1.4   0.3
-#' #                      5.0   3.4    1.6   0.4
-#' #                      5.7   3.8    1.7   0.3
-#' #
-#' #       versicolor     5.7   2.8    4.1   1.3
-#' #                      6.2   2.9    4.3   1.3
-#' #                      7.0   3.2    4.7   1.4
-#' #                      6.6   2.9    4.6   1.3
-#' #
-#' #       virginica      6.2   3.4    5.4   2.3
-#' #                      7.2   3.0    5.8   1.6
-#' #                      6.9   3.1    5.1   2.3
-#' #                      5.6   2.8    4.9   2.0
-#' #                      7.7   2.6    6.9   2.3
-#' #                      6.3   2.8    5.1   1.5
-#' #                      7.7   2.8    6.7   2.0
-#' #
-#' #
-#' #       * From Fisher's Iris Dataset
+#' #           Table 3.6
+#' #       BOD¹ Sample Report
+#' # 
+#' # Time                  Demand
+#' # ----------------------------
+#' # Day 1               8.3 mg/l
+#' # Day 2              10.3 mg/l
+#' # Day 3              19.0 mg/l
+#' # Day 4              16.0 mg/l
+#' # Day 5              15.6 mg/l
+#' # Day 7              19.8 mg/l
+#' # 
+#' # ¹ Biochemical Oxygen Demand
+#' 
+#' 
+#' # Define report #2 - blank margins
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   options_fixed(blank_margins = TRUE) %>% 
+#'   set_margins(top = .5, left = 1) %>% 
+#'   add_content(tbl, align = "left") 
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
+#' 
+#' # 
+#' # 
+#' # 
+#' #                       Table 3.6
+#' #                   BOD¹ Sample Report
+#' # 
+#' #              Time                  Demand
+#' #              ----------------------------
+#' #              Day 1               8.3 mg/l
+#' #              Day 2              10.3 mg/l
+#' #              Day 3              19.0 mg/l
+#' #              Day 4              16.0 mg/l
+#' #              Day 5              15.6 mg/l
+#' #              Day 7              19.8 mg/l
+#' # 
+#' #              ¹ Biochemical Oxygen Demand
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
@@ -592,45 +593,68 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' library(magrittr)
 #' 
 #' # Create a temporary file
-#' tmp <- file.path(tempdir(), "iris.txt")
-#' 
+#' tmp <- file.path(tempdir(), "bod.txt")
+#'
 #' # Define table
-#' tbl <- create_table(iris[1:10, ]) %>% 
-#'   titles("Table 3.2", "IRIS Sample Report") %>% 
-#'   footnotes("* From Fisher's Iris Dataset")
+#' tbl <- create_table(BOD, width = 2.3) %>% 
+#'   titles("Table 3.6", "BOD¹ Sample Report") %>% 
+#'   define(Time, format = "Day %s", align = "left") %>% 
+#'   define(demand, format = "%2.1f mg/l", label = "Demand") %>% 
+#'   footnotes("¹ Biochemical Oxygen Demand")
 #'        
-#' # Define report
+#' # Define report #1 - No blank margins
 #' rpt <- create_report(tmp, orientation="portrait") %>%
-#'   options_fixed(blank_margins = TRUE) %>% 
-#'   set_margins(top = 1, bottom =1) %>% 
 #'   add_content(tbl, align = "left") 
 #' 
 #' # Write the report
 #' write_report(rpt)
 #' 
+#' # Write report to console
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #
-#' #
-#' #
-#' #
-#' #                                  Table 3.2
-#' #                              IRIS Sample Report
-#' #     
-#' #          Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#' #          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#' #                   5.1         3.5          1.4         0.2  setosa
-#' #                   4.9           3          1.4         0.2  setosa
-#' #                   4.7         3.2          1.3         0.2  setosa
-#' #                   4.6         3.1          1.5         0.2  setosa
-#' #                     5         3.6          1.4         0.2  setosa
-#' #                   5.4         3.9          1.7         0.4  setosa
-#' #                   4.6         3.4          1.4         0.3  setosa
-#' #                     5         3.4          1.5         0.2  setosa
-#' #                   4.4         2.9          1.4         0.2  setosa
-#' #                   4.9         3.1          1.5         0.1  setosa
+#' #           Table 3.6
+#' #       BOD¹ Sample Report
 #' # 
-#' #          * From Fisher's Iris Dataset
+#' # Time                  Demand
+#' # ----------------------------
+#' # Day 1               8.3 mg/l
+#' # Day 2              10.3 mg/l
+#' # Day 3              19.0 mg/l
+#' # Day 4              16.0 mg/l
+#' # Day 5              15.6 mg/l
+#' # Day 7              19.8 mg/l
+#' # 
+#' # ¹ Biochemical Oxygen Demand
+#' 
+#' 
+#' # Define report #2 - blank margins
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   options_fixed(blank_margins = TRUE) %>% 
+#'   set_margins(top = .5, left = 1) %>% 
+#'   add_content(tbl, align = "left") 
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Write report to console
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
+#' 
+#' # 
+#' # 
+#' # 
+#' #                       Table 3.6
+#' #                   BOD¹ Sample Report
+#' # 
+#' #              Time                  Demand
+#' #              ----------------------------
+#' #              Day 1               8.3 mg/l
+#' #              Day 2              10.3 mg/l
+#' #              Day 3              19.0 mg/l
+#' #              Day 4              16.0 mg/l
+#' #              Day 5              15.6 mg/l
+#' #              Day 7              19.8 mg/l
+#' # 
+#' #              ¹ Biochemical Oxygen Demand
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL) {
@@ -723,11 +747,14 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
+#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+#' 
 #' # Create the report object
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
 #'   page_header("Client: Motor Trend", "Study: Cars") %>% 
 #'   titles("MTCARS Sample Report") %>% 
-#'   add_content(create_table(mtcars[1:10, ])) 
+#'   add_content(create_table(dat)) %>% 
+#'   page_footer(Sys.time(), right = "Page [pg] of [tpg]")
 #' 
 #' # Write the report to the file system
 #' write_report(rpt)
@@ -735,21 +762,25 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' # Write report to console
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' # Client: Motor Trend                                              Study: Cars
-#' #                             MTCARS Sample Report
+#' # Client: Motor Trend                                                Study: Cars
+#' #                              MTCARS Sample Report
 #' # 
-#' #           mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
-#' #         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#' #            21   6    160  110   3.9   2.62  16.46  0  1    4    4
-#' #            21   6    160  110   3.9  2.875  17.02  0  1    4    4
-#' #          22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
-#' #          21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
-#' #          18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
-#' #          18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
-#' #          14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
-#' #          24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
-#' #          22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
-#' #          19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
+#' #                name                 mpg cyl   disp   hp  drat
+#' #                ----------------------------------------------
+#' #                Mazda RX4             21   6    160  110   3.9
+#' #                Mazda RX4 Wag         21   6    160  110   3.9
+#' #                Datsun 710          22.8   4    108   93  3.85
+#' #                Hornet 4 Drive      21.4   6    258  110  3.08
+#' #                Hornet Sportabout   18.7   8    360  175  3.15
+#' #                Valiant             18.1   6    225  105  2.76
+#' #                Duster 360          14.3   8    360  245  3.21
+#' #                Merc 240D           24.4   4  146.7   62  3.69
+#' #                Merc 230            22.8   4  140.8   95  3.92
+#' #                Merc 280            19.2   6  167.6  123  3.92
+#' # 
+#' # ...
+#' # 
+#' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
 page_header <- function(x, left="", right="", blank_row = "none"){
 
@@ -855,7 +886,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' #               US Personal Expenditures from 1940 - 1960
 #' # 
 #' #     Category                1940    1945    1950    1955    1960
-#' #     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #     ------------------------------------------------------------
 #' #     Food and Tobacco      $22.20  $44.50  $59.60  $73.20  $86.80
 #' #     Household Operation   $10.50  $15.50  $29.00  $36.50  $46.20
 #' #     Medical and Health     $3.53   $5.76   $9.71  $14.00  $21.10
@@ -954,7 +985,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' #               US Personal Expenditures from 1940 - 1960
 #' # 
 #' #     Category                1940    1945    1950    1955    1960
-#' #     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' #     ------------------------------------------------------------
 #' #     Food and Tobacco      $22.20  $44.50  $59.60  $73.20  $86.80
 #' #     Household Operation   $10.50  $15.50  $29.00  $36.50  $46.20
 #' #     Medical and Health     $3.53   $5.76   $9.71  $14.00  $21.10
@@ -1026,48 +1057,44 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' @examples
 #' library(rptr)
 #' library(magrittr)
-#' sam
-#' # Create table 
-#' tbl <- create_table(mtcars[1:10, ]) %>% 
-#'        titles("MTCARS Sample Data") %>% 
-#'        footnotes("* From Motor Trend, 1974")
 #' 
-#' # Create temp report file name
+#' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
-#'         
-#' # Create report 
-#' rpt <- create_report(tmp, orientation="portrait") %>%
-#'        page_header(left = "Cars Data", right = "Sample Report")  %>%
-#'        page_footer(left = Sys.time(), right = "Page [pg] of [tpg]")  %>%
-#'        add_content(tbl)
-#'
-#' # Write out the report        
+#' 
+#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+#' 
+#' # Create the report object
+#' rpt <- create_report(tmp, orientation = "portrait") %>% 
+#'   page_header("Client: Motor Trend", "Study: Cars") %>% 
+#'   titles("MTCARS Sample Report") %>% 
+#'   add_content(create_table(dat)) %>% 
+#'   page_footer(Sys.time(), right = "Page [pg] of [tpg]")
+#' 
+#' # Write the report to the file system
 #' write_report(rpt)
 #' 
-#' # Send report to console 
+#' # Write report to console
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' # Cars Data                                                        Sample Report
-#' #                               MTCARS Sample Data
+#' # Client: Motor Trend                                                Study: Cars
+#' #                              MTCARS Sample Report
 #' # 
-#' #             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
-#' #           ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#' #              21   6    160  110   3.9   2.62  16.46  0  1    4    4
-#' #              21   6    160  110   3.9  2.875  17.02  0  1    4    4
-#' #            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
-#' #            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
-#' #            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
-#' #            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
-#' #            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
-#' #            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
-#' #            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
-#' #            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
-#' # 
-#' #           * From Motor Trend, 1974
+#' #                name                 mpg cyl   disp   hp  drat
+#' #                ----------------------------------------------
+#' #                Mazda RX4             21   6    160  110   3.9
+#' #                Mazda RX4 Wag         21   6    160  110   3.9
+#' #                Datsun 710          22.8   4    108   93  3.85
+#' #                Hornet 4 Drive      21.4   6    258  110  3.08
+#' #                Hornet Sportabout   18.7   8    360  175  3.15
+#' #                Valiant             18.1   6    225  105  2.76
+#' #                Duster 360          14.3   8    360  245  3.21
+#' #                Merc 240D           24.4   4  146.7   62  3.69
+#' #                Merc 230            22.8   4  140.8   95  3.92
+#' #                Merc 280            19.2   6  167.6  123  3.92
 #' # 
 #' # ...
 #' # 
-#' # 2020-09-06 09:47:43                                                Page 1 of 1
+#' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
 page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 
@@ -1135,15 +1162,15 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
 #' # Create first table 
-#' tbl1 <- create_table(mtcars[1:5, ]) %>% 
+#' tbl1 <- create_table(mtcars[1:5, 1:6]) %>% 
 #'   column_defaults(width = .5) 
 #' 
 #' # Create second table
-#' tbl2 <- create_table(mtcars[6:10, ], headerless=TRUE) %>% 
+#' tbl2 <- create_table(mtcars[6:10, 1:6], headerless=TRUE) %>% 
 #'   column_defaults(width = .5) 
 #' 
 #' # Create the report object
-#' rpt <- create_report(fp) %>%
+#' rpt <- create_report(tmp) %>%
 #'   titles("MTCARS Sample Data", align = "left") %>%
 #'   add_content(tbl1, page_break = FALSE, align = "left", blank_row = "none") %>%
 #'   add_content(tbl2, page_break = FALSE, align = "left") %>%
@@ -1157,18 +1184,18 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' 
 #' # MTCARS Sample Data
 #' # 
-#' #    mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#' # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#' #     21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#' #     21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#' #   22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#' #   21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#' #   18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#' #   18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#' #   14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#' #   24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#' #   22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#' #   19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#' #    mpg    cyl   disp     hp   drat     wt
+#' # -----------------------------------------
+#' #     21      6    160    110    3.9   2.62
+#' #     21      6    160    110    3.9  2.875
+#' #   22.8      4    108     93   3.85   2.32
+#' #   21.4      6    258    110   3.08  3.215
+#' #   18.7      8    360    175   3.15   3.44
+#' #   18.1      6    225    105   2.76   3.46
+#' #   14.3      8    360    245   3.21   3.57  
+#' #   24.4      4  146.7     62   3.69   3.19
+#' #   22.8      4  140.8     95   3.92   3.15
+#' #   19.2      6  167.6    123   3.92   3.44
 #' # 
 #' # * NOTE: Above table is actually two tables stacked.
 #' @export
@@ -1276,7 +1303,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' #           BEAVERS Sample Report
 #' # 
 #' #      Day      Time  Temperature    Active
-#' # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' # -----------------------------------------
 #' #  Day 307      1020        37.2°        No
 #' #  Day 307      1030        37.2°        No
 #' #  Day 307       940        36.7°        No
@@ -1420,7 +1447,21 @@ print.report_spec <- function(x, ..., verbose = FALSE){
   
   if (verbose == TRUE) {
     
-    print(unclass(x))
+    for (nm in names(x)) {
+      
+      cat("$", nm, "\n", sep = "")
+      if (nm == "content") {
+        
+        for (i in x[[nm]])
+          print(x[[nm]][[i]], ..., verbose = TRUE)
+      }
+      else  {
+        
+        print(x[[nm]], ...)
+      }
+      cat("\n")
+    }
+    
     
   } else {
     

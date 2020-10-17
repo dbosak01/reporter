@@ -57,7 +57,7 @@
 #' write_report(rpt)
 #' 
 #' # Write the report to console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' #                                Text Content 1.0
 #' #                               Sample Text Report
@@ -73,6 +73,26 @@
 #' #
 #' @export
 create_text <- function(txt, width = NULL, align = "left") {
+  
+  if (!"character" %in% class(txt))
+    stop("value must be of class 'character'")
+  
+  if (is.null(align))
+    align = "left"
+  
+  if (!align %in% c("left", "right", "center", "centre"))
+    stop(paste0("align value invalid.  Valid values are 'left', 'right',",
+                "'center', or 'centre'."))
+  
+  if (!is.null(width)) {
+    
+    if (!is.numeric(width))
+      stop("width must be a number.")
+    
+    if (width <= 0)
+      stop("width must be greater than zero.")
+    
+  }
   
   ret <- structure(list(), class = c("text_spec", "list"))
   
@@ -96,17 +116,20 @@ create_text <- function(txt, width = NULL, align = "left") {
 #' form.  To view all parameters, set the \code{verbose} parameter to TRUE.
 #' @param x The text spec.
 #' @param ... Additional parameters to pass to the underlying print function.
-#' @param verbose Whether to print in verbose form.  Default if FALSE.
+#' @param verbose Whether to print in verbose form.  Default is FALSE.
 #' @seealso 
 #' \code{\link{create_text}} function to create a text specification.
 #' @return The text spec, invisibly.
 #' @family text
 #' @examples 
-#' txt <- create_text("Lorem ipsum dolor sit amet, consectetur...")
-#' print(txt)
+#' txt <- create_text("Lorem ipsum dolor sit amet, consectetur...",
+#'                    align = "left", width = 3)
+#' txt
 #'
-#' # A text specification:
-#' # - text: data.frame 'mtcars' 32 rows 11 cols
+#' # A text specification: 6 words
+#' # - text: Lorem ipsum dolor sit amet, consectetur...
+#' # - width: 3
+#' # - align: left
 #' @import crayon
 #' @export
 print.text_spec <- function(x, ..., verbose = FALSE){
@@ -121,9 +144,10 @@ print.text_spec <- function(x, ..., verbose = FALSE){
     
     grey60 <- make_style(grey60 = "#999999")
 
-    
+    # Print header
     cat(grey60("# A text specification: "))
     
+    # Print 100 characters of text 
     if (!is.null(x$text)) {
       
       wc <- lengths(strsplit(x$text, " "))
@@ -142,9 +166,17 @@ print.text_spec <- function(x, ..., verbose = FALSE){
      cat("\n") 
     }
     
+    if (!is.null(x$width)) 
+      cat(paste0("- width: ", x$width, "\n"))
+    
+    if (!is.null(x$align)) 
+      cat(paste0("- align: ", x$align, "\n"))
+    
+    # Print  titles
     if (!is.null(x$titles)) {
       
       ttlcnt <- 1
+      # There can be more than 1 title block
       for (i in seq_along(x$titles)) {
         
         for (j in seq_along(x$titles[[i]]$titles)) {
@@ -155,9 +187,12 @@ print.text_spec <- function(x, ..., verbose = FALSE){
         
       }
     }
+    
+    # Print footnotes
     if (!is.null(x$footnotes)) {
       
       ftncnt <- 1
+      # There can be more than 1 footnote block
       for (i in seq_along(x$footnotes)) {
         
         for (j in seq_along(x$footnotes[[i]]$footnotes)) {

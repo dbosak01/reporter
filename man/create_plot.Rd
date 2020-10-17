@@ -68,5 +68,8 @@ write_report(rpt)
 \code{\link{titles}} to add a title block to the plot,  
 \code{\link{footnotes}} to add footnotes, and \code{\link{add_content}} 
 to add the plot object to a report.
+
+Other plot: 
+\code{\link{print.plot_spec}()}
 }
 \concept{plot}

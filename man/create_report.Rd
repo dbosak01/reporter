@@ -97,33 +97,52 @@ library(rptr)
 library(magrittr)
 
 # Create temp file path
-tmp <- file.path(tempdir(), "mtcars.txt")
+tmp <- file.path(tempdir(), "airquality.txt")
 
-# Create the report object
-rpt <- create_report(tmp, orientation = "portrait") \%>\% 
-  titles("MTCARS Sample Report") \%>\% 
-  add_content(create_table(mtcars[1:10, ])) 
+# Prepare Data
+dat <- airquality[sample(1:153, 15), ]
+dat$Month <-  as.Date(paste0("1973-", dat$Month, "-01"))
+
+# Define table
+tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone")) \%>\% 
+  titles("Table 9.6", "Air Quality Sample Report") \%>\% 
+  column_defaults(width = .5) \%>\% 
+  define(Month, format = "\%B", align = "left", width = 1) \%>\% 
+  define(Temp, format = "\%.0fÂ°") \%>\% 
+  footnotes("* New York, May to September 1973")
+
+# Define report 
+rpt <- create_report(tmp, orientation = "portrait",  missing = "-") \%>\% 
+  add_content(tbl) 
 
 # Write the report to the file system
 write_report(rpt)
 
 # Write the report to the console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
-#                              MTCARS Sample Report
-# 
-#   mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb
-#  ----------------------------------------------------------------------------
-#    21      6    160    110    3.9   2.62  16.46      0      1      4      4
-#    21      6    160    110    3.9  2.875  17.02      0      1      4      4
-#  22.8      4    108     93   3.85   2.32  18.61      1      1      4      1
-#  21.4      6    258    110   3.08  3.215  19.44      1      0      3      1
-#  18.7      8    360    175   3.15   3.44  17.02      0      0      3      2
-#  18.1      6    225    105   2.76   3.46  20.22      1      0      3      1
-#  14.3      8    360    245   3.21   3.57  15.84      0      0      3      4
-#  24.4      4  146.7     62   3.69   3.19     20      1      0      4      2
-#  22.8      4  140.8     95   3.92   3.15   22.9      1      0      4      2
-#  19.2      6  167.6    123   3.92   3.44   18.3      1      0      4      4
+#                      Table 9.6
+#              Air Quality Sample Report
+#      
+#      Month           Day   Wind   Temp  Ozone
+#      ----------------------------------------
+#      July              8    6.3    92Â°     97
+#      July              9    5.7    92Â°     97
+#      August            1    6.9    81Â°     39
+#      July             23   11.5    82Â°      -
+#      June              9   13.8    90Â°     71
+#      July             12   14.3    73Â°     10
+#      July              4   10.9    84Â°      -
+#      May              31    7.4    76Â°     37
+#      September        30   11.5    68Â°     20
+#      June             25      8    75Â°      -
+#      June             28   11.5    80Â°      -
+#      August           18    7.4    76Â°     23
+#      June             20   10.3    76Â°     13
+#      July              1    4.1    84Â°    135
+#      May              23    9.7    61Â°      4
+#      
+#      * New York, May to September 1973
 }
 \seealso{
 \code{\link{create_table}} and \code{\link{create_text}} functions

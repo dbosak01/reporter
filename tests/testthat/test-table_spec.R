@@ -250,3 +250,33 @@ test_that("print.tbl_spec() works as expected.", {
   expect_equal(TRUE, TRUE)
 
 })
+
+
+test_that("show_cols parameter works as expected.", {
+  
+  
+  tbl <- create_table(mtcars, show_cols = 1:3)
+  
+  expect_equal(tbl$show_cols, c("mpg", "cyl", "disp"))
+  
+  tbl <- create_table(mtcars, show_cols = c("disp", "hp", "drat"))
+  
+  expect_equal(tbl$show_cols, c("disp", "hp", "drat"))
+  
+  tbl <- create_table(mtcars)
+  
+  expect_equal(tbl$show_cols, "all")
+  
+  
+  tbl <- create_table(mtcars, show_cols = "none")
+  
+  expect_equal(tbl$show_cols, "none")
+  
+  tbl <- create_table(mtcars, show_cols = NULL)
+  
+  expect_equal(tbl$show_cols, "all")
+  
+  
+})
+  
+  

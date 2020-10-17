@@ -61,6 +61,9 @@
 create_plot <- function(x, height = NULL, width = NULL) {
   
   
+  if (!"ggplot" %in% class(x))
+    stop("plot object must be of class 'ggplot'")
+  
   ret <- structure(list(), class = c("plot_spec", "list"))
   
   ret$plot <- x
@@ -71,6 +74,104 @@ create_plot <- function(x, height = NULL, width = NULL) {
   return(ret)
 }
 
+
+
+# Utilities ---------------------------------------------------------------
+
+#' @title Prints the plot spec
+#' @description A function to print the plot spec.
+#' The \strong{print} function will print the plot spec in summary 
+#' form.  To view all parameters, set the \code{verbose} parameter to TRUE.
+#' @param x The plot spec.
+#' @param ... Additional parameters to pass to the underlying print function.
+#' @param verbose Whether to print in verbose form.  Default is FALSE.
+#' @seealso 
+#' \code{\link{create_plot}} function to create a plot specification.
+#' @return The plot spec, invisibly.
+#' @family plot
+#' @examples 
+#' txt <- create_text("Lorem ipsum dolor sit amet, consectetur...")
+#' print(txt)
+#'
+#' # A text specification:
+#' # - text: data.frame 'mtcars' 32 rows 11 cols
+#' @import crayon
+#' @export
+print.plot_spec <- function(x, ..., verbose = FALSE){
+  
+  
+  if (verbose == TRUE) {
+    
+    # If verbose mode is indicated, print values as a list
+    for (nm in names(x)) {
+      
+      cat("$", nm, "\n", sep = "")
+      if (nm == "plot") {
+        
+        print(unclass(x[[nm]]), ...)
+      }
+      else  {
+        
+        print(x[[nm]], ...)
+      }
+      cat("\n")
+    }
+    
+    
+  } else {
+    
+    
+    grey60 <- make_style(grey60 = "#999999")
+    
+    
+    cat(grey60("# A plot specification: \n"))
+    
+    if (!is.null(x$plot)) {
+      
+      dat <- x$plot[["data"]]
+
+      cat("- data: ")
+      cat(paste0(nrow(dat), " rows, ", ncol(dat), " cols\n"))
+
+      cat(paste0("- layers: ", length(x$plot[["layers"]]), "\n"))
+      
+    } 
+      
+    cat(paste0("- height: ", x$height, "\n"))
+    cat(paste0("- width: ", x$width, "\n"))
+    
+    if (!is.null(x$titles)) {
+      
+      ttlcnt <- 1
+      for (i in seq_along(x$titles)) {
+        
+        for (j in seq_along(x$titles[[i]]$titles)) {
+          cat("- title " %+% as.character(ttlcnt) %+% ": '" 
+              %+% substring(x$titles[[i]]$titles[[j]], 1) %+% "'\n")
+          ttlcnt <- ttlcnt + 1
+        }
+        
+      }
+    }
+    if (!is.null(x$footnotes)) {
+      
+      ftncnt <- 1
+      for (i in seq_along(x$footnotes)) {
+        
+        for (j in seq_along(x$footnotes[[i]]$footnotes)) {
+          cat("- footnote " %+% as.character(ftncnt) %+% ": '" 
+              %+% substring(x$footnotes[[i]]$footnotes[[j]], 1) %+% "'\n")
+          ftncnt <- ftncnt + 1
+        }
+        
+      }
+    }
+    
+    
+  }
+  
+  invisible(x)
+}
 
 
 # Write Functions -------------------------------------------------------
