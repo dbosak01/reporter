@@ -73,7 +73,8 @@
 #' pass the desired character string to the missing parameter.
 #' @return A new report_spec object.
 #' @family report
-#' @seealso \code{\link{create_table}} and \code{\link{create_text}} functions
+#' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
+#' \code{\link{create_plot}} functions
 #' to create content for the report.
 #' @examples
 #' library(rptr)
@@ -91,7 +92,7 @@
 #'   titles("Table 9.6", "Air Quality Sample Report") %>% 
 #'   column_defaults(width = .5) %>% 
 #'   define(Month, format = "%B", align = "left", width = 1) %>% 
-#'   define(Temp, format = "%.0f°") %>% 
+#'   define(Temp, format = "%.0f\U00B0") %>% 
 #'   footnotes("* New York, May to September 1973")
 #' 
 #' # Define report 
@@ -109,7 +110,7 @@
 #' #      
 #' #      Month           Day   Wind   Temp  Ozone
 #' #      ----------------------------------------
-#' #      July              8    6.3    92°     97
+#' #      July              8    6.3    92\U00B0     97
 #' #      July              9    5.7    92°     97
 #' #      August            1    6.9    81°     39
 #' #      July             23   11.5    82°      -

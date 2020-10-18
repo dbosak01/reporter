@@ -108,7 +108,7 @@ tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone"))
   titles("Table 9.6", "Air Quality Sample Report") \%>\% 
   column_defaults(width = .5) \%>\% 
   define(Month, format = "\%B", align = "left", width = 1) \%>\% 
-  define(Temp, format = "\%.0fÂ°") \%>\% 
+  define(Temp, format = "\%.0f\U00B0") \%>\% 
   footnotes("* New York, May to September 1973")
 
 # Define report 
@@ -126,7 +126,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 #      
 #      Month           Day   Wind   Temp  Ozone
 #      ----------------------------------------
-#      July              8    6.3    92Â°     97
+#      July              8    6.3    92\U00B0     97
 #      July              9    5.7    92Â°     97
 #      August            1    6.9    81Â°     39
 #      July             23   11.5    82Â°      -
@@ -145,7 +145,8 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 #      * New York, May to September 1973
 }
 \seealso{
-\code{\link{create_table}} and \code{\link{create_text}} functions
+\code{\link{create_table}}, \code{\link{create_text}}, and
+\code{\link{create_plot}} functions
 to create content for the report.
 
 Other report: 
