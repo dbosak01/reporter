@@ -108,7 +108,7 @@ tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone"))
   titles("Table 9.6", "Air Quality Sample Report") \%>\% 
   column_defaults(width = .5) \%>\% 
   define(Month, format = "\%B", align = "left", width = 1) \%>\% 
-  define(Temp, format = "\%.0f\U00B0") \%>\% 
+  define(Temp, format = "\%.0f") \%>\% 
   footnotes("* New York, May to September 1973")
 
 # Define report 
@@ -126,21 +126,21 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 #      
 #      Month           Day   Wind   Temp  Ozone
 #      ----------------------------------------
-#      July              8    6.3    92\U00B0     97
-#      July              9    5.7    92Â°     97
-#      August            1    6.9    81Â°     39
-#      July             23   11.5    82Â°      -
-#      June              9   13.8    90Â°     71
-#      July             12   14.3    73Â°     10
-#      July              4   10.9    84Â°      -
-#      May              31    7.4    76Â°     37
-#      September        30   11.5    68Â°     20
-#      June             25      8    75Â°      -
-#      June             28   11.5    80Â°      -
-#      August           18    7.4    76Â°     23
-#      June             20   10.3    76Â°     13
-#      July              1    4.1    84Â°    135
-#      May              23    9.7    61Â°      4
+#      July              8    6.3     92     97
+#      July              9    5.7     92     97
+#      August            1    6.9     81     39
+#      July             23   11.5     82      -
+#      June              9   13.8     90     71
+#      July             12   14.3     73     10
+#      July              4   10.9     84      -
+#      May              31    7.4     76     37
+#      September        30   11.5     68     20
+#      June             25      8     75      -
+#      June             28   11.5     80      -
+#      August           18    7.4     76     23
+#      June             20   10.3     76     13
+#      July              1    4.1     84    135
+#      May              23    9.7     61      4
 #      
 #      * New York, May to September 1973
 }

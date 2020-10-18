@@ -92,7 +92,7 @@
 #'   titles("Table 9.6", "Air Quality Sample Report") %>% 
 #'   column_defaults(width = .5) %>% 
 #'   define(Month, format = "%B", align = "left", width = 1) %>% 
-#'   define(Temp, format = "%.0f\U00B0") %>% 
+#'   define(Temp, format = "%.0f") %>% 
 #'   footnotes("* New York, May to September 1973")
 #' 
 #' # Define report 
@@ -110,21 +110,21 @@
 #' #      
 #' #      Month           Day   Wind   Temp  Ozone
 #' #      ----------------------------------------
-#' #      July              8    6.3    92\U00B0     97
-#' #      July              9    5.7    92°     97
-#' #      August            1    6.9    81°     39
-#' #      July             23   11.5    82°      -
-#' #      June              9   13.8    90°     71
-#' #      July             12   14.3    73°     10
-#' #      July              4   10.9    84°      -
-#' #      May              31    7.4    76°     37
-#' #      September        30   11.5    68°     20
-#' #      June             25      8    75°      -
-#' #      June             28   11.5    80°      -
-#' #      August           18    7.4    76°     23
-#' #      June             20   10.3    76°     13
-#' #      July              1    4.1    84°    135
-#' #      May              23    9.7    61°      4
+#' #      July              8    6.3     92     97
+#' #      July              9    5.7     92     97
+#' #      August            1    6.9     81     39
+#' #      July             23   11.5     82      -
+#' #      June              9   13.8     90     71
+#' #      July             12   14.3     73     10
+#' #      July              4   10.9     84      -
+#' #      May              31    7.4     76     37
+#' #      September        30   11.5     68     20
+#' #      June             25      8     75      -
+#' #      June             28   11.5     80      -
+#' #      August           18    7.4     76     23
+#' #      June             20   10.3     76     13
+#' #      July              1    4.1     84    135
+#' #      May              23    9.7     61      4
 #' #      
 #' #      * New York, May to September 1973
 #' @export
@@ -375,7 +375,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' #           Table 3.6
-#' #       BOD¹ Sample Report
+#' #       BOD* Sample Report
 #' # 
 #' # Time                  Demand
 #' # ----------------------------
@@ -386,7 +386,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' # Day 5              15.6 mg/l
 #' # Day 7              19.8 mg/l
 #' # 
-#' # ¹ Biochemical Oxygen Demand
+#' # * Biochemical Oxygen Demand
 #' 
 #' 
 #' # Define report #2 - blank margins
@@ -405,7 +405,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' # 
 #' # 
 #' #                       Table 3.6
-#' #                   BOD¹ Sample Report
+#' #                   BOD* Sample Report
 #' # 
 #' #              Time                  Demand
 #' #              ----------------------------
@@ -416,7 +416,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' #              Day 5              15.6 mg/l
 #' #              Day 7              19.8 mg/l
 #' # 
-#' #              ¹ Biochemical Oxygen Demand
+#' #              * Biochemical Oxygen Demand
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
@@ -614,7 +614,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' #           Table 3.6
-#' #       BOD¹ Sample Report
+#' #       BOD* Sample Report
 #' # 
 #' # Time                  Demand
 #' # ----------------------------
@@ -625,7 +625,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' # Day 5              15.6 mg/l
 #' # Day 7              19.8 mg/l
 #' # 
-#' # ¹ Biochemical Oxygen Demand
+#' # * Biochemical Oxygen Demand
 #' 
 #' 
 #' # Define report #2 - blank margins
@@ -644,7 +644,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' # 
 #' # 
 #' #                       Table 3.6
-#' #                   BOD¹ Sample Report
+#' #                   BOD* Sample Report
 #' # 
 #' #              Time                  Demand
 #' #              ----------------------------
@@ -655,7 +655,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' #              Day 5              15.6 mg/l
 #' #              Day 7              19.8 mg/l
 #' # 
-#' #              ¹ Biochemical Oxygen Demand
+#' #              * Biochemical Oxygen Demand
 #' @export
 set_margins <- function(x, top=NULL, bottom=NULL,
                            left=NULL, right=NULL) {
@@ -1283,7 +1283,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #'   column_defaults(width = .75) %>% 
 #'   define(day, label = "Day", format = "Day %s") %>% 
 #'   define(time, label = "Time") %>% 
-#'   define(temp, label = "Temperature", width = 1, format = "%.1f°") %>% 
+#'   define(temp, label = "Temperature", width = 1, format = "%.1f") %>% 
 #'   define(activ,label = "Active", format = fmt) %>% 
 #'   footnotes("* NOTE: Data on beaver habits")
 #' 
@@ -1305,21 +1305,21 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' # 
 #' #      Day      Time  Temperature    Active
 #' # -----------------------------------------
-#' #  Day 307      1020        37.2°        No
-#' #  Day 307      1030        37.2°        No
-#' #  Day 307       940        36.7°        No
-#' #  Day 307      1340        37.1°        No
-#' #  Day 307      1410        37.2°        No
-#' #  Day 307      1400        37.1°        No
-#' #  Day 307      1130        36.9°        No
-#' #  Day 307      1140        37.0°        No
-#' #  Day 307      1120        37.0°        No
-#' #  Day 307      1000        37.1°        No
-#' #  Day 307      1250        37.0°        No
-#' #  Day 307      2100        37.9°       Yes
-#' #  Day 307      1210        37.0°        No
-#' #  Day 307      1740        38.0°       Yes
-#' #  Day 308       130        37.8°       Yes
+#' #  Day 307      1020         37.2        No
+#' #  Day 307      1030         37.2        No
+#' #  Day 307       940         36.7        No
+#' #  Day 307      1340         37.1        No
+#' #  Day 307      1410         37.2        No
+#' #  Day 307      1400         37.1        No
+#' #  Day 307      1130         36.9        No
+#' #  Day 307      1140         37.0        No
+#' #  Day 307      1120         37.0        No
+#' #  Day 307      1000         37.1        No
+#' #  Day 307      1250         37.0        No
+#' #  Day 307      2100         37.9       Yes
+#' #  Day 307      1210         37.0        No
+#' #  Day 307      1740         38.0       Yes
+#' #  Day 308       130         37.8       Yes
 #' # 
 #' # * NOTE: Data on beaver habits
 #' @export
@@ -1441,6 +1441,19 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 #' 
 #' # Write the modified report object to the console
 #' print(res)
+#' 
+#' # # A report specification: 1 pages
+#' # - file_path: 'C:/Users/User/AppData/Local/Temp/RtmpWQybXs/mtcars.txt'
+#' # - output_type: TXT
+#' # - units: inches
+#' # - orientation: landscape
+#' # - line size/count: 108/45
+#' # - content: 
+#' #   # A table specification:
+#' #   - data: data.frame 'mtcars' 32 rows 11 cols
+#' # - title 1: 'Table 1.0'
+#' # - title 2: 'MTCARS Sample Report'
+#' # - footnote 1: '* NOTE: Data from 1974'
 #' @import crayon
 #' @export
 print.report_spec <- function(x, ..., verbose = FALSE){
@@ -1448,6 +1461,7 @@ print.report_spec <- function(x, ..., verbose = FALSE){
   
   if (verbose == TRUE) {
     
+    # If verbose mode is requested, print in list form
     for (nm in names(x)) {
       
       cat("$", nm, "\n", sep = "")
@@ -1468,7 +1482,7 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     
     grey60 <- make_style(grey60 = "#999999")
 
-    
+    # Print header
     cat(grey60("# A report specification: "))
     if (!is.null(x$pages)) {
       if (!is.null(x$preview)) {
@@ -1481,6 +1495,8 @@ print.report_spec <- function(x, ..., verbose = FALSE){
         cat(grey60(as.character(x$pages) %+% " pages")) 
       }
     }
+    
+    # Print key attributes
     cat("\n")
     cat("- file_path: '" %+% x$modified_path %+% "'\n")
     cat("- output_type: " %+% x$output_type %+% "\n")
@@ -1488,6 +1504,8 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     cat("- orientation: " %+% x$orientation %+% "\n")
     if (!is.null(x$line_size)) 
       cat("- line size/count: " %+% x$line_size %+% "/" %+% x$line_count %+% "\n")
+    
+    # Print page header
     if (!is.null(x$page_header_left) |
         !is.null(x$page_header_right)) {
       cat("- page_header:")
@@ -1501,6 +1519,8 @@ print.report_spec <- function(x, ..., verbose = FALSE){
       }
       cat("\n")
     }
+    
+    # Print titles
     if (!is.null(x$titles)) {
       
       ttlcnt <- 1
@@ -1514,6 +1534,8 @@ print.report_spec <- function(x, ..., verbose = FALSE){
         
       }
     }
+    
+    # Print footnotes
     if (!is.null(x$footnotes)) {
       
       ftncnt <- 1
@@ -1527,6 +1549,8 @@ print.report_spec <- function(x, ..., verbose = FALSE){
         
       }
     }
+    
+    # Print page footer
     if (!is.null(x$page_footer_left) | 
         !is.null(x$page_footer_center) |
         !is.null(x$page_footer_right)) {

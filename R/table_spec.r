@@ -36,7 +36,7 @@
 #' attributes assigned to data frame columns is that you can store those 
 #' attributes permanently with the data frame, and those attributes will
 #' not have to be re-specified for each report.  To ignore attributes assigned
-#' to the data frame, set the \code{use_attributes} parameter to FALSE.
+#' to the data frame, set the \code{use_attributes} parameter to 'none'.
 #' 
 #' Secondly, attributes can be specified using the \code{\link{column_defaults}}
 #' function.  This function allows the user to apply a default set of parameters
@@ -1032,6 +1032,8 @@ stub <- function(x, vars, label = "", label_align = NULL,
 #'
 #' # A table specification:
 #' # - data: data.frame 'mtcars' 32 rows 11 cols
+#' # - show_cols: all
+#' # - use_attributes: all
 #' # - title 1: 'Table 6.4'
 #' # - title 2: 'MTCARS Sample Table'
 #' # - footnote 1: '* Motor Trend, 1974'
@@ -1070,10 +1072,41 @@ print.table_spec <- function(x, ..., verbose = FALSE){
     grey60 <- make_style(grey60 = "#999999")
     #pcolor <- make_style("snow")
     
+    # Print header
     cat(grey60("# A table specification:\n"))
     cat("- data: " %+% dtyp %+% "'" %+% x$dataname %+% 
                  "' " %+% nrow(x$data) %+% " rows " %+% ncol(x$data) %+%
                  " cols\n")
+    
+    if (!is.null(x$show_cols)) {
+      cat("- show_cols: " %+% 
+            paste(as.character(x$show_cols), collapse = " ") %+% "\n")
+      
+    }
+    
+    if (all(!is.null(x$use_attributes))) {
+      
+      if (all(x$use_attributes == ""))
+        ua <- "none"
+      else if (all(x$use_attributes %in% c("label", "width", "justify", "format")))
+        ua <- "all"
+      else 
+        ua <- paste(x$use_attributes, collapse = " ")
+      
+      cat("- use_attributes: " %+%  ua %+% "\n")
+      
+  
+    }
+    
+    if (!is.null(x$width))
+      cat("- width: " %+% as.character(x$width) %+% "\n")
+    
+    if (!is.null(x$headerless)) {
+      if (x$headerless != FALSE)
+        cat("- headerless: " %+% as.character(x$headerless) %+% "\n")
+    }
+    
+    # Print titles
     if (!is.null(x$titles)) {
      
       ttlcnt <- 1
@@ -1087,6 +1120,8 @@ print.table_spec <- function(x, ..., verbose = FALSE){
       
       }
     }
+    
+    # Print footnotes
     if (!is.null(x$footnotes)) {
       
       ftncnt <- 1
@@ -1101,6 +1136,7 @@ print.table_spec <- function(x, ..., verbose = FALSE){
       }
     }
     
+    # Print spanning headers
     if (!is.null(x$col_spans)) {
       
       for (def in x$col_spans) {
@@ -1119,6 +1155,8 @@ print.table_spec <- function(x, ..., verbose = FALSE){
         
       }
     }
+    
+    # Print column definitions
     if (!is.null(x$col_defs)) {
       
       for (def in x$col_defs) {

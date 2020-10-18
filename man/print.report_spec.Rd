@@ -44,6 +44,19 @@ res <- write_report(rpt)
 
 # Write the modified report object to the console
 print(res)
+
+# # A report specification: 1 pages
+# - file_path: 'C:/Users/User/AppData/Local/Temp/RtmpWQybXs/mtcars.txt'
+# - output_type: TXT
+# - units: inches
+# - orientation: landscape
+# - line size/count: 108/45
+# - content: 
+#   # A table specification:
+#   - data: data.frame 'mtcars' 32 rows 11 cols
+# - title 1: 'Table 1.0'
+# - title 2: 'MTCARS Sample Report'
+# - footnote 1: '* NOTE: Data from 1974'
 }
 \seealso{
 \code{\link{create_report}} function to create a report specification.

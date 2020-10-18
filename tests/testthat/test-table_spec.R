@@ -221,7 +221,9 @@ test_that("define_c function works as expected.", {
 
 test_that("print.tbl_spec() works as expected.", {
   
-  tbl <- create_table(mtcars) %>% 
+  tbl <- create_table(mtcars, headerless = TRUE, 
+                      show_cols = c("mpg", "cyl", "disp"),
+                      use_attributes = "none", width = 8) %>% 
     titles("Table 1", "My title") %>% 
     titles("Here is a much longer title to see what happens when I print it") %>% 
     footnotes("My footnote 1", "My footnote 2") %>% 

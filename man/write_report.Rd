@@ -70,7 +70,7 @@ tbl <- create_table(dat) \%>\%
   column_defaults(width = .75) \%>\% 
   define(day, label = "Day", format = "Day \%s") \%>\% 
   define(time, label = "Time") \%>\% 
-  define(temp, label = "Temperature", width = 1, format = "\%.1fÂ°") \%>\% 
+  define(temp, label = "Temperature", width = 1, format = "\%.1f") \%>\% 
   define(activ,label = "Active", format = fmt) \%>\% 
   footnotes("* NOTE: Data on beaver habits")
 
@@ -92,21 +92,21 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 
 #      Day      Time  Temperature    Active
 # -----------------------------------------
-#  Day 307      1020        37.2Â°        No
-#  Day 307      1030        37.2Â°        No
-#  Day 307       940        36.7Â°        No
-#  Day 307      1340        37.1Â°        No
-#  Day 307      1410        37.2Â°        No
-#  Day 307      1400        37.1Â°        No
-#  Day 307      1130        36.9Â°        No
-#  Day 307      1140        37.0Â°        No
-#  Day 307      1120        37.0Â°        No
-#  Day 307      1000        37.1Â°        No
-#  Day 307      1250        37.0Â°        No
-#  Day 307      2100        37.9Â°       Yes
-#  Day 307      1210        37.0Â°        No
-#  Day 307      1740        38.0Â°       Yes
-#  Day 308       130        37.8Â°       Yes
+#  Day 307      1020         37.2        No
+#  Day 307      1030         37.2        No
+#  Day 307       940         36.7        No
+#  Day 307      1340         37.1        No
+#  Day 307      1410         37.2        No
+#  Day 307      1400         37.1        No
+#  Day 307      1130         36.9        No
+#  Day 307      1140         37.0        No
+#  Day 307      1120         37.0        No
+#  Day 307      1000         37.1        No
+#  Day 307      1250         37.0        No
+#  Day 307      2100         37.9       Yes
+#  Day 307      1210         37.0        No
+#  Day 307      1740         38.0       Yes
+#  Day 308       130         37.8       Yes
 # 
 # * NOTE: Data on beaver habits
 }

@@ -126,7 +126,7 @@ write_report(rpt)
 writeLines(readLines(tmp, encoding = "UTF-8"))
 
 #           Table 3.6
-#       BODÂ¹ Sample Report
+#       BOD* Sample Report
 # 
 # Time                  Demand
 # ----------------------------
@@ -137,7 +137,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # Day 5              15.6 mg/l
 # Day 7              19.8 mg/l
 # 
-# Â¹ Biochemical Oxygen Demand
+# * Biochemical Oxygen Demand
 
 
 # Define report #2 - blank margins
@@ -156,7 +156,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 
 # 
 #                       Table 3.6
-#                   BODÂ¹ Sample Report
+#                   BOD* Sample Report
 # 
 #              Time                  Demand
 #              ----------------------------
@@ -167,7 +167,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 #              Day 5              15.6 mg/l
 #              Day 7              19.8 mg/l
 # 
-#              Â¹ Biochemical Oxygen Demand
+#              * Biochemical Oxygen Demand
 }
 \seealso{
 \code{\link{create_report}} to create a report and set the unit

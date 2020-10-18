@@ -89,7 +89,7 @@ assigning those attributes to your data frame. The advantage of using
 attributes assigned to data frame columns is that you can store those 
 attributes permanently with the data frame, and those attributes will
 not have to be re-specified for each report.  To ignore attributes assigned
-to the data frame, set the \code{use_attributes} parameter to FALSE.
+to the data frame, set the \code{use_attributes} parameter to 'none'.
 
 Secondly, attributes can be specified using the \code{\link{column_defaults}}
 function.  This function allows the user to apply a default set of parameters

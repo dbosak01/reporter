@@ -36,6 +36,8 @@ tbl
 
 # A table specification:
 # - data: data.frame 'mtcars' 32 rows 11 cols
+# - show_cols: all
+# - use_attributes: all
 # - title 1: 'Table 6.4'
 # - title 2: 'MTCARS Sample Table'
 # - footnote 1: '* Motor Trend, 1974'
