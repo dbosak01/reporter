@@ -20,7 +20,7 @@ stub(
 \item{vars}{A vector of quoted variable names from which to create the stub.}
 
 \item{label}{The label for the report stub.  The default label is an empty
-string ("").}
+string.}
 
 \item{label_align}{The alignment for the stub column label.
 Valid values are 'left', 'right', 'center', and 'centre'.  Default follows
@@ -70,7 +70,7 @@ library(rptr)
 library(magrittr)
 
 # Create temporary path
-tmp <- file.path(tempdir(), "example2.txt")
+tmp <- file.path(tempdir(), "stub.txt")
 
 # Read in prepared data
 df <- read.table(header = TRUE, text = '
@@ -108,7 +108,7 @@ rpt <- create_report(tmp, orientation = "portrait") \%>\%
 write_report(rpt)
 
 # View report in console
-writeLines(readLines(tmp))
+writeLines(readLines(tmp, encoding = "UTF-8"))
 
 # Client: Motor Trend                                                Study: Cars
 #                                   Table 1.0
@@ -116,19 +116,19 @@ writeLines(readLines(tmp))
 # 
 #                                     Group A      Group B
 #                                      (N=19)       (N=13)
-#                  -------------------------------------------
+#                 -------------------------------------------
 # 
 #                 Miles Per Gallon
 #                    N                   19           13
-#                    Mean            19.3 (6.7)   21.3 (4.8)
-#                    Median             17.3         21.0
-#                    Q1 - Q3        15.2 - 22.1  19.2 - 22.8
-#                    Range          10.4 - 33.9  14.3 - 32.4
+#                    Mean            18.8 (6.5)   22.0 (4.9)
+#                    Median             16.4         21.4
+#                    Q1 - Q3        15.1 - 21.2  19.2 - 22.8
+#                    Range          10.4 - 33.9  14.7 - 32.4
 #
 #                 Cylinders
 #                    8 Cylinder     10 ( 52.6\%)   4 ( 30.8\%)
-#                    6 Cylinder      3 ( 15.8\%)   4 ( 30.8\%)
-#                    4 Cylinder      6 ( 31.6\%)   5 ( 38.5\%)
+#                    6 Cylinder      4 ( 21.1\%)   3 ( 23.1\%)
+#                    4 Cylinder      5 ( 26.3\%)   6 ( 46.2\%)
 # 
 # ...
 # 

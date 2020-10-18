@@ -99,7 +99,7 @@ set to TRUE.  This parameter is often used in conjunction with the
 The modified table spec.
 }
 \description{
-A function to define the specification for a table column.  The
+A function to define a table column.  The
 \code{define} function contains a variety of a parameters to control the 
 appearance of the report.  Using the \code{define} function, you can control
 simple options like column alignment and format, but also control more 
@@ -112,7 +112,8 @@ the data frame.  The report will use attributes assigned to the data frame
 such as 'width', 'justify', 'label', and 'format'.  In other words, 
 some control over the column 
 formatting is available by manipulating the data frame attributes prior
-to assigning the data frame to \code{\link{create_table}}.
+to assigning the data frame to \code{create_table}.  See 
+\code{\link{create_table}} for more details.
 
 The \code{define} function is used to provide additional control over
 column appearance.  For example, you may use the \code{define} function
@@ -121,8 +122,15 @@ or place a blank row after each unique value of the column.
 See the parameters below for additional options.
 
 Some of the parameters on the \code{define} function are used in the 
-creation of a table stub.  See the \code{\link{stub}} function for additional
-details.
+creation of a table stub.  See the \code{\link{stub}} function for further
+information.
+
+A single column definition may be defined for multiple variables.  
+To create a definition for multiple variables, pass the variables as
+a quoted or unquoted vector.  When creating a single definition for 
+multiple variable, the parameters will be unified across those variables.
+Note that some parameters (such as \code{page_break}) may only be set
+once per report, and cannot be shared across multiple variables.
 }
 \examples{
 library(rptr)

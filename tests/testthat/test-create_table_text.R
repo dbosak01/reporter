@@ -11,7 +11,7 @@ test_that("get_justify() works as expected.", {
 
 test_that("get_table_header works as expected.", {
   
-  
+
   rpt <- create_report("fork.out")
   rpt$line_size <- 108
   

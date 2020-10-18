@@ -220,7 +220,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 }
 
 #' @title Defines a column 
-#' @description A function to define the specification for a table column.  The
+#' @description A function to define a table column.  The
 #' \code{define} function contains a variety of a parameters to control the 
 #' appearance of the report.  Using the \code{define} function, you can control
 #' simple options like column alignment and format, but also control more 
@@ -232,7 +232,8 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' such as 'width', 'justify', 'label', and 'format'.  In other words, 
 #' some control over the column 
 #' formatting is available by manipulating the data frame attributes prior
-#' to assigning the data frame to \code{\link{create_table}}.
+#' to assigning the data frame to \code{create_table}.  See 
+#' \code{\link{create_table}} for more details.
 #' 
 #' The \code{define} function is used to provide additional control over
 #' column appearance.  For example, you may use the \code{define} function
@@ -241,8 +242,15 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' See the parameters below for additional options.
 #' 
 #' Some of the parameters on the \code{define} function are used in the 
-#' creation of a table stub.  See the \code{\link{stub}} function for additional
-#' details.
+#' creation of a table stub.  See the \code{\link{stub}} function for further
+#' information.
+#' 
+#' A single column definition may be defined for multiple variables.  
+#' To create a definition for multiple variables, pass the variables as
+#' a quoted or unquoted vector.  When creating a single definition for 
+#' multiple variable, the parameters will be unified across those variables.
+#' Note that some parameters (such as \code{page_break}) may only be set
+#' once per report, and cannot be shared across multiple variables.  
 #' 
 #' @param x The table spec.
 #' @param vars The variable name or names to define a column for.  Names may
@@ -476,45 +484,43 @@ define_c <- function(var, label = NULL, format = NULL,
 }
 
 
-#' @title Set default parameters for one or more columns
-#' @description A function to define the specification for a table column.  The
-#' \code{define} function contains a variety of a parameters to control the 
-#' appearance of the report.  Using the \code{define} function, you can control
-#' simple options like column alignment and format, but also control more 
-#' sophisticated options like page wrapping and page breaking.
+#' @title Set default attributes for one or more columns
+#' @description A function to set default attributes for columns on a table.  
+#' The \code{column_defaults} function contains a subset of the parameters
+#' on the \code{\link{define}} function that can be shared across variables.
+#' Any attributes set by \code{column_defaults} can be overridden by 
+#' the \code{define} function, if desired.  The overall purpose of the 
+#' function is to minimize redundancy in column definitions. 
 #' @details 
-#' Column definitions are optional.  By default, all columns in the data
-#' are displayed in the order and with the formatting attributes assigned to 
-#' the data frame.  The report will use attributes assigned to the data frame 
-#' such as 'width', 'justify', 'label', and 'format'.  In other words, 
-#' some control over the column 
-#' formatting is available by manipulating the data frame attributes prior
-#' to assigning the data frame to \code{\link{create_table}}.
+#' Column defaults can be specified for multiple variables.  By default,
+#' the function will apply to all variables.  Alternately, you can 
+#' specify a vector of columns on the \code{vars} parameter, or a range of
+#' columns using the \code{from} and \code{to} parameters.  Both the 
+#' \code{vars} parameters and the \code{from} and \code{to} parameters
+#' will accept column positions, quoted variable names, or unquoted variable 
+#' names.
 #' 
-#' The \code{define} function is used to provide additional control over
-#' column appearance.  For example, you may use the \code{define} function
-#' to assign an "N=" population count, eliminate duplicates from the column,
-#' or place a blank row after each unique value of the column. 
-#' See the parameters below for additional options.
+#' The parameters that can be set with the \code{column_defaults} 
+#' include the formatting attributes 'width', 'justify', 'label', and 
+#' 'format'.  Any parameters set with \code{column_defaults} will override
+#' any attributes set on the data frame.
 #' 
-#' Some of the parameters on the \code{define} function are used in the 
-#' creation of a table stub.  See the \code{\link{stub}} function for additional
-#' details.
+#' Note that you may call the \code{column_defaults} function multiple times
+#' on the same table specification.  Typically, multiple \code{column_defaults}
+#' calls would be made with a different set or range of variables.
 #' 
-#' @param x The table spec.
+#' @param x A table spec.
 #' @param vars The variable name or names to define defaults for.  Variable
-#' names may be quoted or unquoted.  For multiple variable names, pass them
-#' as a vector. 
-#' The parameter values passed to this function will be applied to all variables 
-#' specified as default values.  Any values specified on a define function
-#' will override the defaults.
-#' @param from The variable name that starts a column range.  The variable name
+#' names may be quoted or unquoted.  The parameter will also accept 
+#' integer column positions instead of names.  For multiple variable names, 
+#' pass them as a vector. 
+#' @param from The variable name or position that starts a column range.  
+#' If passed as a variable name, it may be quoted or unquoted.
+#' @param to The variable name or position that ends a column range. 
+#' If passed as a variable name, it 
 #' may be quoted or unquoted.
-#' @param to The variable name that ends a column range. The variable name
-#' may be quoted or unquoted.
-#' @param label The label to use for the column header.  If a label is assigned
-#' to the label column attribute, it will be used as a default.  Otherwise,
-#' the column name will be used.
+#' @param label The label to use for a column header.  This label will be 
+#' applied to all variable assigned to the \code{column_defaults} function.
 #' @param format The format to use for the column data.  The format can 
 #' be a string format, a formatting function, a lookup list, or a format object. 
 #' All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
@@ -548,67 +554,37 @@ define_c <- function(var, label = NULL, format = NULL,
 #' 
 #' # Define table
 #' tbl <- create_table(dat, show_cols = 1:8) %>% 
-#'   define(vehicle, label = "Vehicle", width = 3, id_var = TRUE, align = "left") %>% 
-#'   define(mpg, label = "Miles per Gallon", width = 1) %>% 
-#'   define(cyl, label = "Cylinders", format = "%.1f") %>% 
-#'   define(disp, label = "Displacement") %>% 
-#'   define(hp, label = "Horsepower", page_wrap = TRUE) %>% 
-#'   define(drat, visible = FALSE) %>% 
-#'   define(wt, label = "Weight") %>% 
-#'   define(qsec, label = "Quarter Mile Time", width = 1.5) 
-#' 
+#'   column_defaults(from = mpg, to = qsec, width = .5, format = "%.1f") %>% 
+#'   define(vehicle, label = "Vehicle", width = 1.5, align = "left") %>% 
+#'   define(c(cyl, hp), format = "%.0f") 
 #' 
 #' # Create the report
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
-#'   titles("Listing 2.0", "MTCARS Data Listing with Page Wrap") %>% 
-#'   add_content(tbl, align = "left") %>% 
-#'   page_footer(right = "Page [pg] of [tpg]")
+#'   titles("Table 2.5", "MTCARS Sample Report") %>% 
+#'   add_content(tbl) 
 #' 
 #' # Write the report
 #' write_report(rpt)
 #' 
 #' # Send report to console for viewing
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
-#' #                                  Listing 2.0
-#' #                       MTCARS Data Listing with Page Wrap
+#' #                                 Table 2.5
+#' #                            MTCARS Sample Report
 #' # 
-#' #                                         Miles per
-#' # Vehicle                                    Gallon Cylinders Displacement
-#' # ------------------------------------------------------------------------
-#' # Mazda RX4                                      21       6.0          160
-#' # Mazda RX4 Wag                                  21       6.0          160
-#' # Datsun 710                                   22.8       4.0          108
-#' # Hornet 4 Drive                               21.4       6.0          258
-#' # Hornet Sportabout                            18.7       8.0          360
-#' # Valiant                                      18.1       6.0          225
-#' # Duster 360                                   14.3       8.0          360
-#' # Merc 240D                                    24.4       4.0        146.7
-#' # Merc 230                                     22.8       4.0        140.8
-#' # Merc 280                                     19.2       6.0        167.6
-#' # 
-#' # ...
-#' # 
-#' #                                                                    Page 1 of 2
-#' #                                  Listing 2.0
-#' #                       MTCARS Data Listing with Page Wrap
-#' # 
-#' # Vehicle                              Horsepower Weight  Quarter Mile Time
-#' # -------------------------------------------------------------------------
-#' # Mazda RX4                                   110   2.62              16.46
-#' # Mazda RX4 Wag                               110  2.875              17.02
-#' # Datsun 710                                   93   2.32              18.61
-#' # Hornet 4 Drive                              110  3.215              19.44
-#' # Hornet Sportabout                           175   3.44              17.02
-#' # Valiant                                     105   3.46              20.22
-#' # Duster 360                                  245   3.57              15.84
-#' # Merc 240D                                    62   3.19                 20
-#' # Merc 230                                     95   3.15               22.9
-#' # Merc 280                                    123   3.44               18.3
-#' # 
-#' # ...
-#' # 
-#' #                                                                    Page 2 of 2
+#' #    Vehicle               mpg    cyl   disp     hp   drat     wt   qsec
+#' #    -------------------------------------------------------------------
+#' #    Mazda RX4            21.0      6  160.0    110    3.9    2.6   16.5
+#' #    Mazda RX4 Wag        21.0      6  160.0    110    3.9    2.9   17.0
+#' #    Datsun 710           22.8      4  108.0     93    3.8    2.3   18.6
+#' #    Hornet 4 Drive       21.4      6  258.0    110    3.1    3.2   19.4
+#' #    Hornet Sportabout    18.7      8  360.0    175    3.1    3.4   17.0
+#' #    Valiant              18.1      6  225.0    105    2.8    3.5   20.2
+#' #    Duster 360           14.3      8  360.0    245    3.2    3.6   15.8
+#' #    Merc 240D            24.4      4  146.7     62    3.7    3.2   20.0
+#' #    Merc 230             22.8      4  140.8     95    3.9    3.1   22.9
+#' #    Merc 280             19.2      6  167.6    123    3.9    3.4   18.3
+#' #
 #' @export
 column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL, 
                   format = NULL, align=NULL, label_align=NULL, width=NULL,
@@ -670,6 +646,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   if (!identical(vars_c, character(0)))
     dflt$vars = vars_c
   
+  # Assign from value
   f <- as.character(substitute(from, env = environment()))
   if (!identical(f, character(0))) {
     
@@ -682,6 +659,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
     dflt$from =  f
   }
   
+  # Assign to value
   t <- as.character(substitute(to, env = environment()))
   if (!identical(t, character(0))) {
     
@@ -694,6 +672,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
     dflt$to =  t
   }
   
+  # Catch range mismatches
   if (!is.null(dflt$from) & is.null(dflt$to)) {
     stop("'to' parameter cannot be null if 'from' is populated.") 
   }
@@ -725,18 +704,20 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' A spanning header is a label and underline that spans one or more 
 #' columns.  A spanning header is defined minimally by identifying 
 #' the columns to be spanned, and a label.  A label alignment and "N="
-#' value may also be specified.
+#' value may also be supplied.
 #' 
-#' There are three ways to identify the columns to span: by a sequence of 
-#' column positions, by a vector of column names, or by a named vector 
-#' indicating "from" and "to" column names.  When identifying the spanning
-#' column names, all names should be quoted.
+#' The spanning column range is defined by the \code{from} and \code{to} 
+#' parameters.  The range identified a continuous set of variables on the data.
+#' Variables can be identified by position, a quoted variable name, or an 
+#' unquoted variable name.
 #' @param x The table object to add spanning headers to.
 #' @param from The starting column to span.  The spanning columns are defined as
-#' range of columns 'from' and 'to'. The column names may be quoted or unquoted.
+#' range of columns 'from' and 'to'. The column names identified by position, 
+#' or by quoted or unquoted variable names.
 #' The \code{from} parameter is required.  
 #' @param to The ending column to span.  The spanning columns are defined as
-#' range of columns 'from' and 'to'. The column names may be quoted or unquoted.
+#' range of columns 'from' and 'to'. The columns may be identified by position,
+#' or by quoted or unquoted variable names.
 #' The \code{to} parameter is required. 
 #' @param label The label to apply to the spanning header.
 #' @param label_align The alignment to use for the label. Valid values are 
@@ -924,7 +905,7 @@ spanning_header <- function(x, from, to, label = "",
 #' @param x The table spec.
 #' @param vars A vector of quoted variable names from which to create the stub.
 #' @param label The label for the report stub.  The default label is an empty
-#' string ("").
+#' string.
 #' @param label_align The alignment for the stub column label.  
 #' Valid values are 'left', 'right', 'center', and 'centre'.  Default follows
 #' the \code{align} parameter.
@@ -939,7 +920,7 @@ spanning_header <- function(x, from, to, label = "",
 #' library(magrittr)
 #' 
 #' # Create temporary path
-#' tmp <- file.path(tempdir(), "example2.txt")
+#' tmp <- file.path(tempdir(), "stub.txt")
 #' 
 #' # Read in prepared data
 #' df <- read.table(header = TRUE, text = '
@@ -977,7 +958,7 @@ spanning_header <- function(x, from, to, label = "",
 #' write_report(rpt)
 #' 
 #' # View report in console
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' # Client: Motor Trend                                                Study: Cars
 #' #                                   Table 1.0
@@ -985,19 +966,19 @@ spanning_header <- function(x, from, to, label = "",
 #' # 
 #' #                                     Group A      Group B
 #' #                                      (N=19)       (N=13)
-#' #                  -------------------------------------------
+#' #                 -------------------------------------------
 #' # 
 #' #                 Miles Per Gallon
 #' #                    N                   19           13
-#' #                    Mean            19.3 (6.7)   21.3 (4.8)
-#' #                    Median             17.3         21.0
-#' #                    Q1 - Q3        15.2 - 22.1  19.2 - 22.8
-#' #                    Range          10.4 - 33.9  14.3 - 32.4
+#' #                    Mean            18.8 (6.5)   22.0 (4.9)
+#' #                    Median             16.4         21.4
+#' #                    Q1 - Q3        15.1 - 21.2  19.2 - 22.8
+#' #                    Range          10.4 - 33.9  14.7 - 32.4
 #' #
 #' #                 Cylinders
 #' #                    8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
-#' #                    6 Cylinder      3 ( 15.8%)   4 ( 30.8%)
-#' #                    4 Cylinder      6 ( 31.6%)   5 ( 38.5%)
+#' #                    6 Cylinder      4 ( 21.1%)   3 ( 23.1%)
+#' #                    4 Cylinder      5 ( 26.3%)   6 ( 46.2%)
 #' # 
 #' # ...
 #' # 
