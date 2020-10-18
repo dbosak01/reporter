@@ -23,11 +23,24 @@ The \strong{print} function will print the table spec in summary
 form.  To view all parameters, set the \code{verbose} parameter to TRUE.
 }
 \examples{
-tbl <- create_table(mtcars)
-print(tbl)
+library(magrittr)
+
+# Create Table
+tbl <- create_table(mtcars) \%>\% 
+  define(mpg, label = "Miles Per Gallon", width = .5) \%>\% 
+  define(cyl, label = "Cylinders") \%>\% 
+  titles("Table 6.4", "MTCARS Sample Table") \%>\% 
+  footnotes("* Motor Trend, 1974")
+  
+tbl
 
 # A table specification:
 # - data: data.frame 'mtcars' 32 rows 11 cols
+# - title 1: 'Table 6.4'
+# - title 2: 'MTCARS Sample Table'
+# - footnote 1: '* Motor Trend, 1974'
+# - define: mpg 'Miles Per Gallon' width=0.5 
+# - define: cyl 'Cylinders' 
 }
 \seealso{
 \code{\link{create_table}} function to create a table specification.

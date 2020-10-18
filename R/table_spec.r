@@ -1005,19 +1005,6 @@ stub <- function(x, vars, label = "", label_align = NULL,
   return(x)
 }
 
-# *Comment out for now.  Basically useless.  Everything is on the create_table()
-# Defines options for the table
-# @param x The table spec.
-# @param first_row_blank Whether to create a blank on the first row after the
-# table header.
-# @export
-# table_options <- function(x, first_row_blank=FALSE){
-# 
-# 
-#   x$first_row_blank = first_row_blank
-# 
-# 
-# }
 
 #' @title Prints the table spec
 #' @description A function to print the table spec.
@@ -1032,11 +1019,24 @@ stub <- function(x, vars, label = "", label_align = NULL,
 #' @return The table spec, invisibly.
 #' @family table
 #' @examples 
-#' tbl <- create_table(mtcars)
-#' print(tbl)
+#' library(magrittr)
+#' 
+#' # Create Table
+#' tbl <- create_table(mtcars) %>% 
+#'   define(mpg, label = "Miles Per Gallon", width = .5) %>% 
+#'   define(cyl, label = "Cylinders") %>% 
+#'   titles("Table 6.4", "MTCARS Sample Table") %>% 
+#'   footnotes("* Motor Trend, 1974")
+#'   
+#' tbl
 #'
 #' # A table specification:
 #' # - data: data.frame 'mtcars' 32 rows 11 cols
+#' # - title 1: 'Table 6.4'
+#' # - title 2: 'MTCARS Sample Table'
+#' # - footnote 1: '* Motor Trend, 1974'
+#' # - define: mpg 'Miles Per Gallon' width=0.5 
+#' # - define: cyl 'Cylinders' 
 #' @import crayon
 #' @export
 print.table_spec <- function(x, ..., verbose = FALSE){
