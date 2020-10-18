@@ -10,7 +10,8 @@
 <!-- badges: end -->
 
 The **rptr** package creates regulatory-style, statistical reports. It was designed
-for use in the pharmaceutical, biotechnology, and medical-device industries.
+to produce Tables, Listings, and Figures (TLFs) for the 
+the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
 for any industry.  The package is written in Base R, and has no dependencies on
 any other reporting package.
@@ -21,8 +22,7 @@ and a choice of output formats like SAS® ODS. The package will
 initially focus on printable, file-based 
 output formats, as there are already numerous R packages that 
 provide tabular reporting in HTML. 
-The current version supports TEXT output.  Future releases will 
-incorporate RTF, DOCX, and PDF file formats.  
+The current version supports TXT, RTF, and PDF output types.   
 
 ## Key Features
 
@@ -34,7 +34,7 @@ The **rptr** package contains the following key features:
 * Includes automatic wrapping and splitting of wide and long tables
 * Integrates with the **fmtr** package to format numeric, date, and character data
 * Allows appending multiple tables to a report, multiple tables to a page, 
-and intermingling of text and tables
+and intermingling of text, tables, and plots
 * Supports in-report date/time stamps and "Page X of Y" page numbering
 
 
@@ -47,9 +47,9 @@ There are four steps to creating a report:
 * Write out the report 
 
 You can create the report with the `create_report()` function.  Content is
-created with the `create_table()` or `create_text()` functions.  Add content
-to the report with the `add_content()` function. Finally, the report can 
-be written to a file with the `write_report()` function.  
+created with the `create_table()`, `create_text()`, or `create_plot()`
+functions.  Add content to the report with the `add_content()` function. 
+Finally, the report can be written to a file with the `write_report()` function.  
 
 In addition to these primary functions, there are several secondary functions
 to help you formalize the report.  All available functions are shown in
@@ -80,6 +80,7 @@ description of their use.  For additional information, see the help text:
 * `footnotes()`: Set footnotes for the table  
 * `spanning_header()`: Define a spanning header  
 * `stub()`: Define a stub column  
+* `columns_defaults()`: Set default column attributes
 * `define()`: Specify settings for a column  
 
 ### Text functions
@@ -88,6 +89,11 @@ description of their use.  For additional information, see the help text:
 * `titles()`: Set titles for the text  
 * `footnotes()`: Set footnotes for the text  
 
+### Plot functions
+
+* `create_plot()`: Define a plot object  
+* `titles()`: Set titles for the plot  
+* `footnotes()`: Set footnotes for the plot  
 
 
 ## Examples
