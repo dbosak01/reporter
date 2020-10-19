@@ -19,7 +19,7 @@
 #' explicitly defined with a \code{\link{define}} function.  
 #' 
 #' The \code{show_cols} parameter also accepts a vector of column positions
-#' or quoted column names. When a vector is supplied, \code{create_table} will 
+#' or column names. When a vector is supplied, \code{create_table} will 
 #' display only those columns on the report, in the order encountered in the 
 #' vector.  The \code{show_cols} parameter is the only mechanism in 
 #' \code{create_table} to modify the column order. Otherwise, modify the 
@@ -42,7 +42,7 @@
 #' function.  This function allows the user to apply a default set of parameters
 #' to one or more columns.  If no columns are specified in the \code{var} 
 #' or \code{from} and \code{to} parameter of this function, the defaults 
-#' will apply to all columns.  Any default parameter values can be overridden 
+#' will apply to all columns.  Any default parameter value can be overridden 
 #' by the \code{\link{define}} function.
 #' 
 #' Lastly, the \code{\link{define}} function provides the most control over 
@@ -60,9 +60,12 @@
 #' Since the purpose of the \strong{rptr} package is to create statistical 
 #' reports, the \code{create_table} function makes it easy to add population
 #' counts to the table header.  These population counts are added to column
-#' labels and spanning header labels using the function indicated in the 
-#' \code{n_format} parameter. The \strong{rptr} package provides four population 
-#' count formatting functions.  You may create your own formatting function 
+#' labels and spanning header labels using the \code{n} parameter on the 
+#' \code{\link{define}} or \code{\link{spanning_header}} functions.  The 
+#' population count is formatted according to  
+#' \code{n_format} parameter on \code{create_table}. The \strong{rptr} 
+#' package provides four population count formatting functions.  
+#' You may create your own formatting function 
 #' if one of these functions does not meet your needs.  See 
 #' \code{\link{upcase_parens}} for further details.
 #' 
@@ -79,7 +82,7 @@
 #' to the columns on the input data frame.  Valid values are 'all', 'none', or
 #' a vector of attribute names to use.  Possible attributes that may be used
 #' are 'label', 'format', 'width', and 'justify'.  By default, any of these
-#' attribute values will be applied to the table  For example, if you assign
+#' attribute values will be applied to the table.  For example, if you assign
 #' a label to the 'label' attribute of a data frame column, pass that data 
 #' frame into \code{create_table}, and don't override the label value on a 
 #' \code{define} function, the label will appear as a column header on the
@@ -239,7 +242,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' column appearance.  For example, you may use the \code{define} function
 #' to assign an "N=" population count, eliminate duplicates from the column,
 #' or place a blank row after each unique value of the column. 
-#' See the parameters below for additional options.
+#' See the parameter documentation for additional options.
 #' 
 #' Some of the parameters on the \code{define} function are used in the 
 #' creation of a table stub.  See the \code{\link{stub}} function for further
@@ -261,12 +264,15 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' the column name will be used.
 #' @param format The format to use for the column data.  The format can 
 #' be a string format, a formatting function, a lookup list, or a format object. 
-#' All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
-#' additional information, see the help for that package.
+#' All formatting is performed by the \code{\link[fmtr]{fapply}} function from
+#' the \code{\link[fmtr]{fmtr}} package.  For 
+#' a list of common formatting codes, see \link[fmtr]{FormattingStrings}.
 #' @param align The column alignment.  Valid values are "left", "right", 
 #' "center", and "centre".
 #' @param label_align How to align the header labels for this column.
-#' Valid values are "left", "right", "center", and "centre".
+#' Valid values are "left", "right", "center", and "centre".  By default, 
+#' the label alignment will follow any alignment set on the column \code{align}
+#' parameter.
 #' @param width The width of the column in the specified units of measure.
 #' The units of measure are specified on the \code{units} parameter of the
 #' \code{\link{create_report}} function.  If no width is supplied, the
@@ -903,7 +909,8 @@ spanning_header <- function(x, from, to, label = "",
 #' and will always appear as the leftmost column.  There can only be one stub 
 #' defined on a report.
 #' @param x The table spec.
-#' @param vars A vector of quoted variable names from which to create the stub.
+#' @param vars A vector of quoted or unquoted variable names from 
+#' which to create the stub.
 #' @param label The label for the report stub.  The default label is an empty
 #' string.
 #' @param label_align The alignment for the stub column label.  
@@ -936,7 +943,7 @@ spanning_header <- function(x, from, to, label = "",
 #' 
 #' # Create table
 #' tbl <- create_table(df, first_row_blank = TRUE) %>% 
-#'   stub(c("var", "label")) %>% 
+#'   stub(c(var, label)) %>% 
 #'   define(var, blank_after = TRUE, label_row = TRUE, 
 #'          format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
 #'   define(label, indent = .25) %>% 
@@ -993,10 +1000,40 @@ stub <- function(x, vars, label = "", label_align = NULL,
   
   def <- structure(list(), class = c("stub_def", "list"))
   
+  
+  # Determine if it is a vector or not.  "language" is a vector.
+  if (typeof(substitute(vars, env = environment())) == "language") 
+    v <- substitute(vars, env = environment())
+  else 
+    v <- substitute(list(vars), env = environment())
+  
+  # Turn each item into a character
+  vars_c <- c()
+  if (length(v) > 1) {
+    for (i in 2:length(v)) {
+      vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+    }
+    
+  }
+  
+  # Convert list to vector
+  vars_c <- unlist(vars_c)
+  
+  # Check that variable exists in data frame
+  if (!is.null(x$data) & !is.null(vars_c)) {
+    if (!any(vars_c %in% names(x$data))) {
+      for (nm in vars_c) {
+        if (!nm %in% names(x$data)) 
+          stop(paste0("Variable does not exist in data: ", nm))
+      }
+    }
+  }
+  
+  
   def$label <- label
   def$label_align <- label_align
   def$align <- align
-  def$vars <- vars
+  def$vars <- vars_c
   def$width <- width
   def$format <- format
   
