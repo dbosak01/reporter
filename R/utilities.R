@@ -767,5 +767,47 @@ ccm <- function(x) {
   return(2.54 * x)
 }
 
-
+# 
+# getCols <- function(vars = NULL, env = environment(), vars_c = NULL) {
+#   
+#   if (!is.null(vars)) {
+#     print(typeof(substitute(vars, env = env)))
+#           
+#     # Determine if it is a vector or not.  "language" is a vector.
+#     if (typeof(substitute(vars, env = env)) == "language") 
+#       v <- substitute(vars, env = environment())
+#     else {
+#       v <- substitute(list(vars), env = env)
+#     }
+#     
+#     # Turn each item into a character
+#     vars_c <- c()
+#     if (length(v) > 1) {
+#       for (i in 2:length(v)) {
+#         if (suppressWarnings(!is.na(as.integer(as.character(v[[i]])))))
+#           vars_c[[length(vars_c) + 1]] <- as.integer(as.character(v[[i]])) 
+#         else
+#           vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+#       }
+#       
+#     }
+#   
+#     # Convert list to vector
+#     vars_c <- unlist(vars_c)
+#   
+#   }
+#   
+#   return(vars_c)
+#   
+# }
+# 
+# 
+# getCols(fork)
+# getCols("fork")
+# getCols(1)
+# getCols(c(fork, bork))
+# getCols(c("fork", "bork"))
+# getCols(c(1, 2))
+# v <- c("fork", "bork")
+# getCols(vars_c = v)
 

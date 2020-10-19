@@ -483,3 +483,44 @@ test_that("rtf15: Simplest landscape table works as expected.", {
   
 })
 
+test_that("test16: 10 pt report with units in cm works as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test16.rtf")
+  
+  
+  rpt <- create_report(fp, units = "cm", output_type = "RTF") %>%
+    page_header("Client: Experis", "Study: ABC") %>% 
+    titles("IRIS Data Frame") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+
+  
+})
+
+
+test_that("test17: 12 pt report with units in cm works as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test17.rtf")
+  
+  
+  rpt <- create_report(fp, units = "cm", output_type = "RTF") %>%
+    options_fixed(font_size = 12) %>% 
+    page_header("Client: Experis", "Study: ABC") %>% 
+    titles("IRIS Data Frame") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+

@@ -14,8 +14,11 @@ test_that("test1: Simplest table works as expected.", {
   rpt <- create_report(fp) %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
-  
+  #print(rpt, verbose = TRUE)
   res <- write_report(rpt)
+  
+  res
+  #print(res, verbose = TRUE)
   
   expect_equal(file.exists(fp), TRUE)
   
@@ -1263,3 +1266,26 @@ test_that("test39: column_defaults works as expected with column positions.", {
 #   expect_equal(length(lns), res$pages * res$line_count)
 #   
 # })
+
+
+test_that("test40: Report with units in cm works as expected.", {
+  
+  fp <- file.path(base_path, "output/test40.out")
+  
+  
+  rpt <- create_report(fp, units = "cm") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+

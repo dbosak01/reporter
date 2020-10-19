@@ -3,9 +3,9 @@
 
 #' @title Create text content
 #' @description Function to create a text specification that can be 
-#' added as content to a report.  The function creates an S3 object of class
-#' 'text_spec'.  The \code{create_text} function can be used to include 
-#' analysis on a statistical report.
+#' added as content to a report.   The text content can be used to include 
+#' analysis on a statistical report.  A text specification is an S3 
+#' object of class 'text_spec'. 
 #' @details 
 #' To add plain text to a report, use the \code{create_text} function.  The 
 #' function allows you to set a width and alignment for the text.  The

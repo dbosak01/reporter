@@ -105,8 +105,8 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
                    "in, top=", sprintf( "%.3f", rs$margin_top * .85), 
                    "in, bottom=", sprintf("%.3f", rs$margin_bottom/2), "in\"")
   } else {
-    geom <- paste0("\"left=", rs$margin_left, "cm, right=", 
-                   rs$margin_right/2, "cm, top=", rs$margin_top, 
+    geom <- paste0("\"left=", rs$margin_left * .80, "cm, right=", 
+                   rs$margin_right  * .65, "cm, top=", rs$margin_top * .85, 
                    "cm, bottom=", rs$margin_bottom/2, "cm\"")
   }
   hdr[length(hdr) + 1] <- paste("geometry:", geom)

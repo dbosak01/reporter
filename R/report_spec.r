@@ -265,10 +265,10 @@ editor_settings <- read.table(header = TRUE, text = '
                     notepad++        12   4.7619   6.531   2.5862  0.393      1
                     word         11.497   4.5454  6.1146      2.4      0      0
                     wordpad      10.909   4.3165  6.1146      2.4      0      0
-                    pdf12            12   4.7430       5   2.0565  .1967     .5
-                    pdf10       14.2222   5.6074    6.10   2.4590  .1967     .5
-                    rtf10            12   4.7619    6.30    2.521      0      0
-                    rtf12            10   3.9473  5.3333    2.100      0      0
+                    pdf12            12     4.70       5    2.000  .1967     .5
+                    pdf10       14.2222     5.58    6.10      2.4  .1967     .5
+                    rtf10            12   4.7619    6.30      2.5      0      0
+                    rtf12            10   3.9473  5.3333     2.05      0      0
                                ') 
 
 #' @title
@@ -1469,7 +1469,7 @@ print.report_spec <- function(x, ..., verbose = FALSE){
       cat("$", nm, "\n", sep = "")
       if (nm == "content") {
         
-        for (i in x[[nm]])
+        for (i in seq_along(x[[nm]]))
           print(x[[nm]][[i]], ..., verbose = TRUE)
       }
       else  {
@@ -1506,6 +1506,12 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     cat("- orientation: " %+% x$orientation %+% "\n")
     if (!is.null(x$line_size)) 
       cat("- line size/count: " %+% x$line_size %+% "/" %+% x$line_count %+% "\n")
+    
+    # if (!is.null(x$column_widths)) {
+    #   cat("- column widths: \n")
+    #   cat(x$column_widths)
+    #   
+    # }
     
     # Print page header
     if (!is.null(x$page_header_left) |

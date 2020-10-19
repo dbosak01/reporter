@@ -440,4 +440,78 @@ test_that("pdf13: Very Long text output works as expected.", {
 })
 
 
+test_that("pdf14: Simplest portrait table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test14.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", orientation = "portrait") %>% 
+    page_header("left", "right") %>% 
+    titles("Table 1.0", "MTCARS Data Frame") %>% 
+    add_content(create_table(mtcars)) %>% 
+    page_footer("Left", right = "right")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("pdf15: Simplest landscape table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test15.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", orientation = "landscape") %>% 
+    page_header("left", "right") %>% 
+    titles("Table 1.0", "MTCARS Data Frame") %>% 
+    add_content(create_table(mtcars)) %>% 
+    page_footer("Left", right = "right")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test16: 10 pt report with units in cm works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test16.pdf")
+  
+  
+  rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
+    page_header("Client: Experis", "Study: ABC") %>% 
+    titles("IRIS Data Frame") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt, preview = 1)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
+test_that("test17: 12 pt report with units in cm works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test17.pdf")
+  
+  
+  rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
+    options_fixed(font_size = 12) %>% 
+    page_header("Client: Experis", "Study: ABC") %>% 
+    titles("IRIS Data Frame") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt, preview = 1)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
 

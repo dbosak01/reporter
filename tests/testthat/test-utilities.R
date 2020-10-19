@@ -147,9 +147,7 @@ test_that("create_stub works as expected.", {
                   d1 = c("Here", "is", "some", "stuff", "shouldn't", "touch"))
   
   
-  v <- c("a1", "b1", "c1")
-  
-  tbl <- create_table(x) %>% stub(v)
+  tbl <- create_table(x) %>% stub(c("a1", "b1", "c1"))
   
   d <- create_stub(x, tbl)
   
@@ -228,6 +226,8 @@ test_that("set_column_defaults function all cols works as expected.", {
   
 })
 
+# Commented out this test because the dm_final.rds file creates a dependency 
+# on higher level of R > 3.5.
 test_that("data with extra names on variables doesn't crash labels function.", {
   
   # fp <- file.path(base_path, "user/user8.out")

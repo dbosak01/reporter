@@ -71,8 +71,8 @@
 #' 
 #' @param x The data frame or tibble from which to create the table object.
 #' @param show_cols Whether to show all columns by default.  Valid values are
-#' 'all', 'none', a vector of column names, or a vector of column positions.  
-#' 'all' means show all columns, 
+#' 'all', 'none', a vector of quoted column names, or a vector of 
+#' column positions.  'all' means show all columns, 
 #' unless overridden by the column definitions.  
 #' 'none' means don't show any 
 #' columns unless specified in the column definitions.  If a vector of column
