@@ -118,10 +118,9 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   hdr[length(hdr) + 1] <- "header-includes:"
   hdr[length(hdr) + 1] <- "  - \\renewcommand{\\familydefault}{\\ttdefault}"
   hdr[length(hdr) + 1] <- "  - \\thispagestyle{empty}"
-  #hdr[length(hdr) + 1] <- "  - \\usepackage[mathletters]{ucs}"
-  #hdr[length(hdr) + 1] <- "  - \\usepackage[utf8x]{inputenc}"
   hdr[length(hdr) + 1] <- "---"
   hdr[length(hdr) + 1] <- "\\pagenumbering{gobble}"
+  hdr[length(hdr) + 1] <- "\\begin{verbatim}"
 
   # Start with all lines
   body <- ls
@@ -151,23 +150,29 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
       
       # Create latex codes
       if (spec[[4]] == "left") {
-        ltx <- paste0("\\begin{figure}[h!]\n",
+        ltx <- paste0("\\end{verbatim}\n",
+                      "\\begin{figure}[h!]\n",
                       "\\begin{flushleft}\n", 
                       "\\includegraphics{", pth, "}\n",
                       "\\end{flushleft}\n",
-                      "\\end{figure}\n"  )
+                      "\\end{figure}\n",
+                      "\\begin{verbatim}")
         
       } else if (spec[[4]] == "right") {
-        ltx <- paste0("\\begin{figure}[h!]\n",
+        ltx <- paste0("\\end{verbatim}\n",
+                      "\\begin{figure}[h!]\n",
                        "\\begin{flushright}\n", 
                        "\\includegraphics{", pth, "}\n",
                        "\\end{flushright}\n",
-                       "\\end{figure}\n"  )
+                       "\\end{figure}\n",
+                       "\\begin{verbatim}")
       } else  {
-      ltx <- paste0("\\begin{figure}[h!]\n",
+      ltx <- paste0("\\end{verbatim}\n",
+                    "\\begin{figure}[h!]\n",
                     "\\centering\n", 
                     "\\includegraphics{", pth, "}\n",
-                    "\\end{figure}"  )
+                    "\\end{figure}\n",
+                    "\\begin{verbatim}")
       }
       
       # Replace original line with latex codes
@@ -176,84 +181,108 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   }
   
   # Make body replacements
-  if (rs$font_size == 10)
-    body <- gsub(" ", "\\hspace{.502em}", body, fixed = TRUE)
-  else if (rs$font_size == 12)
-    body <- gsub(" ", "\\hspace{.502em}", body, fixed = TRUE)
+  # if (rs$font_size == 10)
+  #   body <- gsub(" ", "\\hspace{.502em}", body, fixed = TRUE)
+  # else if (rs$font_size == 12)
+  #   body <- gsub(" ", "\\hspace{.502em}", body, fixed = TRUE)
   
-  breaks <- grep("\f", body, value = FALSE, fixed = TRUE)
+  #breaks <- grep("\f", body, value = FALSE, fixed = TRUE)
 
   
-  body <- gsub("\f", "", body, fixed = TRUE)
-  body <- gsub("-", "--", body, fixed = TRUE) # not necessary with xelatex
+  body <- gsub("\f", "\\end{verbatim}\n\\newpage\n\\begin{verbatim}", body, fixed = TRUE)
+  body[length(body) + 1] <- "\\end{verbatim}"
+  
+  t1 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  
+  if (file.exists(rmd_path))
+    file.remove(rmd_path)
+
+  # Write to file
+  f <- file(rmd_path, open="w+", encoding = "native.enc")
+
+
+  writeLines(enc2utf8(hdr), con = f, useBytes = TRUE)
+
+  writeLines(enc2utf8(body), con = f, useBytes = TRUE)
+
+  close(f)
+  
+  rmarkdown::render(rmd_path, rmarkdown::pdf_document(), t1, quiet = TRUE)
+  
+  file.copy(t1, pdf_path)
+
+  if (file.exists(t1))
+    file.remove(t1)
+  
+  #body <- gsub("-", "--", body, fixed = TRUE) # not necessary with xelatex
   
   
   ## Break up doc into separate pdfs to prevent render function 
   ## from running out of memory.  Then stitch them back together 
   ## with qpdf
   
-  t1 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
-  t2 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
-  t3 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
-  
-  # Add break at end to handle last page
-  breaks[length(breaks) + 1] <- length(body) + 1
-  
-  endpos <- 0
-  
-  for (i in seq_along(breaks)) {
-    
-    startpos <- endpos + 1
-    endpos <- breaks[i] - 1
-    
-    if (file.exists(rmd_path))
-      file.remove(rmd_path)
-    
-    # Write to file  
-    f <- file(rmd_path, open="w+", encoding = "native.enc")
-  
-
-    writeLines(enc2utf8(hdr), con = f, useBytes = TRUE)
-  
-    writeLines(enc2utf8(paste0("&nbsp;", body[startpos:endpos], "\\")), 
-               con = f, useBytes = TRUE)
-    
-    close(f)
-    
-    # Write PDF to tmp directory and then copy to desired folder to avoid errors
-    
-
-    
-    rmarkdown::render(rmd_path, rmarkdown::pdf_document(), t2, quiet = TRUE)
-    
-    if (startpos == 1)
-      file.copy(t2, t1)
-    else {
-      
-      # t1 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test6.pdf"
-      # t2 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test7.pdf"
-      # t3 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test99.pdf"
-      cmd <- paste0("qpdf --empty --pages \"", t1, "\" \"", 
-                    t2, "\" -- \"", t3, "\"") 
-      res <- system(cmd) 
-      
-      if (res == 0) {
-        file.copy(t3, t1, overwrite = TRUE)
-        file.remove(t2)
-        file.remove(t3)
-      } else 
-        stop("PDF concatenation failed.")
-    }
-  
-  }
-  file.copy(t1, pdf_path)
-  
-  if (file.exists(t1))
-    file.remove(t1)
-  if (file.exists(t2))
-    file.remove(t2)
-  if (file.exists(t3))
-    file.remove(t3)
+  # t1 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  # t2 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  # t3 <- tempfile(tmpdir = tmp_dir, fileext = ".pdf")
+  # 
+  # # Add break at end to handle last page
+  # breaks[length(breaks) + 1] <- length(body) + 1
+  # 
+  # endpos <- 0
+  # 
+  # for (i in seq_along(breaks)) {
+  #   
+  #   startpos <- endpos + 1
+  #   endpos <- breaks[i] - 1
+  #   
+  #   if (file.exists(rmd_path))
+  #     file.remove(rmd_path)
+  #   
+  #   # Write to file  
+  #   f <- file(rmd_path, open="w+", encoding = "native.enc")
+  # 
+  # 
+  #   writeLines(enc2utf8(hdr), con = f, useBytes = TRUE)
+  # 
+  #   writeLines(enc2utf8(paste0("&nbsp;", body[startpos:endpos], "\\")), 
+  #              con = f, useBytes = TRUE)
+  #   
+  #   close(f)
+  #   
+  #   # Write PDF to tmp directory and then copy to desired folder to avoid errors
+  #   
+  # 
+  #   
+  #   rmarkdown::render(rmd_path, rmarkdown::pdf_document(), t2, quiet = TRUE)
+  #   
+  #   if (startpos == 1)
+  #     file.copy(t2, t1)
+  #   else {
+  #     
+  #     # t1 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test6.pdf"
+  #     # t2 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test7.pdf"
+  #     # t3 <- "C:\\packages\\rptr\\tests\\testthat\\pdf\\test99.pdf"
+  #     cmd <- paste0("qpdf --empty --pages \"", t1, "\" \"", 
+  #                   t2, "\" -- \"", t3, "\"") 
+  #     res <- system(cmd) 
+  #     
+  #     if (res == 0) {
+  #       file.copy(t3, t1, overwrite = TRUE)
+  #       file.remove(t2)
+  #       file.remove(t3)
+  #     } else 
+  #       stop("PDF concatenation failed.")
+  #   }
+  # 
+  # }
+  # file.copy(t1, pdf_path)
+  # 
+  # if (file.exists(t1))
+  #   file.remove(t1)
+  # if (file.exists(t2))
+  #   file.remove(t2)
+  # if (file.exists(t3))
+  #   file.remove(t3)
 
 }
 

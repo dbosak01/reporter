@@ -52,8 +52,10 @@ print(res)
 # - orientation: landscape
 # - line size/count: 108/45
 # - content: 
-#   # A table specification:
-#   - data: data.frame 'mtcars' 32 rows 11 cols
+# # A table specification:
+# - data: data.frame 'mtcars' 32 rows 11 cols
+# - show_cols: all
+# - use_attributes: all
 # - title 1: 'Table 1.0'
 # - title 2: 'MTCARS Sample Report'
 # - footnote 1: '* NOTE: Data from 1974'

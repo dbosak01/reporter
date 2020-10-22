@@ -17,7 +17,8 @@ stub(
 \arguments{
 \item{x}{The table spec.}
 
-\item{vars}{A vector of quoted variable names from which to create the stub.}
+\item{vars}{A vector of quoted or unquoted variable names from 
+which to create the stub.}
 
 \item{label}{The label for the report stub.  The default label is an empty
 string.}
@@ -86,7 +87,7 @@ df <- read.table(header = TRUE, text = '
 
 # Create table
 tbl <- create_table(df, first_row_blank = TRUE) \%>\% 
-  stub(c("var", "label")) \%>\% 
+  stub(c(var, label)) \%>\% 
   define(var, blank_after = TRUE, label_row = TRUE, 
          format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) \%>\% 
   define(label, indent = .25) \%>\% 

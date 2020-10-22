@@ -19,11 +19,11 @@ The plot specification.
 }
 \description{
 Function to create a plot specification that can be 
-added as content to a report.  The function creates an S3 object of class
-'plot_spec'.  The \code{create_plot} function can be used to include 
-charts, graphs, and figures on a statistical report.  The function
-only supports plot objects returned by \code{\link[ggplot2]{ggplot}}.  It
-does not support the Base R \code{\link[base]{plot}} function.
+added as content to a report. The \code{create_plot} function can 
+be used to include charts, graphs, and figures on a statistical report.  
+The function only supports plot objects returned by 
+\code{\link[ggplot2]{ggplot}}.  It does not support the Base R 
+\code{\link[base]{plot}} function.
 }
 \details{
 To add a plot to a report, use the \code{create_plot} function.  The 

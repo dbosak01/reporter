@@ -57,26 +57,16 @@ NULL
 
 #' @title Notes on PDF output type
 #' @description The PDF output type has some limitations not associated with 
-#' TXT and RTF output.  PDF has special installation requirements, package
-#' dependencies, and performance limitations.  
+#' TXT and RTF output.  PDF has special installation requirements and package
+#' dependencies.  
 #' 
 #' @details 
-#' The PDF output type requires the \strong{rmarkdown} package, a LaTeX renderer 
-#' like \strong{MiKTeX}, and the PDF manipulation program \strong{qpdf}.  
-#' \strong{MiKTeX} and \strong{qpdf} must be installed separately, and will
-#' not be installed as part of the \strong{rptr} install.  These programs must
+#' The PDF output type requires the \strong{rmarkdown} package and a 
+#' LaTeX renderer like \strong{MiKTeX}.  
+#' \strong{MiKTeX} must be installed separately, and will
+#' not be installed as part of the \strong{rptr} install.  This program must
 #' furthermore be added to the _path_ environment variable on the system
-#' where \strong{rptr} will run, so that \strong{rptr} can find them.
-#' 
-#' Also note that PDF generation is extremely slow compared to TXT and RTF.  
-#' During development of a PDF report, use the \code{preview} parameter of the 
-#' \code{\link{write_report}} function to temporarily limit the number of 
-#' pages produced.  Once development is complete, remove the preview parameter 
-#' and run the entire report.  
-#' 
-#' Another strategy to improve performance is to output the report to
-#' RTF, and then convert to PDF with a document editor or other
-#' conversion program. 
+#' where \strong{rptr} will run, so that \strong{rptr} can find it.
 #' 
 #' PDF output also supports a limited character set.  Some Unicode characters
 #' can cause the LaTeX rendering to fail.  Common Unicode characters like 
@@ -85,12 +75,7 @@ NULL
 #' be supported, depending on the operating system and installed operating 
 #' system languages. 
 #' 
-#' Lastly, note that alignment on some styles of PDF report is not rendered
-#' accurately.  This misalignment is due to LaTeX rendering of plain text
-#' content.  
-#' 
 #' Future versions of \strong{rptr} will eliminate the LaTeX 
-#' intermediary, increase performance, broaden the allowed character set, 
-#' and improve alignment.
+#' intermediary and broaden the allowed character set.
 #' @name NotesOnPDF
 NULL

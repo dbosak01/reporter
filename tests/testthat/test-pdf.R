@@ -100,8 +100,10 @@ test_that("pdf4: Table that spans multiple pages breaks as expected.", {
   fp <- file.path(base_path, "pdf/test4.pdf")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("left", "right") %>% 
     titles("IRIS Data Frame") %>%
-    add_content(create_table(iris)) 
+    add_content(create_table(iris)) %>% 
+    page_footer("left", "center", "Page [pg] of [tpg]")
   
   
   res <- write_report(rpt)
@@ -433,7 +435,7 @@ test_that("pdf13: Very Long text output works as expected.", {
                   center = "Confidential", 
                   right ="Page [pg] of [tpg]")
     
-    res <- write_report(rpt, preview = 3)
+    res <- write_report(rpt)
     
     expect_equal(file.exists(fp), TRUE)
 
@@ -487,7 +489,7 @@ test_that("test16: 10 pt report with units in cm works as expected.", {
     add_content(create_table(iris)) 
   
   
-  res <- write_report(rpt, preview = 1)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
   
@@ -508,7 +510,7 @@ test_that("test17: 12 pt report with units in cm works as expected.", {
     add_content(create_table(iris)) 
   
   
-  res <- write_report(rpt, preview = 1)
+  res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
   

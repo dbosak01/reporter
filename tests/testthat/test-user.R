@@ -347,7 +347,7 @@ test_that("user3: listings works.", {
   expect_equal(file.exists(rtfpth), TRUE)
   
   pdfpth <- file.path(base_path, "user/user3.pdf")
-  write_report(rpt, pdfpth, output_type = "PDF", preview = 1)
+  write_report(rpt, pdfpth, output_type = "PDF")
   expect_equal(file.exists(pdfpth), TRUE)
   
 })
@@ -494,7 +494,7 @@ test_that("user4: Adverse Events table works.", {
   #print(res)
   
   pdfpth <- file.path(base_path, "user/user4.pdf")
-  res <- write_report(rpt, pdfpth, output_type = "PDF", preview = 1)
+  res <- write_report(rpt, pdfpth, output_type = "PDF")
   expect_equal(file.exists(pdfpth), TRUE)
   #print(res)
 
@@ -606,7 +606,7 @@ test_that("user6: listings with page break works as expected.", {
   res <- write_report(rpt, output_type = "RTF")
   expect_equal(file.exists(res$modified_path), TRUE)
   
-  res <- write_report(rpt, output_type = "PDF", preview = 1)
+  res <- write_report(rpt, output_type = "PDF")
   expect_equal(file.exists(res$modified_path), TRUE)
   
   

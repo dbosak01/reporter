@@ -18,8 +18,8 @@ create_table(
 \item{x}{The data frame or tibble from which to create the table object.}
 
 \item{show_cols}{Whether to show all columns by default.  Valid values are
-'all', 'none', a vector of column names, or a vector of column positions.  
-'all' means show all columns, 
+'all', 'none', a vector of quoted column names, or a vector of 
+column positions.  'all' means show all columns, 
 unless overridden by the column definitions.  
 'none' means don't show any 
 columns unless specified in the column definitions.  If a vector of column
@@ -30,7 +30,7 @@ specified, whether or not a definition is supplied.}
 to the columns on the input data frame.  Valid values are 'all', 'none', or
 a vector of attribute names to use.  Possible attributes that may be used
 are 'label', 'format', 'width', and 'justify'.  By default, any of these
-attribute values will be applied to the table  For example, if you assign
+attribute values will be applied to the table.  For example, if you assign
 a label to the 'label' attribute of a data frame column, pass that data 
 frame into \code{create_table}, and don't override the label value on a 
 \code{define} function, the label will appear as a column header on the
@@ -71,7 +71,7 @@ to 'none' will display none of the columns in the data, unless they are
 explicitly defined with a \code{\link{define}} function.  
 
 The \code{show_cols} parameter also accepts a vector of column positions
-or quoted column names. When a vector is supplied, \code{create_table} will 
+or column names. When a vector is supplied, \code{create_table} will 
 display only those columns on the report, in the order encountered in the 
 vector.  The \code{show_cols} parameter is the only mechanism in 
 \code{create_table} to modify the column order. Otherwise, modify the 
@@ -95,7 +95,7 @@ Secondly, attributes can be specified using the \code{\link{column_defaults}}
 function.  This function allows the user to apply a default set of parameters
 to one or more columns.  If no columns are specified in the \code{var} 
 or \code{from} and \code{to} parameter of this function, the defaults 
-will apply to all columns.  Any default parameter values can be overridden 
+will apply to all columns.  Any default parameter value can be overridden 
 by the \code{\link{define}} function.
 
 Lastly, the \code{\link{define}} function provides the most control over 
@@ -115,9 +115,12 @@ into one report.  The example below illustrates use of a headerless table.
 Since the purpose of the \strong{rptr} package is to create statistical 
 reports, the \code{create_table} function makes it easy to add population
 counts to the table header.  These population counts are added to column
-labels and spanning header labels using the function indicated in the 
-\code{n_format} parameter. The \strong{rptr} package provides four population 
-count formatting functions.  You may create your own formatting function 
+labels and spanning header labels using the \code{n} parameter on the 
+\code{\link{define}} or \code{\link{spanning_header}} functions.  The 
+population count is formatted according to  
+\code{n_format} parameter on \code{create_table}. The \strong{rptr} 
+package provides four population count formatting functions.  
+You may create your own formatting function 
 if one of these functions does not meet your needs.  See 
 \code{\link{upcase_parens}} for further details.
 }

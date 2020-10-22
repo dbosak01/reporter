@@ -36,14 +36,17 @@ the column name will be used.}
 
 \item{format}{The format to use for the column data.  The format can 
 be a string format, a formatting function, a lookup list, or a format object. 
-All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
-additional information, see the help for that package.}
+All formatting is performed by the \code{\link[fmtr]{fapply}} function from
+the \code{\link[fmtr]{fmtr}} package.  For 
+a list of common formatting codes, see \link[fmtr]{FormattingStrings}.}
 
 \item{align}{The column alignment.  Valid values are "left", "right", 
 "center", and "centre".}
 
 \item{label_align}{How to align the header labels for this column.
-Valid values are "left", "right", "center", and "centre".}
+Valid values are "left", "right", "center", and "centre".  By default, 
+the label alignment will follow any alignment set on the column \code{align}
+parameter.}
 
 \item{width}{The width of the column in the specified units of measure.
 The units of measure are specified on the \code{units} parameter of the
@@ -119,7 +122,7 @@ The \code{define} function is used to provide additional control over
 column appearance.  For example, you may use the \code{define} function
 to assign an "N=" population count, eliminate duplicates from the column,
 or place a blank row after each unique value of the column. 
-See the parameters below for additional options.
+See the parameter documentation for additional options.
 
 Some of the parameters on the \code{define} function are used in the 
 creation of a table stub.  See the \code{\link{stub}} function for further
