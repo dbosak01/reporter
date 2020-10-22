@@ -1,14 +1,13 @@
 Package: rptr
 Type: Package
 Title: Create statistical reports
-Version: 0.0.0.9024
+Version: 0.0.0.9025
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports, 
     such as those that can be accomplished using SAS® PROC REPORT and ODS. 
-    Currently generates TXT, RTF, and PDF file formats, with plans to include 
-    DOCX in future releases.  The package specializes in printing
-    wide and long tables with automatic page wrapping and splitting.  
+    Currently generates TXT, RTF, and PDF file formats.  The package specializes 
+    in printing wide and long tables with automatic page wrapping and splitting.  
     Reports can be generated with a minimum of function calls, and without 
     relying on other table packages.  The package supports titles, footnotes, 
     page header, page footers, spanning headers, and automatic page numbering.
