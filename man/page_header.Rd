@@ -92,6 +92,7 @@ Other report:
 \code{\link{page_footer}()},
 \code{\link{print.report_spec}()},
 \code{\link{set_margins}()},
+\code{\link{title_header}()},
 \code{\link{titles}()},
 \code{\link{write_report}()}
 }

@@ -71,6 +71,7 @@ Other report:
 \code{\link{page_footer}()},
 \code{\link{page_header}()},
 \code{\link{set_margins}()},
+\code{\link{title_header}()},
 \code{\link{titles}()},
 \code{\link{write_report}()}
 }

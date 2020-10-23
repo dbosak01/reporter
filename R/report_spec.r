@@ -797,6 +797,9 @@ page_header <- function(x, left="", right="", blank_row = "none"){
       "Valid values are 'below' and 'none'."))
   }
   
+  if (!is.null(x$title_hdr))
+    stop("Cannot add both a page header and a title header.")
+  
   x$page_header_left <- left
   x$page_header_right <- right
   x$page_header_blank_row <- blank_row
@@ -804,6 +807,113 @@ page_header <- function(x, left="", right="", blank_row = "none"){
   return(x)
 }
 
+
+#' @title
+#' Adds a title header block 
+#'
+#' @description
+#' This function adds title header to an object.  A title header is a special
+#' type of title layout that has titles on the left and header information
+#' on the right.  
+#' @details
+#' The \code{title_header} function accepts a set of strings of the desired 
+#' title text, and a vector of header strings. The titles will appear on the 
+#' left of the title header, and the header strings on the right. To
+#' specify multiple titles for the block, pass them to the function 
+#' as separate strings.
+#' 
+#' For the title header, titles will be aligned left, and the header strings
+#' will be aligned right. The title header allows the title portion of the block 
+#' to consume 75% of the line width, and the header portion to consume 25%.
+#' 
+#' Title headers may be assigned to a report, a table, a text specification, 
+#' or a plot. If assigned to the report, the title header will appear 
+#' at the top of the page, and be repeated for every page of the report.  
+#' If the title header is assigned to  
+#' content, the titles will appear above the content, and be repeated if the 
+#' content breaks to the next page.  
+#' 
+#' One title header function accepts up to 10 titles. Blank rows above or below 
+#' the title block may be controlled using the 
+#' \code{blank_row} parameter.
+#'
+#' @param x The object to assign titles to.  Valid objects are a report, or
+#' a table, text, or plot specification.
+#' @param ... A set of title strings.
+#' @param blank_row Where to place a blank row.  Valid values are 'above',
+#' 'below', 'both', or 'none'.  Default is "none".
+#' @return The modified report.
+#' @family report
+#' @examples
+#' library(rptr)
+#' library(magrittr)
+#' 
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "expenses.txt")
+#' 
+#' # Prepare data
+#' dat <- data.frame(category = rownames(USPersonalExpenditure),
+#'                   USPersonalExpenditure)
+#' 
+#' # Define table
+#' tbl <- create_table(dat) %>% 
+#'   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") %>% 
+#'   column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+#'   define(category, label = "Category") %>% 
+#'   define(X1940, label = "1940") %>% 
+#'   define(X1945, label = "1945") %>% 
+#'   define(X1950, label = "1950") %>% 
+#'   define(X1955, label = "1955") %>% 
+#'   define(X1960, label = "1960") %>% 
+#'   footnotes("* In billions of dollars")
+#' 
+#' # Define report
+#' rpt <- create_report(tmp, orientation="portrait") %>%
+#'   add_content(tbl) 
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' 
+#' # Display in console
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
+#' 
+#' #                               Table 1.0
+#' #               US Personal Expenditures from 1940 - 1960
+#' # 
+#' #     Category                1940    1945    1950    1955    1960
+#' #     ------------------------------------------------------------
+#' #     Food and Tobacco      $22.20  $44.50  $59.60  $73.20  $86.80
+#' #     Household Operation   $10.50  $15.50  $29.00  $36.50  $46.20
+#' #     Medical and Health     $3.53   $5.76   $9.71  $14.00  $21.10
+#' #     Personal Care          $1.04   $1.98   $2.45   $3.40   $5.40
+#' #     Private Education      $0.34   $0.97   $1.80   $2.60   $3.64
+#' # 
+#' #     * In billions of dollars
+#' @export
+title_header <- function(x, ..., right = "", blank_row = "none") {
+  
+  # Create title structure
+  ttl_hdr <- structure(list(), class = c("title_hdr", "list"))
+  
+  if (length(c(...)) > 10)
+    stop("Limit of 10 titles reached.") 
+  
+  if (length(x$titles) > 0)
+    stop("Cannot add both titles and a title header.")
+  
+  if (!is.null(x$page_header_left) | !is.null(x$page_header_right))
+    stop("Cannot add both a page header and a title header.")
+  
+  # Assign attributes
+  ttl_hdr$titles <-  c(...)
+  ttl_hdr$blank_row <- blank_row
+  ttl_hdr$right <- right
+  
+  x$title_hdr <- ttl_hdr
+  
+  return(x)
+  
+}
 
 #' @title
 #' Adds a title block 
@@ -903,6 +1013,9 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
   
   if (length(c(...)) > 10)
     stop("Limit of 10 titles reached.") 
+  
+  if (!is.null(x$title_hdr))
+    stop("Cannot add both titles and a title header.")
 
   # Assign attributes
   ttl$titles <-  c(...)

@@ -1288,4 +1288,48 @@ test_that("test40: Report with units in cm works as expected.", {
   
 })
 
+test_that("test41: Title header on report works as expected.", {
+  
+  fp <- file.path(base_path, "output/test41.out")
+  
+  
+  rpt <- create_report(fp) %>%
+    title_header("Table 1.0", "IRIS Data Frame", 
+                 right = c("Study ABC", "Client A", "Page")) %>%
+    add_content(create_table(iris)) %>% 
+    page_footer("DateTime", right = "Page")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
 
+
+test_that("test42: Title header on table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test42.out")
+  
+  tbl <- create_table(iris) %>% 
+    title_header("Table 1.0", "IRIS Data Frame",
+                 right = c("Study ABC", "Client A", "Page"),
+                 blank_row = "below")
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})

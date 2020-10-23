@@ -120,6 +120,7 @@ Other report:
 \code{\link{page_header}()},
 \code{\link{print.report_spec}()},
 \code{\link{set_margins}()},
+\code{\link{title_header}()},
 \code{\link{titles}()}
 }
 \concept{report}

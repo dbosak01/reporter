@@ -11,6 +11,7 @@ page_template_text <- function(rs) {
   
   
   pt$page_header <- get_page_header(rs)
+  pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size)
   pt$titles <- get_titles(rs$titles, rs$line_size)
   pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size)
   pt$page_footer <- get_page_footer(rs)
@@ -126,6 +127,77 @@ get_titles <- function(titles, width) {
       if (ttl$blank_row %in% c("below", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
     }
+    
+  }
+  
+  
+  return(ret)
+}
+
+
+#' Get title header text strings suitable for printing
+#' @import stringi
+#' @param title_hdr A title_hdr object
+#' @param width The width to set the title header to
+#' @return A vector of strings
+#' @noRd
+get_title_header <- function(title_hdr, width) {
+  
+  if (is.null(width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  
+  ll <- width
+  ret <- c()
+  
+  if (!is.null(title_hdr)) { 
+    
+    if (!any(class(title_hdr) == "title_hdr"))
+      stop("title header parameter value is not a title header.")
+    
+    if (title_hdr$blank_row %in% c("above", "both") & length(title_hdr$titles) > 0)
+      ret[length(ret) + 1] <- ""
+    
+    maxlen <- length(title_hdr$titles)
+    if (length(title_hdr$right) > maxlen)
+      maxlen <- length(title_hdr$right)
+    
+    hdr <- title_hdr$right
+    
+    for (i in seq_len(maxlen)) {
+      
+      if (i <= length(title_hdr$titles))
+        t <- title_hdr$titles[i]
+      else 
+        t <- ""
+      
+      if (i <= length(hdr))
+        h <- hdr[i]
+      else 
+        h <- ""
+      
+      gp <- ll - nchar(t) - nchar(h)
+      
+      #print("titles")
+      if (gp > 0) {
+        
+
+          ln <- paste0(stri_pad_right(t, ll - nchar(h)), h)
+
+        
+      } else 
+        stop("Title header exceeds available width.")
+      
+      
+      ret[length(ret) + 1] <- ln
+    }
+    
+    if (title_hdr$blank_row %in% c("below", "both") & 
+        length(title_hdr$titles) > 0)
+      ret[length(ret) + 1] <- ""
+  
     
   }
   

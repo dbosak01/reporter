@@ -218,8 +218,11 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (length(rws) > 0)
     ls <- nchar(rws[1])
   
+  if (!is.null(ts$title_hdr))
+    ttls <- get_title_header(ts$title_hdr, ls - 1)
+  else
+    ttls <- get_titles(ts$titles, ls) 
   
-  ttls <- get_titles(ts$titles, ls) 
   ftnts <- get_footnotes(ts$footnotes, ls) 
   #print("Titles")
   #print(ttls)
@@ -265,8 +268,12 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
     hdrs <- get_table_header(rs, ts, pi)  
   }
   
-  ttls <- get_titles(ts$titles, rs$line_size) 
-  #print(paste("Table titles:", ttls))
+  if (is.null(ts$title_hdr))
+    ttls <- get_titles(ts$titles, rs$line_size) 
+  else 
+    ttls <- get_title_header(ts$title_hdr, rs$line_size)
+  
+  # print(paste("Table titles:", ttls))
   
   ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls)
   

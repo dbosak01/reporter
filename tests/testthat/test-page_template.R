@@ -103,3 +103,35 @@ test_that("page_footer function works as expected.", {
   
 })
 
+
+test_that("page_footer function works as expected.", {
+  
+  th <- title_header(list(), "Title One", "Title Two",
+                     right = c("One", "Two", "Three"),
+                     blank_row = "both")
+  
+  
+  rws <- get_title_header(th$title_hdr, 50)
+  
+  expect_equal(length(rws), 5)
+  expect_equal(rws[1], "")
+  
+  th <- title_header(list(), 
+                     right = c("One", "Two", "Three"))
+  
+  
+  rws <- get_title_header(th$title_hdr, 50)
+  
+  expect_equal(length(rws), 3)
+  expect_equal(trimws(rws[1]), "One")
+  
+  
+  th <- title_header(list(), "Title One", "Title Two",
+                     blank_row = "above")
+  
+  rws <- get_title_header(th$title_hdr, 50)
+  
+  expect_equal(length(rws), 3)
+  expect_equal(trimws(rws[2]), "Title One")
+  
+})

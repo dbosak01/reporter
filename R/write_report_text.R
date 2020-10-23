@@ -187,6 +187,11 @@ write_content <- function(rs, ls, pt) {
           writeLines(enc2utf8(paste0(blank_margin_left, pt$page_header)), 
                      con = f, useBytes = TRUE)
         
+        if (!is.null(pt$title_hdr))
+          writeLines(enc2utf8(paste0(blank_margin_left, 
+                                     trimws(pt$title_hdr, which = "right"))), 
+                     con = f, useBytes = TRUE)
+        
         if (!is.null(pt$titles))
            writeLines(enc2utf8(paste0(blank_margin_left, 
                              trimws(pt$titles, which = "right"))), 
@@ -286,7 +291,8 @@ page_setup <- function(rs) {
   
   # Get the page template row count
   # Include all the rows associated with the page template
-  rs$page_template_header_count <- length(pt$page_header) + length(pt$titles)
+  rs$page_template_header_count <- length(pt$page_header) + length(pt$titles) + 
+    length(pt$title_hdr)
   if (debug)
     print(paste("Page Template Header Count:", rs$page_template_header_count))
 
