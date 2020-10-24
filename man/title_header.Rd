@@ -12,6 +12,9 @@ a table, text, or plot specification.}
 
 \item{...}{A set of title strings.}
 
+\item{right}{A set of header strings to be shown on the right side of the
+title header.  Pass the header strings as a vector of strings.}
+
 \item{blank_row}{Where to place a blank row.  Valid values are 'above',
 'below', 'both', or 'none'.  Default is "none".}
 }
@@ -97,6 +100,7 @@ Other report:
 \code{\link{create_report}()},
 \code{\link{footnotes}()},
 \code{\link{options_fixed}()},
+\code{\link{page_by}()},
 \code{\link{page_footer}()},
 \code{\link{page_header}()},
 \code{\link{print.report_spec}()},

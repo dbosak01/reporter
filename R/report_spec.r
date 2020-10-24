@@ -840,6 +840,8 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @param x The object to assign titles to.  Valid objects are a report, or
 #' a table, text, or plot specification.
 #' @param ... A set of title strings.
+#' @param right A set of header strings to be shown on the right side of the
+#' title header.  Pass the header strings as a vector of strings.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is "none".
 #' @return The modified report.
@@ -1110,7 +1112,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above"){
 
-  # Create title structure
+  # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
   
   ft <- c(...)
@@ -1231,7 +1233,62 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 }
 
 
+#' @title
+#' Adds a page by variable  
+#'
+#' @description
+#' This function adds a page by variable to the report or table.  
+#' The page by will appear above the column headers.  The page by can be
+#' added to either the report or the table.  
+#'
+#' @details
+#' Only one page by is allowed per report or table.  The page by will appear 
+#' on all pages of the object.  The page by may be aligned on the 
+#' left, right, or center. Use the \code{align} parameter to specify the 
+#' alignment. 
+#' @param x The report specification to assign the page by to.
+#' @param var The page by variable.  There can be only one page by per report, 
+#' and one page by variable.  The page by can be passed either quoted or 
+#' unquoted.
+#' @param label A label to be used as a prefix to the page by variable value.
+#' By default, the label will be assigned to the variable name.  Alternatively,
+#' you may specify a string value to use for the label.
+#' @param align How to align the page by.  Default value is 'left'. Valid
+#' values are 'left', 'right', 'center', or 'centre'.
+#' @param blank_row Indicates whether a blank row is desired above or below
+#' the page by.  Default value is 'none'.  Valid values are 'above', 'below',
+#' 'both', or 'none'.
+#' @family report
+#' @export
+page_by <- function(x, var, label = NULL, align = "left",
+                    blank_row = "below") {
+  
+  
+  # Create page by structure
+  pb <- structure(list(), class = c("page_by", "list"))
 
+  if (!align %in% c("left", "right", "center", "centre" )){
+    stop(paste("align value is invalid. Valid values are 'left', 'right',",
+               "'center', or 'centre'."))
+  }
+  
+  if (!blank_row %in% c("above", "below", "both", "none" )){
+    stop(paste("blank_row value is invalid. Valid values are 'above', 'below',",
+               "'both', or 'none'."))
+  }
+  
+  var_c <- as.character(substitute(var, env = environment()))
+  
+  pb$var <- var_c
+  pb$label <- label
+  pb$align <- align
+  pb$blank_row <- blank_row
+
+  x$page_by <- pb
+  
+  return(x)
+  
+}
 
 # Functions ---------------------------------------------------------------
 

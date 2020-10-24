@@ -3,7 +3,7 @@
 # Globals -----------------------------------------------------------------
 
 
-control_cols <- c("..blank", "..page", "..row")
+control_cols <- c("..blank", "..page", "..row", "..page_by")
 
 #uchar <- "¯"
 # Putting the actual character works best,
@@ -27,6 +27,12 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   ts <- cntnt$object
   content_blank_row <- cntnt$blank_row
   
+  pgby_var <- NA
+  if (!is.null(rs$page_by))
+    pgby_var <- rs$page_by$var
+  else if (!is.null(ts$page_by))
+    pgby_var <- ts$page_by$var
+  
   if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
     
     stop("ERROR: At least one column must be defined if show_cols = \"none\".")
@@ -39,12 +45,21 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   dat <- as.data.frame(ts$data)  
   dat$..blank <- ""
   dat$..row <- NA
+  dat$..page_by <- NA
   
   # If page_break variable has been defined, use it
-  if (is.null(ts$page_var))
-    dat$..page <- NA
-  else 
+  if (is.null(ts$page_var)) {
+    if (is.na(pgby_var))
+      dat$..page <- NA
+    else 
+      dat$..page <-  dat[[pgby_var]]
+    
+  } else 
     dat$..page <- dat[[ts$page_var]]
+  
+  # If page by is defined, use it
+  if (!is.na(pgby_var))
+    dat$..page_by <-  dat[[pgby_var]]
 
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
@@ -184,9 +199,16 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
                                       rs$body_line_count, content_offset, nrow(s))
       #print(blnk_ind)
       
+      if (!is.na(pgby_var))
+        pgby <- trimws(s[1, "..page_by"])
+      else 
+        pgby <- NULL
+      
+      
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
                      col_width = widths_uom[pg], col_align = aligns[pg],
-                     font_name = font_name, label_align = label_aligns[pg])
+                     font_name = font_name, label_align = label_aligns[pg],
+                     pgby)
       pg_lst[[length(pg_lst) + 1]] <- create_table_text(rs, ts, pi, 
                                                         blnk_ind, wrap_flag,
                                                         lpg_rows)
@@ -227,7 +249,15 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   #print("Titles")
   #print(ttls)
   
+  if (!is.null(rs$page_by))
+    pgby <- get_page_by(rs$page_by, rs$line_size - 1, pi$page_by)
+  else if(!is.null(ts$page_by))
+    pgby <- get_page_by(ts$page_by, ls, pi$page_by)
+  else 
+    pgby <- c()
   
+  # print("Create table text:")
+  # print(length(pgby))
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -237,7 +267,7 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (content_blank_row %in% c("below", "both"))
     b <- ""
   
-  ret <- c(a, ttls, shdrs, hdrs, rws, ftnts, b)
+  ret <- c(a, ttls, pgby, shdrs, hdrs, rws, ftnts, b)
   
   blnks <- c()
   len_diff <- rs$body_line_count - lpg_rows - length(ret)
@@ -273,9 +303,17 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   else 
     ttls <- get_title_header(ts$title_hdr, rs$line_size)
   
+  pgb <- c()
+  if (!is.null(ts$page_by))
+    pgb <- get_page_by(ts$page_by, rs$line_size, NULL)
+  else if (!is.null(rs$page_by))
+    pgb <- get_page_by(rs$page_by, rs$line_size, NULL)
+  
+  #print(length(pgb))
+  
   # print(paste("Table titles:", ttls))
   
-  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls)
+  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb)
   
   if (content_blank_row %in% c("above", "both"))
       ret["blank_upper"] <- 1
@@ -547,8 +585,11 @@ get_table_body <- function(dat) {
         v <- p
 
       if (!is.control(nm[j]) & 
-          (trimws(df[i, "..blank"]) == "" | trimws(df[i, "..blank"]) == "L"))
+          (trimws(df[i, "..blank"]) == "" | trimws(df[i, "..blank"]) == "L")) {
+
         r <- paste0(r, v, " ")
+
+      }
     }
     
     ret[length(ret) + 1] <- r

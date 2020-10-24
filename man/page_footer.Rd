@@ -97,6 +97,7 @@ Other report:
 \code{\link{create_report}()},
 \code{\link{footnotes}()},
 \code{\link{options_fixed}()},
+\code{\link{page_by}()},
 \code{\link{page_header}()},
 \code{\link{print.report_spec}()},
 \code{\link{set_margins}()},

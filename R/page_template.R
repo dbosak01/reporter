@@ -15,6 +15,7 @@ page_template_text <- function(rs) {
   pt$titles <- get_titles(rs$titles, rs$line_size)
   pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size)
   pt$page_footer <- get_page_footer(rs)
+  #pt$page_by <- get_page_by(rs$page_by, rs$line_size, NULL)
   
   
   return(pt)
@@ -134,6 +135,65 @@ get_titles <- function(titles, width) {
   return(ret)
 }
 
+
+#' Get page by text strings suitable for printing
+#' @import stringi
+#' @param titles Page by object
+#' @param width The width to set the page by strings to
+#' @return A vector of strings
+#' @noRd
+get_page_by <- function(pgby, width, value) {
+  
+  if (is.null(width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  if (is.null(value))
+    value <- ""
+  
+  ll <- width
+  ret <- c()
+  
+  if (!is.null(pgby)) { 
+    
+    if (!any(class(pgby) == "page_by"))
+      stop("pgby parameter value is not a page_by.")
+    
+    if (pgby$blank_row %in% c("above", "both"))
+      ret[length(ret) + 1] <- ""
+    
+
+    pb <- paste0(pgby$label, value)
+    
+    gp <- ll - nchar(pb) 
+    
+
+    if (gp > 0) {
+      
+      if (pgby$align == "left")
+        ln <- stri_pad_right(pb, ll)
+      else if (pgby$align == "right")
+        ln <- stri_pad_left(pb, ll)
+      else if (pgby$align == "center" | pgby$align == "centre")
+        ln <- stri_pad_both(pb, ll)
+      
+    } else 
+      stop("Page by exceeds available width.")
+    
+    
+    ret[length(ret) + 1] <- ln
+    
+    
+    if (pgby$blank_row %in% c("below", "both"))
+      ret[length(ret) + 1] <- ""
+    
+    
+  }
+  
+  
+  return(ret)
+}
 
 #' Get title header text strings suitable for printing
 #' @import stringi
@@ -349,7 +409,7 @@ get_page_footer <- function(rs) {
 #' contained in this object.
 #' @noRd
 page_info <- function(data, keys, font_name, col_width, col_align,
-                      label, label_align) {
+                      label, label_align, page_by = NULL) {
   
   ret <- structure(list(), class = c("page_info", "list"))
   
@@ -362,7 +422,7 @@ page_info <- function(data, keys, font_name, col_width, col_align,
   ret$label_align <- label_align
   ret$total_pages <- 0
   ret$page_number <- 0
-  
+  ret$page_by <- page_by
   
   return(ret)
   

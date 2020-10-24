@@ -104,7 +104,7 @@ test_that("page_footer function works as expected.", {
 })
 
 
-test_that("page_footer function works as expected.", {
+test_that("title_header function works as expected.", {
   
   th <- title_header(list(), "Title One", "Title Two",
                      right = c("One", "Two", "Three"),
@@ -133,5 +133,45 @@ test_that("page_footer function works as expected.", {
   
   expect_equal(length(rws), 3)
   expect_equal(trimws(rws[2]), "Title One")
+  
+})
+
+
+test_that("page_by function works as expected.", {
+  
+  pb <- page_by(list(), mpg, "MPG: ",
+                     align = "left",
+                     blank_row = "both")
+  
+  
+  rws <- get_page_by(pb$page_by, 50, NULL)
+  
+  expect_equal(length(rws), 3)
+  expect_equal(rws[1], "")
+  
+  pb <- page_by(list(), mpg, "MPG: ",
+                align = "center",
+                blank_row = "above")
+  
+  rws <- get_page_by(pb$page_by, 50, "fork")
+  
+  expect_equal(length(rws), 2)
+  expect_equal(trimws(rws[2]), "MPG: fork")
+  
+  pb <- page_by(list(), mpg,
+                align = "right",
+                blank_row = "below")
+  
+  rws <- get_page_by(pb$page_by, 50, NULL)
+  
+  expect_equal(length(rws), 2)
+  expect_equal(trimws(rws[1]), "")
+  
+  pb <- page_by(list(), mpg, "Label:")
+  
+  rws <- get_page_by(pb$page_by, 50, "NULL")
+  
+  expect_equal(length(rws), 2)
+  expect_equal(trimws(rws[1]), "Label:NULL")
   
 })

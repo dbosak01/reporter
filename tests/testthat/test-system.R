@@ -1333,3 +1333,83 @@ test_that("test42: Title header on table works as expected.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
+
+
+test_that("test43: Page by on table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test43.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "IRIS Data Frame") %>% 
+    page_by(Species, "Species: ") %>% 
+    define(Species, visible = FALSE) %>% 
+    footnotes("Here is a footnote")
+  
+  rpt <- create_report(fp) %>%
+    page_header("Client", "Study") %>%
+    add_content(tbl) %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]") 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+test_that("test44: Page by on report works as expected.", {
+  
+  fp <- file.path(base_path, "output/test44.out")
+  
+  tbl <- create_table(iris) %>% 
+    define(Species, visible = FALSE)
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    titles("Table 1.0", "IRIS Data Frame") %>% 
+    page_by(Species, "Species: ") %>% 
+    footnotes("Here is a footnote") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]") %>% 
+    add_content(tbl) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+test_that("test45: Report without page by works as expected.", {
+  
+  fp <- file.path(base_path, "output/test45.out")
+  
+  tbl <- create_table(iris) %>% 
+    define(Species, page_break = TRUE)
+  
+  rpt <- create_report(fp) %>% 
+    page_header("Client", "Study") %>% 
+    titles("Table 1.0", "IRIS Data Frame") %>% 
+    footnotes("Here is a footnote") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]") %>% 
+    add_content(tbl) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})

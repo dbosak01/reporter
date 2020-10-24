@@ -178,6 +178,7 @@ Other report:
 \code{\link{add_content}()},
 \code{\link{create_report}()},
 \code{\link{footnotes}()},
+\code{\link{page_by}()},
 \code{\link{page_footer}()},
 \code{\link{page_header}()},
 \code{\link{print.report_spec}()},

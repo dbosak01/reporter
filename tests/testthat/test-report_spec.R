@@ -166,4 +166,29 @@ test_that("title_header function works as expected.", {
 })
 
 
+test_that("page_by function works as expected.", {
+  
+  tbl <- create_table(mtcars)
+  
+  pg <- tbl %>% page_by(mpg, "MPG: ", "right", blank_row = "below")
+  
+  expect_equal(is.null(pg$page_by), FALSE)
+  expect_equal(pg$page_by$var, "mpg")
+  expect_equal(pg$page_by$label, "MPG: ")
+  expect_equal(pg$page_by$align, "right")
+  expect_equal(pg$page_by$blank_row, "below")
+  
+  pg <- tbl %>% page_by("mpg")
+  
+  expect_equal(is.null(pg$page_by), FALSE)
+  expect_equal(pg$page_by$var, "mpg")
+  expect_equal(is.null(pg$page_by$label), TRUE)
+  expect_equal(pg$page_by$align, "left")
+  expect_equal(pg$page_by$blank_row, "below")
+  
+  
+})
+
+
+
 
