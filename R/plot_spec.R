@@ -136,9 +136,35 @@ print.plot_spec <- function(x, ..., verbose = FALSE){
       cat(paste0("- layers: ", length(x$plot[["layers"]]), "\n"))
       
     } 
+    
       
     cat(paste0("- height: ", x$height, "\n"))
     cat(paste0("- width: ", x$width, "\n"))
+    
+    if (!is.null(x$page_by)) {
+      cat(paste0("- page by: ", x$page_by$var, "\n"))
+      
+    }
+    
+    # Print title header
+    if (!is.null(x$title_hdr)) {
+      
+      mx <- max(length(x$title_hdr$titles), length(x$title_hdr$right))
+      
+      ttlcnt <- 1
+      for (i in seq(1, mx)) {
+        
+        cat("- title header " %+% as.character(ttlcnt) %+% ": ")
+        if (!is.na(x$title_hdr$titles[i]))
+          cat("'" %+% x$title_hdr$titles[[i]] %+% "' ")
+        if (!is.na(x$title_hdr$right[i]))
+          cat("right='" %+% x$title_hdr$right[i] %+% "'")
+        
+        cat("\n")
+        
+        ttlcnt <- ttlcnt + 1
+      }
+    }
     
     if (!is.null(x$titles)) {
       

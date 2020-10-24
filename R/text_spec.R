@@ -172,6 +172,27 @@ print.text_spec <- function(x, ..., verbose = FALSE){
     if (!is.null(x$align)) 
       cat(paste0("- align: ", x$align, "\n"))
     
+    
+    # Print title header
+    if (!is.null(x$title_hdr)) {
+      
+      mx <- max(length(x$title_hdr$titles), length(x$title_hdr$right))
+      
+      ttlcnt <- 1
+      for (i in seq(1, mx)) {
+        
+        cat("- title header " %+% as.character(ttlcnt) %+% ": ")
+        if (!is.na(x$title_hdr$titles[i]))
+          cat("'" %+% x$title_hdr$titles[[i]] %+% "' ")
+        if (!is.na(x$title_hdr$right[i]))
+          cat("right='" %+% x$title_hdr$right[i] %+% "'")
+        
+        cat("\n")
+        
+        ttlcnt <- ttlcnt + 1
+      }
+    }
+    
     # Print  titles
     if (!is.null(x$titles)) {
       

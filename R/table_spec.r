@@ -1143,6 +1143,31 @@ print.table_spec <- function(x, ..., verbose = FALSE){
         cat("- headerless: " %+% as.character(x$headerless) %+% "\n")
     }
     
+    if (!is.null(x$page_by)) {
+      cat(paste0("- page by: ", x$page_by$var, "\n"))
+      
+    }
+    
+    # Print title header
+    if (!is.null(x$title_hdr)) {
+      
+      mx <- max(length(x$title_hdr$titles), length(x$title_hdr$right))
+      
+      ttlcnt <- 1
+      for (i in seq(1, mx)) {
+        
+        cat("- title header " %+% as.character(ttlcnt) %+% ": ")
+        if (!is.na(x$title_hdr$titles[i]))
+          cat("'" %+% x$title_hdr$titles[[i]] %+% "' ")
+        if (!is.na(x$title_hdr$right[i]))
+          cat("right='" %+% x$title_hdr$right[i] %+% "'")
+        
+        cat("\n")
+        
+        ttlcnt <- ttlcnt + 1
+      }
+    }
+    
     # Print titles
     if (!is.null(x$titles)) {
      
@@ -1192,6 +1217,7 @@ print.table_spec <- function(x, ..., verbose = FALSE){
         
       }
     }
+    # dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
     
     # Print column definitions
     if (!is.null(x$col_defs)) {
@@ -1207,6 +1233,21 @@ print.table_spec <- function(x, ..., verbose = FALSE){
         
         if (!is.null(def$align)) 
           cat("align='" %+% def$align %+% "' ")
+        
+        if (def$visible == FALSE) 
+          cat("visible='" %+% def$visible %+% "' ")
+        
+        if (def$id_var == TRUE) 
+          cat("id_var='" %+% def$id_var %+% "' ")
+        
+        if (def$dedupe == TRUE) 
+          cat("dedupe='" %+% def$dedupe %+% "' ")
+
+        if (def$page_wrap == TRUE) 
+          cat("page_wrap='" %+% def$page_wrap %+% "' ")
+        
+        if (def$page_break == TRUE) 
+          cat("page_break='" %+% def$page_break %+% "' ")
         
         cat("\n")
         

@@ -1341,7 +1341,7 @@ test_that("test43: Page by on table works as expected.", {
   
   tbl <- create_table(iris) %>% 
     titles("Table 1.0", "IRIS Data Frame") %>% 
-    page_by(Species, "Species: ") %>% 
+    page_by(Species, "Species: ", align = "left") %>% 
     define(Species, visible = FALSE) %>% 
     footnotes("Here is a footnote")
   

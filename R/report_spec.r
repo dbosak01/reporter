@@ -1682,6 +1682,10 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     #   cat(x$column_widths)
     #   
     # }
+    if (!is.null(x$page_by)) {
+      cat(paste0("- page by: ", x$page_by$var, "\n"))
+      
+    }
     
     # Print page header
     if (!is.null(x$page_header_left) |
@@ -1696,6 +1700,27 @@ print.report_spec <- function(x, ..., verbose = FALSE){
         cat(paste0(x$page_header_right, collapse = ", "))
       }
       cat("\n")
+    }
+    
+    
+    # Print title header
+    if (!is.null(x$title_hdr)) {
+      
+      mx <- max(length(x$title_hdr$titles), length(x$title_hdr$right))
+      
+      ttlcnt <- 1
+      for (i in seq(1, mx)) {
+        
+        cat("- title header " %+% as.character(ttlcnt) %+% ": ")
+        if (!is.na(x$title_hdr$titles[i]))
+          cat("'" %+% x$title_hdr$titles[[i]] %+% "' ")
+        if (!is.na(x$title_hdr$right[i]))
+          cat("right='" %+% x$title_hdr$right[i] %+% "'")
+        
+        cat("\n")
+        
+        ttlcnt <- ttlcnt + 1
+      }
     }
     
     # Print titles

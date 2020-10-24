@@ -518,7 +518,7 @@ test_that("test17: 12 pt report with units in cm works as expected.", {
 })
 
 
-test_that("pdf18: Plot with page by works as expected.", {
+test_that("pdf18: Plot with page by on report works as expected.", {
   
   library(ggplot2)
   
@@ -540,9 +540,48 @@ test_that("pdf18: Plot with page by works as expected.", {
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
     set_margins(top = 1, bottom = 1) %>%
-    page_by(cyl, "Cylinders: ") %>% 
+    page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
     add_content(plt) %>%
     footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+
+
+test_that("pdf19: Plot with page by on plot works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "pdf/test19.pdf")
+  
+  
+  dat <- mtcars[order(mtcars$cyl), ]
+  
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+  
+  
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+  
+  plt <- create_plot(p, height = 4, width = 8) %>% 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
+    footnotes("* Motor Trend, 1974")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt) %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   
   
