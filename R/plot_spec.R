@@ -194,22 +194,71 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
   if (!"report_content" %in% class(cntnt))
     stop("Report Content expected for parameter cntnt")
   
+  # Get plot spec 
   plt <- cntnt$object
   
-  tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".png")
+  
+  # Get data in case we need it for page by
+  raw <- plt$plot$data
+  
+  # Determine if there is a page by
+  pgby <- NULL
+  if (!is.null(rs$page_by))
+    pgby <- rs$page_by
+  if (!is.null(plt$page_by))
+    pgby <- plt$page_by
+  
+  if (!is.null(pgby)) {
+    dat_lst <- split(raw, raw[[pgby$var]])
+  } else {
+    dat_lst <- list(raw) 
+  }
   
   u <- ifelse(rs$units == "inches", "in", rs$units)
+  p <- plt$plot
+  ret <- list()
+  cntr <- 1
   
-  # print("Temp plot name:")
-  # print(tmp_nm)
+  for (dat in dat_lst) {
   
-  ggplot2::ggsave(tmp_nm, plt$plot, width =  plt$width, height = plt$height, 
-         dpi = 300, units = u)
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".png")
+    
+    p$data <- dat
+    
+    pgval <- NULL
+    if (!is.null(pgby)) {
+      # print(pgby$var)
+      # print(dat)
+      pgval <- dat[1, c(pgby$var)]
+    }
+    
+    # Save plot to temp file
+    ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+           dpi = 300, units = u)
+    
+    # Get rtf page bodies
+    # Can return multiple pages if it breaks across pages
+    # Not sure what that means for a plot, but that is the logic
+    pgs <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
+                         lpg_rows, cntnt$blank_row, pgby, pgval)
+    
+    # Within a content creation function, assumed that it will take 
+    # care of filling out blanks for each page.  Only the last page
+    # can have empty rows.
+    for (pg in pgs) {
+      rem <- rs$body_line_count - length(pg)
+      if (rem > 0 & cntr < length(dat_lst))
+        blnks <- rep("", rem)
+      else 
+        blnks <- c()
+      
+      # Combine all pages with all previous pages
+      ret <- c(ret, list(c(pg, blnks)))
+    }
+    
+    cntr <- cntr + 1
   
-
-  ret <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
-                       lpg_rows, cntnt$blank_row)
-  
+  }
   
   return(ret)
 }
@@ -217,12 +266,13 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
 #' Create list of vectors of strings for each page 
 #' @noRd
 get_plot_body <- function(plt, plot_path, align, rs,
-                          lpg_rows, content_blank_row) {
+                          lpg_rows, content_blank_row, pgby, pgval) {
   
   # Get titles and footnotes
   w <- ceiling(plt$width / rs$char_width)
   ttls <- get_titles(plt$titles, w) 
   ftnts <- get_footnotes(plt$footnotes, w) 
+  pgbys <- get_page_by(pgby, w, pgval)
   
   pltpth <- gsub("\\", "/", plot_path, fixed = TRUE)
   
@@ -248,7 +298,7 @@ get_plot_body <- function(plt, plot_path, align, rs,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, s, ftnts, b)
+  rws <- c(a, ttls, pgbys, s, ftnts, b)
   
   # Page list
   ret <- list()  

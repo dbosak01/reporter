@@ -9,14 +9,12 @@ page_template_text <- function(rs) {
   
   pt <- structure(list(), class = c("page_template_text", "list"))
   
-  
   pt$page_header <- get_page_header(rs)
   pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size)
   pt$titles <- get_titles(rs$titles, rs$line_size)
   pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size)
   pt$page_footer <- get_page_footer(rs)
-  #pt$page_by <- get_page_by(rs$page_by, rs$line_size, NULL)
-  
+  # Page by not here.  Messes up line counts.
   
   return(pt)
 }

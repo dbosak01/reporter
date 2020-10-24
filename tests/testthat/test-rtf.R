@@ -524,3 +524,84 @@ test_that("test17: 12 pt report with units in cm works as expected.", {
 })
 
 
+
+test_that("rtf18: Plot with page by works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf/test18.rtf")
+
+
+  dat <- mtcars[order(mtcars$cyl), ]
+  
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+
+  
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+  
+  plt <- create_plot(p, height = 4, width = 8)
+  
+
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_by(cyl, "Cylinders: ") %>% 
+    add_content(plt) %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+# 
+# test_that("rtf19: Plot and table with page by works as expected.", {
+#   
+#   library(ggplot2)
+#   
+#   fp <- file.path(base_path, "rtf/test19.rtf")
+#   
+#   
+#   dat <- mtcars[order(mtcars$cyl), ]
+#   
+#   p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+#   
+#   
+#   #dats <- split(p$data, p$data$grp)
+#   #tbl <- create_table(dat[1:3, ])
+#   
+#   plt <- create_plot(p, height = 4, width = 8)
+#   
+#   
+#   
+#   rpt <- create_report(fp, output_type = "RTF") %>%
+#     page_header("Client", "Study: XYZ") %>%
+#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+#     set_margins(top = 1, bottom = 1) %>%
+#     #page_by(grp, "Mileage Category: ") %>% 
+#     add_content(plt) %>%
+#     # add_content(tbl) %>%
+#     footnotes("* Motor Trend, 1974") %>%
+#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+#   
+#   
+#   res <- write_report(rpt)
+#   
+#   #print(res)
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   
+#   
+#   
+# })
+
+

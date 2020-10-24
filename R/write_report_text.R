@@ -76,7 +76,15 @@ paginate_content <- function(rs, ls) {
     else 
       last_object <- FALSE
     
-    # Break content into multiple pages if needed
+    # Break content into multiple pages if needed.
+    # If there are multiple pages, each function is responsible for 
+    # filling out the page body entirely.  Only the last page will
+    # remain open, in case there is more content and no page break between.
+    # Blanks on last page are handled below.
+    # If a last page is left unfinished, and there is no page break, 
+    # the last_page_lines variable is populated with the number of lines
+    # on the last page. That is passed to the next function, so it can
+    # subtract those lines from the first page of the next piece of content.
     if (class(ls[[i]]$object)[1] == "table_spec"){
       
       ret <- create_table_pages_text(rs, ls[[i]], last_page_lines)
