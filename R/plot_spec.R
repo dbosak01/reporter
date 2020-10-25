@@ -146,53 +146,11 @@ print.plot_spec <- function(x, ..., verbose = FALSE){
       
     }
     
-    # Print title header
-    if (!is.null(x$title_hdr)) {
-      
-      mx <- max(length(x$title_hdr$titles), length(x$title_hdr$right))
-      
-      ttlcnt <- 1
-      for (i in seq(1, mx)) {
-        
-        cat("- title header " %+% as.character(ttlcnt) %+% ": ")
-        if (!is.na(x$title_hdr$titles[i]))
-          cat("'" %+% x$title_hdr$titles[[i]] %+% "' ")
-        if (!is.na(x$title_hdr$right[i]))
-          cat("right='" %+% x$title_hdr$right[i] %+% "'")
-        
-        cat("\n")
-        
-        ttlcnt <- ttlcnt + 1
-      }
-    }
+    print_title_header(x$title_hdr)
     
-    if (!is.null(x$titles)) {
-      
-      ttlcnt <- 1
-      for (i in seq_along(x$titles)) {
-        
-        for (j in seq_along(x$titles[[i]]$titles)) {
-          cat("- title " %+% as.character(ttlcnt) %+% ": '" 
-              %+% substring(x$titles[[i]]$titles[[j]], 1) %+% "'\n")
-          ttlcnt <- ttlcnt + 1
-        }
-        
-      }
-    }
-    if (!is.null(x$footnotes)) {
-      
-      ftncnt <- 1
-      for (i in seq_along(x$footnotes)) {
-        
-        for (j in seq_along(x$footnotes[[i]]$footnotes)) {
-          cat("- footnote " %+% as.character(ftncnt) %+% ": '" 
-              %+% substring(x$footnotes[[i]]$footnotes[[j]], 1) %+% "'\n")
-          ftncnt <- ftncnt + 1
-        }
-        
-      }
-    }
+    print_titles(x$titles)
     
+    print_footnotes(x$footnotes)
     
   }
   
