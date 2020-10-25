@@ -400,6 +400,22 @@ write_page_numbers <- function(rs) {
     pg <- 1
     lns <- replace_tokens(lns, rs$page_footer_right, "right")
   }
+  if (!is.null(rs$title_hdr)) {
+    if (token_check(rs$title_hdr$right)) {
+      pg <- 1
+      lns <- replace_tokens(lns, rs$title_hdr$right, "right")
+    }
+  }
+  
+  for (cntnt in rs$content) {
+   if (!is.null(cntnt$object$title_hdr)) { 
+     if (token_check(cntnt$object$title_hdr$right)) {
+       pg <- 1
+       lns <- replace_tokens(lns, cntnt$object$title_hdr$right, "right")
+     }
+     
+   }
+  }
   
   # Replace file with updated lines
   f <- file(rs$modified_path, open="w+", encoding = "native.enc")

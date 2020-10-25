@@ -1295,7 +1295,7 @@ test_that("test41: Title header on report works as expected.", {
   
   rpt <- create_report(fp) %>%
     title_header("Table 1.0", "IRIS Data Frame", 
-                 right = c("Study ABC", "Client A", "Page")) %>%
+                 right = c("Study ABC", "Client A", "Page [pg] of [tpg]")) %>%
     add_content(create_table(iris)) %>% 
     page_footer("DateTime", right = "Page")
   
@@ -1317,7 +1317,7 @@ test_that("test42: Title header on table works as expected.", {
   
   tbl <- create_table(iris) %>% 
     title_header("Table 1.0", "IRIS Data Frame",
-                 right = c("Study ABC", "Client A", "Page"),
+                 right = c("Study ABC", "Client A", "Page [pg] of [tpg]"),
                  blank_row = "below")
   
   rpt <- create_report(fp) %>%
