@@ -241,3 +241,44 @@ test_that("text8: Text page setup portrait works as expected.", {
   expect_equal(length(lns), 120)
 })
 
+
+test_that("text9: Title header with text output works as expected.", {
+  
+  fp <- file.path(base_path, "text/text9.out")
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    title_header("Report 1.0", "Simple Text Report", 
+                 right = c("Client", "Study"), blank_row = "below") %>% 
+    add_content(create_text(cnt)) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+
+
+test_that("text10: Title header with text output works as expected.", {
+  
+  fp <- file.path(base_path, "text/text10.out")
+  
+  txt <- create_text(cnt, width = 5) %>% 
+    title_header("Report 1.0", "Simple Text Report", 
+                 right = c("Client", "Study"), blank_row = "below") 
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    add_content(txt)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+
+

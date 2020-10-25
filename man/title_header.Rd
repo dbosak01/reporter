@@ -4,7 +4,7 @@
 \alias{title_header}
 \title{Adds a title header block}
 \usage{
-title_header(x, ..., right = "", blank_row = "none")
+title_header(x, ..., right = "", blank_row = "below")
 }
 \arguments{
 \item{x}{The object to assign titles to.  Valid objects are a report, or
@@ -16,7 +16,7 @@ a table, text, or plot specification.}
 title header.  Pass the header strings as a vector of strings.}
 
 \item{blank_row}{Where to place a blank row.  Valid values are 'above',
-'below', 'both', or 'none'.  Default is "none".}
+'below', 'both', or 'none'.  Default is "below".}
 }
 \value{
 The modified report.

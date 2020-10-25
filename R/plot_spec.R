@@ -255,6 +255,7 @@ get_plot_body <- function(plt, plot_path, align, rs,
   # Get titles and footnotes
   w <- ceiling(plt$width / rs$char_width)
   ttls <- get_titles(plt$titles, w) 
+  ttl_hdr <- get_title_header(plt$title_hdr, w)
   ftnts <- get_footnotes(plt$footnotes, w) 
   pgbys <- get_page_by(pgby, w, pgval)
   
@@ -264,7 +265,7 @@ get_plot_body <- function(plt, plot_path, align, rs,
   s <- c(paste0("```", pltpth, "|", plt$height, 
                   "|", plt$width, "|", align, "```"))
   
-  h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed?
+  h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed? Appears so.
 
   fill <- rep("```fill```", h) 
   s <- c(s, fill)
@@ -282,7 +283,7 @@ get_plot_body <- function(plt, plot_path, align, rs,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, pgbys, s, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, pgbys, s, ftnts, b)
   
   # Page list
   ret <- list()  

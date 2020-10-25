@@ -843,7 +843,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @param right A set of header strings to be shown on the right side of the
 #' title header.  Pass the header strings as a vector of strings.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
-#' 'below', 'both', or 'none'.  Default is "none".
+#' 'below', 'both', or 'none'.  Default is "below".
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -892,7 +892,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' # 
 #' #     * In billions of dollars
 #' @export
-title_header <- function(x, ..., right = "", blank_row = "none") {
+title_header <- function(x, ..., right = "", blank_row = "below") {
   
   # Create title structure
   ttl_hdr <- structure(list(), class = c("title_hdr", "list"))

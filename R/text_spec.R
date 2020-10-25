@@ -226,6 +226,7 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows,
   # Get titles and footnotes
   ttls <- get_titles(txt$titles, line_width) 
   ftnts <- get_footnotes(txt$footnotes, line_width) 
+  ttl_hdr <- get_title_header(txt$title_hdr, line_width)
   
   # Wrap the text 
   s <- stri_wrap(unlist(
@@ -244,7 +245,7 @@ get_text_body <- function(txt, line_width, line_count, lpg_rows,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, s, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, s, ftnts, b)
   
   # Page list
   ret <- list()  

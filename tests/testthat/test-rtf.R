@@ -603,6 +603,31 @@ test_that("rtf19: Plot with page by on plot works as expected.", {
   
 })
 
+
+test_that("test20: Title Header on Plot works as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test20.rtf")
+  
+  
+  p <- ggplot(mtcars, aes(x=disp, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 5, width = 7) %>% 
+    title_header("Figure 1.0", "MTCARS Plot", 
+                 right = c("Client", "Page", "More")) %>% 
+    footnotes("* Motor Trend, 1974")
+  
+  rpt <- create_report(fp, units = "inches", output_type = "RTF") %>%
+    options_fixed(font_size = 12) %>% 
+    add_content(plt) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
 # 
 # test_that("rtf19: Plot and table with page by works as expected.", {
 #   
