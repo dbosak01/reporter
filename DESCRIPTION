@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Create statistical reports
-Version: 0.0.0.9026
+Version: 0.0.0.9028
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports, 
@@ -11,7 +11,7 @@ Description: Contains functions to create regulatory-style statistical reports,
     Reports can be generated with a minimum of function calls, and without 
     relying on other table packages.  The package supports titles, footnotes, 
     page header, page footers, spanning headers, and automatic page numbering.
-License: CC0
+License: CC BY-NC 4.0
 Encoding: UTF-8
 LazyData: true
 Suggests: 

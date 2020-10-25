@@ -4,7 +4,7 @@
 \alias{create_plot}
 \title{Create plot content}
 \usage{
-create_plot(x, height = NULL, width = NULL)
+create_plot(x, height, width)
 }
 \arguments{
 \item{x}{The plot to create.  Specifically, this parameter should be 

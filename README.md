@@ -24,6 +24,11 @@ output formats, as there are already numerous R packages that
 provide tabular reporting in HTML. 
 The current version supports TXT, RTF, and PDF output types.   
 
+The **rptr** package is distributed under a [Creative Commons non-commercial 
+license](https://creativecommons.org/licenses/by-nc/4.0).  It is available 
+for personal and organizational use, but cannot be used to create a commercial 
+product without permission of the license holder.
+
 ## Key Features
 
 The **rptr** package contains the following key features:
@@ -69,33 +74,27 @@ description of their use.  For additional information, see the help text:
 * `set_margins()`: Set margins for the report  
 * `page_header()`: Define a page header  
 * `page_footer()`: Define a page footer  
-* `titles()`: Set titles for the report  
-* `footnotes()`: Set footnotes for the report  
 * `add_content()`: Add content to the report  
 * `write_report()`: Write the report to a file  
 
 ### Table functions
 
 * `create_table()`: Define a table object  
-* `titles()`: Set titles for the table  
-* `footnotes()`: Set footnotes for the table  
 * `spanning_header()`: Define a spanning header  
 * `stub()`: Define a stub column  
 * `columns_defaults()`: Set default column attributes
 * `define()`: Specify settings for a column  
 
-### Text functions
+### Text and Plot functions
 
 * `create_text()`: Define a text object  
-* `titles()`: Set titles for the text  
-* `footnotes()`: Set footnotes for the text  
+* `create_plot()`: Define a plot object 
 
-### Plot functions
-
-* `create_plot()`: Define a plot object  
+### Title/Footnote Functions 
 * `titles()`: Set titles for the plot  
-* `footnotes()`: Set footnotes for the plot  
-
+* `footnotes()`: Set footnotes for the plot 
+* `title_header()`: A combined title/header block 
+* `page_by()`: Creates separate pages by a variable
 
 ## Examples
 
@@ -547,3 +546,143 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
+
+### Example 7: Page By
+
+A page by variable will split the report into pages by a variable, and
+label each page according the variable value.  The page by can be assigned to
+the report, to a table, or to a plot.  The page by label will appear between
+the titles and the content body.  It can be aligned left, right, or center.
+The data should be sorted by the page by variable prior to reporting.
+
+```
+# Create temp file name
+tmp <- file.path(tempdir(), "example7.txt")
+
+# Prepare data
+dat <- mtcars[order(mtcars$cyl), ]
+dat <- data.frame(vehicle = rownames(dat), dat)
+
+# Define table
+tbl <- create_table(dat, show_cols = 1:8) %>% 
+  page_by(cyl, label="Cylinders: ") 
+
+# Create the report
+rpt <- create_report(tmp, orientation = "portrait") %>% 
+  titles("Listing 3.0", "MTCARS Data Listing with Page By") %>% 
+
+  add_content(tbl) 
+
+
+# Write the report
+write_report(rpt)
+
+# Send report to console for viewing
+writeLines(readLines(tmp, encoding = "UTF-8"))
+
+#                                 Listing 3.0
+#                       MTCARS Data Listing with Page By
+#
+#       Cylinders: 4
+#
+#       vehicle                mpg cyl   disp   hp  drat     wt   qsec
+#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#       Datsun 710            22.8   4    108   93  3.85   2.32  18.61
+#       Merc 240D             24.4   4  146.7   62  3.69   3.19     20
+#       Merc 230              22.8   4  140.8   95  3.92   3.15   22.9
+#       Fiat 128              32.4   4   78.7   66  4.08    2.2  19.47
+#       Honda Civic           30.4   4   75.7   52  4.93  1.615  18.52
+#       Toyota Corolla        33.9   4   71.1   65  4.22  1.835   19.9
+#       Toyota Corona         21.5   4  120.1   97   3.7  2.465  20.01
+#       Fiat X1-9             27.3   4     79   66  4.08  1.935   18.9
+#       Porsche 914-2           26   4  120.3   91  4.43   2.14   16.7
+#       Lotus Europa          30.4   4   95.1  113  3.77  1.513   16.9
+#       Volvo 142E            21.4   4    121  109  4.11   2.78   18.6
+#
+# ...
+#
+#                                 Listing 3.0
+#                       MTCARS Data Listing with Page By
+#
+#       Cylinders: 6
+#
+#       vehicle                mpg cyl   disp   hp  drat     wt   qsec
+#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#       Mazda RX4               21   6    160  110   3.9   2.62  16.46
+#       Mazda RX4 Wag           21   6    160  110   3.9  2.875  17.02
+#       Hornet 4 Drive        21.4   6    258  110  3.08  3.215  19.44
+#       Valiant               18.1   6    225  105  2.76   3.46  20.22
+#       Merc 280              19.2   6  167.6  123  3.92   3.44   18.3
+#       Merc 280C             17.8   6  167.6  123  3.92   3.44   18.9
+#       Ferrari Dino          19.7   6    145  175  3.62   2.77   15.5
+#
+# ...
+#
+#                                 Listing 3.0
+#                       MTCARS Data Listing with Page By
+#
+#       Cylinders: 8
+#
+#       vehicle                mpg cyl   disp   hp  drat     wt   qsec
+#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#       Hornet Sportabout     18.7   8    360  175  3.15   3.44  17.02
+#       Duster 360            14.3   8    360  245  3.21   3.57  15.84
+#       Merc 450SE            16.4   8  275.8  180  3.07   4.07   17.4
+#       Merc 450SL            17.3   8  275.8  180  3.07   3.73   17.6
+#       Merc 450SLC           15.2   8  275.8  180  3.07   3.78     18
+#       Cadillac Fleetwood    10.4   8    472  205  2.93   5.25  17.98
+#       Lincoln Continental   10.4   8    460  215     3  5.424  17.82
+#       Chrysler Imperial     14.7   8    440  230  3.23  5.345  17.42
+#       Dodge Challenger      15.5   8    318  150  2.76   3.52  16.87
+#       AMC Javelin           15.2   8    304  150  3.15  3.435   17.3
+#       Camaro Z28            13.3   8    350  245  3.73   3.84  15.41
+#       Pontiac Firebird      19.2   8    400  175  3.08  3.845  17.05
+#       Ford Pantera L        15.8   8    351  264  4.22   3.17   14.5
+#       Maserati Bora           15   8    301  335  3.54   3.57   14.6
+#
+
+```
+### Example 8: Title Header
+
+A title header is a special type of title block.  The title header displays
+titles on the left side, and header information on the right side.  The 
+title header can be defined with the `title_header()` function.  This style of 
+header is preferred by some organizations.
+
+```
+# Create temp file name
+tmp <- file.path(tempdir(), "example8.txt")
+
+# Create the report
+rpt <- create_report(tmp, orientation = "portrait") %>% 
+  title_header("Listing 4.0", "MTCARS Data Listing with Title Header", 
+               right = c("Page [pg] of [tpg]",  "Study: Cars")) %>% 
+  add_content(create_table(mtcars[1:10, ])) %>% 
+  footnotes("* Motor Trend, 1974")
+
+# Write the report
+write_report(rpt)
+
+# Send report to console for viewing
+writeLines(readLines(tmp, encoding = "UTF-8"))
+
+# Listing 4.0                                                        Page 1 of 1
+# MTCARS Data Listing with Title Header                              Study: Cars
+# 
+#             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
+#           ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#              21   6    160  110   3.9   2.62  16.46  0  1    4    4
+#              21   6    160  110   3.9  2.875  17.02  0  1    4    4
+#            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
+#            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
+#            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
+#            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
+#            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
+#            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
+#            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
+#            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
+# 
+# ...
+# 
+# * Motor Trend, 1974
+```
