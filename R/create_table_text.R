@@ -33,6 +33,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   else if (!is.null(ts$page_by))
     pgby_var <- ts$page_by$var
   
+  
   if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
     
     stop("ERROR: At least one column must be defined if show_cols = \"none\".")
@@ -58,8 +59,11 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
     dat$..page <- dat[[ts$page_var]]
   
   # If page by is defined, use it
-  if (!is.na(pgby_var))
+  if (!is.na(pgby_var)) {
     dat$..page_by <-  dat[[pgby_var]]
+    if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
+      message("Page by variable not sorted.")
+  }
 
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included

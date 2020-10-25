@@ -257,3 +257,4 @@ test_that("data with extra names on variables doesn't crash labels function.", {
   expect_equal(TRUE, TRUE)
   
 })
+

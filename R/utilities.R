@@ -636,6 +636,8 @@ getExtension <- function(file){
   return(ex[-1])
 } 
 
+
+
 # Sizing utilities --------------------------------------------------------
 
 #' @noRd

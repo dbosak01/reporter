@@ -1413,3 +1413,5 @@ test_that("test45: Report without page by works as expected.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
+
+

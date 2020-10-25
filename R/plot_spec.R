@@ -58,7 +58,7 @@
 #' # Uncomment to view PDF file
 #' # shell.exec(tmp)
 #' @export
-create_plot <- function(x, height = NULL, width = NULL) {
+create_plot <- function(x, height, width) {
   
   
   if (!"ggplot" %in% class(x))
@@ -193,6 +193,9 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
     pgby <- plt$page_by
   
   if (!is.null(pgby)) {
+    if (!pgby$var %in% names(raw))
+      stop("Page by variable not found in plot data.")
+    
     dat_lst <- split(raw, raw[[pgby$var]])
   } else {
     dat_lst <- list(raw) 
