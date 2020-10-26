@@ -33,6 +33,11 @@ output formats, as there are already numerous R packages that
 provide tabular reporting in HTML. 
 The current version supports TXT, RTF, and PDF output types.   
 
+The **rptr** package is distributed under a [Creative Commons non-commercial 
+license](https://creativecommons.org/licenses/by-nc/4.0).  It is available 
+for personal and organizational use, but cannot be used to create a commercial 
+product without permission of the license holder.
+
 ## Key Features
 
 The **rptr** package contains the following key features:

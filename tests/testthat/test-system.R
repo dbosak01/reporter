@@ -1415,3 +1415,41 @@ test_that("test45: Report without page by works as expected.", {
 })
 
 
+test_that("test46: Another title_header test to check alignment.", {
+  
+  
+  # Create a temporary file
+  fp <- file.path(base_path, "output/test46.out")
+
+  # Prepare data
+  dat <- data.frame(category = rownames(USPersonalExpenditure),
+                    USPersonalExpenditure)
+
+  # Define table
+  tbl <- create_table(dat) %>%
+    title_header("Table 1.0", "US Personal Expenditures from 1940 - 1960",
+                 right = c("Page [pg] of [tpg]", "World Almanac")) %>%
+    column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+    define(category, label = "Category") %>%
+    define(X1940, label = "1940") %>%
+    define(X1945, label = "1945") %>%
+    define(X1950, label = "1950") %>%
+    define(X1955, label = "1955") %>%
+    define(X1960, label = "1960") %>%
+    footnotes("* In billions of dollars")
+
+  # Define report
+  rpt <- create_report(fp, orientation="portrait") %>%
+    add_content(tbl)
+
+  # Write the report
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+

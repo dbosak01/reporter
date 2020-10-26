@@ -61,7 +61,8 @@ dat <- data.frame(category = rownames(USPersonalExpenditure),
 
 # Define table
 tbl <- create_table(dat) \%>\% 
-  titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") \%>\% 
+  title_header("Table 1.0", "US Personal Expenditures from 1940 - 1960",
+               right = c("Page [pg] of [tpg]", "World Almanac")) \%>\% 
   column_defaults(from = X1940, to = X1960, format = "$\%.2f") \%>\%
   define(category, label = "Category") \%>\% 
   define(X1940, label = "1940") \%>\% 
@@ -81,8 +82,8 @@ write_report(rpt)
 # Display in console
 writeLines(readLines(tmp, encoding = "UTF-8"))
 
-#                               Table 1.0
-#               US Personal Expenditures from 1940 - 1960
+#     Table 1.0                                        Page 1 of 1
+#     US Personal Expenditures from 1940 - 1960      World Almanac
 # 
 #     Category                1940    1945    1950    1955    1960
 #     ------------------------------------------------------------

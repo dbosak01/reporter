@@ -35,6 +35,118 @@ on all pages of the object.  The page by may be aligned on the
 left, right, or center. Use the \code{align} parameter to specify the 
 alignment.
 }
+\examples{
+library(rptr)
+library(magrittr)
+
+# Create temp file path
+tmp <- file.path(tempdir(), "iris.txt")
+
+# Sample and sort iris data frame
+dat <- iris[sample(1:150, 50), ]
+dat <- dat[order(dat$Species), ]
+
+# Create table
+tbl <- create_table(dat) \%>\% 
+  page_by(Species, "Species: ") \%>\%  
+  define(Species, visible = FALSE)
+  
+# Create the report object
+rpt <- create_report(tmp, orientation = "portrait") \%>\% 
+  page_header("Sponsor: Iris Society", "Study: flowers") \%>\% 
+  titles("Table 2.0", "IRIS Sample Report with Page By") \%>\% 
+  add_content(tbl) \%>\% 
+  page_footer(Sys.time(), right = "Page [pg] of [tpg]")
+
+# Write the report to the file system
+write_report(rpt)
+
+# Write report to console
+writeLines(readLines(tmp, encoding = "UTF-8"))
+
+# Sponsor: Iris Society                                           Study: flowers
+#                                  Table 2.0
+#                       IRIS Sample Report with Page By
+# 
+#              Species: setosa
+# 
+#              Sepal.Length Sepal.Width Petal.Length Petal.Width
+#              -------------------------------------------------
+#                       5.4         3.9          1.7         0.4
+#                       4.9         3.1          1.5         0.1
+#                       4.8         3.1          1.6         0.2
+#                       5.1         3.5          1.4         0.3
+#                         5         3.5          1.6         0.6
+#                         5         3.3          1.4         0.2
+#                       4.4           3          1.3         0.2
+#                       5.1         3.5          1.4         0.2
+#                       5.4         3.4          1.5         0.4
+#                       4.9         3.6          1.4         0.1
+#                       4.6         3.1          1.5         0.2
+#                       4.6         3.2          1.4         0.2
+#                       5.1         3.3          1.7         0.5
+# ...
+# 2020-10-25 19:33:35                                                Page 1 of 3
+#
+# Sponsor: Iris Society                                           Study: flowers
+#                                  Table 2.0
+#                       IRIS Sample Report with Page By
+# 
+#              Species: versicolor
+# 
+#              Sepal.Length Sepal.Width Petal.Length Petal.Width
+#              -------------------------------------------------
+#                       4.9         2.4          3.3           1
+#                       6.3         3.3          4.7         1.6
+#                       6.1         2.8          4.7         1.2
+#                         6         2.9          4.5         1.5
+#                       6.7           3            5         1.7
+#                       5.6           3          4.5         1.5
+#                       5.8         2.7          4.1           1
+#                       6.7         3.1          4.7         1.5
+#                       6.1         2.9          4.7         1.4
+#                         5           2          3.5           1
+#                       5.9         3.2          4.8         1.8
+#                       5.5         2.5            4         1.3
+#                         7         3.2          4.7         1.4
+#                       6.3         2.3          4.4         1.3
+#                       6.1         2.8            4         1.3
+#                         6         2.2            4           1
+#                       5.5         2.6          4.4         1.2
+#                         6         3.4          4.5         1.6
+#                         5         2.3          3.3           1
+#                       5.5         2.4          3.7           1
+# ...
+# 2020-10-25 19:33:35                                                Page 2 of 3
+#
+# Sponsor: Iris Society                                           Study: flowers
+#                                  Table 2.0
+#                       IRIS Sample Report with Page By
+# 
+#              Species: versicolor
+# 
+#              Sepal.Length Sepal.Width Petal.Length Petal.Width
+#              -------------------------------------------------
+#                       6.3         3.4          5.6         2.4
+#                       7.9         3.8          6.4           2
+#                       6.7         3.1          5.6         2.4
+#                       6.2         2.8          4.8         1.8
+#                       6.7         3.3          5.7         2.5
+#                       6.2         3.4          5.4         2.3
+#                       5.6         2.8          4.9           2
+#                       7.7         3.8          6.7         2.2
+#                       7.7         2.6          6.9         2.3
+#                       6.9         3.1          5.4         2.1
+#                       6.5         3.2          5.1           2
+#                       6.1         2.6          5.6         1.4
+#                       5.7         2.5            5           2
+#                       6.5           3          5.8         2.2
+#                       6.3         2.8          5.1         1.5
+#                       7.6           3          6.6         2.1
+#                       6.3         2.5            5         1.9
+# ...
+# 2020-10-25 19:33:35                                                Page 3 of 3 
+}
 \seealso{
 Other report: 
 \code{\link{add_content}()},
