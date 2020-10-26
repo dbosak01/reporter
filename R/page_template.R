@@ -242,7 +242,7 @@ get_title_header <- function(title_hdr, width) {
       if (gp > 0) {
         
 
-          ln <- paste0(stri_pad_right(t, ll - nchar(h)), h)
+          ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
 
         
       } else 
