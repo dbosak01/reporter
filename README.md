@@ -773,10 +773,11 @@ plt <- create_plot(p, height = 4, width = 8) %>%
 
 # Add plot to report
 rpt <- create_report(tmp, output_type = "PDF") %>%
-  page_header("Sponsor", "Study: cars") %>%
   set_margins(top = 1, bottom = 1) %>%
+  options_fixed(font_size = 12) %>% 
+  page_header("Sponsor", "Study: cars") %>%
   add_content(plt) %>%
-  page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  page_footer(Sys.time(), "Confidential", "Page [pg] of [tpg]")
 
 # Write out report
 res <- write_report(rpt)
