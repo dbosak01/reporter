@@ -574,12 +574,12 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
   #tbl <- create_table(dat[1:3, ])
   
   plt <- create_plot(p, height = 4, width = 8) %>% 
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-    page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
+    titles("Figure 1.0", "MTCARS Mileage By Displacement", blank_row = "none") %>%
+    #page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
     footnotes("* Motor Trend, 1974")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
-    page_header("Client", "Study: XYZ") %>%
+    page_header("Sponsor", "Study: cars") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt) %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
