@@ -725,6 +725,8 @@ tbl <- create_table(df, first_row_blank = TRUE) %>%
 
 # Create report and add content
 rpt <- create_report(tmp, output_type = "RTF") %>% 
+  set_margins(top = 1, bottom = 1) %>%
+  options_fixed(font_size = 12) %>% 
   page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
   titles("Table 1.0", "MTCARS Summary Table") %>% 
   add_content(tbl) %>% 
