@@ -436,7 +436,7 @@ test_that("user4: Adverse Events table works.", {
               `ARM D_3` = fmt_cnt_pct(`ARM D_3`, arm_pop["ARM D"]))
   
   
-  final <- bind_rows(df2, df1)
+  final <- bind_rows(df2, df1) %>% arrange(AESOC, AEDECOD)
   
   tbl <- create_table(final, first_row_blank = TRUE) %>% 
     column_defaults(from = `ARM A_1`, to = `ARM D_3`, width = 1) %>% 
