@@ -17,7 +17,6 @@ Client: Experis                                                                 
        Diarrhoea                                                  1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
        Stomach Discomfort                                         1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
        Toothache                                                  1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Infections and infestations
        Rash Pustular                                              1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
@@ -26,14 +25,15 @@ Client: Experis                                                                 
        Upper Respiratory Fungal Infection                         0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
        Upper Respiratory Tract Infection                          1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
        Wound Infection                                            0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinusitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Injury, poisoning and procedural complications
+       Heat Cramps                                                1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
+       Procedural Pain                                            0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
+
+    Investigations
+       Blood Potassium Decreased                                  0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
+       Blood Triglycerides Increased                              1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
+       Vitamin D Decreased                                        1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -42,7 +42,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 1 of 12
+Time                                            Confidential                                    Page 1 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -62,7 +62,6 @@ Time                                            Confidential                    
        Diarrhoea                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Stomach Discomfort                                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Toothache                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Cheilitis                                                  0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
 
     Infections and infestations
        Rash Pustular                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
@@ -71,14 +70,15 @@ Time                                            Confidential                    
        Upper Respiratory Fungal Infection                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Upper Respiratory Tract Infection                          2 ( 10.5%)   0 (  0.0%)   0 (  0.0%)
        Wound Infection                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Sinusitis                                                  1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   2 ( 10.5%)   0 (  0.0%)
-       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Injury, poisoning and procedural complications
+       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Investigations
+       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -87,7 +87,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 2 of 12
+Time                                            Confidential                                    Page 2 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -107,7 +107,6 @@ Time                                            Confidential                    
        Diarrhoea                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Stomach Discomfort                                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Toothache                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Infections and infestations
        Rash Pustular                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
@@ -116,14 +115,15 @@ Time                                            Confidential                    
        Upper Respiratory Fungal Infection                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Upper Respiratory Tract Infection                          2 ( 20.0%)   0 (  0.0%)   0 (  0.0%)
        Wound Infection                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinusitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Bronchitis                                                 0 (  0.0%)   2 ( 20.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
-       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Injury, poisoning and procedural complications
+       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Investigations
+       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -132,7 +132,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 3 of 12
+Time                                            Confidential                                    Page 3 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -152,7 +152,6 @@ Time                                            Confidential                    
        Diarrhoea                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Stomach Discomfort                                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Toothache                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Infections and infestations
        Rash Pustular                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
@@ -161,14 +160,15 @@ Time                                            Confidential                    
        Upper Respiratory Fungal Infection                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Upper Respiratory Tract Infection                          1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
        Wound Infection                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinusitis                                                  0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Tinea Pedis                                                0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
 
     Injury, poisoning and procedural complications
+       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Investigations
+       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -177,7 +177,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 4 of 12
+Time                                            Confidential                                    Page 4 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -190,30 +190,30 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Heat Cramps                                                1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Blood Triglycerides Increased                              1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
 
     Musculoskeletal and connective tissue disorders
        Joint Swelling                                             0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
        Myalgia                                                    0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
        Pain In Extremity                                          1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Nervous system disorders
        Dizziness                                                  1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
        Headache                                                  10 ( 33.3%)   1 (  3.3%)   0 (  0.0%)
-       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Respiratory, thoracic and mediastinal disorders
        Nasal Congestion                                           1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
+
+    Gastrointestinal disorders
+       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    General disorders and administration site conditions
+       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Hepatobiliary disorders
+       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -222,7 +222,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 5 of 12
+Time                                            Confidential                                    Page 5 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -235,30 +235,30 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Fall                                                       1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Musculoskeletal and connective tissue disorders
        Joint Swelling                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Myalgia                                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Pain In Extremity                                          0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Nervous system disorders
        Dizziness                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Headache                                                   1 (  5.3%)   1 (  5.3%)   0 (  0.0%)
-       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Respiratory, thoracic and mediastinal disorders
        Nasal Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Gastrointestinal disorders
+       Cheilitis                                                  0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
+
+    General disorders and administration site conditions
+       Application Site Erythema                                  1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
+
+    Hepatobiliary disorders
+       Gallbladder Disorder                                       0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
+
+    Infections and infestations
+       Paronychia                                                 0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -267,7 +267,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 6 of 12
+Time                                            Confidential                                    Page 6 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -280,30 +280,30 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Musculoskeletal and connective tissue disorders
        Joint Swelling                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Myalgia                                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Pain In Extremity                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Nervous system disorders
        Dizziness                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Headache                                                   0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
-       Burning Sensation                                          1 ( 10.0%)   0 (  0.0%)   0 (  0.0%)
-       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Respiratory, thoracic and mediastinal disorders
        Nasal Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Gastrointestinal disorders
+       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    General disorders and administration site conditions
+       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Hepatobiliary disorders
+       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -312,7 +312,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 7 of 12
+Time                                            Confidential                                    Page 7 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -325,30 +325,30 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Musculoskeletal and connective tissue disorders
        Joint Swelling                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Myalgia                                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Pain In Extremity                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Back Pain                                                  1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
 
     Nervous system disorders
        Dizziness                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Headache                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   1 (  6.2%)
-       Sciatica                                                   1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
 
     Respiratory, thoracic and mediastinal disorders
        Nasal Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Gastrointestinal disorders
+       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    General disorders and administration site conditions
+       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Hepatobiliary disorders
+       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 Date Produced: Time ;  SAS Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -357,7 +357,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 8 of 12
+Time                                            Confidential                                    Page 8 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -370,29 +370,29 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
+       Sinusitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Urinary Tract Infection                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
        Cough                                                      0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    General disorders and administration site conditions
-       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Skin and subcutaneous tissue disorders
        Erythema                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Skin Discomfort                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Surgical and medical procedures
        Cholecystectomy                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Skin Lesion Excision                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+    General disorders and administration site conditions
+       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 
 Date Produced: Time ;  SAS Program: Table3_0.R
@@ -402,7 +402,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                    Page 9 of 12
+Time                                            Confidential                                    Page 9 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -415,29 +415,29 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
+       Sinusitis                                                  1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
+       Urinary Tract Infection                                    0 (  0.0%)   2 ( 10.5%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Fall                                                       1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
        Cough                                                      0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    General disorders and administration site conditions
-       Application Site Erythema                                  1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
 
     Skin and subcutaneous tissue disorders
        Erythema                                                   2 ( 10.5%)   0 (  0.0%)   0 (  0.0%)
        Skin Discomfort                                            1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Surgical and medical procedures
        Cholecystectomy                                            0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
        Skin Lesion Excision                                       0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+    General disorders and administration site conditions
+       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 
 Date Produced: Time ;  SAS Program: Table3_0.R
@@ -447,7 +447,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                   Page 10 of 12
+Time                                            Confidential                                   Page 10 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -460,29 +460,29 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
+       Sinusitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Urinary Tract Infection                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
        Cough                                                      0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    General disorders and administration site conditions
-       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     1 ( 10.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Skin and subcutaneous tissue disorders
        Erythema                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Skin Discomfort                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
 
     Surgical and medical procedures
        Cholecystectomy                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Skin Lesion Excision                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
+    General disorders and administration site conditions
+       Influenza Like Illness                                     1 ( 10.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Bronchitis                                                 0 (  0.0%)   2 ( 20.0%)   0 (  0.0%)
+       Nail Infection                                             0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
 
 
 Date Produced: Time ;  SAS Program: Table3_0.R
@@ -492,7 +492,7 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                   Page 11 of 12
+Time                                            Confidential                                   Page 11 of 20
 Client: Experis                                                                                   Study: BBC
                                                  Table 1.0
                                          Adverse Events by Severity
@@ -505,29 +505,29 @@ Time                                            Confidential                    
        Preferred Term                                                Mild        Mod**        Severe
     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
+       Sinusitis                                                  0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
+       Urinary Tract Infection                                    0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
        Cough                                                      0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Sinus Congestion                                           1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-
-    General disorders and administration site conditions
-       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
     Skin and subcutaneous tissue disorders
        Erythema                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Skin Discomfort                                            0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Pruritus                                                   1 (  6.2%)   2 ( 12.5%)   0 (  0.0%)
 
     Surgical and medical procedures
        Cholecystectomy                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
        Skin Lesion Excision                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+    General disorders and administration site conditions
+       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
 
 
 Date Produced: Time ;  SAS Program: Table3_0.R
@@ -537,4 +537,364 @@ Date Produced: Time ;  SAS Program: Table3_0.R
 % is defined as Number of Subjects divided by Total Reporting
 Note: Adverse events were coded using MedDRA Version 9.1
 
-Time                                            Confidential                                   Page 12 of 12
+Time                                            Confidential                                   Page 12 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM A
+                                                                                 (N=30)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+    Nervous system disorders
+       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Reproductive system and breast disorders
+       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Skin and subcutaneous tissue disorders
+       Pruritus                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Musculoskeletal and connective tissue disorders
+       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Nervous system disorders
+       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
+       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 13 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM B
+                                                                                 (N=19)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+    Nervous system disorders
+       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Reproductive system and breast disorders
+       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Skin and subcutaneous tissue disorders
+       Pruritus                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Musculoskeletal and connective tissue disorders
+       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Nervous system disorders
+       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
+       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 14 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM C
+                                                                                 (N=10)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+    Nervous system disorders
+       Burning Sensation                                          1 ( 10.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Reproductive system and breast disorders
+       Menstrual Discomfort                                       0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
+
+    Skin and subcutaneous tissue disorders
+       Pruritus                                                   0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
+
+    Infections and infestations
+       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Musculoskeletal and connective tissue disorders
+       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Nervous system disorders
+       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
+       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 15 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM D
+                                                                                 (N=16)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+    Nervous system disorders
+       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   1 (  6.2%)
+
+    Reproductive system and breast disorders
+       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+    Skin and subcutaneous tissue disorders
+       Pruritus                                                   1 (  6.2%)   2 ( 12.5%)   0 (  0.0%)
+
+    Infections and infestations
+       Tinea Pedis                                                0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
+
+    Injury, poisoning and procedural complications
+       Muscle Injury                                              0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
+
+    Musculoskeletal and connective tissue disorders
+       Back Pain                                                  1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+
+    Nervous system disorders
+       Sciatica                                                   1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+
+    Respiratory, thoracic and mediastinal disorders
+       Sinus Congestion                                           1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+       Throat Irritation                                          1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 16 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM A
+                                                                                 (N=30)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 17 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM B
+                                                                                 (N=19)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 18 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM C
+                                                                                 (N=10)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 19 of 20
+Client: Experis                                                                                   Study: BBC
+                                                 Table 1.0
+                                         Adverse Events by Severity
+                                             Safety Population
+
+                                                                                  ARM D
+                                                                                 (N=16)
+                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    System Organ Class
+       Preferred Term                                                Mild        Mod**        Severe
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+       Upper Respiratory Tract Congestion                         1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Date Produced: Time ;  SAS Program: Table3_0.R
+* Total Reporting is defined as number of subjects who reported at least one adverse event.
+** Mod = Moderate
+# Episodes is defined as the total number of occurances of adverse events
+% is defined as Number of Subjects divided by Total Reporting
+Note: Adverse events were coded using MedDRA Version 9.1
+
+Time                                            Confidential                                   Page 20 of 20

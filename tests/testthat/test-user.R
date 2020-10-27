@@ -677,5 +677,49 @@ test_that("user7: listings with NA values works.", {
 #   
 # })
 
-
+# Also a special case
+# test_that("user9: table with stub and page by works as expected.", {
+#   
+#   # Data Filepath
+#   dir_data <- file.path(base_path, "data")
+#   
+#   fp <- file.path(base_path, "user/user9")
+#   
+#   # Load Data
+#   dat <- file.path(dir_data, "final.rds") %>% readRDS() 
+#   
+#   dat <- subset(dat, dat$label != "Q1 - Q3")
+#   
+#   arm_pop <- c("ARM A" = 20, "ARM B" = 21, "ARM C" = 19, "ARM D" = 22) 
+#   
+#   # Create Table
+#   tbl <- create_table(dat, width = 9) %>% 
+#     column_defaults(from = `ARM A`, to = `ARM D`, align = "center", width = 1.2) %>% 
+#     page_by(AVISIT, label = "Visit: ", blank_row = "none") %>% 
+#     stub(vars = c(PARAM, label), label  = "Parameter", width = 2) %>% 
+#     define(AVISIT, visible = FALSE) %>% 
+#     define(PARAMCD, visible = FALSE) %>% 
+#     define(PARAM, label_row = TRUE, blank_after = TRUE) %>% 
+#     define(label, label = "Statistic", indent = .25) %>% 
+#     define(`ARM A`,  n = arm_pop["ARM A"]) %>% 
+#     define(`ARM B`,  n = arm_pop["ARM B"]) %>% 
+#     define(`ARM C`,  n = arm_pop["ARM C"]) %>% 
+#     define(`ARM D`,  n = arm_pop["ARM D"]) 
+#   
+#   
+#   rpt <- create_report(fp, output_type = "RTF") %>% 
+#     set_margins(top = 1, bottom = .9) %>% 
+#     page_header("Sponsor: Experis", "Study: ABC") %>% 
+#     titles("Table 3.0", "Summary of Vital Sign Parameters by Visit", 
+#            "Safety Population") %>% 
+#     add_content(tbl) %>% 
+#     footnotes("R Program: VA_Table.R") %>% 
+#     page_footer(paste0("Date Produced: ", fapply(Sys.time(), "%d%b%y %H:%M")), 
+#                 right = "Page [pg] of [tpg]")
+#   
+#   res <- write_report(rpt) 
+#   
+#   expect_equal(file.exists(res$modified_path), TRUE)
+#   
+# })
 

@@ -251,6 +251,11 @@ add_blank_row <- function(x, location="below", vars = NULL){
       rw[1, i] <- rv
   }
 
+  # Set page and page by values
+  if ("..page_by" %in% names(x))
+    rw[1, "..page_by"] <-  x[1, "..page_by"]
+  if ("..page" %in% names(x))
+    rw[1, "..page"] <-  x[1, "..page"]
   
   # Add the blank row to the specified location.
   ret <- x
@@ -279,7 +284,41 @@ add_blank_row <- function(x, location="below", vars = NULL){
   return(ret)
 }
 
+#' @noRd
+compare_rows <- function(row1, row2) {
+ 
+  ret <- TRUE
+  for(i in seq_along(row1)) {
+    
+    if (row1[[i]] != row2[[i]]) {
+      ret <- FALSE
+      break
+    }
+  }
+  
+  return(ret)
+  
+}
 
+#' @noRd
+get_breaks <- function(x) {
+  
+  counter <- 1
+  lastrow <- x[1, ]
+  ret <- c()
+  for(i in seq_len(nrow(x))) {
+    row <- x[i, ]
+    if (!compare_rows(row, lastrow)) {
+      counter <- counter + 1
+      lastrow <- row
+      
+    }
+    ret[length(ret) + 1] <- counter
+    
+  }
+  
+  return(ret)
+}
 
 
 #' @title
@@ -300,21 +339,23 @@ add_blank_row <- function(x, location="below", vars = NULL){
 #' @noRd
 add_blank_rows <- function(x, location = "below", vars = NULL) {
 
-  
-  for (nm in vars)
-    x[[nm]] <- factor(x[[nm]], levels=unique(x[[nm]]))
+  # Seems like this is not needed any more
+  # for (nm in vars)
+  #   x[[nm]] <- factor(x[[nm]], levels=unique(x[[nm]]))
 
   # Alternate to get rid of tidyverse dependency
   if (is.null(vars))
     lst <- list(x)
-  else
-    lst <- split(x, x[vars])
+  else {
+    
+    lst <- split(x, get_breaks(x[vars]))
+    
+  }
 
   # print("Split list")
   # print(lst)
 
   # Create a new list to avoid complaints
-  # from tidyverse
   ret <- list()
 
   # Add blank row for each split
@@ -324,6 +365,8 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
 
   }
 
+  # print("After blank row")
+  # print(ret)
 
   # Combine splits
   ret <- do.call("rbind", ret)

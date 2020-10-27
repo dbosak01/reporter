@@ -689,7 +689,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ### Example 9: RTF and PDF
 
-The **rptr** package supports three types of output: TXT, RTF, and PDF.  
+The **rptr** package supports three types of output: TXT, RTF, and PDF. 
 The package produces TXT reports by default.  If you want to produce RTF
 or PDF output, simply change the output type.  Below is the summary table
 with stub example from above, the only change being that the `output_type`

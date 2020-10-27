@@ -233,9 +233,9 @@ prep_data <- function(dat, ts, char_width, missing_val) {
       }
     }
   }
-  
+
    # print("Blanks")
-   # print(dat)
+    #print(dat)
   
   # Set up label rows
   for (def in defs) {
@@ -248,7 +248,6 @@ prep_data <- function(dat, ts, char_width, missing_val) {
       dat <- add_blank_rows(dat, "label", vars = def$var_c)
     }
   }
-  
   
   # print("Labels")
   # print(dat)
@@ -276,14 +275,14 @@ prep_data <- function(dat, ts, char_width, missing_val) {
     }
   }
   
-  # print("Before stub")
-  # print(dat)
+   #print("Before stub")
+   #print(dat)
 
   # Create stub
   dat <- create_stub(dat, ts)
   
-  # print("After stub")
-  # print(dat)
+   #print("After stub")
+   #print(dat)
     
   # Clear out missing values 
   dat <- clear_missing(dat, missing_val)
