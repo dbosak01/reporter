@@ -575,7 +575,7 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
   
   plt <- create_plot(p, height = 4, width = 8) %>% 
     titles("Figure 1.0", "MTCARS Mileage By Displacement", blank_row = "none") %>%
-    #page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
+    page_by(cyl, "Cylinders: ", align = "left", blank_row = "none") %>% 
     footnotes("* Motor Trend, 1974")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
