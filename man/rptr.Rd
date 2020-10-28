@@ -81,6 +81,11 @@ assumptions and limitations are as follows:
   has no capabilities for sorting.  Use the sorting functionality in 
   Base R or supplemental packages to sort the data prior to sending to
   \strong{rptr}.
+  \item Titles, footnotes, page headers, and page footers must fit in the 
+  available space. If they don't, the \strong{rptr} package will 
+  generated an error.  In these situations, the recommended course of 
+  action is to split the offending string into two or more strings that 
+  fit within the available width.
   \item The \strong{rptr} package will never break a word. That means you 
   cannot set a column width that is less than the length of the longest 
   word.  If you wish to break words, add the breaks with

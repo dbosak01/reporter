@@ -39,7 +39,13 @@ also a limit of 5 page header strings per each side.
 There are two special tokens to generate page numbers: [pg] and [tpg]. 
 Use [pg] to indicate the current page number.  Use [tpg] to indicate the
 total number of pages in the report.  These tokens may be placed anywhere 
-in the page header or page footer.
+in the page header or page footer. 
+
+Each header string must fit within the available space.  The \strong{rptr}
+package will not wrap headers.  If a header string does not fit within the 
+available space, an error will be generated.  In these situations, either
+shorten the header string or split it into multiple headers that each fit 
+within the available space.
 }
 \examples{
 library(rptr)

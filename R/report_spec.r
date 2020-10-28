@@ -732,6 +732,12 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' total number of pages in the report.  These tokens may be placed anywhere 
 #' in the page header or page footer. 
 #' 
+#' Each header string must fit within the available space.  The \strong{rptr}
+#' package will not wrap headers.  If a header string does not fit within the 
+#' available space, an error will be generated.  In these situations, either
+#' shorten the header string or split it into multiple headers that each fit 
+#' within the available space. 
+#' 
 #' @param x The report object.
 #' @param left The left page header text.  May be a single string or a vector
 #' of strings.
@@ -837,6 +843,12 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' the title block may be controlled using the 
 #' \code{blank_row} parameter.
 #'
+#' Each title string must fit within the available space.  The \strong{rptr}
+#' package will not wrap titles.  If a title does not fit within the 
+#' available space, an error will be generated.  In these situations, either
+#' shorten the title or split it into multiple titles that each fit within the
+#' available space. 
+#' 
 #' @param x The object to assign titles to.  Valid objects are a report, or
 #' a table, text, or plot specification.
 #' @param ... A set of title strings.
@@ -953,6 +965,12 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' 
 #' Blank rows above or below the title block may be controlled using the 
 #' \code{blank_row} parameter.
+#' 
+#' Each title string must fit within the available space.  The \strong{rptr}
+#' package will not wrap titles.  If a title does not fit within the 
+#' available space, an error will be generated.  In these situations, either
+#' shorten the title or split it into multiple titles that each fit within the
+#' available space. 
 #'
 #' @param x The object to assign titles to.  Valid objects are a report, or
 #' a table, text, or plot specification.
@@ -1057,6 +1075,12 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' Blank rows above or below the footnote block may be controlled using the 
 #' \code{blank_row} parameter.
 #' 
+#' Each footnote string must fit within the available space.  The \strong{rptr}
+#' package will not wrap footnotes.  If a footnote does not fit within the 
+#' available space, an error will be generated.  In these situations, either
+#' shorten the footnote or split it into multiple footnotes that each fit within 
+#' the available space. 
+#' 
 #' @param x The object to assign footnotes to.
 #' @param ... A set of footnote strings.
 #' @param align The position to align the footnotes.  Valid values are: "left",
@@ -1159,6 +1183,12 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' 
 #' Use the \code{blank_row} parameter to control the blank space above the 
 #' page footer.
+#' 
+#' Each footer string must fit within the available space.  The \strong{rptr}
+#' package will not wrap footer.  If a footer string does not fit within the 
+#' available space, an error will be generated.  In these situations, either
+#' shorten the footer string or split it into multiple footers that each fit 
+#' within the available space. 
 #'
 #' @param x The report spec object.
 #' @param left The left page footer text.  May be a single string or a vector

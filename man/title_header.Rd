@@ -47,6 +47,12 @@ content breaks to the next page.
 One title header function accepts up to 10 titles. Blank rows above or below 
 the title block may be controlled using the 
 \code{blank_row} parameter.
+
+Each title string must fit within the available space.  The \strong{rptr}
+package will not wrap titles.  If a title does not fit within the 
+available space, an error will be generated.  In these situations, either
+shorten the title or split it into multiple titles that each fit within the
+available space.
 }
 \examples{
 library(rptr)
