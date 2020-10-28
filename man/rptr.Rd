@@ -14,7 +14,7 @@ page.
 }
 \details{
 The \strong{rptr} package creates regulatory-style, statistical reports. It 
-was designed
+was designed to create tables, listings, and figures (TLFs) 
 for use in the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
 for any industry.  The package is written primarily in Base R, and has 
@@ -58,16 +58,18 @@ The \strong{rptr} package contains the following key features:
   \item \code{\link{create_plot}} to define a plot 
   \item \code{\link{write_report}} to write out the report
 }
+}
 
-#' @section Package Assumptions and Limitations:
+\section{Package Assumptions and Limitations}{
+
 Note that the \strong{rptr} package is built on several assumptions, and 
 has some limitations.  Those
 assumptions and limitations are as follows:
 \itemize{
   \item The current version supports a monospace, fixed-width font only.
   Variable width fonts will be supported in future versions.
-  \item RTF and PDF output are actually text reports dumped into RTF
-  and PDF.  Future versions will support native RTF and PDF file formats.
+  \item RTF and PDF output are actually text reports with an RTF
+  or PDF wrapper.  Future versions will support native RTF and PDF file formats.
   \item The package assumes that, except for formatting and layout, 
   the incoming data is ready for 
   printing. The \strong{rptr} package has no capabilities to perform 
@@ -82,9 +84,9 @@ assumptions and limitations are as follows:
   \item The \strong{rptr} package will never break a word. That means you 
   cannot set a column width that is less than the length of the longest 
   word.  If you wish to break words, add the breaks with
-  \code{link[base]{strwrap}} or an equivalent function before reporting.  
+  \code{\link[base]{strwrap}} or an equivalent function before reporting.  
   \item The package will make a best guess on column widths based on the 
-  longest word in the data or column header.  To override the best guess,
+  width of data and column headers.  To override the best guess,
   set the column width directly by placing a width attribute on the variable
   or by using a \code{\link{define}} function. 
   \item The max automatic column width
