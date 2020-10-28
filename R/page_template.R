@@ -117,7 +117,10 @@ get_titles <- function(titles, width) {
             ln <- stri_pad_both(t, ll)
           
         } else 
-          stop("Title exceeds available width.")
+          stop(paste0("Title exceeds available width.",
+                      "\nTitle: ", t,
+                      "\nTitle width: ", nchar(t),
+                      "\nLine length: ", ll))
         
         
         ret[length(ret) + 1] <- ln
@@ -303,7 +306,10 @@ get_footnotes <- function(footnotes, width) {
             ln <- stri_pad_both(f, ll)
           
         } else 
-          stop("Footnote exceeds available width.")
+          stop(paste0("Footnote exceeds available width.",
+                      "\nFootnote: ", f,
+                      "\nFootnote length: ", nchar(f), 
+                      "\nLine Length: ", ll))
         
         
         ret[length(ret) + 1] <- ln

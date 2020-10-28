@@ -723,3 +723,29 @@ test_that("user7: listings with NA values works.", {
 #   
 # })
 
+# Another special case
+# test_that("user10: Combined report works as expected", {
+#   
+#   
+#   dm_table <- readRDS(file.path(base_path, "data/DM_Table.rds"))
+#   ae_table <- readRDS(file.path(base_path, "data/AE_Table.rds"))
+#   lb_table <- readRDS(file.path(base_path, "data/LB_Table.rds"))
+#   vs_table <- readRDS(file.path(base_path, "data/VS_Table.rds"))
+#   
+#   
+#   rpt <- create_report("rtf/Combined_Table", output_type = "RTF") %>% 
+#     set_margins(top = 1, bottom = .9) %>% 
+#     page_header("Sponsor: Experis", "Study: ABC") %>% 
+#     add_content(dm_table) %>% 
+#     add_content(ae_table) %>% 
+#     add_content(vs_table) %>% 
+#     add_content(lb_table) %>% 
+#     page_footer(paste0("Date Produced: ", fapply(Sys.time(), "%d%b%y %H:%M")), 
+#                 right = "Page [pg] of [tpg]")
+#   
+#   
+#   res <- write_report(rpt) 
+#   
+#   
+#   
+# })

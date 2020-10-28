@@ -242,7 +242,7 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   ls <- rs$line_size
   if (length(rws) > 0)
-    ls <- nchar(rws[1])
+    ls <- max(nchar(rws))
   
   if (!is.null(ts$title_hdr))
     ttls <- get_title_header(ts$title_hdr, ls - 1)
@@ -301,7 +301,7 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
     shdrs <- get_spanning_header(rs, ts, pi)   
     hdrs <- get_table_header(rs, ts, pi)  
   }
-  
+
   if (is.null(ts$title_hdr))
     ttls <- get_titles(ts$titles, rs$line_size) 
   else 
