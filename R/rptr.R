@@ -51,6 +51,41 @@
 #'   \item \code{\link{write_report}} to write out the report
 #' }
 #' 
+#' #' @section Package Assumptions and Limitations:
+#' Note that the \strong{rptr} package is built on several assumptions, and 
+#' has some limitations.  Those
+#' assumptions and limitations are as follows:
+#' \itemize{
+#'   \item The current version supports a monospace, fixed-width font only.
+#'   Variable width fonts will be supported in future versions.
+#'   \item RTF and PDF output are actually text reports dumped into RTF
+#'   and PDF.  Future versions will support native RTF and PDF file formats.
+#'   \item The package assumes that, except for formatting and layout, 
+#'   the incoming data is ready for 
+#'   printing. The \strong{rptr} package has no capabilities to perform 
+#'   calculations, summaries, grouping, or derivations.  Use the many 
+#'   capabilities in R to perform these operations prior to sending data
+#'   to the \strong{rptr} package.
+#'   \item It is assumed that the incoming data is sorted as desired.  
+#'   The \strong{rptr} package
+#'   has no capabilities for sorting.  Use the sorting functionality in 
+#'   Base R or supplemental packages to sort the data prior to sending to
+#'   \strong{rptr}.
+#'   \item The \strong{rptr} package will never break a word. That means you 
+#'   cannot set a column width that is less than the length of the longest 
+#'   word.  If you wish to break words, add the breaks with
+#'   \code{link[base]{strwrap}} or an equivalent function before reporting.  
+#'   \item The package will make a best guess on column widths based on the 
+#'   longest word in the data or column header.  To override the best guess,
+#'   set the column width directly by placing a width attribute on the variable
+#'   or by using a \code{\link{define}} function. 
+#'   \item The max automatic column width
+#'   is 4 inches.  Longer data values will be wrapped.
+#'   \item The package support plots from \strong{ggplot2}. These plots
+#'   can be added to RTF and PDF output types.  The package does not support
+#'   Base R plots.
+#' }
+#' 
 #' @docType package
 #' @name rptr
 NULL

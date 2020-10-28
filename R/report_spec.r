@@ -1685,7 +1685,7 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
   #   ret <- write_report_docx(x, ...)
   # }
   
-  invisible(ret)
+  return(ret)
 }
 
 
