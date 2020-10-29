@@ -193,7 +193,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 }
 \seealso{
 \code{\link{create_report}} to create a report, 
-\code{\link{create_plot}} to craete a plot,
+\code{\link{create_plot}} to create a plot,
 \code{\link{create_text}} to create text content, and 
 \code{\link{add_content}} to append content to a report.  Also see
 the \code{\link{titles}}, \code{\link{footnotes}}, and \code{\link{page_by}}

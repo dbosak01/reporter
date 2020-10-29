@@ -151,7 +151,7 @@ print.text_spec <- function(x, ..., verbose = FALSE){
     if (!is.null(x$text)) {
       
       wc <- lengths(strsplit(x$text, " "))
-      cat(grey60(wc %+% " words\n"))
+      cat(grey60(paste0(as.character(wc), " words\n")))
       
       cat("- text: ")
       if (nchar(x$text) > 100)

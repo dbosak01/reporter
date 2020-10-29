@@ -108,7 +108,7 @@
 #' will have a header. 
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
-#' \code{\link{create_plot}} to craete a plot,
+#' \code{\link{create_plot}} to create a plot,
 #' \code{\link{create_text}} to create text content, and 
 #' \code{\link{add_content}} to append content to a report.  Also see
 #' the \code{\link{titles}}, \code{\link{footnotes}}, and \code{\link{page_by}}
@@ -1120,13 +1120,13 @@ print.table_spec <- function(x, ..., verbose = FALSE){
     
     # Print header
     cat(grey60("# A table specification:\n"))
-    cat("- data: " %+% dtyp %+% "'" %+% x$dataname %+% 
-                 "' " %+% nrow(x$data) %+% " rows " %+% ncol(x$data) %+%
-                 " cols\n")
+    cat(paste0("- data: ", dtyp, "'", x$dataname,
+                 "' ", nrow(x$data), " rows ", ncol(x$data),
+                 " cols\n"))
     
     if (!is.null(x$show_cols)) {
-      cat("- show_cols: " %+% 
-            paste(as.character(x$show_cols), collapse = " ") %+% "\n")
+      cat(paste0("- show_cols: ",
+            paste(as.character(x$show_cols), collapse = " "), "\n"))
       
     }
     
@@ -1139,17 +1139,17 @@ print.table_spec <- function(x, ..., verbose = FALSE){
       else 
         ua <- paste(x$use_attributes, collapse = " ")
       
-      cat("- use_attributes: " %+%  ua %+% "\n")
+      cat(paste0("- use_attributes: ",  ua, "\n"))
       
   
     }
     
     if (!is.null(x$width))
-      cat("- width: " %+% as.character(x$width) %+% "\n")
+      cat(paste0("- width: ", as.character(x$width), "\n"))
     
     if (!is.null(x$headerless)) {
       if (x$headerless != FALSE)
-        cat("- headerless: " %+% as.character(x$headerless) %+% "\n")
+        cat(paste0("- headerless: ", as.character(x$headerless), "\n"))
     }
     
     if (!is.null(x$page_by)) {
@@ -1169,14 +1169,14 @@ print.table_spec <- function(x, ..., verbose = FALSE){
       
       for (def in x$col_spans) {
         
-        cat("- spanning_header: from='" %+% def$from %+% 
-            "' to='" %+% def$to %+% "' ")
+        cat(paste0("- spanning_header: from='", def$from,
+            "' to='", def$to, "' "))
         
         if (!is.null(def[["label"]]))
-          cat("'" %+% def[["label"]] %+% "' ")
+          cat(paste0("'", def[["label"]], "' "))
         
         if (!is.null(def$level)) 
-          cat("level=" %+% def$level %+% " ")
+          cat(paste0("level=", def$level, " "))
 
         
         cat("\n")
@@ -1190,30 +1190,30 @@ print.table_spec <- function(x, ..., verbose = FALSE){
       
       for (def in x$col_defs) {
 
-        cat("- define: " %+% def$var_c %+% " ")
+        cat(paste0("- define: ", def$var_c, " "))
         if (!is.null(def[["label"]]))
-          cat("'" %+% def[["label"]] %+% "' ")
+          cat(paste0("'", def[["label"]], "' "))
 
         if (!is.null(def$width)) 
-          cat("width=" %+% def$width %+% " ")
+          cat(paste0("width=", def$width, " "))
         
         if (!is.null(def$align)) 
-          cat("align='" %+% def$align %+% "' ")
+          cat(paste0("align='", def$align, "' "))
         
         if (def$visible == FALSE) 
-          cat("visible='" %+% def$visible %+% "' ")
+          cat(paste0("visible='", def$visible, "' "))
         
         if (def$id_var == TRUE) 
-          cat("id_var='" %+% def$id_var %+% "' ")
+          cat(paste0("id_var='", def$id_var, "' "))
         
         if (def$dedupe == TRUE) 
-          cat("dedupe='" %+% def$dedupe %+% "' ")
+          cat(paste0("dedupe='", def$dedupe, "' "))
 
         if (def$page_wrap == TRUE) 
-          cat("page_wrap='" %+% def$page_wrap %+% "' ")
+          cat(paste0("page_wrap='", def$page_wrap, "' "))
         
         if (def$page_break == TRUE) 
-          cat("page_break='" %+% def$page_break %+% "' ")
+          cat(paste0("page_break='", def$page_break, "' "))
         
         cat("\n")
         

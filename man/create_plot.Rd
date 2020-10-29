@@ -32,6 +32,10 @@ function will preserve any other geometries you apply to the plot.  See
 the \code{\link{add_content}} function to control page breaking and 
 blanks spaces above or below the plot.    
 
+A plot specification accepts a \code{\link{page_by}} function.  If a page by
+is applied to the plot, the plot data will be subset by the page by 
+variable, and re-run for each subset.
+
 The plot specification also accepts titles and footnotes.  See the 
 \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 details.

@@ -2,21 +2,6 @@
 
 # Utility Functions -------------------------------------------------------
 
-#' @title
-#' Simple Concatenation operator
-#'
-#' @description
-#' A simple operator for concatenating strings.  This operator
-#' is based on \code{paste0()}, and performs the same function, but with a
-#' more compact syntax.
-#' @param x The left string to concatenate.
-#' @param y The right string to concatenate.
-#' @examples
-#' "Today is " %+% weekdays(Sys.Date()) %+% "."
-#' @seealso [paste0()]
-#' @noRd
-`%+%` <- function(x, y)paste0(x,y)
-
 
 #' gen_groups
 #'

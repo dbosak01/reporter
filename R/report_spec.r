@@ -1801,23 +1801,23 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     if (!is.null(x$pages)) {
       if (!is.null(x$preview)) {
         if (x$preview > 0)
-          cat(grey60(as.character(x$pages) %+% " pages") %+% red(" PREVIEW"))
+          cat(grey60(paste0(as.character(x$pages), " pages"), red(" PREVIEW")))
         else
-          cat(grey60(as.character(x$pages) %+% " pages"))
+          cat(grey60(paste0(as.character(x$pages), " pages")))
       } else {
         
-        cat(grey60(as.character(x$pages) %+% " pages")) 
+        cat(grey60(paste0(as.character(x$pages), " pages")))
       }
     }
     
     # Print key attributes
     cat("\n")
-    cat("- file_path: '" %+% x$modified_path %+% "'\n")
-    cat("- output_type: " %+% x$output_type %+% "\n")
-    cat("- units: " %+% x$units %+% "\n")
-    cat("- orientation: " %+% x$orientation %+% "\n")
+    cat(paste0("- file_path: '", x$modified_path, "'\n"))
+    cat(paste0("- output_type: ", x$output_type, "\n"))
+    cat(paste0("- units: ", x$units, "\n"))
+    cat(paste0("- orientation: ", x$orientation, "\n"))
     if (!is.null(x$line_size)) 
-      cat("- line size/count: " %+% x$line_size %+% "/" %+% x$line_count %+% "\n")
+      cat(paste0("- line size/count: ", x$line_size, "/", x$line_count, "\n"))
     
     # if (!is.null(x$column_widths)) {
     #   cat("- column widths: \n")
