@@ -73,7 +73,7 @@
 #'   \strong{rptr}.
 #'   \item Titles, footnotes, page headers, and page footers must fit in the 
 #'   available space. If they don't, the \strong{rptr} package will 
-#'   generated an error.  In these situations, the recommended course of 
+#'   generate an error.  In these situations, the recommended course of 
 #'   action is to split the offending string into two or more strings that 
 #'   fit within the available width.
 #'   \item The \strong{rptr} package will never break a word. That means you 
@@ -81,11 +81,12 @@
 #'   word.  If you wish to break words, add the breaks with
 #'   \code{\link[base]{strwrap}} or an equivalent function before reporting.  
 #'   \item The package will make a best guess on column widths based on the 
-#'   width of data and column headers.  To override the best guess,
+#'   width of the data and column headers.  To override the best guess,
 #'   set the column width directly by placing a width attribute on the variable
-#'   or by using a \code{\link{define}} function. 
+#'   or by using the \code{\link{column_defaults}} or 
+#'   \code{\link{define}} functions. 
 #'   \item The max automatic column width
-#'   is 4 inches.  Longer data values will be wrapped.
+#'   is 5 inches.  Longer data values will be wrapped.
 #'   \item The package support plots from \strong{ggplot2}. These plots
 #'   can be added to RTF and PDF output types.  The package does not support
 #'   Base R plots.

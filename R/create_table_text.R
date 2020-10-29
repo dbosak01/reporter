@@ -130,7 +130,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(widths(dat))
   
   # Get column widths
-  widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width)
+  widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width, rs$units)
   # print("Widths UOM")
   # print(widths_uom)
   

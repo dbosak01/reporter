@@ -1453,3 +1453,51 @@ test_that("test46: Another title_header test to check alignment.", {
   
 })
 
+
+test_that("test47: CM Table with long cell and label values wraps as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test47.out")
+  
+  
+  # Setup
+  arm <- c(rep("A", 5), rep("B", 5))
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa and more and more and more and more and more and more", 
+            "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  
+  
+  # Create data frame
+  df <- data.frame(arm, subjid, name, sex, age)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID for a patient", n = 10, align = "left", 
+           width = 1) %>%
+    define(name, label = "Subject Name") %>%
+    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(age, label = "Age", n = 10) %>%
+    define(arm, label = "Arm",
+           blank_after = TRUE,
+           dedupe = TRUE)
+  
+  
+  rpt <- create_report(fp, units = "cm") %>%
+    titles("Table 1.0", align = "center") %>%
+    add_content(tbl1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})

@@ -336,12 +336,21 @@ create_stub <- function(dat, ts) {
 # @import graphics
 #' @import stringi
 #' @noRd
-get_col_widths <- function(dat, ts, labels, char_width) {
+get_col_widths <- function(dat, ts, labels, char_width, uom) {
   
   defs <- ts$col_defs
-  max_col_width = 5
-  min_col_width = .1
-  padding_buffer = .05
+  if (uom == "cm") {
+    #12.7
+    max_col_width = 12.7  
+    min_col_width = .254
+    padding_buffer = .127
+  } else {
+    max_col_width = 5  
+    min_col_width = .1
+    padding_buffer = .05
+  }
+  
+
   nms <- names(labels)
   #print(nms)
   dwidths <- c()
@@ -435,7 +444,11 @@ get_col_widths <- function(dat, ts, labels, char_width) {
     if (sum(ret) + blnkw < ts$width) {
       ret <- ret * ((ts$width - blnkw) / sum(ret))
     } else {
-      # Come back to this later
+      # If table width is less than the sum of the columns.
+      # This means the table should wrap to the next page, 
+      # but each page should be set to the table width.
+      # Having a hard time figuring out how to do this.
+      # Will come back to it later.
       # print("Here")
       # ret2 <- c()
       # pg <- c() 
