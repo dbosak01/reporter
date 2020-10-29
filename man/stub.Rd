@@ -4,15 +4,7 @@
 \alias{stub}
 \title{Defines a report stub}
 \usage{
-stub(
-  x,
-  vars,
-  label = "",
-  label_align = NULL,
-  align = "left",
-  width = NULL,
-  format = NULL
-)
+stub(x, vars, label = "", label_align = NULL, align = "left", width = NULL)
 }
 \arguments{
 \item{x}{The table spec.}
@@ -31,8 +23,6 @@ the \code{align} parameter.}
 'right', 'center', and 'centre'.  Default is 'left'.}
 
 \item{width}{The width of the stub, in report units of measure.}
-
-\item{format}{A format to apply to the stub column.}
 }
 \value{
 The modified table spec.

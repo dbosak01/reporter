@@ -56,10 +56,14 @@
 #' has some limitations.  Those
 #' assumptions and limitations are as follows:
 #' \itemize{
+#'   \item The package assumes that displaying the data in the proper
+#'   layout is more important than aesthetic considerations like colors,
+#'   borders, fonts, striping, etc.  
 #'   \item The current version supports a monospace, fixed-width font only.
 #'   Variable width fonts will be supported in future versions.
 #'   \item RTF and PDF output are actually text reports with an RTF
-#'   or PDF wrapper.  Future versions will support native RTF and PDF file formats.
+#'   or PDF wrapper.  Future versions will support native RTF and PDF file 
+#'   formats.
 #'   \item The package assumes that, except for formatting and layout, 
 #'   the incoming data is ready for 
 #'   printing. The \strong{rptr} package has no capabilities to perform 

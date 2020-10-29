@@ -35,13 +35,15 @@ to the label column attribute, it will be used as a default.  Otherwise,
 the column name will be used.}
 
 \item{format}{The format to use for the column data.  The format can 
-be a string format, a formatting function, a lookup list, or a format object. 
+be a string format, a formatting function, a lookup list, a user-defined
+format, or a formatting list. 
 All formatting is performed by the \code{\link[fmtr]{fapply}} function from
 the \code{\link[fmtr]{fmtr}} package.  For 
 a list of common formatting codes, see \link[fmtr]{FormattingStrings}.}
 
 \item{align}{The column alignment.  Valid values are "left", "right", 
-"center", and "centre".}
+"center", and "centre".  By default, text columns will be left aligned
+and numeric columns will be right aligned.}
 
 \item{label_align}{How to align the header labels for this column.
 Valid values are "left", "right", "center", and "centre".  By default, 
@@ -77,7 +79,7 @@ are also moved to the far left of the page.}
 \item{page_wrap}{Force a page wrap on this variable.  A page wrap is a vertical
 page break necessary when the table is too wide to fit on a single page.
 The excess variables will be wrapped to the next page.  Page wraps will
-continue until all columns are displayed.  Use the \code{id_vars}
+continue until all columns are displayed.  Use the \code{id_var}
 parameter to identify rows across wrapped pages.}
 
 \item{page_break}{You may control when page breaks occur by defining
@@ -121,7 +123,7 @@ to assigning the data frame to \code{create_table}.  See
 The \code{define} function is used to provide additional control over
 column appearance.  For example, you may use the \code{define} function
 to assign an "N=" population count, eliminate duplicates from the column,
-or place a blank row after each unique value of the column. 
+or place a blank row after each unique value of the variable. 
 See the parameter documentation for additional options.
 
 Some of the parameters on the \code{define} function are used in the 
@@ -131,7 +133,7 @@ information.
 A single column definition may be defined for multiple variables.  
 To create a definition for multiple variables, pass the variables as
 a quoted or unquoted vector.  When creating a single definition for 
-multiple variable, the parameters will be unified across those variables.
+multiple variables, the parameters will be unified across those variables.
 Note that some parameters (such as \code{page_break}) may only be set
 once per report, and cannot be shared across multiple variables.
 }

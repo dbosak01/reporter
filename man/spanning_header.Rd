@@ -17,12 +17,12 @@ spanning_header(
 \arguments{
 \item{x}{The table object to add spanning headers to.}
 
-\item{from}{The starting column to span.  The spanning columns are defined as
-range of columns 'from' and 'to'. The column names identified by position, 
+\item{from}{The starting column to span.  Spanning columns are defined as
+range of columns 'from' and 'to'. The columns may be identified by position, 
 or by quoted or unquoted variable names.
 The \code{from} parameter is required.}
 
-\item{to}{The ending column to span.  The spanning columns are defined as
+\item{to}{The ending column to span.  Spanning columns are defined as
 range of columns 'from' and 'to'. The columns may be identified by position,
 or by quoted or unquoted variable names.
 The \code{to} parameter is required.}
@@ -52,11 +52,11 @@ feature of statistical reports.
 \details{
 A spanning header is a label and underline that spans one or more 
 columns.  A spanning header is defined minimally by identifying 
-the columns to be spanned, and a label.  A label alignment and "N="
+column range to be spanned, and a label.  A label alignment and "N="
 value may also be supplied.
 
 The spanning column range is defined by the \code{from} and \code{to} 
-parameters.  The range identified a continuous set of variables on the data.
+parameters.  The range identifies a continuous set of variables on the data.
 Variables can be identified by position, a quoted variable name, or an 
 unquoted variable name.
 }

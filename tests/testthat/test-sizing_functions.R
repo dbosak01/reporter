@@ -202,7 +202,6 @@ test_that("get_col_formats works as expected", {
   dat
   
   tbl <- create_table(dat) %>% 
-    stub(c("mpg_cat", "name"), label = "Stub", format = "%s") %>% 
     define(cyl, label = "Cylinders", format = "%.1f") %>% 
     define(disp, label = "Displacement", format = "%.2f")
   
@@ -212,7 +211,7 @@ test_that("get_col_formats works as expected", {
   expect_equal(lbls[["cyl"]], "%.1f")
   expect_equal(is.null(lbls[["hp"]]), TRUE)
   expect_equal(lbls[["disp"]], "%.2f")
-  expect_equal(lbls[["stub"]], "%s")
+
   
 })
 

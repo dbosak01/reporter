@@ -62,7 +62,7 @@
 #' counts to the table header.  These population counts are added to column
 #' labels and spanning header labels using the \code{n} parameter on the 
 #' \code{\link{define}} or \code{\link{spanning_header}} functions.  The 
-#' population count is formatted according to  
+#' population count is formatted according to the  
 #' \code{n_format} parameter on \code{create_table}. The \strong{rptr} 
 #' package provides four population count formatting functions.  
 #' You may create your own formatting function 
@@ -70,14 +70,17 @@
 #' \code{\link{upcase_parens}} for further details.
 #' 
 #' @param x The data frame or tibble from which to create the table object.
-#' @param show_cols Whether to show all columns by default.  Valid values are
+#' @param show_cols This parameter gives control over which columns in the 
+#' input data to display on the report by default.  Valid values are
 #' 'all', 'none', a vector of quoted column names, or a vector of 
 #' column positions.  'all' means show all columns, 
 #' unless overridden by the column definitions.  
 #' 'none' means don't show any 
 #' columns unless specified in the column definitions.  If a vector of column
-#' names is supplied, those columns will be shown in the report in the order
-#' specified, whether or not a definition is supplied.  
+#' names or positions is supplied, those columns will be shown in the report 
+#' in the order specified, whether or not a definition is supplied. See the 
+#' \code{\link{define}} function for additional information on how to
+#' show/hide report columns.
 #' @param use_attributes Whether or not to use any formatting attributes assigned
 #' to the columns on the input data frame.  Valid values are 'all', 'none', or
 #' a vector of attribute names to use.  Possible attributes that may be used
@@ -86,7 +89,7 @@
 #' a label to the 'label' attribute of a data frame column, pass that data 
 #' frame into \code{create_table}, and don't override the label value on a 
 #' \code{define} function, the label will appear as a column header on the
-#' table.  The \code{use_attributes} parameter allows you to control the default
+#' table.  The \code{use_attributes} parameter allows you to control this default
 #' behavior, and use or ignore data frame attributes as desired.  
 #' @param width The expected width of the table in the report units of 
 #' measure.  By default, the width setting is NULL, and columns will be sized
@@ -100,11 +103,16 @@
 #' Valid values are TRUE or FALSE.  Default is FALSE.
 #' @param n_format The formatting function to apply to the header "N=" label. 
 #' The default formatting function is \code{\link{upcase_parens}}. 
-#' @param headerless Whether to create a headerless table.  Default is FALSE. 
+#' @param headerless Whether to create a headerless table. A headerless
+#' table displays the table data only. Default is FALSE, meaning the table
+#' will have a header. 
 #' @family table
-#' @seealso \code{\link{create_report}} to create  report, 
+#' @seealso \code{\link{create_report}} to create a report, 
+#' \code{\link{create_plot}} to craete a plot,
 #' \code{\link{create_text}} to create text content, and 
-#' \code{\link{add_content}} to append content to a report.
+#' \code{\link{add_content}} to append content to a report.  Also see
+#' the \code{\link{titles}}, \code{\link{footnotes}}, and \code{\link{page_by}}
+#' functions to add those items to the table if desired.
 #' @examples 
 #' library(rptr)
 #' library(magrittr)
@@ -241,7 +249,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' The \code{define} function is used to provide additional control over
 #' column appearance.  For example, you may use the \code{define} function
 #' to assign an "N=" population count, eliminate duplicates from the column,
-#' or place a blank row after each unique value of the column. 
+#' or place a blank row after each unique value of the variable. 
 #' See the parameter documentation for additional options.
 #' 
 #' Some of the parameters on the \code{define} function are used in the 
@@ -251,7 +259,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' A single column definition may be defined for multiple variables.  
 #' To create a definition for multiple variables, pass the variables as
 #' a quoted or unquoted vector.  When creating a single definition for 
-#' multiple variable, the parameters will be unified across those variables.
+#' multiple variables, the parameters will be unified across those variables.
 #' Note that some parameters (such as \code{page_break}) may only be set
 #' once per report, and cannot be shared across multiple variables.  
 #' 
@@ -263,12 +271,14 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' to the label column attribute, it will be used as a default.  Otherwise,
 #' the column name will be used.
 #' @param format The format to use for the column data.  The format can 
-#' be a string format, a formatting function, a lookup list, or a format object. 
+#' be a string format, a formatting function, a lookup list, a user-defined
+#' format, or a formatting list. 
 #' All formatting is performed by the \code{\link[fmtr]{fapply}} function from
 #' the \code{\link[fmtr]{fmtr}} package.  For 
 #' a list of common formatting codes, see \link[fmtr]{FormattingStrings}.
 #' @param align The column alignment.  Valid values are "left", "right", 
-#' "center", and "centre".
+#' "center", and "centre".  By default, text columns will be left aligned
+#' and numeric columns will be right aligned.
 #' @param label_align How to align the header labels for this column.
 #' Valid values are "left", "right", "center", and "centre".  By default, 
 #' the label alignment will follow any alignment set on the column \code{align}
@@ -296,7 +306,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @param page_wrap Force a page wrap on this variable.  A page wrap is a vertical
 #' page break necessary when the table is too wide to fit on a single page.
 #' The excess variables will be wrapped to the next page.  Page wraps will
-#' continue until all columns are displayed.  Use the \code{id_vars}
+#' continue until all columns are displayed.  Use the \code{id_var}
 #' parameter to identify rows across wrapped pages. 
 #' @param page_break You may control when page breaks occur by defining
 #' a page break variable yourself, and setting this parameter to TRUE for
@@ -495,7 +505,7 @@ define_c <- function(var, label = NULL, format = NULL,
 #' The \code{column_defaults} function contains a subset of the parameters
 #' on the \code{\link{define}} function that can be shared across variables.
 #' Any attributes set by \code{column_defaults} can be overridden by 
-#' the \code{define} function, if desired.  The overall purpose of the 
+#' the \code{define} function.  The overall purpose of the 
 #' function is to minimize redundancy in column definitions. 
 #' @details 
 #' Column defaults can be specified for multiple variables.  By default,
@@ -518,17 +528,18 @@ define_c <- function(var, label = NULL, format = NULL,
 #' @param x A table spec.
 #' @param vars The variable name or names to define defaults for.  Variable
 #' names may be quoted or unquoted.  The parameter will also accept 
-#' integer column positions instead of names.  For multiple variable names, 
-#' pass them as a vector. 
+#' integer column positions instead of names.  For multiple variables, 
+#' pass the names or positions as a vector. 
 #' @param from The variable name or position that starts a column range.  
 #' If passed as a variable name, it may be quoted or unquoted.
 #' @param to The variable name or position that ends a column range. 
 #' If passed as a variable name, it 
 #' may be quoted or unquoted.
 #' @param label The label to use for a column header.  This label will be 
-#' applied to all variable assigned to the \code{column_defaults} function.
+#' applied to all variables assigned to the \code{column_defaults} function.
 #' @param format The format to use for the column data.  The format can 
-#' be a string format, a formatting function, a lookup list, or a format object. 
+#' be a string format, a formatting function, a lookup list, a user-defined
+#' format, or a formatting list. 
 #' All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
 #' additional information, see the help for that package.
 #' @param align The column alignment.  Valid values are "left", "right", 
@@ -709,19 +720,19 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @details 
 #' A spanning header is a label and underline that spans one or more 
 #' columns.  A spanning header is defined minimally by identifying 
-#' the columns to be spanned, and a label.  A label alignment and "N="
+#' column range to be spanned, and a label.  A label alignment and "N="
 #' value may also be supplied.
 #' 
 #' The spanning column range is defined by the \code{from} and \code{to} 
-#' parameters.  The range identified a continuous set of variables on the data.
+#' parameters.  The range identifies a continuous set of variables on the data.
 #' Variables can be identified by position, a quoted variable name, or an 
 #' unquoted variable name.
 #' @param x The table object to add spanning headers to.
-#' @param from The starting column to span.  The spanning columns are defined as
-#' range of columns 'from' and 'to'. The column names identified by position, 
+#' @param from The starting column to span.  Spanning columns are defined as
+#' range of columns 'from' and 'to'. The columns may be identified by position, 
 #' or by quoted or unquoted variable names.
 #' The \code{from} parameter is required.  
-#' @param to The ending column to span.  The spanning columns are defined as
+#' @param to The ending column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position,
 #' or by quoted or unquoted variable names.
 #' The \code{to} parameter is required. 
@@ -919,7 +930,6 @@ spanning_header <- function(x, from, to, label = "",
 #' @param width The width of the stub, in report units of measure.
 #' @param align How to align the stub column.  Valid values are 'left', 
 #' 'right', 'center', and 'centre'.  Default is 'left'.
-#' @param format A format to apply to the stub column.
 #' @return The modified table spec.
 #' @family table
 #' @examples 
@@ -996,7 +1006,7 @@ spanning_header <- function(x, from, to, label = "",
 #' #
 #' @export
 stub <- function(x, vars, label = "", label_align = NULL, 
-                 align = "left", width = NULL, format = NULL) {
+                 align = "left", width = NULL) {
   
   def <- structure(list(), class = c("stub_def", "list"))
   
@@ -1035,7 +1045,6 @@ stub <- function(x, vars, label = "", label_align = NULL,
   def$align <- align
   def$vars <- vars_c
   def$width <- width
-  def$format <- format
   
   x$stub <- def
   

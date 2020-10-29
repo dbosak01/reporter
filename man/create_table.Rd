@@ -17,14 +17,17 @@ create_table(
 \arguments{
 \item{x}{The data frame or tibble from which to create the table object.}
 
-\item{show_cols}{Whether to show all columns by default.  Valid values are
+\item{show_cols}{This parameter gives control over which columns in the 
+input data to display on the report by default.  Valid values are
 'all', 'none', a vector of quoted column names, or a vector of 
 column positions.  'all' means show all columns, 
 unless overridden by the column definitions.  
 'none' means don't show any 
 columns unless specified in the column definitions.  If a vector of column
-names is supplied, those columns will be shown in the report in the order
-specified, whether or not a definition is supplied.}
+names or positions is supplied, those columns will be shown in the report 
+in the order specified, whether or not a definition is supplied. See the 
+\code{\link{define}} function for additional information on how to
+show/hide report columns.}
 
 \item{use_attributes}{Whether or not to use any formatting attributes assigned
 to the columns on the input data frame.  Valid values are 'all', 'none', or
@@ -34,7 +37,7 @@ attribute values will be applied to the table.  For example, if you assign
 a label to the 'label' attribute of a data frame column, pass that data 
 frame into \code{create_table}, and don't override the label value on a 
 \code{define} function, the label will appear as a column header on the
-table.  The \code{use_attributes} parameter allows you to control the default
+table.  The \code{use_attributes} parameter allows you to control this default
 behavior, and use or ignore data frame attributes as desired.}
 
 \item{width}{The expected width of the table in the report units of 
@@ -52,7 +55,9 @@ Valid values are TRUE or FALSE.  Default is FALSE.}
 \item{n_format}{The formatting function to apply to the header "N=" label. 
 The default formatting function is \code{\link{upcase_parens}}.}
 
-\item{headerless}{Whether to create a headerless table.  Default is FALSE.}
+\item{headerless}{Whether to create a headerless table. A headerless
+table displays the table data only. Default is FALSE, meaning the table
+will have a header.}
 }
 \description{
 The \code{create_table} function creates a table object to which 
@@ -117,7 +122,7 @@ reports, the \code{create_table} function makes it easy to add population
 counts to the table header.  These population counts are added to column
 labels and spanning header labels using the \code{n} parameter on the 
 \code{\link{define}} or \code{\link{spanning_header}} functions.  The 
-population count is formatted according to  
+population count is formatted according to the  
 \code{n_format} parameter on \code{create_table}. The \strong{rptr} 
 package provides four population count formatting functions.  
 You may create your own formatting function 
@@ -187,9 +192,12 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 
 }
 \seealso{
-\code{\link{create_report}} to create  report, 
+\code{\link{create_report}} to create a report, 
+\code{\link{create_plot}} to craete a plot,
 \code{\link{create_text}} to create text content, and 
-\code{\link{add_content}} to append content to a report.
+\code{\link{add_content}} to append content to a report.  Also see
+the \code{\link{titles}}, \code{\link{footnotes}}, and \code{\link{page_by}}
+functions to add those items to the table if desired.
 
 Other table: 
 \code{\link{column_defaults}()},

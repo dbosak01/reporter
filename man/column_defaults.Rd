@@ -22,8 +22,8 @@ column_defaults(
 
 \item{vars}{The variable name or names to define defaults for.  Variable
 names may be quoted or unquoted.  The parameter will also accept 
-integer column positions instead of names.  For multiple variable names, 
-pass them as a vector.}
+integer column positions instead of names.  For multiple variables, 
+pass the names or positions as a vector.}
 
 \item{from}{The variable name or position that starts a column range.
 If passed as a variable name, it may be quoted or unquoted.}
@@ -33,10 +33,11 @@ If passed as a variable name, it
 may be quoted or unquoted.}
 
 \item{label}{The label to use for a column header.  This label will be 
-applied to all variable assigned to the \code{column_defaults} function.}
+applied to all variables assigned to the \code{column_defaults} function.}
 
 \item{format}{The format to use for the column data.  The format can 
-be a string format, a formatting function, a lookup list, or a format object. 
+be a string format, a formatting function, a lookup list, a user-defined
+format, or a formatting list. 
 All formatting is performed by the \code{\link[fmtr]{fmtr}} package.  For 
 additional information, see the help for that package.}
 
@@ -66,7 +67,7 @@ A function to set default attributes for columns on a table.
 The \code{column_defaults} function contains a subset of the parameters
 on the \code{\link{define}} function that can be shared across variables.
 Any attributes set by \code{column_defaults} can be overridden by 
-the \code{define} function, if desired.  The overall purpose of the 
+the \code{define} function.  The overall purpose of the 
 function is to minimize redundancy in column definitions.
 }
 \details{

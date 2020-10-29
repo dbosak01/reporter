@@ -1478,7 +1478,7 @@ test_that("test47: CM Table with long cell and label values wraps as expected.",
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
     define(subjid, label = "Subject ID for a patient", n = 10, align = "left", 
-           width = 1) %>%
+           width = 2) %>%
     define(name, label = "Subject Name") %>%
     define(sex, label = "Sex", n = 10, align = "center") %>%
     define(age, label = "Age", n = 10) %>%
@@ -1488,8 +1488,10 @@ test_that("test47: CM Table with long cell and label values wraps as expected.",
   
   
   rpt <- create_report(fp, units = "cm") %>%
-    titles("Table 1.0", align = "center") %>%
-    add_content(tbl1)
+    page_header("Sponsor", "Study") %>% 
+    titles("Table 1.0", align = "right") %>%
+    add_content(tbl1, align = "right") %>% 
+    page_footer("Time", "Confidential", "Page")
   
   
   res <- write_report(rpt)

@@ -1,16 +1,19 @@
 Package: rptr
 Type: Package
-Title: Create statistical reports
+Title: Creates statistical reports (TLFs)
 Version: 0.0.0.9028
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
-Description: Contains functions to create regulatory-style statistical reports, 
-    such as those that can be accomplished using SAS® PROC REPORT and ODS. 
-    Currently generates TXT, RTF, and PDF file formats.  The package specializes 
+Description: Contains functions to create regulatory-style statistical reports.
+    Originally designed to create tables, listings, and figures (TLFs) for the 
+    pharamaceutical, biotechnology, and medical device industries, these
+    reports are generalized enough that they could be used in any industry.
+    Generates TXT, RTF, and PDF file formats.  The package specializes 
     in printing wide and long tables with automatic page wrapping and splitting.  
-    Reports can be generated with a minimum of function calls, and without 
+    Reports can be produced with a minimum of function calls, and without 
     relying on other table packages.  The package supports titles, footnotes, 
-    page header, page footers, spanning headers, and automatic page numbering.
+    page header, page footers, spanning headers, page by variables, 
+    and automatic page numbering.
 License: CC BY-NC 4.0
 Encoding: UTF-8
 LazyData: true

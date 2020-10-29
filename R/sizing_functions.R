@@ -564,19 +564,7 @@ get_col_formats <- function(dat, ts) {
     if (!is.null(d$format))
       ret[[d$var_c]] <-  d$format
   }
-  
 
-  
-  # Deal with stub
-  if (!is.null(ts$stub)) {
-    
-    
-    # Add stub format
-    if (!is.null(ts$stub$format))
-      ret$stub <- ts$stub$format
-    
-    
-  }
   
   return(ret)
 }
