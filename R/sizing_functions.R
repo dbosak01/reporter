@@ -248,9 +248,9 @@ prep_data <- function(dat, ts, char_width, missing_val) {
       dat <- add_blank_rows(dat, "label", vars = def$var_c)
     }
   }
-  
-  # print("Labels")
-  # print(dat)
+
+   # print("Labels")
+   # print(dat)
   
   # Indent and Dedupe variables as requested
   # Do this after adding blanks
@@ -259,7 +259,7 @@ prep_data <- function(dat, ts, char_width, missing_val) {
     if (!is.null(def$indent) | def$dedupe) {
       
       # Convert to character if necessary
-      if (all(dat[[def$var_c]] != "character"))
+      if (all(class(dat[[def$var_c]]) != "character"))
         dat[[def$var_c]] <- as.character(dat[[def$var_c]])
           
       # Actual deduping now takes place in get_splits_text, so 
@@ -271,12 +271,12 @@ prep_data <- function(dat, ts, char_width, missing_val) {
     if (!is.null(def$indent)) {
       ind <- floor(def$indent / char_width)
       blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
-      dat[[def$var_c]] <- paste0(blnks, dat[[def$var_c]])
+      dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
     }
   }
   
-   #print("Before stub")
-   #print(dat)
+   # print("Before stub")
+   # print(dat)
 
   # Create stub
   dat <- create_stub(dat, ts)

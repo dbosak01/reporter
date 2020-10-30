@@ -1503,3 +1503,54 @@ test_that("test47: CM Table with long cell and label values wraps as expected.",
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
+
+
+
+test_that("test48: Three level stub works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test48.out")
+  
+  
+  # Setup
+  cat <- c(rep("Kaplan-Meier estimates", 6), rep("Cox PH estimates", 6))
+  grp <- c("25th percentile", "25th percentile", 
+           "median (weeks)", "median (weeks)",
+           "75th percentile", "75th percentile",
+           "25th percentile", "25th percentile", 
+           "median (weeks)", "median (weeks)",
+           "75th percentile", "75th percentile")
+  ci <- c(NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval")
+  values <- c(41, 53, 43, 39, 47, 52, 38, 25, 37, 23, 78, 21)
+
+  # Create data frame
+  df <- data.frame(cat, grp, ci, values)
+
+  tbl1 <- create_table(df) %>%
+    stub(c(cat, grp, ci), "Estimates") %>% 
+    define(cat, label_row = TRUE, blank_after = TRUE) %>%
+    define(grp, indent = .25) %>%
+    define(ci, indent = .5) %>%
+    define(values, label = "Values")
+
+  rpt <- create_report(fp) %>%
+    titles("Table 3.0", "Analysis of Time to Initial PSGA Success in Weeks") %>% 
+    page_header("Sponsor", "Study") %>% 
+    add_content(tbl1) %>% 
+    page_footer("Time", "Confidential", "Page")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
