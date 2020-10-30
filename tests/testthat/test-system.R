@@ -1513,7 +1513,8 @@ test_that("test48: Three level stub works as expected.", {
   
   
   # Setup
-  cat <- c(rep("Kaplan-Meier estimates", 6), rep("Cox PH estimates", 6))
+  cat <- c(rep("Kaplan-Meier estimates", 6), 
+           rep("Cox PH estimates and some more really long stuff", 6))
   grp <- c("25th percentile", "25th percentile", 
            "median (weeks)", "median (weeks)",
            "75th percentile", "75th percentile",
@@ -1532,7 +1533,7 @@ test_that("test48: Three level stub works as expected.", {
   df <- data.frame(cat, grp, ci, values)
 
   tbl1 <- create_table(df) %>%
-    stub(c(cat, grp, ci), "Estimates") %>% 
+    stub(c(cat, grp, ci), "Estimates", width = 2.5) %>% 
     define(cat, label_row = TRUE, blank_after = TRUE) %>%
     define(grp, indent = .25) %>%
     define(ci, indent = .5) %>%
