@@ -11,11 +11,11 @@ print_title_header <- function(t_hdr) {
     ttlcnt <- 1
     for (i in seq(1, mx)) {
       
-      cat("- title header " %+% as.character(ttlcnt) %+% ": ")
+      cat(paste0("- title header ", as.character(ttlcnt), ": "))
       if (!is.na(t_hdr$titles[i]))
-        cat("'" %+% t_hdr$titles[[i]] %+% "' ")
+        cat(paste0("'", t_hdr$titles[[i]], "' "))
       if (!is.na(t_hdr$right[i]))
-        cat("right='" %+% t_hdr$right[i] %+% "'")
+        cat(paste0("right='", t_hdr$right[i], "'"))
       
       cat("\n")
       
@@ -38,8 +38,8 @@ print_titles <- function(ttls) {
     for (i in seq_along(ttls)) {
       
       for (j in seq_along(ttls[[i]]$titles)) {
-        cat("- title " %+% as.character(ttlcnt) %+% ": '" 
-            %+% substring(ttls[[i]]$titles[[j]], 1) %+% "'\n")
+        cat(paste0("- title ", as.character(ttlcnt), ": '" 
+            , substring(ttls[[i]]$titles[[j]], 1), "'\n"))
         ttlcnt <- ttlcnt + 1
       }
       
@@ -62,8 +62,8 @@ print_footnotes <- function(ftnts) {
     for (i in seq_along(ftnts)) {
       
       for (j in seq_along(ftnts[[i]]$footnotes)) {
-        cat("- footnote " %+% as.character(ftncnt) %+% ": '" 
-            %+% substring(ftnts[[i]]$footnotes[[j]], 1) %+% "'\n")
+        cat(paste0("- footnote ", as.character(ftncnt), ": '" 
+            , substring(ftnts[[i]]$footnotes[[j]], 1), "'\n"))
         ftncnt <- ftncnt + 1
       }
       

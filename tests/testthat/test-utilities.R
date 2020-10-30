@@ -1,11 +1,5 @@
 context("Utilities Tests")
 
-test_that("concatenation operator works as expected.", {
-  
-  expect_equal("1" %+% "2", "12")
-  
-})
-
 
 test_that("gen_groups() works as expected.", {
   
