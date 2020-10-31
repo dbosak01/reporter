@@ -242,14 +242,19 @@ get_title_header <- function(title_hdr, width) {
       gp <- ll - nchar(t) - nchar(h)
       
       #print("titles")
-      if (gp > 0) {
+      if (gp >= 0) {
         
 
           ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
 
         
       } else 
-        stop("Title header exceeds available width.")
+        stop(paste0("Title header exceeds available width.\n",
+                    "Title: ", t, "\n",
+                    "Header: ", h, "\n",
+                    "Title length: ", nchar(t), "\n",
+                    "Header length: ", nchar(h), "\n",
+                    "Line length: ", ll, "\n"))
       
       
       ret[length(ret) + 1] <- ln

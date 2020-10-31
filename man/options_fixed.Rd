@@ -109,7 +109,7 @@ library(magrittr)
 tmp <- file.path(tempdir(), "bod.txt")
 
 # Define table
-tbl <- create_table(BOD, width = 2.3) \%>\% 
+tbl <- create_table(BOD, width = 2.5) \%>\% 
   titles("Table 3.6", "BODÂ¹ Sample Report") \%>\% 
   define(Time, format = "Day \%s", align = "left") \%>\% 
   define(demand, format = "\%2.1f mg/l", label = "Demand") \%>\% 

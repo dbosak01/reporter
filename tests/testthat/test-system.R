@@ -1430,7 +1430,7 @@ test_that("test46: Another title_header test to check alignment.", {
     title_header("Table 1.0", "US Personal Expenditures from 1940 - 1960",
                  right = c("Page [pg] of [tpg]", "World Almanac")) %>%
     column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
-    define(category, label = "Category") %>%
+    define(category, label = "Category", width = 2) %>%
     define(X1940, label = "1940") %>%
     define(X1945, label = "1945") %>%
     define(X1950, label = "1950") %>%
@@ -1555,3 +1555,62 @@ test_that("test48: Three level stub works as expected.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
+
+
+
+test_that("test49: Stub and width settings works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test49.out")
+  
+  
+  # Setup
+  cat <- c(rep("Kaplan-Meier estimates", 6), 
+           rep("Cox PH estimates and some more really long stuff", 6))
+  grp <- c("25th percentile", "25th percentile", 
+           "median (weeks)", "median (weeks)",
+           "75th percentile", "75th percentile",
+           "25th percentile", "25th percentile", 
+           "median (weeks)", "median (weeks)",
+           "75th percentile", "75th percentile")
+  ci <- c(NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval",
+          NA, "95% confidence interval")
+  values1 <- c(41, 53, 43, 39, 47, 52, 38, 25, 37, 23, 78, 21)
+  values2 <- c(32, 28, 94, 32, 09, 42, 67, 65, 56, 12, 91, 32)
+  values3 <- c(41, 53, 43, 39, 47, 52, 38, 25, 37, 23, 78, 21)
+  values4 <- c(32, 28, 94, 32, 09, 42, 67, 65, 56, 12, 91, 32)
+  
+  # Create data frame
+  df <- data.frame(cat, grp, ci, values1, values2, values3, values4)
+  
+  tbl1 <- create_table(df, width = 9) %>%
+    stub(c(cat, grp, ci), "Estimates", width = 3) %>% 
+    define(cat, label_row = TRUE, blank_after = TRUE) %>%
+    define(grp, indent = .25) %>%
+    define(ci, indent = .5) %>%
+    define(values1, label = "Values1", width = .70) %>% 
+    define(values2, label = "Values2") %>% 
+    define(values3, label = "Values3") %>% 
+    define(values4, label = "Values4") 
+  
+  rpt <- create_report(fp) %>%
+    titles("Table 3.0", "Analysis of Time to Initial PSGA Success in Weeks") %>% 
+    page_header("Sponsor", "Study") %>% 
+    add_content(tbl1) %>% 
+    page_footer("Time", "Confidential", "Page")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+

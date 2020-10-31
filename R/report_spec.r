@@ -358,7 +358,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' tmp <- file.path(tempdir(), "bod.txt")
 #'
 #' # Define table
-#' tbl <- create_table(BOD, width = 2.3) %>% 
+#' tbl <- create_table(BOD, width = 2.5) %>% 
 #'   titles("Table 3.6", "BOD¹ Sample Report") %>% 
 #'   define(Time, format = "Day %s", align = "left") %>% 
 #'   define(demand, format = "%2.1f mg/l", label = "Demand") %>% 
@@ -597,7 +597,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' tmp <- file.path(tempdir(), "bod.txt")
 #'
 #' # Define table
-#' tbl <- create_table(BOD, width = 2.3) %>% 
+#' tbl <- create_table(BOD, width = 2.5) %>% 
 #'   titles("Table 3.6", "BOD¹ Sample Report") %>% 
 #'   define(Time, format = "Day %s", align = "left") %>% 
 #'   define(demand, format = "%2.1f mg/l", label = "Demand") %>% 

@@ -370,7 +370,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     else if (w < min_col_width)
       w <- min_col_width
     else
-      w <- (ceiling(w * 100)/100) + padding_buffer
+      w <- (ceiling(w * 100)/100) #+ padding_buffer
     
     # print(paste("w:", w))
     # print(paste("Label:", labels[[nm]]))
@@ -406,12 +406,13 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   for (nm in names(orig))
     ret[[nm]] <- orig[[nm]]
 
-  
+  defnms <- c()
   # Let user definitions override everything
   for (def in defs) {
     
     if (def$var_c %in% names(dat) & !is.null(def$width) && def$width > 0) {
       ret[[def$var_c]] <- def$width
+      defnms[length(defnms) + 1] <- def$var_c
     }
     
   }
@@ -420,9 +421,13 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   if (!is.null(ts$stub)) {
  
     # Add stub width if exists   
-    if (!is.null(ts$stub$width))
+    if (!is.null(ts$stub$width)) {
       ret[["stub"]] <- ts$stub$width
+      defnms[length(defnms) + 1] <- "stub"
+    }
     
+    # print(ret[["stub"]])
+    # print(ts$stub$width)
   }
   
   # Turn into vector if needed
@@ -431,18 +436,36 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   # Remove control columns
   ret <- ret[!sapply(names(ret), is.control)]
   
+
   # Deal with table width
 
   if (!is.null(ts$width)) {
      # print(paste("Table width:", ts$width))
     
-     blnkw <- (length(ret) - 1) * char_width
+     # Adjusted to keep 
+     blnkw <- (length(ret) - 0) * char_width
      # print(paste("Blank width:", blnkw))
      # print(paste("Before:", sum(ret)))
      # print(ret)
      
     if (sum(ret) + blnkw < ts$width) {
-      ret <- ret * ((ts$width - blnkw) / sum(ret))
+      
+      # Get columns not defined by user
+      variable <- ret[!names(ret) %in% defnms]
+      fixed <- ret[names(ret) %in% defnms]
+      
+      available <- ts$width - blnkw - sum(fixed)
+      
+      variable <- variable * available / sum(variable)
+      
+      for (nm in names(variable))
+        ret[[nm]] <- variable[[nm]]
+      
+      # print("diff")
+      # print(ts$width - sum(ret) - 0.4166667)
+      # Make any small adjustments to last column
+     # ret[[length(ret)]] <- ret[[length(ret)]] + ts$width - sum(ret) - 0.4166667
+
     } else {
       # If table width is less than the sum of the columns.
       # This means the table should wrap to the next page, 
@@ -487,6 +510,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     
     # print(paste("After:", sum(ret)))
     # print(ret)
+     
   }
   
 

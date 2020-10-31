@@ -105,6 +105,7 @@ test_that("user1: demo table works.", {
 
   # Define table
   tbl <- create_table(demo, first_row_blank = TRUE) %>%
+    column_defaults(from = "ARM A", to = "ARM D", width = 1) %>% 
     define(var, blank_after = TRUE, dedupe = TRUE,
            format = block_fmt, label = "") %>%
     define(label, label = "") %>%
