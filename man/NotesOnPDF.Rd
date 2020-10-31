@@ -13,7 +13,7 @@ The PDF output type requires the \strong{rmarkdown} package and a
 LaTeX renderer like \strong{MiKTeX}.  
 \strong{MiKTeX} must be installed separately, and will
 not be installed as part of the \strong{rptr} install.  This program must
-furthermore be added to the _path_ environment variable on the system
+furthermore be added to the \code{path} environment variable on the system
 where \strong{rptr} will run, so that \strong{rptr} can find it.
 
 PDF output also supports a limited character set.  Some Unicode characters

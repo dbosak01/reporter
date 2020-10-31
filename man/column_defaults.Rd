@@ -83,10 +83,6 @@ The parameters that can be set with the \code{column_defaults}
 include the formatting attributes 'width', 'justify', 'label', and 
 'format'.  Any parameters set with \code{column_defaults} will override
 any attributes set on the data frame.
-
-Note that you may call the \code{column_defaults} function multiple times
-on the same table specification.  Typically, multiple \code{column_defaults}
-calls would be made with a different set or range of variables.
 }
 \examples{
 library(rptr)

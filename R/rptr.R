@@ -21,7 +21,6 @@
 #' initially focus on printable, file-based 
 #' output formats, as there are already numerous R packages that 
 #' provide tabular reporting in HTML. 
-#' The current version supports TXT, RTF, and PDF output types. 
 #' 
 #' PDF output has special installation requirements.  See \link{NotesOnPDF}
 #' for more information.
@@ -33,10 +32,10 @@
 #'   \item Supports header labels and spanning headers 
 #'   \item Calculates default columns widths automatically
 #'   \item Includes automatic wrapping and splitting of wide and long tables
-#'   \item Integrates with the \strong{fmtr} package to format numeric, date, 
-#'         and character data
-#'   \item Plots from the popular \strong{ggplot2} package can be added to RTF 
-#'         and PDF reports
+#'   \item Integrates with the \strong{\link[fmtr]{fmtr}} package to format 
+#'         numeric, date, and character data
+#'   \item Plots from the popular \strong{\link[ggplot2]{ggplot2}} package can 
+#'         be added to RTF and PDF reports
 #'   \item Allows appending multiple tables to a report, multiple tables to a page, 
 #'         and intermingling of text, tables, and plots
 #'   \item Supports in-report date/time stamps and "Page X of Y" page numbering
@@ -110,7 +109,7 @@ NULL
 #' LaTeX renderer like \strong{MiKTeX}.  
 #' \strong{MiKTeX} must be installed separately, and will
 #' not be installed as part of the \strong{rptr} install.  This program must
-#' furthermore be added to the _path_ environment variable on the system
+#' furthermore be added to the \code{path} environment variable on the system
 #' where \strong{rptr} will run, so that \strong{rptr} can find it.
 #' 
 #' PDF output also supports a limited character set.  Some Unicode characters

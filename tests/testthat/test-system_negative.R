@@ -70,7 +70,6 @@ test_that("neg3: Invalid column names in show_cols generate error.", {
   rpt <- create_report(fp) %>% 
     add_content(tbl)
   
-
   expect_error(write_report(rpt))
   
 })
@@ -86,7 +85,7 @@ test_that("neg4: Invalid column names in define functions generate error.", {
 })
 
 
-test_that("test51: Page header and footer generate error when added to table.", {
+test_that("neg5: Page header and footer generate error when added to table.", {
   
   expect_error(create_table(iris) %>% 
     page_header("Client", "Study"))
@@ -96,7 +95,7 @@ test_that("test51: Page header and footer generate error when added to table.", 
     
 })
 
-test_that("test51: Title header generates error when added to invalid object", {
+test_that("neg6: Title header generates error when added to invalid object", {
   
   expect_error(list() %>% 
                  title_header("Client", "Study"))
@@ -105,3 +104,27 @@ test_that("test51: Title header generates error when added to invalid object", {
                  title_header("Client", "Study"))
   
 })
+
+
+test_that("neg7: Column doesn't exist in show_cols does not generate error.", {
+  
+  
+  fp <- file.path(base_path, "neg/neg7.txt")
+  
+  
+  tbl <- create_table(mtcars, show_cols = c("mpg", "cyl", "disp")) %>% 
+                 define(mpg) %>% 
+                 define(cyl) %>% 
+                 define(hp)
+  
+  rpt <- create_report(fp) %>% add_content(tbl)
+  
+  expect_error(write_report(rpt), NA)
+  
+  
+  
+})
+
+
+
+

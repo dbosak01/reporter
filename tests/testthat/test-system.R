@@ -1696,3 +1696,209 @@ test_that("test51: Page break on invisible columns works as expected.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
+
+
+test_that("test52: Column default values for label and n work as expected.", {
+  
+  fp <- file.path(base_path, "output/test52.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(label = "Data", n = "100") %>% 
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+# Works
+test_that("test53: Multiple Column defaults work as expected for quoted vars.", {
+  
+  fp <- file.path(base_path, "output/test53.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(vars = c("Sepal.Length", "Petal.Length"), label = "Length") %>%
+    column_defaults(vars = c("Sepal.Width", "Petal.Width"), label = "Width") %>%
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+# Doesn't work
+test_that("test54: Multiple Column defaults work as expected for positions.", {
+  
+  fp <- file.path(base_path, "output/test54.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(vars = c(1, 3), label = "Length") %>% 
+    column_defaults(vars = c(2, 4), label = "Width") %>% 
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+# Works
+test_that("test55: Multiple Column defaults work as expected for unquoted vars.", {
+  
+  fp <- file.path(base_path, "output/test55.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(vars = c(Sepal.Length, Petal.Length), label = "Length") %>%
+    column_defaults(vars = c(Sepal.Width, Petal.Width), label = "Width") %>%
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+# Works
+test_that("test56: Multiple Column defaults work as expected for quoted from/to", {
+  
+  fp <- file.path(base_path, "output/test56.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(from = "Sepal.Length", to = "Sepal.Width", label = "Sepal") %>%
+    column_defaults(from = "Petal.Length", to = "Petal.Width", label = "Petal") %>%
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+# Works
+test_that("test57: Multiple Column defaults work as expected for unquoted from/to", {
+  
+  fp <- file.path(base_path, "output/test57.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(from = Sepal.Length, to = Sepal.Width, label = "Sepal") %>%
+    column_defaults(from = Petal.Length, to = Petal.Width, label = "Petal") %>%
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+# Works
+test_that("test58: Multiple Column defaults work as expected for positional from/to", {
+  
+  fp <- file.path(base_path, "output/test58.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    column_defaults(from = 1, to = 2, label = "Sepal") %>%
+    column_defaults(from = 3, to = 4, label = "Petal") %>%
+    define("Species", label = "Species")
+  
+  
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+

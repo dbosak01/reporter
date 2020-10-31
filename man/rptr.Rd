@@ -26,7 +26,6 @@ and a choice of output formats like SAS® ODS. The package will
 initially focus on printable, file-based 
 output formats, as there are already numerous R packages that 
 provide tabular reporting in HTML. 
-The current version supports TXT, RTF, and PDF output types. 
 
 PDF output has special installation requirements.  See \link{NotesOnPDF}
 for more information.
@@ -39,10 +38,10 @@ The \strong{rptr} package contains the following key features:
   \item Supports header labels and spanning headers 
   \item Calculates default columns widths automatically
   \item Includes automatic wrapping and splitting of wide and long tables
-  \item Integrates with the \strong{fmtr} package to format numeric, date, 
-        and character data
-  \item Plots from the popular \strong{ggplot2} package can be added to RTF 
-        and PDF reports
+  \item Integrates with the \strong{\link[fmtr]{fmtr}} package to format 
+        numeric, date, and character data
+  \item Plots from the popular \strong{\link[ggplot2]{ggplot2}} package can 
+        be added to RTF and PDF reports
   \item Allows appending multiple tables to a report, multiple tables to a page, 
         and intermingling of text, tables, and plots
   \item Supports in-report date/time stamps and "Page X of Y" page numbering

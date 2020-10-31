@@ -42,7 +42,7 @@ text report, valid objects are a table or text object.  For an RTF or PDF
 report, valid objects are a table, text, or plot object.  See 
 \code{\link{create_table}}, \code{\link{create_text}}, or 
 \code{\link{create_plot}} for further 
-information on how to create content objects for a report.  
+information on how to create content objects.  
 
 Content will be
 appended to the report in the order it is added.  By default, a page break

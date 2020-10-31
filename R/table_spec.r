@@ -521,10 +521,10 @@ define_c <- function(var, label = NULL, format = NULL,
 #' 'format'.  Any parameters set with \code{column_defaults} will override
 #' any attributes set on the data frame.
 #' 
-#' Note that you may call the \code{column_defaults} function multiple times
-#' on the same table specification.  Typically, multiple \code{column_defaults}
-#' calls would be made with a different set or range of variables.
-#' 
+# Note that you may call the \code{column_defaults} function multiple times
+# on the same table specification.  Typically, multiple \code{column_defaults}
+# calls would be made with a different set or range of variables.
+# 
 #' @param x A table spec.
 #' @param vars The variable name or names to define defaults for.  Variable
 #' names may be quoted or unquoted.  The parameter will also accept 
@@ -615,7 +615,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   
   if (typeof(substitute(vars, env = environment())) == "language") {
     ret <- tryCatch({
-      if (is.integer(vars)) {
+      if (is.numeric(vars)) {
         names(x$data)[vars]
         
       }
@@ -631,6 +631,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
     
   } else 
     v <- substitute(list(vars), env = environment())
+  
   
   # Turn each item into a character
   if (!is.character(v)) {
