@@ -60,7 +60,11 @@ get_page_header <- function(rs) {
       }
       
       else
-        stop("Page header exceeds available width")
+        stop(paste0("Page header exceeds available width\n", 
+                    "Header Left: ", hl, "\n", 
+                    "Header Right: ", hr, "\n",
+                    "Header length: ", nchar(hl) + nchar(hr), "\n",
+                    "Line length: ", rs$line_size, "\n"))
       
       ret[i] <- ln
     }
@@ -396,7 +400,12 @@ get_page_footer <- function(rs) {
         ln <- paste0(fl, stri_pad_both(fc, width = lw), fr)
       }
       else
-        stop("Page header exceeds available width")
+        stop(paste0("Page footer exceeds available width\n", 
+                    "Footer Left: ", fl, "\n", 
+                    "Footer Center: ", fc, "\n",
+                    "Footer Right: ", fr, "\n",
+                    "Footer length: ", nchar(fl) + nchar(fc) + nchar(fr), "\n",
+                    "Line length: ", rs$line_size, "\n"))
       
       ret[length(ret) + 1] <- ln
     }

@@ -127,4 +127,46 @@ test_that("neg7: Column doesn't exist in show_cols does not generate error.", {
 
 
 
+test_that("neg8: Long page header generates error.", {
+  
+  
+  fp <- file.path(base_path, "neg/neg8.txt")
+  
+  
+  tbl <- create_table(mtcars, show_cols = c("mpg", "cyl", "disp")) %>% 
+    define(mpg) %>% 
+    define(cyl) %>% 
+    define(hp)
+  
+  rpt <- create_report(fp) %>% add_content(tbl) %>% 
+    page_header("Here is a a whole bunch of stuff intended to go over the page",
+                "width because it is way too long. Way too long. Way too long.")
+  
+  expect_error(write_report(rpt))
+  
+  
+  
+})
+
+
+test_that("neg9: Long page footer generates error.", {
+  
+  
+  fp <- file.path(base_path, "neg/neg9.txt")
+  
+  
+  tbl <- create_table(mtcars, show_cols = c("mpg", "cyl", "disp")) %>% 
+    define(mpg) %>% 
+    define(cyl) %>% 
+    define(hp)
+  
+  rpt <- create_report(fp) %>% add_content(tbl) %>% 
+    page_footer("Here is a a whole bunch of stuff intended to go over the page",
+                "width because it is way too long. Way too long. Way too long.")
+  
+  expect_error(write_report(rpt))
+  
+  
+  
+})
 
