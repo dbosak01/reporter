@@ -1238,7 +1238,7 @@ test_that("test39: column_defaults works as expected with column positions.", {
 
 
 # 
-# test_that("test28: Table width parameter less than sum of columns works.", {
+# test_that("test28: Table width parameter more than sum of columns works.", {
 #   
 #   
 #   fp <- file.path(base_path, "output/test28.out")
@@ -1620,3 +1620,79 @@ test_that("test49: Stub and width settings works as expected.", {
   
 })
 
+# This is still messed up, but not going to fix it for now.
+test_that("test50: Table with long numeric values sizes as expected.", {
+  
+  fp <- file.path(base_path, "output/test50.out")
+  
+  # Setup
+  arm <- c(rep("A", 5), rep("B", 5))
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  rnd <- c(0.7077520, 0.3180838, 0.9174493, 0.4395207, 0.5307518, 
+           0.8501806, 0.4584808, 0.1016370, 0.7061505, 0.7819369)
+  #rnd <- runif(10)
+  calc <- age * rnd
+  
+  # Create data frame
+  df <- data.frame(arm, subjid, name, sex, age, rnd, calc)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID for a patient", n = 10) %>%
+    define(name, label = "Subject Name") %>%
+    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(age, label = "Age", n = 10) %>%
+    define(arm, label = "Arm",
+           blank_after = TRUE,
+           dedupe = TRUE) %>% 
+    define(rnd, width = .5) %>% 
+    define(calc, width = .6)
+  
+  
+  rpt <- create_report(fp) %>%
+    titles("Table 1.0", align = "center") %>%
+    
+    add_content(tbl1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+test_that("test51: Page break on invisible columns works as expected.", {
+  
+  fp <- file.path(base_path, "output/test51.out")
+  
+  tbl <- create_table(iris) %>% 
+    titles("Table 1.0", "My Irises Data Sample") %>% 
+    define(Species, visible = FALSE, page_break = TRUE) 
+
+   
+  
+  rpt <- create_report(fp) %>%
+    add_content(tbl) %>% 
+    page_header("Client", "Study") %>% 
+    page_footer("Time", right = "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})

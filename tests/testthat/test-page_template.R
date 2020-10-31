@@ -68,7 +68,7 @@ test_that("get_footnotes function works as expected.", {
 test_that("page_header function works as expected.", {
   
   
-  ph <- page_header(list(), left = c("Left 1", "Left 2"), 
+  ph <- page_header(create_report(), left = c("Left 1", "Left 2"), 
                 right = c("Right 1", "Right 2", "Right 3"),
                 blank_row = "below")
   
@@ -77,8 +77,8 @@ test_that("page_header function works as expected.", {
   expect_equal(length(ph$page_header_right), 3)
   expect_equal(ph$page_header_blank_row, "below")
   
-  expect_error(page_header(list(), left = c("a", "b", "c", "d", "e", "f")))
-  expect_error(page_header(list(), blank_row = "above"))
+  expect_error(page_header(create_report(), left = c("a", "b", "c", "d", "e", "f")))
+  expect_error(page_header(create_report(), blank_row = "above"))
                
   
 })
@@ -87,7 +87,7 @@ test_that("page_header function works as expected.", {
 test_that("page_footer function works as expected.", {
   
   
-  ph <- page_footer(list(), left = c("Left 1", "Left 2"), 
+  ph <- page_footer(create_report(), left = c("Left 1", "Left 2"), 
                     center = "center",
                     right = c("Right 1", "Right 2", "Right 3"),
                     blank_row = "above")
@@ -98,15 +98,15 @@ test_that("page_footer function works as expected.", {
   expect_equal(length(ph$page_footer_right), 3)
   expect_equal(ph$page_footer_blank_row, "above")
   
-  expect_error(page_header(list(), left = c("a", "b", "c", "d", "e", "f")))
-  expect_error(page_header(list(), blank_row = "above"))
+  expect_error(page_header(create_report(), left = c("a", "b", "c", "d", "e", "f")))
+  expect_error(page_header(create_report(), blank_row = "above"))
   
 })
 
 
 test_that("title_header function works as expected.", {
   
-  th <- title_header(list(), "Title One", "Title Two",
+  th <- title_header(create_report(), "Title One", "Title Two",
                      right = c("One", "Two", "Three"),
                      blank_row = "both")
   
@@ -116,7 +116,7 @@ test_that("title_header function works as expected.", {
   expect_equal(length(rws), 5)
   expect_equal(rws[1], "")
   
-  th <- title_header(list(), 
+  th <- title_header(create_table(mtcars), 
                      right = c("One", "Two", "Three"))
   
   
@@ -126,7 +126,7 @@ test_that("title_header function works as expected.", {
   expect_equal(trimws(rws[1]), "One")
   
   
-  th <- title_header(list(), "Title One", "Title Two",
+  th <- title_header(create_text("hello"), "Title One", "Title Two",
                      blank_row = "above")
   
   rws <- get_title_header(th$title_hdr, 50)

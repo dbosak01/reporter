@@ -398,14 +398,15 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   #names(dwidths) <- names(dat)
   
   # Set default widths
-  ret = dwidths
+  ret <-  dwidths
   #print("Default Widths")
   #print(ret)
   
   # Let widths on orig df override defaults
   orig <- widths(dat)
-  for (nm in names(orig))
+  for (nm in names(orig)) {
     ret[[nm]] <- orig[[nm]]
+  }
 
   defnms <- c()
   # Let user definitions override everything

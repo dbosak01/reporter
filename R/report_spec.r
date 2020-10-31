@@ -243,7 +243,7 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
   # Trap missing or invalid font_name parameter.
   if (!font_name %in% c("Courier New", "Times New Roman", "Arial", "Calibri")) {
     
-    stop(paste0("ERROR: font_name parameter on create_report() ",
+    stop(paste0("font_name parameter on create_report() ",
                 "function is invalid: '", font_name,
                 "'\n\tValid values are: 'Arial', 'Calibri', 'Courier New', ",
                 "and 'Times New Roman'."))
@@ -439,7 +439,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
         x$cpuom <- if (x$units == "inches") 12 else 4.687
       else if (!(cpuom >= 8 & cpuom <= 14)) {
         
-        stop(paste0("ERROR: cpi parameter on create_report() ",
+        stop(paste0("cpi parameter on create_report() ",
                     "function is invalid: '", cpuom,
                     "'\n\tValue must be between 0 and 15."))
       }
@@ -451,7 +451,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
         x$lpuom <- if (x$units == "inches") 6 else 2.55
       else if (!(lpuom > 0 & lpuom <= 10)) {
         
-        stop(paste0("ERROR: lpuom parameter on create_report() ",
+        stop(paste0("lpuom parameter on create_report() ",
                     "function is invalid: '", lpuom,
                     "'\n\tValue must be between 0 and 10."))
       }
@@ -802,8 +802,11 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @export
 page_header <- function(x, left="", right="", blank_row = "none"){
 
+  if (!"report_spec" %in% class(x))
+    stop("Page header can only be assigned to an object of class 'report_spec'")
+  
   if (length(left) > 5 | length(right) > 5){
-    stop("ERROR: Header string count exceeds limit of 5 strings per side.")
+    stop("Header string count exceeds limit of 5 strings per side.")
   }
   
   if (is.null(blank_row))
@@ -917,6 +920,16 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' #     * In billions of dollars
 #' @export
 title_header <- function(x, ..., right = "", blank_row = "below") {
+  
+
+  diff <- setdiff(class(x), c("list"))
+  
+  if (identical(diff, character(0)) | 
+    all(!diff %in% c("report_spec", "table_spec", "plot_spec", "text_spec"))) {
+    stop(paste("Title header can only be assigned ", 
+                "to an objects of class 'report_spec', 'title_spec', 'plot_spec'",
+                "or 'text_spec'."))
+  }
   
   # Create title structure
   ttl_hdr <- structure(list(), class = c("title_hdr", "list"))
@@ -1256,8 +1269,11 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' @export
 page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 
+  if (!"report_spec" %in% class(x))
+    stop("Page header can only be assigned to an object of class 'report_spec'")
+  
   if (length(left) > 5 | length(right) > 5 | length(center) > 5){
-    stop("ERROR: Footer string count exceeds limit of 5 strings per section.")
+    stop("Footer string count exceeds limit of 5 strings per section.")
   }
   
   if (is.null(blank_row))

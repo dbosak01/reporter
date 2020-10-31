@@ -5,11 +5,6 @@
 
 control_cols <- c("..blank", "..page", "..row", "..page_by")
 
-#uchar <- "¯"
-# Putting the actual character works best,
-# But the check process doesn't like it.
-# So \U00AF is the next best choice.
-uchar <- "\U00AF"
 
 
 # Create Tables -----------------------------------------------------------
