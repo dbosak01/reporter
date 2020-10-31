@@ -77,6 +77,7 @@
 #' @noRd
 get_data_subset <- function(dat, keys, pages) {
  
+  
   if (!is.null(pages)) {
     est <- 60 * pages
     if (nrow(dat) > est) {
@@ -436,9 +437,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   # Remove control columns
   ret <- ret[!sapply(names(ret), is.control)]
   
-
   # Deal with table width
-
   if (!is.null(ts$width)) {
      # print(paste("Table width:", ts$width))
     
@@ -745,6 +744,13 @@ get_table_cols <- function(x) {
   }
   else if (all(x$show_cols %in% names(dat)))
     ret <- x$show_cols
+  else {
+    
+    diff <- setdiff(x$show_cols, names(dat))
+    if (length(diff) > 0)
+      stop("Columns not found in data: ", paste(diff, collapse = ","))
+    
+  }
   
   # Deal with visible options
   if (!is.null(x$col_defs)) {
@@ -757,6 +763,10 @@ get_table_cols <- function(x) {
     }
     
     ret <- unique(ret)
+    
+    diff <- setdiff(ret, names(dat))
+    if (length(diff) > 0)
+      stop("Columns not found in data: ", paste(diff, collapse = ","))
   }
   
   ret <- unique(c(ret, control_cols))

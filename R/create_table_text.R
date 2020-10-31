@@ -67,16 +67,16 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
 
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
-  # depends on show_all parameter on create_table and
+  # depends on show_cols parameter on create_table and
   # visible parameter on column definitions
   keys <- get_table_cols(ts)
-  #print("keys")
-  #print(keys)
+  # print("keys")
+  # print(keys)
 
   # Filter dataset by included columns
   dat <- get_data_subset(dat, keys, rs$preview)
-  # print("Key columns:")
-  # print(dat)
+   # print("Key columns:")
+   # print(dat)
   
   # Update column definitions with column defaults
   ts$col_defs <- set_column_defaults(ts, keys)

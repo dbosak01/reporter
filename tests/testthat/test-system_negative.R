@@ -60,3 +60,32 @@ test_that("neg2:  Page by variable not on plot generates error.", {
   
   
 })
+
+test_that("neg3: Invalid column names in show_cols generate error.", {
+
+  
+  fp <- file.path(base_path, "output/neg3.out")
+  
+  tbl <- create_table(mtcars[1:10, ], show_cols = c("mpg", "cyl", "fork", "bork"))
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl)
+  
+
+  expect_error(write_report(rpt))
+  
+  
+})
+
+
+test_that("neg4: Invalid column names in define functions generate error.", {
+  
+  
+  
+  expect_error(create_table(mtcars[1:10, ]) %>% 
+    define(mpg) %>% 
+    define(cyl) %>% 
+    define(fork))
+  
+
+})
