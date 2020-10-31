@@ -68,6 +68,7 @@ initialized with \code{create_report}.
 \itemize{
   \item \code{\link{titles}} to add titles to the report.
   \item \code{\link{footnotes}} to add footnotes to the report.
+  \item \code{\link{title_header}} to add a title header to the report.
   \item \code{\link{page_header}} to add a page header to the report. 
   \item \code{\link{page_footer}} to add a page_footer to the report. 
   \item \code{\link{add_content}} to add content to the report.

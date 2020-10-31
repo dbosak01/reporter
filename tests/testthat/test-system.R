@@ -1726,7 +1726,7 @@ test_that("test52: Column default values for label and n work as expected.", {
 })
 
 
-# Works
+
 test_that("test53: Multiple Column defaults work as expected for quoted vars.", {
   
   fp <- file.path(base_path, "output/test53.out")
@@ -1755,7 +1755,7 @@ test_that("test53: Multiple Column defaults work as expected for quoted vars.", 
   
 })
 
-# Doesn't work
+
 test_that("test54: Multiple Column defaults work as expected for positions.", {
   
   fp <- file.path(base_path, "output/test54.out")
@@ -1784,7 +1784,7 @@ test_that("test54: Multiple Column defaults work as expected for positions.", {
   
 })
 
-# Works
+
 test_that("test55: Multiple Column defaults work as expected for unquoted vars.", {
   
   fp <- file.path(base_path, "output/test55.out")
@@ -1813,7 +1813,7 @@ test_that("test55: Multiple Column defaults work as expected for unquoted vars."
   
 })
 
-# Works
+
 test_that("test56: Multiple Column defaults work as expected for quoted from/to", {
   
   fp <- file.path(base_path, "output/test56.out")
@@ -1842,7 +1842,7 @@ test_that("test56: Multiple Column defaults work as expected for quoted from/to"
   
 })
 
-# Works
+
 test_that("test57: Multiple Column defaults work as expected for unquoted from/to", {
   
   fp <- file.path(base_path, "output/test57.out")
@@ -1872,7 +1872,7 @@ test_that("test57: Multiple Column defaults work as expected for unquoted from/t
 })
 
 
-# Works
+
 test_that("test58: Multiple Column defaults work as expected for positional from/to", {
   
   fp <- file.path(base_path, "output/test58.out")
@@ -1901,4 +1901,133 @@ test_that("test58: Multiple Column defaults work as expected for positional from
   
 })
 
+test_that("test59: Formatting Attributes on data frame work as expected.", {
+  
+  fp <- file.path(base_path, "output/test59.out")
+  
+  
+  dat <- mtcars
+  
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  dat$mpg <- fattr(dat$mpg, format = "%.2f", width = 2, justify = "left")
+  attr(dat$cyl, "label") <- "Cylinders"
+  dat$cyl <- fattr(dat$cyl, format = "%.1f", width = 1, justify = "center")
+  attr(dat$disp, "label") <- "Displacement"
+  dat$disp <- fattr(dat$disp, format = "%.2f", width = 1, justify = "right")
+  
+  tbl <- create_table(dat, show_cols = c(1:3))
+  
+  rpt <- create_report(fp) %>% add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+test_that("test60: Attributes on data frame are overridden by column defaults.", {
+  
+  fp <- file.path(base_path, "output/test60.out")
+  
+  
+  dat <- mtcars
+  
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  dat$mpg <- fattr(dat$mpg, format = "%.2f", width = 2, justify = "left")
+  attr(dat$cyl, "label") <- "Cylinders"
+  dat$cyl <- fattr(dat$cyl, format = "%.1f", width = 1, justify = "center")
+  attr(dat$disp, "label") <- "Displacement"
+  dat$disp <- fattr(dat$disp, format = "%.2f", width = 1, justify = "right")
+  
+  tbl <- create_table(dat, show_cols = c(1:3)) %>% 
+    column_defaults(width = .75, align = "left", label = "Data", format = "%.0f")
+  
+  rpt <- create_report(fp) %>% add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+test_that("test61: Parameters on column defaults are overridden by define vector.", {
+  
+  fp <- file.path(base_path, "output/test61.out")
+  
+  
+  dat <- mtcars
+  
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  dat$mpg <- fattr(dat$mpg, format = "%.2f", width = 2, justify = "left")
+  attr(dat$cyl, "label") <- "Cylinders"
+  dat$cyl <- fattr(dat$cyl, format = "%.1f", width = 1, justify = "center")
+  attr(dat$disp, "label") <- "Displacement"
+  dat$disp <- fattr(dat$disp, format = "%.2f", width = 1, justify = "right")
+  
+  tbl <- create_table(dat, show_cols = c(1:3)) %>% 
+    column_defaults(width = .75, align = "left", label = "Data",
+                    format = "%.0f") %>% 
+    define(c(mpg, cyl, disp), label = "Data1", width = 2, 
+           align = "right", format = "%.2f")
+  
+  rpt <- create_report(fp) %>% add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+test_that("test62: Parameters on column defaults are overridden by single defines.", {
+  
+  fp <- file.path(base_path, "output/test62.out")
+  
+  
+  dat <- mtcars
+  
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  dat$mpg <- fattr(dat$mpg, format = "%.2f", width = 2, justify = "left")
+  attr(dat$cyl, "label") <- "Cylinders"
+  dat$cyl <- fattr(dat$cyl, format = "%.1f", width = 1, justify = "center")
+  attr(dat$disp, "label") <- "Displacement"
+  dat$disp <- fattr(dat$disp, format = "%.2f", width = 1, justify = "right")
+  
+  tbl <- create_table(dat, show_cols = c(1:3)) %>% 
+    column_defaults(width = .75, align = "left", label = "Data",
+                    format = "%.0f") %>% 
+    define(mpg, label = "Data1", width = 2, 
+           align = "right", format = "%.4f") %>% 
+    define(cyl, label = "Data2", width = 1, 
+           align = "left", format = "%.3f") %>% 
+    define(disp, label = "Data3", width = .75, 
+           align = "center", format = "%.1f")
+  
+  rpt <- create_report(fp) %>% add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
 

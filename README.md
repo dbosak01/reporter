@@ -5,7 +5,6 @@
 [![rptr version](https://www.r-pkg.org/badges/version/rptr)](https://cran.r-project.org/package=rptr)
 [![rptr lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://cran.r-project.org/package=rptr)
 [![rptr downloads](https://cranlogs.r-pkg.org/badges/grand-total/rptr)](https://cran.r-project.org/package=rptr)
-[![Travis build status](https://travis-ci.com/dbosak01/rptr.svg?branch=master)](https://travis-ci.com/dbosak01/rptr)
 
 <!-- badges: end -->
 
