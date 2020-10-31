@@ -1450,7 +1450,11 @@ page_by <- function(x, var, label = NULL, align = "left",
   var_c <- as.character(substitute(var, env = environment()))
   
   pb$var <- var_c
-  pb$label <- label
+  if (is.null(label))
+    pb$label <- paste0(var_c, ": ")
+  else
+    pb$label <- label
+  
   pb$align <- align
   pb$blank_row <- blank_row
 

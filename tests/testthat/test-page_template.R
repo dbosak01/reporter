@@ -165,7 +165,7 @@ test_that("page_by function works as expected.", {
   rws <- get_page_by(pb$page_by, 50, NULL)
   
   expect_equal(length(rws), 2)
-  expect_equal(trimws(rws[1]), "")
+  expect_equal(trimws(rws[1]), "mpg:")
   
   pb <- page_by(list(), mpg, "Label:")
   

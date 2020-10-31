@@ -182,7 +182,8 @@ test_that("page_by function works as expected.", {
   
   expect_equal(is.null(pg$page_by), FALSE)
   expect_equal(pg$page_by$var, "mpg")
-  expect_equal(is.null(pg$page_by$label), TRUE)
+  expect_equal(is.null(pg$page_by$label), FALSE)
+  expect_equal(pg$page_by$label, "mpg: ")
   expect_equal(pg$page_by$align, "left")
   expect_equal(pg$page_by$blank_row, "below")
   
