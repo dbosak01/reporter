@@ -262,16 +262,18 @@ options_variable <- function(x, font_name="Courier New", font_size=10) {
 #' @noRd
 editor_settings <- read.table(header = TRUE, text = '
                     editor          cpi     cpcm     lpi     lpcm    mmi   mmcm
-                    editplus    14.6565    5.769   6.857   2.7027      0      0
-                    notepad          12   4.7619  5.6805   2.2305      0      0
-                    notepad++        12   4.7619   6.531   2.5862  0.393      1
-                    word         11.497   4.5454  6.1146      2.4      0      0
-                    wordpad      10.909   4.3165  6.1146      2.4      0      0
+                    editplus       14.2     5.75     6.1     2.62      0      0
+                    notepad          12     4.75    5.65     2.22      0      0
+                    notepad++        12     4.75    6.50     2.55  0.393      1
+                    word           11.2      4.4       6     2.35      0      0
+                    wordpad        10.8      4.2       6     2.35      0      0
                     pdf12            12     4.70       5    2.000  .1967     .5
                     pdf10       14.2222     5.58    6.10      2.4  .1967     .5
                     rtf10            12   4.7619    6.28      2.5      0      0
                     rtf12            10   3.9473  5.3333     2.05      0      0
                                ') 
+# Good: rtf12, rtf10, pdf12, pdf10, wordpad, word
+# Not tested: editplus, notepad, notepad++
 
 #' @title
 #' Set options for a report (fixed-width font)
@@ -347,6 +349,11 @@ editor_settings <- read.table(header = TRUE, text = '
 #' the \code{line_count} is calculated based on the page size, font size, and lpuom.
 #' You can override the calculated value by setting the \code{line_count}
 #' directly.
+#' @param uchar The character to use for underlines on the table 
+#' header and spanning headers.  Default is a Unicode macron character #U00AF.
+#' You may also use a dash or underscore if your editor does not support
+#' Unicode.  The \code{uchar} is forced to a dash for PDF output, 
+#' as the latex converter does not support the macron character.
 #' @return The updated report spec.
 #' @seealso \code{\link{create_report}} to create a report and set the unit
 #' of measure, \code{\link{write_registration_file}} to determine the 
@@ -422,7 +429,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @export
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
-                          font_size = 10, line_size = NULL, line_count = NULL) {
+                          font_size = 10, line_size = NULL, line_count = NULL,
+                          uchar = "\U00AF") {
   
   if (x$output_type == "TXT") {
     if (is.null(editor)) {
@@ -557,6 +565,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
   x$line_height <- 1 / x$lpuom
   x$user_line_size <- line_size
   x$user_line_count <- line_count
+  x$uchar <- uchar
   
   return(x)
   

@@ -745,7 +745,10 @@ test_that("test20: show_cols 'some' parameter on table works as expected.", {
   
   fp <- file.path(base_path, "output/test20.out")
 
-  tbl <- create_table(mtcars[1:10, ], show_cols = c("vs", "mpg", "cyl", "disp")) 
+  tbl <- create_table(mtcars[1:10, ], 
+                      show_cols = c("vs", "mpg", "cyl", "disp")) %>% 
+    define(mpg)
+  
   
   rpt <- create_report(fp) %>% 
     titles("MTCARS Data Frame", align = "left") %>% 
@@ -1396,7 +1399,10 @@ test_that("test45: Report without page by works as expected.", {
   tbl <- create_table(iris) %>% 
     define(Species, page_break = TRUE)
   
-  rpt <- create_report(fp) %>% 
+  rpt <- create_report(fp, orientation = "portrait", units = "inches") %>% 
+    options_fixed(editor = "word", uchar = "-") %>% 
+    set_margins(top = 1, bottom = 1, left = 1, right = 1) %>% 
+    # 2.54 1.27
     page_header("Client", "Study") %>% 
     titles("Table 1.0", "IRIS Data Frame") %>% 
     footnotes("Here is a footnote") %>% 

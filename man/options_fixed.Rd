@@ -13,7 +13,8 @@ options_fixed(
   blank_margins = FALSE,
   font_size = 10,
   line_size = NULL,
-  line_count = NULL
+  line_count = NULL,
+  uchar = "¯"
 )
 }
 \arguments{
@@ -58,6 +59,12 @@ directly.}
 the \code{line_count} is calculated based on the page size, font size, and lpuom.
 You can override the calculated value by setting the \code{line_count}
 directly.}
+
+\item{uchar}{The character to use for underlines on the table 
+header and spanning headers.  Default is a Unicode macron character #U00AF.
+You may also use a dash or underscore if your editor does not support
+Unicode.  The \code{uchar} is forced to a dash for PDF output, 
+as the latex converter does not support the macron character.}
 }
 \value{
 The updated report spec.
