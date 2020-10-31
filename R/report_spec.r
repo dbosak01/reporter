@@ -50,12 +50,12 @@
 #' on the \code{output_type} specified.
 #' @param output_type The report output type.  Default is "TXT".  Valid
 #' values are "TXT", "RTF", and "PDF".
-#' @param font_type The font type to use on the report. The default value 
-#' 'fixed'.  A font type of 'fixed' will use a fixed-width,
-#' monospace font such as Courier.  Currently, a font type of 'fixed' is the 
-#' only option available.  Future versions will include variable-width fonts
-#' such as Arial and Times New Roman.  To set options for font type 'fixed', 
-#' used the \code{\link{options_fixed}} function.
+# @param font_type The font type to use on the report. The default value 
+# 'fixed'.  A font type of 'fixed' will use a fixed-width,
+# monospace font such as Courier.  Currently, a font type of 'fixed' is the 
+# only option available.  Future versions will include variable-width fonts
+# such as Arial and Times New Roman.  To set options for font type 'fixed', 
+# used the \code{\link{options_fixed}} function.
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param units Specifies the units of measurement.  This setting will 
@@ -129,9 +129,11 @@
 #' #      * New York, May to September 1973
 #' @export
 create_report <- function(file_path = "", output_type = "TXT", 
-                          font_type = "fixed",
+                          #font_type = "fixed",
                           orientation ="landscape", units = "inches",
                           paper_size = "letter", missing = "") {
+  # Force for now
+  font_type <- "fixed"
 
   x <- structure(list(), class = c("report_spec", "list"))
 
@@ -186,7 +188,7 @@ create_report <- function(file_path = "", output_type = "TXT",
   x$pages <- 1                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
   x$missing <- missing
-  x$font_type <- font_type      # For future use.  Not used now.
+  x$font_type <- font_type #font_type      # For future use.  Not used now.
 
   
   if (output_type %in% c("TXT", "PDF", "RTF")) {
