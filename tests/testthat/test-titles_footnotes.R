@@ -2,6 +2,7 @@ context("Title and Footnote Tests")
 
 base_path <- "c:/packages/rptr/tests/testthat"
 
+base_path <- "."
 
 test_that("ttfn1: single title right aligned works.", {
   
