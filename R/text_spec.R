@@ -20,7 +20,7 @@
 #' @param txt The text to create.
 #' @param width The width of the text in the specified units of measure.  If 
 #' no width is specified, the full page width will be used.
-#' @param align How to align the text on the page.  Valid values
+#' @param align How to align the text within the content area.  Valid values
 #' are 'left', 'right', 'center', or 'centre'.  Default is 'left'.
 #' @return The text specification.
 #' @family text

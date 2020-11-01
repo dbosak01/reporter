@@ -69,7 +69,7 @@ the n value will be performed by the formatting function assigned to the
 variable.  Valid values are TRUE or FALSE.  Default is FALSE.}
 
 \item{dedupe}{Whether to dedupe the values for this variable.  Variables
-that are deduped only show the value on the first row for each group.  This 
+that are deduped only show the value on the first row of each group.  This 
 option is commonly used for grouping variables.}
 
 \item{id_var}{Whether this variable should be considered an ID variable.
@@ -88,17 +88,19 @@ that variable.  Only one page break variable can be defined per table.
 If two or more variables are defined as a page break, an error will be 
 generated.}
 
-\item{indent}{How much to indent the column values.  Parameter takes a 
+\item{indent}{How much to indent the column values.  The parameter takes a 
 numeric value that will be interpreted according to the \code{units} 
 (Unit Of Measure) setting on the report.  This parameter can be used to 
 help create a stub column.  The default value is NULL, meaning the column
-should not be indented.}
+should not be indented.  See the \code{\link{stub}} function for additional
+information on creating a stub column.}
 
 \item{label_row}{Whether the values of the variable should be used to
 create a label row.  Valid values are TRUE or FALSE.  Default is FALSE.
 If \code{label_row} is set to TRUE, the dedupe parameter will also be 
 set to TRUE.  This parameter is often used in conjunction with the 
-\code{\link{stub}} function to create a stub column.}
+\code{\link{stub}} function and \code{indent} parameter to create a 
+stub column.}
 }
 \value{
 The modified table spec.
@@ -107,13 +109,14 @@ The modified table spec.
 A function to define a table column.  The
 \code{define} function contains a variety of a parameters to control the 
 appearance of the report.  Using the \code{define} function, you can control
-simple options like column alignment and format, but also control more 
+simple options like column alignment and width, but also control more 
 sophisticated options like page wrapping and page breaking.
 }
 \details{
 Column definitions are optional.  By default, all columns in the data
-are displayed in the order and with the formatting attributes assigned to 
-the data frame.  The report will use attributes assigned to the data frame 
+are displayed in the order assigned to the data frame. 
+
+The report will use attributes assigned to the data frame 
 such as 'width', 'justify', 'label', and 'format'.  In other words, 
 some control over the column 
 formatting is available by manipulating the data frame attributes prior
@@ -127,7 +130,9 @@ or place a blank row after each unique value of the variable.
 See the parameter documentation for additional options.
 
 Some of the parameters on the \code{define} function are used in the 
-creation of a table stub.  See the \code{\link{stub}} function for further
+creation of a table stub.  Specifically, the \code{label_row} and 
+\code{indent} parameters participate in the creation of the stub column.
+See the \code{\link{stub}} function for further
 information.
 
 A single column definition may be defined for multiple variables.  

@@ -12,7 +12,7 @@ create_text(txt, width = NULL, align = "left")
 \item{width}{The width of the text in the specified units of measure.  If 
 no width is specified, the full page width will be used.}
 
-\item{align}{How to align the text on the page.  Valid values
+\item{align}{How to align the text within the content area.  Valid values
 are 'left', 'right', 'center', or 'centre'.  Default is 'left'.}
 }
 \value{

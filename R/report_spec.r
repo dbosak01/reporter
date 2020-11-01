@@ -1296,15 +1296,24 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' Adds a page by variable  
 #'
 #' @description
-#' This function adds a page by variable to the report or table.  
-#' The page by will appear above the column headers.  The page by can be
-#' added to either the report or the table.  
+#' The \code{page_by} function adds a page by variable to a report, table,
+#' or plot. 
+#' The page by will generate a page break for each value of the page by variable.
+#' A label will appear above the content showing the page
+#' by variable value. You must be sort the data by the
+#' page by variable prior to reporting.
 #'
 #' @details
-#' Only one page by is allowed per report or table.  The page by will appear 
-#' on all pages of the object.  The page by may be aligned on the 
+#' Only one page by is allowed per report, table, or plot.  The page by 
+#' label will 
+#' appear on all pages of the object.  The page by label may be aligned on the 
 #' left, right, or center. Use the \code{align} parameter to specify the 
 #' alignment. 
+#' 
+#' You must be sort the data by the page by variable prior to reporting.
+#' The page by labels will appear in the sorted order.  Failure to sort 
+#' the page by variable prior to reporting may produce unexpected results.
+#' 
 #' @param x The report specification to assign the page by to.
 #' @param var The page by variable.  There can be only one page by per report, 
 #' and one page by variable.  The page by can be passed either quoted or 
@@ -1318,6 +1327,8 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' the page by.  Default value is 'none'.  Valid values are 'above', 'below',
 #' 'both', or 'none'.
 #' @family report
+#' @seealso \code{\link{create_table}} to create a table, and 
+#' \code{\link{create_plot}} to create a plot.  
 #' @examples 
 #' library(rptr)
 #' library(magrittr)

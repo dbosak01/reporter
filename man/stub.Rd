@@ -30,8 +30,10 @@ The modified table spec.
 \description{
 Combine columns into a nested report stub.  The report stub
 is a common feature of statistical reports.  The stub is created with
-the \code{stub} function in combination with some parameters from the 
-\code{\link{define}} function.
+the \code{stub} function, and frequently appears in combination with the 
+\code{label_row} and \code{indent} parameters from the 
+\code{\link{define}} function.  These elements work together to define
+the appearance of the stub.
 }
 \details{
 The table stub is a nested set of labels that identify rows 
@@ -42,10 +44,10 @@ higher level concepts.
 
 A typical stub is created with the following steps:
 \itemize{
-  \item Prepare the data with multiple, hierarchical columns.
+  \item Prepare the data. 
   \item Create the table object.
-  \item Define the stub on the table using the stub function, and identify
-  the columns to be combined.
+  \item Define the stub on the table using the \code{stub} function, 
+  and identify the variables to be combined.
   \item Identify higher level concepts with the \code{label_row} parameter
   on the \code{\link{define}} function. 
   \item Identify lower level concepts using the \code{indent} parameter 
@@ -55,6 +57,33 @@ A typical stub is created with the following steps:
 The stub will be automatically added as an identity variable on the report, 
 and will always appear as the leftmost column.  There can only be one stub 
 defined on a report.
+
+If you wish to create multiple levels of nested labels, use
+an NA value to prevent lower level labels from overwriting
+higher level labels. For example, the following data:
+
+continent          country   state_province
+"North America"    NA        NA
+"North America"    "Canada"  NA
+"North America"    "Canada"  "Ontario"
+"North America"    "USA"     NA
+"North America"    "USA"     "New York"
+"South America"    NA        NA
+"South America"    "Brazil"  NA
+"South America"    "Brazil"  "Amazonas"
+"South America"    "Brazil"  "Bahia"
+
+Will produce the following result:
+
+North America
+  Canada
+    Ontario
+  USA
+    New York
+South America
+  Brazil
+    Amazonas
+    Bahia
 }
 \examples{
 library(rptr)
