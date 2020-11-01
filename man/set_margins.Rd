@@ -35,7 +35,7 @@ right, and .5 inches on top and bottom.  When the unit of measure is
 centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 on top and bottom.
 
-Note that when using output type of text, and not using the 
+Note that when using output type of TXT, and not using the 
 \code{blank_margins} option, setting the margins only reduces
 the area available for content on a page.  You must still set the actual
 margins on the available editor to match those specified in 

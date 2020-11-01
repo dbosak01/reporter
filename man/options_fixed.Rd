@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_spec.R
 \name{options_fixed}
 \alias{options_fixed}
-\title{Set options for a report (fixed-width font)}
+\title{Set options for a fixed-width report}
 \usage{
 options_fixed(
   x,
@@ -20,12 +20,12 @@ options_fixed(
 \arguments{
 \item{x}{The report spec.}
 
-\item{editor}{The expected text editor to use for printing.  Assigning
-this parameter will set the \code{cpuom} and \code{lpuom} parameters
-appropriately for the editor.  Valid values are 'notepad',
+\item{editor}{The expected text editor to use for printing text reports.
+Assigning this parameter will set the \code{cpuom} and \code{lpuom} 
+parameters appropriately for the text editor.  Valid values are 'notepad',
 'word', 'wordpad', 'notepad++', and 'editplus'.  If the editor parameter 
 is used, any settings for \code{cpuom} and \code{lpuom} will be 
-ignored.}
+ignored. It is not necessary to set this parameter for RTF and PDF reports.}
 
 \item{cpuom}{Characters per unit of measure of printed text.
 If units is inches, the default is 12.  If units is centimeters (cm), the 
@@ -36,9 +36,8 @@ determine how many characters can fit on a line.}
 inches is 6. The default for centimeters (cm) is 2.55.  This value 
 will be used to determine the number of lines that can fit on a page.}
 
-\item{min_margin}{The editor minimum margin.  When the units of measure
-is set to centimeters, this parameter defaults to 1.  When the units of 
-measure is set to inches, the parameter defaults to .394.}
+\item{min_margin}{The editor minimum margin.  This parameter normally
+defaults to 0, but may be set for some types of editors.}
 
 \item{blank_margins}{When this option is TRUE, \strong{rptr} will use blank 
 spaces and blank rows to create left and top margins, rather than rely 
@@ -50,7 +49,7 @@ FALSE.  This option is only valid for \code{output_type = 'TXT'}.}
 option is only valid for output types RTF and PDF.  Valid values are 10 and 
 12.}
 
-\item{line_size}{The number of character that will fit on a line.  Normally,
+\item{line_size}{The number of characters that will fit on a line.  Normally,
 the \code{line_size} is calculated based on the page size, font size, and cpuom.
 You can override the calculated value by setting the \code{line_size}
 directly.}
@@ -62,21 +61,23 @@ directly.}
 
 \item{uchar}{The character to use for underlines on the table 
 header and spanning headers.  Default is a Unicode macron character #U00AF.
-You may also use a dash or underscore if your editor does not support
+You may use a dash or underscore if your editor does not support
 Unicode.  The \code{uchar} is forced to a dash for PDF output, 
-as the latex converter does not support the macron character.}
+as the LaTeX converter does not support the macron character.}
 }
 \value{
 The updated report spec.
 }
 \description{
 This function sets the options for a report  
-with a fixed width font, such as a text report.
+with a fixed width font.
 }
 \details{
 The \code{options_fixed} function sets options for reports 
 with a fixed-width, monospace font.  These reports are based off a 
-text report, but may be output as type "RTF" or "PDF".  
+text report, but may be output as type "RTF" or "PDF".
+}
+\section{Text Reports}{
 
 The \code{options_fixed} function sets
 the characters per 
@@ -85,7 +86,7 @@ unit of measure (\code{cpuom}) and lines per unit of measure
 many characters and lines will fit within one unit of measure (uom), as 
 specified on the \code{\link{create_report}} function.  These settings are
 important to ensure the report content stays within the available page size 
-and margins.  Because every text editor allows a different number of 
+and margins.  Because every editor allows a different number of 
 characters and lines on a page, these settings must be adjusted depending
 on the editor.  
 
@@ -106,8 +107,29 @@ output types and editors.
 
 The \code{min_margin} parameter is used to set the minimum margin allowed
 by the editor.  This value will be subtracted from the margin settings 
-when the \code{blank_margins} option is used.
+when the \code{blank_margins} option is used. It is useful for 
+editors that do not calculate margins from the edge of the page.
+
+As some editors do not support Unicode characters, it may be necessary 
+to change the character used for the header and spanning header underlines.
+The default character is a Unicode #U00AF macron.  The macron is sometimes
+referred to as an "overline", since it is located at the top of the 
+character area.  If your editor does not support Unicode, the macron
+will not be displayed properly.  In this case, change the underline character
+to a dash ("-") or an underscore ("_") using the \code{uchar} parameter.
 }
+
+\section{RTF and PDF Reports}{
+
+For RTF and PDF reports, most of the parameters on the \code{options_fixed}
+function do not apply.  For RTF and PDF reports, these parameters will
+be set automatically, and cannot be changed.  
+
+Some of the \code{options_fixed} function apply only to RTF and PDF.
+In particular, the \code{font_size} parameter applies only to RTF and PDF
+reports.  Valid font size options are 10 and 12.
+}
+
 \examples{
 library(rptr)
 library(magrittr)

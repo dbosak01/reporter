@@ -74,7 +74,7 @@ dat <- data.frame(category = rownames(USPersonalExpenditure),
 # Define table
 tbl <- create_table(dat) \%>\% 
   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") \%>\% 
-  column_defaults(from = X1940, to = X1960, format = "$\%.2f") \%>\%
+  column_defaults(from = X1940, to = X1960, width = .6, format = "$\%.2f") \%>\%
   define(category, label = "Category") \%>\% 
   define(X1940, label = "1940") \%>\% 
   define(X1945, label = "1945") \%>\% 

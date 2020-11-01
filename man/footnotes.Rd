@@ -11,8 +11,8 @@ footnotes(x, ..., align = "left", blank_row = "above")
 
 \item{...}{A set of footnote strings.}
 
-\item{align}{The position to align the footnotes.  Valid values are: "left",
-"right", "center", or "centre".}
+\item{align}{The position to align the footnotes.  Valid values are: 'left',
+'right', 'center', or 'centre'.}
 
 \item{blank_row}{Whether to print a blank row above or below the footnote.
 Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
@@ -21,22 +21,22 @@ Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
 The modified report.
 }
 \description{
-This function adds one or more footnotes to the report.  If added to 
-the report specification, the footnotes will
+The \code{footnotes} function adds one or more footnotes to the report.  
+If added to the report specification, the footnotes will
 be added to the page template, and thus appear on each page of the report.
 Footnotes may also be added directly to table, text, or plot content.
 }
 \details{
-The footnotes function accepts a set of strings of the desired footnote text.
-The footnotes may be aligned center, left or right using the align parameter.
-The user is responsible for adding desired footnote symbols.
-Footnote symbols will not be generated automatically.
+The \code{footnotes} function accepts a set of strings of the desired 
+footnote text. The footnotes may be aligned center, left or right using 
+the align parameter. The user is responsible for adding desired footnote 
+symbols. Footnote symbols will not be generated automatically.
 
 If footnotes are assigned to the report,
 alignment will be oriented to the page body.  If footnotes are assigned to
 a table or text, alignment will be oriented to the edge of the content.
 
-One title function accepts up to 25 footnotes.  However, multiple footnote 
+One footnote function accepts up to 25 footnotes.  However, multiple footnote 
 blocks may be added to the same object.  
 
 Blank rows above or below the footnote block may be controlled using the 
@@ -62,7 +62,7 @@ dat <- data.frame(category = rownames(USPersonalExpenditure),
 # Define table
 tbl <- create_table(dat) \%>\% 
   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") \%>\% 
-  column_defaults(from = X1940, to = X1960, format = "$\%.2f") \%>\%
+  column_defaults(from = X1940, to = X1960, width = .6, format = "$\%.2f") \%>\%
   define(category, label = "Category") \%>\% 
   define(X1940, label = "1940") \%>\% 
   define(X1945, label = "1945") \%>\% 

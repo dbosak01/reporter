@@ -18,7 +18,7 @@ add_content(
 \item{object}{The object to append.}
 
 \item{page_break}{Whether to add a page break after the object. 
-Valid values are TRUE or FALSE.  You can manipulate the page_break 
+Valid values are TRUE or FALSE.  You can manipulate the \code{page_break} 
 parameter to add multiple objects to the same page.}
 
 \item{align}{How to align the content.  Valid values are 'left', 'right',

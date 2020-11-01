@@ -725,12 +725,12 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' feature of statistical reports.
 #' @details 
 #' A spanning header is a label and underline that spans one or more 
-#' columns.  A spanning header is defined minimally by identifying 
+#' columns.  A spanning header is defined minimally by identifying the
 #' column range to be spanned, and a label.  A label alignment and "N="
 #' value may also be supplied.
 #' 
 #' The spanning column range is defined by the \code{from} and \code{to} 
-#' parameters.  The range identifies a continuous set of variables on the data.
+#' parameters.  The range identifies a contiguous set of variables on the data.
 #' Variables can be identified by position, a quoted variable name, or an 
 #' unquoted variable name.
 #' @param x The table object to add spanning headers to.

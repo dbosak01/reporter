@@ -16,7 +16,7 @@ this parameter overrides the \code{file_path} parameter on the
 \item{output_type}{The output file type.  This parameter will override
 the \code{output_type} on the \code{create_report} function.  This 
 parameter can be used to output the same report object to 
-multiple file types. Default value is NULL, meaning it will not override
+multiple output types. Default value is NULL, meaning it will not override
 the \code{create_report} value.  Valid values are 'TXT', 'RTF', and 'PDF'.}
 
 \item{preview}{Whether to write the entire report, or a report preview.

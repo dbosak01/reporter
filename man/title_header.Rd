@@ -7,8 +7,8 @@
 title_header(x, ..., right = "", blank_row = "below")
 }
 \arguments{
-\item{x}{The object to assign titles to.  Valid objects are a report, or
-a table, text, or plot specification.}
+\item{x}{The object to assign titles to.  Valid objects are a report,
+table, text, or plot specification.}
 
 \item{...}{A set of title strings.}
 
@@ -16,13 +16,13 @@ a table, text, or plot specification.}
 title header.  Pass the header strings as a vector of strings.}
 
 \item{blank_row}{Where to place a blank row.  Valid values are 'above',
-'below', 'both', or 'none'.  Default is "below".}
+'below', 'both', or 'none'.  Default is 'below'.}
 }
 \value{
 The modified report.
 }
 \description{
-This function adds title header to an object.  A title header is a special
+This function adds a title header to an object.  A title header is a special
 type of title layout that has titles on the left and header information
 on the right.
 }
@@ -32,10 +32,6 @@ title text, and a vector of header strings. The titles will appear on the
 left of the title header, and the header strings on the right. To
 specify multiple titles for the block, pass them to the function 
 as separate strings.
-
-For the title header, titles will be aligned left, and the header strings
-will be aligned right. The title header allows the title portion of the block 
-to consume 75% of the line width, and the header portion to consume 25%.
 
 Title headers may be assigned to a report, a table, a text specification, 
 or a plot. If assigned to the report, the title header will appear 
@@ -69,7 +65,7 @@ dat <- data.frame(category = rownames(USPersonalExpenditure),
 tbl <- create_table(dat) \%>\% 
   title_header("Table 1.0", "US Personal Expenditures from 1940 - 1960",
                right = c("Page [pg] of [tpg]", "World Almanac")) \%>\% 
-  column_defaults(from = X1940, to = X1960, format = "$\%.2f") \%>\%
+  column_defaults(from = X1940, to = X1960, width = .6, format = "$\%.2f") \%>\%
   define(category, label = "Category") \%>\% 
   define(X1940, label = "1940") \%>\% 
   define(X1945, label = "1945") \%>\% 

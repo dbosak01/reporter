@@ -277,16 +277,17 @@ editor_settings <- read.table(header = TRUE, text = '
 # Not tested: editplus, notepad, notepad++
 
 #' @title
-#' Set options for a report (fixed-width font)
+#' Set options for a fixed-width report
 #'
 #' @description
 #' This function sets the options for a report  
-#' with a fixed width font, such as a text report.
+#' with a fixed width font. 
 #' 
 #' @details The \code{options_fixed} function sets options for reports 
 #' with a fixed-width, monospace font.  These reports are based off a 
 #' text report, but may be output as type "RTF" or "PDF".  
 #' 
+#' @section Text Reports:
 #' The \code{options_fixed} function sets
 #' the characters per 
 #' unit of measure (\code{cpuom}) and lines per unit of measure
@@ -294,7 +295,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' many characters and lines will fit within one unit of measure (uom), as 
 #' specified on the \code{\link{create_report}} function.  These settings are
 #' important to ensure the report content stays within the available page size 
-#' and margins.  Because every text editor allows a different number of 
+#' and margins.  Because every editor allows a different number of 
 #' characters and lines on a page, these settings must be adjusted depending
 #' on the editor.  
 #' 
@@ -315,15 +316,33 @@ editor_settings <- read.table(header = TRUE, text = '
 #'
 #' The \code{min_margin} parameter is used to set the minimum margin allowed
 #' by the editor.  This value will be subtracted from the margin settings 
-#' when the \code{blank_margins} option is used. 
+#' when the \code{blank_margins} option is used. It is useful for 
+#' editors that do not calculate margins from the edge of the page.
+#' 
+#' As some editors do not support Unicode characters, it may be necessary 
+#' to change the character used for the header and spanning header underlines.
+#' The default character is a Unicode #U00AF macron.  The macron is sometimes
+#' referred to as an "overline", since it is located at the top of the 
+#' character area.  If your editor does not support Unicode, the macron
+#' will not be displayed properly.  In this case, change the underline character
+#' to a dash ("-") or an underscore ("_") using the \code{uchar} parameter.
+#' 
+#' @section RTF and PDF Reports:
+#' For RTF and PDF reports, most of the parameters on the \code{options_fixed}
+#' function do not apply.  For RTF and PDF reports, these parameters will
+#' be set automatically, and cannot be changed.  
+#' 
+#' Some of the \code{options_fixed} function apply only to RTF and PDF.
+#' In particular, the \code{font_size} parameter applies only to RTF and PDF
+#' reports.  Valid font size options are 10 and 12.
 #' 
 #' @param x The report spec.
-#' @param editor The expected text editor to use for printing.  Assigning
-#' this parameter will set the \code{cpuom} and \code{lpuom} parameters
-#' appropriately for the editor.  Valid values are 'notepad',
+#' @param editor The expected text editor to use for printing text reports.  
+#' Assigning this parameter will set the \code{cpuom} and \code{lpuom} 
+#' parameters appropriately for the text editor.  Valid values are 'notepad',
 #' 'word', 'wordpad', 'notepad++', and 'editplus'.  If the editor parameter 
 #' is used, any settings for \code{cpuom} and \code{lpuom} will be 
-#' ignored.
+#' ignored. It is not necessary to set this parameter for RTF and PDF reports.
 #' @param cpuom Characters per unit of measure of printed text.    
 #' If units is inches, the default is 12.  If units is centimeters (cm), the 
 #' default is 4.687.  This value will be used to 
@@ -331,9 +350,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @param lpuom Lines per unit of measure of the printed text. Default for 
 #' inches is 6. The default for centimeters (cm) is 2.55.  This value 
 #' will be used to determine the number of lines that can fit on a page. 
-#' @param min_margin The editor minimum margin.  When the units of measure
-#' is set to centimeters, this parameter defaults to 1.  When the units of 
-#' measure is set to inches, the parameter defaults to .394.
+#' @param min_margin The editor minimum margin.  This parameter normally
+#' defaults to 0, but may be set for some types of editors.  
 #' @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
 #' spaces and blank rows to create left and top margins, rather than rely 
 #' on the editor to set margins.  When used, editor margins
@@ -342,7 +360,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' @param font_size The size of the font in points.  Default is 10pt.  This
 #' option is only valid for output types RTF and PDF.  Valid values are 10 and 
 #' 12.
-#' @param line_size The number of character that will fit on a line.  Normally,
+#' @param line_size The number of characters that will fit on a line.  Normally,
 #' the \code{line_size} is calculated based on the page size, font size, and cpuom.
 #' You can override the calculated value by setting the \code{line_size}
 #' directly.  
@@ -352,9 +370,9 @@ editor_settings <- read.table(header = TRUE, text = '
 #' directly.
 #' @param uchar The character to use for underlines on the table 
 #' header and spanning headers.  Default is a Unicode macron character #U00AF.
-#' You may also use a dash or underscore if your editor does not support
+#' You may use a dash or underscore if your editor does not support
 #' Unicode.  The \code{uchar} is forced to a dash for PDF output, 
-#' as the latex converter does not support the macron character.
+#' as the LaTeX converter does not support the macron character.
 #' @return The updated report spec.
 #' @seealso \code{\link{create_report}} to create a report and set the unit
 #' of measure, \code{\link{write_registration_file}} to determine the 
@@ -587,7 +605,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' centimeters, default margins are 2.54 cm on left and right, and 1.27 cm
 #' on top and bottom.
 #'
-#' Note that when using output type of text, and not using the 
+#' Note that when using output type of TXT, and not using the 
 #' \code{blank_margins} option, setting the margins only reduces
 #' the area available for content on a page.  You must still set the actual
 #' margins on the available editor to match those specified in 
@@ -833,7 +851,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' Adds a title header block 
 #'
 #' @description
-#' This function adds title header to an object.  A title header is a special
+#' This function adds a title header to an object.  A title header is a special
 #' type of title layout that has titles on the left and header information
 #' on the right.  
 #' @details
@@ -842,10 +860,6 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' left of the title header, and the header strings on the right. To
 #' specify multiple titles for the block, pass them to the function 
 #' as separate strings.
-#' 
-#' For the title header, titles will be aligned left, and the header strings
-#' will be aligned right. The title header allows the title portion of the block 
-#' to consume 75% of the line width, and the header portion to consume 25%.
 #' 
 #' Title headers may be assigned to a report, a table, a text specification, 
 #' or a plot. If assigned to the report, the title header will appear 
@@ -864,13 +878,13 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' shorten the title or split it into multiple titles that each fit within the
 #' available space. 
 #' 
-#' @param x The object to assign titles to.  Valid objects are a report, or
-#' a table, text, or plot specification.
+#' @param x The object to assign titles to.  Valid objects are a report,
+#' table, text, or plot specification.
 #' @param ... A set of title strings.
 #' @param right A set of header strings to be shown on the right side of the
 #' title header.  Pass the header strings as a vector of strings.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
-#' 'below', 'both', or 'none'.  Default is "below".
+#' 'below', 'both', or 'none'.  Default is 'below'.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -888,7 +902,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' tbl <- create_table(dat) %>% 
 #'   title_header("Table 1.0", "US Personal Expenditures from 1940 - 1960",
 #'                right = c("Page [pg] of [tpg]", "World Almanac")) %>% 
-#'   column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+#'   column_defaults(from = X1940, to = X1960, width = .6, format = "$%.2f") %>%
 #'   define(category, label = "Category") %>% 
 #'   define(X1940, label = "1940") %>% 
 #'   define(X1945, label = "1945") %>% 
@@ -1020,7 +1034,7 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' # Define table
 #' tbl <- create_table(dat) %>% 
 #'   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") %>% 
-#'   column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+#'   column_defaults(from = X1940, to = X1960, width = .6, format = "$%.2f") %>%
 #'   define(category, label = "Category") %>% 
 #'   define(X1940, label = "1940") %>% 
 #'   define(X1945, label = "1945") %>% 
@@ -1079,22 +1093,22 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' Adds a footnote block
 #'
 #' @description
-#' This function adds one or more footnotes to the report.  If added to 
-#' the report specification, the footnotes will
+#' The \code{footnotes} function adds one or more footnotes to the report.  
+#' If added to the report specification, the footnotes will
 #' be added to the page template, and thus appear on each page of the report.
 #' Footnotes may also be added directly to table, text, or plot content.
 #'
 #' @details
-#' The footnotes function accepts a set of strings of the desired footnote text.
-#' The footnotes may be aligned center, left or right using the align parameter.
-#' The user is responsible for adding desired footnote symbols.
-#' Footnote symbols will not be generated automatically.
+#' The \code{footnotes} function accepts a set of strings of the desired 
+#' footnote text. The footnotes may be aligned center, left or right using 
+#' the align parameter. The user is responsible for adding desired footnote 
+#' symbols. Footnote symbols will not be generated automatically.
 #' 
 #' If footnotes are assigned to the report,
 #' alignment will be oriented to the page body.  If footnotes are assigned to
 #' a table or text, alignment will be oriented to the edge of the content.
 #' 
-#' One title function accepts up to 25 footnotes.  However, multiple footnote 
+#' One footnote function accepts up to 25 footnotes.  However, multiple footnote 
 #' blocks may be added to the same object.  
 #' 
 #' Blank rows above or below the footnote block may be controlled using the 
@@ -1108,8 +1122,8 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' 
 #' @param x The object to assign footnotes to.
 #' @param ... A set of footnote strings.
-#' @param align The position to align the footnotes.  Valid values are: "left",
-#' "right", "center", or "centre".
+#' @param align The position to align the footnotes.  Valid values are: 'left',
+#' 'right', 'center', or 'centre'.
 #' @param blank_row Whether to print a blank row above or below the footnote.
 #' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.
 #' @return The modified report.
@@ -1128,7 +1142,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' # Define table
 #' tbl <- create_table(dat) %>% 
 #'   titles("Table 1.0", "US Personal Expenditures from 1940 - 1960") %>% 
-#'   column_defaults(from = X1940, to = X1960, format = "$%.2f") %>%
+#'   column_defaults(from = X1940, to = X1960, width = .6, format = "$%.2f") %>%
 #'   define(category, label = "Category") %>% 
 #'   define(X1940, label = "1940") %>% 
 #'   define(X1945, label = "1945") %>% 
@@ -1500,7 +1514,7 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' @param x The report_spec to append content to.
 #' @param object The object to append.
 #' @param page_break Whether to add a page break after the object. 
-#' Valid values are TRUE or FALSE.  You can manipulate the page_break 
+#' Valid values are TRUE or FALSE.  You can manipulate the \code{page_break} 
 #' parameter to add multiple objects to the same page.  
 #' @param align How to align the content.  Valid values are 'left', 'right',
 #' 'center', and 'centre'.
@@ -1606,7 +1620,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' @param output_type The output file type.  This parameter will override
 #' the \code{output_type} on the \code{create_report} function.  This 
 #' parameter can be used to output the same report object to 
-#' multiple file types. Default value is NULL, meaning it will not override
+#' multiple output types. Default value is NULL, meaning it will not override
 #' the \code{create_report} value.  Valid values are 'TXT', 'RTF', and 'PDF'.
 #' @param preview Whether to write the entire report, or a report preview.
 #' A report preview is a subset of pages of the report.  The default value is 
@@ -1965,6 +1979,12 @@ print.report_spec <- function(x, ..., verbose = FALSE){
 #' of text reports, 
 #' assign these values to the \code{cpuom} and \code{lpuom} parameters
 #' on the \code{\link{options_fixed}} function.
+#' 
+#' For best results, test the calculated values by printing some reports and
+#' checking for undesired page breaks or wrapped lines.  If necessary, adjust
+#' the calculated cpuom and lpuom values until all content stays within 
+#' the available space without wrapping or breaking.
+#' 
 #' @param file_path The full or relative file name and path to create the 
 #' registration file.
 #' @examples 

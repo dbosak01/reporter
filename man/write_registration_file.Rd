@@ -43,6 +43,11 @@ is the lines per unit of measure (lpuom). To get an accurate printing
 of text reports, 
 assign these values to the \code{cpuom} and \code{lpuom} parameters
 on the \code{\link{options_fixed}} function.
+
+For best results, test the calculated values by printing some reports and
+checking for undesired page breaks or wrapped lines.  If necessary, adjust
+the calculated cpuom and lpuom values until all content stays within 
+the available space without wrapping or breaking.
 }
 
 \examples{
