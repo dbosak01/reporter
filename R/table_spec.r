@@ -930,8 +930,9 @@ spanning_header <- function(x, from, to, label = "",
 #' 
 #' If you wish to create multiple levels of nested labels, use
 #' an NA value to prevent lower level labels from overwriting
-#' higher level labels. For example, the following data:
+#' higher level labels. 
 #' 
+#' \preformatted{
 #' continent          country   state_province \cr   
 #' "North America"    NA        NA   \cr
 #' "North America"    "Canada"  NA   \cr
@@ -954,6 +955,7 @@ spanning_header <- function(x, from, to, label = "",
 #'   Brazil   \cr
 #'     Amazonas   \cr
 #'     Bahia   \cr
+#' }
 #' 
 #' @param x The table spec.
 #' @param vars A vector of quoted or unquoted variable names from 

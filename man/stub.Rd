@@ -60,8 +60,9 @@ defined on a report.
 
 If you wish to create multiple levels of nested labels, use
 an NA value to prevent lower level labels from overwriting
-higher level labels. For example, the following data:
+higher level labels. 
 
+\preformatted{
 continent          country   state_province \cr   
 "North America"    NA        NA   \cr
 "North America"    "Canada"  NA   \cr
@@ -84,6 +85,7 @@ South America   \cr
   Brazil   \cr
     Amazonas   \cr
     Bahia   \cr
+}
 }
 \examples{
 library(rptr)
