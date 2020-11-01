@@ -932,28 +932,28 @@ spanning_header <- function(x, from, to, label = "",
 #' an NA value to prevent lower level labels from overwriting
 #' higher level labels. For example, the following data:
 #' 
-#' continent          country   state_province
-#' "North America"    NA        NA
-#' "North America"    "Canada"  NA
-#' "North America"    "Canada"  "Ontario"
-#' "North America"    "USA"     NA
-#' "North America"    "USA"     "New York"
-#' "South America"    NA        NA
-#' "South America"    "Brazil"  NA
-#' "South America"    "Brazil"  "Amazonas"
-#' "South America"    "Brazil"  "Bahia"
+#' continent          country   state_province   
+#' "North America"    NA        NA   
+#' "North America"    "Canada"  NA   
+#' "North America"    "Canada"  "Ontario"   
+#' "North America"    "USA"     NA   
+#' "North America"    "USA"     "New York"   
+#' "South America"    NA        NA   
+#' "South America"    "Brazil"  NA   
+#' "South America"    "Brazil"  "Amazonas"   
+#' "South America"    "Brazil"  "Bahia"   
 #' 
-#' Will produce the following result:
+#' Will produce the following result:   
 #' 
-#' North America
-#'   Canada
-#'     Ontario
-#'   USA
-#'     New York
-#' South America
-#'   Brazil
-#'     Amazonas
-#'     Bahia
+#' North America   
+#'   Canada   
+#'     Ontario   
+#'   USA   
+#'     New York   
+#' South America   
+#'   Brazil   
+#'     Amazonas   
+#'     Bahia   
 #' 
 #' @param x The table spec.
 #' @param vars A vector of quoted or unquoted variable names from 
