@@ -932,29 +932,30 @@ spanning_header <- function(x, from, to, label = "",
 #' an NA value to prevent lower level labels from overwriting
 #' higher level labels. 
 #' 
+#' For example, the following data:
 #' \preformatted{
-#' continent          country   state_province \cr   
-#' "North America"    NA        NA   \cr
-#' "North America"    "Canada"  NA   \cr
-#' "North America"    "Canada"  "Ontario"   \cr
-#' "North America"    "USA"     NA   \cr
-#' "North America"    "USA"     "New York"   \cr
-#' "South America"    NA        NA   \cr
-#' "South America"    "Brazil"  NA   \cr
-#' "South America"    "Brazil"  "Amazonas"   \cr
-#' "South America"    "Brazil"  "Bahia"   \cr
-#' 
-#' Will produce the following result:   \cr
-#' 
-#' North America   \cr
-#'   Canada   \cr
-#'     Ontario   \cr
-#'   USA   \cr
-#'     New York   \cr
-#' South America   \cr
-#'   Brazil   \cr
-#'     Amazonas   \cr
-#'     Bahia   \cr
+#' continent          country   state_province    
+#' "North America"    NA        NA   
+#' "North America"    "Canada"  NA   
+#' "North America"    "Canada"  "Ontario"   
+#' "North America"    "USA"     NA   
+#' "North America"    "USA"     "New York"   
+#' "South America"    NA        NA   
+#' "South America"    "Brazil"  NA   
+#' "South America"    "Brazil"  "Amazonas"   
+#' "South America"    "Brazil"  "Bahia"   
+#' }
+#' Will produce the following result:   
+#' \preformatted{
+#' North America   
+#'   Canada   
+#'     Ontario   
+#'   USA   
+#'     New York   
+#' South America  
+#'   Brazil 
+#'     Amazonas   
+#'     Bahia   
 #' }
 #' 
 #' @param x The table spec.
