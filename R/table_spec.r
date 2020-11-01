@@ -959,9 +959,9 @@ spanning_header <- function(x, from, to, label = "",
 #' }
 #' With the following code:
 #' \preformatted{
-#' tbl <- create_table(dat) %>% 
-#'   stub(c(continent, country, state_province)) %>% 
-#'   define(country, indent = .25) %>% 
+#' tbl <- create_table(dat) \%>\% 
+#'   stub(c(continent, country, state_province)) \%>\% 
+#'   define(country, indent = .25) \%>\% 
 #'   define(state_province, indent = .5)
 #' }
 #' @param x The table spec.

@@ -89,9 +89,9 @@ South America
 }
 With the following code:
 \preformatted{
-tbl <- create_table(dat) %>% 
-  stub(c(continent, country, state_province)) %>% 
-  define(country, indent = .25) %>% 
+tbl <- create_table(dat) \%>\% 
+  stub(c(continent, country, state_province)) \%>\% 
+  define(country, indent = .25) \%>\% 
   define(state_province, indent = .5)
 }
 }
