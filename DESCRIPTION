@@ -1,7 +1,7 @@
 Package: rptr
 Type: Package
 Title: Creates statistical reports (TLFs)
-Version: 0.0.0.9030
+Version: 1.0.0
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports.
