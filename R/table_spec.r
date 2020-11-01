@@ -945,7 +945,7 @@ spanning_header <- function(x, from, to, label = "",
 #' "South America"    "Brazil"  "Amazonas"   
 #' "South America"    "Brazil"  "Bahia"   
 #' }
-#' Will produce the following result:   
+#' Will produce the following stub:   
 #' \preformatted{
 #' North America   
 #'   Canada   
@@ -957,7 +957,13 @@ spanning_header <- function(x, from, to, label = "",
 #'     Amazonas   
 #'     Bahia   
 #' }
-#' 
+#' With the following code:
+#' \preformatted{
+#' tbl <- create_table(dat) %>% 
+#'   stub(c(continent, country, state_province)) %>% 
+#'   define(country, indent = .25) %>% 
+#'   define(state_province, indent = .5)
+#' }
 #' @param x The table spec.
 #' @param vars A vector of quoted or unquoted variable names from 
 #' which to create the stub.

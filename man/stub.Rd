@@ -75,7 +75,7 @@ continent          country   state_province
 "South America"    "Brazil"  "Amazonas"   
 "South America"    "Brazil"  "Bahia"   
 }
-Will produce the following result:   
+Will produce the following stub:   
 \preformatted{
 North America   
   Canada   
@@ -86,6 +86,13 @@ South America
   Brazil 
     Amazonas   
     Bahia   
+}
+With the following code:
+\preformatted{
+tbl <- create_table(dat) %>% 
+  stub(c(continent, country, state_province)) %>% 
+  define(country, indent = .25) %>% 
+  define(state_province, indent = .5)
 }
 }
 \examples{
