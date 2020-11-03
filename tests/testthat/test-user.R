@@ -466,7 +466,7 @@ test_that("user4: Adverse Events table works.", {
     page_header("Client: Experis", "Study: BBC") %>% 
     titles("Table 1.0", "Adverse Events by Severity", "Safety Population") %>% 
     add_content(tbl) %>% 
-    footnotes(paste("Date Produced:", "Time", ";  SAS Program: Table3_0.R"),
+    footnotes(paste("Date Produced:", "Time", ";  Program: Table3_0.R"),
               paste("* Total Reporting is defined as number of subjects",
                     "who reported at least one adverse event."),
               "** Mod = Moderate",

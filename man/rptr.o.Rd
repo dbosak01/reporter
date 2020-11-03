@@ -21,8 +21,8 @@ for any industry.  The package is written primarily in Base R, and has
 few dependencies on other packages.
 
 The package is intended to give R programmers 
-report layout capabilities such as those found in SAS® PROC REPORT, 
-and a choice of output formats like SAS® ODS. The package will 
+flexible report layout capabilities, and a choice of output formats. 
+The package will 
 initially focus on printable, file-based 
 output formats, as there are already numerous R packages that 
 provide tabular reporting in HTML. 
