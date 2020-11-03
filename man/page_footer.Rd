@@ -49,14 +49,14 @@ in the page header or page footer.
 Use the \code{blank_row} parameter to control the blank space above the 
 page footer.
 
-Each footer string must fit within the available space.  The \strong{rptr}
+Each footer string must fit within the available space.  The \strong{reporter}
 package will not wrap footer.  If a footer string does not fit within the 
 available space, an error will be generated.  In these situations, either
 shorten the footer string or split it into multiple footers that each fit 
 within the available space.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create temp file path

@@ -41,7 +41,7 @@ to write an object that is not of class "report_spec" will generate an error.
 
 The \code{write_report} function is a driver for very complex set of 
 rendering functions. The rendering functions
-perform most of the advanced functionality of the \strong{rptr} package:
+perform most of the advanced functionality of the \strong{reporter} package:
 generating spanning headers, page wrapping and breaking, creating stub 
 columns, etc.  When things go wrong, they will usually go wrong during this
 function call.  For that reason, although this function can be part of 
@@ -50,7 +50,7 @@ the pipeline that creates the report object, it is best to call
 report definition procedure.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(fmtr)
 library(magrittr)
 

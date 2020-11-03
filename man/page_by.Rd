@@ -44,7 +44,7 @@ The page by labels will appear in the sorted order.  Failure to sort
 the page by variable prior to reporting may produce unexpected results.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create temp file path

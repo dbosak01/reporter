@@ -51,7 +51,7 @@ the available space without wrapping or breaking.
 }
 
 \examples{
-library(rptr.o)
+library(reporter)
 
 # Create temp file path
 tmp <- file.path(tempdir(), "reg.txt")

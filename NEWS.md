@@ -1,6 +1,6 @@
 
 
-# rptr.o 1.0.1
+# reporter 1.0.1
 
 A package to create statistical reports (TFLs). Contains the following features:
 

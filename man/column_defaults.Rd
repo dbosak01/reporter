@@ -89,7 +89,7 @@ on the same table specification.  Typically, multiple \code{column_defaults}
 calls would be made with a different set or range of variables.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
  
 # Create temp file name

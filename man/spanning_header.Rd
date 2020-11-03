@@ -61,7 +61,7 @@ Variables can be identified by position, a quoted variable name, or an
 unquoted variable name.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create a temporary file

@@ -42,14 +42,14 @@ blocks may be added to the same object.
 Blank rows above or below the footnote block may be controlled using the 
 \code{blank_row} parameter.
 
-Each footnote string must fit within the available space.  The \strong{rptr}
+Each footnote string must fit within the available space.  The \strong{reporter}
 package will not wrap footnotes.  If a footnote does not fit within the 
 available space, an error will be generated.  In these situations, either
 shorten the footnote or split it into multiple footnotes that each fit within 
 the available space.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create a temporary file

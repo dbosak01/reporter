@@ -143,7 +143,7 @@ Note that some parameters (such as \code{page_break}) may only be set
 once per report, and cannot be shared across multiple variables.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
  
 # Create temp file name

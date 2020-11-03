@@ -1,6 +1,6 @@
 context("Title and Footnote Tests")
 
-base_path <- "c:/packages/rptr.o/tests/testthat"
+base_path <- "c:/packages/reporter/tests/testthat"
 
 base_path <- "."
 

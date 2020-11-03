@@ -78,7 +78,7 @@
 #' \code{\link{create_plot}} functions
 #' to create content for the report.
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -352,7 +352,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' will be used to determine the number of lines that can fit on a page. 
 #' @param min_margin The editor minimum margin.  This parameter normally
 #' defaults to 0, but may be set for some types of editors.  
-#' @param blank_margins When this option is TRUE, \strong{rptr} will use blank 
+#' @param blank_margins When this option is TRUE, \strong{reporter} will use blank 
 #' spaces and blank rows to create left and top margins, rather than rely 
 #' on the editor to set margins.  When used, editor margins
 #' should be set to zero.  Valid values are TRUE and FALSE. Default is
@@ -379,7 +379,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' characters and lines per unit of measure manually.
 #' @family report
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -620,7 +620,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -762,7 +762,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' total number of pages in the report.  These tokens may be placed anywhere 
 #' in the page header or page footer. 
 #' 
-#' Each header string must fit within the available space.  The \strong{rptr}
+#' Each header string must fit within the available space.  The \strong{reporter}
 #' package will not wrap headers.  If a header string does not fit within the 
 #' available space, an error will be generated.  In these situations, either
 #' shorten the header string or split it into multiple headers that each fit 
@@ -778,7 +778,6 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @return The modified report specification.
 #' @family report
 #' @examples
-#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -872,7 +871,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' the title block may be controlled using the 
 #' \code{blank_row} parameter.
 #'
-#' Each title string must fit within the available space.  The \strong{rptr}
+#' Each title string must fit within the available space.  The \strong{reporter}
 #' package will not wrap titles.  If a title does not fit within the 
 #' available space, an error will be generated.  In these situations, either
 #' shorten the title or split it into multiple titles that each fit within the
@@ -888,7 +887,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -1005,7 +1004,7 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' Blank rows above or below the title block may be controlled using the 
 #' \code{blank_row} parameter.
 #' 
-#' Each title string must fit within the available space.  The \strong{rptr}
+#' Each title string must fit within the available space.  The \strong{reporter}
 #' package will not wrap titles.  If a title does not fit within the 
 #' available space, an error will be generated.  In these situations, either
 #' shorten the title or split it into multiple titles that each fit within the
@@ -1021,7 +1020,7 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -1114,7 +1113,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' Blank rows above or below the footnote block may be controlled using the 
 #' \code{blank_row} parameter.
 #' 
-#' Each footnote string must fit within the available space.  The \strong{rptr}
+#' Each footnote string must fit within the available space.  The \strong{reporter}
 #' package will not wrap footnotes.  If a footnote does not fit within the 
 #' available space, an error will be generated.  In these situations, either
 #' shorten the footnote or split it into multiple footnotes that each fit within 
@@ -1129,7 +1128,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -1223,7 +1222,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' Use the \code{blank_row} parameter to control the blank space above the 
 #' page footer.
 #' 
-#' Each footer string must fit within the available space.  The \strong{rptr}
+#' Each footer string must fit within the available space.  The \strong{reporter}
 #' package will not wrap footer.  If a footer string does not fit within the 
 #' available space, an error will be generated.  In these situations, either
 #' shorten the footer string or split it into multiple footers that each fit 
@@ -1241,7 +1240,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1344,7 +1343,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' @seealso \code{\link{create_table}} to create a table, and 
 #' \code{\link{create_plot}} to create a plot.  
 #' @examples 
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1525,7 +1524,7 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
 #' \code{\link{create_plot}} to create content for a report. 
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1605,7 +1604,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' 
 #' The \code{write_report} function is a driver for very complex set of 
 #' rendering functions. The rendering functions
-#' perform most of the advanced functionality of the \strong{rptr} package:
+#' perform most of the advanced functionality of the \strong{reporter} package:
 #' generating spanning headers, page wrapping and breaking, creating stub 
 #' columns, etc.  When things go wrong, they will usually go wrong during this
 #' function call.  For that reason, although this function can be part of 
@@ -1632,7 +1631,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' debugging issues with the procedure.
 #' @family report
 #' @examples 
-#' library(rptr.o)
+#' library(reporter)
 #' library(fmtr)
 #' library(magrittr)
 #' 
@@ -1790,7 +1789,7 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 #' @return The report spec, invisibly.
 #' @family report
 #' @examples 
-#' library(rptr.o)
+#' library(reporter)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1988,7 +1987,7 @@ print.report_spec <- function(x, ..., verbose = FALSE){
 #' @param file_path The full or relative file name and path to create the 
 #' registration file.
 #' @examples 
-#' library(rptr.o)
+#' library(reporter)
 #' 
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "reg.txt")

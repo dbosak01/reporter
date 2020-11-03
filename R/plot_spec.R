@@ -35,7 +35,7 @@
 #' \code{\link{footnotes}} to add footnotes, and \code{\link{add_content}} 
 #' to add the plot object to a report.
 #' @examples
-#' library(rptr.o)
+#' library(reporter)
 #' library(ggplot2)
 #' library(magrittr)
 #' 

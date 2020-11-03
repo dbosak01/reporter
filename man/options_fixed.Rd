@@ -39,7 +39,7 @@ will be used to determine the number of lines that can fit on a page.}
 \item{min_margin}{The editor minimum margin.  This parameter normally
 defaults to 0, but may be set for some types of editors.}
 
-\item{blank_margins}{When this option is TRUE, \strong{rptr} will use blank 
+\item{blank_margins}{When this option is TRUE, \strong{reporter} will use blank 
 spaces and blank rows to create left and top margins, rather than rely 
 on the editor to set margins.  When used, editor margins
 should be set to zero.  Valid values are TRUE and FALSE. Default is
@@ -131,7 +131,7 @@ reports.  Valid font size options are 10 and 12.
 }
 
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create a temporary file

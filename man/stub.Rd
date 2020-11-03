@@ -96,7 +96,7 @@ tbl <- create_table(dat) \%>\%
 }
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create temporary path

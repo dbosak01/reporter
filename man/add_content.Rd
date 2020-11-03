@@ -51,7 +51,7 @@ closely by setting the \code{page_break} parameter to FALSE, and
 the \code{blank_row} parameter to "none".
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create temp file path

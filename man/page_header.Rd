@@ -41,14 +41,13 @@ Use [pg] to indicate the current page number.  Use [tpg] to indicate the
 total number of pages in the report.  These tokens may be placed anywhere 
 in the page header or page footer. 
 
-Each header string must fit within the available space.  The \strong{rptr}
+Each header string must fit within the available space.  The \strong{reporter}
 package will not wrap headers.  If a header string does not fit within the 
 available space, an error will be generated.  In these situations, either
 shorten the header string or split it into multiple headers that each fit 
 within the available space.
 }
 \examples{
-library(rptr.o)
 library(magrittr)
 
 # Create temp file path

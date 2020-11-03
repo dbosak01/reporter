@@ -24,7 +24,7 @@ form by default.  To print in list form, set the \code{verbose} parameter
 to TRUE.
 }
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create temp file path

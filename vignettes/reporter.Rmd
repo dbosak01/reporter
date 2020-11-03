@@ -16,9 +16,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# rptr.o <img src="../man/images/reporter.svg" align="right" height="138" />
+# reporter <img src="../man/images/reporter.svg" align="right" height="138" />
 
-The **rptr.o** package creates regulatory-style, statistical reports. It was designed
+The **reporter** package creates regulatory-style, statistical reports. It was designed
 to produce Tables, Listings, and Figures (TLFs) for the 
 the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting
@@ -33,14 +33,14 @@ output formats, as there are already numerous R packages that
 provide tabular reporting in HTML. 
 The current version supports TXT, RTF, and PDF output types.   
 
-The **rptr.o** package is distributed under a [Creative Commons non-commercial 
+The **reporter** package is distributed under a [Creative Commons non-commercial 
 license](https://creativecommons.org/licenses/by-nc/4.0).  It is available 
 for personal and organizational use, but cannot be used to create a commercial 
 product without permission of the license holder.
 
 ## Key Features
 
-The **rptr.o** package contains the following key features:
+The **reporter** package contains the following key features:
 
 * Titles, footnotes, page header, and page footer are repeated on each page
 * Supports header labels and spanning headers 
@@ -53,7 +53,7 @@ and intermingling of text, tables, and plots
 * Supports in-report date/time stamps and "Page X of Y" page numbering
 
 
-## How to use **rptr.o**
+## How to use **reporter**
 There are four steps to creating a report:
 
 * Create report 
@@ -73,7 +73,7 @@ the subsequent glossary.
 
 ## Glossary of Functions
 
-Below are the functions available in the **rptr.o** package, and a brief
+Below are the functions available in the **reporter** package, and a brief
 description of their use.  For additional information, see the help text:
 
 ### Report Functions
@@ -110,7 +110,7 @@ description of their use.  For additional information, see the help text:
 ### Example 1: Listing
 
 Here is an example of 
-a regulatory-style listing using **rptr.o** and the mtcars sample data frame:
+a regulatory-style listing using **reporter** and the mtcars sample data frame:
 
 ```
 # Create temp file name
@@ -413,7 +413,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 ### Example 5: Spanning Headers
 
 Spanning headers are a common requirement of regulatory tables, yet few 
-reporting packages support them.  **rptr.o** supports any number of spanning
+reporting packages support them.  **reporter** supports any number of spanning
 levels, along with a flexible and simple syntax to define them.
 
 ```
@@ -698,7 +698,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ### Example 9: RTF and PDF
 
-The **rptr.o** package supports three types of output: TXT, RTF, and PDF. 
+The **reporter** package supports three types of output: TXT, RTF, and PDF. 
 The package produces TXT reports by default.  If you want to produce RTF
 or PDF output, simply change the output type.  Below is the summary table
 with stub example from above, the only change being that the `output_type`

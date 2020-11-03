@@ -1,6 +1,6 @@
 context("Write Report Text Tests")
 
-base_path <- "c:/packages/rptr/tests/testthat"
+base_path <- "c:/packages/reporter/tests/testthat"
 
 base_path <- "./"
 

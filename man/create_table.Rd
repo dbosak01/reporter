@@ -117,13 +117,13 @@ The \code{create_table} function also provides the capabilities to create
 a "headerless" table.  A headerless table is useful when combining two tables 
 into one report.  The example below illustrates use of a headerless table.
 
-Since the purpose of the \strong{rptr} package is to create statistical 
+Since the purpose of the \strong{reporter} package is to create statistical 
 reports, the \code{create_table} function makes it easy to add population
 counts to the table header.  These population counts are added to column
 labels and spanning header labels using the \code{n} parameter on the 
 \code{\link{define}} or \code{\link{spanning_header}} functions.  The 
 population count is formatted according to the  
-\code{n_format} parameter on \code{create_table}. The \strong{rptr} 
+\code{n_format} parameter on \code{create_table}. The \strong{reporter} 
 package provides four population count formatting functions.  
 You may create your own formatting function 
 if one of these functions does not meet your needs.  See 
@@ -131,7 +131,7 @@ if one of these functions does not meet your needs.  See
 }
 
 \examples{
-library(rptr.o)
+library(reporter)
 library(magrittr)
 
 # Create temp file path
