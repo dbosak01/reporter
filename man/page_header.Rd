@@ -48,7 +48,7 @@ shorten the header string or split it into multiple headers that each fit
 within the available space.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create temp file path

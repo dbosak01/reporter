@@ -36,7 +36,7 @@ The text specification also accepts titles and footnotes.  See the
 details.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create temp file path

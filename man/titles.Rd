@@ -61,7 +61,7 @@ shorten the title or split it into multiple titles that each fit within the
 available space.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create a temporary file

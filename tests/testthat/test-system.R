@@ -1,7 +1,7 @@
 
 context("System Tests")
 
-base_path <- "c:/packages/rptr/tests/testthat"
+base_path <- "c:/packages/rptr.o/tests/testthat"
 
 base_path <- "."
 

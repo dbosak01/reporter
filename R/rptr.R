@@ -1,4 +1,4 @@
-#' @title rptr: A package for creating statistical reports
+#' @title rptr.o: A package for creating statistical reports
 #'
 #' @description The \strong{rptr} package creates statistical reports in TXT, 
 #' RTF, and PDF file formats.  Features include automatic page wrapping and 
@@ -96,7 +96,7 @@
 #' }
 #' 
 #' @docType package
-#' @name rptr
+#' @name rptr.o
 NULL
 
 #' @title Notes on PDF output type

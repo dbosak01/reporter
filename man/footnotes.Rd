@@ -49,7 +49,7 @@ shorten the footnote or split it into multiple footnotes that each fit within
 the available space.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create a temporary file

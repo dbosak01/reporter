@@ -86,7 +86,7 @@ See \link{NotesOnPDF} for additional information.
 }
 
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create temp file path

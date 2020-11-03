@@ -131,7 +131,7 @@ if one of these functions does not meet your needs.  See
 }
 
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create temp file path

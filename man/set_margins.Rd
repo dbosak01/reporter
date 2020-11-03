@@ -44,7 +44,7 @@ on the page. For best results, set the right and bottom margins to zero
 to allow for slight overflow without causing a page break or wrapping lines.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create a temporary file

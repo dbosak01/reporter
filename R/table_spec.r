@@ -114,7 +114,7 @@
 #' the \code{\link{titles}}, \code{\link{footnotes}}, and \code{\link{page_by}}
 #' functions to add those items to the table if desired.
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -331,7 +331,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @return The modified table spec.
 #' @family table
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #'  
 #' # Create temp file name
@@ -564,7 +564,7 @@ define_c <- function(var, label = NULL, format = NULL,
 #' @return The modified table spec.
 #' @family table
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #'  
 #' # Create temp file name
@@ -755,7 +755,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @return The modified table spec.
 #' @family table
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -978,7 +978,7 @@ spanning_header <- function(x, from, to, label = "",
 #' @return The modified table spec.
 #' @family table
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temporary path

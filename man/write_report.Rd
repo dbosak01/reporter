@@ -50,7 +50,7 @@ the pipeline that creates the report object, it is best to call
 report definition procedure.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(fmtr)
 library(magrittr)
 

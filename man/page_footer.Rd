@@ -56,7 +56,7 @@ shorten the footer string or split it into multiple footers that each fit
 within the available space.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create temp file path

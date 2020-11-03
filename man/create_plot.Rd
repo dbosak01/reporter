@@ -41,7 +41,7 @@ The plot specification also accepts titles and footnotes.  See the
 details.
 }
 \examples{
-library(rptr)
+library(rptr.o)
 library(ggplot2)
 library(magrittr)
 

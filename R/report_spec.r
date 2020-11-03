@@ -78,7 +78,7 @@
 #' \code{\link{create_plot}} functions
 #' to create content for the report.
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -379,7 +379,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' characters and lines per unit of measure manually.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -620,7 +620,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 #' @return The report_spec with margins set as desired.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -778,7 +778,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @return The modified report specification.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -888,7 +888,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -1021,7 +1021,7 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -1129,7 +1129,7 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create a temporary file
@@ -1241,7 +1241,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
 #' @return The modified report.
 #' @family report
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1344,7 +1344,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' @seealso \code{\link{create_table}} to create a table, and 
 #' \code{\link{create_plot}} to create a plot.  
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1525,7 +1525,7 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
 #' \code{\link{create_plot}} to create content for a report. 
 #' @examples
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1632,7 +1632,7 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' debugging issues with the procedure.
 #' @family report
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(fmtr)
 #' library(magrittr)
 #' 
@@ -1790,7 +1790,7 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 #' @return The report spec, invisibly.
 #' @family report
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path
@@ -1988,7 +1988,7 @@ print.report_spec <- function(x, ..., verbose = FALSE){
 #' @param file_path The full or relative file name and path to create the 
 #' registration file.
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' 
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "reg.txt")

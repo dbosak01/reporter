@@ -29,7 +29,7 @@
 #' \code{\link{footnotes}} to add footnotes, and \code{\link{add_content}} 
 #' to add the text object to a report.
 #' @examples 
-#' library(rptr)
+#' library(rptr.o)
 #' library(magrittr)
 #' 
 #' # Create temp file path

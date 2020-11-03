@@ -131,7 +131,7 @@ reports.  Valid font size options are 10 and 12.
 }
 
 \examples{
-library(rptr)
+library(rptr.o)
 library(magrittr)
 
 # Create a temporary file

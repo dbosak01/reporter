@@ -1,4 +1,4 @@
-Package: rptr
+Package: rptr.o
 Type: Package
 Title: Creates Statistical Reports (TLFs)
 Version: 1.0.1
