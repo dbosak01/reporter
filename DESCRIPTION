@@ -1,14 +1,14 @@
 Package: reporter
 Type: Package
-Title: Creates Statistical Reports (TLFs)
-Version: 1.0.1
+Title: Creates Statistical Reports 
+Version: 1.0.2
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports.
-    Originally designed to create tables, listings, and figures (TLFs) for the 
+    Originally designed to create tables, listings, and figures for the 
     pharmaceutical, biotechnology, and medical device industries, these
     reports are generalized enough that they could be used in any industry.
-    Generates TXT, RTF, and PDF file formats.  The package specializes 
+    Generates text, rich-text, and PDF file formats.  The package specializes 
     in printing wide and long tables with automatic page wrapping and splitting.  
     Reports can be produced with a minimum of function calls, and without 
     relying on other table packages.  The package supports titles, footnotes, 
