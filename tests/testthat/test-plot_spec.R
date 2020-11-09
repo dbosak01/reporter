@@ -29,3 +29,22 @@ test_that("plot print() function works as expected.", {
   
 })
   
+test_that("plot accepts survival plots as expected.", {
+  
+  p <- list()
+  class(p) <- c("ggcoxzph", "ggsurv", "list")
+  
+  plt <- create_plot(p, height = 4, width = 2)
+  
+  expect_equal(plt$plot, p) 
+  
+  class(p) <- c("fork", "list")
+  
+  expect_error(create_plot(p, 4, 2))
+  
+  class(p) <- c("gg", "list")
+  
+  plt <- create_plot(p, height = 4, width = 2)
+  
+  expect_equal(plt$plot, p)
+})

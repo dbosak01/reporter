@@ -65,8 +65,8 @@
 create_plot <- function(x, height, width) {
   
   
-  if (!"ggplot" %in% class(x))
-    stop("plot object must be of class 'ggplot'")
+  if (!any(class(x) %in% c("gg", "ggplot", "ggcoxzph", "ggsurv")))
+    stop("plot object must be of type 'ggplot'")
   
   ret <- structure(list(), class = c("plot_spec", "list"))
   
