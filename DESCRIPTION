@@ -25,7 +25,8 @@ Suggests:
     readr,
     knitr,          
     ggplot2,
-    rmarkdown
+    rmarkdown,
+    gridExtra
 Imports: fmtr,
          qlcMatrix,
          stringi,

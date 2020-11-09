@@ -224,8 +224,20 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
     }
     
     # Save plot to temp file
-    ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
-           dpi = 300, units = u)
+    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+
+      # Deal with survival plots
+      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                      width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u )
+      
+      
+    } else {
+
+      # Any other type of plots
+      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+             dpi = 300, units = u)
+    }
     
     # Get rtf page bodies
     # Can return multiple pages if it breaks across pages
