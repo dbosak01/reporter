@@ -90,8 +90,8 @@ description of their use.  For additional information, see the help text:
 * `create_plot()`: Define a plot object 
 
 ### Title/Footnote Functions 
-* `titles()`: Set titles for the plot  
-* `footnotes()`: Set footnotes for the plot 
+* `titles()`: Set titles for the object  
+* `footnotes()`: Set footnotes for the object 
 * `title_header()`: A combined title/header block 
 * `page_by()`: Creates separate pages by a variable
 
@@ -245,7 +245,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ### Example 3: Summary table with stub column
 
-Here is an example of the same regulatory-style table of summary statistics,
+Here is an example of the same table of summary statistics,
 but with row labels merged into a stub column:
 
 ```
@@ -748,7 +748,7 @@ write_report(rpt)
 ### Example 10: Figures
 
 RTF and PDF also support plots produced with the ggplot2 package.  Use 
-the `create_plot()` function to create a report that contains a plot.  The 
+the `create_plot()` function to create plot content for a report.  The 
 plot can be added to the report with the `add_content()` function, just
 like tables and text.
 

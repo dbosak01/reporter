@@ -363,7 +363,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' write_report(rpt)
 #' 
 #' # Send report to console for viewing
-#' writeLines(readLines(tmp))
+#' writeLines(readLines(tmp, encoding = "UTF-8"))
 #' 
 #' #                                  Listing 2.0
 #' #                       MTCARS Data Listing with Page Wrap

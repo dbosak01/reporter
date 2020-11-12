@@ -363,6 +363,8 @@ write_page_numbers <- function(rs) {
     # Update page number if hit a page break
     if (grepl("\f", x, fixed = TRUE)) {
       #print("Updated page number")
+      # This double arrow <<- is updating the pg variable in the containing
+      # function write_page_numbers().  It is not updating the global environment.
       pg <<- pg + 1 
     }
     

@@ -1,4 +1,6 @@
+# reporter 1.0.3
 
+* Added support for survminer graphics in create_plot()
 
 # reporter 1.0.2
 

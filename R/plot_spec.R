@@ -7,7 +7,8 @@
 #' added as content to a report. The \code{create_plot} function can 
 #' be used to include charts, graphs, and figures on a statistical report.  
 #' The function only supports plot objects returned by 
-#' \code{\link[ggplot2]{ggplot}}.  It does not support the Base R 
+#' \code{\link[ggplot2]{ggplot}} or \code{\link[survminer]{ggsurvplot}}.  
+#' It does not support the Base R 
 #' \code{\link[base]{plot}} function. 
 #' @details 
 #' To add a plot to a report, use the \code{create_plot} function.  The 
@@ -25,7 +26,8 @@
 #' details.
 #' 
 #' @param x The plot to create.  Specifically, this parameter should be 
-#' set to an object returned from a call to \code{\link[ggplot2]{ggplot}}.
+#' set to an object returned from a call to \code{\link[ggplot2]{ggplot}}
+#' or \code{\link[survminer]{ggsurvplot}}.
 #' @param height The height of the plot in the specified units of measure. 
 #' @param width The width of the plot in the specified units of measure. 
 #' @return The plot specification.
@@ -66,7 +68,7 @@ create_plot <- function(x, height, width) {
   
   
   if (!any(class(x) %in% c("gg", "ggplot", "ggcoxzph", "ggsurv")))
-    stop("plot object must be of type 'ggplot'")
+    stop("plot object must be of type 'ggplot' or 'ggsurv'.")
   
   ret <- structure(list(), class = c("plot_spec", "list"))
   

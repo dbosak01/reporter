@@ -8,7 +8,8 @@ create_plot(x, height, width)
 }
 \arguments{
 \item{x}{The plot to create.  Specifically, this parameter should be 
-set to an object returned from a call to \code{\link[ggplot2]{ggplot}}.}
+set to an object returned from a call to \code{\link[ggplot2]{ggplot}}
+or \code{\link[survminer]{ggsurvplot}}.}
 
 \item{height}{The height of the plot in the specified units of measure.}
 
@@ -22,7 +23,8 @@ Function to create a plot specification that can be
 added as content to a report. The \code{create_plot} function can 
 be used to include charts, graphs, and figures on a statistical report.  
 The function only supports plot objects returned by 
-\code{\link[ggplot2]{ggplot}}.  It does not support the Base R 
+\code{\link[ggplot2]{ggplot}} or \code{\link[survminer]{ggsurvplot}}.  
+It does not support the Base R 
 \code{\link[base]{plot}} function.
 }
 \details{
