@@ -1,8 +1,11 @@
 context("User Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
+data_dir <- base_path
 
-base_path <- "./"
+
+base_path <- tempdir()
+data_dir <- "."
 
 test_that("user1: demo table works.", {
 
@@ -10,7 +13,7 @@ test_that("user1: demo table works.", {
   library(dplyr)
 
   # Data Filepath
-  dir_data <- file.path(base_path, "data")
+  dir_data <- file.path(data_dir, "data")
   
   fp <- file.path(base_path, "user/user1.out")
   
@@ -153,7 +156,7 @@ test_that("user2: demo table with stub works.", {
   
   
   # Data Filepath
-  dir_data <- file.path(base_path, "data")
+  dir_data <- file.path(data_dir, "data")
   
   fp <- file.path(base_path, "user/user2.out")
   
@@ -283,7 +286,7 @@ test_that("user2: demo table with stub works.", {
 test_that("user3: listings works.", {
   
   # Data Filepath
-  dir_data <- file.path(base_path, "data")
+  dir_data <- file.path(data_dir, "data")
   
   fp <- file.path(base_path, "user/user3.out")
   
@@ -360,7 +363,7 @@ test_that("user4: Adverse Events table works.", {
   library(tidyr)
 
   # Data Filepath
-  dir_data <- file.path(base_path, "data")
+  dir_data <- file.path(data_dir, "data")
 
   fp <- file.path(base_path, "user/user4.out")
 
@@ -571,7 +574,7 @@ test_that("user5: large listing works.", {
 test_that("user6: listings with page break works as expected.", {
   
   # Data Filepath
-  dir_data <- file.path(base_path, "data")
+  dir_data <- file.path(data_dir, "data")
 
   
   # Load Data
@@ -621,7 +624,7 @@ test_that("user7: listings with NA values works.", {
   library(readr)
   
   # Data Filepath
-  dir_data <- file.path(base_path, "data")
+  dir_data <- file.path(data_dir, "data")
   
   fp <- file.path(base_path, "user/user7")
   

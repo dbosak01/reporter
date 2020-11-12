@@ -3,7 +3,7 @@ context("RTF Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-base_path <- "."
+base_path <- tempdir()
 
 cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
