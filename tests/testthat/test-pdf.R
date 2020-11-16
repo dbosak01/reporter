@@ -345,8 +345,6 @@ test_that("pdf9: Simplest PDF Plot works as expected.", {
 })
 
 
-
-
 test_that("pdf10: PDF Table with Plot works as expected.", {
   
   if (dev) {
