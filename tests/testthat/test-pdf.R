@@ -517,7 +517,7 @@ test_that("pdf15: Simplest landscape table works as expected.", {
   
 })
 
-test_that("test16: 10 pt report with units in cm works as expected.", {
+test_that("pdf16: 10 pt report with units in cm works as expected.", {
   
   if (rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test16.pdf")
@@ -540,7 +540,7 @@ test_that("test16: 10 pt report with units in cm works as expected.", {
 })
 
 
-test_that("test17: 12 pt report with units in cm works as expected.", {
+test_that("pdf17: 12 pt report with units in cm works as expected.", {
   
   if (rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test17.pdf")

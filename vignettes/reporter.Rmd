@@ -788,7 +788,9 @@ rpt <- create_report(tmp, output_type = "PDF") %>%
   page_footer(Sys.time(), "Confidential", "Page [pg] of [tpg]")
 
 # Write out report
-res <- write_report(rpt)
+if (rmarkdown::pandoc_available("1.12.3")) {
+  res <- write_report(rpt)
+}
 
 # View report
 # file.show(tmp)

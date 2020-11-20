@@ -48,7 +48,7 @@ library(ggplot2)
 library(magrittr)
 
 # Create temp file path
-tmp <- file.path(tempdir(), "mtcars.pdf")
+tmp <- file.path(tempdir(), "mtcars.rtf")
 
 # Create ggplot
 p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
@@ -56,7 +56,7 @@ p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 # Create plot object
 plt <- create_plot(p, height = 4, width = 8)
 
-rpt <- create_report(tmp, output_type = "PDF") \%>\%
+rpt <- create_report(tmp, output_type = "RTF") \%>\%
   page_header("Client", "Study: XYZ") \%>\% 
   titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") \%>\%
   set_margins(top = 1, bottom = 1) \%>\%
@@ -67,7 +67,7 @@ rpt <- create_report(tmp, output_type = "PDF") \%>\%
 # Write out report
 write_report(rpt)
 
-# Uncomment to view PDF file
+# Uncomment to view RTF file
 # shell.exec(tmp)
 }
 \seealso{
