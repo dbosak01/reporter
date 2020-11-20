@@ -12,6 +12,10 @@
 #' @noRd
 write_report_pdf <- function(rs) {
   
+  if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
+   stop("pandoc version >= 1.12.3 is required. Install to continue.") 
+  }
+  
   debug <- FALSE
   
   orig_path <- rs$modified_path

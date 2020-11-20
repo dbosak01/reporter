@@ -17,7 +17,7 @@ dev <- FALSE
 
 test_that("pdf1: Simplest table works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
   
   fp <- file.path(base_path, "pdf/test1.pdf")
   
@@ -35,7 +35,7 @@ test_that("pdf1: Simplest table works as expected.", {
 
 test_that("pdf2: Simplest table with title works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test2.pdf")
     
     tbl <- create_table(mtcars[1:10, ]) %>% 
@@ -59,7 +59,7 @@ test_that("pdf2: Simplest table with title works as expected.", {
 
 test_that("pdf3: Table with break between sections works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
   fp <- file.path(base_path, "pdf/test3.pdf")
 
   # Setup
@@ -108,7 +108,7 @@ test_that("pdf3: Table with break between sections works as expected.", {
 
 test_that("pdf4: Table that spans multiple pages breaks as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test4.pdf")
     
     rpt <- create_report(fp, output_type = "PDF") %>%
@@ -130,7 +130,7 @@ test_that("pdf4: Table that spans multiple pages breaks as expected.", {
 
 test_that("pdf5: Table with long cell and label values wraps as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test5.pdf")
     
     # Setup
@@ -176,7 +176,7 @@ test_that("pdf5: Table with long cell and label values wraps as expected.", {
 
 test_that("pdf6: Table with spanning headers works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test6.pdf")
     
     
@@ -216,7 +216,7 @@ test_that("pdf6: Table with spanning headers works as expected.", {
 
 test_that("pdf7: Simplest PDF report with 1 in margins works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     fp <- file.path(base_path, "pdf/test7.pdf")
     
     tbl <- create_table(mtcars[1:10, ]) %>%
@@ -244,7 +244,7 @@ test_that("pdf7: Simplest PDF report with 1 in margins works as expected.", {
 
 test_that("pdf8: Two page PDF report works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
   
     fp <- file.path(base_path, "pdf/test8.pdf")
     
@@ -314,7 +314,7 @@ test_that("pdf8: Two page PDF report works as expected.", {
 
 test_that("pdf9: Simplest PDF Plot works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     library(ggplot2)
     
     fp <- file.path(base_path, "pdf/test9.pdf")
@@ -347,7 +347,7 @@ test_that("pdf9: Simplest PDF Plot works as expected.", {
 
 test_that("pdf10: PDF Table with Plot works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
     library(ggplot2)
     
     fp <- file.path(base_path, "pdf/test10.pdf")
@@ -384,7 +384,7 @@ test_that("pdf10: PDF Table with Plot works as expected.", {
 
 
 test_that("pdf11: PDF Table with Plot on same page works as expected.", {
-  
+  if (rmarkdown::pandoc_available("1.12.3")) {
   library(ggplot2)
   
   fp <- file.path(base_path, "pdf/test11.pdf")
@@ -412,13 +412,15 @@ test_that("pdf11: PDF Table with Plot on same page works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
   
-  
+  } else 
+    expect_equal(TRUE, TRUE)
   
 })
 
 
 test_that("pdf12: Table and Text output works as expected.", {
   
+  if (rmarkdown::pandoc_available("1.12.3")) {
   fp <- file.path(base_path, "pdf/test12.pdf")
   
   tbl1 <- mtcars[1:10, ]
@@ -441,13 +443,14 @@ test_that("pdf12: Table and Text output works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
   
-  
+  } else
+    expect_equal(TRUE, TRUE)
 })
 
 
 test_that("pdf13: Very Long text output works as expected.", {
   
-  if (dev) {
+  if (dev & rmarkdown::pandoc_available("1.12.3")) {
 
     fp <- file.path(base_path, "pdf/test13.pdf")
     
@@ -473,54 +476,65 @@ test_that("pdf13: Very Long text output works as expected.", {
 
 test_that("pdf14: Simplest portrait table works as expected.", {
   
+  if (rmarkdown::pandoc_available("1.12.3")) {
   
-  fp <- file.path(base_path, "pdf/test14.pdf")
+    fp <- file.path(base_path, "pdf/test14.pdf")
+    
+    rpt <- create_report(fp, output_type = "PDF", orientation = "portrait") %>% 
+      page_header("left", "right") %>% 
+      titles("Table 1.0", "MTCARS Data Frame") %>% 
+      add_content(create_table(mtcars)) %>% 
+      page_footer("Left", right = "right")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
   
-  rpt <- create_report(fp, output_type = "PDF", orientation = "portrait") %>% 
-    page_header("left", "right") %>% 
-    titles("Table 1.0", "MTCARS Data Frame") %>% 
-    add_content(create_table(mtcars)) %>% 
-    page_footer("Left", right = "right")
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
   
 })
 
 
 test_that("pdf15: Simplest landscape table works as expected.", {
   
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    
+    fp <- file.path(base_path, "pdf/test15.pdf")
+    
+    rpt <- create_report(fp, output_type = "PDF", orientation = "landscape") %>% 
+      page_header("left", "right") %>% 
+      titles("Table 1.0", "MTCARS Data Frame") %>% 
+      add_content(create_table(mtcars)) %>% 
+      page_footer("Left", right = "right")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
   
-  fp <- file.path(base_path, "pdf/test15.pdf")
-  
-  rpt <- create_report(fp, output_type = "PDF", orientation = "landscape") %>% 
-    page_header("left", "right") %>% 
-    titles("Table 1.0", "MTCARS Data Frame") %>% 
-    add_content(create_table(mtcars)) %>% 
-    page_footer("Left", right = "right")
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
   
 })
 
 test_that("test16: 10 pt report with units in cm works as expected.", {
   
-  fp <- file.path(base_path, "pdf/test16.pdf")
-  
-  
-  rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
-    page_header("Client: Experis", "Study: ABC") %>% 
-    titles("IRIS Data Frame") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
-    add_content(create_table(iris)) 
-  
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    fp <- file.path(base_path, "pdf/test16.pdf")
+    
+    
+    rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
+      page_header("Client: Experis", "Study: ABC") %>% 
+      titles("IRIS Data Frame") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+      add_content(create_table(iris)) 
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
   
   
 })
@@ -528,60 +542,64 @@ test_that("test16: 10 pt report with units in cm works as expected.", {
 
 test_that("test17: 12 pt report with units in cm works as expected.", {
   
-  fp <- file.path(base_path, "pdf/test17.pdf")
-  
-  
-  rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
-    options_fixed(font_size = 12) %>% 
-    page_header("Client: Experis", "Study: ABC") %>% 
-    titles("IRIS Data Frame") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
-    add_content(create_table(iris)) 
-  
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
-  
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    fp <- file.path(base_path, "pdf/test17.pdf")
+    
+    
+    rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
+      options_fixed(font_size = 12) %>% 
+      page_header("Client: Experis", "Study: ABC") %>% 
+      titles("IRIS Data Frame") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+      add_content(create_table(iris)) 
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
   
 })
 
 
 test_that("pdf18: Plot with page by on report works as expected.", {
   
-  library(ggplot2)
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "pdf/test18.pdf")
+    
+    
+    dat <- mtcars[order(mtcars$cyl), ]
+    
+    p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+    
+    
+    #dats <- split(p$data, p$data$grp)
+    #tbl <- create_table(dat[1:3, ])
+    
+    plt <- create_plot(p, height = 4, width = 8)
+    
+    
+    rpt <- create_report(fp, output_type = "PDF") %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
+      add_content(plt) %>%
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
   
-  fp <- file.path(base_path, "pdf/test18.pdf")
-  
-  
-  dat <- mtcars[order(mtcars$cyl), ]
-  
-  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-  
-  
-  #dats <- split(p$data, p$data$grp)
-  #tbl <- create_table(dat[1:3, ])
-  
-  plt <- create_plot(p, height = 4, width = 8)
-  
-  
-  rpt <- create_report(fp, output_type = "PDF") %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    page_by(cyl, "Cylinders: ", align = "right", blank_row = "none") %>% 
-    add_content(plt) %>%
-    footnotes("* Motor Trend, 1974") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-  
-  
-  res <- write_report(rpt)
-  
-  #print(res)
-  
-  expect_equal(file.exists(fp), TRUE)
-  
-  
+  } else
+    expect_equal(TRUE, TRUE)
   
 })
 
@@ -589,37 +607,39 @@ test_that("pdf18: Plot with page by on report works as expected.", {
 
 test_that("pdf19: Plot with page by on plot works as expected.", {
   
-  library(ggplot2)
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "pdf/test19.pdf")
+    
+    
+    dat <- mtcars[order(mtcars$cyl), ]
+    
+    p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+    
+    
+    #dats <- split(p$data, p$data$grp)
+    #tbl <- create_table(dat[1:3, ])
+    
+    plt <- create_plot(p, height = 4, width = 8) %>% 
+      titles("Figure 1.0", "MTCARS Mileage By Displacement", blank_row = "none") %>%
+      page_by(cyl, "Cylinders: ", align = "left", blank_row = "none") %>% 
+      footnotes("* Motor Trend, 1974")
+    
+    rpt <- create_report(fp, output_type = "PDF") %>%
+      page_header("Sponsor", "Study: cars") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt) %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
   
-  fp <- file.path(base_path, "pdf/test19.pdf")
-  
-  
-  dat <- mtcars[order(mtcars$cyl), ]
-  
-  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-  
-  
-  #dats <- split(p$data, p$data$grp)
-  #tbl <- create_table(dat[1:3, ])
-  
-  plt <- create_plot(p, height = 4, width = 8) %>% 
-    titles("Figure 1.0", "MTCARS Mileage By Displacement", blank_row = "none") %>%
-    page_by(cyl, "Cylinders: ", align = "left", blank_row = "none") %>% 
-    footnotes("* Motor Trend, 1974")
-  
-  rpt <- create_report(fp, output_type = "PDF") %>%
-    page_header("Sponsor", "Study: cars") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt) %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-  
-  
-  res <- write_report(rpt)
-  
-  #print(res)
-  
-  expect_equal(file.exists(fp), TRUE)
-  
-  
+  } else 
+    expect_equal(TRUE, TRUE)
   
 })
