@@ -783,3 +783,49 @@ test_that("user7: listings with NA values works.", {
 #   
 #   
 # })
+
+# Special Case
+# test_that("mismatched format works as expected.", {
+#   
+#   
+#   fp <- file.path(base_path, "data/final.rds")
+#   
+#   final <- readRDS(fp)
+#   
+#   var_fmt <- c("AGE" = "Age", "AGEGR1" = "Age Group", "SEX" = "Sex", "RACE" = "Race")
+#   
+#   arm_pop <- c("ARM A" = 20, "ARM B" = 21,  "ARM C" = 21, "ARM D" = 23) 
+#   
+#   # Create Table
+#   tbl <- create_table(final, first_row_blank = TRUE, width = 9) %>% 
+#     column_defaults(from = `ARM A`, to = `ARM D`, align = "center", width = 1) %>% 
+#     stub(vars = c("var", "label"), "Variable", width = 2.5) %>% 
+#     define(var, blank_after = TRUE, dedupe = TRUE, label = "Variable",
+#            format = var_fmt,label_row = TRUE) %>% 
+#     define(label, indent = .25, label = "Demographic Category") %>% 
+#     define(`ARM A`,  n = arm_pop["ARM A"]) %>% 
+#     define(`ARM B`,  n = arm_pop["ARM B"]) %>% 
+#     define(`ARM C`,  n = arm_pop["ARM C"]) %>% 
+#     define(`ARM D`,  n = arm_pop["ARM D"]) %>% 
+#     define(stat, label = "Tests of Association*\nValue (P-value)",  
+#            width = 2, dedupe = TRUE, align = "center") %>% 
+#     titles("Table 1.0", "Analysis of Demographic Characteristics", 
+#            "Safety Population") %>% 
+#     footnotes("R Program: Table1_0.R",
+#               "NOTE: Denominator based on number of non-missing responses.",
+#               "*Pearsons's Chi-Square tests will be used for categorical variables",
+#               "   and ANOVA tests for continuous variables.") 
+#   
+# 
+#   
+#   rpt <- create_report("output/DM_Table2.rtf", output_type = "RTF") %>% 
+#     set_margins(top = 1, bottom = 1) %>% 
+#     page_header("Sponsor: Experis", "Study: ABC") %>% 
+#     add_content(tbl) %>% 
+#     page_footer(paste0("Date Produced: ", fapply(Sys.time(), "%d%b%y %H:%M")), 
+#                 right = "Page [pg] of [tpg]")
+#   
+#   write_report(rpt) 
+#   
+#   
+# })

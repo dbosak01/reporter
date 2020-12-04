@@ -274,8 +274,7 @@ compare_rows <- function(row1, row2) {
  
   ret <- TRUE
   for(i in seq_along(row1)) {
-    
-    if (row1[[i]] != row2[[i]]) {
+    if (!strong_eq(row1[[i]], row2[[i]])) {
       ret <- FALSE
       break
     }
@@ -284,6 +283,31 @@ compare_rows <- function(row1, row2) {
   return(ret)
   
 }
+
+#' @noRd
+strong_eq <- Vectorize(function(x1, x2) {
+  
+  ret <- TRUE
+  if (is.null(x1) & is.null(x2))
+    ret <- TRUE
+  else if (is.null(x1) & !is.null(x2))
+    ret <- FALSE
+  else if (!is.null(x1) & is.null(x2))
+    ret <- FALSE
+  else if (is.na(x1) & is.na(x2))
+    ret <- TRUE
+  else if (is.na(x1) & !is.na(x2))
+    ret <- FALSE
+  else if (!is.na(x1) & is.na(x2))
+    ret <- FALSE
+  else {
+    ret <- x1 == x2
+    
+  }
+  
+  return(ret)
+  
+})
 
 #' @noRd
 get_breaks <- function(x) {

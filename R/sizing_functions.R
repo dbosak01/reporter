@@ -243,7 +243,7 @@ prep_data <- function(dat, ts, char_width, missing_val) {
     if (def$label_row) {
       
       # Convert to character if necessary
-      if (all(dat[[def$var_c]] != "character"))
+      if (all(class(dat[[def$var_c]]) != "character"))
         dat[[def$var_c]] <- as.character(dat[[def$var_c]])
       
       dat <- add_blank_rows(dat, "label", vars = def$var_c)
