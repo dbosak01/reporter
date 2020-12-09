@@ -130,7 +130,9 @@
 #' #      * New York, May to September 1973
 #' @export
 create_report <- function(file_path = "", output_type = "TXT", 
-                          #font_type = "fixed",
+                          # report_type = "tabular" or "flat", 
+                          # font_type = "fixed" or "variable" 
+                          # tabular = TRUE
                           orientation ="landscape", units = "inches",
                           paper_size = "letter", missing = "") {
   # Force for now

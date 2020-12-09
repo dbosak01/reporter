@@ -58,7 +58,7 @@ write_report_pdf <- function(rs) {
   ls <- readLines(tmp_path, encoding = "UTF-8")
 
   # Revise text and write to pdf
-  write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
+  fls <- write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
 
   # Restore original path
   rs$modified_path <- orig_path
@@ -67,8 +67,9 @@ write_report_pdf <- function(rs) {
   if (!debug) {
     file.remove(tmp_path)
     file.remove(rmd_path)
-    nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
-    file.remove(nms)
+    #nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
+    if (length(fls) > 0)
+      file.remove(fls)
     #unlink(tmp_dir, recursive = TRUE)
   }
   
@@ -81,6 +82,7 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   # Set up vectors
   hdr <- c() 
   body <- c() 
+  ret <- c()
   
   # Prepare header
   hdr[length(hdr) + 1] <- "---"
@@ -140,6 +142,7 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
       spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
       
       pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
+      ret[length(ret) + 1] <- pth
   
       # 1 = path
       # 2 = height
@@ -203,6 +206,8 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
 
   if (file.exists(t1))
     file.remove(t1)
+  
+  return(ret)
   
 }
 

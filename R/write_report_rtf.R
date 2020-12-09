@@ -54,7 +54,7 @@ write_report_rtf <- function(rs) {
   ls <- readLines(tmp_path)
   
   # Revise text and write to rtf
-  write_rtf_output(rs, ls, rtf_path, orig_path, tmp_dir)
+  fls <- write_rtf_output(rs, ls, rtf_path, orig_path, tmp_dir)
   
   # Restore original path
   rs$modified_path <- orig_path
@@ -63,8 +63,9 @@ write_report_rtf <- function(rs) {
   if (!debug) {
     file.remove(tmp_path)
     #file.remove(rtf_path)
-    nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
-    file.remove(nms)
+    #nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
+    if (length(fls) > 0)
+      file.remove(fls)
     #unlink(tmp_dir, recursive = TRUE)
   }
   
@@ -73,12 +74,15 @@ write_report_rtf <- function(rs) {
 
 
 # May need some adjustments/sophistication/options to this function
+#' @return Vector of graphic file paths
 #' @noRd
 write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   
   # Set up vectors
   hdr <- c() 
   body <- c() 
+  
+  ret <- c()
 
   
   # Get conversion factor to twips
@@ -136,6 +140,7 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
       # 4 = align
       
       img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), as.numeric(spec[[2]]), rs$units)
+      ret[length(ret) + 1] <- spec[[1]]
       
       # Create latex codes
       if (spec[[4]] == "left") {
@@ -167,6 +172,8 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   
 #   file.copy(rtf_path, orig_path)
 #   file.remove(rtf_path)
+  
+  return(ret)
 
 }
 
