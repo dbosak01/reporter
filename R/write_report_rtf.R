@@ -114,6 +114,8 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
     hdr[length(hdr) + 1] <- "\\fs20"
   else if (rs$font_size == 12)
     hdr[length(hdr) + 1] <- "\\fs24"
+  else if (rs$font_size == 8)
+    hdr[length(hdr) + 1] <- "\\fs16"
   
   # Start with all lines
   body <- encodeRTF(ls)

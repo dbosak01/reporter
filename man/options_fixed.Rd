@@ -46,8 +46,8 @@ should be set to zero.  Valid values are TRUE and FALSE. Default is
 FALSE.  This option is only valid for \code{output_type = 'TXT'}.}
 
 \item{font_size}{The size of the font in points.  Default is 10pt.  This
-option is only valid for output types RTF and PDF.  Valid values are 10 and 
-12.}
+option is only valid for output types RTF and PDF.  Valid values are 8, 10, 
+and 12.}
 
 \item{line_size}{The number of characters that will fit on a line.  Normally,
 the \code{line_size} is calculated based on the page size, font size, and cpuom.
@@ -127,7 +127,7 @@ be set automatically, and cannot be changed.
 
 Some of the \code{options_fixed} function apply only to RTF and PDF.
 In particular, the \code{font_size} parameter applies only to RTF and PDF
-reports.  Valid font size options are 10 and 12.
+reports.  Valid font size options are 8, 10, and 12.
 }
 
 \examples{

@@ -272,11 +272,12 @@ editor_settings <- read.table(header = TRUE, text = '
                     wordpad        10.8      4.2       6     2.35      0      0
                     pdf12            12     4.70       5    2.000  .1967     .5
                     pdf10       14.2222     5.58    6.10      2.4  .1967     .5
-                    rtf10            12   4.7619    6.28      2.5      0      0
+                    pdf8           17.5     6.88    7.55     2.95  .1967     .5
                     rtf12            10   3.9473  5.3333     2.05      0      0
+                    rtf10            12   4.7619    6.28      2.5      0      0
+                    rtf8             15      5.9    7.85     3.05      0      0
                                ') 
-# Good: rtf12, rtf10, pdf12, pdf10, wordpad, word
-# Not tested: editplus, notepad, notepad++
+
 
 #' @title
 #' Set options for a fixed-width report
@@ -336,7 +337,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' 
 #' Some of the \code{options_fixed} function apply only to RTF and PDF.
 #' In particular, the \code{font_size} parameter applies only to RTF and PDF
-#' reports.  Valid font size options are 10 and 12.
+#' reports.  Valid font size options are 8, 10, and 12.
 #' 
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing text reports.  
@@ -360,8 +361,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' should be set to zero.  Valid values are TRUE and FALSE. Default is
 #' FALSE.  This option is only valid for \code{output_type = 'TXT'}.
 #' @param font_size The size of the font in points.  Default is 10pt.  This
-#' option is only valid for output types RTF and PDF.  Valid values are 10 and 
-#' 12.
+#' option is only valid for output types RTF and PDF.  Valid values are 8, 10, 
+#' and 12.
 #' @param line_size The number of characters that will fit on a line.  Normally,
 #' the \code{line_size} is calculated based on the page size, font size, and cpuom.
 #' You can override the calculated value by setting the \code{line_size}
@@ -453,6 +454,10 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           font_size = 10, line_size = NULL, line_count = NULL,
                           uchar = "\U00AF") {
   
+  if (!"report_spec" %in% class(x)) {
+    stop("Input object must be of class 'report_spec'.") 
+  }
+  
   if (x$output_type == "TXT") {
     if (is.null(editor)) {
       # Trap missing or invalid cpuom parameter.
@@ -526,8 +531,10 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       e <- editor_settings[editor_settings$editor == "pdf12", ]
     else if (font_size == 10)
       e <- editor_settings[editor_settings$editor == "pdf10", ]
+    else if (font_size == 8)
+      e <- editor_settings[editor_settings$editor == "pdf8", ]
     else 
-      stop("Invalid font_size setting.  Valid values are 10 and 12")
+      stop("Invalid font_size setting.  Valid values are 8, 10 and 12")
     
     # Set cpuom and lpuom
     if (x$units == "inches") {
@@ -549,8 +556,10 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       e <- editor_settings[editor_settings$editor == "rtf12", ]
     else if (font_size == 10)
       e <- editor_settings[editor_settings$editor == "rtf10", ]
+    else if (font_size == 8)
+      e <- editor_settings[editor_settings$editor == "rtf8", ]
     else 
-      stop("Invalid font_size setting.  Valid values are 10 and 12")
+      stop("Invalid font_size setting.  Valid values are 8, 10 and 12")
     
     # Set cpuom and lpuom
     if (x$units == "inches") {

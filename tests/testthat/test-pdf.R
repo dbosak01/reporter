@@ -643,3 +643,48 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
     expect_equal(TRUE, TRUE)
   
 })
+
+
+
+test_that("test21: 8 pt report with units in inches works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test21.pdf")
+  
+  tbl <- create_table(iris) 
+  
+  rpt <- create_report(fp, units = "inches", output_type = "PDF") %>%
+    page_header("Client: Experis", "Study: ABC") %>% 
+    titles("IRIS Data Frame") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    options_fixed(font_size = 8) %>% 
+    add_content(tbl) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+test_that("test22: 8 pt report with units in cm works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test22.pdf")
+  
+  
+  rpt <- create_report(fp, units = "cm", output_type = "PDF") %>%
+    page_header("Client: Experis", "Study: ABC") %>% 
+    titles("IRIS Data Frame") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    options_fixed(font_size = 8) %>% 
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
