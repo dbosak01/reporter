@@ -237,8 +237,7 @@ test_that("print.tbl_spec() works as expected.", {
   tbl2 <- create_table(mtcars) 
   
   tbl2
-  
-  
+
   tbl3 <- create_table(mtcars) %>% 
     titles("Table 1", "My title") %>% 
     titles("Here is a much longer title to see what happens when I print it") %>% 
@@ -282,4 +281,60 @@ test_that("show_cols parameter works as expected.", {
   
 })
   
+
+test_that("define escape works as expected.", {
   
+  tbl <- create_table(mtcars)
+  
+  v1 <- c("mpg", "cyl")
+  
+  expect_error(define(tbl, vars = v1))
+  
+  
+  dfn <- define(tbl, vars = {{v1}})
+  
+  expect_equal(length(dfn$col_defs), 2)
+  expect_equal(dfn$col_defs[[1]]$var, "mpg")
+  expect_equal(dfn$col_defs[[2]]$var, "cyl")
+  
+  mytest <- function(myvar) {
+    
+    tbl1 <- create_table(mtcars)
+    dfn1 <- define(tbl1, {{myvar}})
+    return(dfn1$col_defs[[1]])
+  }
+  
+  
+  expect_equal(mytest("disp")$var, "disp")
+  
+})
+
+test_that("stub escape works as expected.", {
+  
+  tbl <- create_table(mtcars)
+  
+  v1 <- c("mpg", "cyl")
+  
+  expect_error(stub(tbl, vars = v1))
+  
+  
+  dfn <- stub(tbl, vars = {{v1}})
+  
+  expect_equal(length(dfn$stub$vars), 2)
+  expect_equal(dfn$stub$vars[[1]], "mpg")
+  expect_equal(dfn$stub$vars[[2]], "cyl")
+  
+  mytest <- function(myvar) {
+    
+    tbl1 <- create_table(mtcars)
+    dfn1 <- stub(tbl1, {{myvar}})
+    return(dfn1$stub$vars)
+  }
+  
+  
+  expect_equal(mytest("disp"), "disp")
+  
+})
+
+
+ 

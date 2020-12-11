@@ -269,7 +269,10 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @param x The table spec.
 #' @param vars The variable name or names to define a column for.  Names may
 #' be quoted or unquoted.  If defining for multiple variables, 
-#' pass them as a vector of names.
+#' pass them as a vector of names.  If you want to pass an R variable of names,
+#' escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
+#' The curly brace escape is useful when writing functions that construct
+#' reports dynamically. 
 #' @param label The label to use for the column header.  If a label is assigned
 #' to the label column attribute, it will be used as a default.  Otherwise,
 #' the column name will be used.
@@ -429,6 +432,13 @@ define <- function(x, vars, label = NULL, format = NULL,
   
   # Convert list to vector
   vars_c <- unlist(vars_c)
+  
+  # Deal with curly brace escape
+  if (length(vars_c) > 0) {
+    if (vars_c[[1]] == "{") { 
+      vars_c <- get(vars_c[[2]], envir = parent.frame())
+    }
+  }
   
   # Check that variable exists in data frame
   if (!is.null(x$data) & !is.null(vars_c)) {
@@ -828,6 +838,19 @@ spanning_header <- function(x, from, to, label = "",
   f <- as.character(substitute(from, env = environment()))
   t <- as.character(substitute(to, env = environment()))
   
+  # Deal with curly brace escape
+  if (length(f) > 0) {
+    if (f[[1]] == "{") { 
+      f <- get(f[[2]], envir = parent.frame())
+    }
+  }
+  
+  if (length(t) > 0) {
+    if (t[[1]] == "{") { 
+      t <- get(t[[2]], envir = parent.frame())
+    }
+  }
+  
   if (!is.na(suppressWarnings(as.numeric(f))))
     f <- as.numeric(f)
   
@@ -966,7 +989,10 @@ spanning_header <- function(x, from, to, label = "",
 #' }
 #' @param x The table spec.
 #' @param vars A vector of quoted or unquoted variable names from 
-#' which to create the stub.
+#' which to create the stub. If you want to pass an R variable of names,
+#' escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
+#' The curly brace escape is useful when writing functions that construct
+#' reports dynamically. 
 #' @param label The label for the report stub.  The default label is an empty
 #' string.
 #' @param label_align The alignment for the stub column label.  
@@ -1073,6 +1099,13 @@ stub <- function(x, vars, label = "", label_align = NULL,
   
   # Convert list to vector
   vars_c <- unlist(vars_c)
+  
+  # Deal with curly brace escape
+  if (length(vars_c) > 0) {
+    if (vars_c[[1]] == "{") { 
+      vars_c <- get(vars_c[[2]], envir = parent.frame())
+    }
+  }
   
   # Check that variable exists in data frame
   if (!is.null(x$data) & !is.null(vars_c)) {

@@ -28,7 +28,10 @@ define(
 
 \item{vars}{The variable name or names to define a column for.  Names may
 be quoted or unquoted.  If defining for multiple variables, 
-pass them as a vector of names.}
+pass them as a vector of names.  If you want to pass an R variable of names,
+escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
+The curly brace escape is useful when writing functions that construct
+reports dynamically.}
 
 \item{label}{The label to use for the column header.  If a label is assigned
 to the label column attribute, it will be used as a default.  Otherwise,

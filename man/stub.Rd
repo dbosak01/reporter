@@ -10,7 +10,10 @@ stub(x, vars, label = "", label_align = NULL, align = "left", width = NULL)
 \item{x}{The table spec.}
 
 \item{vars}{A vector of quoted or unquoted variable names from 
-which to create the stub.}
+which to create the stub. If you want to pass an R variable of names,
+escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
+The curly brace escape is useful when writing functions that construct
+reports dynamically.}
 
 \item{label}{The label for the report stub.  The default label is an empty
 string.}
