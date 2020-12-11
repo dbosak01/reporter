@@ -544,7 +544,11 @@ define_c <- function(var, label = NULL, format = NULL,
 #' @param vars The variable name or names to define defaults for.  Variable
 #' names may be quoted or unquoted.  The parameter will also accept 
 #' integer column positions instead of names.  For multiple variables, 
-#' pass the names or positions as a vector. 
+#' pass the names or positions as a vector. If you want to pass an R variable 
+#' of names,
+#' escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
+#' The curly brace escape is useful when writing functions that construct
+#' reports dynamically. 
 #' @param from The variable name or position that starts a column range.  
 #' If passed as a variable name, it may be quoted or unquoted.
 #' @param to The variable name or position that ends a column range. 
@@ -663,6 +667,13 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   # Convert list to vector
   vars_c <- unlist(vars_c)
   
+  # Deal with curly brace escape
+  if (length(vars_c) > 0) {
+    if (vars_c[[1]] == "{") { 
+      vars_c <- get(vars_c[[2]], envir = parent.frame())
+    }
+  }
+  
   # Check that variable exists in data frame
   if (!is.null(x$data) & !is.null(vars_c)) {
     if (!any(vars_c %in% names(x$data))) {
@@ -683,6 +694,17 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   f <- as.character(substitute(from, env = environment()))
   if (!identical(f, character(0))) {
     
+    # Deal with curly brace escape for from
+    if (length(f) > 1) {
+      if (f[[1]] == "{") { 
+        f <- f[[2]]
+        f <- gsub("{", "", f, fixed = TRUE)
+        f <- gsub("}", "", f, fixed = TRUE)
+        f <- gsub("\\n", "", f, fixed = TRUE)
+        f <- get(trimws(f), envir = parent.frame())
+      }
+    }
+    
     if (suppressWarnings(!is.na(as.integer(f))))
         f <- names(x$data)[as.integer(f)]
     
@@ -695,6 +717,17 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   # Assign to value
   t <- as.character(substitute(to, env = environment()))
   if (!identical(t, character(0))) {
+    
+    # Deal with curly brace escape for to
+    if (length(t) > 1) {
+      if (t[[1]] == "{") { 
+        t <- t[[2]]
+        t <- gsub("{", "", t, fixed = TRUE)
+        t <- gsub("}", "", t, fixed = TRUE)
+        t <- gsub("\\n", "", t, fixed = TRUE)
+        t <- get(trimws(t), envir = parent.frame())
+      }
+    }
     
     if (suppressWarnings(!is.na(as.integer(t))))
       t <- names(x$data)[as.integer(t)]
@@ -746,11 +779,13 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @param x The table object to add spanning headers to.
 #' @param from The starting column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position, 
-#' or by quoted or unquoted variable names.
+#' or by quoted or unquoted variable names. If you want to pass an R variable,
+#' escape the value with double curly braces, i.e. \code{from = {{myvar}}}.
 #' The \code{from} parameter is required.  
 #' @param to The ending column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position,
-#' or by quoted or unquoted variable names.
+#' or by quoted or unquoted variable names.  If you want to pass an R variable,
+#' escape the value with double curly braces, i.e. \code{to = {{myvar}}}.
 #' The \code{to} parameter is required. 
 #' @param label The label to apply to the spanning header.
 #' @param label_align The alignment to use for the label. Valid values are 
@@ -838,16 +873,26 @@ spanning_header <- function(x, from, to, label = "",
   f <- as.character(substitute(from, env = environment()))
   t <- as.character(substitute(to, env = environment()))
   
-  # Deal with curly brace escape
-  if (length(f) > 0) {
+
+  # Deal with curly brace escape for from
+  if (length(f) > 1) {
     if (f[[1]] == "{") { 
-      f <- get(f[[2]], envir = parent.frame())
+      f <- f[[2]]
+      f <- gsub("{", "", f, fixed = TRUE)
+      f <- gsub("}", "", f, fixed = TRUE)
+      f <- gsub("\\n", "", f, fixed = TRUE)
+      f <- get(trimws(f), envir = parent.frame())
     }
   }
   
-  if (length(t) > 0) {
+  # Deal with curly brace escape for to
+  if (length(t) > 1) {
     if (t[[1]] == "{") { 
-      t <- get(t[[2]], envir = parent.frame())
+      t <- t[[2]]
+      t <- gsub("{", "", t, fixed = TRUE)
+      t <- gsub("}", "", t, fixed = TRUE)
+      t <- gsub("\\n", "", t, fixed = TRUE)
+      t <- get(trimws(t), envir = parent.frame())
     }
   }
   

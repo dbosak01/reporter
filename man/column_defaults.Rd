@@ -23,7 +23,11 @@ column_defaults(
 \item{vars}{The variable name or names to define defaults for.  Variable
 names may be quoted or unquoted.  The parameter will also accept 
 integer column positions instead of names.  For multiple variables, 
-pass the names or positions as a vector.}
+pass the names or positions as a vector. If you want to pass an R variable 
+of names,
+escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
+The curly brace escape is useful when writing functions that construct
+reports dynamically.}
 
 \item{from}{The variable name or position that starts a column range.
 If passed as a variable name, it may be quoted or unquoted.}

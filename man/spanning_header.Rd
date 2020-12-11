@@ -19,12 +19,14 @@ spanning_header(
 
 \item{from}{The starting column to span.  Spanning columns are defined as
 range of columns 'from' and 'to'. The columns may be identified by position, 
-or by quoted or unquoted variable names.
+or by quoted or unquoted variable names. If you want to pass an R variable,
+escape the value with double curly braces, i.e. \code{from = {{myvar}}}.
 The \code{from} parameter is required.}
 
 \item{to}{The ending column to span.  Spanning columns are defined as
 range of columns 'from' and 'to'. The columns may be identified by position,
-or by quoted or unquoted variable names.
+or by quoted or unquoted variable names.  If you want to pass an R variable,
+escape the value with double curly braces, i.e. \code{to = {{myvar}}}.
 The \code{to} parameter is required.}
 
 \item{label}{The label to apply to the spanning header.}
