@@ -1228,7 +1228,27 @@ print.table_spec <- function(x, ..., verbose = FALSE){
         
       }
     }
-    # dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
+
+    # (x, vars, label = "", label_align = NULL, 
+    # align = "left", width = NULL)
+    
+    if (!is.null(x$stub)) {
+      
+      stb <- x$stub
+      
+      cat(paste0("- stub: ", paste(stb$vars, collapse = " "), " "))
+      if (stb$label != "")
+        cat(paste0("'", stb$label, "' "))
+      
+      if (!is.null(stb$width))
+        cat(paste0("width=", stb$width, " "))
+      
+      if (!is.null(stb$align)) 
+        cat(paste0("align='", stb$align, "' "))
+      
+      cat("\n")
+      
+    }
     
     # Print column definitions
     if (!is.null(x$col_defs)) {

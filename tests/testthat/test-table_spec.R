@@ -228,8 +228,9 @@ test_that("print.tbl_spec() works as expected.", {
     titles("Here is a much longer title to see what happens when I print it") %>% 
     footnotes("My footnote 1", "My footnote 2") %>% 
     spanning_header(from = "mpg", to = "disp", label = "My label") %>% 
+    stub(c(cyl, disp), "My stub") %>% 
     define(mpg, width = 2, label = "Miles per Gallon") %>% 
-    define(cyl, align = "left")
+    define(c(cyl, disp), align = "left")
   
   tbl
   
