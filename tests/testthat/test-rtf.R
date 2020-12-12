@@ -710,3 +710,75 @@ test_that("test22: 8 pt report with units in cm works as expected.", {
   
   
 })
+
+
+
+
+test_that("rtf23: RTF Table with Plot and borders works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf/test23.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  
+  plt <- create_plot(p, height = 4, width = 8)
+  tbl <- create_table(mtcars[1:10, ])
+  
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "all") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974", borders = "all") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+
+test_that("rtf24: RTF Table with Plot and borders works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf/test24.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  
+  plt <- create_plot(p, height = 4, width = 8) %>% 
+    titles("My plot", borders = "all") %>% 
+    footnotes("My plot footnotes", borders = "all")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("My table", borders = "all") %>% 
+    footnotes("My table footnotes", borders = "all", align = "right")
+  
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    add_content(plt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+

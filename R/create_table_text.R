@@ -240,11 +240,11 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
     ls <- max(nchar(rws))
   
   if (!is.null(ts$title_hdr))
-    ttls <- get_title_header(ts$title_hdr, ls - 1)
+    ttls <- get_title_header(ts$title_hdr, ls - 1, rs$uchar)
   else
-    ttls <- get_titles(ts$titles, ls) 
+    ttls <- get_titles(ts$titles, ls, rs$uchar) 
   
-  ftnts <- get_footnotes(ts$footnotes, ls) 
+  ftnts <- get_footnotes(ts$footnotes, ls, rs$uchar) 
   #print("Titles")
   #print(ttls)
   
@@ -298,9 +298,9 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   }
 
   if (is.null(ts$title_hdr))
-    ttls <- get_titles(ts$titles, rs$line_size) 
+    ttls <- get_titles(ts$titles, rs$line_size, rs$uchar) 
   else 
-    ttls <- get_title_header(ts$title_hdr, rs$line_size)
+    ttls <- get_title_header(ts$title_hdr, rs$line_size, rs$uchar)
   
   pgb <- c()
   if (!is.null(ts$page_by))

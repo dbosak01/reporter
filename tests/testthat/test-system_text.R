@@ -282,3 +282,91 @@ test_that("text10: Title header with text output works as expected.", {
 })
 
 
+test_that("text11: Title header with text output and border works as expected.", {
+  
+  fp <- file.path(base_path, "text/text11.out")
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    title_header("Report 1.0", "Simple Text Report", 
+                 right = c("Client", "Study"), blank_row = "below",
+                 borders = "all") %>% 
+    add_content(create_text(cnt)) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+
+
+test_that("text12: Title and footnote with borders on text output works as expected.", {
+  
+  fp <- file.path(base_path, "text/text12.out")
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    page_header("Left", "Right") %>% 
+    titles("Report 1.0", "Simple Text Report", blank_row = "below",
+           borders = "all") %>%
+    footnotes("Footnote one", "Footnote 2", borders = "all") %>% 
+    add_content(create_text(cnt)) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+
+
+test_that("text13: Title header with text output and border works as expected.", {
+  
+  fp <- file.path(base_path, "text/text13.out")
+  
+  
+  txt <- create_text(cnt) %>% 
+    title_header("Report 1.0", "Simple Text Report", 
+                 right = c("Client", "Study"), blank_row = "below",
+                 borders = "all") %>% 
+    footnotes("Here is a footnote", borders = "all")
+    
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    add_content(txt) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+
+
+test_that("text14: Title and footnote with borders on text output works as expected.", {
+  
+  fp <- file.path(base_path, "text/text14.out")
+  
+  txt <- create_text(cnt) %>% 
+    titles("Report 1.0", "Simple Text Report", blank_row = "below",
+           borders = "all") %>%
+    footnotes("Footnote one", "Footnote 2", borders = "all") 
+    
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Other left", "", "Other Right") %>% 
+    add_content(txt) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+

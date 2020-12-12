@@ -213,20 +213,20 @@ create_text_pages_text <- function(rs, cntnt, lpg_rows) {
   if (!is.null(txt$width))
     w <- round(txt$width / rs$char_width)
   
-  rws <- get_text_body(txt, w, rs$body_line_count, lpg_rows, cntnt$blank_row)
+  rws <- get_text_body(rs, txt, w, rs$body_line_count, lpg_rows, cntnt$blank_row)
   
   return(rws)
 }
 
 #' Create list of vectors of strings for each page 
 #' @noRd
-get_text_body <- function(txt, line_width, line_count, lpg_rows, 
+get_text_body <- function(rs, txt, line_width, line_count, lpg_rows, 
                           content_blank_row) {
   
   # Get titles and footnotes
-  ttls <- get_titles(txt$titles, line_width) 
-  ftnts <- get_footnotes(txt$footnotes, line_width) 
-  ttl_hdr <- get_title_header(txt$title_hdr, line_width)
+  ttls <- get_titles(txt$titles, line_width + 1, rs$uchar) 
+  ftnts <- get_footnotes(txt$footnotes, line_width + 1, rs$uchar) 
+  ttl_hdr <- get_title_header(txt$title_hdr, line_width, rs$uchar)
   
   # Wrap the text 
   s <- stri_wrap(unlist(

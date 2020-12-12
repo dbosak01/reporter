@@ -4,7 +4,7 @@
 \alias{titles}
 \title{Adds a title block}
 \usage{
-titles(x, ..., align = "center", blank_row = "below")
+titles(x, ..., align = "center", blank_row = "below", borders = "none")
 }
 \arguments{
 \item{x}{The object to assign titles to.  Valid objects are a report, or
@@ -17,6 +17,9 @@ a table, text, or plot specification.}
 
 \item{blank_row}{Where to place a blank row.  Valid values are 'above',
 'below', 'both', or 'none'.  Default is "below".}
+
+\item{borders}{Whether and where to place a border. Valid values are 'top',
+'bottom', 'all', or 'none'.  Default is "none".}
 }
 \value{
 The modified report.

@@ -30,6 +30,18 @@ test_that("get_titles function works as expected.", {
   expect_equal(length(res3), 4)
   expect_equal(nchar(res3[2]), 30)
   
+  ttl <- titles(list(), "My title 1", "My title 2", 
+                align = "left", blank_row = "both", borders = "all")
+  
+  
+  res3 <- get_titles(ttl$titles, 30)
+  
+  res3
+  
+  expect_equal(length(res3), 6)
+  expect_equal(nchar(res3[2]), 30)
+  
+  
 })
   
 
@@ -60,6 +72,23 @@ test_that("get_footnotes function works as expected.", {
   res3
   
   expect_equal(length(res3), 4)
+  expect_equal(nchar(res3[2]), 30)
+  
+})
+
+test_that("get_footnotes function with borders works as expected.", {
+  
+  
+  ftn <- footnotes(list(), "My footnote 1", "My footnote 2", 
+                   align = "left", blank_row = "both", borders = "all")
+  
+  expect_error(get_footnotes(ftn, 30))
+  
+  res3 <- get_footnotes(ftn$footnotes, 30)
+  
+  res3
+  
+  expect_equal(length(res3), 6)
   expect_equal(nchar(res3[2]), 30)
   
 })
@@ -133,6 +162,14 @@ test_that("title_header function works as expected.", {
   
   expect_equal(length(rws), 3)
   expect_equal(trimws(rws[2]), "Title One")
+  
+  th <- title_header(create_text("hello"), "Title One", "Title Two",
+                     blank_row = "above", borders = "all")
+  
+  rws <- get_title_header(th$title_hdr, 50)
+  
+  expect_equal(length(rws), 5)
+  expect_equal(trimws(rws[3]), "Title One")
   
 })
 

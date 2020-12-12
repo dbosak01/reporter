@@ -895,6 +895,8 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' title header.  Pass the header strings as a vector of strings.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is 'below'.
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'all', or 'none'.  Default is 'none'.  
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -944,7 +946,8 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' # 
 #' #     * In billions of dollars
 #' @export
-title_header <- function(x, ..., right = "", blank_row = "below") {
+title_header <- function(x, ..., right = "", 
+                         blank_row = "below", borders = "none") {
   
 
   diff <- setdiff(class(x), c("list"))
@@ -968,9 +971,18 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
   if (!is.null(x$page_header_left) | !is.null(x$page_header_right))
     stop("Cannot add both a page header and a title header.")
   
+  if (!blank_row %in% c("above", "below", "both", "none"))
+    stop(paste("Blank row parameter invalid.  Valid values are", 
+               "'above', 'below', 'both', or 'none'."))
+  
+  if (!all(borders %in% c("top", "bottom", "all", "none")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'all', or 'none'."))
+  
   # Assign attributes
   ttl_hdr$titles <-  c(...)
   ttl_hdr$blank_row <- blank_row
+  ttl_hdr$borders <- borders
   ttl_hdr$right <- right
   
   x$title_hdr <- ttl_hdr
@@ -1028,6 +1040,8 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' 'right', 'center' or 'centre'.  For titles, the default is 'center'.
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is "below".
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'all', or 'none'.  Default is "none".
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1076,7 +1090,8 @@ title_header <- function(x, ..., right = "", blank_row = "below") {
 #' # 
 #' #     * In billions of dollars
 #' @export
-titles <- function(x, ..., align = "center", blank_row = "below"){
+titles <- function(x, ..., align = "center", blank_row = "below", 
+                   borders = "none"){
 
   # Create title structure
   ttl <- structure(list(), class = c("title_spec", "list"))
@@ -1086,10 +1101,19 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
   
   if (!is.null(x$title_hdr))
     stop("Cannot add both titles and a title header.")
+  
+  if (!blank_row %in% c("above", "below", "both", "none"))
+    stop(paste("Blank row parameter invalid.  Valid values are", 
+               "'above', 'below', 'both', or 'none'."))
+  
+  if (!all(borders %in% c("top", "bottom", "all", "none")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'all', or 'none'."))
 
   # Assign attributes
   ttl$titles <-  c(...)
   ttl$blank_row <- blank_row
+  ttl$borders <- borders
   ttl$align <- align
 
   x$titles[[length(x$titles) + 1]] <- ttl
@@ -1136,6 +1160,11 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' 'right', 'center', or 'centre'.
 #' @param blank_row Whether to print a blank row above or below the footnote.
 #' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.
+#' @param borders Whether to print a border above or below the footnote. Valid
+#' values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
+#' For fixed width reports, the 
+#' border character will be taken from the value of the \code{uchar} parameter
+#' on the \code{\link{options_fixed}} function.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1184,7 +1213,8 @@ titles <- function(x, ..., align = "center", blank_row = "below"){
 #' # 
 #' #     * In billions of dollars
 #' @export
-footnotes <- function(x, ..., align = "left", blank_row = "above"){
+footnotes <- function(x, ..., align = "left", blank_row = "above", 
+                      borders = "none"){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1194,10 +1224,19 @@ footnotes <- function(x, ..., align = "left", blank_row = "above"){
   if (length(ft) > 25){
     stop("footnotes function is limited to a maximum of 25 footnotes.")
   }
+  
+  if (!blank_row %in% c("above", "below", "both", "none"))
+    stop(paste("Blank row parameter invalid.  Valid values are", 
+               "'above', 'below', 'both', or 'none'."))
+  
+  if (!all(borders %in% c("top", "bottom", "all", "none")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'all', or 'none'."))
 
   ftn$footnotes <- ft
   ftn$blank_row <- blank_row
   ftn$align <- align
+  ftn$borders <- borders
   
   x$footnotes[[length(x$footnotes) + 1]] <- ftn
 

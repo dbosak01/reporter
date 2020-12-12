@@ -10,9 +10,9 @@ page_template_text <- function(rs) {
   pt <- structure(list(), class = c("page_template_text", "list"))
   
   pt$page_header <- get_page_header(rs)
-  pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size)
-  pt$titles <- get_titles(rs$titles, rs$line_size)
-  pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size)
+  pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size, rs$uchar)
+  pt$titles <- get_titles(rs$titles, rs$line_size + 1, rs$uchar)
+  pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size + 1, rs$uchar)
   pt$page_footer <- get_page_footer(rs)
   # Page by not here.  Messes up line counts.
   
@@ -83,7 +83,7 @@ get_page_header <- function(rs) {
 #' @param width The width to set the title strings to
 #' @return A vector of strings
 #' @noRd
-get_titles <- function(titles, width) {
+get_titles <- function(titles, width, uchar = "-") {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -103,6 +103,10 @@ get_titles <- function(titles, width) {
           
       if (ttl$blank_row %in% c("above", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
+      
+      if (any(ttl$borders %in% c("top", "all")) & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll - 1), 
+                                               collapse = ""), " ")
       
       for (i in seq_along(ttl$titles)) {
       
@@ -129,6 +133,10 @@ get_titles <- function(titles, width) {
         
         ret[length(ret) + 1] <- ln
       }
+      
+      if (any(ttl$borders %in% c("bottom", "all")) & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
+                                              collapse = ""), " ")
       
       if (ttl$blank_row %in% c("below", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
@@ -206,7 +214,7 @@ get_page_by <- function(pgby, width, value) {
 #' @param width The width to set the title header to
 #' @return A vector of strings
 #' @noRd
-get_title_header <- function(title_hdr, width) {
+get_title_header <- function(title_hdr, width, uchar = "-") {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -224,6 +232,9 @@ get_title_header <- function(title_hdr, width) {
     
     if (title_hdr$blank_row %in% c("above", "both") & length(title_hdr$titles) > 0)
       ret[length(ret) + 1] <- ""
+    
+    if (any(title_hdr$borders %in% c("top", "all")) & length(title_hdr$titles) > 0)
+      ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
     
     maxlen <- length(title_hdr$titles)
     if (length(title_hdr$right) > maxlen)
@@ -264,6 +275,10 @@ get_title_header <- function(title_hdr, width) {
       ret[length(ret) + 1] <- ln
     }
     
+    if (any(title_hdr$borders %in% c("top", "all")) & 
+        length(title_hdr$titles) > 0)
+      ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+    
     if (title_hdr$blank_row %in% c("below", "both") & 
         length(title_hdr$titles) > 0)
       ret[length(ret) + 1] <- ""
@@ -279,7 +294,7 @@ get_title_header <- function(title_hdr, width) {
 #' @param rs The report spec
 #' @return A vector of strings
 #' @noRd
-get_footnotes <- function(footnotes, width) {
+get_footnotes <- function(footnotes, width, uchar = "-") {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -297,6 +312,10 @@ get_footnotes <- function(footnotes, width) {
       
       if (ftn$blank_row %in% c("above", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""
+      
+      if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0)
+        ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
+                                              collapse = ""), " ")
       
       for (i in seq_along(ftn$footnotes)) {
         
@@ -323,6 +342,10 @@ get_footnotes <- function(footnotes, width) {
         
         ret[length(ret) + 1] <- ln
       }
+      
+      if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0)
+        ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
+                                              collapse = ""), " ")
       
       if (ftn$blank_row %in% c("below", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""

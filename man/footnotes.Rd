@@ -4,7 +4,7 @@
 \alias{footnotes}
 \title{Adds a footnote block}
 \usage{
-footnotes(x, ..., align = "left", blank_row = "above")
+footnotes(x, ..., align = "left", blank_row = "above", borders = "none")
 }
 \arguments{
 \item{x}{The object to assign footnotes to.}
@@ -16,6 +16,12 @@ footnotes(x, ..., align = "left", blank_row = "above")
 
 \item{blank_row}{Whether to print a blank row above or below the footnote.
 Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
+
+\item{borders}{Whether to print a border above or below the footnote. Valid
+values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
+For fixed width reports, the 
+border character will be taken from the value of the \code{uchar} parameter
+on the \code{\link{options_fixed}} function.}
 }
 \value{
 The modified report.
