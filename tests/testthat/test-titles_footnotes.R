@@ -260,3 +260,43 @@ test_that("ttfn11: blank hitting page break works as expected.", {
   
 })
 
+
+test_that("ttfn12: title and footnote with bottom borders assigned to table works.", {
+  
+  fp <- file.path(base_path, "titles/ttfn12.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("MTCARS Data Frame 1", align = "center", 
+           borders = "bottom") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", 
+              borders = "bottom") 
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center")
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("ttfn13: title and footnote with top borders assigned to table works.", {
+  
+  fp <- file.path(base_path, "titles/ttfn13.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("MTCARS Data Frame 1", align = "center", 
+           borders = "top") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", 
+              borders = "top") 
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center")
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})

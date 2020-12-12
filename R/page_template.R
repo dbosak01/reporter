@@ -343,7 +343,7 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
         ret[length(ret) + 1] <- ln
       }
       
-      if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0)
+      if (any(ftn$borders %in% c("bottom", "all")) & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
                                               collapse = ""), " ")
       
