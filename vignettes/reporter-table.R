@@ -1,0 +1,75 @@
+## ----setup, include = FALSE---------------------------------------------------
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  
+#  # Create temporary path
+#  tmp <- file.path(tempdir(), "example2.txt")
+#  
+#  # Read in prepared data
+#  df <- read.table(header = TRUE, text = '
+#        var     label        A             B
+#        "ampg"   "N"          "19"          "13"
+#        "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+#        "ampg"   "Median"     "16.4"        "21.4"
+#        "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+#        "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+#        "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+#        "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
+#        "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+#  
+#  # Create table
+#  tbl <- create_table(df, first_row_blank = TRUE) %>%
+#    define(var, label = "Variable", blank_after = TRUE, dedupe = TRUE,
+#           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
+#    define(label, label = "") %>%
+#    define(A, label = "Group A", align = "center", n = 19) %>%
+#    define(B, label = "Group B", align = "center", n = 13)
+#  
+#  
+#  # Create report and add content
+#  rpt <- create_report(tmp, orientation = "portrait") %>%
+#    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+#    titles("Table 1.0", "MTCARS Summary Table") %>%
+#    add_content(tbl) %>%
+#    footnotes("* Motor Trend, 1974") %>%
+#    page_footer(left = Sys.time(),
+#                center = "Confidential",
+#                right = "Page [pg] of [tpg]")
+#  
+#  # Write out report
+#  write_report(rpt)
+#  
+#  # View report in console
+#  writeLines(readLines(tmp, encoding = "UTF-8"))
+#  
+#  # Client: Motor Trend                                                Study: Cars
+#  #                                   Table 1.0
+#  #                              MTCARS Summary Table
+#  #
+#  #                                            Group A      Group B
+#  #            Variable                         (N=19)       (N=13)
+#  #            ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#  #
+#  #            Miles Per Gallon  N                19           13
+#  #                              Mean         18.8 (6.5)   22.0 (4.9)
+#  #                              Median          16.4         21.4
+#  #                              Q1 - Q3     15.1 - 21.2  19.2 - 22.8
+#  #                              Range       10.4 - 33.9  14.7 - 32.4
+#  #
+#  #            Cylinders         8 Cylinder  10 ( 52.6%)   4 ( 30.8%)
+#  #                              6 Cylinder   4 ( 21.1%)   3 ( 23.1%)
+#  #                              4 Cylinder   5 ( 26.3%)   6 ( 46.2%)
+#  #
+#  #
+#  # ...
+#  #
+#  #
+#  # * Motor Trend, 1974
+#  #
+#  # 2020-10-16 18:57:02              Confidential                      Page 1 of 1
+#  
+

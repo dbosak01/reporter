@@ -1,0 +1,21 @@
+url: https://reporter.r-sassy.org
+
+articles:
+- title: Examples
+  navbar: ~
+  contents:
+  - reporter-listing
+  - reporter-table
+  - reporter-stub
+  - reporter-spanning
+  - reporter-text
+  - reporter-pageby
+  - reporter-wrap
+  - reporter-title_header
+  - reporter-rtf
+  - reporter-figure
+
+navbar:
+  structure:
+    left:  [home, intro, reference, articles, news]
+    right: [github]

@@ -95,6 +95,45 @@ page by variable prior to reporting." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/reporter-listing.html">Example 1: Listing</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-table.html">Example 2: Table</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-stub.html">Example 3: Table Stub</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-text.html">Example 4: Table and Text</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-rtf.html">Example 9: RTF and PDF</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-figure.html">Example 10: Figure</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -215,7 +254,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 <span class='co'># Write the report to the file system</span>
 <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #555555;'># A report specification: 3 pages</span><span>
-#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\RtmpwhKO4o/iris.txt'
+#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\Rtmp8cPIA3/iris.txt'
 #&gt; - output_type: TXT
 #&gt; - units: inches
 #&gt; - orientation: portrait
@@ -223,7 +262,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 #&gt; - page_header: left=Sponsor: Iris Society right=Study: flowers
 #&gt; - title 1: 'Table 2.0'
 #&gt; - title 2: 'IRIS Sample Report with Page By'
-#&gt; - page_footer: left=2020-12-18 21:56:00 center= right=Page [pg] of [tpg]
+#&gt; - page_footer: left=2020-12-20 09:37:20 center= right=Page [pg] of [tpg]
 #&gt; - content: 
 #&gt; </span><span style='color: #555555;'># A table specification:
 #&gt; </span><span>- data: data.frame 'dat' 50 rows 5 cols
@@ -292,7 +331,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 #&gt; 
 #&gt; 
 #&gt; 
-#&gt; 2020-12-18 21:56:00                                                Page 1 of 3
+#&gt; 2020-12-20 09:37:20                                                Page 1 of 3
 #&gt; Sponsor: Iris Society                                           Study: flowers
 #&gt;                                    Table 2.0
 #&gt;                         IRIS Sample Report with Page By
@@ -352,7 +391,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 #&gt; 
 #&gt; 
 #&gt; 
-#&gt; 2020-12-18 21:56:00                                                Page 2 of 3
+#&gt; 2020-12-20 09:37:20                                                Page 2 of 3
 #&gt; Sponsor: Iris Society                                           Study: flowers
 #&gt;                                    Table 2.0
 #&gt;                         IRIS Sample Report with Page By
@@ -412,7 +451,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 #&gt; 
 #&gt; 
 #&gt; 
-#&gt; 2020-12-18 21:56:00                                                Page 3 of 3</div><div class='input'>
+#&gt; 2020-12-20 09:37:20                                                Page 3 of 3</div><div class='input'>
 <span class='co'># Sponsor: Iris Society                                           Study: flowers</span>
 <span class='co'>#                                  Table 2.0</span>
 <span class='co'>#                       IRIS Sample Report with Page By</span>

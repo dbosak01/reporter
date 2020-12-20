@@ -58,6 +58,45 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/reporter-listing.html">Example 1: Listing</a>
+    </li>
+    <li>
+      <a href="articles/reporter-table.html">Example 2: Table</a>
+    </li>
+    <li>
+      <a href="articles/reporter-stub.html">Example 3: Table Stub</a>
+    </li>
+    <li>
+      <a href="articles/reporter-spanning.html">Example 5: Spanning Headers</a>
+    </li>
+    <li>
+      <a href="articles/reporter-text.html">Example 4: Table and Text</a>
+    </li>
+    <li>
+      <a href="articles/reporter-pageby.html">Example 7: Page By</a>
+    </li>
+    <li>
+      <a href="articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="articles/reporter-title_header.html">Example 8: Title Header</a>
+    </li>
+    <li>
+      <a href="articles/reporter-rtf.html">Example 9: RTF and PDF</a>
+    </li>
+    <li>
+      <a href="articles/reporter-figure.html">Example 10: Figure</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="news/index.html">Changelog</a>
 </li>
@@ -74,765 +113,39 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="reporter-" class="section level1">
+<div id="reporter" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#reporter-" class="anchor"></a>reporter <img src="man/images/reporter.svg" align="right" height="138">
-</h1></div>
+<a href="#reporter" class="anchor"></a>reporter</h1></div>
 <!-- badges: start -->
 
-<p>The <strong>reporter</strong> package creates regulatory-style, statistical reports. It was designed to produce Tables, Listings, and Figures (TLFs) for the the pharmaceutical, biotechnology, and medical-device industries. However, the functions are generalized enough to provide statistical reporting for any industry. The package is written in Base R, and has no dependencies on any other reporting package.</p>
-<p>The package is intended to give R programmers flexible report layout capabilities and a choice of output formats. The package will initially focus on printable, file-based output formats, as there are already numerous R packages that provide tabular reporting in HTML. The current version supports TXT, RTF, and PDF output types.</p>
-<p>The <strong>reporter</strong> package is distributed under a <a href="https://creativecommons.org/licenses/by-nc/4.0">Creative Commons non-commercial license</a>. It is available for personal and organizational use, but cannot be used to create a commercial product without permission of the license holder.</p>
-<div id="key-features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#key-features" class="anchor"></a>Key Features</h2>
-<p>The <strong>reporter</strong> package contains the following key features:</p>
-<ul>
-<li>Titles, footnotes, page header, and page footer are repeated on each page</li>
-<li>Supports header labels and spanning headers</li>
-<li>Calculates default columns widths automatically</li>
-<li>Includes automatic wrapping and splitting of wide and long tables</li>
-<li>Integrates with the <strong>fmtr</strong> package to format numeric, date, and character data</li>
-<li>Plots from the popular <strong>ggplot2</strong> package can be added to RTF and PDF reports</li>
-<li>Allows appending multiple tables to a report, multiple tables to a page, and intermingling of text, tables, and plots</li>
-<li>Supports in-report date/time stamps and “Page X of Y” page numbering</li>
-</ul>
-</div>
-<div id="how-to-use-reporter" class="section level2">
-<h2 class="hasAnchor">
-<a href="#how-to-use-reporter" class="anchor"></a>How to use <strong>reporter</strong>
-</h2>
-<p>There are four steps to creating a report:</p>
-<ul>
-<li>Create report</li>
-<li>Create report content</li>
-<li>Add content to the report</li>
-<li>Write out the report</li>
-</ul>
-<p>You can create the report with the <code><a href="reference/create_report.html">create_report()</a></code> function. Content is created with the <code><a href="reference/create_table.html">create_table()</a></code>, <code><a href="reference/create_text.html">create_text()</a></code>, or <code><a href="reference/create_plot.html">create_plot()</a></code> functions. Add content to the report with the <code><a href="reference/add_content.html">add_content()</a></code> function. Finally, the report can be written to a file with the <code><a href="reference/write_report.html">write_report()</a></code> function.</p>
-<p>In addition to these primary functions, there are several secondary functions to help you formalize the report. All available functions are shown in the subsequent glossary.</p>
-</div>
-<div id="glossary-of-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#glossary-of-functions" class="anchor"></a>Glossary of Functions</h2>
-<p>Below are the functions available in the <strong>reporter</strong> package, and a brief description of their use. For additional information, see the help text:</p>
-<div id="report-functions" class="section level3">
+<div id="introduction-" class="section level3">
 <h3 class="hasAnchor">
-<a href="#report-functions" class="anchor"></a>Report Functions</h3>
-<ul>
-<li>
-<code><a href="reference/create_report.html">create_report()</a></code>: Define a report object<br>
-</li>
-<li>
-<code><a href="reference/options_fixed.html">options_fixed()</a></code>: Set options for fixed width (text) reports<br>
-</li>
-<li>
-<code><a href="reference/set_margins.html">set_margins()</a></code>: Set margins for the report<br>
-</li>
-<li>
-<code><a href="reference/page_header.html">page_header()</a></code>: Define a page header<br>
-</li>
-<li>
-<code><a href="reference/page_footer.html">page_footer()</a></code>: Define a page footer<br>
-</li>
-<li>
-<code><a href="reference/add_content.html">add_content()</a></code>: Add content to the report<br>
-</li>
-<li>
-<code><a href="reference/write_report.html">write_report()</a></code>: Write the report to a file</li>
-</ul>
+<a href="#introduction-" class="anchor"></a>Introduction <img src="man/images/reporter.svg" align="right" height="138">
+</h3>
+<p>Historically, R has not been very strong on reporting. The <strong>reporter</strong> package aims to fill that gap.</p>
+<p>Using <strong>reporter</strong>, you can create a report in just a few lines of code.<br>
+Not only is it easy to create a report, but the <strong>reporter</strong> package can handle all sorts of situations that other packages struggle with.</p>
+<p>For example, unlike other packages, the <strong>reporter</strong> package creates the entire report: page header and footer, titles, footnotes, tables - everything. The end result of a reporter call is a complete, printable report.</p>
+<p>In addition, <strong>reporter</strong> can handle page breaking, page wrapping, page headers and footers, and automatic sizing of column widths. The package offers a choice of output file types. And it supports the inclusion of tables, text and graphics into a report.</p>
+<p>What is more, the package does not expect you to know R Markdown, knitr, or pandoc.<br>
+You do not need to learn Latex, HTML, or any other intermediary language. With <strong>reporter</strong>, you send your data into a create function, assign titles and footnotes, and write the report. That’s it!</p>
+<p>If you are familiar with SAS® software, you may notice some slight similarity between <strong>reporter</strong> functions and <code>proc report</code>. This similarity, however, is only on the surface. The implementation of <strong>reporter</strong> is done entirely in R, and, internally, is modeled in a different way.<br>
+However, SAS® users will find the <strong>reporter</strong> functions very convenient and easy to understand compared to the alternatives.</p>
 </div>
-<div id="table-functions" class="section level3">
+<div id="installation" class="section level3">
 <h3 class="hasAnchor">
-<a href="#table-functions" class="anchor"></a>Table functions</h3>
-<ul>
-<li>
-<code><a href="reference/create_table.html">create_table()</a></code>: Define a table object<br>
-</li>
-<li>
-<code><a href="reference/spanning_header.html">spanning_header()</a></code>: Define a spanning header<br>
-</li>
-<li>
-<code><a href="reference/stub.html">stub()</a></code>: Define a stub column<br>
-</li>
-<li>
-<code>columns_defaults()</code>: Set default column attributes</li>
-<li>
-<code><a href="reference/define.html">define()</a></code>: Specify settings for a column</li>
-</ul>
+<a href="#installation" class="anchor"></a>Installation</h3>
+<p>The <strong>reporter</strong> package can be installed from the console. Simply run the following command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">"reporter"</span>)</span></code></pre></div>
+<p>Then put the following line at the top of your program or script:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(reporter)</span></code></pre></div>
+<p>The <strong>reporter</strong> package will give you access to a number of functions to help create, lay out, and write your report to the file system. For a complete description of the functions available, see the function reference.</p>
 </div>
-<div id="text-and-plot-functions" class="section level3">
+<div id="next-steps" class="section level3">
 <h3 class="hasAnchor">
-<a href="#text-and-plot-functions" class="anchor"></a>Text and Plot functions</h3>
-<ul>
-<li>
-<code><a href="reference/create_text.html">create_text()</a></code>: Define a text object<br>
-</li>
-<li>
-<code><a href="reference/create_plot.html">create_plot()</a></code>: Define a plot object</li>
-</ul>
-</div>
-<div id="titlefootnote-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#titlefootnote-functions" class="anchor"></a>Title/Footnote Functions</h3>
-<ul>
-<li>
-<code><a href="reference/titles.html">titles()</a></code>: Set titles for the object<br>
-</li>
-<li>
-<code><a href="reference/footnotes.html">footnotes()</a></code>: Set footnotes for the object</li>
-<li>
-<code><a href="reference/title_header.html">title_header()</a></code>: A combined title/header block</li>
-<li>
-<code><a href="reference/page_by.html">page_by()</a></code>: Creates separate pages by a variable</li>
-</ul>
-</div>
-</div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
-<div id="example-1-listing" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-1-listing" class="anchor"></a>Example 1: Listing</h3>
-<p>Here is an example of a regulatory-style listing using <strong>reporter</strong> and the mtcars sample data frame:</p>
-<pre><code># Create temp file name
-tmp &lt;- file.path(tempdir(), "example1.txt")
-
-# Create the report
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  page_header(left = "Client: Motor Trend", right = "Study: Cars") %&gt;% 
-  titles("Listing 1.0", "MTCARS Data Listing") %&gt;% 
-  add_content(create_table(mtcars)) %&gt;% 
-  footnotes("* Motor Trend, 1974") %&gt;%
-  page_footer(left = Sys.time(), 
-              center = "Confidential", 
-              right = "Page [pg] of [tpg]")
-
-# Write the report
-write_report(rpt)
-
-# Send report to console for viewing
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-# Client: Motor Trend                                                Study: Cars
-#                                  Listing 1.0
-#                             MTCARS Data Listing
-#
-#            mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
-#          ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#             21   6    160  110   3.9   2.62  16.46  0  1    4    4
-#             21   6    160  110   3.9  2.875  17.02  0  1    4    4
-#           22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
-#           21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
-#           18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
-#           18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
-#           14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
-#           24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
-#           22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
-#           19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
-#           17.8   6  167.6  123  3.92   3.44   18.9  1  0    4    4
-#           16.4   8  275.8  180  3.07   4.07   17.4  0  0    3    3
-#           17.3   8  275.8  180  3.07   3.73   17.6  0  0    3    3
-#           15.2   8  275.8  180  3.07   3.78     18  0  0    3    3
-#           10.4   8    472  205  2.93   5.25  17.98  0  0    3    4
-#           10.4   8    460  215     3  5.424  17.82  0  0    3    4
-#           14.7   8    440  230  3.23  5.345  17.42  0  0    3    4
-#           32.4   4   78.7   66  4.08    2.2  19.47  1  1    4    1
-#           30.4   4   75.7   52  4.93  1.615  18.52  1  1    4    2
-#           33.9   4   71.1   65  4.22  1.835   19.9  1  1    4    1
-#           21.5   4  120.1   97   3.7  2.465  20.01  1  0    3    1
-#           15.5   8    318  150  2.76   3.52  16.87  0  0    3    2
-#           15.2   8    304  150  3.15  3.435   17.3  0  0    3    2
-#           13.3   8    350  245  3.73   3.84  15.41  0  0    3    4
-#           19.2   8    400  175  3.08  3.845  17.05  0  0    3    2
-#           27.3   4     79   66  4.08  1.935   18.9  1  1    4    1
-#             26   4  120.3   91  4.43   2.14   16.7  0  1    5    2
-#           30.4   4   95.1  113  3.77  1.513   16.9  1  1    5    2
-#           15.8   8    351  264  4.22   3.17   14.5  0  1    5    4
-#           19.7   6    145  175  3.62   2.77   15.5  0  1    5    6
-#             15   8    301  335  3.54   3.57   14.6  0  1    5    8
-#           21.4   4    121  109  4.11   2.78   18.6  1  1    4    2
-# 
-# ...
-# 
-# * Motor Trend, 1974
-# 
-# 2020-08-25 23:57:30              Confidential                      Page 1 of 1
-
-</code></pre>
-</div>
-<div id="example-2-summary-table" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-2-summary-table" class="anchor"></a>Example 2: Summary table</h3>
-<p>Here is an example of a regulatory-style table of summary statistics:</p>
-<pre><code>
-# Create temporary path
-tmp &lt;- file.path(tempdir(), "example2.txt")
-
-# Read in prepared data
-df &lt;- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
-      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
-      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
-      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-
-# Create table
-tbl &lt;- create_table(df, first_row_blank = TRUE) %&gt;% 
-  define(var, label = "Variable", blank_after = TRUE, dedupe = TRUE,
-         format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %&gt;% 
-  define(label, label = "") %&gt;% 
-  define(A, label = "Group A", align = "center", n = 19) %&gt;% 
-  define(B, label = "Group B", align = "center", n = 13)
-
-
-# Create report and add content
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  page_header(left = "Client: Motor Trend", right = "Study: Cars") %&gt;% 
-  titles("Table 1.0", "MTCARS Summary Table") %&gt;% 
-  add_content(tbl) %&gt;% 
-  footnotes("* Motor Trend, 1974") %&gt;%
-  page_footer(left = Sys.time(), 
-              center = "Confidential", 
-              right = "Page [pg] of [tpg]")
-
-# Write out report
-write_report(rpt)
-
-# View report in console
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-# Client: Motor Trend                                                Study: Cars
-#                                   Table 1.0
-#                              MTCARS Summary Table
-# 
-#                                            Group A      Group B
-#            Variable                         (N=19)       (N=13)
-#            ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-# 
-#            Miles Per Gallon  N                19           13
-#                              Mean         18.8 (6.5)   22.0 (4.9)
-#                              Median          16.4         21.4
-#                              Q1 - Q3     15.1 - 21.2  19.2 - 22.8
-#                              Range       10.4 - 33.9  14.7 - 32.4
-# 
-#            Cylinders         8 Cylinder  10 ( 52.6%)   4 ( 30.8%)
-#                              6 Cylinder   4 ( 21.1%)   3 ( 23.1%)
-#                              4 Cylinder   5 ( 26.3%)   6 ( 46.2%)
-# 
-# 
-# ...
-# 
-# 
-# * Motor Trend, 1974
-# 
-# 2020-10-16 18:57:02              Confidential                      Page 1 of 1
-</code></pre>
-</div>
-<div id="example-3-summary-table-with-stub-column" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-3-summary-table-with-stub-column" class="anchor"></a>Example 3: Summary table with stub column</h3>
-<p>Here is an example of the same table of summary statistics, but with row labels merged into a stub column:</p>
-<pre><code>
-# Create temporary path
-tmp &lt;- file.path(tempdir(), "example3.txt")
-
-# Read in prepared data
-df &lt;- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
-      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
-      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
-      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-
-# Create table
-tbl &lt;- create_table(df, first_row_blank = TRUE) %&gt;% 
-  stub(c("var", "label")) %&gt;% 
-  define(var, blank_after = TRUE, label_row = TRUE, 
-         format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %&gt;% 
-  define(label, indent = .25) %&gt;% 
-  define(A, label = "Group A", align = "center", n = 19) %&gt;% 
-  define(B, label = "Group B", align = "center", n = 13)
-
-
-# Create report and add content
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  page_header(left = "Client: Motor Trend", right = "Study: Cars") %&gt;% 
-  titles("Table 1.0", "MTCARS Summary Table") %&gt;% 
-  add_content(tbl) %&gt;% 
-  footnotes("* Motor Trend, 1974") %&gt;%
-  page_footer(left = Sys.time(), 
-              center = "Confidential", 
-              right = "Page [pg] of [tpg]")
-
-# Write out report
-write_report(rpt)
-
-# View report in console
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-# Client: Motor Trend                                                Study: Cars
-#                                   Table 1.0
-#                              MTCARS Summary Table
-# 
-#                                      Group A      Group B
-#                                       (N=19)       (N=13)
-#                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-# 
-#                  Miles Per Gallon
-#                     N                   19           13
-#                     Mean            18.8 (6.5)   22.0 (4.9)
-#                     Median             16.4         21.4
-#                     Q1 - Q3        15.1 - 21.2  19.2 - 22.8
-#                     Range          10.4 - 33.9  14.7 - 32.4
-# 
-#                  Cylinders
-#                     8 Cylinder     10 ( 52.6%)   4 ( 30.8%)
-#                     6 Cylinder      4 ( 21.1%)   3 ( 23.1%)
-#                     4 Cylinder      5 ( 26.3%)   6 ( 46.2%)
-# 
-# 
-# ...
-# 
-# 
-# * Motor Trend, 1974
-# 
-# 2020-10-16 18:57:02              Confidential                      Page 1 of 1
-</code></pre>
-</div>
-<div id="example-4-intermingle-table-and-text" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-4-intermingle-table-and-text" class="anchor"></a>Example 4: Intermingle Table and Text</h3>
-<p>The below example demonstrates intermingling of table and text content. This functionality is enabled by the ability to append multiple pieces of content to the same report. Appending content is useful when you want to create a report with multiple tables, or provide textual analysis of tabular data.</p>
-<pre><code># Create temporary path
-tmp &lt;- file.path(tempdir(), "example4.txt")
-
-# Dummy text
-cnt &lt;- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
-              "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
-              "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
-              "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
-              "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
-              "qui officia deserunt mollit anim id est laborum.")
-
-# Create text content
-txt &lt;- create_text(cnt) 
-
-# Prepare data
-dat &lt;- mtcars[1:10, ]
-
-# Create table content
-tbl &lt;- create_table(dat) %&gt;% 
-  titles("Table 1.0", "MTCARS Sample Data") %&gt;% 
-  footnotes("* Motor Trend, 1974")
-
-# Create report and add both table and text content
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  page_header(left = "Client: Motor Trend", right = "Study: Cars") %&gt;% 
-  add_content(tbl, page_break = FALSE) %&gt;% 
-  add_content(txt) %&gt;% 
-  page_footer(left = Sys.time(), 
-              center = "Confidential", 
-              right = "Page [pg] of [tpg]")
-
-# Write the report
-write_report(rpt)
-
-# View in console
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-# Client: Motor Trend                                                Study: Cars
-#                                   Table 1.0
-#                               MTCARS Sample Data
-# 
-#             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
-#           ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#              21   6    160  110   3.9   2.62  16.46  0  1    4    4
-#              21   6    160  110   3.9  2.875  17.02  0  1    4    4
-#            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
-#            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
-#            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
-#            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
-#            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
-#            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
-#            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
-#            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
-# 
-#           * Motor Trend, 1974
-# 
-# Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-# incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-# nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-# Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-# eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-# in culpa qui officia deserunt mollit anim id est laborum.
-# 
-# 
-# ...
-# 
-# 2020-08-30 04:44:53              Confidential                      Page 1 of 1
-</code></pre>
-</div>
-<div id="example-5-spanning-headers" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-5-spanning-headers" class="anchor"></a>Example 5: Spanning Headers</h3>
-<p>Spanning headers are a common requirement of regulatory tables, yet few reporting packages support them. <strong>reporter</strong> supports any number of spanning levels, along with a flexible and simple syntax to define them.</p>
-<pre><code>
-# Create temporary path
-tmp &lt;- file.path(tempdir(), "example5.txt")
-
-# Prepare Data
-dat &lt;- mtcars[1:10, ]
-df &lt;- data.frame(vehicle = rownames(dat), dat)
-
-# Define Table with spanning headers
-tbl &lt;- create_table(df) %&gt;% 
-  titles("Table 1.0", "MTCARS Spanning Headers") %&gt;% 
-  spanning_header(from = "mpg", to = "hp", label = "Span 1", n = 10) %&gt;%
-  spanning_header(from = "drat", to = "qsec", label = "Span 2", n = 10) %&gt;%
-  spanning_header(from = "vs", to = "carb", label = "Span 3", n = 10) %&gt;%
-  spanning_header(from = "drat", to = "carb", 
-                  label = "Super Span", level = 2) %&gt;%
-  define(vehicle, label = "Vehicle") %&gt;% 
-  define(mpg, format = "%.1f") %&gt;% 
-  define(disp, visible = FALSE) %&gt;% 
-  define(am, visible = FALSE) 
-
-# Create Report and add table 
-rpt &lt;- create_report(tmp) %&gt;%
-  add_content(tbl, align = "left") 
-
-# Write the report
-res &lt;- write_report(rpt)
-
-# View in console
-writeLines(readLines(tmp, encoding = "UTF-8"))
-  
-#                              Table 1.0
-#                       MTCARS Spanning Headers
-# 
-#                                              Super Span
-#                                   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#                        Span 1            Span 2          Span 3
-#                        (N=10)            (N=10)          (N=10)
-#                    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
-# Vehicle              mpg cyl   hp  drat     wt   qsec vs gear carb
-# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-# Mazda RX4           21.0   6  110   3.9   2.62  16.46  0    4    4
-# Mazda RX4 Wag       21.0   6  110   3.9  2.875  17.02  0    4    4
-# Datsun 710          22.8   4   93  3.85   2.32  18.61  1    4    1
-# Hornet 4 Drive      21.4   6  110  3.08  3.215  19.44  1    3    1
-# Hornet Sportabout   18.7   8  175  3.15   3.44  17.02  0    3    2
-# Valiant             18.1   6  105  2.76   3.46  20.22  1    3    1
-# Duster 360          14.3   8  245  3.21   3.57  15.84  0    3    4
-# Merc 240D           24.4   4   62  3.69   3.19     20  1    4    2
-# Merc 230            22.8   4   95  3.92   3.15   22.9  1    4    2
-# Merc 280            19.2   6  123  3.92   3.44   18.3  1    4    4
-
-</code></pre>
-</div>
-<div id="example-6-page-wrap" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-6-page-wrap" class="anchor"></a>Example 6: Page Wrap</h3>
-<p>Page wrapping will occur automatically if the table width exceeds the available page width. But page wrapping can also be controlled using the <code>page_wrap</code> parameter on the <code><a href="reference/define.html">define()</a></code> function. Below is an example. Also note the use of the <code>id_var</code> option to cause the vehicle column to be retained on each wrapped page.</p>
-<pre><code># Create temp file name
-tmp &lt;- file.path(tempdir(), "example6.txt")
-
-# Prepare data
-dat &lt;- mtcars[1:10, ]
-dat &lt;- data.frame(vehicle = rownames(dat), dat)
-
-# Define table
-tbl &lt;- create_table(dat, show_cols = 1:8) %&gt;% 
-  define(vehicle, label = "Vehicle", width = 3, id_var = TRUE, align = "left") %&gt;% 
-  define(mpg, label = "Miles per Gallon", width = 1) %&gt;% 
-  define(cyl, label = "Cylinders", format = "%.1f") %&gt;% 
-  define(disp, label = "Displacement") %&gt;% 
-  define(hp, label = "Horsepower", page_wrap = TRUE) %&gt;% 
-  define(drat, visible = FALSE) %&gt;% 
-  define(wt, label = "Weight") %&gt;% 
-  define(qsec, label = "Quarter Mile Time", width = 1.5) 
-
-  
-# Create the report
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  titles("Listing 2.0", "MTCARS Data Listing with Page Wrap") %&gt;% 
-  add_content(tbl, align = "left") %&gt;% 
-  page_footer(right = "Page [pg] of [tpg]")
-
-# Write the report
-write_report(rpt)
-
-# Send report to console for viewing
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-#                                  Listing 2.0
-#                       MTCARS Data Listing with Page Wrap
-# 
-#                                         Miles per
-# Vehicle                                    Gallon Cylinders Displacement
-# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-# Mazda RX4                                      21       6.0          160
-# Mazda RX4 Wag                                  21       6.0          160
-# Datsun 710                                   22.8       4.0          108
-# Hornet 4 Drive                               21.4       6.0          258
-# Hornet Sportabout                            18.7       8.0          360
-# Valiant                                      18.1       6.0          225
-# Duster 360                                   14.3       8.0          360
-# Merc 240D                                    24.4       4.0        146.7
-# Merc 230                                     22.8       4.0        140.8
-# Merc 280                                     19.2       6.0        167.6
-# 
-# ...
-# 
-#                                                                    Page 1 of 2
-#                                  Listing 2.0
-#                       MTCARS Data Listing with Page Wrap
-# 
-# Vehicle                              Horsepower Weight  Quarter Mile Time
-# ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-# Mazda RX4                                   110   2.62              16.46
-# Mazda RX4 Wag                               110  2.875              17.02
-# Datsun 710                                   93   2.32              18.61
-# Hornet 4 Drive                              110  3.215              19.44
-# Hornet Sportabout                           175   3.44              17.02
-# Valiant                                     105   3.46              20.22
-# Duster 360                                  245   3.57              15.84
-# Merc 240D                                    62   3.19                 20
-# Merc 230                                     95   3.15               22.9
-# Merc 280                                    123   3.44               18.3
-# 
-# ...
-# 
-#                                                                    Page 2 of 2
-</code></pre>
-</div>
-<div id="example-7-page-by" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-7-page-by" class="anchor"></a>Example 7: Page By</h3>
-<p>A page by variable will split the report into pages by a variable, and label each page according the variable value. The page by can be assigned to the report, to a table, or to a plot. The page by label will appear between the titles and the content body. It can be aligned left, right, or center. The data should be sorted by the page by variable prior to reporting.</p>
-<pre><code># Create temp file name
-tmp &lt;- file.path(tempdir(), "example7.txt")
-
-# Prepare data
-dat &lt;- mtcars[order(mtcars$cyl), ]
-dat &lt;- data.frame(vehicle = rownames(dat), dat)
-
-# Define table
-tbl &lt;- create_table(dat, show_cols = 1:8) %&gt;% 
-  page_by(cyl, label="Cylinders: ") 
-
-# Create the report
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  titles("Listing 3.0", "MTCARS Data Listing with Page By") %&gt;% 
-
-  add_content(tbl) 
-
-
-# Write the report
-write_report(rpt)
-
-# Send report to console for viewing
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-#                                 Listing 3.0
-#                       MTCARS Data Listing with Page By
-#
-#       Cylinders: 4
-#
-#       vehicle                mpg cyl   disp   hp  drat     wt   qsec
-#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#       Datsun 710            22.8   4    108   93  3.85   2.32  18.61
-#       Merc 240D             24.4   4  146.7   62  3.69   3.19     20
-#       Merc 230              22.8   4  140.8   95  3.92   3.15   22.9
-#       Fiat 128              32.4   4   78.7   66  4.08    2.2  19.47
-#       Honda Civic           30.4   4   75.7   52  4.93  1.615  18.52
-#       Toyota Corolla        33.9   4   71.1   65  4.22  1.835   19.9
-#       Toyota Corona         21.5   4  120.1   97   3.7  2.465  20.01
-#       Fiat X1-9             27.3   4     79   66  4.08  1.935   18.9
-#       Porsche 914-2           26   4  120.3   91  4.43   2.14   16.7
-#       Lotus Europa          30.4   4   95.1  113  3.77  1.513   16.9
-#       Volvo 142E            21.4   4    121  109  4.11   2.78   18.6
-#
-# ...
-#
-#                                 Listing 3.0
-#                       MTCARS Data Listing with Page By
-#
-#       Cylinders: 6
-#
-#       vehicle                mpg cyl   disp   hp  drat     wt   qsec
-#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#       Mazda RX4               21   6    160  110   3.9   2.62  16.46
-#       Mazda RX4 Wag           21   6    160  110   3.9  2.875  17.02
-#       Hornet 4 Drive        21.4   6    258  110  3.08  3.215  19.44
-#       Valiant               18.1   6    225  105  2.76   3.46  20.22
-#       Merc 280              19.2   6  167.6  123  3.92   3.44   18.3
-#       Merc 280C             17.8   6  167.6  123  3.92   3.44   18.9
-#       Ferrari Dino          19.7   6    145  175  3.62   2.77   15.5
-#
-# ...
-#
-#                                 Listing 3.0
-#                       MTCARS Data Listing with Page By
-#
-#       Cylinders: 8
-#
-#       vehicle                mpg cyl   disp   hp  drat     wt   qsec
-#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#       Hornet Sportabout     18.7   8    360  175  3.15   3.44  17.02
-#       Duster 360            14.3   8    360  245  3.21   3.57  15.84
-#       Merc 450SE            16.4   8  275.8  180  3.07   4.07   17.4
-#       Merc 450SL            17.3   8  275.8  180  3.07   3.73   17.6
-#       Merc 450SLC           15.2   8  275.8  180  3.07   3.78     18
-#       Cadillac Fleetwood    10.4   8    472  205  2.93   5.25  17.98
-#       Lincoln Continental   10.4   8    460  215     3  5.424  17.82
-#       Chrysler Imperial     14.7   8    440  230  3.23  5.345  17.42
-#       Dodge Challenger      15.5   8    318  150  2.76   3.52  16.87
-#       AMC Javelin           15.2   8    304  150  3.15  3.435   17.3
-#       Camaro Z28            13.3   8    350  245  3.73   3.84  15.41
-#       Pontiac Firebird      19.2   8    400  175  3.08  3.845  17.05
-#       Ford Pantera L        15.8   8    351  264  4.22   3.17   14.5
-#       Maserati Bora           15   8    301  335  3.54   3.57   14.6
-#
-</code></pre>
-</div>
-<div id="example-8-title-header" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-8-title-header" class="anchor"></a>Example 8: Title Header</h3>
-<p>A title header is a special type of title block. The title header displays titles on the left side, and header information on the right side. The title header can be defined with the <code><a href="reference/title_header.html">title_header()</a></code> function. This style of header is preferred by some organizations.</p>
-<pre><code># Create temp file name
-tmp &lt;- file.path(tempdir(), "example8.txt")
-
-# Create the report
-rpt &lt;- create_report(tmp, orientation = "portrait") %&gt;% 
-  title_header("Listing 4.0", "MTCARS Data Listing with Title Header", 
-               right = c("Page [pg] of [tpg]",  "Study: Cars")) %&gt;% 
-  add_content(create_table(mtcars[1:10, ])) %&gt;% 
-  footnotes("* Motor Trend, 1974")
-
-# Write the report
-write_report(rpt)
-
-# Send report to console for viewing
-writeLines(readLines(tmp, encoding = "UTF-8"))
-
-# Listing 4.0                                                        Page 1 of 1
-# MTCARS Data Listing with Title Header                              Study: Cars
-# 
-#             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
-#           ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#              21   6    160  110   3.9   2.62  16.46  0  1    4    4
-#              21   6    160  110   3.9  2.875  17.02  0  1    4    4
-#            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
-#            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
-#            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
-#            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
-#            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
-#            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
-#            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
-#            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
-# 
-# ...
-# 
-# * Motor Trend, 1974</code></pre>
-</div>
-<div id="example-9-rtf-and-pdf" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-9-rtf-and-pdf" class="anchor"></a>Example 9: RTF and PDF</h3>
-<p>The <strong>reporter</strong> package supports three types of output: TXT, RTF, and PDF. The package produces TXT reports by default. If you want to produce RTF or PDF output, simply change the output type. Below is the summary table with stub example from above, the only change being that the <code>output_type</code> is now set to RTF.</p>
-<pre><code>
-# Create temporary path
-tmp &lt;- file.path(tempdir(), "example9.rtf")
-
-# Read in prepared data
-df &lt;- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
-      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
-      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
-      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-
-# Create table
-tbl &lt;- create_table(df, first_row_blank = TRUE) %&gt;% 
-  stub(c("var", "label")) %&gt;% 
-  define(var, blank_after = TRUE, label_row = TRUE, 
-         format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %&gt;% 
-  define(label, indent = .25) %&gt;% 
-  define(A, label = "Group A", align = "center", n = 19) %&gt;% 
-  define(B, label = "Group B", align = "center", n = 13)
-
-
-# Create report and add content
-rpt &lt;- create_report(tmp, output_type = "RTF") %&gt;% 
-  set_margins(top = 1, bottom = 1) %&gt;%
-  options_fixed(font_size = 12) %&gt;% 
-  page_header(left = "Client: Motor Trend", right = "Study: Cars") %&gt;% 
-  titles("Table 1.0", "MTCARS Summary Table") %&gt;% 
-  add_content(tbl) %&gt;% 
-  footnotes("* Motor Trend, 1974") %&gt;%
-  page_footer(left = Sys.time(), 
-              center = "Confidential", 
-              right = "Page [pg] of [tpg]")
-
-# Write out report
-write_report(rpt)
-
-# View report
-# file.show(tmp)
-</code></pre>
-<p><img src="man/images/rtf.png"></p>
-</div>
-<div id="example-10-figures" class="section level3">
-<h3 class="hasAnchor">
-<a href="#example-10-figures" class="anchor"></a>Example 10: Figures</h3>
-<p>RTF and PDF also support plots produced with the ggplot2 package. Use the <code><a href="reference/create_plot.html">create_plot()</a></code> function to create plot content for a report. The plot can be added to the report with the <code><a href="reference/add_content.html">add_content()</a></code> function, just like tables and text.</p>
-<pre><code><a href="http://ggplot2.tidyverse.org">library(ggplot2)
-  
-# Create temporary path
-tmp &lt;- file.path(tempdir(), "example10.pdf")
-  
-# Prepare data
-dat &lt;- mtcars[order(mtcars$cyl), ]
-
-# Generate plot
-p &lt;- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-
-# Define plot object
-plt &lt;- create_plot(p, height = 4, width = 8) %&gt;% 
-  titles("Figure 1.0", "MTCARS Mileage By Displacement", blank_row = "none") %&gt;%
-  footnotes("* Motor Trend, 1974")
-
-# Add plot to report
-rpt &lt;- create_report(tmp, output_type = "PDF") %&gt;%
-  set_margins(top = 1, bottom = 1) %&gt;%
-  options_fixed(font_size = 12) %&gt;% 
-  page_header("Sponsor", "Study: cars") %&gt;%
-  add_content(plt) %&gt;%
-  page_footer(Sys.time(), "Confidential", "Page [pg] of [tpg]")
-
-# Write out report
-if (rmarkdown::pandoc_available("1.12.3")) {
-  res &lt;- write_report(rpt)
-}
-
-# View report
-# file.show(tmp)</a></code></pre>
-<p><img src="man/images/plot.png"></p>
-</div>
+<a href="#next-steps" class="anchor"></a>Next Steps</h3>
+<p>The next step on your journey with <strong>reporter</strong> is to read the <a href="http://reporter.r-sassy.org/articles/reporter.html">Get started</a> page on the <a href="http://reporter.r-sassy.org">reporter</a> site. From there, please review some of the examples.</p>
+<p>Note that <strong>reporter</strong> is part of the <strong><a href="http://www.r-sassy.org">sassy</a></strong> family of packages.</p>
 </div>
 </div>
   </div>
