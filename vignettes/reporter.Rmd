@@ -1,6 +1,5 @@
 ---
 title: "Create Statistical Reports"
-author: "David Bosak"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
