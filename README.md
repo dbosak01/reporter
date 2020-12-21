@@ -45,6 +45,11 @@ The **reporter** package can be installed from the console.  Simply run
 the following command: 
 
     install.packages("reporter")
+    
+Or if you want the latest development version, you can install it directly
+from github:
+
+    devtools::install_github("https://github.com/dbosak01/reporter")
 
 
 Then put the following line at the top of your program or script:
@@ -62,5 +67,5 @@ The next step on your journey with **reporter** is to read the
 on the [reporter](http://reporter.r-sassy.org) site.  From there, please
 review some of the examples.  
 
-Note that **reporter** is part of the **[sassy](http://www.r-sassy.org)**
+Note that **reporter** is part of the **[sassy](http://sassy.r-sassy.org)**
 family of packages.  
