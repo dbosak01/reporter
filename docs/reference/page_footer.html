@@ -8,6 +8,13 @@
 
 <title>Adds a page footer — page_footer • reporter</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -44,6 +51,7 @@
 on each page of the report, at the bottom of the page.  The page footer
 contains three sections: left, center, and right.  Content for each section
 may be specified with the appropriate parameter." />
+<meta property="og:image" content="https://reporter.r-sassy.org/logo.png" />
 
 
 
@@ -252,14 +260,14 @@ within the available space.</p>
 <span class='co'># Write the report to the file system</span>
 <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #555555;'># A report specification: 1 pages</span><span>
-#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\RtmpqEI0XE/mtcars.txt'
+#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\RtmpwxPQ5l/mtcars.txt'
 #&gt; - output_type: TXT
 #&gt; - units: inches
 #&gt; - orientation: portrait
 #&gt; - line size/count: 78/60
 #&gt; - page_header: left=Client: Motor Trend right=Study: Cars
 #&gt; - title 1: 'MTCARS Sample Report'
-#&gt; - page_footer: left=2020-12-20 18:48:59 center= right=Page [pg] of [tpg]
+#&gt; - page_footer: left=2020-12-20 23:56:11 center= right=Page [pg] of [tpg]
 #&gt; - content: 
 #&gt; </span><span style='color: #555555;'># A table specification:
 #&gt; </span><span>- data: data.frame 'dat' 10 rows 6 cols
@@ -326,7 +334,7 @@ within the available space.</p>
 #&gt; 
 #&gt; 
 #&gt; 
-#&gt; 2020-12-20 18:48:59                                                Page 1 of 1</div><div class='input'>
+#&gt; 2020-12-20 23:56:11                                                Page 1 of 1</div><div class='input'>
 <span class='co'># Client: Motor Trend                                                Study: Cars</span>
 <span class='co'>#                              MTCARS Sample Report</span>
 <span class='co'># </span>
