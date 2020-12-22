@@ -8,7 +8,7 @@
 [![Travis build status](https://travis-ci.com/dbosak01/reporter.svg?branch=master)](https://travis-ci.com/dbosak01/reporter)
 <!-- badges: end -->
 
-### Introduction <img src="man/images/reporter4.png" align="right" height="138"/>
+### Introduction <img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;"/>
 
 Historically, R has not been very strong on reporting.  The **reporter**
 package aims to fill that gap.  
@@ -31,7 +31,7 @@ You do not need to learn Latex, HTML, or any other intermediate language.
 With **reporter**, you send your data into a create function, assign 
 titles and footnotes, and write the report.  That's it!
 
-If you are familiar with SAS® software, you may notice some  
+If you are familiar with SAS® software, you may notice some 
 similarity between **reporter** functions and `proc report`.  This similarity,
 however, is only on the surface.  The implementation of **reporter** is
 done entirely in R, and, internally, is modeled in a different way. 
