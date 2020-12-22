@@ -15,7 +15,52 @@ articles:
   - reporter-rtf
   - reporter-figure
 
+reference:
+- title: Report Functions
+  desc: Functions to define and decorate a report.
+  contents:
+  - create_report
+  - page_header
+  - page_footer
+  - add_content
+  - options_fixed
+  - set_margins
+  - write_report
+  - print.report_spec
+- title: Table Functions
+  desc: Functions to define and lay out a table.
+  contents:
+  - create_table
+  - column_defaults
+  - spanning_header
+  - stub
+  - define
+  - print.table_spec
+- title: Plot and Text Functions
+  desc: Functions to define plots and text content.
+  contents:
+  - create_plot
+  - print.plot_spec
+  - create_text
+  - print.text_spec
+- title: Title and Footnote Functions
+  desc: Functions to create titles and footnotes.
+  contents:
+  - titles
+  - footnotes
+  - title_header
+  - page_by
+- title: Other Functions
+  desc: Here are some other functions included in the reporter package.
+  contents:
+  - write_registration_file
+  - lowcase_parens
+  - upcase_parens
+  - lowcase_n
+  - upcase_n
+
 navbar:
   structure:
-    left:  [home, intro, reference, articles, news]
+    left:  [home, intro, articles, reference, news]
     right: [github]
+

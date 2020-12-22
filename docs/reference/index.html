@@ -94,9 +94,6 @@
 <li>
   <a href="../articles/reporter.html">Get started</a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -137,6 +134,9 @@
   </ul>
 </li>
 <li>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
@@ -169,8 +169,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-report-functions" class="hasAnchor"><a href="#section-report-functions" class="anchor"></a>Report Functions</h2>
+          <p class="section-desc"><p>Functions to define and decorate a report.</p></p>
         </th>
       </tr>
       
@@ -181,81 +181,9 @@
       <tr>
         
         <td>
-          <p><code><a href="add_content.html">add_content()</a></code> </p>
-        </td>
-        <td><p>Add content to a report</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="column_defaults.html">column_defaults()</a></code> </p>
-        </td>
-        <td><p>Set default attributes for one or more columns</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="create_plot.html">create_plot()</a></code> </p>
-        </td>
-        <td><p>Create plot content</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="create_report.html">create_report()</a></code> </p>
         </td>
         <td><p>Create a report</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="create_table.html">create_table()</a></code> </p>
-        </td>
-        <td><p>Create a table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="create_text.html">create_text()</a></code> </p>
-        </td>
-        <td><p>Create text content</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="define.html">define()</a></code> </p>
-        </td>
-        <td><p>Defines a column</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="footnotes.html">footnotes()</a></code> </p>
-        </td>
-        <td><p>Adds a footnote block</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="lowcase_parens.html">lowcase_parens()</a></code> <code><a href="lowcase_parens.html">upcase_parens()</a></code> <code><a href="lowcase_parens.html">lowcase_n()</a></code> <code><a href="lowcase_parens.html">upcase_n()</a></code> </p>
-        </td>
-        <td><p>Functions to format the population label</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="NotesOnPDF.html">NotesOnPDF</a></code> </p>
-        </td>
-        <td><p>Notes on PDF output type</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="options_fixed.html">options_fixed()</a></code> </p>
-        </td>
-        <td><p>Set options for a fixed-width report</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="page_by.html">page_by()</a></code> </p>
-        </td>
-        <td><p>Adds a page by variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="page_footer.html">page_footer()</a></code> </p>
-        </td>
-        <td><p>Adds a page footer</p></td>
       </tr><tr>
         
         <td>
@@ -265,39 +193,64 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="print.plot_spec.html">print(<i>&lt;plot_spec&gt;</i>)</a></code> </p>
+          <p><code><a href="page_footer.html">page_footer()</a></code> </p>
         </td>
-        <td><p>Prints the plot spec</p></td>
+        <td><p>Adds a page footer</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="print.report_spec.html">print(<i>&lt;report_spec&gt;</i>)</a></code> </p>
+          <p><code><a href="add_content.html">add_content()</a></code> </p>
         </td>
-        <td><p>Prints the report specification</p></td>
+        <td><p>Add content to a report</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="print.table_spec.html">print(<i>&lt;table_spec&gt;</i>)</a></code> </p>
+          <p><code><a href="options_fixed.html">options_fixed()</a></code> </p>
         </td>
-        <td><p>Prints the table spec</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.text_spec.html">print(<i>&lt;text_spec&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Prints the text spec</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="reporter.html">reporter</a></code> </p>
-        </td>
-        <td><p>reporter: A package for creating statistical reports</p></td>
+        <td><p>Set options for a fixed-width report</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="set_margins.html">set_margins()</a></code> </p>
         </td>
         <td><p>Set page margins</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="write_report.html">write_report()</a></code> </p>
+        </td>
+        <td><p>Write a report to the file system</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.report_spec.html">print(<i>&lt;report_spec&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Prints the report specification</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-table-functions" class="hasAnchor"><a href="#section-table-functions" class="anchor"></a>Table Functions</h2>
+          <p class="section-desc"><p>Functions to define and lay out a table.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="create_table.html">create_table()</a></code> </p>
+        </td>
+        <td><p>Create a table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="column_defaults.html">column_defaults()</a></code> </p>
+        </td>
+        <td><p>Set default attributes for one or more columns</p></td>
       </tr><tr>
         
         <td>
@@ -313,9 +266,77 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="define.html">define()</a></code> </p>
+        </td>
+        <td><p>Defines a column</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.table_spec.html">print(<i>&lt;table_spec&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Prints the table spec</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-plot-and-text-functions" class="hasAnchor"><a href="#section-plot-and-text-functions" class="anchor"></a>Plot and Text Functions</h2>
+          <p class="section-desc"><p>Functions to define plots and text content.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="create_plot.html">create_plot()</a></code> </p>
+        </td>
+        <td><p>Create plot content</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.plot_spec.html">print(<i>&lt;plot_spec&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Prints the plot spec</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_text.html">create_text()</a></code> </p>
+        </td>
+        <td><p>Create text content</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.text_spec.html">print(<i>&lt;text_spec&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Prints the text spec</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-title-and-footnote-functions" class="hasAnchor"><a href="#section-title-and-footnote-functions" class="anchor"></a>Title and Footnote Functions</h2>
+          <p class="section-desc"><p>Functions to create titles and footnotes.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
           <p><code><a href="titles.html">titles()</a></code> </p>
         </td>
         <td><p>Adds a title block</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="footnotes.html">footnotes()</a></code> </p>
+        </td>
+        <td><p>Adds a footnote block</p></td>
       </tr><tr>
         
         <td>
@@ -325,15 +346,34 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="page_by.html">page_by()</a></code> </p>
+        </td>
+        <td><p>Adds a page by variable</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-other-functions" class="hasAnchor"><a href="#section-other-functions" class="anchor"></a>Other Functions</h2>
+          <p class="section-desc"><p>Here are some other functions included in the reporter package.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
           <p><code><a href="write_registration_file.html">write_registration_file()</a></code> </p>
         </td>
         <td><p>Create a registration file</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="write_report.html">write_report()</a></code> </p>
+          <p><code><a href="lowcase_parens.html">lowcase_parens()</a></code> <code><a href="lowcase_parens.html">upcase_parens()</a></code> <code><a href="lowcase_parens.html">lowcase_n()</a></code> <code><a href="lowcase_parens.html">upcase_n()</a></code> </p>
         </td>
-        <td><p>Write a report to the file system</p></td>
+        <td><p>Functions to format the population label</p></td>
       </tr>
     </tbody>
     </table>
