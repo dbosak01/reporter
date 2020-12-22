@@ -1,8 +1,8 @@
-# reporter 1.0.3
+# reporter 1.0.6
 
 * Added support for survminer graphics in create_plot()
 
-# reporter 1.0.2
+# reporter 1.0.5
 
 A package to create statistical reports (TFLs). Contains the following features:
 
