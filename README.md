@@ -17,8 +17,8 @@ Using **reporter**, you can create a report in just a few lines of code.
 Not only is it easy to create a report, but the **reporter** package can handle 
 all sorts of situations that other packages struggle with.
 
-For example, unlike other packages, the **reporter** package creates the entire
-report: page header and footer, titles, footnotes, tables - everything.
+For example, unlike other packages, the **reporter** package creates the *entire
+report*: page header and footer, titles, footnotes, tables - everything.
 The end result of a reporter call is a complete, printable report. 
 
 In addition, **reporter** can handle page breaking, page wrapping, and 
@@ -26,7 +26,7 @@ automatic sizing of column widths.  The package
 offers a choice of output file types.  And it supports the inclusion of 
 tables, text and graphics into a report.
 
-What is more, the package does not expect you to know R Markdown, knitr, or pandoc.  
+What is more, the package does not expect you to know R Markdown, knitr, or pandoc.
 You do not need to learn Latex, HTML, or any other intermediate language.
 With **reporter**, you send your data into a create function, assign 
 titles and footnotes, and write the report.  That's it!
