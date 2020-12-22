@@ -1,6 +1,5 @@
 ---
 title: "Example 2: Table"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 2: Table}
@@ -20,6 +19,7 @@ knitr::opts_chunk$set(
 Here is an example of a regulatory-style table of summary statistics:
 
 ```{r eval=FALSE, echo=TRUE} 
+library(reporter)
 
 # Create temporary path
 tmp <- file.path(tempdir(), "example2.txt")
@@ -88,3 +88,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 2020-10-16 18:57:02              Confidential                      Page 1 of 1
 
 ```
+
+Next: [Example 3: Table Stub](https://reporter.r-sassy.org/articles/reporter-stub.html)

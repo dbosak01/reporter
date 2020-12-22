@@ -1,6 +1,5 @@
 ---
 title: "Example 1: Listing"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 1: Listing}
@@ -21,6 +20,8 @@ Here is an example of
 a regulatory-style listing using **reporter** and the mtcars sample data frame:
 
 ```{r eval=FALSE, echo=TRUE} 
+library(reporter)
+
 # Create temp file name
 tmp <- file.path(tempdir(), "example1.txt")
 
@@ -87,3 +88,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 
 ```
+
+Next: [Example 2: Table](https://reporter.r-sassy.org/articles/reporter-table.html)

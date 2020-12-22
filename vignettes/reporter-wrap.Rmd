@@ -1,6 +1,5 @@
 ---
 title: "Example 6: Page Wrap"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 6: Page Wrap}
@@ -24,6 +23,8 @@ page wrapping can also be controlled using the `page_wrap` parameter on the
 option to cause the vehicle column to be retained on each wrapped page. 
 
 ```{r eval=FALSE, echo=TRUE}  
+library(reporter)
+
 # Create temp file name
 tmp <- file.path(tempdir(), "example6.txt")
 
@@ -96,3 +97,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 #                                                                    Page 2 of 2
 
 ```
+
+Next: [Example 7: Page By](https://reporter.r-sassy.org/articles/reporter-pageby.html)

@@ -79,16 +79,16 @@
       <a href="articles/reporter-stub.html">Example 3: Table Stub</a>
     </li>
     <li>
-      <a href="articles/reporter-spanning.html">Example 5: Spanning Headers</a>
-    </li>
-    <li>
       <a href="articles/reporter-text.html">Example 4: Table and Text</a>
     </li>
     <li>
-      <a href="articles/reporter-pageby.html">Example 7: Page By</a>
+      <a href="articles/reporter-spanning.html">Example 5: Spanning Headers</a>
     </li>
     <li>
       <a href="articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="articles/reporter-pageby.html">Example 7: Page By</a>
     </li>
     <li>
       <a href="articles/reporter-title_header.html">Example 8: Title Header</a>
@@ -120,22 +120,19 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="reporter" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#reporter" class="anchor"></a>reporter</h1></div>
-<!-- badges: start -->
 
-<div id="introduction-" class="section level3">
-<h3 class="hasAnchor">
-<a href="#introduction-" class="anchor"></a>Introduction <img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;">
-</h3>
+
+<div id="introduction-to-reporter" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#introduction-to-reporter" class="anchor"></a>Introduction to <strong>reporter</strong>
+</h1></div>
+<p><img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;"></p>
 <p>Historically, R has not been very strong on reporting. The <strong>reporter</strong> package aims to fill that gap.</p>
 <p>Using <strong>reporter</strong>, you can create a report in just a few lines of code. Not only is it easy to create a report, but the <strong>reporter</strong> package can handle all sorts of situations that other packages struggle with.</p>
 <p>For example, unlike other packages, the <strong>reporter</strong> package creates the <em>entire report</em>: page header and footer, titles, footnotes, tables - everything. The end result of a reporter call is a complete, printable report.</p>
 <p>In addition, <strong>reporter</strong> can handle page breaking, page wrapping, and automatic sizing of column widths. The package offers a choice of output file types. And it supports the inclusion of tables, text and graphics into a report.</p>
 <p>What is more, the package does not expect you to know R Markdown, knitr, or pandoc. You do not need to learn Latex, HTML, or any other intermediate language. With <strong>reporter</strong>, you send your data into a create function, assign titles and footnotes, and write the report. That’s it!</p>
 <p>If you are familiar with SAS® software, you may notice some similarity between <strong>reporter</strong> functions and <code>proc report</code>. This similarity, however, is only on the surface. The implementation of <strong>reporter</strong> is done entirely in R, and, internally, is modeled in a different way. However, SAS® users will find the <strong>reporter</strong> functions very convenient and easy to understand compared to the alternatives.</p>
-</div>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
@@ -154,6 +151,7 @@
 <p>Note that <strong>reporter</strong> is part of the <strong><a href="http://sassy.r-sassy.org">sassy</a></strong> family of packages.</p>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

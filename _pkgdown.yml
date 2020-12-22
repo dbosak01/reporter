@@ -7,10 +7,10 @@ articles:
   - reporter-listing
   - reporter-table
   - reporter-stub
-  - reporter-spanning
   - reporter-text
-  - reporter-pageby
+  - reporter-spanning
   - reporter-wrap
+  - reporter-pageby
   - reporter-title_header
   - reporter-rtf
   - reporter-figure

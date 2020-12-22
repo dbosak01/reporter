@@ -11,7 +11,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2020-12-20" />
 
 <title>Example 3: Table Stub</title>
 
@@ -327,82 +326,83 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Example 3: Table Stub</h1>
-<h4 class="date">2020-12-20</h4>
 
 
 
 <div id="create-a-summary-table-with-stub-column" class="section level3">
 <h3>Create a Summary Table with Stub Column</h3>
 <p>Here is an example of the same table of summary statistics, but with row labels merged into a stub column:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># Create temporary path</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>tmp &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;example3.txt&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># Read in prepared data</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>df &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">text =</span> <span class="st">&#39;</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="st">      var     label        A             B          </span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="st">      &quot;ampg&quot;   &quot;N&quot;          &quot;19&quot;          &quot;13&quot;         </span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="st">      &quot;ampg&quot;   &quot;Mean&quot;       &quot;18.8 (6.5)&quot;  &quot;22.0 (4.9)&quot; </span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="st">      &quot;ampg&quot;   &quot;Median&quot;     &quot;16.4&quot;        &quot;21.4&quot;       </span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="st">      &quot;ampg&quot;   &quot;Q1 - Q3&quot;    &quot;15.1 - 21.2&quot; &quot;19.2 - 22.8&quot;</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="st">      &quot;ampg&quot;   &quot;Range&quot;      &quot;10.4 - 33.9&quot; &quot;14.7 - 32.4&quot;</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="st">      &quot;cyl&quot;    &quot;8 Cylinder&quot; &quot;10 ( 52.6%)&quot; &quot;4 ( 30.8%)&quot; </span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="st">      &quot;cyl&quot;    &quot;6 Cylinder&quot; &quot;4 ( 21.1%)&quot;  &quot;3 ( 23.1%)&quot; </span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="st">      &quot;cyl&quot;    &quot;4 Cylinder&quot; &quot;5 ( 26.3%)&quot;  &quot;6 ( 46.2%)&quot;&#39;</span>)</span>
-<span id="cb1-16"><a href="#cb1-16"></a></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co"># Create table</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a>tbl &lt;-<span class="st"> </span><span class="kw">create_table</span>(df, <span class="dt">first_row_blank =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="st">  </span><span class="kw">stub</span>(<span class="kw">c</span>(<span class="st">&quot;var&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="st">  </span><span class="kw">define</span>(var, <span class="dt">blank_after =</span> <span class="ot">TRUE</span>, <span class="dt">label_row =</span> <span class="ot">TRUE</span>, </span>
-<span id="cb1-21"><a href="#cb1-21"></a>         <span class="dt">format =</span> <span class="kw">c</span>(<span class="dt">ampg =</span> <span class="st">&quot;Miles Per Gallon&quot;</span>, <span class="dt">cyl =</span> <span class="st">&quot;Cylinders&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="st">  </span><span class="kw">define</span>(label, <span class="dt">indent =</span> <span class="fl">.25</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="st">  </span><span class="kw">define</span>(A, <span class="dt">label =</span> <span class="st">&quot;Group A&quot;</span>, <span class="dt">align =</span> <span class="st">&quot;center&quot;</span>, <span class="dt">n =</span> <span class="dv">19</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-24"><a href="#cb1-24"></a><span class="st">  </span><span class="kw">define</span>(B, <span class="dt">label =</span> <span class="st">&quot;Group B&quot;</span>, <span class="dt">align =</span> <span class="st">&quot;center&quot;</span>, <span class="dt">n =</span> <span class="dv">13</span>)</span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(reporter)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Create temporary path</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>tmp &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;example3.txt&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Read in prepared data</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>df &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">text =</span> <span class="st">&#39;</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="st">      var     label        A             B          </span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="st">      &quot;ampg&quot;   &quot;N&quot;          &quot;19&quot;          &quot;13&quot;         </span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="st">      &quot;ampg&quot;   &quot;Mean&quot;       &quot;18.8 (6.5)&quot;  &quot;22.0 (4.9)&quot; </span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="st">      &quot;ampg&quot;   &quot;Median&quot;     &quot;16.4&quot;        &quot;21.4&quot;       </span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="st">      &quot;ampg&quot;   &quot;Q1 - Q3&quot;    &quot;15.1 - 21.2&quot; &quot;19.2 - 22.8&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="st">      &quot;ampg&quot;   &quot;Range&quot;      &quot;10.4 - 33.9&quot; &quot;14.7 - 32.4&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="st">      &quot;cyl&quot;    &quot;8 Cylinder&quot; &quot;10 ( 52.6%)&quot; &quot;4 ( 30.8%)&quot; </span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="st">      &quot;cyl&quot;    &quot;6 Cylinder&quot; &quot;4 ( 21.1%)&quot;  &quot;3 ( 23.1%)&quot; </span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="st">      &quot;cyl&quot;    &quot;4 Cylinder&quot; &quot;5 ( 26.3%)&quot;  &quot;6 ( 46.2%)&quot;&#39;</span>)</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co"># Create table</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>tbl &lt;-<span class="st"> </span><span class="kw">create_table</span>(df, <span class="dt">first_row_blank =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="st">  </span><span class="kw">stub</span>(<span class="kw">c</span>(<span class="st">&quot;var&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="st">  </span><span class="kw">define</span>(var, <span class="dt">blank_after =</span> <span class="ot">TRUE</span>, <span class="dt">label_row =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb1-22"><a href="#cb1-22"></a>         <span class="dt">format =</span> <span class="kw">c</span>(<span class="dt">ampg =</span> <span class="st">&quot;Miles Per Gallon&quot;</span>, <span class="dt">cyl =</span> <span class="st">&quot;Cylinders&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="st">  </span><span class="kw">define</span>(label, <span class="dt">indent =</span> <span class="fl">.25</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="st">  </span><span class="kw">define</span>(A, <span class="dt">label =</span> <span class="st">&quot;Group A&quot;</span>, <span class="dt">align =</span> <span class="st">&quot;center&quot;</span>, <span class="dt">n =</span> <span class="dv">19</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="st">  </span><span class="kw">define</span>(B, <span class="dt">label =</span> <span class="st">&quot;Group B&quot;</span>, <span class="dt">align =</span> <span class="st">&quot;center&quot;</span>, <span class="dt">n =</span> <span class="dv">13</span>)</span>
 <span id="cb1-26"><a href="#cb1-26"></a></span>
-<span id="cb1-27"><a href="#cb1-27"></a><span class="co"># Create report and add content</span></span>
-<span id="cb1-28"><a href="#cb1-28"></a>rpt &lt;-<span class="st"> </span><span class="kw">create_report</span>(tmp, <span class="dt">orientation =</span> <span class="st">&quot;portrait&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="st">  </span><span class="kw">page_header</span>(<span class="dt">left =</span> <span class="st">&quot;Client: Motor Trend&quot;</span>, <span class="dt">right =</span> <span class="st">&quot;Study: Cars&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-30"><a href="#cb1-30"></a><span class="st">  </span><span class="kw">titles</span>(<span class="st">&quot;Table 1.0&quot;</span>, <span class="st">&quot;MTCARS Summary Table&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-31"><a href="#cb1-31"></a><span class="st">  </span><span class="kw">add_content</span>(tbl) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-32"><a href="#cb1-32"></a><span class="st">  </span><span class="kw">footnotes</span>(<span class="st">&quot;* Motor Trend, 1974&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="st">  </span><span class="kw">page_footer</span>(<span class="dt">left =</span> <span class="kw">Sys.time</span>(), </span>
-<span id="cb1-34"><a href="#cb1-34"></a>              <span class="dt">center =</span> <span class="st">&quot;Confidential&quot;</span>, </span>
-<span id="cb1-35"><a href="#cb1-35"></a>              <span class="dt">right =</span> <span class="st">&quot;Page [pg] of [tpg]&quot;</span>)</span>
-<span id="cb1-36"><a href="#cb1-36"></a></span>
-<span id="cb1-37"><a href="#cb1-37"></a><span class="co"># Write out report</span></span>
-<span id="cb1-38"><a href="#cb1-38"></a><span class="kw">write_report</span>(rpt)</span>
-<span id="cb1-39"><a href="#cb1-39"></a></span>
-<span id="cb1-40"><a href="#cb1-40"></a><span class="co"># View report in console</span></span>
-<span id="cb1-41"><a href="#cb1-41"></a><span class="kw">writeLines</span>(<span class="kw">readLines</span>(tmp, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span>
-<span id="cb1-42"><a href="#cb1-42"></a></span>
-<span id="cb1-43"><a href="#cb1-43"></a><span class="co"># Client: Motor Trend                                                Study: Cars</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a><span class="co">#                                   Table 1.0</span></span>
-<span id="cb1-45"><a href="#cb1-45"></a><span class="co">#                              MTCARS Summary Table</span></span>
-<span id="cb1-46"><a href="#cb1-46"></a><span class="co"># </span></span>
-<span id="cb1-47"><a href="#cb1-47"></a><span class="co">#                                      Group A      Group B</span></span>
-<span id="cb1-48"><a href="#cb1-48"></a><span class="co">#                                       (N=19)       (N=13)</span></span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="co">#                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
-<span id="cb1-50"><a href="#cb1-50"></a><span class="co"># </span></span>
-<span id="cb1-51"><a href="#cb1-51"></a><span class="co">#                  Miles Per Gallon</span></span>
-<span id="cb1-52"><a href="#cb1-52"></a><span class="co">#                     N                   19           13</span></span>
-<span id="cb1-53"><a href="#cb1-53"></a><span class="co">#                     Mean            18.8 (6.5)   22.0 (4.9)</span></span>
-<span id="cb1-54"><a href="#cb1-54"></a><span class="co">#                     Median             16.4         21.4</span></span>
-<span id="cb1-55"><a href="#cb1-55"></a><span class="co">#                     Q1 - Q3        15.1 - 21.2  19.2 - 22.8</span></span>
-<span id="cb1-56"><a href="#cb1-56"></a><span class="co">#                     Range          10.4 - 33.9  14.7 - 32.4</span></span>
-<span id="cb1-57"><a href="#cb1-57"></a><span class="co"># </span></span>
-<span id="cb1-58"><a href="#cb1-58"></a><span class="co">#                  Cylinders</span></span>
-<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#                     8 Cylinder     10 ( 52.6%)   4 ( 30.8%)</span></span>
-<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#                     6 Cylinder      4 ( 21.1%)   3 ( 23.1%)</span></span>
-<span id="cb1-61"><a href="#cb1-61"></a><span class="co">#                     4 Cylinder      5 ( 26.3%)   6 ( 46.2%)</span></span>
-<span id="cb1-62"><a href="#cb1-62"></a><span class="co"># </span></span>
+<span id="cb1-27"><a href="#cb1-27"></a></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co"># Create report and add content</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>rpt &lt;-<span class="st"> </span><span class="kw">create_report</span>(tmp, <span class="dt">orientation =</span> <span class="st">&quot;portrait&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="st">  </span><span class="kw">page_header</span>(<span class="dt">left =</span> <span class="st">&quot;Client: Motor Trend&quot;</span>, <span class="dt">right =</span> <span class="st">&quot;Study: Cars&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="st">  </span><span class="kw">titles</span>(<span class="st">&quot;Table 1.0&quot;</span>, <span class="st">&quot;MTCARS Summary Table&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="st">  </span><span class="kw">add_content</span>(tbl) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="st">  </span><span class="kw">footnotes</span>(<span class="st">&quot;* Motor Trend, 1974&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="st">  </span><span class="kw">page_footer</span>(<span class="dt">left =</span> <span class="kw">Sys.time</span>(), </span>
+<span id="cb1-35"><a href="#cb1-35"></a>              <span class="dt">center =</span> <span class="st">&quot;Confidential&quot;</span>, </span>
+<span id="cb1-36"><a href="#cb1-36"></a>              <span class="dt">right =</span> <span class="st">&quot;Page [pg] of [tpg]&quot;</span>)</span>
+<span id="cb1-37"><a href="#cb1-37"></a></span>
+<span id="cb1-38"><a href="#cb1-38"></a><span class="co"># Write out report</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="kw">write_report</span>(rpt)</span>
+<span id="cb1-40"><a href="#cb1-40"></a></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="co"># View report in console</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a><span class="kw">writeLines</span>(<span class="kw">readLines</span>(tmp, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span>
+<span id="cb1-43"><a href="#cb1-43"></a></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="co"># Client: Motor Trend                                                Study: Cars</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a><span class="co">#                                   Table 1.0</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a><span class="co">#                              MTCARS Summary Table</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="co"># </span></span>
+<span id="cb1-48"><a href="#cb1-48"></a><span class="co">#                                      Group A      Group B</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a><span class="co">#                                       (N=19)       (N=13)</span></span>
+<span id="cb1-50"><a href="#cb1-50"></a><span class="co">#                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
+<span id="cb1-51"><a href="#cb1-51"></a><span class="co"># </span></span>
+<span id="cb1-52"><a href="#cb1-52"></a><span class="co">#                  Miles Per Gallon</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a><span class="co">#                     N                   19           13</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a><span class="co">#                     Mean            18.8 (6.5)   22.0 (4.9)</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a><span class="co">#                     Median             16.4         21.4</span></span>
+<span id="cb1-56"><a href="#cb1-56"></a><span class="co">#                     Q1 - Q3        15.1 - 21.2  19.2 - 22.8</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a><span class="co">#                     Range          10.4 - 33.9  14.7 - 32.4</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a><span class="co"># </span></span>
+<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#                  Cylinders</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#                     8 Cylinder     10 ( 52.6%)   4 ( 30.8%)</span></span>
+<span id="cb1-61"><a href="#cb1-61"></a><span class="co">#                     6 Cylinder      4 ( 21.1%)   3 ( 23.1%)</span></span>
+<span id="cb1-62"><a href="#cb1-62"></a><span class="co">#                     4 Cylinder      5 ( 26.3%)   6 ( 46.2%)</span></span>
 <span id="cb1-63"><a href="#cb1-63"></a><span class="co"># </span></span>
-<span id="cb1-64"><a href="#cb1-64"></a><span class="co"># ...</span></span>
-<span id="cb1-65"><a href="#cb1-65"></a><span class="co"># </span></span>
+<span id="cb1-64"><a href="#cb1-64"></a><span class="co"># </span></span>
+<span id="cb1-65"><a href="#cb1-65"></a><span class="co"># ...</span></span>
 <span id="cb1-66"><a href="#cb1-66"></a><span class="co"># </span></span>
-<span id="cb1-67"><a href="#cb1-67"></a><span class="co"># * Motor Trend, 1974</span></span>
-<span id="cb1-68"><a href="#cb1-68"></a><span class="co"># </span></span>
-<span id="cb1-69"><a href="#cb1-69"></a><span class="co"># 2020-10-16 18:57:02              Confidential                      Page 1 of 1</span></span></code></pre></div>
+<span id="cb1-67"><a href="#cb1-67"></a><span class="co"># </span></span>
+<span id="cb1-68"><a href="#cb1-68"></a><span class="co"># * Motor Trend, 1974</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a><span class="co"># </span></span>
+<span id="cb1-70"><a href="#cb1-70"></a><span class="co"># 2020-10-16 18:57:02              Confidential                      Page 1 of 1</span></span></code></pre></div>
+<p>Next: <a href="https://reporter.r-sassy.org/articles/reporter-text.html">Example 4: Table and Text</a></p>
 </div>
 
 

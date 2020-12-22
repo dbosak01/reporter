@@ -70,16 +70,16 @@
       <a href="../articles/reporter-stub.html">Example 3: Table Stub</a>
     </li>
     <li>
-      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
-    </li>
-    <li>
       <a href="../articles/reporter-text.html">Example 4: Table and Text</a>
     </li>
     <li>
-      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
+      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
     </li>
     <li>
       <a href="../articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
     </li>
     <li>
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
@@ -114,7 +114,6 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example 9: RTF and PDF</h1>
             
-            <h4 class="date">2020-12-22</h4>
       
       
       <div class="hidden name"><code>reporter-rtf.Rmd</code></div>
@@ -128,7 +127,8 @@
 <a href="#output-to-rtf-and-pdf" class="anchor"></a>Output to RTF and PDF</h3>
 <p>The <strong>reporter</strong> package supports three types of output: TXT, RTF, and PDF. The package produces TXT reports by default. If you want to produce RTF or PDF output, simply change the output type. Below is the summary table with stub example from above, the only change being that the <code>output_type</code> is now set to RTF.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">reporter</span><span class="op">)</span>
+
 <span class="co"># Create temporary path</span>
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example9.rtf"</span><span class="op">)</span>
 
@@ -172,6 +172,7 @@
 <span class="co"># View report</span>
 <span class="co"># file.show(tmp)</span></code></pre></div>
 <p><img src="../man/images/rtf.png"></p>
+<p>Next: <a href="https://reporter.r-sassy.org/articles/reporter-figure.html">Example 10: Figure</a></p>
 </div>
   </div>
 

@@ -70,16 +70,16 @@
       <a href="../articles/reporter-stub.html">Example 3: Table Stub</a>
     </li>
     <li>
-      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
-    </li>
-    <li>
       <a href="../articles/reporter-text.html">Example 4: Table and Text</a>
     </li>
     <li>
-      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
+      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
     </li>
     <li>
       <a href="../articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
     </li>
     <li>
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
@@ -114,7 +114,6 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example 4: Table and Text</h1>
             
-            <h4 class="date">2020-12-22</h4>
       
       
       <div class="hidden name"><code>reporter-text.Rmd</code></div>
@@ -128,7 +127,9 @@
 <a href="#intermingle-table-and-text" class="anchor"></a>Intermingle Table and Text</h3>
 <p>The below example demonstrates intermingling of table and text content. This functionality is enabled by the ability to append multiple pieces of content to the same report. Appending content is useful when you want to create a report with multiple tables, or provide textual analysis of tabular data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create temporary path</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">reporter</span><span class="op">)</span>
+
+<span class="co"># Create temporary path</span>
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example4.txt"</span><span class="op">)</span>
 
 <span class="co"># Dummy text</span>
@@ -196,6 +197,7 @@
 <span class="co"># ...</span>
 <span class="co"># </span>
 <span class="co"># 2020-08-30 04:44:53              Confidential                      Page 1 of 1</span></code></pre></div>
+<p>Next: <a href="https://reporter.r-sassy.org/articles/reporter-spanning.html">Example 5: Spanning Headers</a></p>
 </div>
   </div>
 

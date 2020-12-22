@@ -1,6 +1,5 @@
 ---
 title: "Example 10: Figure"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 10: Figure}
@@ -23,6 +22,7 @@ plot can be added to the report with the `add_content()` function, just
 like tables and text.
 
 ```{r eval=FALSE, echo=TRUE} 
+library(reporter)
 library(ggplot2)
   
 # Create temporary path

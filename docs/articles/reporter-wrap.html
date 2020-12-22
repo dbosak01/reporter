@@ -70,16 +70,16 @@
       <a href="../articles/reporter-stub.html">Example 3: Table Stub</a>
     </li>
     <li>
-      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
-    </li>
-    <li>
       <a href="../articles/reporter-text.html">Example 4: Table and Text</a>
     </li>
     <li>
-      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
+      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
     </li>
     <li>
       <a href="../articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
     </li>
     <li>
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
@@ -114,7 +114,6 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example 6: Page Wrap</h1>
             
-            <h4 class="date">2020-12-22</h4>
       
       
       <div class="hidden name"><code>reporter-wrap.Rmd</code></div>
@@ -128,7 +127,9 @@
 <a href="#handle-wide-tables-with-page-wrap" class="anchor"></a>Handle Wide Tables with Page Wrap</h3>
 <p>Page wrapping will occur automatically if the table width exceeds the available page width. But page wrapping can also be controlled using the <code>page_wrap</code> parameter on the <code><a href="../reference/define.html">define()</a></code> function. Below is an example. Also note the use of the <code>id_var</code> option to cause the vehicle column to be retained on each wrapped page.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create temp file name</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">reporter</span><span class="op">)</span>
+
+<span class="co"># Create temp file name</span>
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example6.txt"</span><span class="op">)</span>
 
 <span class="co"># Prepare data</span>
@@ -198,6 +199,7 @@
 <span class="co"># ...</span>
 <span class="co"># </span>
 <span class="co">#                                                                    Page 2 of 2</span></code></pre></div>
+<p>Next: <a href="https://reporter.r-sassy.org/articles/reporter-pageby.html">Example 7: Page By</a></p>
 </div>
   </div>
 

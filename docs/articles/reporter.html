@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Statistical Reports • reporter</title>
+<title>reporter • reporter</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Create Statistical Reports">
+<script src="../pkgdown.js"></script><meta property="og:title" content="reporter">
 <meta property="og:description" content="reporter">
 <meta property="og:image" content="https://reporter.r-sassy.org/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -70,16 +70,16 @@
       <a href="../articles/reporter-stub.html">Example 3: Table Stub</a>
     </li>
     <li>
-      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
-    </li>
-    <li>
       <a href="../articles/reporter-text.html">Example 4: Table and Text</a>
     </li>
     <li>
-      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
+      <a href="../articles/reporter-spanning.html">Example 5: Spanning Headers</a>
     </li>
     <li>
       <a href="../articles/reporter-wrap.html">Example 6: Page Wrap</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-pageby.html">Example 7: Page By</a>
     </li>
     <li>
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
@@ -112,9 +112,8 @@
       </header><script src="reporter_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Create Statistical Reports</h1>
+      <h1 data-toc-skip>reporter</h1>
             
-            <h4 class="date">2020-12-22</h4>
       
       
       <div class="hidden name"><code>reporter.Rmd</code></div>
@@ -123,10 +122,7 @@
 
     
     
-<div id="reporter" class="section level1">
-<h1 class="hasAnchor">
-<a href="#reporter" class="anchor"></a>reporter</h1>
-<p>The <strong>reporter</strong> package creates regulatory-style, statistical reports. It was designed to produce Tables, Listings, and Figures (TLFs) for the the pharmaceutical, biotechnology, and medical-device industries. However, the functions are generalized enough to provide statistical reporting for any industry. The package is written in Base R, and has no dependencies on any other reporting package.</p>
+<p>The <strong>reporter</strong> package creates regulatory-style statistical reports. It was designed to produce Tables, Listings, and Figures (TLFs) for the the pharmaceutical, biotechnology, and medical-device industries. However, the functions are generalized enough to provide statistical reporting for any industry. The package is written in Base R, and has no dependencies on any other reporting package.</p>
 <p>The package is intended to give R programmers flexible report layout capabilities and a choice of output formats. The package will initially focus on printable, file-based output formats, as there are already numerous R packages that provide tabular reporting in HTML. The current version supports TXT, RTF, and PDF output types.</p>
 <p>The <strong>reporter</strong> package is distributed under a <a href="https://creativecommons.org/licenses/by-nc/4.0">Creative Commons non-commercial license</a>. It is available for personal and organizational use, but cannot be used to create a commercial product without permission of the license holder.</p>
 <div id="key-features" class="section level2">
@@ -232,7 +228,6 @@
 <li>
 <code><a href="../reference/page_by.html">page_by()</a></code>: Creates separate pages by a variable</li>
 </ul>
-</div>
 </div>
 </div>
   </div>

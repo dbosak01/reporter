@@ -1,6 +1,5 @@
 ---
 title: "Example 9: RTF and PDF"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 9: RTF and PDF}
@@ -24,6 +23,7 @@ with stub example from above, the only change being that the `output_type`
 is now set to RTF.
 
 ```{r eval=FALSE, echo=TRUE} 
+library(reporter)
 
 # Create temporary path
 tmp <- file.path(tempdir(), "example9.rtf")
@@ -71,3 +71,5 @@ write_report(rpt)
 ```
 <img src="../man/images/rtf.png"/>
 
+
+Next: [Example 10: Figure](https://reporter.r-sassy.org/articles/reporter-figure.html)

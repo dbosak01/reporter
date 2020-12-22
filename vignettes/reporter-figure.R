@@ -5,6 +5,7 @@ knitr::opts_chunk$set(
 )
 
 ## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  library(reporter)
 #  library(ggplot2)
 #  
 #  # Create temporary path

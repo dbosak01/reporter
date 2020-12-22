@@ -1,6 +1,5 @@
 ---
 title: "Example 3: Table Stub"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 3: Table Stub}
@@ -21,6 +20,7 @@ Here is an example of the same table of summary statistics,
 but with row labels merged into a stub column:
 
 ```{r eval=FALSE, echo=TRUE} 
+library(reporter)
 
 # Create temporary path
 tmp <- file.path(tempdir(), "example3.txt")
@@ -92,3 +92,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 2020-10-16 18:57:02              Confidential                      Page 1 of 1
 
 ```
+
+Next: [Example 4: Table and Text](https://reporter.r-sassy.org/articles/reporter-text.html)

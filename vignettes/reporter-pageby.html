@@ -11,7 +11,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2020-12-20" />
 
 <title>Example 7: Page By</title>
 
@@ -327,97 +326,99 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Example 7: Page By</h1>
-<h4 class="date">2020-12-20</h4>
 
 
 
 <div id="create-a-table-with-a-by-group" class="section level3">
 <h3>Create a Table with a By-Group</h3>
 <p>A page by variable will split the report into pages by a variable, and label each page according the variable value. The page by can be assigned to the report, to a table, or to a plot. The page by label will appear between the titles and the content body. It can be aligned left, right, or center. The data should be sorted by the page by variable prior to reporting.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Create temp file name</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>tmp &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;example7.txt&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Prepare data</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>dat &lt;-<span class="st"> </span>mtcars[<span class="kw">order</span>(mtcars<span class="op">$</span>cyl), ]</span>
-<span id="cb1-6"><a href="#cb1-6"></a>dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">vehicle =</span> <span class="kw">rownames</span>(dat), dat)</span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># Define table</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>tbl &lt;-<span class="st"> </span><span class="kw">create_table</span>(dat, <span class="dt">show_cols =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="st">  </span><span class="kw">page_by</span>(cyl, <span class="dt">label=</span><span class="st">&quot;Cylinders: &quot;</span>) </span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># Create the report</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>rpt &lt;-<span class="st"> </span><span class="kw">create_report</span>(tmp, <span class="dt">orientation =</span> <span class="st">&quot;portrait&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="st">  </span><span class="kw">titles</span>(<span class="st">&quot;Listing 3.0&quot;</span>, <span class="st">&quot;MTCARS Data Listing with Page By&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="st">  </span><span class="kw">add_content</span>(tbl) </span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(reporter)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Create temp file name</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>tmp &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;example7.txt&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Prepare data</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>dat &lt;-<span class="st"> </span>mtcars[<span class="kw">order</span>(mtcars<span class="op">$</span>cyl), ]</span>
+<span id="cb1-8"><a href="#cb1-8"></a>dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">vehicle =</span> <span class="kw">rownames</span>(dat), dat)</span>
+<span id="cb1-9"><a href="#cb1-9"></a></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co"># Define table</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>tbl &lt;-<span class="st"> </span><span class="kw">create_table</span>(dat, <span class="dt">show_cols =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="st">  </span><span class="kw">page_by</span>(cyl, <span class="dt">label=</span><span class="st">&quot;Cylinders: &quot;</span>) </span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co"># Create the report</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>rpt &lt;-<span class="st"> </span><span class="kw">create_report</span>(tmp, <span class="dt">orientation =</span> <span class="st">&quot;portrait&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="st">  </span><span class="kw">titles</span>(<span class="st">&quot;Listing 3.0&quot;</span>, <span class="st">&quot;MTCARS Data Listing with Page By&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-17"><a href="#cb1-17"></a></span>
-<span id="cb1-18"><a href="#cb1-18"></a></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="co"># Write the report</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="kw">write_report</span>(rpt)</span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="co"># Send report to console for viewing</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="kw">writeLines</span>(<span class="kw">readLines</span>(tmp, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span>
-<span id="cb1-24"><a href="#cb1-24"></a></span>
-<span id="cb1-25"><a href="#cb1-25"></a><span class="co">#                                 Listing 3.0</span></span>
-<span id="cb1-26"><a href="#cb1-26"></a><span class="co">#                       MTCARS Data Listing with Page By</span></span>
-<span id="cb1-27"><a href="#cb1-27"></a><span class="co">#</span></span>
-<span id="cb1-28"><a href="#cb1-28"></a><span class="co">#       Cylinders: 4</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="st">  </span><span class="kw">add_content</span>(tbl) </span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co"># Write the report</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="kw">write_report</span>(rpt)</span>
+<span id="cb1-23"><a href="#cb1-23"></a></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co"># Send report to console for viewing</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="kw">writeLines</span>(<span class="kw">readLines</span>(tmp, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co">#                                 Listing 3.0</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co">#                       MTCARS Data Listing with Page By</span></span>
 <span id="cb1-29"><a href="#cb1-29"></a><span class="co">#</span></span>
-<span id="cb1-30"><a href="#cb1-30"></a><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
-<span id="cb1-31"><a href="#cb1-31"></a><span class="co">#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
-<span id="cb1-32"><a href="#cb1-32"></a><span class="co">#       Datsun 710            22.8   4    108   93  3.85   2.32  18.61</span></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="co">#       Merc 240D             24.4   4  146.7   62  3.69   3.19     20</span></span>
-<span id="cb1-34"><a href="#cb1-34"></a><span class="co">#       Merc 230              22.8   4  140.8   95  3.92   3.15   22.9</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a><span class="co">#       Fiat 128              32.4   4   78.7   66  4.08    2.2  19.47</span></span>
-<span id="cb1-36"><a href="#cb1-36"></a><span class="co">#       Honda Civic           30.4   4   75.7   52  4.93  1.615  18.52</span></span>
-<span id="cb1-37"><a href="#cb1-37"></a><span class="co">#       Toyota Corolla        33.9   4   71.1   65  4.22  1.835   19.9</span></span>
-<span id="cb1-38"><a href="#cb1-38"></a><span class="co">#       Toyota Corona         21.5   4  120.1   97   3.7  2.465  20.01</span></span>
-<span id="cb1-39"><a href="#cb1-39"></a><span class="co">#       Fiat X1-9             27.3   4     79   66  4.08  1.935   18.9</span></span>
-<span id="cb1-40"><a href="#cb1-40"></a><span class="co">#       Porsche 914-2           26   4  120.3   91  4.43   2.14   16.7</span></span>
-<span id="cb1-41"><a href="#cb1-41"></a><span class="co">#       Lotus Europa          30.4   4   95.1  113  3.77  1.513   16.9</span></span>
-<span id="cb1-42"><a href="#cb1-42"></a><span class="co">#       Volvo 142E            21.4   4    121  109  4.11   2.78   18.6</span></span>
-<span id="cb1-43"><a href="#cb1-43"></a><span class="co">#</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a><span class="co"># ...</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="co">#       Cylinders: 4</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="co">#</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co">#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="co">#       Datsun 710            22.8   4    108   93  3.85   2.32  18.61</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co">#       Merc 240D             24.4   4  146.7   62  3.69   3.19     20</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="co">#       Merc 230              22.8   4  140.8   95  3.92   3.15   22.9</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="co">#       Fiat 128              32.4   4   78.7   66  4.08    2.2  19.47</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a><span class="co">#       Honda Civic           30.4   4   75.7   52  4.93  1.615  18.52</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="co">#       Toyota Corolla        33.9   4   71.1   65  4.22  1.835   19.9</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a><span class="co">#       Toyota Corona         21.5   4  120.1   97   3.7  2.465  20.01</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="co">#       Fiat X1-9             27.3   4     79   66  4.08  1.935   18.9</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a><span class="co">#       Porsche 914-2           26   4  120.3   91  4.43   2.14   16.7</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a><span class="co">#       Lotus Europa          30.4   4   95.1  113  3.77  1.513   16.9</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="co">#       Volvo 142E            21.4   4    121  109  4.11   2.78   18.6</span></span>
 <span id="cb1-45"><a href="#cb1-45"></a><span class="co">#</span></span>
-<span id="cb1-46"><a href="#cb1-46"></a><span class="co">#                                 Listing 3.0</span></span>
-<span id="cb1-47"><a href="#cb1-47"></a><span class="co">#                       MTCARS Data Listing with Page By</span></span>
-<span id="cb1-48"><a href="#cb1-48"></a><span class="co">#</span></span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="co">#       Cylinders: 6</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a><span class="co"># ...</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="co">#</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a><span class="co">#                                 Listing 3.0</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a><span class="co">#                       MTCARS Data Listing with Page By</span></span>
 <span id="cb1-50"><a href="#cb1-50"></a><span class="co">#</span></span>
-<span id="cb1-51"><a href="#cb1-51"></a><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
-<span id="cb1-52"><a href="#cb1-52"></a><span class="co">#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
-<span id="cb1-53"><a href="#cb1-53"></a><span class="co">#       Mazda RX4               21   6    160  110   3.9   2.62  16.46</span></span>
-<span id="cb1-54"><a href="#cb1-54"></a><span class="co">#       Mazda RX4 Wag           21   6    160  110   3.9  2.875  17.02</span></span>
-<span id="cb1-55"><a href="#cb1-55"></a><span class="co">#       Hornet 4 Drive        21.4   6    258  110  3.08  3.215  19.44</span></span>
-<span id="cb1-56"><a href="#cb1-56"></a><span class="co">#       Valiant               18.1   6    225  105  2.76   3.46  20.22</span></span>
-<span id="cb1-57"><a href="#cb1-57"></a><span class="co">#       Merc 280              19.2   6  167.6  123  3.92   3.44   18.3</span></span>
-<span id="cb1-58"><a href="#cb1-58"></a><span class="co">#       Merc 280C             17.8   6  167.6  123  3.92   3.44   18.9</span></span>
-<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#       Ferrari Dino          19.7   6    145  175  3.62   2.77   15.5</span></span>
-<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#</span></span>
-<span id="cb1-61"><a href="#cb1-61"></a><span class="co"># ...</span></span>
+<span id="cb1-51"><a href="#cb1-51"></a><span class="co">#       Cylinders: 6</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a><span class="co">#</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a><span class="co">#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a><span class="co">#       Mazda RX4               21   6    160  110   3.9   2.62  16.46</span></span>
+<span id="cb1-56"><a href="#cb1-56"></a><span class="co">#       Mazda RX4 Wag           21   6    160  110   3.9  2.875  17.02</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a><span class="co">#       Hornet 4 Drive        21.4   6    258  110  3.08  3.215  19.44</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a><span class="co">#       Valiant               18.1   6    225  105  2.76   3.46  20.22</span></span>
+<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#       Merc 280              19.2   6  167.6  123  3.92   3.44   18.3</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#       Merc 280C             17.8   6  167.6  123  3.92   3.44   18.9</span></span>
+<span id="cb1-61"><a href="#cb1-61"></a><span class="co">#       Ferrari Dino          19.7   6    145  175  3.62   2.77   15.5</span></span>
 <span id="cb1-62"><a href="#cb1-62"></a><span class="co">#</span></span>
-<span id="cb1-63"><a href="#cb1-63"></a><span class="co">#                                 Listing 3.0</span></span>
-<span id="cb1-64"><a href="#cb1-64"></a><span class="co">#                       MTCARS Data Listing with Page By</span></span>
-<span id="cb1-65"><a href="#cb1-65"></a><span class="co">#</span></span>
-<span id="cb1-66"><a href="#cb1-66"></a><span class="co">#       Cylinders: 8</span></span>
+<span id="cb1-63"><a href="#cb1-63"></a><span class="co"># ...</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a><span class="co">#</span></span>
+<span id="cb1-65"><a href="#cb1-65"></a><span class="co">#                                 Listing 3.0</span></span>
+<span id="cb1-66"><a href="#cb1-66"></a><span class="co">#                       MTCARS Data Listing with Page By</span></span>
 <span id="cb1-67"><a href="#cb1-67"></a><span class="co">#</span></span>
-<span id="cb1-68"><a href="#cb1-68"></a><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
-<span id="cb1-69"><a href="#cb1-69"></a><span class="co">#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
-<span id="cb1-70"><a href="#cb1-70"></a><span class="co">#       Hornet Sportabout     18.7   8    360  175  3.15   3.44  17.02</span></span>
-<span id="cb1-71"><a href="#cb1-71"></a><span class="co">#       Duster 360            14.3   8    360  245  3.21   3.57  15.84</span></span>
-<span id="cb1-72"><a href="#cb1-72"></a><span class="co">#       Merc 450SE            16.4   8  275.8  180  3.07   4.07   17.4</span></span>
-<span id="cb1-73"><a href="#cb1-73"></a><span class="co">#       Merc 450SL            17.3   8  275.8  180  3.07   3.73   17.6</span></span>
-<span id="cb1-74"><a href="#cb1-74"></a><span class="co">#       Merc 450SLC           15.2   8  275.8  180  3.07   3.78     18</span></span>
-<span id="cb1-75"><a href="#cb1-75"></a><span class="co">#       Cadillac Fleetwood    10.4   8    472  205  2.93   5.25  17.98</span></span>
-<span id="cb1-76"><a href="#cb1-76"></a><span class="co">#       Lincoln Continental   10.4   8    460  215     3  5.424  17.82</span></span>
-<span id="cb1-77"><a href="#cb1-77"></a><span class="co">#       Chrysler Imperial     14.7   8    440  230  3.23  5.345  17.42</span></span>
-<span id="cb1-78"><a href="#cb1-78"></a><span class="co">#       Dodge Challenger      15.5   8    318  150  2.76   3.52  16.87</span></span>
-<span id="cb1-79"><a href="#cb1-79"></a><span class="co">#       AMC Javelin           15.2   8    304  150  3.15  3.435   17.3</span></span>
-<span id="cb1-80"><a href="#cb1-80"></a><span class="co">#       Camaro Z28            13.3   8    350  245  3.73   3.84  15.41</span></span>
-<span id="cb1-81"><a href="#cb1-81"></a><span class="co">#       Pontiac Firebird      19.2   8    400  175  3.08  3.845  17.05</span></span>
-<span id="cb1-82"><a href="#cb1-82"></a><span class="co">#       Ford Pantera L        15.8   8    351  264  4.22   3.17   14.5</span></span>
-<span id="cb1-83"><a href="#cb1-83"></a><span class="co">#       Maserati Bora           15   8    301  335  3.54   3.57   14.6</span></span>
-<span id="cb1-84"><a href="#cb1-84"></a><span class="co">#</span></span></code></pre></div>
+<span id="cb1-68"><a href="#cb1-68"></a><span class="co">#       Cylinders: 8</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a><span class="co">#</span></span>
+<span id="cb1-70"><a href="#cb1-70"></a><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a><span class="co">#       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
+<span id="cb1-72"><a href="#cb1-72"></a><span class="co">#       Hornet Sportabout     18.7   8    360  175  3.15   3.44  17.02</span></span>
+<span id="cb1-73"><a href="#cb1-73"></a><span class="co">#       Duster 360            14.3   8    360  245  3.21   3.57  15.84</span></span>
+<span id="cb1-74"><a href="#cb1-74"></a><span class="co">#       Merc 450SE            16.4   8  275.8  180  3.07   4.07   17.4</span></span>
+<span id="cb1-75"><a href="#cb1-75"></a><span class="co">#       Merc 450SL            17.3   8  275.8  180  3.07   3.73   17.6</span></span>
+<span id="cb1-76"><a href="#cb1-76"></a><span class="co">#       Merc 450SLC           15.2   8  275.8  180  3.07   3.78     18</span></span>
+<span id="cb1-77"><a href="#cb1-77"></a><span class="co">#       Cadillac Fleetwood    10.4   8    472  205  2.93   5.25  17.98</span></span>
+<span id="cb1-78"><a href="#cb1-78"></a><span class="co">#       Lincoln Continental   10.4   8    460  215     3  5.424  17.82</span></span>
+<span id="cb1-79"><a href="#cb1-79"></a><span class="co">#       Chrysler Imperial     14.7   8    440  230  3.23  5.345  17.42</span></span>
+<span id="cb1-80"><a href="#cb1-80"></a><span class="co">#       Dodge Challenger      15.5   8    318  150  2.76   3.52  16.87</span></span>
+<span id="cb1-81"><a href="#cb1-81"></a><span class="co">#       AMC Javelin           15.2   8    304  150  3.15  3.435   17.3</span></span>
+<span id="cb1-82"><a href="#cb1-82"></a><span class="co">#       Camaro Z28            13.3   8    350  245  3.73   3.84  15.41</span></span>
+<span id="cb1-83"><a href="#cb1-83"></a><span class="co">#       Pontiac Firebird      19.2   8    400  175  3.08  3.845  17.05</span></span>
+<span id="cb1-84"><a href="#cb1-84"></a><span class="co">#       Ford Pantera L        15.8   8    351  264  4.22   3.17   14.5</span></span>
+<span id="cb1-85"><a href="#cb1-85"></a><span class="co">#       Maserati Bora           15   8    301  335  3.54   3.57   14.6</span></span>
+<span id="cb1-86"><a href="#cb1-86"></a><span class="co">#</span></span></code></pre></div>
+<p>Next: <a href="https://reporter.r-sassy.org/articles/reporter-title_header.html">Example 8: Title Header</a></p>
 </div>
 
 

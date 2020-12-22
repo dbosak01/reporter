@@ -1,5 +1,3 @@
-# reporter 
-
 <!-- badges: start -->
 
 [![reporter version](https://www.r-pkg.org/badges/version/reporter)](https://cran.r-project.org/package=reporter)
@@ -8,7 +6,8 @@
 [![Travis build status](https://travis-ci.com/dbosak01/reporter.svg?branch=master)](https://travis-ci.com/dbosak01/reporter)
 <!-- badges: end -->
 
-### Introduction <img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;"/>
+# Introduction to **reporter**
+<img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;"/>
 
 Historically, R has not been very strong on reporting.  The **reporter**
 package aims to fill that gap.  

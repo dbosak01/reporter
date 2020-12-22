@@ -1,6 +1,5 @@
 ---
 title: "Example 7: Page By"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 7: Page By}
@@ -24,6 +23,8 @@ the titles and the content body.  It can be aligned left, right, or center.
 The data should be sorted by the page by variable prior to reporting.
 
 ```{r eval=FALSE, echo=TRUE}  
+library(reporter)
+
 # Create temp file name
 tmp <- file.path(tempdir(), "example7.txt")
 
@@ -110,3 +111,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 #
 
 ```
+
+Next: [Example 8: Title Header](https://reporter.r-sassy.org/articles/reporter-title_header.html)

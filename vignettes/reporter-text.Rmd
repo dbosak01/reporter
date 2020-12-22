@@ -1,6 +1,5 @@
 ---
 title: "Example 4: Table and Text"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 4: Table and Text}
@@ -23,6 +22,8 @@ to the same report.  Appending content is useful when you want to create a
 report with multiple tables, or provide textual analysis of tabular data.
 
 ```{r eval=FALSE, echo=TRUE}  
+library(reporter)
+
 # Create temporary path
 tmp <- file.path(tempdir(), "example4.txt")
 
@@ -93,3 +94,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 2020-08-30 04:44:53              Confidential                      Page 1 of 1
 
 ```
+
+Next: [Example 5: Spanning Headers](https://reporter.r-sassy.org/articles/reporter-spanning.html)

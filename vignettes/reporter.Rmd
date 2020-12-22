@@ -1,9 +1,8 @@
 ---
-title: "Create Statistical Reports"
-date: "`r Sys.Date()`"
+title: "reporter"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Create Statistical Reports}
+  %\VignetteIndexEntry{reporter}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,9 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# reporter 
-
-The **reporter** package creates regulatory-style, statistical reports. It was designed
+The **reporter** package creates regulatory-style statistical reports. It was designed
 to produce Tables, Listings, and Figures (TLFs) for the 
 the pharmaceutical, biotechnology, and medical-device industries.
 However, the functions are generalized enough to provide statistical reporting

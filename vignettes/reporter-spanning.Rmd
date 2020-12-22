@@ -1,6 +1,5 @@
 ---
 title: "Example 5: Spanning Headers"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 5: Spanning Headers}
@@ -22,6 +21,7 @@ reporting packages support them.  **reporter** supports any number of spanning
 levels, along with a flexible and simple syntax to define them.
 
 ```{r eval=FALSE, echo=TRUE}  
+library(reporter)
 
 # Create temporary path
 tmp <- file.path(tempdir(), "example5.txt")
@@ -76,3 +76,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 
 ```
+
+Next: [Example 6: Page Wrap](https://reporter.r-sassy.org/articles/reporter-wrap.html)

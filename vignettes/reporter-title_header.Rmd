@@ -1,6 +1,5 @@
 ---
 title: "Example 8: Title Header"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example 8: Title Header}
@@ -23,6 +22,8 @@ title header can be defined with the `title_header()` function.  This style of
 header is preferred by some organizations.
 
 ```{r eval=FALSE, echo=TRUE} 
+library(reporter)
+
 # Create temp file name
 tmp <- file.path(tempdir(), "example8.txt")
 
@@ -59,3 +60,5 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 
 # * Motor Trend, 1974
 ```
+
+Next: [Example 9: RTF and PDF](https://reporter.r-sassy.org/articles/reporter-rtf.html)

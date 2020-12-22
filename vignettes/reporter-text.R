@@ -5,6 +5,8 @@ knitr::opts_chunk$set(
 )
 
 ## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  library(reporter)
+#  
 #  # Create temporary path
 #  tmp <- file.path(tempdir(), "example4.txt")
 #  
