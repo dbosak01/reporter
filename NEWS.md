@@ -1,3 +1,12 @@
+# reporter 1.1.0
+
+* Added 8pt font
+* Added border property to titles, footnotes, and title_header functions
+* Added {{}} double curly escape on parameters accepting unquoted parameters, 
+so that users could pass them as variables inside a function.
+* Added pkgdown site
+* Fixed bug on deleting image files in the temp directory.
+
 # reporter 1.0.6
 
 * Added support for survminer graphics in create_plot()

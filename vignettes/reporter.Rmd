@@ -72,8 +72,8 @@ the function [reference](https://reporter.r-sassy.org/articles/reporter.html).
 Before diving too deep into the functions, however, it is recommended that you 
 review some examples of the **reporter** package in action.  The examples
 show a variety of common use cases.  You will see
-that the **reporter** functions are very intutive and easy to use.  Here is a 
-list of available examples.
+that the **reporter** functions are very intuitive and easy to use.  Here is a 
+list of examples.
 
 * [Example 1: Listing](https://reporter.r-sassy.org/articles/reporter-listing.html)
 * [Example 2: Table](https://reporter.r-sassy.org/articles/reporter-table.html)
