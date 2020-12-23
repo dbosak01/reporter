@@ -64,40 +64,25 @@ Finally, the report can be written to a file with the `write_report()` function.
 
 In addition to these primary functions, there are several secondary functions
 to help you formalize the report.  All available functions are shown in
-the subsequent glossary.
+the function [reference](https://reporter.r-sassy.org/articles/reporter.html).
 
 
-## Glossary of Functions
+## Next Steps
 
-Below are the functions available in the **reporter** package, and a brief
-description of their use.  For additional information, see the help text:
+Before diving too deep into the functions, however, it is recommended that you 
+review some examples of the **reporter** package in action.  The examples
+show a variety of common use cases.  You will see
+that the **reporter** functions are very intutive and easy to use.  Here is a 
+list of available examples.
 
-### Report Functions
-
-* `create_report()`: Define a report object  
-* `options_fixed()`: Set options for fixed width (text) reports  
-* `set_margins()`: Set margins for the report  
-* `page_header()`: Define a page header  
-* `page_footer()`: Define a page footer  
-* `add_content()`: Add content to the report  
-* `write_report()`: Write the report to a file  
-
-### Table functions
-
-* `create_table()`: Define a table object  
-* `spanning_header()`: Define a spanning header  
-* `stub()`: Define a stub column  
-* `columns_defaults()`: Set default column attributes
-* `define()`: Specify settings for a column  
-
-### Text and Plot functions
-
-* `create_text()`: Define a text object  
-* `create_plot()`: Define a plot object 
-
-### Title/Footnote Functions 
-* `titles()`: Set titles for the object  
-* `footnotes()`: Set footnotes for the object 
-* `title_header()`: A combined title/header block 
-* `page_by()`: Creates separate pages by a variable
+* [Example 1: Listing](https://reporter.r-sassy.org/articles/reporter-listing.html)
+* [Example 2: Table](https://reporter.r-sassy.org/articles/reporter-table.html)
+* [Example 3: Table Stub](https://reporter.r-sassy.org/articles/reporter-stub.html) 
+* [Example 4: Table and Text](https://reporter.r-sassy.org/articles/reporter-text.html)
+* [Example 5: Spanning Headers](https://reporter.r-sassy.org/articles/reporter-spanning.html)
+* [Example 6: Page Wrap](https://reporter.r-sassy.org/articles/reporter-wrap.html)
+* [Example 7: Page By](https://reporter.r-sassy.org/articles/reporter-pageby.html)
+* [Example 8: Title Header](https://reporter.r-sassy.org/articles/reporter-title_header.html)
+* [Example 9: RTF and PDF](https://reporter.r-sassy.org/articles/reporter-rtf.html)
+* [Example 10: Figure](https://reporter.r-sassy.org/articles/reporter-figure.html)
 

@@ -12,7 +12,7 @@
 
 
 
-<title>Create Statistical Reports</title>
+<title>reporter</title>
 
 <script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
 // v0.0.1
@@ -237,13 +237,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Create Statistical Reports</h1>
+<h1 class="title toc-ignore">reporter</h1>
 
 
 
-<div id="reporter" class="section level1">
-<h1>reporter</h1>
-<p>The <strong>reporter</strong> package creates regulatory-style, statistical reports. It was designed to produce Tables, Listings, and Figures (TLFs) for the the pharmaceutical, biotechnology, and medical-device industries. However, the functions are generalized enough to provide statistical reporting for any industry. The package is written in Base R, and has no dependencies on any other reporting package.</p>
+<p>The <strong>reporter</strong> package creates regulatory-style statistical reports. It was designed to produce Tables, Listings, and Figures (TLFs) for the the pharmaceutical, biotechnology, and medical-device industries. However, the functions are generalized enough to provide statistical reporting for any industry. The package is written in Base R, and has no dependencies on any other reporting package.</p>
 <p>The package is intended to give R programmers flexible report layout capabilities and a choice of output formats. The package will initially focus on printable, file-based output formats, as there are already numerous R packages that provide tabular reporting in HTML. The current version supports TXT, RTF, and PDF output types.</p>
 <p>The <strong>reporter</strong> package is distributed under a <a href="https://creativecommons.org/licenses/by-nc/4.0">Creative Commons non-commercial license</a>. It is available for personal and organizational use, but cannot be used to create a commercial product without permission of the license holder.</p>
 <div id="key-features" class="section level2">
@@ -270,61 +268,23 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <li>Write out the report</li>
 </ul>
 <p>You can create the report with the <code>create_report()</code> function. Content is created with the <code>create_table()</code>, <code>create_text()</code>, or <code>create_plot()</code> functions. Add content to the report with the <code>add_content()</code> function. Finally, the report can be written to a file with the <code>write_report()</code> function.</p>
-<p>In addition to these primary functions, there are several secondary functions to help you formalize the report. All available functions are shown in the subsequent glossary.</p>
+<p>In addition to these primary functions, there are several secondary functions to help you formalize the report. All available functions are shown in the function <a href="https://reporter.r-sassy.org/articles/reporter.html">reference</a>.</p>
 </div>
-<div id="glossary-of-functions" class="section level2">
-<h2>Glossary of Functions</h2>
-<p>Below are the functions available in the <strong>reporter</strong> package, and a brief description of their use. For additional information, see the help text:</p>
-<div id="report-functions" class="section level3">
-<h3>Report Functions</h3>
+<div id="next-steps" class="section level2">
+<h2>Next Steps</h2>
+<p>Before diving too deep into the functions, however, it is recommended that you review some examples of the <strong>reporter</strong> package in action. The examples show a variety of common use cases. You will see that the <strong>reporter</strong> functions are very intutive and easy to use. Here is a list of available examples.</p>
 <ul>
-<li><code>create_report()</code>: Define a report object<br />
-</li>
-<li><code>options_fixed()</code>: Set options for fixed width (text) reports<br />
-</li>
-<li><code>set_margins()</code>: Set margins for the report<br />
-</li>
-<li><code>page_header()</code>: Define a page header<br />
-</li>
-<li><code>page_footer()</code>: Define a page footer<br />
-</li>
-<li><code>add_content()</code>: Add content to the report<br />
-</li>
-<li><code>write_report()</code>: Write the report to a file</li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-listing.html">Example 1: Listing</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-table.html">Example 2: Table</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-stub.html">Example 3: Table Stub</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-text.html">Example 4: Table and Text</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-spanning.html">Example 5: Spanning Headers</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-wrap.html">Example 6: Page Wrap</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-pageby.html">Example 7: Page By</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-title_header.html">Example 8: Title Header</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-rtf.html">Example 9: RTF and PDF</a></li>
+<li><a href="https://reporter.r-sassy.org/articles/reporter-figure.html">Example 10: Figure</a></li>
 </ul>
-</div>
-<div id="table-functions" class="section level3">
-<h3>Table functions</h3>
-<ul>
-<li><code>create_table()</code>: Define a table object<br />
-</li>
-<li><code>spanning_header()</code>: Define a spanning header<br />
-</li>
-<li><code>stub()</code>: Define a stub column<br />
-</li>
-<li><code>columns_defaults()</code>: Set default column attributes</li>
-<li><code>define()</code>: Specify settings for a column</li>
-</ul>
-</div>
-<div id="text-and-plot-functions" class="section level3">
-<h3>Text and Plot functions</h3>
-<ul>
-<li><code>create_text()</code>: Define a text object<br />
-</li>
-<li><code>create_plot()</code>: Define a plot object</li>
-</ul>
-</div>
-<div id="titlefootnote-functions" class="section level3">
-<h3>Title/Footnote Functions</h3>
-<ul>
-<li><code>titles()</code>: Set titles for the object<br />
-</li>
-<li><code>footnotes()</code>: Set footnotes for the object</li>
-<li><code>title_header()</code>: A combined title/header block</li>
-<li><code>page_by()</code>: Creates separate pages by a variable</li>
-</ul>
-</div>
-</div>
 </div>
 
 
