@@ -61,4 +61,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # * Motor Trend, 1974
 ```
 
-Next: [Example 9: RTF and PDF](https://reporter.r-sassy.org/articles/reporter-rtf.html)
+Next: [Example 9: RTF and PDF](reporter-rtf.html)

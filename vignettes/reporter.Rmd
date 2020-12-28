@@ -75,14 +75,14 @@ show a variety of common use cases.  You will see
 that the **reporter** functions are very intuitive and easy to use.  Here is a 
 list of examples.
 
-* [Example 1: Listing](https://reporter.r-sassy.org/articles/reporter-listing.html)
-* [Example 2: Table](https://reporter.r-sassy.org/articles/reporter-table.html)
-* [Example 3: Table Stub](https://reporter.r-sassy.org/articles/reporter-stub.html) 
-* [Example 4: Table and Text](https://reporter.r-sassy.org/articles/reporter-text.html)
-* [Example 5: Spanning Headers](https://reporter.r-sassy.org/articles/reporter-spanning.html)
-* [Example 6: Page Wrap](https://reporter.r-sassy.org/articles/reporter-wrap.html)
-* [Example 7: Page By](https://reporter.r-sassy.org/articles/reporter-pageby.html)
-* [Example 8: Title Header](https://reporter.r-sassy.org/articles/reporter-title_header.html)
-* [Example 9: RTF and PDF](https://reporter.r-sassy.org/articles/reporter-rtf.html)
-* [Example 10: Figure](https://reporter.r-sassy.org/articles/reporter-figure.html)
+* [Example 1: Listing](reporter-listing.html)
+* [Example 2: Table](reporter-table.html)
+* [Example 3: Table Stub](reporter-stub.html) 
+* [Example 4: Table and Text](reporter-text.html)
+* [Example 5: Spanning Headers](reporter-spanning.html)
+* [Example 6: Page Wrap](reporter-wrap.html)
+* [Example 7: Page By](reporter-pageby.html)
+* [Example 8: Title Header](reporter-title_header.html)
+* [Example 9: RTF and PDF](reporter-rtf.html)
+* [Example 10: Figure](reporter-figure.html)
 

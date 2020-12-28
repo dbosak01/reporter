@@ -77,4 +77,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
-Next: [Example 6: Page Wrap](https://reporter.r-sassy.org/articles/reporter-wrap.html)
+Next: [Example 6: Page Wrap](reporter-wrap.html)

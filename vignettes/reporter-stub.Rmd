@@ -93,4 +93,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
-Next: [Example 4: Table and Text](https://reporter.r-sassy.org/articles/reporter-text.html)
+Next: [Example 4: Table and Text](reporter-text.html)

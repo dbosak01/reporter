@@ -112,4 +112,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
-Next: [Example 8: Title Header](https://reporter.r-sassy.org/articles/reporter-title_header.html)
+Next: [Example 8: Title Header](reporter-title_header.html)

@@ -72,4 +72,4 @@ write_report(rpt)
 <img src="../man/images/rtf.png"/>
 
 
-Next: [Example 10: Figure](https://reporter.r-sassy.org/articles/reporter-figure.html)
+Next: [Example 10: Figure](reporter-figure.html)

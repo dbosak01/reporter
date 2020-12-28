@@ -95,4 +95,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
-Next: [Example 5: Spanning Headers](https://reporter.r-sassy.org/articles/reporter-spanning.html)
+Next: [Example 5: Spanning Headers](reporter-spanning.html)

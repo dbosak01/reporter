@@ -89,4 +89,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
-Next: [Example 2: Table](https://reporter.r-sassy.org/articles/reporter-table.html)
+Next: [Example 2: Table](reporter-table.html)

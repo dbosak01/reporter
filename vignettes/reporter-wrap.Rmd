@@ -98,4 +98,4 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 
 ```
 
-Next: [Example 7: Page By](https://reporter.r-sassy.org/articles/reporter-pageby.html)
+Next: [Example 7: Page By](reporter-pageby.html)
