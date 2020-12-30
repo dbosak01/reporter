@@ -300,3 +300,44 @@ test_that("ttfn13: title and footnote with top borders assigned to table works."
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+test_that("ttfn14: title_header with bottom borders assigned to table works.", {
+  
+  fp <- file.path(base_path, "titles/ttfn14.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    title_header("MTCARS Data Frame 1", 
+           borders = "bottom") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", 
+              borders = "bottom") 
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center")
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("ttfn15: title_header with top borders assigned to table works.", {
+  
+  fp <- file.path(base_path, "titles/ttfn15.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    title_header("MTCARS Data Frame 1", 
+           borders = "top") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", 
+              borders = "top") 
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center")
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})

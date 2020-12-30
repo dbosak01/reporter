@@ -275,7 +275,7 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
       ret[length(ret) + 1] <- ln
     }
     
-    if (any(title_hdr$borders %in% c("top", "all")) & 
+    if (any(title_hdr$borders %in% c("bottom", "all")) & 
         length(title_hdr$titles) > 0)
       ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
     

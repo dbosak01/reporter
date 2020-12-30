@@ -747,7 +747,8 @@ test_that("test20: show_cols 'some' parameter on table works as expected.", {
 
   tbl <- create_table(mtcars[1:10, ], 
                       show_cols = c("vs", "mpg", "cyl", "disp")) %>% 
-    define(mpg)
+    define(mpg, label = "Miles Per Gallon") %>% 
+    define(vs, label = "")
   
   
   rpt <- create_report(fp) %>% 
@@ -2208,6 +2209,36 @@ test_that("test67: Title header with border on report works as expected.", {
     add_content(create_table(iris)) %>% 
     footnotes("Something", borders = "all") %>% 
     page_footer("DateTime", right = "Page")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+
+
+
+test_that("test68: show_cols 'some' parameter on table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test68.out")
+  
+  mycols <- c("vs", "mpg", "cyl", "disp")
+  myvar = "vs"
+  tbl <- create_table(mtcars[1:10, ], 
+                      show_cols = mycols, use_attributes = "none") %>% 
+    define(mpg, label = "Miles Per Gallon") %>% 
+    define({{myvar}}, label = "My label")
+  
+  
+  rpt <- create_report(fp) %>% 
+    titles("MTCARS Data Frame", align = "center") %>% 
+    add_content(tbl)
   
   
   res <- write_report(rpt)
