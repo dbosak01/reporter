@@ -26,7 +26,7 @@ test_that("spanning header constructor works as expected.", {
     spanning_header(from = mpg, to = disp, 
                     label = "Span 1", n = 25, label_align = "left") %>% 
     spanning_header(from = hp, to = qsec, 
-                    label = "Span 2", n = 30) %>% 
+                    label = "Span 2", n = 30, underline = FALSE) %>% 
     define(mpg, format = "%.1f") %>% 
     define(cyl, width = 1) %>% 
     define(hp)
@@ -39,8 +39,10 @@ test_that("spanning header constructor works as expected.", {
   expect_equal(s[[1]]$n, 25)
   expect_equal(s[[1]]$from, "mpg")
   expect_equal(s[[1]]$to, "disp")
+  expect_equal(s[[1]]$underline, TRUE)
   expect_equal(s[[2]]$label, "Span 2")
   expect_equal(s[[2]]$n, 30)
+  expect_equal(s[[2]]$underline, FALSE)
   expect_equal(length(tbl$col_defs), 3)
   
   # Quoted Names

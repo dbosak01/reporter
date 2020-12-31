@@ -463,14 +463,16 @@ get_spanning_header <- function(rs, ts, pi) {
     s$align <- ""
     s$n <- NA
     s$name <- ""
+    s$underline <- TRUE
     
     # Populate data structure with labels, alignments, and n values from 
     # spanning column objects
     counter <- 1
     for (index in s$span) {
       if (index > 0) {
-        s$label[counter] <- slvl[[l]][[index]]$label
+        s$label[counter] <- slvl[[l]][[index]]["label"]
         s$align[counter] <- slvl[[l]][[index]]$label_align
+        s$underline[counter] <- slvl[[l]][[index]]$underline
         if (!is.null(slvl[[l]][[index]]$n))
           s$n[counter] <- slvl[[l]][[index]]$n
 
@@ -546,8 +548,12 @@ get_spanning_header <- function(rs, ts, pi) {
       if (s$span[i] > 0) {
         if (rs$output_type == "PDF")
           r <- paste0(r, paste0(rep("-", s$width[i] - 1), collapse = ""), " ")
-        else
-          r <- paste0(r, paste0(rep(rs$uchar, s$width[i] - 1), collapse = ""), " ")
+        else {
+          if (s$underline[i])
+            r <- paste0(r, paste0(rep(rs$uchar, s$width[i] - 1), collapse = ""), " ")
+          else 
+            r <- paste0(r, paste0(rep(" ", s$width[i] - 1), collapse = ""), " ")
+        }
           
       } else {
         r <- paste0(r, paste0(rep(" ", s$width[i]), collapse = ""))

@@ -797,6 +797,8 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @param n The population count to use for the "N=" label on the spanning 
 #' header. The "N=" label will be formatted according to the \code{n_format}
 #' parameter on the \code{\link{create_table}} function.
+#' @param underline A TRUE or FALSE value indicating whether the spanning
+#' header should be underlined.  Default is TRUE.  
 #' @return The modified table spec.
 #' @family table
 #' @examples 
@@ -867,7 +869,8 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' #       * From Fisher's Iris Dataset
 #' @export
 spanning_header <- function(x, from, to, label = "",
-                            label_align = "center", level = 1, n = NULL) {
+                            label_align = "center", level = 1, n = NULL,
+                            underline = TRUE) {
   
   
   f <- as.character(substitute(from, env = environment()))
@@ -960,6 +963,7 @@ spanning_header <- function(x, from, to, label = "",
   sh$label_align = label_align
   sh$level = level
   sh$n = n
+  sh$underline = underline
 
   x$col_spans[[length(x$col_spans) + 1]] <- sh
 

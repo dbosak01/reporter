@@ -1,5 +1,6 @@
 # reporter 1.1.0
 
+* Added underline parameter to spanning_header to turn it on or off
 * Added 8pt font
 * Added border property to titles, footnotes, and title_header functions
 * Added {{}} double curly escape on parameters accepting unquoted parameters, 

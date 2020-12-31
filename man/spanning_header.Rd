@@ -11,7 +11,8 @@ spanning_header(
   label = "",
   label_align = "center",
   level = 1,
-  n = NULL
+  n = NULL,
+  underline = TRUE
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ By default, the level is set to 1.}
 \item{n}{The population count to use for the "N=" label on the spanning 
 header. The "N=" label will be formatted according to the \code{n_format}
 parameter on the \code{\link{create_table}} function.}
+
+\item{underline}{A TRUE or FALSE value indicating whether the spanning
+header should be underlined.  Default is TRUE.}
 }
 \value{
 The modified table spec.

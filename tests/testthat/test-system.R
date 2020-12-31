@@ -2224,7 +2224,7 @@ test_that("test67: Title header with border on report works as expected.", {
 
 
 
-test_that("test68: show_cols 'some' parameter on table works as expected.", {
+test_that("test68: show_cols 'some' parameter and label works as expected.", {
   
   fp <- file.path(base_path, "output/test68.out")
   
@@ -2251,3 +2251,42 @@ test_that("test68: show_cols 'some' parameter on table works as expected.", {
   
 })
 
+test_that("test69: Table with spanning headers no underline works as expected.", {
+  
+  fp <- file.path(base_path, "output/test69.out")
+  
+  
+  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  rownames(df) = NULL
+  
+  df$qsec <- fattr(df$qsec, format = "%.1f")
+  df$wt <- fattr(df$wt, justify = "center", width = .75)
+  
+  tbl <- create_table(df) %>% 
+    spanning_header("mpg", "hp",
+                    label = "Span 1", label_align = "center", n = 10) %>% 
+    spanning_header("drat", "qsec",
+                    label = "Span 2", label_align = "center", n = 10, 
+                    underline = FALSE) %>%
+    spanning_header("vs", "carb",
+                    label = "Span 3", label_align = "center", n = 10) %>%
+    spanning_header(from = "drat", to = "carb", label = "Super Span",
+                    label_align = "center",
+                    level = 2) %>%
+    define(vehicle, label = "Vehicle") %>% 
+    define(mpg, format = "%.1f")
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl) %>% 
+    titles("Table 1.0", "MTCARS Subset Test")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
