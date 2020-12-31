@@ -1,4 +1,4 @@
-                                              IRIS Data Frame
+                                               IRIS Data Frame
 
                        Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
                        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -47,7 +47,7 @@
                                 4.4         3.2          1.3         0.2     setosa
                                   5         3.5          1.6         0.6     setosa
                                 5.1         3.8          1.9         0.4     setosa
-                                              IRIS Data Frame
+                                               IRIS Data Frame
 
                        Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
                        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -96,7 +96,7 @@
                                 6.3         2.3          4.4         1.3 versicolor
                                 5.6           3          4.1         1.3 versicolor
                                 5.5         2.5            4         1.3 versicolor
-                                              IRIS Data Frame
+                                               IRIS Data Frame
 
                        Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
                        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -145,7 +145,7 @@
                                 6.4         2.8          5.6         2.2  virginica
                                 6.3         2.8          5.1         1.5  virginica
                                 6.1         2.6          5.6         1.4  virginica
-                                              IRIS Data Frame
+                                               IRIS Data Frame
 
                        Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
                        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

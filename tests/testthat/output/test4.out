@@ -1,8 +1,8 @@
 Experis                                                                                            Study ABC
                                                                                               Status: Closed
-                                                 Table 1.0
-                                       Analysis Data Subject Listing
-                                             Safety Population
+                                                  Table 1.0
+                                        Analysis Data Subject Listing
+                                              Safety Population
 
               subjid name              sex                                           age arm
               ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -49,9 +49,9 @@ Program Name: table1_0.R
 Time                                            Confidential                                     Page 1 of 2
 Experis                                                                                            Study ABC
                                                                                               Status: Closed
-                                                 Table 1.0
-                                       Analysis Data Subject Listing
-                                             Safety Population
+                                                  Table 1.0
+                                        Analysis Data Subject Listing
+                                              Safety Population
 
                        subjid name                  sex age arm
                        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
