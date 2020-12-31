@@ -1,0 +1,8 @@
+CATEGORY, LABEL, COL1, COL2, COL3, COL4, COL5, COL6, COL7, COL8, COL9, COL10, COL11
+Treatment Disposition:,Completed,1,1.4,0, ,1,5.3,0.382,0.401,0.317,0.106, NA
+Treatment Disposition:,Discontinued,3,4.3,5,10.2,0,,0.298,0.204,0.359,0.148,0
+Treatment Disposition:,Continuing Treatment,66,94.3,44,89.8,18,94.7, , , , ,
+Reasons for Treatment Discontinuation:,ADVERSE EVENT,1,1.4,1,2,1,5.3,0.532,0.798,0.317,0.48,2.67
+Reasons for Treatment Discontinuation:,OTHER,1,1.4,2,4.1,0, ,0.724,0.364,0.6,0.371,0
+Reasons for Treatment Discontinuation:,PROTOCOL VIOLATION,2,2.9,0, ,0, ,0.637,0.233,0.456,NA, NA
+Reasons for Treatment Discontinuation:,WITHDRAWAL BY SUBJECT,0, ,2,4.1,0, ,0.241,0.088, NA,0.371,0

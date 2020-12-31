@@ -2229,14 +2229,15 @@ test_that("test68: show_cols 'some' parameter and label works as expected.", {
   fp <- file.path(base_path, "output/test68.out")
   
   mycols <- c("vs", "mpg", "cyl", "disp")
-  myvar = "vs"
+  myvar1 = "vs"
+  myvar2 = "mpg"
   tbl <- create_table(mtcars[1:10, ], 
                       show_cols = mycols, use_attributes = "none") %>% 
-    define(mpg, label = "Miles Per Gallon") %>% 
-    define({{myvar}}, label = "My label")
+    define({{myvar2}}, label = "n", width = 1.5) %>% 
+    define({{myvar1}}, label = "(%)", width = 1.5)
   
   
-  rpt <- create_report(fp) %>% 
+  rpt <- create_report(fp, missing = NULL) %>% 
     titles("MTCARS Data Frame", align = "center") %>% 
     add_content(tbl)
   
