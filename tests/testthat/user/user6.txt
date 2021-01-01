@@ -1,4 +1,4 @@
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -41,7 +41,7 @@ ABC-16-047 1        ARM A          ABC     DM         47 1/2/2007   2/1/2007    
 ABC-16-157 1        ARM A          ABC     DM        157 12/14/2006                              12/7/2006
 
 Time                                                                                            Page 1 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -84,7 +84,7 @@ ABC-16-047 1        ARM A          2/1/2007                    16 4/20/1932   74
 ABC-16-157 1        ARM A                                      16 9/4/1944    62 YEARS M
 
 Time                                                                                            Page 2 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -127,7 +127,7 @@ ABC-16-047 1        ARM A          WHITE                     NOT HISPANIC OR LAT
 ABC-16-157 1        ARM A          WHITE                     HISPANIC OR LATINO
 
 Time                                                                                            Page 3 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -170,7 +170,7 @@ ABC-14-118 2        ARM B          ABC     DM        118 11/28/2006             
 ABC-14-124 2        ARM B          ABC     DM        124 12/28/2006                              12/19/2006
 
 Time                                                                                            Page 4 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -213,7 +213,7 @@ ABC-14-118 2        ARM B                                      14 6/24/1972   34
 ABC-14-124 2        ARM B                                      14 6/29/1951   55 YEARS M
 
 Time                                                                                            Page 5 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -256,7 +256,7 @@ ABC-14-118 2        ARM B          WHITE                     NOT HISPANIC OR LAT
 ABC-14-124 2        ARM B          WHITE                     NOT HISPANIC OR LATINO
 
 Time                                                                                            Page 6 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -299,7 +299,7 @@ ABC-16-158 2        ARM B          ABC     DM        158 12/19/2006             
 
 
 Time                                                                                            Page 7 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -342,7 +342,7 @@ ABC-16-158 2        ARM B                                      16 5/22/1935   71
 
 
 Time                                                                                            Page 8 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -385,7 +385,7 @@ ABC-16-158 2        ARM B          WHITE                     NOT HISPANIC OR LAT
 
 
 Time                                                                                            Page 9 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -428,7 +428,7 @@ ABC-14-121 3        ARM C          ABC     DM        121 11/29/2006             
 ABC-15-154 3        ARM C          ABC     DM        154 1/10/2007  2/12/2007                    12/29/2006
 
 Time                                                                                           Page 10 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -471,7 +471,7 @@ ABC-14-121 3        ARM C                                      14 12/5/1950   55
 ABC-15-154 3        ARM C          2/12/2007                   15 6/5/1936    70 YEARS F
 
 Time                                                                                           Page 11 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -514,7 +514,7 @@ ABC-14-121 3        ARM C          WHITE                     NOT HISPANIC OR LAT
 ABC-15-154 3        ARM C          WHITE                     NOT HISPANIC OR LATINO
 
 Time                                                                                           Page 12 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -557,7 +557,7 @@ ABC-16-159 3        ARM C          ABC     DM        159 12/21/2006             
 
 
 Time                                                                                           Page 13 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -600,7 +600,7 @@ ABC-16-159 3        ARM C                                      16 7/19/1948   58
 
 
 Time                                                                                           Page 14 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -643,7 +643,7 @@ ABC-16-159 3        ARM C          WHITE                     NOT HISPANIC OR LAT
 
 
 Time                                                                                           Page 15 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -686,7 +686,7 @@ ABC-14-122 4        ARM D          ABC     DM        122 12/18/2006             
 ABC-15-153 4        ARM D          ABC     DM        153 1/4/2007   2/22/2007                    12/21/2006
 
 Time                                                                                           Page 16 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -729,7 +729,7 @@ ABC-14-122 4        ARM D                                      14 5/3/1972    34
 ABC-15-153 4        ARM D          2/22/2007                   15 10/22/1941  65 YEARS F
 
 Time                                                                                           Page 17 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -772,7 +772,7 @@ ABC-14-122 4        ARM D          WHITE                     HISPANIC OR LATINO
 ABC-15-153 4        ARM D          WHITE                     NOT HISPANIC OR LATINO
 
 Time                                                                                           Page 18 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -815,7 +815,7 @@ ABC-16-160 4        ARM D          ABC     DM        160 12/28/2006             
 
 
 Time                                                                                           Page 19 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -858,7 +858,7 @@ ABC-16-160 4        ARM D                                      16 3/8/1962    44
 
 
 Time                                                                                           Page 20 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
@@ -901,7 +901,7 @@ ABC-16-160 4        ARM D          WHITE                     HISPANIC OR LATINO
 
 
 Time                                                                                           Page 21 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            STUDYID DOMAIN SUBJID RFSTDTC    RFENDTC    RFXSTDTC RFXENDTC RFICDTC
@@ -944,7 +944,7 @@ ABC-06-162 SCRNFAIL SCREEN FAILURE ABC     DM        162 12/28/2006             
 
 
 Time                                                                                           Page 22 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RFPENDTC   DTHDTC DTHFL SITEID BRTHDTC    AGE AGEU  SEX
@@ -987,7 +987,7 @@ ABC-06-162 SCRNFAIL SCREEN FAILURE                              6 12/21/1948  58
 
 
 Time                                                                                           Page 23 of 24
-                                                Listing 1.0
+                                                 Listing 1.0
                                             Demographics Dataset
 
 USUBJID    ARMCD    ARM            RACE                      ETHNIC                 ACTARMCD ACTARM COUNTRY
