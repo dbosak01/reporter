@@ -902,15 +902,16 @@ test_that("user12: Complex table works as expected.", {
                 "Program Location: /lillyce/qa/vct/common/rums/taffy_rums/dev_r/c_ds_dispsum/c_ds_dispsum_4.R",
                 "Output Location: /lillyce/qa/vct/common/rums/taffy_rums/dev_r/c_ds_dispsum/validation/output/odds_pair_overall_h_test.docx",
                 "Data Set Location: /lillyce/qa/vct/common/rums/taffy_rums/data/multi arms",
-                borders = "top", blank_row = "none")
+               borders = "top", blank_row = "none")
     
     # Define Report
     rpt <- create_report(fp, output_type = "RTF") %>%
-      options_fixed(font_size = 8, line_size = 135) %>% 
+      options_fixed(font_size = 8) %>% 
       set_margins(top = 1, bottom = .5, left = 1, right = 1) %>% 
-      page_header(right = c("Page [pg] of [tpg]", 
-                            fapply(Sys.time(), "%H:%M %d-%b-%Y"),
-                            "DDDM")) %>% 
+      page_header(right = c("Page [pg] of [tpg]",
+                            format(Sys.time(), "%H:%M %d-%b-%Y"),
+                            "DDDL"
+                            )) %>%
       add_content(tbl, align = "left") 
     
     # Write out report
@@ -918,7 +919,6 @@ test_that("user12: Complex table works as expected.", {
     res
     
     expect_equal(file.exists(res$modified_path), TRUE)
-    
 
     
   } else

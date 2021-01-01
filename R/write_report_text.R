@@ -35,7 +35,7 @@ write_report_text <- function(rs) {
   
   # Assign pages to ls and continue processing
   ls <- ret[["pages"]]
-  
+
   # Deal with preview
   if (!is.null(rs$preview)) {
     if (rs$preview < length(ls[[1]]$pages))
@@ -49,7 +49,7 @@ write_report_text <- function(rs) {
   # Reason is we don't really know how many pages there are 
   # until the report is written.
   rs <- write_page_numbers(rs)
-  
+
   invisible(rs)
 }
 
@@ -380,40 +380,72 @@ write_page_numbers <- function(rs) {
     
     return(ret)
   })
-  
+
   # Call vectorized function on entire page header/footer segment
+
   if (token_check(rs$page_header_left)) {
-    pg <- 1
-    lns <- replace_tokens(lns, rs$page_header_left, "left")
+    for (i in seq_len(length(rs$page_header_left))) {
+      if (token_check(rs$page_header_left[i])) {
+        pg <- 1
+        lns <- replace_tokens(lns, rs$page_header_left[i], "left")
+      }
+    }
   }
+
   if (token_check(rs$page_header_right)) {
-    pg <- 1
-    lns <- replace_tokens(lns, rs$page_header_right, "right")
+    for (i in seq_len(length(rs$page_header_right))) {
+      if (token_check(rs$page_header_right[i])) {
+        pg <- 1
+        lns <- replace_tokens(lns, rs$page_header_right[i], "right")
+      }
+    }
   }
+  
   if (token_check(rs$page_footer_left)) {
-    pg <- 1
-    lns <- replace_tokens(lns, rs$page_footer_left, "left")
+    for (i in seq_len(length(rs$page_footer_left))) {
+      if (token_check(rs$page_footer_left[i])) {
+        pg <- 1
+        lns <- replace_tokens(lns, rs$page_footer_left[i], "left")
+      }
+    }
   }
   if (token_check(rs$page_footer_center)) {
-    pg <- 1
-    lns <- replace_tokens(lns, rs$page_footer_center, "centre")
+    for (i in seq_len(length(rs$page_footer_center))) {
+      if (token_check(rs$page_footer_center[i])) {
+        pg <- 1
+        lns <- replace_tokens(lns, rs$page_footer_center[i], "centre")
+      }
+    }
   }
   if (token_check(rs$page_footer_right)) {
-    pg <- 1
-    lns <- replace_tokens(lns, rs$page_footer_right, "right")
+
+    for (i in seq_len(length(rs$page_footer_right))) {
+      if (token_check( rs$page_footer_right[i])) {
+        pg <- 1
+        lns <- replace_tokens(lns, rs$page_footer_right[i], "right")
+      }
+    }
   }
   if (!is.null(rs$title_hdr)) {
     if (token_check(rs$title_hdr$right)) {
-      pg <- 1
-      lns <- replace_tokens(lns, rs$title_hdr$right, "right")
+      for (i in seq_len(length(rs$title_hdr$right))) {
+        if (token_check(rs$title_hdr$right[i])) {
+          pg <- 1
+          lns <- replace_tokens(lns, rs$title_hdr$right[i], "right")
+        }
+      }
     }
   }
   
   for (cntnt in rs$content) {
    if (!is.null(cntnt$object$title_hdr)) { 
      if (token_check(cntnt$object$title_hdr$right)) {
-       pg <- 1
-       lns <- replace_tokens(lns, cntnt$object$title_hdr$right, "right")
+       for (i in seq_len(length(cntnt$object$title_hdr$right))) {
+         if (token_check(cntnt$object$title_hdr$right[i])) {
+          pg <- 1
+          lns <- replace_tokens(lns, cntnt$object$title_hdr$right[i], "right")
+         }
+       }
      }
      
    }

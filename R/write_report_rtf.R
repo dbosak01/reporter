@@ -40,7 +40,7 @@ write_report_rtf <- function(rs) {
   # print(tmp_path)
   # print(rtf_path)
   # print(getwd())
-  
+
   if (file.exists(orig_path))
     file.remove(orig_path)
   
@@ -49,16 +49,16 @@ write_report_rtf <- function(rs) {
   
   # Create text output normally to temp location
   rs <- write_report_text(rs)
-  
+
   # Read lines from text output
   ls <- readLines(tmp_path)
-  
+
   # Revise text and write to rtf
   fls <- write_rtf_output(rs, ls, rtf_path, orig_path, tmp_dir)
   
   # Restore original path
   rs$modified_path <- orig_path
-  
+
   # Clean up
   if (!debug) {
     file.remove(tmp_path)
@@ -68,7 +68,7 @@ write_report_rtf <- function(rs) {
       file.remove(fls)
     #unlink(tmp_dir, recursive = TRUE)
   }
-  
+
   return(rs)
 }
 
