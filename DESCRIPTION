@@ -32,6 +32,7 @@ Suggests:
     survminer
 Imports: fmtr,
          stringi,
-         crayon
+         crayon,
+         logr
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

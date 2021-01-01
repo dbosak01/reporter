@@ -1875,6 +1875,7 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
 #' # - title 2: 'MTCARS Sample Report'
 #' # - footnote 1: '* NOTE: Data from 1974'
 #' @import crayon
+#' @import logr
 #' @export
 print.report_spec <- function(x, ..., verbose = FALSE){
   
@@ -1988,6 +1989,8 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     }
     
   }
+  
+  log_hook("I am here")
   
   invisible(x)
 }
