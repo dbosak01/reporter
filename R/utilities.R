@@ -696,6 +696,14 @@ getExtension <- function(file){
 } 
 
 
+#' @noRd
+log_logr <- function(x) {
+ 
+  if (utils::packageVersion("logr") >= "1.2.0") {
+    logr::log_hook(x)
+  }
+}
+
 
 # Sizing utilities --------------------------------------------------------
 

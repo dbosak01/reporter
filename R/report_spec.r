@@ -1676,8 +1676,6 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' NULL, meaning the entire report will be written.  You may also pass 
 #' a number of pages to write.  For example, passing the number 1 will print
 #' the first page, while passing a 5 will print the first five pages.
-#' @param autolog Whether to print the report object to the log (if available).
-#' Default is TRUE.
 #' @return The report spec, with settings modified during rendering.  These 
 #' modified settings can sometimes be useful for documentation, and for 
 #' debugging issues with the procedure.
@@ -1742,11 +1740,9 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' #  Day 308       130         37.8       Yes
 #' # 
 #' # * NOTE: Data on beaver habits
-#' @import logr
 #' @export
 write_report <- function(x, file_path = NULL, 
-                         output_type = NULL, preview = NULL,
-                         autolog = TRUE) {
+                         output_type = NULL, preview = NULL) {
   
   
   if (!"report_spec" %in% class(x)) {
@@ -1826,8 +1822,7 @@ write_report <- function(x, file_path = NULL,
   #   ret <- write_report_docx(x, ...)
   # }
   
-  if (autolog)
-    log_hook(ret)
+  log_logr(ret)
   
   return(ret)
 }

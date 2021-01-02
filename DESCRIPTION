@@ -29,10 +29,11 @@ Suggests:
     ggplot2,
     rmarkdown,
     gridExtra,
-    survminer
+    survminer,
+    utils,
+    logr
 Imports: fmtr,
          stringi,
-         crayon,
-         logr
+         crayon
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
