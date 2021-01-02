@@ -1,5 +1,7 @@
 # reporter 1.1.0
 
+* Integrated logging functionality with logr package.  write_report() will
+now log results automatically when logr autolog is enabled.
 * Added underline parameter to spanning_header to turn it on or off
 * Added 8pt font
 * Added border property to titles, footnotes, and title_header functions
@@ -7,6 +9,7 @@
 so that users could pass them as variables inside a function.
 * Added pkgdown site
 * Fixed bug on deleting image files in the temp directory.
+* Various small bugs and documentation fixes/improvements
 
 # reporter 1.0.6
 
