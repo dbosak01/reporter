@@ -1,5 +1,7 @@
 # reporter 1.1.0
 
+* Removed error on title/footnote width being too long.  Changed to warning
+and truncated text instead, so the user can at least see what is going on.
 * Integrated logging functionality with logr package.  write_report() will
 now log results automatically when logr autolog is enabled.
 * Added underline parameter to spanning_header to turn it on or off
