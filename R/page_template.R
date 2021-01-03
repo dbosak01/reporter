@@ -59,12 +59,14 @@ get_page_header <- function(rs) {
         ln <- paste0(stri_pad_right(hl, width = lw), hr) 
       }
       
-      else
+      else {
         stop(paste0("Page header exceeds available width\n", 
                     "Header Left: ", hl, "\n", 
                     "Header Right: ", hr, "\n",
                     "Header length: ", nchar(hl) + nchar(hr), "\n",
                     "Line length: ", rs$line_size, "\n"))
+        ln <- ""
+      }
       
       ret[i] <- ln
     }
@@ -124,11 +126,27 @@ get_titles <- function(titles, width, uchar = "-") {
           else if (ttl$align == "center" | ttl$align == "centre")
             ln <- stri_pad_both(t, ll)
           
-        } else 
-          stop(paste0("Title exceeds available width.",
+        } else {
+          warning(paste0("Title exceeds available width.",
                       "\nTitle: ", t,
                       "\nTitle width: ", nchar(t),
                       "\nLine length: ", ll))
+          
+          tgp <- ll - 3
+
+          if (tgp >= 0) {
+            if (ttl$align == "left") {
+              ln <- paste0(substr(stri_pad_right(t, ll), 1, tgp), "...")
+            } else if (ttl$align == "right") {
+              ln <- paste0("...", substr(stri_pad_left(t, ll), 1, tgp))
+            } else if (ttl$align == "center" | ttl$align == "centre") {
+              ln <- paste0(substr(stri_pad_both(t, ll), 1, tgp), "...")
+            }
+            
+            
+          } else ln <- ""
+          
+        }
         
         
         ret[length(ret) + 1] <- ln
@@ -263,13 +281,22 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
           ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
 
         
-      } else 
-        stop(paste0("Title header exceeds available width.\n",
+      } else {
+        warning(paste0("Title header exceeds available width.\n",
                     "Title: ", t, "\n",
                     "Header: ", h, "\n",
                     "Title length: ", nchar(t), "\n",
                     "Header length: ", nchar(h), "\n",
                     "Line length: ", ll, "\n"))
+        
+        tgp <- ll - 3
+        if (tgp >= 0) {
+          
+          ln <- paste0(substr(paste0(stri_pad_right(t, ll - nchar(h)), h, " "), 
+                              1, tgp), "...")
+          
+        } else ln <- ""
+      }
       
       
       ret[length(ret) + 1] <- ln
@@ -333,11 +360,25 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
           else if (ftn$align == "center" | ftn$align == "centre")
             ln <- stri_pad_both(f, ll)
           
-        } else 
-          stop(paste0("Footnote exceeds available width.",
+        } else {
+          warning(paste0("Footnote exceeds available width.",
                       "\nFootnote: ", f,
                       "\nFootnote length: ", nchar(f), 
                       "\nLine Length: ", ll))
+          
+          tln <- ll - 3
+          
+          if (tln >= 0) {
+            
+            if (ftn$align == "left") {
+              ln <- paste0(substr(stri_pad_right(f , ll), 1, tln), "...")
+            } else if (ftn$align == "right") {
+              ln <- paste0("...", substr(stri_pad_left(f, ll), 1, tln))
+            } else if (ftn$align == "center" | ftn$align == "centre") {
+              ln <- paste0(substr(stri_pad_both(f, ll), 1, tln), "...")
+            }
+          } else ln <- "" 
+        }
         
         
         ret[length(ret) + 1] <- ln
@@ -422,13 +463,16 @@ get_page_footer <- function(rs) {
         lw <- rs$line_size - nchar(fr) - nchar(fl)
         ln <- paste0(fl, stri_pad_both(fc, width = lw), fr)
       }
-      else
+      else {
+        
         stop(paste0("Page footer exceeds available width\n", 
                     "Footer Left: ", fl, "\n", 
                     "Footer Center: ", fc, "\n",
                     "Footer Right: ", fr, "\n",
                     "Footer length: ", nchar(fl) + nchar(fc) + nchar(fr), "\n",
                     "Line length: ", rs$line_size, "\n"))
+        ln <- ""
+      }
       
       ret[length(ret) + 1] <- ln
     }
