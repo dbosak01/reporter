@@ -58,7 +58,7 @@ test_that("page_template_text() works as expected.", {
   rpt4 <- create_report("fork.out") %>% 
     titles(paste0(rep("W", 200), collapse =""))
   rpt4$line_size <- 140
-  expect_error(page_template_text(rpt4))
+  expect_warning(page_template_text(rpt4))
   
 })
 
