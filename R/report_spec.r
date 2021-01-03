@@ -1741,7 +1741,8 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' # 
 #' # * NOTE: Data on beaver habits
 #' @export
-write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL) {
+write_report <- function(x, file_path = NULL, 
+                         output_type = NULL, preview = NULL) {
   
   
   if (!"report_spec" %in% class(x)) {
@@ -1820,6 +1821,8 @@ write_report <- function(x, file_path = NULL, output_type = NULL, preview = NULL
   # } else if (x$output_type == "docx") {
   #   ret <- write_report_docx(x, ...)
   # }
+  
+  log_logr(ret)
   
   return(ret)
 }

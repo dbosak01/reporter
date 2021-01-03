@@ -29,7 +29,9 @@ Suggests:
     ggplot2,
     rmarkdown,
     gridExtra,
-    survminer
+    survminer,
+    utils,
+    logr
 Imports: fmtr,
          stringi,
          crayon
