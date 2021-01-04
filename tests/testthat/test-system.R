@@ -3,7 +3,7 @@ context("System Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-base_path <- tempdir()
+#base_path <- tempdir()
 
 test_that("test1: Simplest table works as expected.", {
   
@@ -2290,4 +2290,31 @@ test_that("test69: Table with spanning headers no underline works as expected.",
   
   expect_equal(length(lns), res$pages * res$line_count)
   
+})
+
+test_that("test70: Column widths work as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test70.out")
+  
+  dat <- unlist(rep("AAAAAAAAA B", 10))
+  
+  df <- data.frame(col1 = dat, col2 = dat, col3 = dat, col4 = dat, col5 = dat)
+  
+  tbl <- create_table(df) %>% 
+    spanning_header(1, 2, "Span 1") %>% 
+    spanning_header(3, 5, "Span 2") %>% 
+    spanning_header(1, 5, "Super Span", level = 2) %>% 
+    column_defaults(width = 1)
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+ # print(res, verbose = TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
 })

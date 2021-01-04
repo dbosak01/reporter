@@ -1,39 +1,39 @@
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM A
+                                                                                 ARM A
                                                                                  (N=30)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-    All System Organ Classes
-       All Adverse Events                                        22 ( 73.3%)   8 ( 26.7%)   0 (  0.0%)
+      All System Organ Classes
+         All Adverse Events                                       22 ( 73.3%) 8 ( 26.7%)  0 (  0.0%)
 
-    Gastrointestinal disorders
-       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Diarrhoea                                                  1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Stomach Discomfort                                         1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Toothache                                                  1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
+      Gastrointestinal disorders
+         Cheilitis                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Diarrhoea                                                1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Stomach Discomfort                                       1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Toothache                                                1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
 
-    General disorders and administration site conditions
-       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      General disorders and administration site conditions
+         Application Site Erythema                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Influenza Like Illness                                   0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Hepatobiliary disorders
+         Gallbladder Disorder                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Infections and infestations
-       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Rash Pustular                                              1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Respiratory Tract Infection                                1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Rhinitis                                                   0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Sinusitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Infections and infestations
+         Bronchitis                                               0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Nail Infection                                           0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Paronychia                                               0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Rash Pustular                                            1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Respiratory Tract Infection                              1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Rhinitis                                                 0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
+         Sinusitis                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -44,41 +44,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 1 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM B
+                                                                                 ARM B
                                                                                  (N=19)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-    All System Organ Classes
-       All Adverse Events                                         9 ( 47.4%)  10 ( 52.6%)   0 (  0.0%)
+      All System Organ Classes
+         All Adverse Events                                       9 ( 47.4%)  10 ( 52.6%) 0 (  0.0%)
 
-    Gastrointestinal disorders
-       Cheilitis                                                  0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Diarrhoea                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Stomach Discomfort                                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Toothache                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Gastrointestinal disorders
+         Cheilitis                                                0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
+         Diarrhoea                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Stomach Discomfort                                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Toothache                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    General disorders and administration site conditions
-       Application Site Erythema                                  1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      General disorders and administration site conditions
+         Application Site Erythema                                1 (  5.3%)  0 (  0.0%)  0 (  0.0%)
+         Influenza Like Illness                                   0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
+      Hepatobiliary disorders
+         Gallbladder Disorder                                     0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
 
-    Infections and infestations
-       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Rash Pustular                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Respiratory Tract Infection                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Rhinitis                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinusitis                                                  1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
+      Infections and infestations
+         Bronchitis                                               0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Nail Infection                                           0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Paronychia                                               0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
+         Rash Pustular                                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Respiratory Tract Infection                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Rhinitis                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sinusitis                                                1 (  5.3%)  0 (  0.0%)  0 (  0.0%)
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -89,41 +89,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 2 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM C
+                                                                                 ARM C
                                                                                  (N=10)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-    All System Organ Classes
-       All Adverse Events                                         4 ( 40.0%)   6 ( 60.0%)   0 (  0.0%)
+      All System Organ Classes
+         All Adverse Events                                       4 ( 40.0%)  6 ( 60.0%)  0 (  0.0%)
 
-    Gastrointestinal disorders
-       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Diarrhoea                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Stomach Discomfort                                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Toothache                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Gastrointestinal disorders
+         Cheilitis                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Diarrhoea                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Stomach Discomfort                                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Toothache                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    General disorders and administration site conditions
-       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     1 ( 10.0%)   0 (  0.0%)   0 (  0.0%)
+      General disorders and administration site conditions
+         Application Site Erythema                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Influenza Like Illness                                   1 ( 10.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Hepatobiliary disorders
+         Gallbladder Disorder                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Infections and infestations
-       Bronchitis                                                 0 (  0.0%)   2 ( 20.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Rash Pustular                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Respiratory Tract Infection                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Rhinitis                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinusitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Infections and infestations
+         Bronchitis                                               0 (  0.0%)  2 ( 20.0%)  0 (  0.0%)
+         Nail Infection                                           0 (  0.0%)  1 ( 10.0%)  0 (  0.0%)
+         Paronychia                                               0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Rash Pustular                                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Respiratory Tract Infection                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Rhinitis                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sinusitis                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -134,41 +134,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 3 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM D
+                                                                                 ARM D
                                                                                  (N=16)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-    All System Organ Classes
-       All Adverse Events                                         7 ( 43.8%)   8 ( 50.0%)   1 (  6.2%)
+      All System Organ Classes
+         All Adverse Events                                       7 ( 43.8%)  8 ( 50.0%)  1 (  6.2%)
 
-    Gastrointestinal disorders
-       Cheilitis                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Diarrhoea                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Stomach Discomfort                                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Toothache                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Gastrointestinal disorders
+         Cheilitis                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Diarrhoea                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Stomach Discomfort                                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Toothache                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    General disorders and administration site conditions
-       Application Site Erythema                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Influenza Like Illness                                     0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      General disorders and administration site conditions
+         Application Site Erythema                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Influenza Like Illness                                   0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Hepatobiliary disorders
-       Gallbladder Disorder                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Hepatobiliary disorders
+         Gallbladder Disorder                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Infections and infestations
-       Bronchitis                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nail Infection                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Paronychia                                                 0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Rash Pustular                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Respiratory Tract Infection                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Rhinitis                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinusitis                                                  0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
+      Infections and infestations
+         Bronchitis                                               0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Nail Infection                                           0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Paronychia                                               0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Rash Pustular                                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Respiratory Tract Infection                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Rhinitis                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sinusitis                                                0 (  0.0%)  1 (  6.2%)  0 (  0.0%)
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -179,41 +179,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 4 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM A
+                                                                                 ARM A
                                                                                  (N=30)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Fungal Infection                         0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Upper Respiratory Tract Infection                          1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Wound Infection                                            0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
+         Tinea Pedis                                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Fungal Infection                       0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
+         Upper Respiratory Tract Infection                        1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Urinary Tract Infection                                  0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Wound Infection                                          0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
 
-    Injury, poisoning and procedural complications
-       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Heat Cramps                                                1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
+      Injury, poisoning and procedural complications
+         Fall                                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Heat Cramps                                              1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Muscle Injury                                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Procedural Pain                                          0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
 
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Blood Triglycerides Increased                              1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
+      Investigations
+         Blood Potassium Decreased                                0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
+         Blood Triglycerides Increased                            1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Vitamin D Decreased                                      1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
 
-    Musculoskeletal and connective tissue disorders
-       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Joint Swelling                                             0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Myalgia                                                    0 (  0.0%)   1 (  3.3%)   0 (  0.0%)
-       Pain In Extremity                                          1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
+      Musculoskeletal and connective tissue disorders
+         Back Pain                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Joint Swelling                                           0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
+         Myalgia                                                  0 (  0.0%)  1 (  3.3%)  0 (  0.0%)
+         Pain In Extremity                                        1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
 
-    Nervous system disorders
+      Nervous system disorders
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -224,41 +224,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 5 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM B
+                                                                                 ARM B
                                                                                  (N=19)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Fungal Infection                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Infection                          2 ( 10.5%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   2 ( 10.5%)   0 (  0.0%)
-       Wound Infection                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+         Tinea Pedis                                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Fungal Infection                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Infection                        2 ( 10.5%)  0 (  0.0%)  0 (  0.0%)
+         Urinary Tract Infection                                  0 (  0.0%)  2 ( 10.5%)  0 (  0.0%)
+         Wound Infection                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Injury, poisoning and procedural complications
-       Fall                                                       1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
-       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Injury, poisoning and procedural complications
+         Fall                                                     1 (  5.3%)  0 (  0.0%)  0 (  0.0%)
+         Heat Cramps                                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Muscle Injury                                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Procedural Pain                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Investigations
+         Blood Potassium Decreased                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Blood Triglycerides Increased                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Vitamin D Decreased                                      0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Musculoskeletal and connective tissue disorders
-       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Joint Swelling                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Myalgia                                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pain In Extremity                                          0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
+      Musculoskeletal and connective tissue disorders
+         Back Pain                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Joint Swelling                                           0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Myalgia                                                  0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Pain In Extremity                                        0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
 
-    Nervous system disorders
+      Nervous system disorders
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -269,41 +269,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 6 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM C
+                                                                                 ARM C
                                                                                  (N=10)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Tinea Pedis                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Fungal Infection                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Infection                          2 ( 20.0%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Wound Infection                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+         Tinea Pedis                                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Fungal Infection                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Infection                        2 ( 20.0%)  0 (  0.0%)  0 (  0.0%)
+         Urinary Tract Infection                                  0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Wound Infection                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Injury, poisoning and procedural complications
-       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Injury, poisoning and procedural complications
+         Fall                                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Heat Cramps                                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Muscle Injury                                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Procedural Pain                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Investigations
+         Blood Potassium Decreased                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Blood Triglycerides Increased                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Vitamin D Decreased                                      0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Musculoskeletal and connective tissue disorders
-       Back Pain                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Joint Swelling                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Myalgia                                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pain In Extremity                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Musculoskeletal and connective tissue disorders
+         Back Pain                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Joint Swelling                                           0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Myalgia                                                  0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Pain In Extremity                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Nervous system disorders
+      Nervous system disorders
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -314,41 +314,41 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 7 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM D
+                                                                                 ARM D
                                                                                  (N=16)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Tinea Pedis                                                0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Upper Respiratory Fungal Infection                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Infection                          1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-       Urinary Tract Infection                                    0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Wound Infection                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+         Tinea Pedis                                              0 (  0.0%)  1 (  6.2%)  0 (  0.0%)
+         Upper Respiratory Fungal Infection                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Infection                        1 (  6.2%)  0 (  0.0%)  0 (  0.0%)
+         Urinary Tract Infection                                  0 (  0.0%)  1 (  6.2%)  0 (  0.0%)
+         Wound Infection                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Injury, poisoning and procedural complications
-       Fall                                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Heat Cramps                                                0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Muscle Injury                                              0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Procedural Pain                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Injury, poisoning and procedural complications
+         Fall                                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Heat Cramps                                              0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Muscle Injury                                            0 (  0.0%)  1 (  6.2%)  0 (  0.0%)
+         Procedural Pain                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Investigations
-       Blood Potassium Decreased                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Blood Triglycerides Increased                              0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Vitamin D Decreased                                        0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Investigations
+         Blood Potassium Decreased                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Blood Triglycerides Increased                            0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Vitamin D Decreased                                      0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Musculoskeletal and connective tissue disorders
-       Back Pain                                                  1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-       Joint Swelling                                             0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Myalgia                                                    0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pain In Extremity                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Musculoskeletal and connective tissue disorders
+         Back Pain                                                1 (  6.2%)  0 (  0.0%)  0 (  0.0%)
+         Joint Swelling                                           0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Myalgia                                                  0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Pain In Extremity                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Nervous system disorders
+      Nervous system disorders
 
 Date Produced: Time ;  Program: Table3_0.R
 * Total Reporting is defined as number of subjects who reported at least one adverse event.
@@ -359,40 +359,40 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 8 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM A
+                                                                                 ARM A
                                                                                  (N=30)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Dizziness                                                  1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Headache                                                  10 ( 33.3%)   1 (  3.3%)   0 (  0.0%)
-       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+         Burning Sensation                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Dizziness                                                1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Headache                                                 10 ( 33.3%) 1 (  3.3%)  0 (  0.0%)
+         Sciatica                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Reproductive system and breast disorders
+         Menstrual Discomfort                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Respiratory, thoracic and mediastinal disorders
-       Cough                                                      0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nasal Congestion                                           1 (  3.3%)   0 (  0.0%)   0 (  0.0%)
-       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Respiratory, thoracic and mediastinal disorders
+         Cough                                                    0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Nasal Congestion                                         1 (  3.3%)  0 (  0.0%)  0 (  0.0%)
+         Sinus Congestion                                         0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Throat Irritation                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Congestion                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Skin and subcutaneous tissue disorders
-       Erythema                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Skin Discomfort                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Skin and subcutaneous tissue disorders
+         Erythema                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Pruritus                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Skin Discomfort                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Surgical and medical procedures
-       Cholecystectomy                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Skin Lesion Excision                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Surgical and medical procedures
+         Cholecystectomy                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Skin Lesion Excision                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
 
 Date Produced: Time ;  Program: Table3_0.R
@@ -404,40 +404,40 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                    Page 9 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM B
+                                                                                 ARM B
                                                                                  (N=19)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Dizziness                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Headache                                                   1 (  5.3%)   1 (  5.3%)   0 (  0.0%)
-       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+         Burning Sensation                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Dizziness                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Headache                                                 1 (  5.3%)  1 (  5.3%)  0 (  0.0%)
+         Sciatica                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Reproductive system and breast disorders
+         Menstrual Discomfort                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Respiratory, thoracic and mediastinal disorders
-       Cough                                                      0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Nasal Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Respiratory, thoracic and mediastinal disorders
+         Cough                                                    0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
+         Nasal Congestion                                         0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sinus Congestion                                         0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Throat Irritation                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Congestion                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Skin and subcutaneous tissue disorders
-       Erythema                                                   2 ( 10.5%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Skin Discomfort                                            1 (  5.3%)   0 (  0.0%)   0 (  0.0%)
+      Skin and subcutaneous tissue disorders
+         Erythema                                                 2 ( 10.5%)  0 (  0.0%)  0 (  0.0%)
+         Pruritus                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Skin Discomfort                                          1 (  5.3%)  0 (  0.0%)  0 (  0.0%)
 
-    Surgical and medical procedures
-       Cholecystectomy                                            0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
-       Skin Lesion Excision                                       0 (  0.0%)   1 (  5.3%)   0 (  0.0%)
+      Surgical and medical procedures
+         Cholecystectomy                                          0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
+         Skin Lesion Excision                                     0 (  0.0%)  1 (  5.3%)  0 (  0.0%)
 
 
 Date Produced: Time ;  Program: Table3_0.R
@@ -449,40 +449,40 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                   Page 10 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM C
+                                                                                 ARM C
                                                                                  (N=10)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Burning Sensation                                          1 ( 10.0%)   0 (  0.0%)   0 (  0.0%)
-       Dizziness                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Headache                                                   0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
-       Sciatica                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+         Burning Sensation                                        1 ( 10.0%)  0 (  0.0%)  0 (  0.0%)
+         Dizziness                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Headache                                                 0 (  0.0%)  1 ( 10.0%)  0 (  0.0%)
+         Sciatica                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
+      Reproductive system and breast disorders
+         Menstrual Discomfort                                     0 (  0.0%)  1 ( 10.0%)  0 (  0.0%)
 
-    Respiratory, thoracic and mediastinal disorders
-       Cough                                                      0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Nasal Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinus Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Respiratory, thoracic and mediastinal disorders
+         Cough                                                    0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Nasal Congestion                                         0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sinus Congestion                                         0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Throat Irritation                                        0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Congestion                       0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Skin and subcutaneous tissue disorders
-       Erythema                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   0 (  0.0%)   1 ( 10.0%)   0 (  0.0%)
-       Skin Discomfort                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Skin and subcutaneous tissue disorders
+         Erythema                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Pruritus                                                 0 (  0.0%)  1 ( 10.0%)  0 (  0.0%)
+         Skin Discomfort                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Surgical and medical procedures
-       Cholecystectomy                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Skin Lesion Excision                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Surgical and medical procedures
+         Cholecystectomy                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Skin Lesion Excision                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
 
 Date Produced: Time ;  Program: Table3_0.R
@@ -494,40 +494,40 @@ Note: Adverse events were coded using MedDRA Version 9.1
 
 Time                                            Confidential                                   Page 11 of 12
 Client: Experis                                                                                   Study: BBC
-                                                 Table 1.0
+                                                  Table 1.0
                                          Adverse Events by Severity
-                                             Safety Population
+                                              Safety Population
 
-                                                                                  ARM D
+                                                                                 ARM D
                                                                                  (N=16)
-                                                                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-    System Organ Class
-       Preferred Term                                                Mild        Mod**        Severe
-    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+      System Organ Class
+         Preferred Term                                              Mild        Mod**      Severe
+      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-       Burning Sensation                                          0 (  0.0%)   0 (  0.0%)   1 (  6.2%)
-       Dizziness                                                  0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Headache                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sciatica                                                   1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+         Burning Sensation                                        0 (  0.0%)  0 (  0.0%)  1 (  6.2%)
+         Dizziness                                                0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Headache                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sciatica                                                 1 (  6.2%)  0 (  0.0%)  0 (  0.0%)
 
-    Reproductive system and breast disorders
-       Menstrual Discomfort                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Reproductive system and breast disorders
+         Menstrual Discomfort                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
-    Respiratory, thoracic and mediastinal disorders
-       Cough                                                      0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
-       Nasal Congestion                                           0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Sinus Congestion                                           1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-       Throat Irritation                                          1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
-       Upper Respiratory Tract Congestion                         1 (  6.2%)   0 (  0.0%)   0 (  0.0%)
+      Respiratory, thoracic and mediastinal disorders
+         Cough                                                    0 (  0.0%)  1 (  6.2%)  0 (  0.0%)
+         Nasal Congestion                                         0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Sinus Congestion                                         1 (  6.2%)  0 (  0.0%)  0 (  0.0%)
+         Throat Irritation                                        1 (  6.2%)  0 (  0.0%)  0 (  0.0%)
+         Upper Respiratory Tract Congestion                       1 (  6.2%)  0 (  0.0%)  0 (  0.0%)
 
-    Skin and subcutaneous tissue disorders
-       Erythema                                                   0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Pruritus                                                   1 (  6.2%)   2 ( 12.5%)   0 (  0.0%)
-       Skin Discomfort                                            0 (  0.0%)   1 (  6.2%)   0 (  0.0%)
+      Skin and subcutaneous tissue disorders
+         Erythema                                                 0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Pruritus                                                 1 (  6.2%)  2 ( 12.5%)  0 (  0.0%)
+         Skin Discomfort                                          0 (  0.0%)  1 (  6.2%)  0 (  0.0%)
 
-    Surgical and medical procedures
-       Cholecystectomy                                            0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
-       Skin Lesion Excision                                       0 (  0.0%)   0 (  0.0%)   0 (  0.0%)
+      Surgical and medical procedures
+         Cholecystectomy                                          0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
+         Skin Lesion Excision                                     0 (  0.0%)  0 (  0.0%)  0 (  0.0%)
 
 
 Date Produced: Time ;  Program: Table3_0.R

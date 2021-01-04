@@ -2,24 +2,24 @@ Sponsor                                                                         
                                                   Table 3.0
                               Analysis of Time to Initial PSGA Success in Weeks
 
-                                   Estimates                      Values
-                                   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                                   Estimates                     Values
+                                   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
                                    Kaplan-Meier estimates
-                                      25th percentile                 41
-                                         95% confidence interval      53
-                                      median (weeks)                  43
-                                         95% confidence interval      39
-                                      75th percentile                 47
-                                         95% confidence interval      52
+                                      25th percentile                41
+                                         95% confidence interval     53
+                                      median (weeks)                 43
+                                         95% confidence interval     39
+                                      75th percentile                47
+                                         95% confidence interval     52
 
-                                   Cox PH estimates and some more
-                                   really long stuff
-                                      25th percentile                 38
-                                         95% confidence interval      25
-                                      median (weeks)                  37
-                                         95% confidence interval      23
-                                      75th percentile                 78
-                                         95% confidence interval      21
+                                   Cox PH estimates and some
+                                   more really long stuff
+                                      25th percentile                38
+                                         95% confidence interval     25
+                                      median (weeks)                 37
+                                         95% confidence interval     23
+                                      75th percentile                78
+                                         95% confidence interval     21
 
 
 

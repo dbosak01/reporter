@@ -82,7 +82,7 @@ test_that("get_spanning_header works as expected.", {
   res1
   
   expect_equal(length(res1), 5)
-  expect_equal(trimws(res1[[1]]), "Span 4                       Span 5")
+  expect_equal(trimws(res1[[1]]), "Span 4                   Span 5")
   
 })
 

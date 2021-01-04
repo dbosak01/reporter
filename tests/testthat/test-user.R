@@ -4,10 +4,10 @@ base_path <- "c:/packages/reporter/tests/testthat"
 data_dir <- base_path
 
 
-base_path <- tempdir()
+#base_path <- tempdir()
 data_dir <- "."
 
-dev <- FALSE
+dev <- TRUE
 
 test_that("user1: demo table works.", {
 
