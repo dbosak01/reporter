@@ -1,5 +1,7 @@
 # reporter 1.1.0
 
+* Changed column width calculation to make sum of widths equal the total width of
+the table.  Previously it was excluding the column gutter from the calculation.
 * Removed error on title/footnote width being too long.  Changed to warning
 and truncated text instead, so the user can at least see what is going on.
 * Integrated logging functionality with logr package.  write_report() will

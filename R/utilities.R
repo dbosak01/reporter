@@ -409,6 +409,18 @@ get_page_size <- function(paper_size, units) {
       ret <- c(21, 29.7)
     else if (paper_size == "RD4")
       ret <- c(19.6, 27.3)
+    
+     # For character units, 
+     # use inches and convert
+  }  else if (units == "char") {
+    if (paper_size == "letter")
+      ret <- c(8.5, 11)
+    else if (paper_size == "legal")
+      ret <- c(8.5, 14)
+    else if (paper_size == "A4")
+      ret <- c(8.27, 11.69)
+    else if (paper_size == "RD4")
+      ret <- c(7.7, 10.7)
   }
   
   return(ret)

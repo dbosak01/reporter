@@ -133,7 +133,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   #rs$column_widths[length(rs$column_widths) + 1] <- widths_uom
 
   # Convert to text measurements
-  widths_char <- round(widths_uom / rs$char_width)
+  # Adjust by -1 to account for space between columns
+  widths_char <- round(widths_uom / rs$char_width) - 1
   # print("Widths Char")
   # print(widths_char)
 
@@ -337,7 +338,7 @@ get_table_header <- function(rs, ts, pi) {
   
   lbls <- pi$label
   lbla <- pi$label_align
-  w <- round(pi$col_width / rs$char_width)
+  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
   # print("Label A")
   # print(lbla)
   ret <- c()
@@ -395,7 +396,7 @@ get_spanning_header <- function(rs, ts, pi) {
   spns <- ts$col_spans
   cols <- pi$keys
   cols <- cols[!is.controlv(cols)]
-  w <- round(pi$col_width / rs$char_width)
+  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
   w <- w[cols]
   
   # print("Cols:")

@@ -58,12 +58,12 @@ Then put the following line at the top of your program or script:
 The **reporter** package will give you access to a number of functions
 to help create, lay out, and write your report to the file system. 
 For examples and usage information, visit the **reporter** documentation
-site [here](http://reporter.r-sassy.org/articles/reporter.html).
+site [here](https://reporter.r-sassy.org/articles/reporter.html).
 
 ### Getting Help
 
 If you need help, the first place 
-to turn to is the [reporter](http://reporter.r-sassy.org) web site. The web site
+to turn to is the [reporter](https://reporter.r-sassy.org) web site. The web site
 has full documentation on all **reporter** functions.
 
 If you need additional help, please consult 
@@ -81,4 +81,4 @@ If you encounter a bug or have a feature request, please submit an issue
 The **reporter** package is part of the **sassy** meta-package. 
 The **sassy** meta-package includes several packages that help make R
 easier for SAS® programmers.  You can read more about the **sassy** package
-[here](http://sassy.r-sassy.org).
+[here](https://sassy.r-sassy.org).

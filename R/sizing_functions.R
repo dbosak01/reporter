@@ -344,11 +344,12 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     #12.7
     max_col_width = 12.7  
     min_col_width = .254
-    padding_buffer = .127
-  } else {
+  } else if (uom == "inches") {
     max_col_width = 5  
     min_col_width = .1
-    padding_buffer = .05
+  } else if (uom == "char") {
+    max_col_width = 60
+    min_col_width = 2
   }
   
 
@@ -371,7 +372,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     else if (w < min_col_width)
       w <- min_col_width
     else
-      w <- (ceiling(w * 100)/100) #+ padding_buffer
+      w <- (ceiling(w * 100)/100) 
     
     # print(paste("w:", w))
     # print(paste("Label:", labels[[nm]]))
@@ -388,9 +389,9 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     # set column width to max label word width
     # so as not to break any words in the label
     if (max(l) > w)
-      dwidths[[nm]] <- max(l)
+      dwidths[[nm]] <- max(l) + char_width
     else
-      dwidths[[nm]] <- w
+      dwidths[[nm]] <- w + char_width
     
   }
   
@@ -443,18 +444,18 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
      # print(paste("Table width:", ts$width))
     
      # Adjusted to keep 
-     blnkw <- (length(ret) - 0) * char_width
+     #blnkw <- (length(ret) - 0) * char_width
      # print(paste("Blank width:", blnkw))
      # print(paste("Before:", sum(ret)))
      # print(ret)
      
-    if (sum(ret) + blnkw < ts$width) {
+    if (sum(ret) < ts$width) {
       
       # Get columns not defined by user
       variable <- ret[!names(ret) %in% defnms]
       fixed <- ret[names(ret) %in% defnms]
       
-      available <- ts$width - blnkw - sum(fixed)
+      available <- ts$width - sum(fixed)
       
       variable <- variable * available / sum(variable)
       
@@ -462,9 +463,8 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
         ret[[nm]] <- variable[[nm]]
       
       # print("diff")
-      # print(ts$width - sum(ret) - 0.4166667)
-      # Make any small adjustments to last column
-     # ret[[length(ret)]] <- ret[[length(ret)]] + ts$width - sum(ret) - 0.4166667
+      # Add one character to first column so it fills the entire page
+      ret[[1]] <- ret[[1]] + char_width
 
     } else {
       # If table width is less than the sum of the columns.
