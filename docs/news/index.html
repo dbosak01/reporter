@@ -141,7 +141,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -156,7 +161,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      
+      <small>Source: <a href='https://github.com/dbosak01/reporter/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div id="reporter-110" class="section level1">
@@ -164,6 +169,7 @@
 <a href="#reporter-110" class="anchor"></a>reporter 1.1.0<small> Unreleased </small>
 </h1>
 <ul>
+<li>Changed column width calculation to make sum of widths equal the total width of the table. Previously it was excluding the column gutter from the calculation.</li>
 <li>Removed error on title/footnote width being too long. Changed to warning and truncated text instead, so the user can at least see what is going on.</li>
 <li>Integrated logging functionality with logr package. write_report() will now log results automatically when logr autolog is enabled.</li>
 <li>Added underline parameter to spanning_header to turn it on or off</li>

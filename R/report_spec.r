@@ -164,6 +164,14 @@ create_report <- function(file_path = "", output_type = "TXT",
                 "'\n\tValid values are: 'inches' or 'cm'."))
   }
   
+  # if (!units %in% c("inches", "cm", "char")) {
+  #   
+  #   stop(paste0("units parameter on ",
+  #               "create_report() function is invalid: '", units,
+  #               "'\n\tValid values are: 'inches', 'cm', or 'char'."))
+  # }
+  
+  
   # Trap missing or invalid paper_size parameter.
   if (!paper_size %in% c("letter", "legal", "A4", "RD4")) {
     
@@ -461,9 +469,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
   if (x$output_type == "TXT") {
     if (is.null(editor)) {
       # Trap missing or invalid cpuom parameter.
-      if (is.null(cpuom))
-        x$cpuom <- if (x$units == "inches") 12 else 4.687
-      else if (!(cpuom >= 8 & cpuom <= 14)) {
+      if (is.null(cpuom)) {
+        if (x$units == "inches")
+          x$cpuom <- 12 
+        else if (x$units == "cm")
+          x$cpuom <- 4.687
+        else if (x$units == "char")
+          x$cpuom <- 1
+      } else if (!(cpuom >= 1 & cpuom <= 14)) {
         
         stop(paste0("cpi parameter on create_report() ",
                     "function is invalid: '", cpuom,
@@ -473,9 +486,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
         x$cpuom <- cpuom
         
       # Trap missing or invalid lpuom parameter.
-      if (is.null(lpuom))
-        x$lpuom <- if (x$units == "inches") 6 else 2.55
-      else if (!(lpuom > 0 & lpuom <= 10)) {
+      if (is.null(lpuom)) {
+        if (x$units == "inches")
+          x$lpuom <-  6 
+        else if (x$units == "cm")
+          x$lpuom <- 2.55
+        else if (x$units == "char")
+          x$lpuom <- 1
+      } else if (!(lpuom > 0 & lpuom <= 10)) {
         
         stop(paste0("lpuom parameter on create_report() ",
                     "function is invalid: '", lpuom,
@@ -506,16 +524,21 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       
       x$editor <- editor
       
-      # Set columns per unit of measure
+      # Set characters per unit of measure
       # and lines per unit of measure
       if (x$units == "inches") {
         x$cpuom <- e$cpi
         x$lpuom <- e$lpi
         x$min_margin <- e$mmi
-      } else {
+      } else if (x$units == "cm") {
         x$cpuom <- e$cpcm
         x$lpuom <- e$lpcm
         x$min_margin <- e$mmcm
+      } else if (x$units == "char") {
+        
+        x$cpuom <- 1
+        x$lpuom <- 1
+        x$min_margin <- round(e$mmi / 12)
       }
       
       # print(paste("cpuom:", x$cpuom))
@@ -541,10 +564,15 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       x$cpuom <- e$cpi
       x$lpuom <- e$lpi
       x$min_margin <- e$mmi
-    } else {
+    } else if (x$units == "cm") {
       x$cpuom <- e$cpcm
       x$lpuom <- e$lpcm
       x$min_margin <- e$mmcm
+    } else if (x$units == "char") {
+      
+      x$cpuom <- 1
+      x$lpuom <- 1
+      x$min_margin <- round(e$mmi / 12)
     }
     
     x$blank_margins <- FALSE
@@ -566,10 +594,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       x$cpuom <- e$cpi
       x$lpuom <- e$lpi
       x$min_margin <- e$mmi
-    } else {
+    } else if (x$units == "cm") {
       x$cpuom <- e$cpcm
       x$lpuom <- e$lpcm
       x$min_margin <- e$mmcm
+    } else if (x$units == "char") {
+      x$cpuom <- 1
+      x$lpuom <- 1
+      x$min_margin <- round(e$mmi / 12)
     }
     
     x$blank_margins <- FALSE
@@ -708,8 +740,14 @@ set_margins <- function(x, top=NULL, bottom=NULL,
     else
       x$margin_top = top
   }
-  else
-    x$margin_top = if (x$units == "inches") .5 else 1.27
+  else {
+    if (x$units == "inches")
+      x$margin_top <- .5 
+    else if (x$units == "cm")
+      x$margin_top <- 1.27
+    else if (x$units == "char")
+      x$margin_top <- set_char_margins(x, "top")
+  }
   
   if (!is.null(bottom)) {
     if (is.na(bottom) | bottom < 0| !is.numeric(bottom)){
@@ -718,8 +756,14 @@ set_margins <- function(x, top=NULL, bottom=NULL,
     else
       x$margin_bottom = bottom
   }
-  else
-    x$margin_bottom = if (x$units == "inches") .5 else 1.27
+  else {
+    if (x$units == "inches")
+      x$margin_bottom <- .5 
+    else if (x$units == "cm")
+      x$margin_bottom <- 1.27
+    else if (x$units == "char")
+      x$margin_bottom <- set_char_margins(x, "bottom")
+  }
   
   if (!is.null(left)) {
     if (is.na(left) | left < 0| !is.numeric(left)){
@@ -728,8 +772,15 @@ set_margins <- function(x, top=NULL, bottom=NULL,
     else
       x$margin_left = left
   }
-  else
-    x$margin_left = if (x$units == "inches") 1 else 2.54
+  else {
+    if (x$units == "inches")
+      x$margin_left <-  1 
+    else if (x$units == "cm")
+      x$margin_left <- 2.54
+    else if (x$units == "char")
+      x$margin_left <- set_char_margins(x, "left")
+    
+  }
   
   if (!is.null(right)) {
     if (is.na(right) | right < 0| !is.numeric(right)){
@@ -738,13 +789,46 @@ set_margins <- function(x, top=NULL, bottom=NULL,
     else 
       x$margin_right = right
   }
-  else
-    x$margin_right = if (x$units == "inches") 1 else 2.54
+  else {
+    if (x$units == "inches")
+      x$margin_right <- 1 
+    else if (x$units == "cm")
+      x$margin_right <- 2.54
+    else if (x$units == "char")
+      x$margin_right <- set_char_margins(x, "right")
+  }
 
 
   return(x)
 }
 
+#' @noRd
+set_char_margins <- function(rs, margin) {
+  
+  ret <- NULL
+  if (!is.null(rs$font_size)) {
+    if (rs$font_size == 8) {
+      if (margin %in% c("right", "left"))
+        ret <- 15
+      else if (margin %in% c("top", "bottom"))
+        ret <- 4
+    }  
+    if (rs$font_size == 10) {
+      if (margin %in% c("right", "left"))
+        ret <- 12
+      else if (margin %in% c("top", "bottom"))
+        ret <- 3
+    }  
+    if (rs$font_size == 12) {
+      if (margin %in% c("right", "left"))
+        ret <- 10
+      else if (margin %in% c("top", "bottom"))
+        ret <- 3
+    }  
+  }
+  
+  return(ret)
+}
 
 # Page Template Items -----------------------------------------------
 

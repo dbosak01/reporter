@@ -344,11 +344,12 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     #12.7
     max_col_width = 12.7  
     min_col_width = .254
-    padding_buffer = .127
-  } else {
+  } else if (uom == "inches") {
     max_col_width = 5  
     min_col_width = .1
-    padding_buffer = .05
+  } else if (uom == "char") {
+    max_col_width = 60
+    min_col_width = 2
   }
   
 
@@ -371,7 +372,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     else if (w < min_col_width)
       w <- min_col_width
     else
-      w <- (ceiling(w * 100)/100) #+ padding_buffer
+      w <- (ceiling(w * 100)/100) 
     
     # print(paste("w:", w))
     # print(paste("Label:", labels[[nm]]))
