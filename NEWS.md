@@ -1,5 +1,6 @@
-# reporter 1.1.0
+# reporter 1.1.2
 
+* Added valign parameter to footnotes function.
 * Changed column width calculation to make sum of widths equal the total width of
 the table.  Previously it was excluding the column gutter from the calculation.
 * Removed error on title/footnote width being too long.  Changed to warning

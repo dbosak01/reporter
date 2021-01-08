@@ -2299,22 +2299,65 @@ test_that("test70: Column widths work as expected.", {
   
   dat <- unlist(rep("AAAAAAAAA B", 10))
   
-  df <- data.frame(col1 = dat, col2 = dat, col3 = dat, col4 = dat, col5 = dat)
+  df <- data.frame(col1 = dat, col2 = dat, col3 = dat, col4 = dat, col5 = dat,
+                   col6 = dat, col7 = dat, col8 = dat, col9 = dat)
   
   tbl <- create_table(df) %>% 
     spanning_header(1, 2, "Span 1") %>% 
     spanning_header(3, 5, "Span 2") %>% 
     spanning_header(1, 5, "Super Span", level = 2) %>% 
-    column_defaults(width = 1)
+    column_defaults(width = 1) %>% 
+    footnotes("Here is a really long footnote that will need a few columns to contain.")
   
-  rpt <- create_report(fp) %>% 
-    add_content(tbl)
+  rpt <- create_report(fp, output_type = "TXT") %>% 
+    set_margins(left = 1, right = 1) %>% 
+    add_content(tbl, align = "left") 
   
+
   res <- write_report(rpt)
   
- # print(res, verbose = TRUE)
   
   lns <- readLines(fp)
   
   expect_equal(length(lns), res$pages * res$line_count)
+  expect_equal(res$pages, 1)
 })
+
+
+test_that("test71: Column widths work as expected with fractional widths.", {
+  
+  
+  fp <- file.path(base_path, "output/test71.out")
+  
+  dat <- unlist(rep("AAA", 10))
+  
+  df <- data.frame(col1 = dat, col2 = dat, col3 = dat, col4 = dat, col5 = dat,
+                   col6 = dat, col7 = dat, col8 = dat, col9 = dat)
+  
+  tbl <- create_table(df) %>% 
+    spanning_header(1, 2, "Span 1") %>% 
+    spanning_header(3, 5, "Span 2") %>% 
+    spanning_header(1, 5, "Super Span", level = 2) %>% 
+    column_defaults(width = .5) %>% 
+    define(col1, width = 3.5) %>% 
+    define(col2, width = 1) %>% 
+    define(col7, width = .7) %>%
+    define(col8, width = 1.3) %>% 
+    footnotes("Here is a really long footnote that will need a few columns to contain.")
+  
+  rpt <- create_report(fp, output_type = "TXT") %>% 
+    set_margins(left = 1, right = 1) %>% 
+    add_content(tbl, align = "left")
+  
+  
+  res <- write_report(rpt)
+  
+  
+  # print(res, verbose = TRUE)
+
+  lns <- readLines(fp)
+
+  expect_equal(length(lns), res$pages * res$line_count)
+  expect_equal(res$pages, 1)
+})
+

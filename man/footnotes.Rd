@@ -4,7 +4,14 @@
 \alias{footnotes}
 \title{Adds a footnote block}
 \usage{
-footnotes(x, ..., align = "left", blank_row = "above", borders = "none")
+footnotes(
+  x,
+  ...,
+  align = "left",
+  blank_row = "above",
+  borders = "none",
+  valign = NULL
+)
 }
 \arguments{
 \item{x}{The object to assign footnotes to.}
@@ -22,6 +29,10 @@ values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.
 For fixed width reports, the 
 border character will be taken from the value of the \code{uchar} parameter
 on the \code{\link{options_fixed}} function.}
+
+\item{valign}{The vertical position to align the footnotes.  Valid
+values are: 'top' and 'bottom'.  For footnotes attached to a report,
+default is 'bottom'.  For footnotes attached to content, default is 'top'.}
 }
 \value{
 The modified report.

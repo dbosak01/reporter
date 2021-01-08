@@ -1249,6 +1249,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' For fixed width reports, the 
 #' border character will be taken from the value of the \code{uchar} parameter
 #' on the \code{\link{options_fixed}} function.
+#' @param valign The vertical position to align the footnotes.  Valid
+#' values are: 'top' and 'bottom'.  For footnotes attached to a report,
+#' default is 'bottom'.  For footnotes attached to content, default is 'top'.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1298,7 +1301,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' #     * In billions of dollars
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
-                      borders = "none"){
+                      borders = "none", valign = NULL){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1309,11 +1312,19 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     stop("footnotes function is limited to a maximum of 25 footnotes.")
   }
   
+  if (!align %in% c("left", "right"))
+    stop(paste("Align parameter invalid. Valid values are 'left' and 'right'"))
+  
+  if (!is.null(valign)) {
+    if (!valign %in% c("top", "bottom"))
+      stop(paste("Valign parameter invalid. Valid values are 'top' and 'bottom'"))
+  } 
+  
   if (!blank_row %in% c("above", "below", "both", "none"))
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (!all(borders %in% c("top", "bottom", "all", "none")))
+  if (any(!borders %in% c("top", "bottom", "all", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
                "'top', 'bottom', 'all', or 'none'."))
 
@@ -1321,6 +1332,13 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   ftn$blank_row <- blank_row
   ftn$align <- align
   ftn$borders <- borders
+  
+  if (is.null(valign)) {
+    if ("report_spec" %in% class(x))
+      ftn$valign <- "bottom"
+    else 
+      ftn$valign <- "top"
+  }
   
   x$footnotes[[length(x$footnotes) + 1]] <- ftn
 
@@ -2009,6 +2027,9 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     cat(paste0("- output_type: ", x$output_type, "\n"))
     cat(paste0("- units: ", x$units, "\n"))
     cat(paste0("- orientation: ", x$orientation, "\n"))
+    cat(paste0("- margins: top ", x$margin_top, " bottom ", 
+               x$margin_bottom, " left ", x$margin_left, 
+               " right ", x$margin_right, "\n"))
     if (!is.null(x$line_size)) 
       cat(paste0("- line size/count: ", x$line_size, "/", x$line_count, "\n"))
     
