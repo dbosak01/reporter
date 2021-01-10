@@ -41,6 +41,94 @@ document.addEventListener('DOMContentLoaded', function() {
     </style>
 
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -262,17 +350,68 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>How to use <strong>reporter</strong></h2>
 <p>There are four steps to creating a report:</p>
 <ul>
-<li>Create report</li>
 <li>Create report content</li>
+<li>Create report</li>
 <li>Add content to the report</li>
 <li>Write out the report</li>
 </ul>
 <p>You can create the report with the <code>create_report()</code> function. Content is created with the <code>create_table()</code>, <code>create_text()</code>, or <code>create_plot()</code> functions. Add content to the report with the <code>add_content()</code> function. Finally, the report can be written to a file with the <code>write_report()</code> function.</p>
-<p>In addition to these primary functions, there are several secondary functions to help you formalize the report. All available functions are shown in the function <a href="https://reporter.r-sassy.org/reference/index.html">reference</a>.</p>
+<p>Let’s look at a simple example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(reporter)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(magrittr)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Create temp file name </span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>tmp &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;example.txt&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Create report content</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>tbl &lt;-<span class="st"> </span><span class="kw">create_table</span>(mtcars) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="st">  </span><span class="kw">titles</span>(<span class="st">&quot;MTCARS Sample Data&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="st">  </span><span class="kw">footnotes</span>(<span class="st">&quot;* Motor Trend, 1974&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># Create report and add content  </span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>rpt &lt;-<span class="st"> </span><span class="kw">create_report</span>(tmp) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="st">  </span><span class="kw">add_content</span>(tbl)</span>
+<span id="cb1-15"><a href="#cb1-15"></a>  </span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co"># Write out the report</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="kw">write_report</span>(rpt)</span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co"># # A report specification: 1 pages</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co"># - file_path: &#39;C:\Users\User\AppData\Local\Temp\RtmpeC1s5u/example.txt&#39;</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co"># - output_type: TXT</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co"># - units: inches</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co"># - orientation: landscape</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co"># - margins: top 0.5 bottom 0.5 left 1 right 1</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co"># - line size/count: 108/45</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="co"># - content: </span></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co"># # A table specification:</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co"># - data: data.frame &#39;mtcars[1:10, ]&#39; 10 rows 11 cols</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co"># - show_cols: all</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="co"># - use_attributes: all</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="co"># - title 1: &#39;MTCARS Sample Data&#39;</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="co"># - footnote 1: &#39;* Motor Trend, 1974&#39;</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="kw">writeLines</span>(<span class="kw">readLines</span>(tmp, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>))</span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="co">#                        MTCARS Sample Data</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co"># </span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="co">#          mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="co">#         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a><span class="co">#           21   6   160 110  3.9  2.62 16.46  0  1    4    4</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="co">#           21   6   160 110  3.9 2.875 17.02  0  1    4    4</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a><span class="co">#         22.8   4   108  93 3.85  2.32 18.61  1  1    4    1</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="co">#         21.4   6   258 110 3.08 3.215 19.44  1  0    3    1</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a><span class="co">#         18.7   8   360 175 3.15  3.44 17.02  0  0    3    2</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a><span class="co">#         18.1   6   225 105 2.76  3.46 20.22  1  0    3    1</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="co">#         14.3   8   360 245 3.21  3.57 15.84  0  0    3    4</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a><span class="co">#         24.4   4 146.7  62 3.69  3.19    20  1  0    4    2</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a><span class="co">#         22.8   4 140.8  95 3.92  3.15  22.9  1  0    4    2</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="co">#         19.2   6 167.6 123 3.92  3.44  18.3  1  0    4    4</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a><span class="co"># </span></span>
+<span id="cb1-49"><a href="#cb1-49"></a><span class="co">#         * Motor Trend, 1974</span></span></code></pre></div>
+<p>As you can see, using the <strong>reporter</strong> package, you can create a useful report with just a few lines of code. By default, the package creates a text report. But you can create reports in RTF and PDF with just a single parameter change.</p>
+<p>In addition to the functions shown above, there are additional functions to create page headers and footers, spanning headers, a report stub, a by-variable, and more. The package also allows you to add text and plots to a report. All of these capabilities are demonstrated in the examples below.</p>
 </div>
 <div id="next-steps" class="section level2">
 <h2>Next Steps</h2>
-<p>Before diving too deep into the functions, however, it is recommended that you review some examples of the <strong>reporter</strong> package in action. The examples show a variety of common use cases. You will see that the <strong>reporter</strong> functions are very intuitive and easy to use. Here is a list of examples.</p>
+<p>For next steps, it is recommended that you review some examples of the <strong>reporter</strong> package in action. The examples show a variety of common use cases. You will see that the <strong>reporter</strong> functions are very intuitive and easy to use. Here is a list of examples:</p>
 <ul>
 <li><a href="reporter-listing.html">Example 1: Listing</a></li>
 <li><a href="reporter-table.html">Example 2: Table</a></li>

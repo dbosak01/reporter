@@ -52,8 +52,8 @@ and intermingling of text, tables, and plots
 ## How to use **reporter**
 There are four steps to creating a report:
 
-* Create report 
 * Create report content
+* Create report 
 * Add content to the report
 * Write out the report 
 
@@ -62,18 +62,77 @@ created with the `create_table()`, `create_text()`, or `create_plot()`
 functions.  Add content to the report with the `add_content()` function. 
 Finally, the report can be written to a file with the `write_report()` function.  
 
-In addition to these primary functions, there are several secondary functions
-to help you formalize the report.  All available functions are shown in
-the function [reference](https://reporter.r-sassy.org/reference/index.html).
+Let's look at a simple example:
+```{r eval=FALSE, echo=TRUE}
+library(reporter)
+library(magrittr)
 
+# Create temp file name 
+tmp <- file.path(tempdir(), "example.txt")
+
+# Create report content
+tbl <- create_table(mtcars) %>% 
+  titles("MTCARS Sample Data") %>% 
+  footnotes("* Motor Trend, 1974")
+
+# Create report and add content  
+rpt <- create_report(tmp) %>% 
+  add_content(tbl)
+  
+# Write out the report
+write_report(rpt)
+# # A report specification: 1 pages
+# - file_path: 'C:\Users\User\AppData\Local\Temp\RtmpeC1s5u/example.txt'
+# - output_type: TXT
+# - units: inches
+# - orientation: landscape
+# - margins: top 0.5 bottom 0.5 left 1 right 1
+# - line size/count: 108/45
+# - content: 
+# # A table specification:
+# - data: data.frame 'mtcars[1:10, ]' 10 rows 11 cols
+# - show_cols: all
+# - use_attributes: all
+# - title 1: 'MTCARS Sample Data'
+# - footnote 1: '* Motor Trend, 1974'
+
+writeLines(readLines(tmp, encoding = "UTF-8"))
+#                        MTCARS Sample Data
+# 
+#          mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#           21   6   160 110  3.9  2.62 16.46  0  1    4    4
+#           21   6   160 110  3.9 2.875 17.02  0  1    4    4
+#         22.8   4   108  93 3.85  2.32 18.61  1  1    4    1
+#         21.4   6   258 110 3.08 3.215 19.44  1  0    3    1
+#         18.7   8   360 175 3.15  3.44 17.02  0  0    3    2
+#         18.1   6   225 105 2.76  3.46 20.22  1  0    3    1
+#         14.3   8   360 245 3.21  3.57 15.84  0  0    3    4
+#         24.4   4 146.7  62 3.69  3.19    20  1  0    4    2
+#         22.8   4 140.8  95 3.92  3.15  22.9  1  0    4    2
+#         19.2   6 167.6 123 3.92  3.44  18.3  1  0    4    4
+# 
+#         * Motor Trend, 1974
+```
+
+As you can see, using the **reporter** package, you can 
+create a useful report with just a few lines of code.  By default, 
+the package creates a text report.  But you can create reports in 
+RTF and PDF with just a single parameter change.  
+
+In addition
+to the functions shown above, there are additional functions to create
+page headers and footers, spanning headers, a report stub, a by-variable, 
+and more.  The package also allows you to add text and plots to a report.
+All of these capabilities are demonstrated in the examples below.
 
 ## Next Steps
 
-Before diving too deep into the functions, however, it is recommended that you 
+For next steps, it is recommended that you 
 review some examples of the **reporter** package in action.  The examples
 show a variety of common use cases.  You will see
 that the **reporter** functions are very intuitive and easy to use.  Here is a 
-list of examples.
+list of examples:
 
 * [Example 1: Listing](reporter-listing.html)
 * [Example 2: Table](reporter-table.html)

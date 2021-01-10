@@ -3,7 +3,7 @@ context("RTF Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-base_path <- tempdir()
+#base_path <- tempdir()
 
 cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -24,6 +24,7 @@ test_that("rtf1: Simplest table works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
   
 })
 
@@ -43,6 +44,7 @@ test_that("rtf2: Simplest table with title works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
   
   
 })
@@ -92,7 +94,7 @@ test_that("rtf3: Table with break between sections works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
   
 })
 
@@ -108,7 +110,7 @@ test_that("rtf4: Table that spans multiple pages breaks as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 4)
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
 
@@ -152,7 +154,7 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
   
 })
 
@@ -187,7 +189,7 @@ test_that("rtf6: Table with spanning headers works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
   
 })
 
@@ -213,7 +215,7 @@ test_that("rtf7: Simplest RTF report with 1 in margins works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-
+  expect_equal(res$pages, 1)
 
 
 })
@@ -279,7 +281,7 @@ test_that("rtf8: Two page RTF report works as expected.", {
   #print(res)
 
   expect_equal(file.exists(fp), TRUE)
-
+  expect_equal(res$pages, 2)
 
 
 })
@@ -312,7 +314,7 @@ test_that("rtf9: Simplest RTF Plot works as expected.", {
   #print(res)
 
   expect_equal(file.exists(fp), TRUE)
-
+  expect_equal(res$pages, 1)
 
 
 })
@@ -348,7 +350,7 @@ test_that("rtf10: RTF Table with Plot works as expected.", {
   #print(res)
 
   expect_equal(file.exists(fp), TRUE)
-
+  expect_equal(res$pages, 2)
 
 
 })
@@ -384,7 +386,7 @@ test_that("rtf11: RTF Table with Plot on same page works as expected.", {
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
   
   
 })
@@ -413,7 +415,7 @@ test_that("rtf12: Table and Text output works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 2)
 
 })
 
@@ -438,7 +440,7 @@ test_that("rtf13: Very Long text output works as expected.", {
     res <- write_report(rpt)
     
     expect_equal(file.exists(fp), TRUE)
-    
+    expect_equal(res$pages, 123)
 
     
   } else {
@@ -462,7 +464,7 @@ test_that("rtf14: Simplest portrait table works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
 })
 
 
@@ -480,7 +482,7 @@ test_that("rtf15: Simplest landscape table works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
 })
 
 test_that("test16: 10 pt report with units in cm works as expected.", {
@@ -498,7 +500,7 @@ test_that("test16: 10 pt report with units in cm works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-
+  expect_equal(res$pages, 4)
   
 })
 
@@ -519,7 +521,7 @@ test_that("test17: 12 pt report with units in cm works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 5)
   
 })
 
@@ -558,7 +560,7 @@ test_that("rtf18: Plot with page by on report works as expected.", {
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 3)
   
   
 })
@@ -598,12 +600,12 @@ test_that("rtf19: Plot with page by on plot works as expected.", {
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 3)
   
   
 })
 
-
+# Problem on this one.  Title header not aligned with plot.
 test_that("test20: Title Header on Plot works as expected.", {
   
   fp <- file.path(base_path, "rtf/test20.rtf")
@@ -624,7 +626,7 @@ test_that("test20: Title Header on Plot works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 1)
   
 })
 
@@ -687,7 +689,7 @@ test_that("test21: 8 pt report with units in inches works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 3)
   
 })
 
@@ -707,7 +709,7 @@ test_that("test22: 8 pt report with units in cm works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 3)
   
 })
 
@@ -742,6 +744,7 @@ test_that("rtf23: RTF Table with Plot and borders works as expected.", {
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
   
 })
 
@@ -778,7 +781,7 @@ test_that("rtf24: RTF Table with Plot and borders works as expected.", {
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
-  
+  expect_equal(res$pages, 2)
 })
 
 

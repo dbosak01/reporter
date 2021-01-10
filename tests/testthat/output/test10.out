@@ -1,12 +1,12 @@
                                Table 1.0
-                           MTCARS Subset Test
+                          MTCARS Subset Test
 
                                                     Super
                                                     Span
                                                     ¯¯¯¯
                                                     Span
                                        Span 1         2
-                                       (N=10)       (N=10)
+                                      (N=10)       (N=10)
                                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯
              Vehicle              mpg cyl  disp  hp drat
              ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -59,7 +59,7 @@
 
 
                                Table 1.0
-                           MTCARS Subset Test
+                          MTCARS Subset Test
 
                                         Super Span
                                        ¯¯¯¯¯¯¯¯¯¯¯
@@ -119,7 +119,7 @@
 
 
                                Table 1.0
-                           MTCARS Subset Test
+                          MTCARS Subset Test
 
                                         Super Span
                                      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

@@ -275,16 +275,21 @@ page_setup <- function(rs) {
     print(paste0("Content Size: ", rs$content_size))
   
   # Line size is the number of characters that will fit in the content size width
-  if (is.null(rs$user_line_size))
-    rs$line_size <- ceiling(rs$content_size[["width"]] / rs$char_width)
-  else 
+  if (is.null(rs$user_line_size)) {
+    if (rs$output_type == "RTF") {
+      # 1 char adjustment to avoid occasional wrapping 
+      rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width) - 1 
+    } else {
+      rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width) 
+    }
+  } else 
     rs$line_size <- rs$user_line_size
   if (debug)
     print(paste0("Line Size: ", rs$line_size))
   
   # Line count is the number of lines that will fit in the content size height
   if (is.null(rs$user_line_count))
-    rs$line_count <- ceiling(rs$content_size[["height"]] / rs$line_height)
+    rs$line_count <- floor(rs$content_size[["height"]] / rs$line_height)
   else
     rs$line_count <- rs$user_line_count
   if (debug)

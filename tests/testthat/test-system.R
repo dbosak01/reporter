@@ -3,7 +3,7 @@ context("System Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-base_path <- tempdir()
+#base_path <- tempdir()
 
 test_that("test1: Simplest table works as expected.", {
   

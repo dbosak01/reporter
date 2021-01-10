@@ -106,9 +106,9 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   }
   
   hdr[length(hdr) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
-                                "\\margr", round(rs$margin_right * .9 * conv),
+                                "\\margr", round(rs$margin_right * conv),
                                 "\\margt", round(rs$margin_top * conv),
-                                "\\margb", round(rs$margin_bottom/2 * conv))
+                                "\\margb", round(rs$margin_bottom  * conv))
 
   if (rs$font_size == 10)
     hdr[length(hdr) + 1] <- "\\fs20"
@@ -159,14 +159,27 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
     }
   }
   
+  # Get page breaks
+  pgs <- grepl("\f", body, fixed = TRUE)
+  
+  # Adjust by one to get previous line
+  pgs <- pgs[2:length(pgs)]
+  
+  # Add one for end of document
+  pgs[length(pgs) + 1] <- TRUE 
+  # print(length(body))
+  # print(length(pgs))
+  # print(pgs)
+  
   body <- gsub("\f", "\\page ", body, fixed = TRUE)
+  body <- paste0(body, ifelse(pgs, "", "\\line"))
   
   # Write to file  
   f <- file(orig_path, open="a")
   
   writeLines(hdr, con = f)
   
-  writeLines(paste0(body, "\\line"), con = f)
+  writeLines(body, con = f)
   
   writeLines("}", con = f)
   
