@@ -4,7 +4,7 @@ base_path <- "c:/packages/reporter/tests/testthat"
 data_dir <- base_path
 
 
-#base_path <- tempdir()
+base_path <- tempdir()
 data_dir <- "."
 
 dev <- FALSE

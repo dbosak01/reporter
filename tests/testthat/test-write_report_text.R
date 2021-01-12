@@ -2,7 +2,7 @@ context("Write Report Text Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-#base_path <- tempdir()
+base_path <- tempdir()
 
 test_that("page_template_text() works as expected.", {
   

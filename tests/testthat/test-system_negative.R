@@ -3,7 +3,7 @@ context("Negative System Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-#base_path <- tempdir()
+base_path <- tempdir()
 
 test_that("neg1: Unsorted Page by generates warning.", {
   

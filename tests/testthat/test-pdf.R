@@ -3,7 +3,7 @@ context("PDF Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-#base_path <- tempdir()
+base_path <- tempdir()
 
 cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -13,7 +13,7 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
               "qui officia deserunt mollit anim id est laborum.")
 
-dev <- TRUE
+dev <- FALSE
 
 test_that("pdf1: Simplest table works as expected.", {
   
