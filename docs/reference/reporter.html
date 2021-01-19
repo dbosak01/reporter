@@ -85,7 +85,7 @@ page." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -147,7 +147,12 @@ page." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -162,7 +167,7 @@ page." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>reporter: A package for creating statistical reports</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/reporter.R'><code>R/reporter.R</code></a></small>
     <div class="hidden name"><code>reporter.Rd</code></div>
     </div>
 
@@ -202,7 +207,7 @@ for more information.</p>
 <li><p>Supports header labels and spanning headers</p></li>
 <li><p>Calculates default columns widths automatically</p></li>
 <li><p>Includes automatic wrapping and splitting of wide and long tables</p></li>
-<li><p>Integrates with the <strong><a href='https://rdrr.io/pkg/fmtr/man/fmtr.html'>fmtr</a></strong> package to format 
+<li><p>Integrates with the <strong><a href='https://fmtr.r-sassy.org/reference/fmtr.html'>fmtr</a></strong> package to format 
         numeric, date, and character data</p></li>
 <li><p>Plots from the popular <strong><a href='https://ggplot2.tidyverse.org/reference/ggplot2-package.html'>ggplot2</a></strong> package can 
         be added to RTF and PDF reports</p></li>
@@ -251,7 +256,7 @@ assumptions and limitations are as follows:</p><ul>
   <strong>reporter</strong>.</p></li>
 <li><p>Titles, footnotes, page headers, and page footers must fit in the 
   available space. If they don't, the <strong>reporter</strong> package will 
-  generate an error.  In these situations, the recommended course of 
+  generate a warning.  In these situations, the recommended course of 
   action is to split the offending string into two or more strings that 
   fit within the available width.</p></li>
 <li><p>The <strong>reporter</strong> package will never break a word. That means you 

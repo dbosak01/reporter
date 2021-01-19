@@ -4,14 +4,7 @@
 \alias{footnotes}
 \title{Adds a footnote block}
 \usage{
-footnotes(
-  x,
-  ...,
-  align = "left",
-  blank_row = "above",
-  borders = "none",
-  valign = NULL
-)
+footnotes(x, ..., align = "left", blank_row = "above", borders = "none")
 }
 \arguments{
 \item{x}{The object to assign footnotes to.}
@@ -29,10 +22,6 @@ values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.
 For fixed width reports, the 
 border character will be taken from the value of the \code{uchar} parameter
 on the \code{\link{options_fixed}} function.}
-
-\item{valign}{The vertical position to align the footnotes.  Valid
-values are: 'top' and 'bottom'.  For footnotes attached to a report,
-default is 'bottom'.  For footnotes attached to content, default is 'top'.}
 }
 \value{
 The modified report.
@@ -61,7 +50,8 @@ Blank rows above or below the footnote block may be controlled using the
 
 Each footnote string must fit within the available space.  The \strong{reporter}
 package will not wrap footnotes.  If a footnote does not fit within the 
-available space, an error will be generated.  In these situations, either
+available space, a warning will be generated and the footnote will be 
+truncated.  In these situations, either
 shorten the footnote or split it into multiple footnotes that each fit within 
 the available space.
 }

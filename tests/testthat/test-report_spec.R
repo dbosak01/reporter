@@ -80,7 +80,7 @@ test_that("Footnotes traps invalid parameter as expected.", {
   rpt <- create_report("fork.out")
   
   expect_error(footnotes(rpt, align = "error"))
-  expect_error(footnotes(rpt, valign = "error"))
+  # expect_error(footnotes(rpt, valign = "error"))
   expect_error(footnotes(rpt, blank_row = "error"))
   expect_error(footnotes(rpt, borders = "error"))
   

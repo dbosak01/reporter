@@ -82,7 +82,7 @@ form.  To view all parameters, set the verbose parameter to TRUE." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -144,7 +144,12 @@ form.  To view all parameters, set the verbose parameter to TRUE." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -159,7 +164,7 @@ form.  To view all parameters, set the verbose parameter to TRUE." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prints the text spec</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/text_spec.R'><code>R/text_spec.R</code></a></small>
     <div class="hidden name"><code>print.text_spec.Rd</code></div>
     </div>
 
@@ -199,18 +204,15 @@ form.  To view all parameters, set the <code>verbose</code> parameter to TRUE.</
 <code><a href='create_text.html'>create_text</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>txt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_text.html'>create_text</a></span><span class='op'>(</span><span class='st'>"Lorem ipsum dolor sit amet, consectetur..."</span>,
+    <pre class="examples"><span class='va'>txt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_text.html'>create_text</a></span><span class='op'>(</span><span class='st'>"Lorem ipsum dolor sit amet, consectetur..."</span>,
                    align <span class='op'>=</span> <span class='st'>"left"</span>, width <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 <span class='va'>txt</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A text specification: 6 words
-#&gt; </span><span>- text: Lorem ipsum dolor sit amet, consectetur...
-#&gt; - width: 3
-#&gt; - align: left</div><div class='input'>
+
 <span class='co'># A text specification: 6 words</span>
 <span class='co'># - text: Lorem ipsum dolor sit amet, consectetur...</span>
 <span class='co'># - width: 3</span>
 <span class='co'># - align: left</span>
-</div></span></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

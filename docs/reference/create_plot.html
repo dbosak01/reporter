@@ -86,7 +86,7 @@ plot function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -148,7 +148,12 @@ plot function." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -163,7 +168,7 @@ plot function." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create plot content</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/plot_spec.R'><code>R/plot_spec.R</code></a></small>
     <div class="hidden name"><code>create_plot.Rd</code></div>
     </div>
 
@@ -223,8 +228,8 @@ to add the plot object to a report.</p>
 <code><a href='print.plot_spec.html'>print.plot_spec</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>reporter</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 
 <span class='co'># Create temp file path</span>
@@ -246,26 +251,10 @@ to add the plot object to a report.</p>
 
 <span class='co'># Write out report</span>
 <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A report specification: 1 pages</span><span>
-#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\Rtmpe09NNY/mtcars.rtf'
-#&gt; - output_type: RTF
-#&gt; - units: inches
-#&gt; - orientation: landscape
-#&gt; - line size/count: 108/41
-#&gt; - page_header: left=Client right=Study: XYZ
-#&gt; - title 1: 'Figure 1.0'
-#&gt; - title 2: 'MTCARS Miles per Cylinder Plot'
-#&gt; - footnote 1: '* Motor Trend, 1974'
-#&gt; - page_footer: left=Time center=Confidential right=Page [pg] of [tpg]
-#&gt; - content: 
-#&gt; </span><span style='color: #555555;'># A plot specification: 
-#&gt; </span><span>- data: 32 rows, 11 cols
-#&gt; - layers: 1
-#&gt; - height: 4
-#&gt; - width: 8</div><div class='input'>
+
 <span class='co'># Uncomment to view RTF file</span>
 <span class='co'># shell.exec(tmp)</span>
-</div></span></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

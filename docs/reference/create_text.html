@@ -83,7 +83,7 @@ object of class 'text_spec'." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -145,7 +145,12 @@ object of class 'text_spec'." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -160,7 +165,7 @@ object of class 'text_spec'." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create text content</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/text_spec.R'><code>R/text_spec.R</code></a></small>
     <div class="hidden name"><code>create_text.Rd</code></div>
     </div>
 
@@ -214,7 +219,7 @@ to add the text object to a report.</p>
 <code><a href='print.text_spec.html'>print.text_spec</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>reporter</span><span class='op'>)</span>
+    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 
 <span class='co'># Create temp file path</span>
@@ -240,81 +245,10 @@ to add the text object to a report.</p>
 
 <span class='co'># Write the report to the file system</span>
 <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A report specification: 1 pages</span><span>
-#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\Rtmpe09NNY/mtcars.txt'
-#&gt; - output_type: TXT
-#&gt; - units: inches
-#&gt; - orientation: portrait
-#&gt; - line size/count: 78/60
-#&gt; - content: 
-#&gt; </span><span style='color: #555555;'># A text specification: 69 words
-#&gt; </span><span>- text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ...
-#&gt; - align: left
-#&gt; - title 1: 'Text Content 1.0'
-#&gt; - title 2: 'Sample Text Report'
-#&gt; - footnote 1: '* Cicero, 1st century BCE'</div><div class='input'>
+
 <span class='co'># Write the report to console</span>
 <span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                                Text Content 1.0
-#&gt;                               Sample Text Report
-#&gt; 
-#&gt; Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-#&gt; incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-#&gt; nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-#&gt; Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-#&gt; eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-#&gt; in culpa qui officia deserunt mollit anim id est laborum.
-#&gt; 
-#&gt; * Cicero, 1st century BCE
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; </div><div class='input'>
+
 <span class='co'>#                                Text Content 1.0</span>
 <span class='co'>#                               Sample Text Report</span>
 <span class='co'># </span>
@@ -327,7 +261,7 @@ to add the text object to a report.</p>
 <span class='co'># </span>
 <span class='co'># * Cicero, 1st century BCE</span>
 <span class='co'>#</span>
-</div></span></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

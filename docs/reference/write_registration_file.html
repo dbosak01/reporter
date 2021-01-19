@@ -81,7 +81,7 @@ the correct cpuom and lpuom for your editor/printer." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -143,7 +143,12 @@ the correct cpuom and lpuom for your editor/printer." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -158,7 +163,7 @@ the correct cpuom and lpuom for your editor/printer." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a registration file</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/report_spec.r'><code>R/report_spec.r</code></a></small>
     <div class="hidden name"><code>write_registration_file.Rd</code></div>
     </div>
 
@@ -214,7 +219,7 @@ the calculated cpuom and lpuom values until all content stays within
 the available space without wrapping or breaking.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>reporter</span><span class='op'>)</span>
+    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
 
 <span class='co'># Create temp file path</span>
 <span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"reg.txt"</span><span class='op'>)</span>
@@ -224,66 +229,7 @@ the available space without wrapping or breaking.</p>
 
 <span class='co'># Write registration file to the console</span>
 <span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 0--------+---------+---------+---------+---------+---------+
-#&gt; -       10        20        30        40        50        60
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; + 10
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; + 20
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; + 30
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; + 40
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; + 50
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; -
-#&gt; + 60</div><div class='input'>
+
 <span class='co'># 0--------+---------+---------+---------+---------+---------+</span>
 <span class='co'># -       10        20        30        40        50        60</span>
 <span class='co'># -</span>
@@ -344,7 +290,7 @@ the available space without wrapping or breaking.</p>
 <span class='co'># -</span>
 <span class='co'># -</span>
 <span class='co'># + 60</span>
-</div></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

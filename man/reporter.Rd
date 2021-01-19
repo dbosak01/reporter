@@ -86,7 +86,7 @@ assumptions and limitations are as follows:
   \strong{reporter}.
   \item Titles, footnotes, page headers, and page footers must fit in the 
   available space. If they don't, the \strong{reporter} package will 
-  generate an error.  In these situations, the recommended course of 
+  generate a warning.  In these situations, the recommended course of 
   action is to split the offending string into two or more strings that 
   fit within the available width.
   \item The \strong{reporter} package will never break a word. That means you 

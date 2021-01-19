@@ -1113,7 +1113,8 @@ title_header <- function(x, ..., right = "",
 #' 
 #' Each title string must fit within the available space.  The \strong{reporter}
 #' package will not wrap titles.  If a title does not fit within the 
-#' available space, an error will be generated.  In these situations, either
+#' available space, a warning will be generated and the title will be 
+#' truncated.  In these situations, either
 #' shorten the title or split it into multiple titles that each fit within the
 #' available space. 
 #'
@@ -1160,7 +1161,6 @@ title_header <- function(x, ..., right = "",
 #' 
 #' # Display in console
 #' writeLines(readLines(tmp, encoding = "UTF-8"))
-#' 
 #' #                               Table 1.0
 #' #               US Personal Expenditures from 1940 - 1960
 #' # 
@@ -1234,7 +1234,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' 
 #' Each footnote string must fit within the available space.  The \strong{reporter}
 #' package will not wrap footnotes.  If a footnote does not fit within the 
-#' available space, an error will be generated.  In these situations, either
+#' available space, a warning will be generated and the footnote will be 
+#' truncated.  In these situations, either
 #' shorten the footnote or split it into multiple footnotes that each fit within 
 #' the available space. 
 #' 
@@ -1249,9 +1250,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' For fixed width reports, the 
 #' border character will be taken from the value of the \code{uchar} parameter
 #' on the \code{\link{options_fixed}} function.
-#' @param valign The vertical position to align the footnotes.  Valid
-#' values are: 'top' and 'bottom'.  For footnotes attached to a report,
-#' default is 'bottom'.  For footnotes attached to content, default is 'top'.
+# @param valign The vertical position to align the footnotes.  Valid
+# values are: 'top' and 'bottom'.  For footnotes attached to a report,
+# default is 'bottom'.  For footnotes attached to content, default is 'top'.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1301,7 +1302,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' #     * In billions of dollars
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
-                      borders = "none", valign = NULL){
+                      borders = "none"
+                      #, valign = NULL
+                      ){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1315,10 +1318,10 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   if (!align %in% c("left", "right"))
     stop(paste("Align parameter invalid. Valid values are 'left' and 'right'"))
   
-  if (!is.null(valign)) {
-    if (!valign %in% c("top", "bottom"))
-      stop(paste("Valign parameter invalid. Valid values are 'top' and 'bottom'"))
-  } 
+  # if (!is.null(valign)) {
+  #   if (!valign %in% c("top", "bottom"))
+  #     stop(paste("Valign parameter invalid. Valid values are 'top' and 'bottom'"))
+  # } 
   
   if (!blank_row %in% c("above", "below", "both", "none"))
     stop(paste("Blank row parameter invalid.  Valid values are", 
@@ -1333,12 +1336,12 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   ftn$align <- align
   ftn$borders <- borders
   
-  if (is.null(valign)) {
-    if ("report_spec" %in% class(x))
-      ftn$valign <- "bottom"
-    else 
-      ftn$valign <- "top"
-  }
+  # if (is.null(valign)) {
+  #   if ("report_spec" %in% class(x))
+  #     ftn$valign <- "bottom"
+  #   else 
+  #     ftn$valign <- "top"
+  # }
   
   x$footnotes[[length(x$footnotes) + 1]] <- ftn
 

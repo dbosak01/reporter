@@ -85,7 +85,7 @@ page by variable prior to reporting." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -147,7 +147,12 @@ page by variable prior to reporting." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -162,7 +167,7 @@ page by variable prior to reporting." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Adds a page by variable</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/report_spec.r'><code>R/report_spec.r</code></a></small>
     <div class="hidden name"><code>page_by.Rd</code></div>
     </div>
 
@@ -237,7 +242,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 <code><a href='write_report.html'>write_report</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>reporter</span><span class='op'>)</span>
+    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 
 <span class='co'># Create temp file path</span>
@@ -261,205 +266,10 @@ the page by variable prior to reporting may produce unexpected results.</p>
 
 <span class='co'># Write the report to the file system</span>
 <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A report specification: 3 pages</span><span>
-#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\Rtmpe09NNY/iris.txt'
-#&gt; - output_type: TXT
-#&gt; - units: inches
-#&gt; - orientation: portrait
-#&gt; - line size/count: 78/60
-#&gt; - page_header: left=Sponsor: Iris Society right=Study: flowers
-#&gt; - title 1: 'Table 2.0'
-#&gt; - title 2: 'IRIS Sample Report with Page By'
-#&gt; - page_footer: left=2020-12-22 09:12:11 center= right=Page [pg] of [tpg]
-#&gt; - content: 
-#&gt; </span><span style='color: #555555;'># A table specification:
-#&gt; </span><span>- data: data.frame 'dat' 50 rows 5 cols
-#&gt; - show_cols: all
-#&gt; - use_attributes: all
-#&gt; - page by: Species
-#&gt; - define: Species visible='FALSE' </div><div class='input'>
+
 <span class='co'># Write report to console</span>
 <span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Sponsor: Iris Society                                           Study: flowers
-#&gt;                                    Table 2.0
-#&gt;                         IRIS Sample Report with Page By
-#&gt; 
-#&gt;               Species: setosa
-#&gt; 
-#&gt;               Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt;               ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#&gt;                        5.5         4.2          1.4         0.2
-#&gt;                        4.6         3.1          1.5         0.2
-#&gt;                        4.4         3.2          1.3         0.2
-#&gt;                        5.4         3.4          1.5         0.4
-#&gt;                        4.4         2.9          1.4         0.2
-#&gt;                        4.9         3.1          1.5         0.1
-#&gt;                        5.4         3.9          1.3         0.4
-#&gt;                        5.1         3.7          1.5         0.4
-#&gt;                        4.8         3.4          1.9         0.2
-#&gt;                          5         3.4          1.5         0.2
-#&gt;                        5.2         3.5          1.5         0.2
-#&gt;                        4.6         3.2          1.4         0.2
-#&gt;                        4.9         3.1          1.5         0.2
-#&gt;                        4.9           3          1.4         0.2
-#&gt;                        4.7         3.2          1.3         0.2
-#&gt;                        4.9         3.6          1.4         0.1
-#&gt;                        5.4         3.9          1.7         0.4
-#&gt;                        5.7         3.8          1.7         0.3
-#&gt;                        5.1         3.4          1.5         0.2
-#&gt;                        4.8         3.4          1.6         0.2
-#&gt;                          5         3.5          1.3         0.3
-#&gt;                        4.5         2.3          1.3         0.3
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 2020-12-22 09:12:11                                                Page 1 of 3
-#&gt; Sponsor: Iris Society                                           Study: flowers
-#&gt;                                    Table 2.0
-#&gt;                         IRIS Sample Report with Page By
-#&gt; 
-#&gt;               Species: versicolor
-#&gt; 
-#&gt;               Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt;               ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#&gt;                        5.6         2.5          3.9         1.1
-#&gt;                        5.6         2.7          4.2         1.3
-#&gt;                        5.6         2.9          3.6         1.3
-#&gt;                        5.8         2.7          3.9         1.2
-#&gt;                        6.1           3          4.6         1.4
-#&gt;                        6.4         2.9          4.3         1.3
-#&gt;                        5.5         2.5            4         1.3
-#&gt;                        6.7         3.1          4.7         1.5
-#&gt;                        5.8         2.7          4.1           1
-#&gt;                        6.1         2.9          4.7         1.4
-#&gt;                        5.7         2.9          4.2         1.3
-#&gt;                        5.9         3.2          4.8         1.8
-#&gt;                        5.5         2.3            4         1.3
-#&gt;                        6.7         3.1          4.4         1.4
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 2020-12-22 09:12:11                                                Page 2 of 3
-#&gt; Sponsor: Iris Society                                           Study: flowers
-#&gt;                                    Table 2.0
-#&gt;                         IRIS Sample Report with Page By
-#&gt; 
-#&gt;               Species: virginica
-#&gt; 
-#&gt;               Sepal.Length Sepal.Width Petal.Length Petal.Width
-#&gt;               ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#&gt;                        6.1         2.6          5.6         1.4
-#&gt;                        6.2         3.4          5.4         2.3
-#&gt;                        6.5           3          5.5         1.8
-#&gt;                        6.4         2.8          5.6         2.1
-#&gt;                        6.8         3.2          5.9         2.3
-#&gt;                        7.3         2.9          6.3         1.8
-#&gt;                        7.6           3          6.6         2.1
-#&gt;                        5.6         2.8          4.9           2
-#&gt;                        6.7           3          5.2         2.3
-#&gt;                        7.1           3          5.9         2.1
-#&gt;                          6           3          4.8         1.8
-#&gt;                        6.3         2.7          4.9         1.8
-#&gt;                        6.7         3.1          5.6         2.4
-#&gt;                        6.3         3.4          5.6         2.4
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 2020-12-22 09:12:11                                                Page 3 of 3</div><div class='input'>
+
 <span class='co'># Sponsor: Iris Society                                           Study: flowers</span>
 <span class='co'>#                                  Table 2.0</span>
 <span class='co'>#                       IRIS Sample Report with Page By</span>
@@ -542,7 +352,7 @@ the page by variable prior to reporting may produce unexpected results.</p>
 <span class='co'>#                       6.3         2.5            5         1.9</span>
 <span class='co'># ...</span>
 <span class='co'># 2020-10-25 19:33:35                                                Page 3 of 3 </span>
-</div></span></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

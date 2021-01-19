@@ -81,7 +81,7 @@ specifications provided in the object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -143,7 +143,12 @@ specifications provided in the object." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/dbosak01/reporter/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -158,7 +163,7 @@ specifications provided in the object." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Write a report to the file system</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/report_spec.r'><code>R/report_spec.r</code></a></small>
     <div class="hidden name"><code>write_report.Rd</code></div>
     </div>
 
@@ -235,8 +240,8 @@ report definition procedure.</p>
 <code><a href='titles.html'>titles</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>reporter</span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/dbosak01/fmtr'>fmtr</a></span><span class='op'>)</span>
+    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://fmtr.r-sassy.org'>fmtr</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 
 <span class='co'># Create temp file path</span>
@@ -246,8 +251,8 @@ report definition procedure.</p>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>beaver2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>, <span class='fl'>15</span><span class='op'>)</span>, <span class='op'>]</span>
 
 <span class='co'># Create format for active variable</span>
-<span class='va'>fmt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/fmtr/man/value.html'>value</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/fmtr/man/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span><span class='op'>)</span>,
-             <span class='fu'><a href='https://rdrr.io/pkg/fmtr/man/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>1</span>, <span class='st'>"Yes"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fmt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://fmtr.r-sassy.org/reference/value.html'>value</a></span><span class='op'>(</span><span class='fu'><a href='https://fmtr.r-sassy.org/reference/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span><span class='op'>)</span>,
+             <span class='fu'><a href='https://fmtr.r-sassy.org/reference/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>1</span>, <span class='st'>"Yes"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Create the table</span>
 <span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
@@ -268,71 +273,10 @@ report definition procedure.</p>
 
 <span class='co'># Write the modified report object to the console</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A report specification: 1 pages</span><span>
-#&gt; - file_path: 'C:\Users\User\AppData\Local\Temp\Rtmpe09NNY/beaver2.txt'
-#&gt; - output_type: TXT
-#&gt; - units: inches
-#&gt; - orientation: landscape
-#&gt; - line size/count: 108/45
-#&gt; - content: 
-#&gt; </span><span style='color: #555555;'># A table specification:
-#&gt; </span><span>- data: data.frame 'dat' 15 rows 4 cols
-#&gt; - show_cols: all
-#&gt; - use_attributes: all
-#&gt; - title 1: 'Table 1.0'
-#&gt; - title 2: 'BEAVERS Sample Report'
-#&gt; - footnote 1: '* NOTE: Data on beaver habits'
-#&gt; - define: day 'Day' 
-#&gt; - define: time 'Time' 
-#&gt; - define: temp 'Temperature' width=1 
-#&gt; - define: activ 'Active' </div><div class='input'>
+
 <span class='co'># Write the report to console</span>
 <span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                  Table 1.0
-#&gt;            BEAVERS Sample Report
-#&gt; 
-#&gt;       Day      Time  Temperature    Active
-#&gt; ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-#&gt;   Day 307      1450         37.3        No
-#&gt;   Day 307      1520         37.5        No
-#&gt;   Day 307      1030         37.2        No
-#&gt;   Day 307      1310         37.0        No
-#&gt;   Day 308         0         37.7       Yes
-#&gt;   Day 307      1500         37.3        No
-#&gt;   Day 307      2120         38.0       Yes
-#&gt;   Day 307      2130         37.8       Yes
-#&gt;   Day 307      1750         38.0       Yes
-#&gt;   Day 307      1910         37.8       Yes
-#&gt;   Day 307      1540         37.5        No
-#&gt;   Day 307      1330         37.1        No
-#&gt;   Day 307      1810         38.2       Yes
-#&gt;   Day 307      1510         37.4        No
-#&gt;   Day 307      1650         38.1       Yes
-#&gt; 
-#&gt; * NOTE: Data on beaver habits
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; 
-#&gt; </div><div class='input'>
+
 <span class='co'>#                 Table 1.0</span>
 <span class='co'>#           BEAVERS Sample Report</span>
 <span class='co'># </span>
@@ -355,7 +299,7 @@ report definition procedure.</p>
 <span class='co'>#  Day 308       130         37.8       Yes</span>
 <span class='co'># </span>
 <span class='co'># * NOTE: Data on beaver habits</span>
-</div></span></pre>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
