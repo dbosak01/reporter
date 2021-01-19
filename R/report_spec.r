@@ -389,6 +389,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' of measure, \code{\link{write_registration_file}} to determine the 
 #' characters and lines per unit of measure manually.
 #' @family report
+#' @encoding UTF-8
 #' @examples
 #' library(reporter)
 #' library(magrittr)
@@ -398,10 +399,10 @@ editor_settings <- read.table(header = TRUE, text = '
 #'
 #' # Define table
 #' tbl <- create_table(BOD, width = 2.5) %>% 
-#'   titles("Table 3.6", "BOD¹ Sample Report") %>% 
+#'   titles("Table 3.6", "BOD* Sample Report") %>% 
 #'   define(Time, format = "Day %s", align = "left") %>% 
 #'   define(demand, format = "%2.1f mg/l", label = "Demand") %>% 
-#'   footnotes("¹ Biochemical Oxygen Demand")
+#'   footnotes("* Biochemical Oxygen Demand")
 #'        
 #' # Define report #1 - No blank margins
 #' rpt <- create_report(tmp, orientation="portrait") %>%
