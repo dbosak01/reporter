@@ -245,7 +245,33 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   else
     ttls <- get_titles(ts$titles, ls, rs$uchar) 
   
-  ftnts <- get_footnotes(ts$footnotes, ls, rs$uchar) 
+  ftnts <- c()
+  vflag <- FALSE
+  
+  # Deal with valign paramter
+  if (!is.null(ts$footnotes)) {
+    if (!is.null(ts$footnotes[[length(ts$footnotes)]])) {
+      if (ts$footnotes[[length(ts$footnotes)]]$valign == "bottom") {
+
+        vflag <- TRUE
+        ftnts <- get_footnotes(ts$footnotes, rs$line_size, rs$uchar) 
+      } else {
+        
+        ftnts <- get_footnotes(ts$footnotes, ls, rs$uchar) 
+      }
+    
+    }
+  } else {
+
+    if (!is.null(rs$footnotes[[1]])) {
+      if (!is.null(rs$footnotes[[1]]$valign)) {
+        if (rs$footnotes[[1]]$valign == "top") {
+
+          ftnts <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar) 
+        } 
+      }
+    }
+  }
   #print("Titles")
   #print(ttls)
   
@@ -267,14 +293,34 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (content_blank_row %in% c("below", "both"))
     b <- ""
   
-  ret <- c(a, ttls, pgby, shdrs, hdrs, rws, ftnts, b)
-  
   blnks <- c()
-  len_diff <- rs$body_line_count - lpg_rows - length(ret)
-  if (wrap_flag & len_diff > 0) {
-    blnks <- rep("", len_diff)
-    ret <- c(ret, blnks) 
+  if (vflag) {
+    ret <- c(a, ttls, pgby, shdrs, hdrs, rws, b)
+
+    len_diff <- rs$body_line_count - lpg_rows - length(ret) - length(ftnts)
+    
+    # At some point will have to deal with wrap flag
+    # Right now cannot put anything in between end of content
+    # and the start of the footnote.  Edge case but should still
+    # fix at some point.
+    if (len_diff > 0) {
+      blnks <- rep("", len_diff)
+      ret <- c(ret, blnks, ftnts) 
+    }
+      
+  } else { 
+    
+    ret <- c(a, ttls, pgby, shdrs, hdrs, rws, ftnts, b)
+    
+    len_diff <- rs$body_line_count - lpg_rows - length(ret)
+    if (wrap_flag & len_diff > 0) {
+      blnks <- rep("", len_diff)
+      ret <- c(ret, blnks) 
+    }
+    
   }
+  
+
   
   return(ret) 
 }

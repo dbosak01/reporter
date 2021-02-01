@@ -395,3 +395,51 @@ test_that("ttfn18: Long title_header generates warning not error.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+
+test_that("ttfn19: footnote valign parameter checks work as expected.", {
+  
+  ftnt <- footnotes(list(), "MTCARS Data Frame 2",  valign = "top")
+  expect_equal(ftnt$footnotes[[1]]$valign, "top")
+   
+
+  expect_error(footnotes("MTCARS Data Frame 2",  valign = "fork"))
+  
+  
+})
+
+test_that("ttfn20: footnote valign parameter on report works as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn20.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("MTCARS Data Frame 1", align = "center") 
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", valign = "top") 
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("ttfn21: footnote valign parameter on table works as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn21.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("MTCARS Data Frame 1", align = "center") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", valign = "bottom") 
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center") 
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})

@@ -12,7 +12,14 @@ page_template_text <- function(rs) {
   pt$page_header <- get_page_header(rs)
   pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size, rs$uchar)
   pt$titles <- get_titles(rs$titles, rs$line_size + 1, rs$uchar)
-  pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size + 1, rs$uchar)
+  pt$footnotes <- c()
+  if (!is.null(rs$footnotes)) {
+    if (!is.null(rs$footnotes[[1]])) {
+      if (rs$footnotes[[1]]$valign == "bottom")
+        pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size + 1, rs$uchar)
+    }
+  
+  }
   pt$page_footer <- get_page_footer(rs)
   # Page by not here.  Messes up line counts.
   

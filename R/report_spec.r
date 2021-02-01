@@ -1251,9 +1251,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' For fixed width reports, the 
 #' border character will be taken from the value of the \code{uchar} parameter
 #' on the \code{\link{options_fixed}} function.
-# @param valign The vertical position to align the footnotes.  Valid
-# values are: 'top' and 'bottom'.  For footnotes attached to a report,
-# default is 'bottom'.  For footnotes attached to content, default is 'top'.
+#' @param valign The vertical position to align the footnotes.  Valid
+#' values are: 'top' and 'bottom'.  For footnotes attached to a report,
+#' default is 'bottom'.  For footnotes attached to content, default is 'top'.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1304,7 +1304,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
                       borders = "none"
-                      #, valign = NULL
+                      , valign = NULL
                       ){
 
   # Create footnote structure
@@ -1319,10 +1319,10 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   if (!align %in% c("left", "right"))
     stop(paste("Align parameter invalid. Valid values are 'left' and 'right'"))
   
-  # if (!is.null(valign)) {
-  #   if (!valign %in% c("top", "bottom"))
-  #     stop(paste("Valign parameter invalid. Valid values are 'top' and 'bottom'"))
-  # } 
+  if (!is.null(valign)) {
+    if (!valign %in% c("top", "bottom"))
+      stop(paste("Valign parameter invalid. Valid values are 'top' and 'bottom'"))
+  }
   
   if (!blank_row %in% c("above", "below", "both", "none"))
     stop(paste("Blank row parameter invalid.  Valid values are", 
@@ -1337,12 +1337,21 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   ftn$align <- align
   ftn$borders <- borders
   
-  # if (is.null(valign)) {
-  #   if ("report_spec" %in% class(x))
-  #     ftn$valign <- "bottom"
-  #   else 
-  #     ftn$valign <- "top"
-  # }
+  if ("report_spec" %in% class(x)) {
+    ftn$container <- "report" 
+  } else {
+    ftn$container <- "content" 
+  }
+  
+  if (is.null(valign)) {
+    if ("report_spec" %in% class(x))
+      ftn$valign <- "bottom"
+    else
+      ftn$valign <- "top"
+  } else {
+    
+   ftn$valign <- valign 
+  }
   
   x$footnotes[[length(x$footnotes) + 1]] <- ftn
 
