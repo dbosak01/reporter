@@ -3,7 +3,7 @@ context("System Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
 
-base_path <- tempdir()
+#base_path <- tempdir()
 
 test_that("test1: Simplest table works as expected.", {
   
@@ -2360,4 +2360,42 @@ test_that("test71: Column widths work as expected with fractional widths.", {
   expect_equal(length(lns), res$pages * res$line_count)
   expect_equal(res$pages, 1)
 })
+
+
+test_that("test72: Check column alignment", {
+  
+  
+  fp <- file.path(base_path, "output/test72.out")
+  
+  # Sample data
+  df <- read.table(header = TRUE, text = '
+  Country         N1   Mean1   SD1   N2   Mean2    SD2 
+  Bangladesh      52   25.03   0.02  43   22.31   0.08
+  Germany         42   95.01   1.02  53   9.31    0.09
+  Italy            2   20.22   0.00  11   8.09    1.11')
+  
+  
+  tbl <- create_table(df) %>% 
+    column_defaults(width = .5) %>% 
+    spanning_header(N1, SD1, label = "Treatment A") %>%
+    spanning_header(N2, SD2, label = "Treatment B") %>%
+    define(Country, width = 1) %>% 
+    titles("Table 1.0", "Treatments by Country") %>% 
+    footnotes("* Country of Site")
+  
+  rpt <- create_report(fp) %>% 
+    options_fixed(uchar = "-") %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt) 
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  expect_equal(res$pages, 1)
+  
+})
+
+
+subset(mtcars, mpg > 20)
 

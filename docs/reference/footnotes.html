@@ -45,6 +45,8 @@
 
 
 
+  
+  <script src="../extra.js"></script>
 
 <meta property="og:title" content="Adds a footnote block — footnotes" />
 <meta property="og:description" content="The footnotes function adds one or more footnotes to the report.  
@@ -72,7 +74,7 @@ Footnotes may also be added directly to table, text, or plot content." />
   <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -89,6 +91,9 @@ Footnotes may also be added directly to table, text, or plot content." />
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="../index.html">
     <span class="fas fa-home fa-lg"></span>
@@ -143,9 +148,7 @@ Footnotes may also be added directly to table, text, or plot content." />
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
+<li>
   <a href="https://github.com/dbosak01/reporter/">
     <span class="fab fa-github fa-lg"></span>
      
@@ -176,7 +179,14 @@ be added to the page template, and thus appear on each page of the report.
 Footnotes may also be added directly to table, text, or plot content.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>footnotes</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, align <span class='op'>=</span> <span class='st'>"left"</span>, blank_row <span class='op'>=</span> <span class='st'>"above"</span>, borders <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>footnotes</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>...</span>,
+  align <span class='op'>=</span> <span class='st'>"left"</span>,
+  blank_row <span class='op'>=</span> <span class='st'>"above"</span>,
+  borders <span class='op'>=</span> <span class='st'>"none"</span>,
+  valign <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,6 +216,12 @@ values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.
 For fixed width reports, the 
 border character will be taken from the value of the <code>uchar</code> parameter
 on the <code><a href='options_fixed.html'>options_fixed</a></code> function.</p></td>
+    </tr>
+    <tr>
+      <th>valign</th>
+      <td><p>The vertical position to align the footnotes.  Valid
+values are: 'top' and 'bottom'.  For footnotes attached to a report,
+default is 'bottom'.  For footnotes attached to content, default is 'top'.</p></td>
     </tr>
     </table>
 
