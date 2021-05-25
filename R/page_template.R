@@ -107,8 +107,9 @@ get_titles <- function(titles, width, uchar = "-") {
     
     for (ttl in titles) {
       
-      if (!any(class(ttl) == "title_spec"))
+      if (!any(class(ttl) == "title_spec")) {
         stop("titles parameter value is not a title spec.")
+      }
           
       if (ttl$blank_row %in% c("above", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
@@ -252,6 +253,102 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
   
   if (!is.null(title_hdr)) { 
     
+    for (ttl_hdr in title_hdr) {
+      
+      if (!any(class(ttl_hdr) == "title_hdr"))
+        stop("title header parameter value is not a title header.")
+      
+      if (ttl_hdr$blank_row %in% c("above", "both") & length(ttl_hdr$titles) > 0)
+        ret[length(ret) + 1] <- ""
+      
+      if (any(ttl_hdr$borders %in% c("top", "all")) & length(ttl_hdr$titles) > 0)
+        ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+      
+      maxlen <- length(ttl_hdr$titles)
+      if (length(ttl_hdr$right) > maxlen)
+        maxlen <- length(ttl_hdr$right)
+      
+      hdr <- ttl_hdr$right
+      
+      for (i in seq_len(maxlen)) {
+        
+        if (i <= length(ttl_hdr$titles))
+          t <- ttl_hdr$titles[i]
+        else 
+          t <- ""
+        
+        if (i <= length(hdr))
+          h <- hdr[i]
+        else 
+          h <- ""
+        
+        gp <- ll - nchar(t) - nchar(h)
+        
+        #print("titles")
+        if (gp >= 0) {
+          
+  
+            ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
+  
+          
+        } else {
+          warning(paste0("Title header exceeds available width.\n",
+                      "Title: ", t, "\n",
+                      "Header: ", h, "\n",
+                      "Title length: ", nchar(t), "\n",
+                      "Header length: ", nchar(h), "\n",
+                      "Line length: ", ll, "\n"))
+          
+          tgp <- ll - 3
+          if (tgp >= 0) {
+            
+            ln <- paste0(substr(paste0(stri_pad_right(t, ll - nchar(h)), h, " "), 
+                                1, tgp), "...")
+            
+          } else ln <- ""
+        }
+        
+        
+        ret[length(ret) + 1] <- ln
+      }
+      
+      if (any(ttl_hdr$borders %in% c("bottom", "all")) & 
+          length(ttl_hdr$titles) > 0)
+        ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+      
+      if (ttl_hdr$blank_row %in% c("below", "both") & 
+          length(ttl_hdr$titles) > 0)
+        ret[length(ret) + 1] <- ""
+  
+    
+    }
+  }
+  
+  
+  return(ret)
+}
+
+
+
+#' Get title header text strings suitable for printing
+#' @import stringi
+#' @param title_hdr A title_hdr object
+#' @param width The width to set the title header to
+#' @return A vector of strings
+#' @noRd
+get_title_header_back <- function(title_hdr, width, uchar = "-") {
+  
+  if (is.null(width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  
+  ll <- width
+  ret <- c()
+  
+  if (!is.null(title_hdr)) { 
+    
     if (!any(class(title_hdr) == "title_hdr"))
       stop("title header parameter value is not a title header.")
     
@@ -284,17 +381,17 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
       #print("titles")
       if (gp >= 0) {
         
-
-          ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
-
+        
+        ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
+        
         
       } else {
         warning(paste0("Title header exceeds available width.\n",
-                    "Title: ", t, "\n",
-                    "Header: ", h, "\n",
-                    "Title length: ", nchar(t), "\n",
-                    "Header length: ", nchar(h), "\n",
-                    "Line length: ", ll, "\n"))
+                       "Title: ", t, "\n",
+                       "Header: ", h, "\n",
+                       "Title length: ", nchar(t), "\n",
+                       "Header length: ", nchar(h), "\n",
+                       "Line length: ", ll, "\n"))
         
         tgp <- ll - 3
         if (tgp >= 0) {
@@ -316,13 +413,14 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
     if (title_hdr$blank_row %in% c("below", "both") & 
         length(title_hdr$titles) > 0)
       ret[length(ret) + 1] <- ""
-  
+    
     
   }
   
   
   return(ret)
 }
+
 
 #' Get footnote text strings suitable for printing
 #' @param rs The report spec

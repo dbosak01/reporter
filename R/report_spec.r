@@ -1050,8 +1050,10 @@ title_header <- function(x, ..., right = "",
   if (length(c(...)) > 10)
     stop("Limit of 10 titles reached.") 
   
-  if (length(x$titles) > 0)
+  if (!is.null(x$titles)){
+    x$titles
     stop("Cannot add both titles and a title header.")
+  }
   
   if (!is.null(x$page_header_left) | !is.null(x$page_header_right))
     stop("Cannot add both a page header and a title header.")
@@ -1070,7 +1072,7 @@ title_header <- function(x, ..., right = "",
   ttl_hdr$borders <- borders
   ttl_hdr$right <- right
   
-  x$title_hdr <- ttl_hdr
+  x$title_hdr[[length(x$title_hdr) + 1]] <- ttl_hdr
   
   return(x)
   

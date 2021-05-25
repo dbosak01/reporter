@@ -443,3 +443,50 @@ test_that("ttfn21: footnote valign parameter on table works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+
+test_that("ttfn22: Multiple title_headers works as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn22.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    title_header("MTCARS Data Frame 1", right ="One", blank_row = "none") %>% 
+    title_header("MTCARS Data Frame 2", right ="Two", blank_row = "none") %>% 
+    title_header("MTCARS Data Frame 3", right ="Three") %>% 
+    footnotes("MTCARS Data Frame 2", align = "left", 
+              borders = "top") 
+
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center")
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("ttfn23: Multiple title_headers with multiple titles works as expected.", {
+  
+  fp <- file.path(base_path, "titles/ttfn23.out")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    title_header("MTCARS Data Frame 1", "MTCARS Data Frame 1a",
+                 right ="One", blank_row = "none") %>% 
+    title_header("MTCARS Data Frame 2", right ="Two", blank_row = "none") %>% 
+    title_header("MTCARS Data Frame 3", right =c("Three", "Three A")) %>% 
+    footnotes("MTCARS Footnote 1", align = "left", 
+              borders = "top") 
+  
+  
+  rpt <- create_report(fp) %>% 
+    add_content(tbl, align = "center")
+  
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+

@@ -6,18 +6,24 @@ print_title_header <- function(t_hdr) {
   # Print title header
   if (!is.null(t_hdr)) {
     
-    mx <- max(length(t_hdr$titles), length(t_hdr$right))
-    
     ttlcnt <- 1
-    for (i in seq(1, mx)) {
+    
+    for (i in seq_along(t_hdr)) {
       
-      cat(paste0("- title header ", as.character(ttlcnt), ": "))
-      if (!is.na(t_hdr$titles[i]))
-        cat(paste0("'", t_hdr$titles[[i]], "' "))
-      if (!is.na(t_hdr$right[i]))
-        cat(paste0("right='", t_hdr$right[i], "'"))
+      mx <- max(length(t_hdr[[i]]$titles), length(t_hdr[[i]]$right))
       
-      cat("\n")
+      for (j in seq(1, mx)) {
+        
+        cat(paste0("- title header ", as.character(ttlcnt), ": "))
+        if (!is.na(t_hdr[[i]]$titles[j]))
+          cat(paste0("'", t_hdr[[i]]$titles[j], "' "))
+        
+        if (!is.na(t_hdr[[i]]$right[j]))
+          cat(paste0("right='", t_hdr[[i]]$right[j], "'"))
+        
+        cat("\n")
+        
+      }
       
       ttlcnt <- ttlcnt + 1
     }
@@ -25,6 +31,9 @@ print_title_header <- function(t_hdr) {
   
   
 }
+
+tslst <- c("one")
+is.na(tslst[2])
 
 
 #' @import crayon

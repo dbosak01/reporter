@@ -1,3 +1,7 @@
+# reporter 1.1.3
+
+* Allow user to add more than one title header.
+
 # reporter 1.1.2
 
 * Changed column width calculation to make sum of widths equal the total width of

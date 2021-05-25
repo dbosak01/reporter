@@ -168,10 +168,10 @@ test_that("title_header function works as expected.", {
   th <- tbl %>% title_header("Table 1.0", "MTCARS Sample Data",
                              right = c("One", "Two"), blank_row = "below")
   
-  expect_equal(is.null(th$title_hdr), FALSE)
-  expect_equal(length(th$title_hdr$titles), 2)
-  expect_equal(length(th$title_hdr$right), 2)
-  expect_equal(th$title_hdr$blank_row, "below")
+  expect_equal(is.null(th$title_hdr[[1]]), FALSE)
+  expect_equal(length(th$title_hdr[[1]]$titles), 2)
+  expect_equal(length(th$title_hdr[[1]]$right), 2)
+  expect_equal(th$title_hdr[[1]]$blank_row, "below")
 
   
 })
