@@ -4,6 +4,7 @@
 [![reporter lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://cran.r-project.org/package=reporter)
 [![reporter downloads](https://cranlogs.r-pkg.org/badges/grand-total/reporter)](https://cran.r-project.org/package=reporter)
 [![Travis build status](https://travis-ci.com/dbosak01/reporter.svg?branch=master)](https://travis-ci.com/dbosak01/reporter)
+[![R-CMD-check](https://github.com/dbosak01/reporter/workflows/R-CMD-check/badge.svg)](https://github.com/dbosak01/reporter/actions)
 <!-- badges: end -->
 
 # Introduction to **reporter**

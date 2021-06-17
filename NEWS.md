@@ -1,6 +1,7 @@
 # reporter 1.1.3
 
 * Allow user to add more than one title header.
+* Add GitHub Actions for prior R version checks.
 
 # reporter 1.1.2
 

@@ -259,7 +259,7 @@ test_that("user2: demo table with stub works.", {
     
     
     # Stub decode
-    block_fmt <- c(AGE = "Age", SEX = "Sex", RACE = "Race")
+    block_fmt <- c(AGE = "Age", SEX = "Sex", RACE2 = "Race")
     
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE) %>%
