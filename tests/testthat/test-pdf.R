@@ -15,7 +15,11 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
 
 dev <- FALSE
 
+options(tinytex.verbose = TRUE)
+
 test_that("pdf1: Simplest table works as expected.", {
+  
+
   
   if (dev & rmarkdown::pandoc_available("1.12.3")) {
   
