@@ -841,7 +841,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
   # print(paste("Page size:", page_size))
   # print(paste("Last Page Rows:", lpg_rows))
   # print(paste("Content offset:", offset))
-
+  print("Top of Get Page Breaks")
   
   for (i in seq_len(nrow(x))){
     
@@ -873,6 +873,8 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
     } else
       userForce <- FALSE
     
+    print("Middle of Get Page Breaks")
+    
     # After comparison, set last page value
     lastPage <- currentPage
 
@@ -893,6 +895,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
     # print(pg)
   }
 
+  print("End of Get Page Breaks")
   
   # Convert ..page back to number if necessary
   if (class(x$..page) != "numeric")
