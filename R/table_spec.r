@@ -203,7 +203,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   ret <- structure(list(), class = c("table_spec", "list"))
 
   ret$data <- x
-  ret$dataname <- deparse1(substitute(x, env = environment()))
+  ret$dataname <- paste0(deparse(substitute(x, env = environment())))
   ret$n_format <- n_format
   ret$col_defs <- list()
   ret$col_spans <- list()
