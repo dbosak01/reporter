@@ -19,7 +19,7 @@ Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues
 SystemRequirements: pandoc (>= 1.12.3)
-Depends: R (>= 4.0.0)
+Depends: R (>= 3.6.0)
 Suggests: 
     testthat,
     magrittr,
