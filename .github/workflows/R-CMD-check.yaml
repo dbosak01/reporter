@@ -40,7 +40,9 @@ jobs:
           r-version: ${{ matrix.config.r }}
 
       - uses: r-lib/actions/setup-pandoc@v1
-      - uses: r-lib/actions/setup-tinytex@v1
+      - uses: xu-cheng/latex-action@v2
+        with:
+          latexmk_use_xelatex: true
 
       - name: Query dependencies
         run: |
