@@ -12,7 +12,8 @@ spanning_header(
   label_align = "center",
   level = 1,
   n = NULL,
-  underline = TRUE
+  underline = TRUE,
+  standard_eval = FALSE
 )
 }
 \arguments{
@@ -20,14 +21,16 @@ spanning_header(
 
 \item{from}{The starting column to span.  Spanning columns are defined as
 range of columns 'from' and 'to'. The columns may be identified by position, 
-or by quoted or unquoted variable names. If you want to pass an R variable,
-escape the value with double curly braces, i.e. \code{from = {{myvar}}}.
+or by quoted or unquoted variable names. If you want to pass the \code{from} 
+value using an R variable,
+set the \code{standard_eval} parameter to TRUE.
 The \code{from} parameter is required.}
 
 \item{to}{The ending column to span.  Spanning columns are defined as
 range of columns 'from' and 'to'. The columns may be identified by position,
-or by quoted or unquoted variable names.  If you want to pass an R variable,
-escape the value with double curly braces, i.e. \code{to = {{myvar}}}.
+or by quoted or unquoted variable names.  If you want to pass the \code{to} 
+value using an R variable,
+set the \code{standard_eval} parameter to TRUE.
 The \code{to} parameter is required.}
 
 \item{label}{The label to apply to the spanning header.}
@@ -46,6 +49,12 @@ parameter on the \code{\link{create_table}} function.}
 
 \item{underline}{A TRUE or FALSE value indicating whether the spanning
 header should be underlined.  Default is TRUE.}
+
+\item{standard_eval}{A TRUE or FALSE value that indicates whether to
+use standard or non-standard evaluation of the \code{from},
+and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
+to pass the column names as variables. Default is FALSE, meaning it
+will use non-standard (unquoted) evaluation.}
 }
 \value{
 The modified table spec.

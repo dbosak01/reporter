@@ -1,5 +1,7 @@
 context("Table Spec Tests")
 
+
+
 test_that("table spec constructor operator works as expected.", {
   
 
@@ -412,3 +414,81 @@ test_that("column_defaults escape works as expected.", {
   
   
 })
+
+test_that("standard_eval parameter works as expected for define.", {
+  
+  tmp <- "mpg"
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    define(tmp, format = "%.1f", standard_eval = TRUE) 
+  
+  expect_equal(length(tbl$col_defs), 1)
+  expect_equal(tbl$col_defs[[1]]$var_c, "mpg")
+  
+})
+
+test_that("standard_eval parameter works as expected for column_defaults", {
+  
+  tmp <- "mpg" 
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    column_defaults(tmp, width = 2, standard_eval = TRUE)
+
+  
+  expect_equal(length(tbl$col_dflts), 1)
+  expect_equal(tbl$col_dflts[[1]]$vars, "mpg")
+  
+  
+  tmp1 <- "mpg" 
+  tmp2 <- "cyl"
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    column_defaults(from = tmp1, to = tmp2, width = 2, standard_eval = TRUE)
+  
+  
+  expect_equal(length(tbl$col_dflts), 1)
+  expect_equal(tbl$col_dflts[[1]]$from, "mpg")
+  expect_equal(tbl$col_dflts[[1]]$to, "cyl")
+  
+  
+  
+})
+
+test_that("standard_eval parameter works as expected for spanning_header.", {
+  
+  tmp1 <- "mpg" 
+  tmp2 <- "cyl"
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    spanning_header(from = tmp1, to = tmp2, standard_eval = TRUE)
+  
+  
+  expect_equal(length(tbl$col_spans), 1)
+  expect_equal(tbl$col_spans[[1]]$from, "mpg")
+  expect_equal(tbl$col_spans[[1]]$to, "cyl")
+  
+  
+  
+  
+})
+
+test_that("standard_eval parameter works as expected for stub", {
+  
+  tmp1 <- c("mpg", "cyl") 
+  
+  
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    stub(vars = tmp1, standard_eval = TRUE)
+  
+  
+  expect_equal(length(tbl$stub), 3)
+  expect_equal(tbl$stub$vars, c("mpg", "cyl"))
+  
+  
+  
+  
+})
+
+
+

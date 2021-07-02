@@ -270,8 +270,8 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @param vars The variable name or names to define a column for.  Names may
 #' be quoted or unquoted.  If defining for multiple variables, 
 #' pass them as a vector of names.  If you want to pass an R variable of names,
-#' escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
-#' The curly brace escape is useful when writing functions that construct
+#' set the \code{standard_eval} parameter to TRUE .
+#' The \code{standard_eval} parameter is useful when writing functions that construct
 #' reports dynamically. 
 #' @param label The label to use for the column header.  If a label is assigned
 #' to the label column attribute, it will be used as a default.  Otherwise,
@@ -331,6 +331,10 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' set to TRUE.  This parameter is often used in conjunction with the 
 #' \code{\link{stub}} function and \code{indent} parameter to create a 
 #' stub column.
+#' @param standard_eval A TRUE or FALSE value indicating whether to 
+#' use standard evaluation on the \code{vars} parameter value.  Default is
+#' FALSE.  Set this parameter to TRUE if you want to pass the \code{vars}
+#' value(s) using a variable.
 #' @return The modified table spec.
 #' @family table
 #' @examples
@@ -412,26 +416,40 @@ define <- function(x, vars, label = NULL, format = NULL,
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
-                   page_break = FALSE, indent = NULL, label_row = FALSE) {
+                   page_break = FALSE, indent = NULL, label_row = FALSE,
+                   standard_eval = FALSE) {
   
-  
-  # Determine if it is a vector or not.  "language" is a vector.
-  if (typeof(substitute(vars, env = environment())) == "language") 
-    v <- substitute(vars, env = environment())
-  else 
-    v <- substitute(list(vars), env = environment())
-  
-  # Turn each item into a character
-  vars_c <- c()
-  if (length(v) > 1) {
-    for (i in 2:length(v)) {
-      vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+  if (standard_eval) {
+    if (typeof(vars) != "character") {
+      
+      stop("Type of vars parameter must be character when standard_eval is TRUE.")
     }
+    
+    vars_c <- vars
+    
+  } else {
+    
+    # Determine if it is a vector or not.  "language" is a vector.
+    if (typeof(substitute(vars, env = environment())) == "language") 
+      v <- substitute(vars, env = environment())
+    else 
+      v <- substitute(list(vars), env = environment())
+  
+    # Turn each item into a character
+    vars_c <- c()
+    if (length(v) > 1) {
+      for (i in 2:length(v)) {
+        vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+      }
+      
+    }
+    
+    # Convert list to vector
+    vars_c <- unlist(vars_c)
     
   }
   
-  # Convert list to vector
-  vars_c <- unlist(vars_c)
+
   
   # Deal with curly brace escape
   if (length(vars_c) > 0) {
@@ -546,8 +564,8 @@ define_c <- function(var, label = NULL, format = NULL,
 #' integer column positions instead of names.  For multiple variables, 
 #' pass the names or positions as a vector. If you want to pass an R variable 
 #' of names,
-#' escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
-#' The curly brace escape is useful when writing functions that construct
+#' set the \code{standard_eval} parameter to TRUE.
+#' The \code{standard_eval} parameter is useful when writing functions that construct
 #' reports dynamically. 
 #' @param from The variable name or position that starts a column range.  
 #' If passed as a variable name, it may be quoted or unquoted.
@@ -575,6 +593,11 @@ define_c <- function(var, label = NULL, format = NULL,
 #' @param n The n value to place in the "N=" header label.  Formatting for
 #' the n value will be performed by the formatting function assigned to the 
 #' \code{n_format} parameter on \code{\link{create_table}}.
+#' @param standard_eval A TRUE or FALSE value that indicates whether to
+#' use standard or non-standard evaluation of the \code{vars}, \code{from},
+#' and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
+#' to pass the column names as variables. Default is FALSE, meaning it
+#' will use non-standard (unquoted) evaluation.
 #' @return The modified table spec.
 #' @family table
 #' @examples
@@ -624,48 +647,63 @@ define_c <- function(var, label = NULL, format = NULL,
 #' @export
 column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL, 
                   format = NULL, align=NULL, label_align=NULL, width=NULL,
-                   n = NULL) {
+                   n = NULL, standard_eval = FALSE) {
   
   if (!"table_spec" %in% class(x))
     stop("Input object must be of class 'table_spec'.")
 
+  if (standard_eval) {
+    
+    if (is.null(vars)) {
+      
+      vars_c <- character(0)
+    } else {
+      if (typeof(vars) != "character")
+        stop("vars parameter must be a character if standard_eval is TRUE.")
+    
+      vars_c <- vars
+    }
+    
+  } else {
   
-  # Determine if it is a vector or not.  "language" is a vector.
+    # Determine if it is a vector or not.  "language" is a vector.
+    
+    if (typeof(substitute(vars, env = environment())) == "language") {
+      ret <- tryCatch({
+        if (is.numeric(vars)) {
+          names(x$data)[vars]
+          
+        }
   
-  if (typeof(substitute(vars, env = environment())) == "language") {
-    ret <- tryCatch({
-      if (is.numeric(vars)) {
-        names(x$data)[vars]
+      }, error = function(e) {
+        FALSE
+      })
+      
+      if (all(ret == FALSE))
+        v <- substitute(vars, env = environment())
+      else 
+        v <- ret
+      
+    } else 
+      v <- substitute(list(vars), env = environment())
+    
+    
+    # Turn each item into a character
+    if (!is.character(v)) {
+      vars_c <- c()
+      if (length(v) > 1) {
+        for (i in 2:length(v)) {
+          vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+        }
         
       }
-
-    }, error = function(e) {
-      FALSE
-    })
+    } else 
+      vars_c <- v
     
-    if (all(ret == FALSE))
-      v <- substitute(vars, env = environment())
-    else 
-      v <- ret
-    
-  } else 
-    v <- substitute(list(vars), env = environment())
+    # Convert list to vector
+    vars_c <- unlist(vars_c)
   
-  
-  # Turn each item into a character
-  if (!is.character(v)) {
-    vars_c <- c()
-    if (length(v) > 1) {
-      for (i in 2:length(v)) {
-        vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
-      }
-      
-    }
-  } else 
-    vars_c <- v
-  
-  # Convert list to vector
-  vars_c <- unlist(vars_c)
+  }
   
   # Deal with curly brace escape
   if (length(vars_c) > 0) {
@@ -690,8 +728,26 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
   if (!identical(vars_c, character(0)))
     dflt$vars = vars_c
   
-  # Assign from value
-  f <- as.character(substitute(from, env = environment()))
+  if (standard_eval) {
+    
+    if (is.null(from)) {
+      
+      f <- character(0)
+      
+    } else {
+      if (typeof(from) != "character" )
+        stop("from parameter must be of type character if standard_eval = TRUE.")
+      
+      f <- from
+    }
+    
+  } else {
+  
+    # Assign from value
+    f <- as.character(substitute(from, env = environment()))
+  
+  }
+  
   if (!identical(f, character(0))) {
     
     # Deal with curly brace escape for from
@@ -714,8 +770,28 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
     dflt$from =  f
   }
   
-  # Assign to value
-  t <- as.character(substitute(to, env = environment()))
+  
+  
+  if (standard_eval) {
+    
+    if (is.null(to)) {
+      
+      t <- character(0)
+      
+    } else {
+      if (typeof(to) != "character")
+        stop("to parameter must be of type character if standard_eval = TRUE.")
+      
+      t <- to
+    }
+    
+  } else {
+    
+    # Assign to value
+    t <- as.character(substitute(to, env = environment()))
+    
+  }
+  
   if (!identical(t, character(0))) {
     
     # Deal with curly brace escape for to
@@ -779,13 +855,15 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @param x The table object to add spanning headers to.
 #' @param from The starting column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position, 
-#' or by quoted or unquoted variable names. If you want to pass an R variable,
-#' escape the value with double curly braces, i.e. \code{from = {{myvar}}}.
+#' or by quoted or unquoted variable names. If you want to pass the \code{from} 
+#' value using an R variable,
+#' set the \code{standard_eval} parameter to TRUE.
 #' The \code{from} parameter is required.  
 #' @param to The ending column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position,
-#' or by quoted or unquoted variable names.  If you want to pass an R variable,
-#' escape the value with double curly braces, i.e. \code{to = {{myvar}}}.
+#' or by quoted or unquoted variable names.  If you want to pass the \code{to} 
+#' value using an R variable,
+#' set the \code{standard_eval} parameter to TRUE.
 #' The \code{to} parameter is required. 
 #' @param label The label to apply to the spanning header.
 #' @param label_align The alignment to use for the label. Valid values are 
@@ -799,6 +877,11 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' parameter on the \code{\link{create_table}} function.
 #' @param underline A TRUE or FALSE value indicating whether the spanning
 #' header should be underlined.  Default is TRUE.  
+#' @param standard_eval A TRUE or FALSE value that indicates whether to
+#' use standard or non-standard evaluation of the \code{from},
+#' and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
+#' to pass the column names as variables. Default is FALSE, meaning it
+#' will use non-standard (unquoted) evaluation.
 #' @return The modified table spec.
 #' @family table
 #' @examples 
@@ -870,12 +953,24 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @export
 spanning_header <- function(x, from, to, label = "",
                             label_align = "center", level = 1, n = NULL,
-                            underline = TRUE) {
+                            underline = TRUE, standard_eval = FALSE) {
   
+  if (standard_eval) {
+    
+    if (typeof(from) != "character")
+      stop("from parameter must be a type of character if standard_eval is TRUE.")
+    
+    if (typeof(to) != "character")
+      stop("to parameter must be a type of character if standard_eval is TRUE.")
+    
+    f <- from
+    t <- to
+    
+  } else {
   
-  f <- as.character(substitute(from, env = environment()))
-  t <- as.character(substitute(to, env = environment()))
-  
+    f <- as.character(substitute(from, env = environment()))
+    t <- as.character(substitute(to, env = environment()))
+  }
 
   # Deal with curly brace escape for from
   if (length(f) > 1) {
@@ -1050,6 +1145,11 @@ spanning_header <- function(x, from, to, label = "",
 #' @param width The width of the stub, in report units of measure.
 #' @param align How to align the stub column.  Valid values are 'left', 
 #' 'right', 'center', and 'centre'.  Default is 'left'.
+#' @param standard_eval A TRUE or FALSE value that indicates whether to
+#' use standard or non-standard evaluation of the \code{vars}, \code{from},
+#' and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
+#' to pass the column names as variables. Default is FALSE, meaning it
+#' will use non-standard (unquoted) evaluation.
 #' @return The modified table spec.
 #' @family table
 #' @examples 
@@ -1126,24 +1226,34 @@ spanning_header <- function(x, from, to, label = "",
 #' #
 #' @export
 stub <- function(x, vars, label = "", label_align = NULL, 
-                 align = "left", width = NULL) {
+                 align = "left", width = NULL, standard_eval = FALSE) {
   
   def <- structure(list(), class = c("stub_def", "list"))
   
-  
-  # Determine if it is a vector or not.  "language" is a vector.
-  if (typeof(substitute(vars, env = environment())) == "language") 
-    v <- substitute(vars, env = environment())
-  else 
-    v <- substitute(list(vars), env = environment())
-  
-  # Turn each item into a character
-  vars_c <- c()
-  if (length(v) > 1) {
-    for (i in 2:length(v)) {
-      vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
-    }
+  if (standard_eval) {
     
+    if (typeof(vars) != "character") 
+      stop("vars parameter must be of type character if standard_eval is TRUE.")
+    
+    vars_c <- vars
+    
+  } else {
+  
+    # Determine if it is a vector or not.  "language" is a vector.
+    if (typeof(substitute(vars, env = environment())) == "language") 
+      v <- substitute(vars, env = environment())
+    else 
+      v <- substitute(list(vars), env = environment())
+    
+    # Turn each item into a character
+    vars_c <- c()
+    if (length(v) > 1) {
+      for (i in 2:length(v)) {
+        vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
+      }
+      
+    }
+  
   }
   
   # Convert list to vector

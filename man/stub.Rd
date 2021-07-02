@@ -4,7 +4,15 @@
 \alias{stub}
 \title{Defines a report stub}
 \usage{
-stub(x, vars, label = "", label_align = NULL, align = "left", width = NULL)
+stub(
+  x,
+  vars,
+  label = "",
+  label_align = NULL,
+  align = "left",
+  width = NULL,
+  standard_eval = FALSE
+)
 }
 \arguments{
 \item{x}{The table spec.}
@@ -26,6 +34,12 @@ the \code{align} parameter.}
 'right', 'center', and 'centre'.  Default is 'left'.}
 
 \item{width}{The width of the stub, in report units of measure.}
+
+\item{standard_eval}{A TRUE or FALSE value that indicates whether to
+use standard or non-standard evaluation of the \code{vars}, \code{from},
+and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
+to pass the column names as variables. Default is FALSE, meaning it
+will use non-standard (unquoted) evaluation.}
 }
 \value{
 The modified table spec.

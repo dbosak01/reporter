@@ -3,6 +3,11 @@
 * Allow user to add more than one title header.
 * Add GitHub Actions for prior R version checks.
 * Made _output_type_ parameter case insensitive.
+* Added _standard_eval_ parameter to `define()`, `spanning_header()`,
+and `column_defaults()` functions.  These parameters will replace curly brace 
+escape on those functions.
+Curly brace escape will remain active for backward compatibility, but is 
+no longer documented.
 
 # reporter 1.1.2
 

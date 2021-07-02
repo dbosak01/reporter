@@ -14,7 +14,8 @@ column_defaults(
   align = NULL,
   label_align = NULL,
   width = NULL,
-  n = NULL
+  n = NULL,
+  standard_eval = FALSE
 )
 }
 \arguments{
@@ -25,8 +26,8 @@ names may be quoted or unquoted.  The parameter will also accept
 integer column positions instead of names.  For multiple variables, 
 pass the names or positions as a vector. If you want to pass an R variable 
 of names,
-escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
-The curly brace escape is useful when writing functions that construct
+set the \code{standard_eval} parameter to TRUE.
+The \code{standard_eval} parameter is useful when writing functions that construct
 reports dynamically.}
 
 \item{from}{The variable name or position that starts a column range.
@@ -62,6 +63,12 @@ In other words, \code{write_report} will not break words.}
 \item{n}{The n value to place in the "N=" header label.  Formatting for
 the n value will be performed by the formatting function assigned to the 
 \code{n_format} parameter on \code{\link{create_table}}.}
+
+\item{standard_eval}{A TRUE or FALSE value that indicates whether to
+use standard or non-standard evaluation of the \code{vars}, \code{from},
+and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
+to pass the column names as variables. Default is FALSE, meaning it
+will use non-standard (unquoted) evaluation.}
 }
 \value{
 The modified table spec.

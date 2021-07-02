@@ -86,7 +86,7 @@ sophisticated options like page wrapping and page breaking." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
       </span>
     </div>
 
@@ -197,7 +197,8 @@ sophisticated options like page wrapping and page breaking.</p>
   page_wrap <span class='op'>=</span> <span class='cn'>FALSE</span>,
   page_break <span class='op'>=</span> <span class='cn'>FALSE</span>,
   indent <span class='op'>=</span> <span class='cn'>NULL</span>,
-  label_row <span class='op'>=</span> <span class='cn'>FALSE</span>
+  label_row <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  standard_eval <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -212,8 +213,8 @@ sophisticated options like page wrapping and page breaking.</p>
       <td><p>The variable name or names to define a column for.  Names may
 be quoted or unquoted.  If defining for multiple variables, 
 pass them as a vector of names.  If you want to pass an R variable of names,
-escape the values with double curly braces, i.e. <code>vars = {{myvar}}</code>.
-The curly brace escape is useful when writing functions that construct
+set the <code>standard_eval</code> parameter to TRUE .
+The <code>standard_eval</code> parameter is useful when writing functions that construct
 reports dynamically.</p></td>
     </tr>
     <tr>
@@ -315,6 +316,13 @@ If <code>label_row</code> is set to TRUE, the dedupe parameter will also be
 set to TRUE.  This parameter is often used in conjunction with the 
 <code><a href='stub.html'>stub</a></code> function and <code>indent</code> parameter to create a 
 stub column.</p></td>
+    </tr>
+    <tr>
+      <th>standard_eval</th>
+      <td><p>A TRUE or FALSE value indicating whether to 
+use standard evaluation on the <code>vars</code> parameter value.  Default is
+FALSE.  Set this parameter to TRUE if you want to pass the <code>vars</code>
+value(s) using a variable.</p></td>
     </tr>
     </table>
 

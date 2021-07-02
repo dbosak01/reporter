@@ -20,7 +20,8 @@ define(
   page_wrap = FALSE,
   page_break = FALSE,
   indent = NULL,
-  label_row = FALSE
+  label_row = FALSE,
+  standard_eval = FALSE
 )
 }
 \arguments{
@@ -29,8 +30,8 @@ define(
 \item{vars}{The variable name or names to define a column for.  Names may
 be quoted or unquoted.  If defining for multiple variables, 
 pass them as a vector of names.  If you want to pass an R variable of names,
-escape the values with double curly braces, i.e. \code{vars = {{myvar}}}.
-The curly brace escape is useful when writing functions that construct
+set the \code{standard_eval} parameter to TRUE .
+The \code{standard_eval} parameter is useful when writing functions that construct
 reports dynamically.}
 
 \item{label}{The label to use for the column header.  If a label is assigned
@@ -104,6 +105,11 @@ If \code{label_row} is set to TRUE, the dedupe parameter will also be
 set to TRUE.  This parameter is often used in conjunction with the 
 \code{\link{stub}} function and \code{indent} parameter to create a 
 stub column.}
+
+\item{standard_eval}{A TRUE or FALSE value indicating whether to 
+use standard evaluation on the \code{vars} parameter value.  Default is
+FALSE.  Set this parameter to TRUE if you want to pass the \code{vars}
+value(s) using a variable.}
 }
 \value{
 The modified table spec.
