@@ -141,11 +141,14 @@ create_report <- function(file_path = "", output_type = "TXT",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!output_type %in% c("TXT", "PDF", "RTF")) {
+  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
                 "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
+  } else {
+    
+    output_type <- toupper(output_type) 
   }
   
   # Trap missing or invalid orientation parameter.
@@ -1875,13 +1878,13 @@ write_report <- function(x, file_path = NULL,
   
   # Trap missing or invalid output_type parameter
   if (!is.null(output_type)) {
-    if (!output_type %in% c("TXT", "PDF", "RTF")) {
+    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF")) {
       
       stop(paste0("output_type parameter on create_report() ",
                   "function is invalid: '", output_type,
                   "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
     }
-    x$output_type <- output_type
+    x$output_type <- toupper(output_type)
 
     x <- options_fixed(x, font_size = x$font_size)
   }

@@ -13,7 +13,7 @@ test_that("create_report sets default values appropriately", {
 
 test_that("create_report changes parameters appropriately", {
   
-  ret <- create_report(output_type = "TXT", orientation = "portrait")
+  ret <- create_report(output_type = "txt", orientation = "portrait")
   
   expect_equal(ret$orientation, "portrait")
   expect_equal(ret$output_type, "TXT")
@@ -25,7 +25,7 @@ test_that("create_report changes parameters appropriately", {
 test_that("create_report traps invalid parameters", {
   
   expect_error(create_report(orientation = "porait"))
-  expect_error(create_report(output_type = "txt"))
+  expect_error(create_report(output_type = "text"))
   
   
 })

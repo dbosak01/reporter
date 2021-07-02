@@ -174,6 +174,7 @@
 <ul>
 <li>Allow user to add more than one title header.</li>
 <li>Add GitHub Actions for prior R version checks.</li>
+<li>Made <em>output_type</em> parameter case insensitive.</li>
 </ul>
 </div>
     <div id="reporter-112" class="section level1">
@@ -183,10 +184,10 @@
 <ul>
 <li>Changed column width calculation to make sum of widths equal the total width of the table. Previously it was excluding the column gutter from the calculation.</li>
 <li>Removed error on title/footnote width being too long. Changed to warning and truncated text instead, so the user can at least see what is going on.</li>
-<li>Integrated logging functionality with logr package. write_report() will now log results automatically when logr autolog is enabled.</li>
-<li>Added underline parameter to spanning_header to turn it on or off</li>
+<li>Integrated logging functionality with <strong>logr</strong> package. <code><a href="../reference/write_report.html">write_report()</a></code> will now log results automatically when logr autolog is enabled.</li>
+<li>Added <em>underline</em> parameter to <code><a href="../reference/spanning_header.html">spanning_header()</a></code> to turn it on or off</li>
 <li>Added 8pt font</li>
-<li>Added border property to titles, footnotes, and title_header functions</li>
+<li>Added <em>border</em> property to <code><a href="../reference/titles.html">titles()</a></code>, <code><a href="../reference/footnotes.html">footnotes()</a></code>, and <code><a href="../reference/title_header.html">title_header()</a></code> functions.</li>
 <li>Added {{}} double curly escape on parameters accepting unquoted parameters, so that users could pass them as variables inside a function.</li>
 <li>Added pkgdown site</li>
 <li>Fixed bug on deleting image files in the temp directory.</li>
@@ -198,7 +199,7 @@
 <a href="#reporter-106" class="anchor"></a>reporter 1.0.6<small> 2020-11-20 </small>
 </h1>
 <ul>
-<li>Added support for survminer graphics in create_plot()</li>
+<li>Added support for <strong>survminer</strong> graphics in <code><a href="../reference/create_plot.html">create_plot()</a></code>.</li>
 </ul>
 </div>
     <div id="reporter-105" class="section level1">

@@ -2,6 +2,7 @@
 
 * Allow user to add more than one title header.
 * Add GitHub Actions for prior R version checks.
+* Made _output_type_ parameter case insensitive.
 
 # reporter 1.1.2
 
@@ -9,11 +10,12 @@
 the table.  Previously it was excluding the column gutter from the calculation.
 * Removed error on title/footnote width being too long.  Changed to warning
 and truncated text instead, so the user can at least see what is going on.
-* Integrated logging functionality with logr package.  write_report() will
+* Integrated logging functionality with **logr** package.  `write_report()` will
 now log results automatically when logr autolog is enabled.
-* Added underline parameter to spanning_header to turn it on or off
+* Added _underline_ parameter to `spanning_header()` to turn it on or off
 * Added 8pt font
-* Added border property to titles, footnotes, and title_header functions
+* Added _border_ property to `titles()`, `footnotes()`, and `title_header()` 
+functions.
 * Added {{}} double curly escape on parameters accepting unquoted parameters, 
 so that users could pass them as variables inside a function.
 * Added pkgdown site
@@ -22,7 +24,7 @@ so that users could pass them as variables inside a function.
 
 # reporter 1.0.6
 
-* Added support for survminer graphics in create_plot()
+* Added support for **survminer** graphics in `create_plot()`.
 
 # reporter 1.0.5
 
