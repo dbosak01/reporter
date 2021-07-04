@@ -12,9 +12,9 @@
 #' @noRd
 write_report_pdf <- function(rs) {
   
-  if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
-   stop("pandoc version >= 1.12.3 is required. Install to continue.") 
-  }
+  # if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
+  #  stop("pandoc version >= 1.12.3 is required. Install to continue.") 
+  # }
   
   debug <- FALSE
   
@@ -211,15 +211,15 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   # Can't figure out how to get rid of it.
   # So going to suppress it for now.
   # Other fonts sizes shouldn't have any warnings.
-  if (rs$font_size == 8) {
-    suppressWarnings(rmarkdown::render(rmd_path, 
-                                       rmarkdown::pdf_document(), t1, 
-                                       quiet = TRUE))
-  } else {
-    rmarkdown::render(rmd_path, 
-                      rmarkdown::pdf_document(), t1, 
-                      quiet = TRUE)
-  }
+  # if (rs$font_size == 8) {
+  #   suppressWarnings(rmarkdown::render(rmd_path, 
+  #                                      rmarkdown::pdf_document(), t1, 
+  #                                      quiet = TRUE))
+  # } else {
+  #   rmarkdown::render(rmd_path, 
+  #                     rmarkdown::pdf_document(), t1, 
+  #                     quiet = TRUE)
+  # }
   
   file.copy(t1, pdf_path)
 

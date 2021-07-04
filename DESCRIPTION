@@ -1,7 +1,7 @@
 Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
-Version: 1.1.3
+Version: 1.2
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports.
@@ -28,7 +28,6 @@ Suggests:
     readr,
     knitr,          
     ggplot2,
-    rmarkdown,
     gridExtra,
     survminer,
     utils,

@@ -8,6 +8,10 @@ and `column_defaults()` functions.  These parameters will replace curly brace
 escape on those functions.
 Curly brace escape will remain active for backward compatibility, but is 
 no longer documented.
+* Figured out how to generate PDF files directly, instead of using 
+Latex/Rmarkdown/MikTex/Pandoc.  Will greatly reduce dependencies and make
+the **reporter** package much easier to install and test.  All makes it much
+easier to accurately render the PDF file.
 
 # reporter 1.1.2
 
