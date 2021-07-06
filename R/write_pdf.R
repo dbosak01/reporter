@@ -141,21 +141,27 @@ render.pdf_document <- function(x) {
   xrefs <- c()
   
   for (itm in x) {
-    tmp <-  render(itm) 
-    cnts[length(cnts) + 1] <- tmp
-    
     
     # Sum up the number of bytes for all previous objects
     # Add 4 bytes for the binary designator
-    xrefs[length(xrefs) + 1] <- sum(nchar(cnts, type = "bytes")) + 4
+    xrefs[length(xrefs) + 1] <- sum(sum(nchar(cnts, type = "bytes")), # Number of bytes
+                                4,   # Double by chars on second line
+                                (length(cnts) * 2) - 4, # 1 extra for each line
+                                1) # offset to first character of block
+    
+    #print(itm$id)
+    tmp <-  render(itm) 
+    #print(tmp)
+    cnts[length(cnts) + 1] <- tmp
     
   }
   
-  
   cnt <- paste0(cnts, collapse = "")
+  
+  sm <- sum(nchar(cnt), 4, (length(cnts) * 2), 2)
 
   ret <- paste0(cnt, render.xref(xrefs, x[[1]]$id, 
-                                  nchar(cnt)), 
+                                  sm), 
                                   "%%EOF",
                                   collapse = "")
   
@@ -165,7 +171,6 @@ render.pdf_document <- function(x) {
 }
 
 
-#' @exportS3Method render pdf_document
 render.xref <- function(xrefs, rootID, startpos) {
   
   ret <- paste0("xref\n", "0 ", length(xrefs) + 1, "\n")
@@ -177,7 +182,7 @@ render.xref <- function(xrefs, rootID, startpos) {
     
   ret <- paste0(ret, refs)
   
-  ret <- paste0(ret, "trailer", 
+  ret <- paste0(ret, "trailer ", 
                 render(pdf_dictionary(Size = length(xrefs) + 1, 
                                       Root = paste(rootID, "0 R"))),
                 "\n", 
@@ -204,10 +209,20 @@ pdf_document <- function(...) {
   
   for (itm in lst) {
     
-    if (!"pdf_object"  %in% class(itm))
-      stop("Document item must be of class pdf_object.")
-    else 
+    if ("pdf_object" %in% class(itm)) {
       doc[[itm$id]] <- itm
+    } else if (all("list" %in% class(itm))){
+      
+      for (sub in itm) {
+        if (!"pdf_object"  %in% class(sub))
+          stop("Document subitem must be of class pdf_object.")
+        else 
+          doc[[sub$id]] <- sub
+      }
+        
+    } else 
+      stop("Document item must be of class pdf_object.")
+      
   }
   
   
@@ -275,5 +290,35 @@ pdf_stream <- function(id, contents = NULL) {
   strm$contents <- contents
   
   return(strm)
+}
+
+
+
+pdf_header <- function() {
+  
+  lst <- list()
+  
+  lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
+                                           Pages = "2 0 R"))
+  
+  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Pages",
+                                           Kids = pdf_array("3 0 R"),
+                                           Count = 1))
+  
+  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Page",
+                                           Parent = "2 0 R",
+                                           Resources = "4 0 R",
+                                           MediaBox = pdf_array(0, 0, 600, 700),
+                                           Contents = "6 0 R"))
+  lst[[4]] <- pdf_object(4, pdf_dictionary(Font = pdf_dictionary(F1 = "5 0 R")))
+  
+  lst[[5]] <- pdf_object(5, pdf_dictionary(Type = "/Font", 
+                                           Subtype = "/Type1", 
+                                           BaseFont = "/Courier"))
+  
+  
+  
+  return(lst)
+  
 }
 

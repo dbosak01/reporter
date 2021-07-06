@@ -161,3 +161,36 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   
 })
 
+test_that("create full document works as expected.", {
+  
+  
+  
+  strm <- pdf_stream(6, paste0(
+                     "BT /F1 12 Tf 175 600 Td (Hello)Tj ET\n",
+                     "BT /F1 12 Tf 175 580 Td (World)Tj ET\n"))
+  
+  doc <- pdf_document(pdf_header(), strm)
+  
+  expect_equal(length(doc), 6)
+  expect_equal("pdf_document" %in% class(doc), TRUE)
+  
+  res <- render(doc)
+  
+  cat(res)
+  
+  fp <- file.path(base_path, "pdf/direct1.pdf")
+  
+  
+  
+  f <- file(fp, open="w+", encoding = "native.enc")
+  
+  
+  writeLines(enc2utf8(res), con = f, useBytes = TRUE)
+  
+  
+  close(f)
+  
+  
+  
+})
+
