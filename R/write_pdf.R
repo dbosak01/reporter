@@ -123,7 +123,7 @@ render.pdf_stream <- function(x) {
   
   strm <-   paste0("stream\n", cnts, "\nendstream\n")
   
-  obj <- pdf_object(x$id, pdf_dictionary(Length = nchar(cnts)), strm)
+  obj <- pdf_object(x$id, pdf_dictionary(Length = nchar(cnts) + 1), strm)
                                          
   
   ret <- render.pdf_object(obj)
@@ -158,7 +158,7 @@ render.pdf_document <- function(x) {
   
   cnt <- paste0(cnts, collapse = "")
   
-  sm <- sum(nchar(cnt), 4, (length(cnts) * 2), 2)
+  sm <- sum(nchar(cnt), 4, (length(cnts) * 2))
 
   ret <- paste0(cnt, render.xref(xrefs, x[[1]]$id, 
                                   sm), 

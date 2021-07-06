@@ -167,7 +167,7 @@ test_that("create full document works as expected.", {
   
   strm <- pdf_stream(6, paste0(
                      "BT /F1 12 Tf 175 600 Td (Hello)Tj ET\n",
-                     "BT /F1 12 Tf 175 580 Td (World)Tj ET\n"))
+                     "BT /F1 12 Tf 175 580 Td (World)Tj ET"))
   
   doc <- pdf_document(pdf_header(), strm)
   
