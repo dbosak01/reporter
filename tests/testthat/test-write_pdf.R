@@ -159,15 +159,38 @@ test_that("pdf_document and render.pdf_document work as expected.", {
                            "trailer<</Size 3 /Root 1 0 R>>\n",
                            "startxref\n125\n%%EOF"))
   
+  
+  tmp <- c("\n%PDF\n-1.P7\n",
+           "%âãÏÓ\n")
+  
+  tmp <- "fork"
+  
+  cnt <- grep("P", tmp, value = TRUE) 
+  cnt
+  
+  sum(tmp %in% '\n')
+  
+  stringi::stri_count(tmp, fixed="\n")
+  
+  
+  # 
+  # nchar(tmp, type = "chars")
+  # nchar(tmp, type = "bytes")
+  # nchar(enc2utf8(tmp), type = "chars")
+  # nchar(enc2utf8(tmp), type = "bytes")
+  
+  
 })
 
 test_that("create full document works as expected.", {
   
   
   
-  strm <- pdf_stream(6, paste0(
-                     "BT /F1 12 Tf 175 600 Td (Hello)Tj ET\n",
-                     "BT /F1 12 Tf 175 580 Td (World)Tj ET"))
+  strm <- pdf_stream(6, c(
+                     "BT /F1 12 Tf 175 600 Td (Hello here is some more)Tj ET",
+                     "BT /F1 12 Tf 175 580 Td (There I like text.)Tj ET",
+                     "BT /F1 12 Tf 175 560 Td (World and more)Tj ET", 
+                     "BT /F1 12 Tf 175 540 Td (And some more)Tj ET"))
   
   doc <- pdf_document(pdf_header(), strm)
   
@@ -193,4 +216,42 @@ test_that("create full document works as expected.", {
   
   
 })
+
+
+test_that("chars function works as expected.", {
+  
+  
+  tmp <- c("there",
+           "here\n")
+  
+  res <- chars(tmp)
+  
+  
+  if (Sys.info()["sysname"] == "Windows") {
+  
+    expect_equal(res, 11)
+  } else {
+    
+    expect_equal(res, 10)
+    
+  }
+  
+  
+  tmp <- c("%PDF-1.P7\n",
+           "%âãÏÓ\n")
+  
+  
+  res <- chars(tmp)
+  
+  
+  if (Sys.info()["sysname"] == "Windows") {
+    expect_equal(res, 22)
+    
+  } else {
+    
+    expect_equal(res, 20)
+  }
+  
+  
+}) 
 

@@ -119,17 +119,17 @@ render.pdf_dictionary <- function(x) {
 render.pdf_stream <- function(x) {
   
 
-  cnts <- render(x$contents)
+  cnts <- paste0(x$contents, collapse = "\n")
+  cnts <- paste0(cnts, "\n")
   
-  strm <-   paste0("stream\n", cnts, "\nendstream\n")
+  strm <-   paste0("stream\n", cnts, "endstream\n")
   
-  obj <- pdf_object(x$id, pdf_dictionary(Length = nchar(cnts) + 1), strm)
+  obj <- pdf_object(x$id, pdf_dictionary(Length = chars(cnts)), strm)
                                          
   
   ret <- render.pdf_object(obj)
   
   return(ret)
-  
   
 }
 
@@ -143,11 +143,8 @@ render.pdf_document <- function(x) {
   for (itm in x) {
     
     # Sum up the number of bytes for all previous objects
-    # Add 4 bytes for the binary designator
-    xrefs[length(xrefs) + 1] <- sum(sum(nchar(cnts, type = "bytes")), # Number of bytes
-                                4,   # Double by chars on second line
-                                (length(cnts) * 2) - 4, # 1 extra for each line
-                                1) # offset to first character of block
+    # Plus 1 to offset to first character of block
+    xrefs[length(xrefs) + 1] <- chars(cnts) + 1 
     
     #print(itm$id)
     tmp <-  render(itm) 
@@ -158,7 +155,7 @@ render.pdf_document <- function(x) {
   
   cnt <- paste0(cnts, collapse = "")
   
-  sm <- sum(nchar(cnt), 4, (length(cnts) * 2))
+  sm <- sum(chars(cnt), 1)
 
   ret <- paste0(cnt, render.xref(xrefs, x[[1]]$id, 
                                   sm), 
@@ -322,3 +319,21 @@ pdf_header <- function() {
   
 }
 
+
+# Utilities ---------------------------------------------------------------
+
+
+#' Takes a vector of lines and returns the number of bytes.
+#' Extra bytes are added for the end characters depending on the OS.
+chars <- function(lines) {
+  
+  
+  ret <- sum(nchar(enc2utf8(lines), type = "bytes"))
+  
+  
+  if (Sys.info()["sysname"] == "Windows") {
+    ret <- ret + sum(stringi::stri_count(lines, fixed = "\n")) - 2
+  }
+  
+  return(ret)
+}
