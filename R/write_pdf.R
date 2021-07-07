@@ -1,19 +1,93 @@
+pointsize <- 1/72
+inchsize <- 72
 
 # Write PDF ---------------------------------------------------------------
 
 #' A function to write out a PDF file
 #' @noRd
-write_pdf <- function(contents, 
-                      page_size = NULL, 
+write_pdf <- function(filename, contents, 
+                      page_height = 8.5,
+                      page_width = 11,
                       fontname = "Courier", 
-                      fontsize = "10",
-                      margins = NULL) {
+                      fontsize = 10,
+                      margin_top = 1,
+                      margin_left = 1, 
+                      info = FALSE,
+                      author = "",
+                      title = "",
+                      subject = "",
+                      keywords = "") {
+  
+  # Check font size is valid
+  if (!fontsize %in% c(8, 10, 12))
+    stop(paste0("Fontsize ", fontsize, " not valid."))
+  
+  # Remove existing file if needed
+  if (file.exists(filename))
+    file.remove(filename)
+  
+  bp <- dirname(base_path)
+  
+  # Check that base path exists
+  if (!file.exists(bp))
+    stop(paste0("Base path '", bp, "' does not exist."))
+  
+  stx <- margin_left * inchsize
+  sty <- (page_height * inchsize) -  (margin_top * inchsize)
+  lh <- fontsize  + (fontsize * .5) 
+                
+  
+  hd <- pdf_header(fontname = fontname,
+                   pageheight = (page_height * inchsize),
+                   pagewidth = (page_width * inchsize))
+  
+  strm <- pdf_stream(6, get_stream(contents,
+                                   stx,
+                                   sty,
+                                   lh,
+                                   fontsize))
+  
+  if (info) {
+    
+    i <- Sys.info()
+    
+    inf <- pdf_info(7, author = author,
+                    title = title, 
+                    subject = subject,
+                    keywords = keywords)
+    
+    doc <- pdf_document(hd, strm, inf)
+    
+  } else {
+
+    doc <- pdf_document(hd, strm)
+  }
+  
+  rdoc <- render.pdf_document(doc)
   
   
+  f <- file(filename, open="w+", encoding = "native.enc")
   
   
+  writeLines(enc2utf8(rdoc), con = f, useBytes = TRUE)
   
   
+  close(f)
+  
+}
+
+#' @noRd
+get_stream <- function(contents, startx, starty, lineheight, fontsize) {
+ 
+
+  ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
+  
+  ret <- paste0("BT /F1 ", fontsize, 
+                " Tf ", startx, " ", ypos, " Td (", 
+                contents, ")Tj ET")
+  
+  
+  return(ret)
   
 }
 
@@ -133,12 +207,42 @@ render.pdf_stream <- function(x) {
   
 }
 
+#' @exportS3Method render pdf_info
+render.pdf_info <- function(x) {
+  
+  
+  # Get current time
+  tm <- Sys.time()
+  cdt <- paste0(as.character(tm, "D:%Y%m%d%H%M%S"), 
+                stri_sub(as.character(tm, "%z"), 1, 3), "'",
+                stri_sub(as.character(tm, "%z"), 4, 5), "'")
+  
+  
+  dict <- pdf_dictionary(Producer = paste0("(", x$producer, ")"),
+                         Author = paste0("(", x$author, ")"),
+                         Title = paste0("(", x$title, ")"),
+                         Subject = paste0("(", x$subject, ")"),
+                         Creator = paste0("(", x$creator, ")"),
+                         Keywords = paste0("(", paste(x$keywords, collapse = " ")
+                                           , ")\n"),
+                         CreationDate = paste0("(", cdt, ")"),
+                         ModDate = paste0("(", cdt, ")"))
+  
+  obj <- pdf_object(x$id, dict)
+  
+  ret <- render.pdf_object(obj)
+  
+  
+  return(ret)
+}
+
 #' @exportS3Method render pdf_document
 render.pdf_document <- function(x) {
   
   
   cnts <- c("%PDF-1.7\n", "%âãÏÓ\n")
   xrefs <- c()
+  infoid <- NULL
   
   for (itm in x) {
     
@@ -151,13 +255,17 @@ render.pdf_document <- function(x) {
     #print(tmp)
     cnts[length(cnts) + 1] <- tmp
     
+    if ("pdf_info" %in% class(itm))
+      infoid <- itm$id
+    
   }
   
   cnt <- paste0(cnts, collapse = "")
   
   sm <- sum(chars(cnt), 1)
 
-  ret <- paste0(cnt, render.xref(xrefs, x[[1]]$id, 
+
+  ret <- paste0(cnt, render.xref(xrefs, x[[1]]$id, infoid,
                                   sm), 
                                   "%%EOF",
                                   collapse = "")
@@ -168,7 +276,7 @@ render.pdf_document <- function(x) {
 }
 
 
-render.xref <- function(xrefs, rootID, startpos) {
+render.xref <- function(xrefs, rootID, infoID, startpos) {
   
   ret <- paste0("xref\n", "0 ", length(xrefs) + 1, "\n")
   
@@ -179,9 +287,15 @@ render.xref <- function(xrefs, rootID, startpos) {
     
   ret <- paste0(ret, refs)
   
+  dict <- pdf_dictionary(Size = length(xrefs) + 1, 
+                         Root = paste(rootID, "0 R"))
+  
+  if (!is.null(infoID)) {
+
+    dict$Info <- paste(infoID, "0 R")    
+  } 
   ret <- paste0(ret, "trailer ", 
-                render(pdf_dictionary(Size = length(xrefs) + 1, 
-                                      Root = paste(rootID, "0 R"))),
+                render(dict),
                 "\n", 
                 "startxref\n",
                 startpos, "\n")
@@ -291,7 +405,9 @@ pdf_stream <- function(id, contents = NULL) {
 
 
 
-pdf_header <- function() {
+pdf_header <- function(fontname = "Courier", 
+                       pageheight = 612, 
+                       pagewidth = 792) {
   
   lst <- list()
   
@@ -305,18 +421,41 @@ pdf_header <- function() {
   lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Page",
                                            Parent = "2 0 R",
                                            Resources = "4 0 R",
-                                           MediaBox = pdf_array(0, 0, 600, 700),
+                                           MediaBox = pdf_array(0, 0, 
+                                                                pagewidth, 
+                                                                pageheight),
                                            Contents = "6 0 R"))
   lst[[4]] <- pdf_object(4, pdf_dictionary(Font = pdf_dictionary(F1 = "5 0 R")))
   
   lst[[5]] <- pdf_object(5, pdf_dictionary(Type = "/Font", 
                                            Subtype = "/Type1", 
-                                           BaseFont = "/Courier"))
+                                           BaseFont = paste0("/", fontname)))
   
   
   
   return(lst)
   
+}
+
+pdf_info <- function(id, 
+                     author = NULL, title = NULL,
+                     subject = NULL, creator = NULL,
+                     keywords = NULL) {
+  
+  
+  info <- structure(list(), class = c("pdf_info", "pdf_object", "list"))
+  
+  info$id <- id
+  info$producer <- paste0("reporter v", getNamespaceVersion("reporter"))
+  info$author <- author
+  info$title <- title
+  info$subject <- subject
+  info$creator <- R.Version()["version.string"]
+  info$keywords <- keywords
+  info$create_date <- Sys.time()
+  info$mod_date <- Sys.time()
+  
+  return(info)
 }
 
 
@@ -325,6 +464,7 @@ pdf_header <- function() {
 
 #' Takes a vector of lines and returns the number of bytes.
 #' Extra bytes are added for the end characters depending on the OS.
+#' @noRd
 chars <- function(lines) {
   
   

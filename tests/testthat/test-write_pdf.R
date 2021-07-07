@@ -112,6 +112,35 @@ test_that("pdf_stream and render.pdf_stream work as expected.", {
 })
 
 
+test_that("pdf_info works as expected.", {
+  
+  inf <- pdf_info(25,
+                  author = "David",
+                  keywords = c("PDF", "document"),
+                  title = "My Doc",
+                  subject = "My Subject")
+                  
+
+  inf
+  
+  expect_equal(inf[["id"]], 25)
+  expect_equal(inf$producer, paste0("reporter v", 
+                                    getNamespaceVersion("reporter")))
+  expect_equal(inf$keywords, c("PDF", "document"))
+  expect_equal(inf$title, "My Doc")
+  expect_equal(inf$subject, "My Subject")
+  expect_equal(inf$author, "David")
+  expect_equal(is.null(inf$create_date), FALSE)
+  expect_equal(is.null(inf$mod_date), FALSE)
+  
+  
+  res <- render.pdf_info(inf)
+  
+  #cat(res)
+  
+  expect_equal(nchar(res), 212)
+  
+})
 
 
 test_that("render.xref works as expected.", {
@@ -160,26 +189,7 @@ test_that("pdf_document and render.pdf_document work as expected.", {
                            "startxref\n125\n%%EOF"))
   
   
-  tmp <- c("\n%PDF\n-1.P7\n",
-           "%âãÏÓ\n")
-  
-  tmp <- "fork"
-  
-  cnt <- grep("P", tmp, value = TRUE) 
-  cnt
-  
-  sum(tmp %in% '\n')
-  
-  stringi::stri_count(tmp, fixed="\n")
-  
-  
-  # 
-  # nchar(tmp, type = "chars")
-  # nchar(tmp, type = "bytes")
-  # nchar(enc2utf8(tmp), type = "chars")
-  # nchar(enc2utf8(tmp), type = "bytes")
-  
-  
+
 })
 
 test_that("create full document works as expected.", {
@@ -203,8 +213,7 @@ test_that("create full document works as expected.", {
   
   fp <- file.path(base_path, "pdf/direct1.pdf")
   
-  
-  
+
   f <- file(fp, open="w+", encoding = "native.enc")
   
   
@@ -213,7 +222,7 @@ test_that("create full document works as expected.", {
   
   close(f)
   
-  
+  expect_equal(file.exists(fp), TRUE)
   
 })
 
@@ -254,4 +263,64 @@ test_that("chars function works as expected.", {
   
   
 }) 
+
+
+test_that("get_stream function works as expected.", {
+  
+  contents <- c("Hello", "goodbye", "later")
+  
+  
+  res <- get_stream(contents, 50, 600, 20, 12)
+  
+  
+  expect_equal(length(res), 3)
+  
+  expect_equal(res[[3]], "BT /F1 12 Tf 50 560 Td (later)Tj ET")
+  
+})
+
+test_that("basic write_pdf works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct2.pdf")
+  
+
+  cnts <- c("Hello", "There", "Here is some text")
+  
+  write_pdf(fp, cnts, fontsize = 8, info = FALSE)
+
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+
+test_that("write_pdf with info works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct3.pdf")
+  
+  
+  cnts <- c("Hello", "There", "Here is some text")
+  
+  write_pdf(fp, cnts, info = TRUE, author = "David Bosak",
+            keywords = "one two three", subject = "Reporting",
+            title = "PDF 1.0")
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+
+test_that("write_pdf with info defaults work as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct4.pdf")
+  
+  
+  cnts <- c("Hello", "There", "Here is some text")
+  
+  write_pdf(fp, cnts, info = TRUE)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+
 
