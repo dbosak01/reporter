@@ -21,6 +21,8 @@ write_pdf <- function(filename, contents,
   # Check font size is valid
   if (!fontsize %in% c(8, 10, 12))
     stop(paste0("Fontsize ", fontsize, " not valid."))
+  else 
+    fontsize <- fontsize - 1
   
   # Remove existing file if needed
   if (file.exists(filename))
@@ -32,40 +34,62 @@ write_pdf <- function(filename, contents,
   if (!file.exists(bp))
     stop(paste0("Base path '", bp, "' does not exist."))
   
+  # Get x starting position in points
   stx <- margin_left * inchsize
-  sty <- (page_height * inchsize) -  (margin_top * inchsize)
-  lh <- fontsize  + (fontsize * .5) 
-                
   
+  # Get y starting position in points
+  sty <- (page_height * inchsize) -  (margin_top * inchsize)
+  
+  # Calculate reasonable line height
+  lh <- fontsize  + round(fontsize * .3) 
+                
+  # Get header objects
   hd <- pdf_header(fontname = fontname,
                    pageheight = (page_height * inchsize),
-                   pagewidth = (page_width * inchsize))
+                   pagewidth = (page_width * inchsize),
+                   length(contents))
+
+  # Get stream objects
+  strmlst <- list()
+  for (pg in contents) {
+    
+    idno <- length(hd) + length(strmlst) + 1
+    
+    strmlst[[length(strmlst) + 1]] <- pdf_stream(idno, 
+                                                 get_stream(pg,
+                                                 stx,
+                                                 sty,
+                                                 lh,
+                                                 fontsize))
+  }
   
-  strm <- pdf_stream(6, get_stream(contents,
-                                   stx,
-                                   sty,
-                                   lh,
-                                   fontsize))
-  
+
+  # Add info if desired
   if (info) {
     
     i <- Sys.info()
     
-    inf <- pdf_info(7, author = author,
+    idno <- length(hd) + length(strmlst) + 1
+    
+    inf <- pdf_info(idno, author = author,
                     title = title, 
                     subject = subject,
                     keywords = keywords)
     
-    doc <- pdf_document(hd, strm, inf)
+    doc <- pdf_document(hd, strmlst, inf)
     
   } else {
 
-    doc <- pdf_document(hd, strm)
+    doc <- pdf_document(hd, strmlst)
   }
   
+  # Render document
   rdoc <- render.pdf_document(doc)
   
   
+  # Write document to file system
+  # Encoding is important.  Has to be UTF-8.
+  # This is the only way to do it on Windows.
   f <- file(filename, open="w+", encoding = "native.enc")
   
   
@@ -275,18 +299,31 @@ render.pdf_document <- function(x) {
   
 }
 
-
+#' Create cross-reference table
+#' @noRd
 render.xref <- function(xrefs, rootID, infoID, startpos) {
   
+  
+  # Create first entry of cross reference table
   ret <- paste0("xref\n", "0 ", length(xrefs) + 1, "\n")
   
-  ret <- paste0(ret, "0000000000 65535 f\n")
   
-  
-  refs <- paste0(sprintf("%010d", xrefs), " 00000 n\n", collapse = "")
+  # Dynamically create subsequent entries
+  # Windows has two character end character, 
+  # and therefore doesn't need an extra space.
+  # Total width has to be 20 characters exactly.
+  if (Sys.info()[["sysname"]] == "Windows") {
+    ret <- paste0(ret, "0000000000 65535 f\n")
+    refs <- paste0(sprintf("%010d", xrefs), " 00000 n\n", collapse = "")
+  } else {
+    ret <- paste0(ret, "0000000000 65535 f \n")
+    refs <- paste0(sprintf("%010d", xrefs), " 00000 n \n", collapse = "")
+  }
     
+  # Combine first and subsequent entries
   ret <- paste0(ret, refs)
   
+  # Create dictionary for trailer
   dict <- pdf_dictionary(Size = length(xrefs) + 1, 
                          Root = paste(rootID, "0 R"))
   
@@ -294,6 +331,8 @@ render.xref <- function(xrefs, rootID, infoID, startpos) {
 
     dict$Info <- paste(infoID, "0 R")    
   } 
+  
+  # Create trailer
   ret <- paste0(ret, "trailer ", 
                 render(dict),
                 "\n", 
@@ -405,32 +444,45 @@ pdf_stream <- function(id, contents = NULL) {
 
 
 
-pdf_header <- function(fontname = "Courier", 
+pdf_header <- function(pagecount = 1, 
+                       fontname = "Courier", 
                        pageheight = 612, 
                        pagewidth = 792) {
   
   lst <- list()
   
   lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
-                                           Pages = "2 0 R"))
+                                           Pages = "4 0 R"))
   
-  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Pages",
-                                           Kids = pdf_array("3 0 R"),
-                                           Count = 1))
+  lst[[2]] <- pdf_object(2, pdf_dictionary(Font = pdf_dictionary(F1 = "3 0 R")))
   
-  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Page",
-                                           Parent = "2 0 R",
-                                           Resources = "4 0 R",
-                                           MediaBox = pdf_array(0, 0, 
-                                                                pagewidth, 
-                                                                pageheight),
-                                           Contents = "6 0 R"))
-  lst[[4]] <- pdf_object(4, pdf_dictionary(Font = pdf_dictionary(F1 = "5 0 R")))
-  
-  lst[[5]] <- pdf_object(5, pdf_dictionary(Type = "/Font", 
+  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Font", 
                                            Subtype = "/Type1", 
                                            BaseFont = paste0("/", fontname)))
   
+  pgseq <- seq(5, 4 + pagecount)
+
+  kds <- paste(pgseq, "0 R", collapse = " ")
+  
+  lst[[4]] <- pdf_object(4, pdf_dictionary(Type = "/Pages",
+                                           Kids = pdf_array(kds),
+                                           Count = pagecount))
+  
+  strmseq <- seq(max(pgseq) + 1, max(pgseq) + pagecount)
+  
+  for ( i in seq_along(pgseq)) {
+    lst[[pgseq[i]]] <- pdf_object(pgseq[i], 
+                                  pdf_dictionary(Type = "/Page",
+                                           Parent = "4 0 R",
+                                           Resources = "2 0 R",
+                                           MediaBox = pdf_array(0, 0, 
+                                                                pagewidth, 
+                                                                pageheight),
+                                           Contents = paste(strmseq[i], "0 R")))
+
+  }
+  
+
   
   
   return(lst)

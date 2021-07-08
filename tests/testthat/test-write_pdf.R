@@ -192,6 +192,44 @@ test_that("pdf_document and render.pdf_document work as expected.", {
 
 })
 
+
+test_that("pdf_header works as expected.", {
+  
+  # Check one page
+  hdr <- pdf_header(pagecount = 1)
+  
+  expect_equal(length(hdr), 5)
+  
+  hdrtxt <- render(pdf_document(hdr))
+  
+  cat(hdrtxt)
+  
+  expect_equal(nchar(hdrtxt) > 0, TRUE)
+  
+  # Check two pages
+  hdr <- pdf_header(pagecount = 2)
+  
+  expect_equal(length(hdr), 6)
+  
+  hdrtxt <- render(pdf_document(hdr))
+  
+  cat(hdrtxt)
+  
+  expect_equal(nchar(hdrtxt) > 0, TRUE)
+  
+  # Check three pages
+  hdr <- pdf_header(pagecount = 3)
+  
+  expect_equal(length(hdr), 7)
+  
+  hdrtxt <- render(pdf_document(hdr))
+  
+  cat(hdrtxt)
+  
+  expect_equal(nchar(hdrtxt) > 0, TRUE)
+  
+})
+
 test_that("create full document works as expected.", {
   
   
@@ -202,7 +240,7 @@ test_that("create full document works as expected.", {
                      "BT /F1 12 Tf 175 560 Td (World and more)Tj ET", 
                      "BT /F1 12 Tf 175 540 Td (And some more)Tj ET"))
   
-  doc <- pdf_document(pdf_header(), strm)
+  doc <- pdf_document(pdf_header(1), strm)
   
   expect_equal(length(doc), 6)
   expect_equal("pdf_document" %in% class(doc), TRUE)
@@ -283,8 +321,8 @@ test_that("basic write_pdf works as expected.", {
   
   fp <- file.path(base_path, "pdf/direct2.pdf")
   
-
-  cnts <- c("Hello", "There", "Here is some text")
+  cnts <- list()
+  cnts[[1]] <- c("Hello", "There", "Here is some text")
   
   write_pdf(fp, cnts, fontsize = 8, info = FALSE)
 
@@ -297,8 +335,8 @@ test_that("write_pdf with info works as expected.", {
   
   fp <- file.path(base_path, "pdf/direct3.pdf")
   
-  
-  cnts <- c("Hello", "There", "Here is some text")
+  cnts <- list()
+  cnts[[1]] <- c("Hello", "There", "Here is some text")
   
   write_pdf(fp, cnts, info = TRUE, author = "David Bosak",
             keywords = "one two three", subject = "Reporting",
@@ -313,14 +351,105 @@ test_that("write_pdf with info defaults work as expected.", {
   
   fp <- file.path(base_path, "pdf/direct4.pdf")
   
+  cnts <- list()
+  cnts[[1]] <- c("Hello", "There", "Here is some text")
   
-  cnts <- c("Hello", "There", "Here is some text")
-  
-  write_pdf(fp, cnts, info = TRUE)
+  write_pdf(fp, cnts, info = TRUE, margin_left = .5, margin_top = .5)
   
   expect_equal(file.exists(fp), TRUE)  
   
 })
 
 
+test_that("Two page pdf works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct5.pdf")
+  
+  lst <- list()
+  lst[[1]] <- c("Hello", "There", "Here is some text")
+  lst[[2]] <- c("Hey!", "Here is a second page!")
+  
+  write_pdf(fp, lst, info = TRUE, author = "David Bosak",
+            keywords = "one two three", subject = "Reporting",
+            title = "PDF 1.0", fontname = "XTCHNU+LMMono10-Regular")
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
 
+
+test_that("Three page pdf works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct6.pdf")
+  
+  lst <- list()
+  lst[[1]] <- c("Hello", "There", "Here is some text")
+  lst[[2]] <- c("Hey!", "Here is a second page!")
+  lst[[3]] <- c("Third page!")
+  
+  write_pdf(fp, lst, info = TRUE, author = "David Bosak",
+            keywords = "one two three", subject = "Reporting",
+            title = "PDF 1.0")
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("Simplest direct table works as expected.", {
+  
+  
+
+    
+    fp <- file.path(base_path, "pdf/direct7.pdf")
+    
+    rpt <- create_report(fp, output_type = "PDF") %>%
+      add_content(create_table(mtcars[1:10, ]), align = "left")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+
+  
+})
+
+test_that("Direct table with 2 pages works as expected.", {
+  
+  
+
+  fp <- file.path(base_path, "pdf/direct8.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    add_content(create_table(mtcars[1:10, ])) %>% 
+    add_content(create_table(mtcars[11:32, ]))
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+# XTCHNU+LMMono10-Regular
+
+
+test_that("Different font works as expected.", {
+  
+  
+  
+  fp <- file.path(base_path, "pdf/direct9.pdf")
+  
+  lst <- list()
+  lst[[1]] <- c("disp", "There", "Here is some text")
+
+  
+  write_pdf(fp, lst, info = TRUE, author = "David Bosak",
+            keywords = "one two three", subject = "Reporting",
+            title = "PDF 1.0", fontsize = 10)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+  
+  
+})

@@ -26,7 +26,6 @@ Suggests:
     dplyr,
     tidyr,
     readr,
-    knitr,          
     ggplot2,
     gridExtra,
     survminer,

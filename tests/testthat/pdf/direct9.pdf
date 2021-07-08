@@ -10,16 +10,18 @@ endobj
 endobj
 5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 6 0 R>>
 endobj
-6 0 obj<</Length 198>>
+6 0 obj<</Length 117>>
 stream
-BT /F1 12 Tf 175 600 Td (Hello here is some more)Tj ET
-BT /F1 12 Tf 175 580 Td (There I like text.)Tj ET
-BT /F1 12 Tf 175 560 Td (World and more)Tj ET
-BT /F1 12 Tf 175 540 Td (And some more)Tj ET
+BT /F1 9 Tf 72 540 Td (disp)Tj ET
+BT /F1 9 Tf 72 528 Td (There)Tj ET
+BT /F1 9 Tf 72 516 Td (Here is some text)Tj ET
 endstream
 endobj
+7 0 obj<</Producer (reporter v1.2) /Author (David Bosak) /Title (PDF 1.0) /Subject (Reporting) /Creator (R version 4.0.5 (2021-03-31)) /Keywords (one two three)
+ /CreationDate (D:20210708083845-04'00') /ModDate (D:20210708083845-04'00')>>
+endobj
 xref
-0 7
+0 8
 0000000000 65535 f
 0000000020 00000 n
 0000000068 00000 n
@@ -27,7 +29,8 @@ xref
 0000000175 00000 n
 0000000231 00000 n
 0000000334 00000 n
-trailer <</Size 7 /Root 1 0 R>>
+0000000504 00000 n
+trailer <</Size 8 /Root 1 0 R /Info 7 0 R>>
 startxref
-585
+753
 %%EOF

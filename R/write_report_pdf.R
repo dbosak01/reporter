@@ -58,26 +58,57 @@ write_report_pdf <- function(rs) {
   ls <- readLines(tmp_path, encoding = "UTF-8")
 
   # Revise text and write to pdf
-  fls <- write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
+  fls <- write_pdf_output(rs, ls, orig_path)
 
   # Restore original path
   rs$modified_path <- orig_path
   
+  #print(tmp_path)
+  
   # Clean up
   if (!debug) {
     file.remove(tmp_path)
-    file.remove(rmd_path)
-    #nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
-    if (length(fls) > 0)
-      file.remove(fls)
-    #unlink(tmp_dir, recursive = TRUE)
   }
   
   return(rs)
 }
 
 #' @noRd
-write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
+write_pdf_output <- function(rs, ls, pdf_path) {
+  
+  pgs <- list()
+  pg <- c()
+  
+  for (ln in ls) {
+    
+    res <- grep("\f", ln, fixed = TRUE, value = FALSE) 
+    if (length(res) > 0) {
+      
+      pgs[[length(pgs) + 1]] <- pg
+      pg <- c(gsub("\f", "", ln, fixed = TRUE))
+    
+    } else {
+      
+      pg[length(pg) + 1] <- ln   
+      
+    }
+  }
+  
+  if (length(pg) > 0)
+    pgs[[length(pgs) + 1]] <- pg
+  
+  if (file.exists(pdf_path))
+    file.remove(pdf_path)
+  
+  
+  write_pdf(pdf_path, pgs, info = TRUE)
+  
+  return(pdf_path)
+  
+}
+
+#' @noRd
+write_pdf_output2 <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   # Set up vectors
   hdr <- c() 
