@@ -142,7 +142,7 @@ test_that("pdf_info works as expected.", {
   
   #cat(res)
   
-  expect_equal(nchar(res), 240)
+  expect_equal(chars(res) > 240, TRUE)
   
 })
 
