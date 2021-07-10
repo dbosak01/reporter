@@ -1,5 +1,6 @@
 pointsize <- 1/72
 inchsize <- 72
+in2cm <- 2.54
 
 # Write PDF ---------------------------------------------------------------
 
@@ -17,7 +18,8 @@ write_pdf <- function(filename, contents,
                       title = "",
                       subject = "",
                       keywords = "",
-                      orientation = "landscape") {
+                      orientation = "landscape",
+                      units = "inches") {
   
   # Check font size is valid
   if (!fontsize %in% c(8, 10, 12))
@@ -29,15 +31,23 @@ write_pdf <- function(filename, contents,
     page_width <- tmp
     
   }
-
   
+  if (units == "cm") {
+    
+   page_height <- round(page_height / in2cm, 2)
+   page_width <- round(page_width / in2cm, 2)
+   margin_top <- round(margin_top / in2cm, 2)
+   margin_left <- round(margin_left / in2cm, 2)
+  }
+
+  # Achieved by trial and error
   fontscale <- 87
   
   # Remove existing file if needed
   if (file.exists(filename))
     file.remove(filename)
   
-  bp <- dirname(base_path)
+  bp <- dirname(filename)
   
   # Check that base path exists
   if (!file.exists(bp))
@@ -50,7 +60,8 @@ write_pdf <- function(filename, contents,
   sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
   
   # Calculate reasonable line height
-  lh <- fontsize  + round(fontsize * .25) 
+  # Also trial and error
+  lh <- fontsize  + round(fontsize * .19, 2) 
                 
   # Get header objects
   hd <- pdf_header(fontname = fontname,
@@ -242,11 +253,13 @@ render.pdf_info <- function(x) {
   
 }
 
+#' @encoding UTF-8
 #' @exportS3Method render pdf_document
 render.pdf_document <- function(x) {
   
   
-  cnts <- c("%PDF-1.7\n", "%âãÏÓ\n")
+  #cnts <- c("%PDF-1.7\n", "%âãÏÓ\n")
+  cnts <- c("%PDF-1.7\n", "%\u0203\u00e3\u00cf\u00d3\n")
   xrefs <- c()
   infoid <- NULL
   
@@ -541,7 +554,7 @@ get_text_stream <- function(contents, startx, starty,
   
 }
 
-
+#' @noRd
 get_binary_stream <- function(filename) {
   
   ret <- "stream\n"
@@ -552,7 +565,7 @@ get_binary_stream <- function(filename) {
   f <- file(filename, open="r+", encoding = "native.enc")
   
   
-  lns <- readLines(con = f, useBytes = TRUE)
+  lns <- readLines(con = f, encoding = "UTF-8")
   
   
   close(f)

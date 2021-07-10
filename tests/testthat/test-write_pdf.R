@@ -138,19 +138,19 @@ test_that("pdf_info works as expected.", {
   
   #cat(res)
   
-  expect_equal(nchar(res), 212)
+  expect_equal(nchar(res), 240)
   
 })
 
 
 test_that("render.xref works as expected.", {
   
-  d <- render.xref(c(20, 68, 124, 224, 267, 334), 1, 514)
+  d <- render.xref(c(20, 68, 124, 224, 267, 334), 1, 10, 514)
   
-  cat(d)
+  #cat(d)
   
   expect_equal(length(d), 1)
-  expect_equal(nchar(d), 187)
+  expect_equal(nchar(d), 201)
   
   
 })
@@ -172,22 +172,25 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   rnd <- render(d)
   
   
-  cat(rnd)
+  #cat(rnd)
   
   
-  expect_equal(rnd, paste0("%PDF-1.7\n",
-                           "%âãÏÓ\n",
-                           "1 0 obj<</Type /Catalog /Pages 2 0 R>>\n",
-                           "endobj\n",
-                           "2 0 obj<</Length 17>>\nstream\n", 
-                           "Here is some text\nendstream\nendobj\n",
-                           "xref\n0 3\n",
-                           "0000000000 65535 f\n",
-                           "0000000065 00000 n\n",
-                           "0000000129 00000 n\n",
-                           "trailer<</Size 3 /Root 1 0 R>>\n",
-                           "startxref\n125\n%%EOF"))
+  expect_equal(nchar(rnd), 242)
   
+  
+  # paste0("%PDF-1.7\n",
+  #        "%\u0203\u00e3\u00cf\u00d3\n",
+  #        "1 0 obj<</Type /Catalog /Pages 2 0 R>>\n",
+  #        "endobj\n",
+  #        "2 0 obj<</Length 17>>\nstream\n", 
+  #        "Here is some text\nendstream\nendobj\n",
+  #        "xref\n0 3\n",
+  #        "0000000000 65535 f\n",
+  #        "0000000020 00000 n\n",
+  #        "0000000068 00000 n\n",
+  #        "trailer <</Size 3 /Root 1 0 R>>\n",
+  #        "startxref\n137\n%%EOF")
+  # 
   
 
 })
@@ -202,7 +205,7 @@ test_that("pdf_header works as expected.", {
   
   hdrtxt <- render(pdf_document(hdr))
   
-  cat(hdrtxt)
+  #cat(hdrtxt)
   
   expect_equal(nchar(hdrtxt) > 0, TRUE)
   
@@ -213,7 +216,7 @@ test_that("pdf_header works as expected.", {
   
   hdrtxt <- render(pdf_document(hdr))
   
-  cat(hdrtxt)
+  #cat(hdrtxt)
   
   expect_equal(nchar(hdrtxt) > 0, TRUE)
   
@@ -224,7 +227,7 @@ test_that("pdf_header works as expected.", {
   
   hdrtxt <- render(pdf_document(hdr))
   
-  cat(hdrtxt)
+  #cat(hdrtxt)
   
   expect_equal(nchar(hdrtxt) > 0, TRUE)
   
@@ -247,7 +250,7 @@ test_that("create full document works as expected.", {
   
   res <- render(doc)
   
-  cat(res)
+  #cat(res)
   
   fp <- file.path(base_path, "pdf/direct1.pdf")
   
@@ -276,10 +279,10 @@ test_that("chars function works as expected.", {
   
   if (Sys.info()["sysname"] == "Windows") {
   
-    expect_equal(res, 11)
+    expect_equal(res, 9)
   } else {
     
-    expect_equal(res, 10)
+    expect_equal(res, 8)
     
   }
   
@@ -292,28 +295,28 @@ test_that("chars function works as expected.", {
   
   
   if (Sys.info()["sysname"] == "Windows") {
-    expect_equal(res, 22)
+    expect_equal(res, 20)
     
   } else {
     
-    expect_equal(res, 20)
+    expect_equal(res, 19)
   }
   
   
 }) 
 
 
-test_that("get_stream function works as expected.", {
+test_that("get_text_stream function works as expected.", {
   
   contents <- c("Hello", "goodbye", "later")
   
   
-  res <- get_stream(contents, 50, 600, 20, 12)
+  res <- get_text_stream(contents, 50, 600, 20, 12, 100)
   
   
   expect_equal(length(res), 3)
   
-  expect_equal(res[[3]], "BT /F1 12 Tf 50 560 Td (later)Tj ET")
+  expect_equal(res[[3]], "BT /F1 12 Tf 100 Tz 50 560 Td (later)Tj ET")
   
 })
 

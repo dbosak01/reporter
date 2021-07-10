@@ -21,7 +21,7 @@ test_that("pdf1: Simplest table works as expected.", {
 
 
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+  # if (dev & rmarkdown::pandoc_available("1.12.3")) {
 
   fp <- file.path(base_path, "pdf/test1.pdf")
 
@@ -32,14 +32,13 @@ test_that("pdf1: Simplest table works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
+
 
 })
 
 test_that("pdf2: Simplest table with title works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test2.pdf")
 
     tbl <- create_table(mtcars[1:10, ]) %>%
@@ -55,15 +54,12 @@ test_that("pdf2: Simplest table with title works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
-
 
 })
 
 test_that("pdf3: Table with break between sections works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
   fp <- file.path(base_path, "pdf/test3.pdf")
 
   # Setup
@@ -106,13 +102,12 @@ test_that("pdf3: Table with break between sections works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
+
 })
 
 test_that("pdf4: Table that spans multiple pages breaks as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test4.pdf")
 
     rpt <- create_report(fp, output_type = "PDF") %>%
@@ -126,15 +121,12 @@ test_that("pdf4: Table that spans multiple pages breaks as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
-
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
 
 test_that("pdf5: Table with long cell and label values wraps as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test5.pdf")
 
     # Setup
@@ -173,14 +165,12 @@ test_that("pdf5: Table with long cell and label values wraps as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
 test_that("pdf6: Table with spanning headers works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test6.pdf")
 
 
@@ -211,8 +201,7 @@ test_that("pdf6: Table with spanning headers works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
+
 })
 
 
@@ -220,7 +209,7 @@ test_that("pdf6: Table with spanning headers works as expected.", {
 
 test_that("pdf7: Simplest PDF report with 1 in margins works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test7.pdf")
 
     tbl <- create_table(mtcars[1:10, ]) %>%
@@ -240,15 +229,12 @@ test_that("pdf7: Simplest PDF report with 1 in margins works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
 
 test_that("pdf8: Two page PDF report works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
 
     fp <- file.path(base_path, "pdf/test8.pdf")
 
@@ -308,8 +294,6 @@ test_that("pdf8: Two page PDF report works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
@@ -318,7 +302,7 @@ test_that("pdf8: Two page PDF report works as expected.", {
 
 test_that("pdf9: Simplest PDF Plot works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+  if (dev & FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test9.pdf")
@@ -351,7 +335,7 @@ test_that("pdf9: Simplest PDF Plot works as expected.", {
 
 test_that("pdf10: PDF Table with Plot works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+  if (dev & FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test10.pdf")
@@ -388,7 +372,8 @@ test_that("pdf10: PDF Table with Plot works as expected.", {
 
 
 test_that("pdf11: PDF Table with Plot on same page works as expected.", {
-  if (rmarkdown::pandoc_available("1.12.3")) {
+  
+  if (FALSE) {
   library(ggplot2)
 
   fp <- file.path(base_path, "pdf/test11.pdf")
@@ -424,7 +409,7 @@ test_that("pdf11: PDF Table with Plot on same page works as expected.", {
 
 test_that("pdf12: Table and Text output works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+
   fp <- file.path(base_path, "pdf/test12.pdf")
 
   tbl1 <- mtcars[1:10, ]
@@ -447,14 +432,13 @@ test_that("pdf12: Table and Text output works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
+
 })
 
 
 test_that("pdf13: Very Long text output works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+  if (dev & FALSE) {
 
     fp <- file.path(base_path, "pdf/test13.pdf")
 
@@ -480,7 +464,7 @@ test_that("pdf13: Very Long text output works as expected.", {
 
 test_that("pdf14: Simplest portrait table works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+
 
     fp <- file.path(base_path, "pdf/test14.pdf")
 
@@ -494,15 +478,14 @@ test_that("pdf14: Simplest portrait table works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
+
 
 })
 
 
 test_that("pdf15: Simplest landscape table works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+
 
     fp <- file.path(base_path, "pdf/test15.pdf")
 
@@ -516,14 +499,12 @@ test_that("pdf15: Simplest landscape table works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
 test_that("pdf16: 10 pt report with units in cm works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test16.pdf")
 
 
@@ -537,8 +518,7 @@ test_that("pdf16: 10 pt report with units in cm works as expected.", {
     res <- write_report(rpt)
 
     expect_equal(file.exists(fp), TRUE)
-  } else
-    expect_equal(TRUE, TRUE)
+
 
 
 })
@@ -546,7 +526,7 @@ test_that("pdf16: 10 pt report with units in cm works as expected.", {
 
 test_that("pdf17: 12 pt report with units in cm works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test17.pdf")
 
 
@@ -561,15 +541,14 @@ test_that("pdf17: 12 pt report with units in cm works as expected.", {
     res <- write_report(rpt)
 
     expect_equal(file.exists(fp), TRUE)
-  } else
-    expect_equal(TRUE, TRUE)
+
 
 })
 
 
 test_that("pdf18: Plot with page by on report works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+  if (FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test18.pdf")
@@ -611,7 +590,7 @@ test_that("pdf18: Plot with page by on report works as expected.", {
 
 test_that("pdf19: Plot with page by on plot works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+  if (FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test19.pdf")
@@ -652,7 +631,7 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
 
 test_that("test21: 8 pt report with units in inches works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test21.pdf")
 
     tbl <- create_table(iris)
@@ -669,13 +648,12 @@ test_that("test21: 8 pt report with units in inches works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
+
 })
 
 test_that("test22: 8 pt report with units in cm works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+
     fp <- file.path(base_path, "pdf/test22.pdf")
 
 
@@ -690,8 +668,7 @@ test_that("test22: 8 pt report with units in cm works as expected.", {
     res <- write_report(rpt)
 
     expect_equal(file.exists(fp), TRUE)
-  } else
-    expect_equal(TRUE, TRUE)
+
 
 })
 
@@ -700,7 +677,7 @@ test_that("test22: 8 pt report with units in cm works as expected.", {
 
 test_that("pdf23: RTF Table with Plot and borders works as expected.", {
 
-  if (rmarkdown::pandoc_available("1.12.3")) {
+  if (FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test23.pdf")
@@ -736,7 +713,7 @@ test_that("pdf23: RTF Table with Plot and borders works as expected.", {
 
 test_that("pdf24: RTF Table with Plot and borders works as expected.", {
 
-  if (dev & rmarkdown::pandoc_available("1.12.3")) {
+  if (dev & FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test24.pdf")

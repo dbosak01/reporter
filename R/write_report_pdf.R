@@ -108,6 +108,7 @@ write_pdf_output <- function(rs, ls, pdf_path) {
             page_height = rs$page_size[1],
             page_width = rs$page_size[2],
             orientation = rs$orientation,
+            units = rs$units,
             info = TRUE)
   
   return(pdf_path)
