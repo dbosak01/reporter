@@ -154,7 +154,11 @@ test_that("render.xref works as expected.", {
   #cat(d)
   
   expect_equal(length(d), 1)
-  expect_equal(chars(d), 211)
+  
+  if (Sys.info()[["sysname"]] == "Windows")
+     expect_equal(chars(d), 211)
+  else 
+    expect_equal(chars(d), 208)
   
   
 })
@@ -178,9 +182,10 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   
   
   #cat(rnd)
-  
-  
-  expect_equal(chars(rnd), 261)
+  if (Sys.info()[["sysname"]] == "Windows")
+    expect_equal(chars(rnd), 261)
+  else 
+    expect_equal(chars(rnd), 249)
   
   
   # paste0("%PDF-1.7\n",
