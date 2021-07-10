@@ -16,13 +16,22 @@ write_pdf <- function(filename, contents,
                       author = "",
                       title = "",
                       subject = "",
-                      keywords = "") {
+                      keywords = "",
+                      orientation = "landscape") {
   
   # Check font size is valid
   if (!fontsize %in% c(8, 10, 12))
     stop(paste0("Fontsize ", fontsize, " not valid."))
-  else 
-    fontsize <- fontsize - 1
+  
+  if (orientation == "portrait") {
+    tmp <- page_height
+    page_height <- page_width
+    page_width <- tmp
+    
+  }
+
+  
+  fontscale <- 87
   
   # Remove existing file if needed
   if (file.exists(filename))
@@ -35,13 +44,13 @@ write_pdf <- function(filename, contents,
     stop(paste0("Base path '", bp, "' does not exist."))
   
   # Get x starting position in points
-  stx <- margin_left * inchsize
+  stx <- (margin_left * inchsize) - 13
   
   # Get y starting position in points
-  sty <- (page_height * inchsize) -  (margin_top * inchsize)
+  sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
   
   # Calculate reasonable line height
-  lh <- fontsize  + round(fontsize * .3) 
+  lh <- fontsize  + round(fontsize * .25) 
                 
   # Get header objects
   hd <- pdf_header(fontname = fontname,
@@ -56,11 +65,12 @@ write_pdf <- function(filename, contents,
     idno <- length(hd) + length(strmlst) + 1
     
     strmlst[[length(strmlst) + 1]] <- pdf_stream(idno, 
-                                                 get_stream(pg,
+                                                 get_text_stream(pg,
                                                  stx,
                                                  sty,
                                                  lh,
-                                                 fontsize))
+                                                 fontsize,
+                                                 fontscale))
   }
   
 
@@ -100,42 +110,10 @@ write_pdf <- function(filename, contents,
   
 }
 
-#' @noRd
-get_stream <- function(contents, startx, starty, lineheight, fontsize) {
- 
-
-  ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
-  
-  ret <- paste0("BT /F1 ", fontsize, 
-                " Tf ", startx, " ", ypos, " Td (", 
-                contents, ")Tj ET")
-  
-  
-  return(ret)
-  
-}
 
 
 # Render Functions ---------------------------------------------------------
 
-
-#' g <- function(x) {
-#'   
-#'  UseMethod("g") 
-#' }
-#' 
-#' #' @exportS3Method g integer
-#' g.integer <- function(x) {
-#'  
-#'   
-#'   return(x + 2) 
-#' }
-#' 
-#' #' @exportS3Method g character
-#' g.character <- function(x) {
-#'   
-#'  return(paste(x, "two")) 
-#' }
 
 
 #' Generic render function
@@ -182,7 +160,10 @@ render.pdf_array <- function(x) {
 render.pdf_object <- function(x) {
   
   ret <- paste0(x$id, " ", x$version, " obj")
-  ret <- paste0(ret, render(x$parameters), "\n")
+  
+  if (!is.null(x$parameters)) {
+    ret <- paste0(ret, render(x$parameters), "\n")
+  }
   
   if (!is.null(x$contents)) {
     
@@ -258,6 +239,7 @@ render.pdf_info <- function(x) {
   
   
   return(ret)
+  
 }
 
 #' @exportS3Method render pdf_document
@@ -394,7 +376,7 @@ pdf_array <- function(...) {
 }
 
 #' @noRd
-pdf_object <- function(id, params, contents = NULL) {
+pdf_object <- function(id, params = NULL, contents = NULL) {
   
   
   if (!class(id) %in% c("integer", "numeric"))
@@ -511,6 +493,8 @@ pdf_info <- function(id,
 }
 
 
+
+
 # Utilities ---------------------------------------------------------------
 
 
@@ -529,3 +513,55 @@ chars <- function(lines) {
   
   return(ret)
 }
+
+
+#' Return a reference 
+#' @noRd
+ref <- function(id) {
+  
+ ret <- paste(id, "0 R")
+ 
+ return(ret)
+  
+}
+
+#' @noRd
+get_text_stream <- function(contents, startx, starty, 
+                            lineheight, fontsize, fontscale) {
+  
+  
+  ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
+  
+  ret <- paste0("BT /F1 ", fontsize, 
+                " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td (", 
+                contents, ")Tj ET")
+  
+  
+  return(ret)
+  
+}
+
+
+get_binary_stream <- function(filename) {
+  
+  ret <- "stream\n"
+  
+  if (!file.exists(filename))
+    stop(paste0("File does not exist: ", filename))
+  
+  f <- file(filename, open="r+", encoding = "native.enc")
+  
+  
+  lns <- readLines(con = f, useBytes = TRUE)
+  
+  
+  close(f)
+  
+  ret <- paste0(ret, paste0(lns, collapse = ""))
+  
+  ret <- paste0(ret, "endstream\n")
+  
+  return(ret)
+  
+}
+

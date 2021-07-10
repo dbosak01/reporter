@@ -101,7 +101,14 @@ write_pdf_output <- function(rs, ls, pdf_path) {
     file.remove(pdf_path)
   
   
-  write_pdf(pdf_path, pgs, info = TRUE)
+  write_pdf(pdf_path, pgs, 
+            margin_top = rs$margin_top,
+            margin_left = rs$margin_left,
+            fontsize = rs$font_size,
+            page_height = rs$page_size[1],
+            page_width = rs$page_size[2],
+            orientation = rs$orientation,
+            info = TRUE)
   
   return(pdf_path)
   
