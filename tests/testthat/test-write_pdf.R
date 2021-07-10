@@ -106,8 +106,12 @@ test_that("pdf_stream and render.pdf_stream work as expected.", {
   #cat(rnd)
   
   
-  expect_equal(rnd, paste0("1 0 obj<</Length 17>>\nstream\n", 
-                           "Here is some text\nendstream\nendobj\n"))
+  expect_true(grep("1 0 obj<</Length", rnd, fixed = TRUE, value = FALSE) > 0)
+  
+  expect_true(grep(">>\nstream\nHere is some text\nendstream\nendobj\n",
+                   rnd,
+                   fixed = TRUE, value = FALSE) > 0)
+  
   
 })
 
@@ -150,7 +154,7 @@ test_that("render.xref works as expected.", {
   #cat(d)
   
   expect_equal(length(d), 1)
-  expect_equal(nchar(d), 201)
+  expect_equal(chars(d), 211)
   
   
 })
@@ -167,6 +171,7 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   expect_equal(d[[1]]$id, 1)
   expect_equal(d[[2]]$id, 2)
   expect_equal(d[[2]]$contents, "Here is some text")
+  expect_equal("pdf_document" %in% class(d), TRUE) 
   
   
   rnd <- render(d)
@@ -175,7 +180,7 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   #cat(rnd)
   
   
-  expect_equal(nchar(rnd), 242)
+  expect_equal(chars(rnd), 261)
   
   
   # paste0("%PDF-1.7\n",
@@ -282,7 +287,7 @@ test_that("chars function works as expected.", {
     expect_equal(res, 9)
   } else {
     
-    expect_equal(res, 8)
+    expect_equal(res, 10)
     
   }
   
@@ -299,7 +304,7 @@ test_that("chars function works as expected.", {
     
   } else {
     
-    expect_equal(res, 19)
+    expect_equal(res, 20)
   }
   
   
