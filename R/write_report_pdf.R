@@ -12,9 +12,9 @@
 #' @noRd
 write_report_pdf <- function(rs) {
   
-  if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
-   stop("pandoc version >= 1.12.3 is required. Install to continue.") 
-  }
+  # if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
+  #  stop("pandoc version >= 1.12.3 is required. Install to continue.") 
+  # }
   
   debug <- FALSE
   
@@ -58,26 +58,65 @@ write_report_pdf <- function(rs) {
   ls <- readLines(tmp_path, encoding = "UTF-8")
 
   # Revise text and write to pdf
-  fls <- write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
+  fls <- write_pdf_output(rs, ls, orig_path)
 
   # Restore original path
   rs$modified_path <- orig_path
   
+  #print(tmp_path)
+  
   # Clean up
   if (!debug) {
     file.remove(tmp_path)
-    file.remove(rmd_path)
-    #nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
-    if (length(fls) > 0)
-      file.remove(fls)
-    #unlink(tmp_dir, recursive = TRUE)
   }
   
   return(rs)
 }
 
 #' @noRd
-write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
+write_pdf_output <- function(rs, ls, pdf_path) {
+  
+  pgs <- list()
+  pg <- c()
+  
+  for (ln in ls) {
+    
+    res <- grep("\f", ln, fixed = TRUE, value = FALSE) 
+    if (length(res) > 0) {
+      
+      pgs[[length(pgs) + 1]] <- pg
+      pg <- c(gsub("\f", "", ln, fixed = TRUE))
+    
+    } else {
+      
+      pg[length(pg) + 1] <- ln   
+      
+    }
+  }
+  
+  if (length(pg) > 0)
+    pgs[[length(pgs) + 1]] <- pg
+  
+  if (file.exists(pdf_path))
+    file.remove(pdf_path)
+  
+  
+  write_pdf(pdf_path, pgs, 
+            margin_top = rs$margin_top,
+            margin_left = rs$margin_left,
+            fontsize = rs$font_size,
+            page_height = rs$page_size[1],
+            page_width = rs$page_size[2],
+            orientation = rs$orientation,
+            units = rs$units,
+            info = TRUE)
+  
+  return(pdf_path)
+  
+}
+
+#' @noRd
+write_pdf_output2 <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   # Set up vectors
   hdr <- c() 
@@ -211,15 +250,15 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   # Can't figure out how to get rid of it.
   # So going to suppress it for now.
   # Other fonts sizes shouldn't have any warnings.
-  if (rs$font_size == 8) {
-    suppressWarnings(rmarkdown::render(rmd_path, 
-                                       rmarkdown::pdf_document(), t1, 
-                                       quiet = TRUE))
-  } else {
-    rmarkdown::render(rmd_path, 
-                      rmarkdown::pdf_document(), t1, 
-                      quiet = TRUE)
-  }
+  # if (rs$font_size == 8) {
+  #   suppressWarnings(rmarkdown::render(rmd_path, 
+  #                                      rmarkdown::pdf_document(), t1, 
+  #                                      quiet = TRUE))
+  # } else {
+  #   rmarkdown::render(rmd_path, 
+  #                     rmarkdown::pdf_document(), t1, 
+  #                     quiet = TRUE)
+  # }
   
   file.copy(t1, pdf_path)
 
