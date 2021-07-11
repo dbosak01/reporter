@@ -1,5 +1,5 @@
 %PDF-1.7
-%ȃãÏÓ
+%âãÏÓ
 1 0 obj<</Type /Catalog /Pages 4 0 R>>
 endobj
 2 0 obj<</Font <</F1 3 0 R>>>>
@@ -10,30 +10,27 @@ endobj
 endobj
 5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 6 0 R>>
 endobj
-6 0 obj<</Length 145>>
+6 0 obj<</Length 121>>
 stream
-BT /F1 10 Tf 87 Tz 59 535 Td (Hello)Tj ET
-
-BT /F1 10 Tf 87 Tz 59 523.1 Td (There)Tj ET
-
-BT /F1 10 Tf 87 Tz 59 511.2 Td (Here is some text)Tj ET
-
+BT /F1 10 Tf 72 540 Td (Hello)Tj ET
+BT /F1 10 Tf 72 525 Td (There)Tj ET
+BT /F1 10 Tf 72 510 Td (Here is some text)Tj ET
 endstream
 endobj
 7 0 obj<</Producer (reporter v1.2) /Author (David Bosak) /Title (PDF 1.0) /Subject (Reporting) /Creator (R version 4.0.5 (2021-03-31)) /Keywords (one two three)
- /CreationDate (D:20210710204938-04'00') /ModDate (D:20210710204938-04'00')>>
+ /CreationDate (D:20210707222735-04'00') /ModDate (D:20210707222735-04'00')>>
 endobj
 xref
 0 8
-0000000000 65535 f 
-0000000019 00000 n 
-0000000065 00000 n 
-0000000103 00000 n 
-0000000168 00000 n 
-0000000222 00000 n 
-0000000323 00000 n 
-0000000515 00000 n 
+0000000000 65535 f
+0000000020 00000 n
+0000000068 00000 n
+0000000108 00000 n
+0000000175 00000 n
+0000000231 00000 n
+0000000334 00000 n
+0000000508 00000 n
 trailer <</Size 8 /Root 1 0 R /Info 7 0 R>>
 startxref
-761
+757
 %%EOF

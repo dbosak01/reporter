@@ -1,3 +1,6 @@
+
+# Globals -----------------------------------------------------------------
+
 pointsize <- 1/72
 inchsize <- 72
 in2cm <- 2.54
@@ -75,13 +78,15 @@ write_pdf <- function(filename, contents,
     
     idno <- length(hd) + length(strmlst) + 1
     
-    strmlst[[length(strmlst) + 1]] <- pdf_stream(idno, 
-                                                 get_text_stream(pg,
-                                                 stx,
-                                                 sty,
-                                                 lh,
-                                                 fontsize,
-                                                 fontscale))
+    # Will need to do something here with the images
+    
+    strmlst[[length(strmlst) + 1]] <- pdf_text_stream(idno, 
+                                                      get_text_stream(pg,
+                                                      stx,
+                                                      sty,
+                                                      lh,
+                                                      fontsize,
+                                                      fontscale))
   }
   
 
@@ -107,14 +112,13 @@ write_pdf <- function(filename, contents,
   # Render document
   rdoc <- render.pdf_document(doc)
   
-  
   # Write document to file system
   # Encoding is important.  Has to be UTF-8.
   # This is the only way to do it on Windows.
-  f <- file(filename, open="w+", encoding = "native.enc")
+  f <- file(filename, open="wb", encoding = "native.enc")
   
   
-  writeLines(enc2utf8(rdoc), con = f, useBytes = TRUE)
+  writeBin(rdoc, con = f, useBytes = TRUE)
   
   
   close(f)
@@ -142,17 +146,6 @@ render.default <- function(x) {
   return(as.character(x))
   
 }
-
-#' @exportS3Method render pdf_contents
-render.pdf_contents <- function(x) {
-  
-  
-  ret <- "contents"
-  
-  return(ret)
-  
-}
-
 
 
 #' @exportS3Method render pdf_array
@@ -205,23 +198,53 @@ render.pdf_dictionary <- function(x) {
   
 }
 
-#' @exportS3Method render pdf_stream
-render.pdf_stream <- function(x) {
+#' @exportS3Method render pdf_text_stream
+render.pdf_text_stream <- function(x) {
   
 
-  cnts <- paste0(x$contents, collapse = "\n")
-  cnts <- paste0(cnts, "\n")
+  if (length(x$contents) > 1) {
+    cnts <- paste0(x$contents, collapse = "\n")
+    cnts <- paste0(cnts, "\n")
+  } else {
+    
+    cnts <- paste0(x$contents, "\n") 
+  }
   
   strm <-   paste0("stream\n", cnts, "endstream\n")
   
-  obj <- pdf_object(x$id, pdf_dictionary(Length = chars(cnts)), strm)
+  obj <- pdf_object(x$id, pdf_dictionary(Length = chars(cnts)), strm) 
+
                                          
+  ret <- render.pdf_object(obj)
+  
+  return(ret)
+  
+}
+
+# Need to fix up**
+#' @exportS3Method render pdf_image_stream
+render.pdf_image_stream <- function(x) {
+  
+  
+  if (length(x$contents) > 1) {
+    cnts <- paste0(x$contents, collapse = "\n")
+    cnts <- paste0(cnts, "\n")
+  } else {
+    
+    cnts <- paste0(x$contents, "\n") 
+  }
+  
+  strm <-   paste0("stream\n", cnts, "endstream\n")
+  
+  obj <- pdf_object(x$id, pdf_dictionary(Length = chars(cnts)), strm) 
+  
   
   ret <- render.pdf_object(obj)
   
   return(ret)
   
 }
+
 
 #' @exportS3Method render pdf_info
 render.pdf_info <- function(x) {
@@ -253,13 +276,18 @@ render.pdf_info <- function(x) {
   
 }
 
+# Returns a raw byte array that can be written
+# directly to disk with writeBin
 #' @encoding UTF-8
 #' @exportS3Method render pdf_document
 render.pdf_document <- function(x) {
   
   
   #cnts <- c("%PDF-1.7\n", "%âãÏÓ\n")
-  cnts <- c("%PDF-1.7\n", "%\u0203\u00e3\u00cf\u00d3\n")
+  
+  cnts <- list()
+  cnts[[1]] <- "%PDF-1.7\n"
+  cnts[[2]] <- "%\u0203\u00e3\u00cf\u00d3\n"
   xrefs <- c()
   infoid <- NULL
   
@@ -267,12 +295,12 @@ render.pdf_document <- function(x) {
     
     # Sum up the number of bytes for all previous objects
     # Plus 1 to offset to first character of block
-    xrefs[length(xrefs) + 1] <- chars(cnts) + 1 
+    xrefs[length(xrefs) + 1] <- chars(cnts) 
     
     #print(itm$id)
     tmp <-  render(itm) 
     #print(tmp)
-    cnts[length(cnts) + 1] <- tmp
+    cnts[[length(cnts) + 1]] <- tmp
     
     if ("pdf_info" %in% class(itm))
       infoid <- itm$id
@@ -281,13 +309,12 @@ render.pdf_document <- function(x) {
   
   cnt <- paste0(cnts, collapse = "")
   
-  sm <- sum(chars(cnt), 1)
 
 
-  ret <- paste0(cnt, render.xref(xrefs, x[[1]]$id, infoid,
-                                  sm), 
-                                  "%%EOF",
-                                  collapse = "")
+  cnts[[length(cnts) + 1]] <- render.xref(xrefs, x[[1]]$id, infoid, chars(cnt)) 
+  cnts[[length(cnts) + 1]] <- "%%EOF"
+  
+  ret <- unlist(vraw(cnts))
   
   
   return(ret)
@@ -303,28 +330,28 @@ render.xref <- function(xrefs, rootID, infoID, startpos) {
   ret <- paste0("xref\n", "0 ", length(xrefs) + 1, "\n")
   
   
-  # Dynamically create subsequent entries
-  # Windows has two character end character, 
-  # and therefore doesn't need an extra space.
-  # Total width has to be 20 characters exactly.
-  if (Sys.info()[["sysname"]] == "Windows") {
-    ret <- paste0(ret, "0000000000 65535 f\n")
-    refs <- paste0(sprintf("%010d", xrefs), " 00000 n\n", collapse = "")
-  } else {
+  # # Dynamically create subsequent entries
+  # # Windows has two character end character, 
+  # # and therefore doesn't need an extra space.
+  # # Total width has to be 20 characters exactly.
+  # if (Sys.info()[["sysname"]] == "Windows") {
+  #   ret <- paste0(ret, "0000000000 65535 f\n")
+  #   refs <- paste0(sprintf("%010d", xrefs), " 00000 n\n", collapse = "")
+  # } else {
     ret <- paste0(ret, "0000000000 65535 f \n")
     refs <- paste0(sprintf("%010d", xrefs), " 00000 n \n", collapse = "")
-  }
+  # }
     
   # Combine first and subsequent entries
   ret <- paste0(ret, refs)
   
   # Create dictionary for trailer
   dict <- pdf_dictionary(Size = length(xrefs) + 1, 
-                         Root = paste(rootID, "0 R"))
+                         Root = ref(rootID))
   
   if (!is.null(infoID)) {
 
-    dict$Info <- paste(infoID, "0 R")    
+    dict$Info <- ref(infoID)    
   } 
   
   # Create trailer
@@ -354,6 +381,7 @@ pdf_document <- function(...) {
   
   for (itm in lst) {
     
+    # Input can be a single object or a list of objects
     if ("pdf_object" %in% class(itm)) {
       doc[[itm$id]] <- itm
     } else if (all("list" %in% class(itm))){
@@ -377,6 +405,7 @@ pdf_document <- function(...) {
 
 
 #' Define a class to contain a PDF array
+#' This is a list of numbers, strings, or object references
 #' @noRd
 pdf_array <- function(...) {
   
@@ -388,6 +417,10 @@ pdf_array <- function(...) {
   
 }
 
+#' Define a general object class
+#' @param id The id number for the object
+#' @param params A dictionary of parameters for this object
+#' @param contents Contents for this object.  May be null.
 #' @noRd
 pdf_object <- function(id, params = NULL, contents = NULL) {
   
@@ -409,6 +442,7 @@ pdf_object <- function(id, params = NULL, contents = NULL) {
 }
 
 
+#' Define a dictionary class, which is a list of name/value pairs
 #' @noRd
 pdf_dictionary <- function(...) {
   
@@ -426,10 +460,12 @@ pdf_dictionary <- function(...) {
   
 }
 
-pdf_stream <- function(id, contents = NULL) {
+#' Define a stream for text content
+#' @noRd
+pdf_text_stream <- function(id, contents = NULL) {
 
   
-  strm <- structure(list(), class = c("pdf_stream", "pdf_object", "list"))
+  strm <- structure(list(), class = c("pdf_text_stream", "pdf_object", "list"))
 
   strm$id <- id
   strm$contents <- contents
@@ -437,8 +473,23 @@ pdf_stream <- function(id, contents = NULL) {
   return(strm)
 }
 
+#' Define a stream for image content
+#' @noRd
+pdf_image_stream <- function(id, contents = NULL) {
+  
+  
+  strm <- structure(list(), class = c("pdf_image_stream", "pdf_object", "list"))
+  
+  strm$id <- id
+  strm$contents <- contents
+  
+  return(strm)
+}
 
 
+#' A function to create a list of objects for the PDF header.
+#' This includes the catalog, font, and pages.
+#' @noRd
 pdf_header <- function(pagecount = 1, 
                        fontname = "Courier", 
                        pageheight = 612, 
@@ -477,13 +528,12 @@ pdf_header <- function(pagecount = 1,
 
   }
   
-
-  
-  
   return(lst)
   
 }
 
+#' A function to create an info object
+#' @noRd
 pdf_info <- function(id, 
                      author = NULL, title = NULL,
                      subject = NULL, creator = NULL,
@@ -514,7 +564,7 @@ pdf_info <- function(id,
 #' Takes a vector of lines and returns the number of bytes.
 #' Extra bytes are added for the end characters depending on the OS.
 #' @noRd
-chars <- function(lines) {
+chars_back <- function(lines) {
   
   
   ret <- sum(nchar(enc2utf8(lines), type = "bytes"))
@@ -523,6 +573,31 @@ chars <- function(lines) {
   if (Sys.info()["sysname"] == "Windows") {
     ret <- ret + sum(stringi::stri_count(lines, fixed = "\n")) - 2
   }
+  
+  return(ret)
+}
+
+#' A function to cast lists of mixed content to lists of raw vectors
+#' @noRd
+vraw <- Vectorize(function(line) {
+  
+  
+ if (class(line) == "raw") {
+   ret <- line
+ } else {
+   
+  ret <- charToRaw(enc2utf8(line))
+ }
+  
+  return(ret)
+  
+})
+
+#' Count actual bytes as will exist in the file
+#' @noRd
+chars <- function(lines) {
+  
+  ret <- length(unlist(vraw(lines)))
   
   return(ret)
 }
@@ -538,6 +613,7 @@ ref <- function(id) {
   
 }
 
+#' Utility function to create content for a text stream
 #' @noRd
 get_text_stream <- function(contents, startx, starty, 
                             lineheight, fontsize, fontscale) {
@@ -547,32 +623,33 @@ get_text_stream <- function(contents, startx, starty,
   
   ret <- paste0("BT /F1 ", fontsize, 
                 " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td (", 
-                contents, ")Tj ET")
+                contents, ")Tj ET\n")
   
+  # Not working
+  #ret <- memCompress(ret, type = "gzip")
   
   return(ret)
   
 }
 
+#' Utility function to create content for an image stream
 #' @noRd
-get_binary_stream <- function(filename) {
+get_image_stream <- function(filename) {
   
-  ret <- "stream\n"
+
   
   if (!file.exists(filename))
     stop(paste0("File does not exist: ", filename))
   
-  f <- file(filename, open="r+", encoding = "native.enc")
+  f <- file(filename, open="rb", encoding = "native.enc")
   
   
-  lns <- readLines(con = f, encoding = "UTF-8")
+  ret <- readBin(con = f, "raw", 10000)
   
   
   close(f)
   
-  ret <- paste0(ret, paste0(lns, collapse = ""))
-  
-  ret <- paste0(ret, "endstream\n")
+
   
   return(ret)
   

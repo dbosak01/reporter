@@ -92,7 +92,7 @@ test_that("pdf_object and render.pdf_object work as expected.", {
 test_that("pdf_stream and render.pdf_stream work as expected.", {
   
   
-  d <- pdf_stream(1, "Here is some text")
+  d <- pdf_text_stream(1, "Here is some text")
   
   
   expect_equal(length(d), 2)
@@ -155,10 +155,7 @@ test_that("render.xref works as expected.", {
   
   expect_equal(length(d), 1)
   
-  if (Sys.info()[["sysname"]] == "Windows")
-     expect_equal(chars(d), 211)
-  else 
-    expect_equal(chars(d), 208)
+  expect_equal(chars(d), 208)
   
   
 })
@@ -167,7 +164,7 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   
   d <- pdf_document(pdf_object(1, pdf_dictionary(Type = "/Catalog", 
                                                  Pages = "2 0 R")),
-                    pdf_stream(2, "Here is some text"))
+                    pdf_text_stream(2, "Here is some text"))
   
   class(d)
   
@@ -180,12 +177,9 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   
   rnd <- render(d)
   
-  
-  #cat(rnd)
-  if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(chars(rnd), 261)
-  else 
-    expect_equal(chars(rnd), 249)
+  # rnd
+  #cat(rawToChar(rnd))
+  expect_equal(length(rnd), 249)
   
   
   # paste0("%PDF-1.7\n",
@@ -215,9 +209,9 @@ test_that("pdf_header works as expected.", {
   
   hdrtxt <- render(pdf_document(hdr))
   
-  #cat(hdrtxt)
+  #cat(rawToChar(hdrtxt))
   
-  expect_equal(nchar(hdrtxt) > 0, TRUE)
+  expect_equal(length(hdrtxt), 503)
   
   # Check two pages
   hdr <- pdf_header(pagecount = 2)
@@ -226,9 +220,9 @@ test_that("pdf_header works as expected.", {
   
   hdrtxt <- render(pdf_document(hdr))
   
-  #cat(hdrtxt)
+  #cat(rawToChar(hdrtxt))
   
-  expect_equal(nchar(hdrtxt) > 0, TRUE)
+  expect_equal(length(hdrtxt), 630)
   
   # Check three pages
   hdr <- pdf_header(pagecount = 3)
@@ -237,9 +231,9 @@ test_that("pdf_header works as expected.", {
   
   hdrtxt <- render(pdf_document(hdr))
   
-  #cat(hdrtxt)
+  #cat(rawToChar(hdrtxt))
   
-  expect_equal(nchar(hdrtxt) > 0, TRUE)
+  expect_equal(length(hdrtxt), 758)
   
 })
 
@@ -247,7 +241,7 @@ test_that("create full document works as expected.", {
   
   
   
-  strm <- pdf_stream(6, c(
+  strm <- pdf_text_stream(6, c(
                      "BT /F1 12 Tf 175 600 Td (Hello here is some more)Tj ET",
                      "BT /F1 12 Tf 175 580 Td (There I like text.)Tj ET",
                      "BT /F1 12 Tf 175 560 Td (World and more)Tj ET", 
@@ -265,10 +259,10 @@ test_that("create full document works as expected.", {
   fp <- file.path(base_path, "pdf/direct1.pdf")
   
 
-  f <- file(fp, open="w+", encoding = "native.enc")
+  f <- file(fp, open="wb", encoding = "native.enc")
   
   
-  writeLines(enc2utf8(res), con = f, useBytes = TRUE)
+  writeBin(res, con = f, useBytes = TRUE)
   
   
   close(f)
@@ -286,31 +280,15 @@ test_that("chars function works as expected.", {
   
   res <- chars(tmp)
   
-  
-  if (Sys.info()["sysname"] == "Windows") {
-  
-    expect_equal(res, 9)
-  } else {
+  expect_equal(res, 10)
     
-    expect_equal(res, 10)
-    
-  }
-  
-  
+
   tmp <- c("%PDF-1.P7\n",
            "%âãÏÓ\n")
   
-  
   res <- chars(tmp)
-  
-  
-  if (Sys.info()["sysname"] == "Windows") {
-    expect_equal(res, 20)
-    
-  } else {
-    
-    expect_equal(res, 20)
-  }
+
+  expect_equal(res, 20)
   
   
 }) 
@@ -320,13 +298,12 @@ test_that("get_text_stream function works as expected.", {
   
   contents <- c("Hello", "goodbye", "later")
   
-  
   res <- get_text_stream(contents, 50, 600, 20, 12, 100)
   
   
   expect_equal(length(res), 3)
   
-  expect_equal(res[[3]], "BT /F1 12 Tf 100 Tz 50 560 Td (later)Tj ET")
+  expect_equal(res[[3]], "BT /F1 12 Tf 100 Tz 50 560 Td (later)Tj ET\n")
   
 })
 
@@ -384,7 +361,7 @@ test_that("Two page pdf works as expected.", {
   
   write_pdf(fp, lst, info = TRUE, author = "David Bosak",
             keywords = "one two three", subject = "Reporting",
-            title = "PDF 1.0", fontname = "XTCHNU+LMMono10-Regular")
+            title = "PDF 1.0")
   
   expect_equal(file.exists(fp), TRUE)  
   
@@ -446,23 +423,99 @@ test_that("Direct table with 2 pages works as expected.", {
 })
 
 
-
-test_that("Different font works as expected.", {
+test_that("vraw function works as expected.", {
   
+  str <- list("Hello\n", "thereÏ\n", charToRaw("fork\n"))
   
+  str2 <- vraw(str)
   
-  fp <- file.path(base_path, "pdf/direct9.pdf")
+  expect_equal(length(str2), 3)
   
-  lst <- list()
-  lst[[1]] <- c("disp", "There", "Here is some text")
-
-  
-  write_pdf(fp, lst, info = TRUE, author = "David Bosak",
-            keywords = "one two three", subject = "Reporting",
-            title = "PDF 1.0", fontsize = 10)
-  
-  expect_equal(file.exists(fp), TRUE)  
-  
+  expect_equal(length(unlist(str2)), 19)
   
   
 })
+
+# 
+# test_that("get_image_stream works as expected.", {
+#   
+#   fp <- file.path(base_path, "pdf/direct9.pdf")
+#   
+#   
+#   str <- enc2utf8(c("Hello\n", "thereÏ\n"))
+# 
+#   str2 <- c()
+#   
+#   str2[[1]] <- charToRaw(str[1])
+#   str2[[2]] <- charToRaw(str[2])
+#   
+#   str3 <- unlist(str2)
+#   
+#   length(str2)
+#   
+#   nchar(str2, type = "bytes")
+#   
+#   str3 <- rawToChar(str2)
+# 
+#   cmp <- memCompress(str, "g")
+#   
+#   
+#   fp <- file.path(base_path, "pdf/test.bin")
+#   
+#   con <- file(fp, "wb", encoding = "native.enc")
+#   
+#   writeBin(str3, fp, useBytes = TRUE)
+#   
+#   close(con)
+#   
+#   
+# })
+# 
+# 
+# 
+# test_that("File with embedded png works.", {
+#   
+#   fp1 <- file.path(base_path, "pdf/dot.png")
+#   
+#   res <- get_image_stream(fp1)
+#   
+#   fp2 <- file.path(base_path, "pdf/dot2.png")
+#   
+#   con <- file(fp2, "wb", encoding = "native.enc")
+#   
+#   writeBin(res, fp2, useBytes = TRUE)
+#   
+#   close(con)
+#   
+# 
+# })
+# 
+# 
+# test_that("Simplest direct plot works as expected.", {
+#   
+#   
+#   library(ggplot2)
+#   
+#   fp <- file.path(base_path, "pdf/direct10.pdf")
+#   
+#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+#   
+#   plt <- create_plot(p, height = 4, width = 8)
+#   
+#   
+#   rpt <- create_report(fp, output_type = "PDF") %>%
+#     page_header("Client", "Study: XYZ") %>%
+#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+#     set_margins(top = 1, bottom = 1) %>%
+#     add_content(plt, align = "center") %>%
+#     footnotes("* Motor Trend, 1974") %>%
+#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+#   
+#   res <- write_report(rpt)
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   
+#   
+#   
+# })
+

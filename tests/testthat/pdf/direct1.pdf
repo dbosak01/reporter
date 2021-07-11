@@ -1,5 +1,5 @@
 %PDF-1.7
-%âãÏÓ
+%ȃãÏÓ
 1 0 obj<</Type /Catalog /Pages 4 0 R>>
 endobj
 2 0 obj<</Font <</F1 3 0 R>>>>
@@ -10,7 +10,7 @@ endobj
 endobj
 5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 6 0 R>>
 endobj
-6 0 obj<</Length 198>>
+6 0 obj<</Length 196>>
 stream
 BT /F1 12 Tf 175 600 Td (Hello here is some more)Tj ET
 BT /F1 12 Tf 175 580 Td (There I like text.)Tj ET
@@ -20,14 +20,14 @@ endstream
 endobj
 xref
 0 7
-0000000000 65535 f
-0000000020 00000 n
-0000000068 00000 n
-0000000108 00000 n
-0000000175 00000 n
-0000000231 00000 n
-0000000334 00000 n
+0000000000 65535 f 
+0000000019 00000 n 
+0000000065 00000 n 
+0000000103 00000 n 
+0000000168 00000 n 
+0000000222 00000 n 
+0000000323 00000 n 
 trailer <</Size 7 /Root 1 0 R>>
 startxref
-585
+566
 %%EOF
