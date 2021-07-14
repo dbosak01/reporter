@@ -79,6 +79,13 @@ write_pdf_output <- function(rs, ls, pdf_path) {
   pgs <- list()
   pg <- c()
   
+  
+  if (rs$has_graphics) {
+    
+    ls <- gsub("```fill```", "", ls, fixed = TRUE)
+    
+  }
+  
   for (ln in ls) {
     
     res <- grep("\f", ln, fixed = TRUE, value = FALSE) 
@@ -88,7 +95,7 @@ write_pdf_output <- function(rs, ls, pdf_path) {
       pg <- c(gsub("\f", "", ln, fixed = TRUE))
     
     } else {
-      
+
       pg[length(pg) + 1] <- ln   
       
     }
@@ -100,16 +107,24 @@ write_pdf_output <- function(rs, ls, pdf_path) {
   if (file.exists(pdf_path))
     file.remove(pdf_path)
   
+  r <- create_pdf(filename = pdf_path,
+                  margin_top = rs$margin_top,
+                  margin_left = rs$margin_left,
+                  fontsize = rs$font_size,
+                  page_height = rs$page_size[1],
+                  page_width = rs$page_size[2],
+                  orientation = rs$orientation,
+                  units = rs$units,
+                  info = TRUE)
   
-  write_pdf(pdf_path, pgs, 
-            margin_top = rs$margin_top,
-            margin_left = rs$margin_left,
-            fontsize = rs$font_size,
-            page_height = rs$page_size[1],
-            page_width = rs$page_size[2],
-            orientation = rs$orientation,
-            units = rs$units,
-            info = TRUE)
+  for (pg in pgs) {
+    
+    r <- add_page(r, page_text(pg)) 
+  }
+  
+  
+  write_pdf(r)
+  
   
   return(pdf_path)
   

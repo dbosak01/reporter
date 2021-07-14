@@ -1,51 +1,46 @@
 %PDF-1.7
-%»É√£√è√ì
+%‚„œ”
 1 0 obj<</Type /Catalog /Pages 4 0 R>>
 endobj
 2 0 obj<</Font <</F1 3 0 R>>>>
 endobj
 3 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier>>
 endobj
-4 0 obj<</Type /Pages /Kids [5 0 R 6 0 R] /Count 2>>
+4 0 obj<</Type /Pages /Kids [5 0 R 7 0 R] /Count 2 /MediaBox [0 0 792 612]>>
 endobj
-5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 7 0 R>>
+5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /ProcSet [/PDF /Text] /Contents 6 0 R>>
 endobj
-6 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 8 0 R>>
-endobj
-7 0 obj<</Length 145>>
+6 0 obj<</Length 142>>
 stream
 BT /F1 10 Tf 87 Tz 59 535 Td (Hello)Tj ET
-
 BT /F1 10 Tf 87 Tz 59 523.1 Td (There)Tj ET
-
 BT /F1 10 Tf 87 Tz 59 511.2 Td (Here is some text)Tj ET
-
 endstream
 endobj
-8 0 obj<</Length 104>>
+7 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /ProcSet [/PDF /Text] /Contents 8 0 R>>
+endobj
+8 0 obj<</Length 102>>
 stream
 BT /F1 10 Tf 87 Tz 59 535 Td (Hey!)Tj ET
-
 BT /F1 10 Tf 87 Tz 59 523.1 Td (Here is a second page!)Tj ET
-
 endstream
 endobj
-9 0 obj<</Producer (reporter v1.2) /Author (David Bosak) /Title (PDF 1.0) /Subject (Reporting) /Creator (R version 4.0.5 (2021-03-31)) /Keywords (one two three)
- /CreationDate (D:20210710205158-04'00') /ModDate (D:20210710205158-04'00')>>
+9 0 obj<</Producer (reporter v1.2) /Author (dbosa) /Title () /Subject () /Creator (R version 4.0.5 (2021-03-31)) /Keywords ()
+ /CreationDate (D:20210714001135-04'00') /ModDate (D:20210714001135-04'00')>>
 endobj
 xref
 0 10
 0000000000 65535 f 
-0000000019 00000 n 
-0000000065 00000 n 
-0000000103 00000 n 
-0000000168 00000 n 
-0000000228 00000 n 
-0000000329 00000 n 
-0000000430 00000 n 
-0000000622 00000 n 
-0000000773 00000 n 
+0000000015 00000 n 
+0000000061 00000 n 
+0000000099 00000 n 
+0000000164 00000 n 
+0000000248 00000 n 
+0000000347 00000 n 
+0000000536 00000 n 
+0000000635 00000 n 
+0000000784 00000 n 
 trailer <</Size 10 /Root 1 0 R /Info 9 0 R>>
 startxref
-1019
+995
 %%EOF

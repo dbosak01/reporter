@@ -2,8 +2,10 @@
 context("write_pdf Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
+data_dir <- base_path
 
 base_path <- tempdir()
+data_dir <- "."
 
 test_that("pdf_array and render.pdf_array work as expected.", {
   
@@ -179,7 +181,7 @@ test_that("pdf_document and render.pdf_document work as expected.", {
   
   # rnd
   #cat(rawToChar(rnd))
-  expect_equal(length(rnd), 249)
+  expect_equal(length(rnd), 245)
   
   
   # paste0("%PDF-1.7\n",
@@ -200,46 +202,76 @@ test_that("pdf_document and render.pdf_document work as expected.", {
 })
 
 
-test_that("pdf_header works as expected.", {
+test_that("get_header works as expected.", {
   
   # Check one page
-  hdr <- pdf_header(pagecount = 1)
+  hdr <- get_header(page_count = 1,
+                    font_name = "Arial",
+                    page_ids = c(3))
   
-  expect_equal(length(hdr), 5)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 503)
+  expect_equal(length(hdrtxt), 400)
   
   # Check two pages
-  hdr <- pdf_header(pagecount = 2)
+  hdr <- get_header(page_count = 2,
+                    page_ids = c(3, 4),
+                    page_height = 500,
+                    page_width = 600)
   
-  expect_equal(length(hdr), 6)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 630)
+  expect_equal(length(hdrtxt), 408)
   
   # Check three pages
-  hdr <- pdf_header(pagecount = 3)
+  hdr <- get_header(page_count = 3,
+                    page_ids = c(3, 4, 5))
   
-  expect_equal(length(hdr), 7)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 758)
+  expect_equal(length(hdrtxt), 414)
   
+})
+
+test_that("pdf_page works as expected.", {
+  
+  pg1 <- pdf_page(5, 6)
+  
+  expect_equal(length(pg1), 4)
+  expect_equal(pg1$id, 5)
+  expect_equal(pg1$content_id, 6)
+  expect_equal(unclass(pg1$parameters$ProcSet), list("/PDF", "/Text"))
+  
+  
+  pg2 <- pdf_page(5, 6, c(7, 8))
+  
+  expect_equal(length(pg2), 5)
+  expect_equal(pg2$id, 5)
+  expect_equal(pg2$content_id, 6)
+  expect_equal(unclass(pg2$parameters$ProcSet), list("/PDF", 
+                                                     "/Text", 
+                                                     "/ImageB", 
+                                                     "/ImageC", 
+                                                     "/ImageI"))
+  expect_equal(pg2$graphic_ids, c(7, 8))
 })
 
 test_that("create full document works as expected.", {
   
   
+  pg <- pdf_page(5, 6)
   
   strm <- pdf_text_stream(6, c(
                      "BT /F1 12 Tf 175 600 Td (Hello here is some more)Tj ET",
@@ -247,16 +279,21 @@ test_that("create full document works as expected.", {
                      "BT /F1 12 Tf 175 560 Td (World and more)Tj ET", 
                      "BT /F1 12 Tf 175 540 Td (And some more)Tj ET"))
   
-  doc <- pdf_document(pdf_header(1), strm)
+
+  
+  doc <- pdf_document(get_header(1, page_ids = 5), pg, strm)
   
   expect_equal(length(doc), 6)
   expect_equal("pdf_document" %in% class(doc), TRUE)
   
   res <- render(doc)
   
-  #cat(res)
+  #cat(rawToChar(res))
   
   fp <- file.path(base_path, "pdf/direct1.pdf")
+  
+  if (file.exists(fp))
+    file.remove(fp)
   
 
   f <- file(fp, open="wb", encoding = "native.enc")
@@ -284,11 +321,11 @@ test_that("chars function works as expected.", {
     
 
   tmp <- c("%PDF-1.P7\n",
-           "%âãÏÓ\n")
+           "%fork\n")
   
   res <- chars(tmp)
 
-  expect_equal(res, 20)
+  expect_equal(res, 16)
   
   
 }) 
@@ -303,124 +340,10 @@ test_that("get_text_stream function works as expected.", {
   
   expect_equal(length(res), 3)
   
-  expect_equal(res[[3]], "BT /F1 12 Tf 100 Tz 50 560 Td (later)Tj ET\n")
+  expect_equal(res[[3]], "BT /F1 12 Tf 100 Tz 50 560 Td (later)Tj ET")
   
 })
 
-test_that("basic write_pdf works as expected.", {
-  
-  fp <- file.path(base_path, "pdf/direct2.pdf")
-  
-  cnts <- list()
-  cnts[[1]] <- c("Hello", "There", "Here is some text")
-  
-  write_pdf(fp, cnts, fontsize = 8, info = FALSE)
-
-  expect_equal(file.exists(fp), TRUE)  
-  
-})
-
-
-test_that("write_pdf with info works as expected.", {
-  
-  fp <- file.path(base_path, "pdf/direct3.pdf")
-  
-  cnts <- list()
-  cnts[[1]] <- c("Hello", "There", "Here is some text")
-  
-  write_pdf(fp, cnts, info = TRUE, author = "David Bosak",
-            keywords = "one two three", subject = "Reporting",
-            title = "PDF 1.0")
-  
-  expect_equal(file.exists(fp), TRUE)  
-  
-})
-
-
-test_that("write_pdf with info defaults work as expected.", {
-  
-  fp <- file.path(base_path, "pdf/direct4.pdf")
-  
-  cnts <- list()
-  cnts[[1]] <- c("Hello", "There", "Here is some text")
-  
-  write_pdf(fp, cnts, info = TRUE, margin_left = .5, margin_top = .5)
-  
-  expect_equal(file.exists(fp), TRUE)  
-  
-})
-
-
-test_that("Two page pdf works as expected.", {
-  
-  fp <- file.path(base_path, "pdf/direct5.pdf")
-  
-  lst <- list()
-  lst[[1]] <- c("Hello", "There", "Here is some text")
-  lst[[2]] <- c("Hey!", "Here is a second page!")
-  
-  write_pdf(fp, lst, info = TRUE, author = "David Bosak",
-            keywords = "one two three", subject = "Reporting",
-            title = "PDF 1.0")
-  
-  expect_equal(file.exists(fp), TRUE)  
-  
-})
-
-
-test_that("Three page pdf works as expected.", {
-  
-  fp <- file.path(base_path, "pdf/direct6.pdf")
-  
-  lst <- list()
-  lst[[1]] <- c("Hello", "There", "Here is some text")
-  lst[[2]] <- c("Hey!", "Here is a second page!")
-  lst[[3]] <- c("Third page!")
-  
-  write_pdf(fp, lst, info = TRUE, author = "David Bosak",
-            keywords = "one two three", subject = "Reporting",
-            title = "PDF 1.0")
-  
-  expect_equal(file.exists(fp), TRUE)  
-  
-})
-
-test_that("Simplest direct table works as expected.", {
-  
-  
-
-    
-    fp <- file.path(base_path, "pdf/direct7.pdf")
-    
-    rpt <- create_report(fp, output_type = "PDF") %>%
-      add_content(create_table(mtcars[1:10, ]), align = "left") %>% 
-      set_margins(top = .5)
-    
-    res <- write_report(rpt)
-    
-    expect_equal(file.exists(fp), TRUE)
-    
-
-  
-})
-
-test_that("Direct table with 2 pages works as expected.", {
-  
-  
-
-  fp <- file.path(base_path, "pdf/direct8.pdf")
-  
-  rpt <- create_report(fp, output_type = "PDF") %>%
-    add_content(create_table(mtcars[1:10, ])) %>% 
-    add_content(create_table(mtcars[11:32, ])) 
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
-  
-  
-  
-})
 
 
 test_that("vraw function works as expected.", {
@@ -436,61 +359,339 @@ test_that("vraw function works as expected.", {
   
 })
 
+
+test_that("get_image_text works as expected.", {
+  
+  res <- get_image_text(img_ref = 23, height = 200, width = 400, 
+                        xpos= 100, ypos = 150)
+  
+  
+  expect_equal(res[1], "q")
+  expect_equal(res[2], "400 0 0 200 100 150 cm")
+  expect_equal(res[3], "/X23 Do")
+  expect_equal(res[4], "Q")
+  
+  
+})
+
+test_that("pdf_image_stream works as expected.", {
+  
+  fp <- file.path(data_dir, "data/dot.jpg")
+  
+  f <- file(fp, open="rb", encoding = "native.enc")
+  
+  png <- readBin(f, "raw", 10000)
+  
+  close(f)
+  
+  
+  strm <- pdf_image_stream(6, 60, 60, png)
+  
+  strm
+  
+  expect_equal(length(strm), 5)
+  
+  res <- render.pdf_image_stream(strm, view = TRUE)
+  
+  res
+  
+  expect_equal(length(res), 6)
+  
+  
+})
+
+
+
+
+test_that("create_pdf and add_page work as expected.", {
+  
+  p <- create_pdf(filename = "mypath.pdf",
+                  orientation = "portrait",
+                  fontsize = 12,
+                  fontname = "Arial",
+                  page_height = 200,
+                  page_width = 500,
+                  units = "cm",
+                  margin_top = 3,
+                  margin_left = 4) %>% 
+    add_page(page_text("here is some text"), 
+             page_image("myimagefile.jpg", 
+                        200, 600, align= "left",
+                        xpos = 25, ypos = 30)) %>% 
+    add_info(author = "David",
+             subject = "Stuff",
+             keywords = "reports",
+             title = "My Title")
+  
+  
+  
+    expect_equal(p$filename, "mypath.pdf")
+    expect_equal(p$page_height, 200)
+    expect_equal(p$fontname, "Arial")
+    expect_equal(p$fontsize, 12)
+    expect_equal(p$margin_top, 3)
+    expect_equal(p$margin_left, 4)
+    expect_equal(p$info, TRUE)
+    expect_equal(p$author, "David")
+    expect_equal(p$title, "My Title")
+    expect_equal(p$subject, "Stuff")
+    expect_equal(p$keywords, "reports")
+    expect_equal(p$orientation, "portrait")
+    expect_equal(p$units, "cm")
+    expect_equal(length(p$pages), 1)
+    txt <- p$pages[[1]][[1]]
+    expect_equal(txt$text, "here is some text")
+    img <- p$pages[[1]][[2]]
+    expect_equal(img$filename, "myimagefile.jpg")
+    expect_equal(img$height, 200)
+    expect_equal(img$width, 600)
+    expect_equal(img$align, "left")
+    expect_equal(img$xpos, 25)
+    expect_equal(img$ypos, 30)
+  
+})
+
+
+
+test_that("get_image_stream works as expected.", {
+
+  fp <- file.path(data_dir, "data/dot.jpg")
+  
+  res <- get_image_stream(fp)
+
+
+
+  fp <- file.path(base_path, "pdf/dot2.jpg")
+  
+  if (file.exists(fp))
+    file.remove(fp)
+
+  con <- file(fp, "wb", encoding = "native.enc")
+
+  writeBin(res, con, useBytes = TRUE)
+
+  close(con)
+  
+  
+  expect_equal(file.exists(fp), TRUE)
+
+
+})
+
+test_that("get_pages works as expected.", {
+  
+  fp <- file.path(data_dir, "data/dot.jpg")
+  
+  
+  rpt <- create_pdf() %>% 
+    add_page(page_text("Hello")) %>% 
+    add_page(page_text("There")) %>% 
+    add_page(page_text("Image page"),
+             page_image(fp, height = 60, width = 62, xpos = 100, ypos = 150))
+  
+  rpt 
+  
+  expect_equal(length(rpt$pages), 3)
+  expect_equal(length(rpt$pages[[3]]), 2)
+  
+  res <- get_pages(rpt$pages, 
+                   margin_left = rpt$margin_left, 
+                   margin_top = rpt$margin_top, 
+                   page_height = rpt$page_height, 
+                   page_width = rpt$page_width,
+                   fontsize = rpt$fontsize)
+  
+  
+  res
+  
+  expect_equal(res$page_ids, c(5, 7, 9))
+  expect_equal(length(res$objects), 7)
+  
+  
+})
+
+test_that("basic write_pdf works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct2.pdf")
+  
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_text(c("Hello", "There", "Here is some text")))
+  
+  expect_equal(r$filename, fp)
+  expect_equal(r$fontname, "Courier")
+  expect_equal(length(r$pages), 1)
+  expect_equal(r$pages[[1]][[1]]$text, c("Hello", "There", "Here is some text"))
+  
+
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+
+test_that("write_pdf with info works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct3.pdf")
+
+  r <- create_pdf(fp) %>% 
+    add_page(page_text( c("Hello", "There", "Here is some text"))) %>% 
+    add_info(author = "David Bosak",
+             keywords = "one two three", subject = "Reporting",
+             title = "PDF 1.0")
+    
+
+  write_pdf(r)
+
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("write_pdf with info defaults work as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct4.pdf")
+
+  
+  r <- create_pdf(fp, margin_top = .5, margin_left = .5) %>% 
+    add_page(page_text( c("Hello", "There", "Here is some text"))) 
+  
+  
+  write_pdf(r)
+
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("Two page pdf works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct5.pdf")
+
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_text(c("Hello", "There", "Here is some text"))) %>% 
+    add_page(page_text(c("Hey!", "Here is a second page!"))) 
+    
+
+  write_pdf(r)
+
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("Three page pdf works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct6.pdf")
+  
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_text(c("Hello", "There", "Here is some text"))) %>% 
+    add_page(page_text(c("Hey!", "Here is a second page!"))) %>% 
+    add_page(page_text(c("A third page!")))
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("Simplest direct table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/direct7.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    add_content(create_table(mtcars[1:10, ]), align = "left") %>% 
+    set_margins(top = .5)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+test_that("Direct table with 2 pages works as expected.", {
+  
+  
+  
+  fp <- file.path(base_path, "pdf/direct8.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    add_content(create_table(mtcars[1:10, ])) %>% 
+    add_content(create_table(mtcars[11:32, ])) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
 # 
-# test_that("get_image_stream works as expected.", {
-#   
-#   fp <- file.path(base_path, "pdf/direct9.pdf")
-#   
-#   
-#   str <- enc2utf8(c("Hello\n", "thereÏ\n"))
+# test_that("simple jpg document works as expected.", {
 # 
-#   str2 <- c()
-#   
-#   str2[[1]] <- charToRaw(str[1])
-#   str2[[2]] <- charToRaw(str[2])
-#   
-#   str3 <- unlist(str2)
-#   
-#   length(str2)
-#   
-#   nchar(str2, type = "bytes")
-#   
-#   str3 <- rawToChar(str2)
+#   fp <- file.path(base_path, "pdf/dot.jpg")
 # 
-#   cmp <- memCompress(str, "g")
-#   
-#   
-#   fp <- file.path(base_path, "pdf/test.bin")
-#   
-#   con <- file(fp, "wb", encoding = "native.enc")
-#   
-#   writeBin(str3, fp, useBytes = TRUE)
-#   
-#   close(con)
-#   
-#   
+#   f <- file(fp, open="rb", encoding = "native.enc")
+# 
+#   png <- readBin(f, "raw", 10000)
+# 
+#   close(f)
+# 
+# 
+#   strm <- pdf_image_stream(6, 60, 60, png)
+# 
+#   doc <- pdf_document(get_header(1), strm)
+# 
+#   expect_equal(length(doc), 6)
+#   expect_equal("pdf_document" %in% class(doc), TRUE)
+# 
+#   res <- render(doc)
+# 
+#   res
+# 
+# 
+#   fp <- file.path(base_path, "pdf/direct90.pdf")
+# 
+# 
+#   f <- file(fp, open="wb", encoding = "native.enc")
+# 
+# 
+#   writeBin(res, con = f, useBytes = TRUE)
+# 
+# 
+#   close(f)
+# 
+#   expect_equal(file.exists(fp), TRUE)
+# 
 # })
-# 
-# 
-# 
-# test_that("File with embedded png works.", {
-#   
-#   fp1 <- file.path(base_path, "pdf/dot.png")
-#   
-#   res <- get_image_stream(fp1)
-#   
-#   fp2 <- file.path(base_path, "pdf/dot2.png")
-#   
-#   con <- file(fp2, "wb", encoding = "native.enc")
-#   
-#   writeBin(res, fp2, useBytes = TRUE)
-#   
-#   close(con)
-#   
-# 
-# })
-# 
-# 
+
+
+test_that("simple jpg document works as expected.", {
+  
+  
+  ip <- file.path(data_dir, "data/dot.jpg")
+  fp <- file.path(base_path, "pdf/direct9.pdf")
+  
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_image(ip, 1, 1, 100, 100))
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)    
+  
+})
+
+
 # test_that("Simplest direct plot works as expected.", {
 #   
 #   
