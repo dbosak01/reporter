@@ -51,11 +51,29 @@ create_pdf <- function(filename = NULL,
 
 
 #' @param x The pdf_report object to add a page to.
-#' @param content The page_text or page_image content to add.
+#' @param ... The page_text or page_image content to add.
 #' @noRd
 add_page <- function(x, ...) {
   
-  pg <- structure(list(...), class = c("pdf_page", "list"))
+  
+  pg <- structure(list(), class = c("pdf_page", "list"))
+  
+  inc <- list(...)
+  
+  for (itm in inc) {
+    
+    if (all(class(itm) == "list")) {
+      
+      for (sub in itm) {
+        pg[[length(pg) + 1]] <- sub 
+        
+      }
+      
+      
+    } else 
+      pg[[length(pg) + 1]] <- itm
+  }
+
   
   
   x$pages[[length(x$pages) + 1]] <- pg
@@ -101,22 +119,38 @@ page_text <- function(text #, font_name = NULL, font_size = NULL,
   
 }
 
+#' Either pass align parameter and line_start, or pass specific xpos and ypos
+#' All measurements in units specified.  Processing function will convert
+#' appropriately.
 #' @noRd
 page_image <- function(filename, height, width,  
-                       align = "center", #image_type = "JPG",
+                       align = "center", line_start = NULL,
                        xpos = NULL, ypos = NULL, units = "inches",
                        dpi = 300) {
   
   img <- structure(list(), class = c("page_image", "page_content", "list"))
   
+  if (!is.null(xpos) & !is.null(ypos)) {
+    
+    img$xpos <- xpos
+    img$ypos <- ypos
+
+  } else if (!is.null(align) * !is.null(line_start)) {
+    
+    img$align <- align 
+    img$line_start <- line_start
+    
+  } else {
+    
+    stop("Must set either align parameter or xpos.") 
+  }
+  
   img$filename <- filename
   img$height <- height
   img$width <- width
-  img$align <- align
-  img$xpos <- xpos
-  img$ypos <- ypos
   img$units <- units
   img$dpi <- dpi
+
   
   return(img)
   
@@ -350,18 +384,43 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
           phgt <- cnt$height * cnt$dpi
           wth <- cnt$width  * inchsize
           hgt <- cnt$height * inchsize
-          xpos <- cnt$xpos * inchsize
-          ypos <- cnt$ypos * inchsize
+          
+          if (!is.null(cnt$align)) {
+            if (cnt$align == "left")
+              xpos <- margin_left * inchsize
+            else if (cnt$align == "right")
+              xpos <- (page_width * inchsize) - wth - (margin_left * inchsize)
+            else 
+              xpos <- ((page_width * inchsize)/2) - (wth / 2)
+            
+            ypos <- (page_height * inchsize) - hgt - 
+              (lh * (cnt$line_start - 1)) - (margin_top * inchsize)
+            
+          } else {
+            xpos <- cnt$xpos * inchsize
+            ypos <- (page_height * inchsize) - hgt - (cnt$ypos * inchsize) 
+          }
+          
           
         } else {
+          
+          # Come back to this.  Need to do something better.
+          # Maybe create a separate function to calculate this stuff.
           pwth <- round(cnt$width / in2cm, 2) * cnt$dpi
           phgt <- round(cnt$height / in2cm, 2) * cnt$dpi
           wth <- round(cnt$width / in2cm, 2) * inchsize 
           hgt <- round(cnt$height / in2cm, 2) * inchsize 
           xpos <- round(cnt$xpos / in2cm, 2) * inchsize
-          ypos <- round(cnt$ypos / in2cm, 2) * inchsize
+          ypos <- (page_height * inchsize) - hgt - 
+            (round(cnt$ypos / in2cm, 2) * inchsize)
         }
         
+        # print(paste("wth:", wth))
+        # print(paste("hgt:", hgt))
+        # print(paste("xpos:", xpos))
+        # print(paste("ypos:", ypos))
+
+
         # Every image needs a "Do" command on the content page
         tmp <- get_image_text(img_ref = id,
                               width = wth,
@@ -381,7 +440,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
       }
       
       # Append or replace content as appropriate
-      if (cnto$contents == "")
+      if (all(cnto$contents == ""))
         cnto$contents <- tmp
       else 
         cnto$contents <- append(cnto$contents, tmp)

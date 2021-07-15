@@ -77,26 +77,36 @@ write_report_pdf <- function(rs) {
 write_pdf_output <- function(rs, ls, pdf_path) {
   
   pgs <- list()
-  pg <- c()
-  
-  
+  pg <- list(text = c(), images = c())
+
+  # Replace fill lines with blanks
   if (rs$has_graphics) {
     
     ls <- gsub("```fill```", "", ls, fixed = TRUE)
     
   }
   
+  
   for (ln in ls) {
-    
+  
     res <- grep("\f", ln, fixed = TRUE, value = FALSE) 
     if (length(res) > 0) {
       
       pgs[[length(pgs) + 1]] <- pg
-      pg <- c(gsub("\f", "", ln, fixed = TRUE))
+      pg <- list(text = c(), images = c())
+      pg$text <- c(gsub("\f", "", ln, fixed = TRUE))
     
     } else {
 
-      pg[length(pg) + 1] <- ln   
+      res <- grep("```([^}]*)```", ln)
+      if (length(res) > 0) {
+        pg$text <- append(pg$text, "")
+        pi <- parse_image(ln)
+        pi$line_start <- length(pg$text)
+        pg$images[[length(pg$images) + 1]] <- pi
+      } else {
+        pg$text <- append(pg$text, ln)   
+      }
       
     }
   }
@@ -111,15 +121,34 @@ write_pdf_output <- function(rs, ls, pdf_path) {
                   margin_top = rs$margin_top,
                   margin_left = rs$margin_left,
                   fontsize = rs$font_size,
-                  page_height = rs$page_size[1],
-                  page_width = rs$page_size[2],
+                  page_height = rs$page_size[2],
+                  page_width = rs$page_size[1],
                   orientation = rs$orientation,
                   units = rs$units,
                   info = TRUE)
   
   for (pg in pgs) {
     
-    r <- add_page(r, page_text(pg)) 
+    if (length(pg$images) > 0) {
+      
+
+      
+      imgs <- list()
+      for (img in pg$images) {
+
+        imgs[[length(imgs) + 1]] <- page_image(img$filename,
+                                             height = img$height,
+                                             width = img$width,
+                                             align = img$align,
+                                             line_start = img$line_start)
+                  
+      }
+     
+      r <- add_page(r, page_text(pg$text), imgs)
+                    
+    } else {
+      r <- add_page(r, page_text(pg$text)) 
+    }
   }
   
   
@@ -127,6 +156,32 @@ write_pdf_output <- function(rs, ls, pdf_path) {
   
   
   return(pdf_path)
+  
+}
+
+parse_image <- function(image_string) {
+ 
+  ret <- list()
+  
+  # Remove braces
+  rw <- trimws(gsub("`", "", image_string, fixed = TRUE))  
+  
+  # Split on pipe
+  spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
+  
+  pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
+  
+  # 1 = path
+  # 2 = height
+  # 3 = width
+  # 4 = align 
+  
+  ret$filename <- pth
+  ret$height <- as.numeric(spec[[2]])
+  ret$width <- as.numeric(spec[[3]])
+  ret$align <- spec[[4]]
+  
+  return(ret)
   
 }
 

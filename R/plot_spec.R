@@ -214,7 +214,7 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
   
   for (dat in dat_lst) {
   
-    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".png")
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
     p$data <- dat
     

@@ -455,7 +455,7 @@ test_that("create_pdf and add_page work as expected.", {
     expect_equal(img$filename, "myimagefile.jpg")
     expect_equal(img$height, 200)
     expect_equal(img$width, 600)
-    expect_equal(img$align, "left")
+    expect_equal(is.null(img$align), TRUE)
     expect_equal(img$xpos, 25)
     expect_equal(img$ypos, 30)
   
@@ -644,44 +644,7 @@ test_that("Direct table with 2 pages works as expected.", {
   
 })
 
-# 
-# test_that("simple jpg document works as expected.", {
-# 
-#   fp <- file.path(base_path, "pdf/dot.jpg")
-# 
-#   f <- file(fp, open="rb", encoding = "native.enc")
-# 
-#   png <- readBin(f, "raw", 10000)
-# 
-#   close(f)
-# 
-# 
-#   strm <- pdf_image_stream(6, 60, 60, png)
-# 
-#   doc <- pdf_document(get_header(1), strm)
-# 
-#   expect_equal(length(doc), 6)
-#   expect_equal("pdf_document" %in% class(doc), TRUE)
-# 
-#   res <- render(doc)
-# 
-#   res
-# 
-# 
-#   fp <- file.path(base_path, "pdf/direct90.pdf")
-# 
-# 
-#   f <- file(fp, open="wb", encoding = "native.enc")
-# 
-# 
-#   writeBin(res, con = f, useBytes = TRUE)
-# 
-# 
-#   close(f)
-# 
-#   expect_equal(file.exists(fp), TRUE)
-# 
-# })
+
 
 
 test_that("simple jpg document works as expected.", {
@@ -712,31 +675,131 @@ test_that("simple jpg document works as expected.", {
 })
 
 
-# test_that("Simplest direct plot works as expected.", {
-#   
+test_that("Test jpg alignment works as expected.", {
+  
+  library(ggplot2)
+  
+  ip <- file.path(data_dir, "pdf/plot.jpg")
+
+  
+  
+  if (file.exists(ip))
+    file.remove(ip)
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  ggsave(filename= ip, plot = p, width = 6, height = 3, units = "in")
+  
+  
+  fp <- file.path(base_path, "pdf/direct10a.pdf")
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_image(ip, height = 3, width = 6, align = "left", line_start = 1))
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)   
+  
+  fp <- file.path(base_path, "pdf/direct10b.pdf")
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_image(ip, height = 3, width = 6, align = "right", line_start = 1))
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)   
+  
+  
+  fp <- file.path(base_path, "pdf/direct10c.pdf")
+  
+  r <- create_pdf(fp) %>% 
+    add_page(page_image(ip, height = 3, width = 6, align = "center", line_start = 1))
+  
+  
+  write_pdf(r)
+  
+  
+  expect_equal(file.exists(fp), TRUE)    
+  
+  
+  
+})
+
+# Work on this
+# test_that("simple jpg document works as expected in centimeters.", {
 #   
 #   library(ggplot2)
 #   
-#   fp <- file.path(base_path, "pdf/direct10.pdf")
+#   ip <- file.path(data_dir, "pdf/plot.jpg")
+#   fp <- file.path(base_path, "pdf/direct11.pdf")
+#   
+#   
+#   if (file.exists(ip))
+#     file.remove(ip)
 #   
 #   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 #   
-#   plt <- create_plot(p, height = 4, width = 8)
+#   ggsave(filename= ip, plot = p, width = 23, height = 13, 
+#          units = "cm")
+#   
+#   r <- create_pdf(fp) %>% 
+#     add_page(page_image(ip, height = 13, width = 23, xpos = 2.5, 
+#                         ypos = 2.5, units = "cm"))
 #   
 #   
-#   rpt <- create_report(fp, output_type = "PDF") %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(plt, align = "center") %>%
-#     footnotes("* Motor Trend, 1974") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+#   write_pdf(r)
 #   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
+#   expect_equal(file.exists(fp), TRUE)    
 #   
 #   
 #   
 # })
+
+test_that("Simplest direct table right aligned works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/direct12.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    add_content(create_table(mtcars[1:10, ]), align = "right") %>% 
+    set_margins(top = .5)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+
+test_that("Simplest direct plot works as expected.", {
+
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf/direct13.pdf")
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  plt <- create_plot(p, height = 4, width = 8)
+
+
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+
+})
 
