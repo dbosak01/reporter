@@ -209,13 +209,13 @@ test_that("get_header works as expected.", {
                     font_name = "Arial",
                     page_ids = c(3))
   
-  expect_equal(length(hdr), 4)
+  expect_equal(length(hdr), 3)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 400)
+  expect_equal(length(hdrtxt), 342)
   
   # Check two pages
   hdr <- get_header(page_count = 2,
@@ -223,25 +223,25 @@ test_that("get_header works as expected.", {
                     page_height = 500,
                     page_width = 600)
   
-  expect_equal(length(hdr), 4)
+  expect_equal(length(hdr), 3)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 408)
+  expect_equal(length(hdrtxt), 350)
   
   # Check three pages
   hdr <- get_header(page_count = 3,
                     page_ids = c(3, 4, 5))
   
-  expect_equal(length(hdr), 4)
+  expect_equal(length(hdr), 3)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 414)
+  expect_equal(length(hdrtxt), 356)
   
 })
 
@@ -514,7 +514,7 @@ test_that("get_pages works as expected.", {
   
   res
   
-  expect_equal(res$page_ids, c(5, 7, 9))
+  expect_equal(res$page_ids, c(4, 6, 8))
   expect_equal(length(res$objects), 7)
   
   
