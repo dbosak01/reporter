@@ -711,7 +711,7 @@ test_that("pdf23: RTF Table with Plot and borders works as expected.", {
 
 
 
-test_that("pdf24: RTF Table with Plot and borders works as expected.", {
+test_that("pdf24: PDF Table with Plot and borders works as expected.", {
 
   if (dev & FALSE) {
     library(ggplot2)

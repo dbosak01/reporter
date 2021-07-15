@@ -1,16 +1,14 @@
 %PDF-1.7
 %‚„œ”
-1 0 obj<</Type /Catalog /Pages 4 0 R>>
+1 0 obj<</Type /Catalog /Pages 3 0 R>>
 endobj
-2 0 obj<</Font <</F1 3 0 R>>>>
+2 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier>>
 endobj
-3 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier>>
+3 0 obj<</Type /Pages /Kids [4 0 R 6 0 R] /Count 2 /MediaBox [0 0 612 792]>>
 endobj
-4 0 obj<</Type /Pages /Kids [5 0 R 7 0 R] /Count 2 /MediaBox [0 0 612 792]>>
+4 0 obj<</Type /Page /Parent 3 0 R /Contents 5 0 R /Resources <</Font <</F1 2 0 R>> /ProcSet [/PDF /Text]>>>>
 endobj
-5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /ProcSet [/PDF /Text] /Contents 6 0 R>>
-endobj
-6 0 obj<</Length 2801>>
+5 0 obj<</Length 2801>>
 stream
 BT /F1 10 Tf 87 Tz 59 751 Td (                                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb)Tj ET
 BT /F1 10 Tf 87 Tz 59 739.1 Td (                                     ---------------------------------------------------)Tj ET
@@ -59,9 +57,9 @@ BT /F1 10 Tf 87 Tz 59 239.3 Td ()Tj ET
 BT /F1 10 Tf 87 Tz 59 227.4 Td ()Tj ET
 endstream
 endobj
-7 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /ProcSet [/PDF /Text] /Contents 8 0 R>>
+6 0 obj<</Type /Page /Parent 3 0 R /Contents 7 0 R /Resources <</Font <</F1 2 0 R>> /ProcSet [/PDF /Text]>>>>
 endobj
-8 0 obj<</Length 3857>>
+7 0 obj<</Length 3857>>
 stream
 BT /F1 10 Tf 87 Tz 59 751 Td (                                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb)Tj ET
 BT /F1 10 Tf 87 Tz 59 739.1 Td (                                     ---------------------------------------------------)Tj ET
@@ -110,22 +108,21 @@ BT /F1 10 Tf 87 Tz 59 239.3 Td ()Tj ET
 BT /F1 10 Tf 87 Tz 59 227.4 Td ()Tj ET
 endstream
 endobj
-9 0 obj<</Producer (reporter v1.2) /Author (dbosa) /Title () /Subject () /Creator (R version 4.0.5 (2021-03-31)) /Keywords ()
- /CreationDate (D:20210714002704-04'00') /ModDate (D:20210714002704-04'00')>>
+8 0 obj<</Producer (reporter v1.2) /Author (dbosa) /Title () /Subject () /Creator (R version 4.0.5 (2021-03-31)) /Keywords ()
+ /CreationDate (D:20210715015322-04'00') /ModDate (D:20210715015322-04'00')>>
 endobj
 xref
-0 10
+0 9
 0000000000 65535 f 
 0000000015 00000 n 
 0000000061 00000 n 
-0000000099 00000 n 
-0000000164 00000 n 
-0000000248 00000 n 
-0000000347 00000 n 
-0000003196 00000 n 
-0000003295 00000 n 
-0000007200 00000 n 
-trailer <</Size 10 /Root 1 0 R /Info 9 0 R>>
+0000000126 00000 n 
+0000000210 00000 n 
+0000000327 00000 n 
+0000003176 00000 n 
+0000003293 00000 n 
+0000007198 00000 n 
+trailer <</Size 9 /Root 1 0 R /Info 8 0 R>>
 startxref
-7411
+7409
 %%EOF

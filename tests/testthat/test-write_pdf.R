@@ -252,20 +252,30 @@ test_that("pdf_page works as expected.", {
   expect_equal(length(pg1), 4)
   expect_equal(pg1$id, 5)
   expect_equal(pg1$content_id, 6)
-  expect_equal(unclass(pg1$parameters$ProcSet), list("/PDF", "/Text"))
+  expect_equal(unclass(pg1$parameters$Resources$ProcSet), list("/PDF", "/Text"))
   
+  
+  pg1r <- render(pg1)
+  
+  pg1r
   
   pg2 <- pdf_page(5, 6, c(7, 8))
   
   expect_equal(length(pg2), 5)
   expect_equal(pg2$id, 5)
   expect_equal(pg2$content_id, 6)
-  expect_equal(unclass(pg2$parameters$ProcSet), list("/PDF", 
+  expect_equal(unclass(pg2$parameters$Resources$ProcSet), list("/PDF", 
                                                      "/Text", 
                                                      "/ImageB", 
                                                      "/ImageC", 
                                                      "/ImageI"))
+  
+  pg2r <- render(pg2)
+  
+  pg2r
+  
   expect_equal(pg2$graphic_ids, c(7, 8))
+
 })
 
 test_that("create full document works as expected.", {
@@ -676,18 +686,28 @@ test_that("Direct table with 2 pages works as expected.", {
 
 test_that("simple jpg document works as expected.", {
   
+  library(ggplot2)
   
-  ip <- file.path(data_dir, "data/dot.jpg")
+  ip <- file.path(data_dir, "pdf/plot.jpg")
   fp <- file.path(base_path, "pdf/direct9.pdf")
   
   
+  if (file.exists(ip))
+    file.remove(ip)
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  ggsave(filename= ip, plot = p, width = 9, height = 5, units = "in")
+  
   r <- create_pdf(fp) %>% 
-    add_page(page_image(ip, 1, 1, 100, 100))
+    add_page(page_image(ip, height = 5, width = 9, xpos = 1, ypos = 1))
   
   
   write_pdf(r)
   
   expect_equal(file.exists(fp), TRUE)    
+  
+
   
 })
 

@@ -104,7 +104,8 @@ page_text <- function(text #, font_name = NULL, font_size = NULL,
 #' @noRd
 page_image <- function(filename, height, width,  
                        align = "center", #image_type = "JPG",
-                       xpos = NULL, ypos = NULL) {
+                       xpos = NULL, ypos = NULL, units = "inches",
+                       dpi = 300) {
   
   img <- structure(list(), class = c("page_image", "page_content", "list"))
   
@@ -114,6 +115,8 @@ page_image <- function(filename, height, width,
   img$align <- align
   img$xpos <- xpos
   img$ypos <- ypos
+  img$units <- units
+  img$dpi <- dpi
   
   return(img)
   
@@ -235,11 +238,10 @@ get_header <- function(page_count = 1,
   lst <- list()
   
   lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
-                                           Pages = "4 0 R"))
+                                           Pages = ref(3)))
+
   
-  lst[[2]] <- pdf_object(2, pdf_dictionary(Font = pdf_dictionary(F1 = "3 0 R")))
-  
-  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Font", 
+  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
                                            Subtype = "/Type1", 
                                            BaseFont = paste0("/", font_name)))
   
@@ -248,7 +250,7 @@ get_header <- function(page_count = 1,
   else 
     kds <- paste(page_ids, "0 R", collapse = " ")
   
-  lst[[4]] <- pdf_object(4, pdf_dictionary(Type = "/Pages",
+  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Pages",
                                            Kids = pdf_array(kds),
                                            Count = page_count,                                                 
                                            MediaBox = pdf_array(0, 0, 
@@ -298,7 +300,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   # Starting ID is 5 because of standard header objects.
   # This id variable will be incremented along the way 
   # as needed to get unique ids for the objects. 
-  id <- 5
+  id <- 4
   
   # Loop through added pages
   for (pg in pages) {
@@ -344,12 +346,16 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         
         # Convert measurements to points
         if (units == "inches") {
-          wth <- cnt$width * inchsize
+          pwth <- cnt$width * cnt$dpi
+          phgt <- cnt$height * cnt$dpi
+          wth <- cnt$width  * inchsize
           hgt <- cnt$height * inchsize
           xpos <- cnt$xpos * inchsize
           ypos <- cnt$ypos * inchsize
           
         } else {
+          pwth <- round(cnt$width / in2cm, 2) * cnt$dpi
+          phgt <- round(cnt$height / in2cm, 2) * cnt$dpi
           wth <- round(cnt$width / in2cm, 2) * inchsize 
           hgt <- round(cnt$height / in2cm, 2) * inchsize 
           xpos <- round(cnt$xpos / in2cm, 2) * inchsize
@@ -365,8 +371,8 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         
         # Add stream to the list
         imgs[[length(imgs) + 1]] <- pdf_image_stream(id, 
-                                                     height = hgt,
-                                                     width = wth,
+                                                     height = phgt,
+                                                     width = pwth,
                                        get_image_stream(cnt$filename))
           
         # Increment id in preparation for next object
@@ -604,12 +610,9 @@ render.pdf_document <- function(x) {
     }
     
   }
-  
-  cnt <- paste0(cnts, collapse = "")
-  
 
 
-  cnts[[length(cnts) + 1]] <- render.xref(xrefs, x[[1]]$id, infoid, chars(cnt)) 
+  cnts[[length(cnts) + 1]] <- render.xref(xrefs, x[[1]]$id, infoid, chars(cnts)) 
   cnts[[length(cnts) + 1]] <- "%%EOF"
   
   ret <- unlist(vraw(cnts))
@@ -769,36 +772,44 @@ pdf_page <- function(id, content_id, graphic_ids = NULL) {
   
   # If there are graphics, expand the procedures
   if (length(graphic_ids) > 0) {
+    
     procs <- pdf_array("/PDF", 
                       "/Text", 
                       "/ImageB", 
                       "/ImageC", 
                       "/ImageI")
-  } else {
     
-    procs <- pdf_array("/PDF", "/Text")
-  }
-  
-  parms <-  pdf_dictionary(Type = "/Page",
-                           Parent = "4 0 R",
-                           Resources = "2 0 R",
-                           ProcSet = procs,
-                           Contents = ref(content_id))
-  
-  # If there are graphics, 
-  # add references to the XObject parameter
-  if (!is.null(graphic_ids)) {
-    
-    d <- pdf_dictionary()
+    xobj <- pdf_dictionary()
     
     for(g in graphic_ids) {
       
-      d[[paste0("X", g)]] <- ref(g) 
+      xobj[[paste0("X", g)]] <- ref(g) 
       
     }
     
-    parms$XObject <- d
+    
+    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2)), 
+                          ProcSet = procs,
+                          XObject = xobj)
+    
+    parms <-  pdf_dictionary(Type = "/Page",
+                             Parent = ref(3),
+                             Contents = ref(content_id),
+                             Resources = res)
+                             
+  } else {
+    
+    procs <- pdf_array("/PDF", "/Text")
+    
+    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2)), 
+                          ProcSet = procs)
+    
+    parms <-  pdf_dictionary(Type = "/Page",
+                             Parent = ref(3),
+                             Contents = ref(content_id),
+                             Resources = res)
   }
+
   
   # Assign properties
   pg$id <- id
@@ -952,15 +963,15 @@ get_image_stream <- function(filename) {
   if (!file.exists(filename))
     stop(paste0("File does not exist: ", filename))
   
+  # Get file size and add 10% for safety
+  fz <- file.info(filename)[["size"]] * 1.1
+
+  # Read in bytes
   f <- file(filename, open="rb", encoding = "native.enc")
   
-  
-  ret <- readBin(con = f, "raw", 100000)
-  
+  ret <- readBin(con = f, "raw", fz)
   
   close(f)
-  
-
   
   return(ret)
   
