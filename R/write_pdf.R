@@ -277,7 +277,8 @@ get_header <- function(page_count = 1,
   
   lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
                                            Subtype = "/Type1", 
-                                           BaseFont = paste0("/", font_name)))
+                                           BaseFont = paste0("/", font_name),
+                                           Encoding = "/WinAnsiEncoding"))
   
   if (page_count > 10)
     kds <- paste(page_ids, "0 R\n", collapse = " ")
@@ -322,7 +323,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   fontscale <- 87
   
   # Get x starting position in points
-  stx <- (margin_left * inchsize) - 13
+  stx <- (margin_left * inchsize) - 5
   
   # Get y starting position in points
   sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
@@ -369,7 +370,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         # In the future, will need to account for multiple pieces
         # of text, and may define their own positions and font size.
         # Right now everything is Courier from top left.
-        tmp <- get_text_stream(cnt$text,
+        tmp <- get_byte_stream(cnt$text,
                                stx, sty, lh, fontsize, fontscale)
     
       
@@ -379,59 +380,26 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         img_ids <- append(img_ids, id)
         
         # Convert measurements to points
-        if (units == "inches") {
-          pwth <- cnt$width * cnt$dpi
-          phgt <- cnt$height * cnt$dpi
-          wth <- cnt$width  * inchsize
-          hgt <- cnt$height * inchsize
-          
-          if (!is.null(cnt$align)) {
-            if (cnt$align == "left")
-              xpos <- margin_left * inchsize
-            else if (cnt$align == "right")
-              xpos <- (page_width * inchsize) - wth - (margin_left * inchsize)
-            else 
-              xpos <- ((page_width * inchsize)/2) - (wth / 2)
-            
-            ypos <- (page_height * inchsize) - hgt - 
-              (lh * (cnt$line_start - 1)) - (margin_top * inchsize)
-            
-          } else {
-            xpos <- cnt$xpos * inchsize
-            ypos <- (page_height * inchsize) - hgt - (cnt$ypos * inchsize) 
-          }
-          
-          
-        } else {
-          
-          # Come back to this.  Need to do something better.
-          # Maybe create a separate function to calculate this stuff.
-          pwth <- round(cnt$width / in2cm, 2) * cnt$dpi
-          phgt <- round(cnt$height / in2cm, 2) * cnt$dpi
-          wth <- round(cnt$width / in2cm, 2) * inchsize 
-          hgt <- round(cnt$height / in2cm, 2) * inchsize 
-          xpos <- round(cnt$xpos / in2cm, 2) * inchsize
-          ypos <- (page_height * inchsize) - hgt - 
-            (round(cnt$ypos / in2cm, 2) * inchsize)
-        }
+        d <- calc_points(cnt, margin_left, margin_top, page_height, 
+                             page_width, cnt$units, lh)
         
-        # print(paste("wth:", wth))
-        # print(paste("hgt:", hgt))
-        # print(paste("xpos:", xpos))
-        # print(paste("ypos:", ypos))
+        # print(paste("wth:", d$wth))
+        # print(paste("hgt:", d$hgt))
+        # print(paste("xpos:", d$xpos))
+        # print(paste("ypos:", d$ypos))
 
 
         # Every image needs a "Do" command on the content page
         tmp <- get_image_text(img_ref = id,
-                              width = wth,
-                              height = hgt,
-                              xpos = xpos,
-                              ypos = ypos)
+                              width = d$wth,
+                              height = d$hgt,
+                              xpos = d$xpos,
+                              ypos = d$ypos)
         
         # Add stream to the list
         imgs[[length(imgs) + 1]] <- pdf_image_stream(id, 
-                                                     height = phgt,
-                                                     width = pwth,
+                                                     height = d$phgt,
+                                                     width = d$pwth,
                                        get_image_stream(cnt$filename))
           
         # Increment id in preparation for next object
@@ -465,6 +433,64 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   
 }
 
+#' Calculation all measurement to points, so they can be sent to pdf.
+#' @import jpeg
+#' @noRd
+calc_points <- function(cnt, margin_left, margin_top, 
+                        page_height, page_width, 
+                        units, line_height) {
+  
+  pw <- page_width
+  ph <- page_height
+  ml <- margin_left
+  mt <- margin_top
+  
+  if (units == "inches") {
+    cw <- cnt$width
+    ch <- cnt$height
+    xp <- cnt$xpos 
+    yp <- cnt$ypos
+
+  } else if (units == "cm") {
+    
+    cw <- cnt$width / in2cm
+    ch <- cnt$height / in2cm
+    xp <- round(cnt$xpos / in2cm, 2)
+    yp <- round(cnt$ypos/ in2cm, 2)
+    
+  } else 
+    stop("Specified units not supported.")
+  
+  ret <- list()
+  
+  
+  img <- readJPEG(cnt$filename)
+  d <- dim(img)
+  
+  ret$pwth <- d[2]
+  ret$phgt <- d[1]
+  ret$wth <- round(cw  * inchsize, 2)
+  ret$hgt <- round(ch * inchsize, 2)
+  
+  if (!is.null(cnt$align)) {
+    if (cnt$align == "left")
+      ret$xpos <- ml * inchsize
+    else if (cnt$align == "right")
+      ret$xpos <- (pw * inchsize) - ret$wth - (ml * inchsize)
+    else 
+      ret$xpos <- ((pw * inchsize)/2) - (ret$wth / 2)
+    
+    ret$ypos <- (ph * inchsize) - ret$hgt - 
+      (line_height * (cnt$line_start - 1)) - (mt * inchsize)
+    
+  } else {
+    ret$xpos <- xp * inchsize
+    ret$ypos <- (ph * inchsize) - ret$hgt - (yp * inchsize) 
+  }
+  
+  return(ret)
+  
+}
 
 # Render Functions ---------------------------------------------------------
 
@@ -991,6 +1017,30 @@ ref <- function(id) {
  return(ret)
   
 }
+
+get_byte_stream <- function(contents, startx, starty, 
+                            lineheight, fontsize, fontscale) {
+  
+  # Calculate y positions
+  ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
+  
+  cnts <- c()
+  
+  # Convert text characters to byte codes
+  for (ln in contents) {
+    cnts[length(cnts) + 1] <- paste0(charToRaw(ln), collapse = " ")
+  
+  }
+  
+
+  # Create report line
+  ret <- paste0("BT /F1 ", fontsize, 
+                " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td <", 
+                cnts, ">Tj ET")
+  
+  return(ret)
+}
+
 
 #' Utility function to create content for a text stream
 #' @noRd

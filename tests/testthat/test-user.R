@@ -144,11 +144,11 @@ test_that("user1: demo table works.", {
       write_report(rpt, rtfpth, output_type = "RTF")
       expect_equal(file.exists(rtfpth), TRUE)
       
-      if (rmarkdown::pandoc_available("1.12.3")) {
-        pdfpth <- file.path(base_path, "user/user1.pdf")
-        write_report(rpt, pdfpth, output_type = "PDF")
-        expect_equal(file.exists(pdfpth), TRUE)
-      }
+
+      pdfpth <- file.path(base_path, "user/user1.pdf")
+      write_report(rpt, pdfpth, output_type = "PDF")
+      expect_equal(file.exists(pdfpth), TRUE)
+      
     }
   
   } else 

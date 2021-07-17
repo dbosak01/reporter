@@ -215,7 +215,7 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 342)
+  expect_equal(length(hdrtxt), 369)
   
   # Check two pages
   hdr <- get_header(page_count = 2,
@@ -229,7 +229,7 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 350)
+  expect_equal(length(hdrtxt), 377)
   
   # Check three pages
   hdr <- get_header(page_count = 3,
@@ -241,7 +241,7 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 356)
+  expect_equal(length(hdrtxt), 383)
   
 })
 
@@ -616,7 +616,8 @@ test_that("Simplest direct table works as expected.", {
   
   rpt <- create_report(fp, output_type = "PDF") %>%
     add_content(create_table(mtcars[1:10, ]), align = "left") %>% 
-    set_margins(top = .5)
+    set_margins(top = .5) 
+  
   
   res <- write_report(rpt)
   
@@ -625,6 +626,8 @@ test_that("Simplest direct table works as expected.", {
   
   
 })
+
+
 
 test_that("Direct table with 2 pages works as expected.", {
   
@@ -728,34 +731,32 @@ test_that("Test jpg alignment works as expected.", {
 })
 
 # Work on this
-# test_that("simple jpg document works as expected in centimeters.", {
-#   
-#   library(ggplot2)
-#   
-#   ip <- file.path(data_dir, "pdf/plot.jpg")
-#   fp <- file.path(base_path, "pdf/direct11.pdf")
-#   
-#   
-#   if (file.exists(ip))
-#     file.remove(ip)
-#   
-#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-#   
-#   ggsave(filename= ip, plot = p, width = 23, height = 13, 
-#          units = "cm")
-#   
-#   r <- create_pdf(fp) %>% 
-#     add_page(page_image(ip, height = 13, width = 23, xpos = 2.5, 
-#                         ypos = 2.5, units = "cm"))
-#   
-#   
-#   write_pdf(r)
-#   
-#   expect_equal(file.exists(fp), TRUE)    
-#   
-#   
-#   
-# })
+test_that("simple jpg document works as expected in centimeters.", {
+
+  library(ggplot2)
+
+  ip <- file.path(data_dir, "pdf/plot.jpg")
+  fp <- file.path(base_path, "pdf/direct11.pdf")
+
+
+  if (file.exists(ip))
+    file.remove(ip)
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  ggsave(filename= ip, plot = p, width = 23, height = 13,
+         units = "cm")
+
+  r <- create_pdf(fp, page_height = 27.94, page_width = 21.59, units = "cm") %>%
+    add_page(page_image(ip, height = 13, width = 23, xpos = 2.5,
+                        ypos = 2.5, units = "cm"))
+
+
+  write_pdf(r)
+
+  expect_equal(file.exists(fp), TRUE)
+
+})
 
 test_that("Simplest direct table right aligned works as expected.", {
   
@@ -781,6 +782,9 @@ test_that("Simplest direct plot works as expected.", {
   library(ggplot2)
 
   fp <- file.path(base_path, "pdf/direct13.pdf")
+  
+  if (file.exists(fp))
+    file.remove(fp)
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
@@ -801,5 +805,38 @@ test_that("Simplest direct plot works as expected.", {
 
 
 
+})
+
+
+test_that("PDF with special chars works as expected.", {
+  
+  # 
+  # str <- "Here are some special chars \u0203\u00e3\u00cf\u00d3"
+  # str2 <- charToRaw(str)
+  # 
+  # hc <- paste0(str2, collapse = " ")
+  # 
+  # str3 <- paste0("<", hc, ">")
+  
+  str4 <- paste("Here are some special chars â ã Ï Ó µ ¿ ‰ \n", 
+               "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
+               "Ω ± ∑ π α β")
+  
+  # str5 <- charToRaw(str4)
+  # 
+  # str6 <- paste0("<", paste0(str5, collapse = " "), ">")
+  # 
+  fp <- file.path(base_path, "pdf/direct14.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    add_content(create_text(str4), align = "left") 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  # cat(str4)
+  
 })
 

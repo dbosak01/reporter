@@ -302,7 +302,7 @@ test_that("pdf8: Two page PDF report works as expected.", {
 
 test_that("pdf9: Simplest PDF Plot works as expected.", {
 
-  if (dev & FALSE) {
+
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test9.pdf")
@@ -327,15 +327,13 @@ test_that("pdf9: Simplest PDF Plot works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
 
 test_that("pdf10: PDF Table with Plot works as expected.", {
 
-  if (dev & FALSE) {
+
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test10.pdf")
@@ -363,8 +361,6 @@ test_that("pdf10: PDF Table with Plot works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
@@ -373,7 +369,7 @@ test_that("pdf10: PDF Table with Plot works as expected.", {
 
 test_that("pdf11: PDF Table with Plot on same page works as expected.", {
   
-  if (FALSE) {
+
   library(ggplot2)
 
   fp <- file.path(base_path, "pdf/test11.pdf")
@@ -401,8 +397,6 @@ test_that("pdf11: PDF Table with Plot on same page works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
@@ -438,7 +432,7 @@ test_that("pdf12: Table and Text output works as expected.", {
 
 test_that("pdf13: Very Long text output works as expected.", {
 
-  if (dev & FALSE) {
+  if (dev) {
 
     fp <- file.path(base_path, "pdf/test13.pdf")
 
@@ -548,7 +542,6 @@ test_that("pdf17: 12 pt report with units in cm works as expected.", {
 
 test_that("pdf18: Plot with page by on report works as expected.", {
 
-  if (FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test18.pdf")
@@ -581,8 +574,6 @@ test_that("pdf18: Plot with page by on report works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
@@ -590,7 +581,6 @@ test_that("pdf18: Plot with page by on report works as expected.", {
 
 test_that("pdf19: Plot with page by on plot works as expected.", {
 
-  if (FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test19.pdf")
@@ -622,8 +612,6 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
@@ -675,9 +663,8 @@ test_that("test22: 8 pt report with units in cm works as expected.", {
 
 
 
-test_that("pdf23: RTF Table with Plot and borders works as expected.", {
+test_that("pdf23: PDF Table with Plot and borders works as expected.", {
 
-  if (FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test23.pdf")
@@ -696,24 +683,22 @@ test_that("pdf23: RTF Table with Plot and borders works as expected.", {
       add_content(tbl) %>%
       add_content(plt, align = "center") %>%
       footnotes("* Motor Trend, 1974", borders = "all") %>%
-      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+      options_fixed(uchar = "-")
 
 
     res <- write_report(rpt)
 
-    #print(res)
+    res
 
     expect_equal(file.exists(fp), TRUE)
-  } else
-    expect_equal(TRUE, TRUE)
 
 })
 
 
 
-test_that("pdf24: PDF Table with Plot and borders works as expected.", {
+test_that("pdf24: PDF Table with Plot and borders on content works as expected.", {
 
-  if (dev & FALSE) {
     library(ggplot2)
 
     fp <- file.path(base_path, "pdf/test24.pdf")
@@ -743,8 +728,7 @@ test_that("pdf24: PDF Table with Plot and borders works as expected.", {
     #print(res)
 
     expect_equal(file.exists(fp), TRUE)
-  } else
-    expect_equal(TRUE, TRUE)
+
 
 })
 
