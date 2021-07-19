@@ -63,7 +63,7 @@ get_page_header <- function(rs) {
       if (gp >= 0) {
         
         lw <- rs$line_size - nchar(hr)
-        ln <- paste0(stri_pad_right(hl, width = lw), hr) 
+        ln <- paste0(pad_right(hl, lw), hr) 
       }
       
       else {
@@ -128,11 +128,11 @@ get_titles <- function(titles, width, uchar = "-") {
         if (gp > 0) {
           
           if (ttl$align == "left")
-            ln <- stri_pad_right(t, ll)
+            ln <- pad_right(t, ll)
           else if (ttl$align == "right")
-            ln <- stri_pad_left(t, ll)
+            ln <- pad_left(t, ll)
           else if (ttl$align == "center" | ttl$align == "centre")
-            ln <- stri_pad_both(t, ll)
+            ln <- pad_both(t, ll)
           
         } else {
           warning(paste0("Title exceeds available width.",
@@ -144,11 +144,11 @@ get_titles <- function(titles, width, uchar = "-") {
 
           if (tgp >= 0) {
             if (ttl$align == "left") {
-              ln <- paste0(substr(stri_pad_right(t, ll), 1, tgp), "...")
+              ln <- paste0(substr(pad_right(t, ll), 1, tgp), "...")
             } else if (ttl$align == "right") {
-              ln <- paste0("...", substr(stri_pad_left(t, ll), 1, tgp))
+              ln <- paste0("...", substr(pad_left(t, ll), 1, tgp))
             } else if (ttl$align == "center" | ttl$align == "centre") {
-              ln <- paste0(substr(stri_pad_both(t, ll), 1, tgp), "...")
+              ln <- paste0(substr(pad_both(t, ll), 1, tgp), "...")
             }
             
             
@@ -211,11 +211,11 @@ get_page_by <- function(pgby, width, value) {
     if (gp > 0) {
       
       if (pgby$align == "left")
-        ln <- stri_pad_right(pb, ll)
+        ln <- pad_right(pb, ll)
       else if (pgby$align == "right")
-        ln <- stri_pad_left(pb, ll)
+        ln <- pad_left(pb, ll)
       else if (pgby$align == "center" | pgby$align == "centre")
-        ln <- stri_pad_both(pb, ll)
+        ln <- pad_both(pb, ll)
       
     } else 
       stop("Page by exceeds available width.")
@@ -288,7 +288,7 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
         if (gp >= 0) {
           
   
-            ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
+            ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
   
           
         } else {
@@ -302,7 +302,7 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
           tgp <- ll - 3
           if (tgp >= 0) {
             
-            ln <- paste0(substr(paste0(stri_pad_right(t, ll - nchar(h)), h, " "), 
+            ln <- paste0(substr(paste0(pad_right(t, ll - nchar(h)), h, " "), 
                                 1, tgp), "...")
             
           } else ln <- ""
@@ -382,7 +382,7 @@ get_title_header_back <- function(title_hdr, width, uchar = "-") {
       if (gp >= 0) {
         
         
-        ln <- paste0(stri_pad_right(t, ll - nchar(h)), h, " ")
+        ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
         
         
       } else {
@@ -396,7 +396,7 @@ get_title_header_back <- function(title_hdr, width, uchar = "-") {
         tgp <- ll - 3
         if (tgp >= 0) {
           
-          ln <- paste0(substr(paste0(stri_pad_right(t, ll - nchar(h)), h, " "), 
+          ln <- paste0(substr(paste0(pad_right(t, ll - nchar(h)), h, " "), 
                               1, tgp), "...")
           
         } else ln <- ""
@@ -459,11 +459,11 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
         if (gp > 0) {
           
           if (ftn$align == "left")
-            ln <- stri_pad_right(f, ll)
+            ln <- pad_right(f, ll)
           else if (ftn$align == "right")
-            ln <- stri_pad_left(f, ll)
+            ln <- pad_left(f, ll)
           else if (ftn$align == "center" | ftn$align == "centre")
-            ln <- stri_pad_both(f, ll)
+            ln <- pad_both(f, ll)
           
         } else {
           warning(paste0("Footnote exceeds available width.",
@@ -476,11 +476,11 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
           if (tln >= 0) {
             
             if (ftn$align == "left") {
-              ln <- paste0(substr(stri_pad_right(f , ll), 1, tln), "...")
+              ln <- paste0(substr(pad_right(f , ll), 1, tln), "...")
             } else if (ftn$align == "right") {
-              ln <- paste0("...", substr(stri_pad_left(f, ll), 1, tln))
+              ln <- paste0("...", substr(pad_left(f, ll), 1, tln))
             } else if (ftn$align == "center" | ftn$align == "centre") {
-              ln <- paste0(substr(stri_pad_both(f, ll), 1, tln), "...")
+              ln <- paste0(substr(pad_both(f, ll), 1, tln), "...")
             }
           } else ln <- "" 
         }
@@ -561,12 +561,12 @@ get_page_footer <- function(rs) {
       #print("footer")
       if (gp >= 0) {
         if (l_sz > r_sz)
-          fr <- stri_pad_left(fr, l_sz)
+          fr <- pad_left(fr, l_sz)
         else
-          fl <- stri_pad_right(fl, r_sz)
+          fl <- pad_right(fl, r_sz)
         
         lw <- rs$line_size - nchar(fr) - nchar(fl)
-        ln <- paste0(fl, stri_pad_both(fc, width = lw), fr)
+        ln <- paste0(fl, pad_both(fc, lw), fr)
       }
       else {
         
@@ -615,6 +615,41 @@ page_info <- function(data, keys, font_name, col_width, col_align,
   ret$page_by <- page_by
   
   return(ret)
+  
+}
+
+
+
+
+# Utilities ---------------------------------------------------------------
+
+#' @noRd
+pad_right <- function(s, w) {
+  
+  ret <- format(s, width = w, justify = "left")
+
+  return(ret)
+  
+  
+}
+
+#' @noRd
+pad_left <- function(s, w) {
+  
+  ret <- format(s, width = w, justify = "right")
+  
+  return(ret)
+  
+  
+}
+
+#' @noRd
+pad_both <- function(s, w) {
+  
+  ret <- format(s, width = w, justify = "centre")
+  
+  return(ret)
+  
   
 }
 

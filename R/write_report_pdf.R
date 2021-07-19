@@ -17,7 +17,7 @@ write_report_pdf <- function(rs) {
     file.remove(rs$modified_path)
   
   
-  # Create text output normally to temp location
+  # Create text output 
   res <- create_report_text(rs)
   
   rs <- res[["rs"]]

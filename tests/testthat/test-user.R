@@ -606,8 +606,11 @@ test_that("user6: listings with page break works as expected.", {
       define(ARMCD, page_break = TRUE, id_var = TRUE) %>% 
       define(ARM, id_var = TRUE)
     
+    fp <- file.path(base_path, "user/user6")
+    
+    
     # Define Report
-    rpt <- create_report("user/user6") %>%
+    rpt <- create_report(fp) %>%
       options_fixed(editor = "notepad") %>% 
       titles("Listing 1.0",
              "Demographics Dataset") %>%

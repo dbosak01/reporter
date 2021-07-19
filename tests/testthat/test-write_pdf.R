@@ -823,7 +823,11 @@ test_that("PDF with special chars works as expected.", {
                # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
                # "Ω ± ∑ π α β")
   
- # stri_enc_detect(str4)
+  # stri_enc_detect(str4)
+  # 
+  # str5 <- stri_pad_right(str4, 100)
+  # 
+  # stri_enc_detect(str5)
   
   # lns <- stri_encode(str4, from = NULL,
   #                    to = "ANSI1251")
@@ -838,9 +842,15 @@ test_that("PDF with special chars works as expected.", {
   # 
   fp <- file.path(base_path, "pdf/direct14.pdf")
   
-  rpt <- create_report(fp, output_type = "PDF") %>%
-    add_content(create_text(str4), align = "left") %>% 
+  txt <- create_text(str4) %>% 
     titles(str4) %>% 
+    footnotes("Ï Ó µ ¿")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    titles("Ï Ó µ ¿") %>% 
+    page_header("special chars â ã Ï Ó") %>% 
+    page_footer("special chars â ã Ï Ó") %>% 
+    add_content(txt, align = "left") %>% 
     footnotes(str4)
   
   
