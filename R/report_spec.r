@@ -1205,6 +1205,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   ttl$blank_row <- blank_row
   ttl$borders <- borders
   ttl$align <- align
+  
 
   x$titles[[length(x$titles) + 1]] <- ttl
   

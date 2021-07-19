@@ -966,21 +966,6 @@ pdf_info <- function(id,
 # Utilities ---------------------------------------------------------------
 
 
-#' Takes a vector of lines and returns the number of bytes.
-#' Extra bytes are added for the end characters depending on the OS.
-#' @noRd
-chars_back <- function(lines) {
-  
-  
-  ret <- sum(nchar(enc2utf8(lines), type = "bytes"))
-  
-  
-  if (Sys.info()["sysname"] == "Windows") {
-    ret <- ret + sum(stringi::stri_count(lines, fixed = "\n")) - 2
-  }
-  
-  return(ret)
-}
 
 #' A function to cast lists of mixed content to lists of raw vectors
 #' @noRd
@@ -1023,6 +1008,12 @@ get_byte_stream <- function(contents, startx, starty,
   
   # Calculate y positions
   ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
+  
+  # lns <- stri_encode(contents, from = stri_enc_detect2(contents),
+  #                    to = "Adobe-Standard-Encoding")
+  
+  
+  #print(stri_enc_detect(contents))
   
   cnts <- c()
   

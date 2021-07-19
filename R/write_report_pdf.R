@@ -12,63 +12,19 @@
 #' @noRd
 write_report_pdf <- function(rs) {
   
-  # if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
-  #  stop("pandoc version >= 1.12.3 is required. Install to continue.") 
-  # }
   
-  debug <- FALSE
+  if (file.exists(rs$modified_path))
+    file.remove(rs$modified_path)
   
-  orig_path <- rs$modified_path
-  
-  # Create temp path for text output
-  if (debug) {
-    
-    b_path <- file.path(getwd(), "tests/testthat")
-    
-    tmp_path <- file.path(b_path, "output/tmp.txt")
-    rmd_path <- file.path(b_path, "output/tmp.Rmd")
-    if (file.exists(tmp_path))
-      file.remove(tmp_path)
-    if (file.exists(rmd_path))
-      file.remove(rmd_path)
-    if (file.exists(orig_path))
-      file.remove(orig_path)
-  } else {
-    tmp_dir <- tempdir()
-    if (!file.exists(tmp_dir))
-      dir.create(tmp_dir)
-    tmp_path <- tempfile(fileext = ".txt", tmpdir = tmp_dir)
-    rmd_path <- tempfile(fileext = ".Rmd", tmpdir = tmp_dir)
-    #rmd_path <- sub(".pdf", ".Rmd", orig_path)
-  }
-  # print(tmp_path)
-  # print(rmd_path)
-  # print(getwd())
-  
-  if (file.exists(orig_path))
-    file.remove(orig_path)
-  
-  # Replace original path
-  rs$modified_path <- tmp_path
   
   # Create text output normally to temp location
-  rs <- write_report_text(rs)
+  res <- create_report_text(rs)
   
-  # Read lines from text output
-  ls <- readLines(tmp_path, encoding = "UTF-8")
+  rs <- res[["rs"]]
+  ls <- res[["ls"]]
 
   # Revise text and write to pdf
-  fls <- write_pdf_output(rs, ls, orig_path)
-
-  # Restore original path
-  rs$modified_path <- orig_path
-  
-  #print(tmp_path)
-  
-  # Clean up
-  if (!debug) {
-    file.remove(tmp_path)
-  }
+  fls <- write_pdf_output(rs, ls, rs$modified_path)
   
   return(rs)
 }
@@ -79,40 +35,39 @@ write_pdf_output <- function(rs, ls, pdf_path) {
   pgs <- list()
   pg <- list(text = c(), images = c())
 
-  # Replace fill lines with blanks
-  if (rs$has_graphics) {
+  # Loop through text pages
+  for (i in seq_along(ls)) {
+  
     
-    ls <- gsub("```fill```", "", ls, fixed = TRUE)
-    
-  }
-  
-  
-  for (ln in ls) {
-  
-    res <- grep("\f", ln, fixed = TRUE, value = FALSE) 
-    if (length(res) > 0) {
+    # Replace fill lines with blanks
+    if (rs$has_graphics) {
       
-      pgs[[length(pgs) + 1]] <- pg
-      pg <- list(text = c(), images = c())
-      pg$text <- c(gsub("\f", "", ln, fixed = TRUE))
-    
-    } else {
-
-      res <- grep("```([^}]*)```", ln)
-      if (length(res) > 0) {
-        pg$text <- append(pg$text, "")
-        pi <- parse_image(ln)
-        pi$line_start <- length(pg$text)
-        pg$images[[length(pg$images) + 1]] <- pi
-      } else {
-        pg$text <- append(pg$text, ln)   
+      ls[[i]] <- gsub("```fill```", "", ls[[i]], fixed = TRUE)
+      
+      # Need to split up text and images
+      for (ln in ls[[i]]) {
+        
+        res <- grep("```([^}]*)```", ln)
+        if (length(res) > 0) {
+          pg$text <- append(pg$text, "")
+          pi <- parse_image(ln)
+          pi$line_start <- length(pg$text)
+          pg$images[[length(pg$images) + 1]] <- pi
+        } else {
+          pg$text <- append(pg$text, ln)   
+        }
+        
       }
       
-    }
+    } else 
+      pg$text <- ls[[i]]
+    
+
+    
+    pgs[[length(pgs) + 1]] <- pg
+    pg <- list(text = c(), images = c())
   }
   
-  if (length(pg) > 0)
-    pgs[[length(pgs) + 1]] <- pg
   
   if (file.exists(pdf_path))
     file.remove(pdf_path)
@@ -130,8 +85,6 @@ write_pdf_output <- function(rs, ls, pdf_path) {
   for (pg in pgs) {
     
     if (length(pg$images) > 0) {
-      
-
       
       imgs <- list()
       for (img in pg$images) {
@@ -185,6 +138,7 @@ parse_image <- function(image_string) {
   
 }
 
+#' Old rmarkdown version
 #' @noRd
 write_pdf_output2 <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   

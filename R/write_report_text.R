@@ -1,6 +1,287 @@
 
+# Special Functions for PDF and RTF ---------------------------------------
+
+
+#' @title
+#' Create a text report, but not on the file system
+#'
+#' @description
+#' This function creates a report, using the
+#' parameters provided in the report_spec object.
+#'
+#' @param x The report_spec object to write.
+#' @return The report spec.
+#' @noRd
+create_report_text <- function(rs) {
+  
+  # Calculate available space for content 
+  rs <- page_setup(rs)
+  
+  # Get page template for easy access
+  pt <- rs$page_template
+  
+  # Put content in new variable for easy access
+  ls <- rs$content
+  
+  # Break content into pages
+  ret <- paginate_content(rs, ls)
+  
+  # Assign table column widths back to report spec for reference
+  rs$column_widths <- ret[["widths"]]
+  
+  # Assign graphics flag back to report spec
+  rs$has_graphics <- ret[["has_graphics"]]
+  
+  # Assign pages to ls and continue processing
+  ls <- ret[["pages"]]
+  
+  # Deal with preview
+  if (!is.null(rs$preview)) {
+    if (rs$preview < length(ls[[1]]$pages))
+      ls[[1]]$pages <- ls[[1]]$pages[seq(1, rs$preview)]
+  }
+  
+  # Write pages to file
+  res <- create_content(rs, ls, pt)
+  rs <- res$rs
+  ls <- res$ls
+  
+  # After report is created, fix the page numbers.
+  # Reason is we don't really know how many pages there are 
+  # until the report is created.
+  upt <- update_page_numbers(rs, ls)
+  
+  res <- list(rs = rs, ls = upt)
+  
+  return(res)
+}
+
+
+#' @title Create content for PDF and RTF output type.
+#' @description This loop writes out pages created in paginate_content
+#' @noRd
+create_content <- function(rs, ls, pt) {
+  
+  ret <- list()
+
+  counter <- 0
+  page <- 0
+  last_object <- FALSE
+  last_page <- FALSE
+  page_open <- FALSE
+  
+  blank_margin_top <- rep("", rs$blank_margin_top)
+  blank_margin_left <- paste0(rep(" ", rs$blank_margin_left), collapse = "")
+  
+  
+  for (cont in ls) {
+    
+    
+    # Increment counter
+    counter <- counter + 1
+    page <- 0
+    
+    
+    # Set last_object flag
+    if (counter == length(ls))
+      last_object <- TRUE
+    else 
+      last_object <- FALSE
+    
+    
+    for (pg in cont$pages) {
+      
+      page <- page + 1
+      
+      # Vector to hold lines on a page
+      lns <- c()
+      
+      if (page == length(cont$pages))
+        last_page <- TRUE
+      else
+        last_page <- FALSE
+      
+      
+      
+      if (rs$blank_margins)
+        lns <- append(lns, blank_margin_top)
+      
+      
+      #print(page_open)
+      if (page_open == FALSE) {
+        if (!is.null(pt$page_header))
+          lns <- append(lns, paste0(blank_margin_left, pt$page_header))
+        
+        if (!is.null(pt$title_hdr))
+          lns <- append(lns, paste0(blank_margin_left, 
+                                     trimws(pt$title_hdr, which = "right")))
+        
+        if (!is.null(pt$titles))
+          lns <- append(lns, paste0(blank_margin_left, 
+                                     trimws(pt$titles, which = "right")))
+        
+      }
+      
+      if (!is.null(pg)) {
+        tmp <- trimws(format(pg, width = rs$line_size,
+                             justify = get_justify(cont$align)),
+                      which = "right")
+        lns <- append(lns, paste0(blank_margin_left, tmp))
+        
+      }
+      
+      # Set page_open flag based on status of page_break and current objects
+      if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
+        page_open <- TRUE
+      else 
+        page_open <- FALSE
+      
+      if (page_open == FALSE) {
+        
+        if (!is.null(pt$footnotes))
+          lns <- append(lns, paste0(blank_margin_left,
+                                     trimws(pt$footnotes, which = "right")))
+        
+        if (!is.null(pt$page_footer))
+          lns <- append(lns, paste0(blank_margin_left, pt$page_footer))
+        
+        # Complete page 
+        if (last_object == FALSE | last_page == FALSE) {
+          
+          if (is.null(rs$pages))
+            rs$pages <- 1
+          else 
+            rs$pages <- rs$pages + 1 
+          
+          ret[[length(ret) + 1]] <- lns
+          
+        } else if (last_page == TRUE) {
+          
+          ret[[length(ret) + 1]] <- lns 
+          
+        }
+      }
+  
+      
+    }
+    
+  }
+  
+  res <- list(rs = rs, ls = ret)
+  
+  return(res)
+  
+}
+
+#' @description Update page numbers in text file
+#' @details Logic is to read in each line of the file, loop through and replace
+#' tokens as needed.  Pages numbers are incremented every time a form feed
+#' is encountered.  Total pages is retrieved from the report pages property.
+#' Total pages is calculated when a page break occurs.
+#' @noRd
+update_page_numbers <- function(rs, lns) {
+  
+  
+  # Set up page variables
+  tpg <- rs$pages
+
+  
+  # Define vectorized function to replace tokens
+  replace_tokens <- Vectorize(function(x, srch, just) {
+    
+    ret <- x
+    
+    # Replace tokens, but keep overall width the same
+    if (grepl(srch, x, fixed = TRUE)) {
+      #print("found it")
+      
+      tmp <- sub("[tpg]", tpg, srch, fixed = TRUE)
+      tmp <- sub("[pg]", pg, tmp, fixed = TRUE)
+      tmp <- format(tmp, width = nchar(srch), justify = just)
+      ret <- sub(srch, tmp, x, fixed = TRUE)
+    }
+    
+    return(ret)
+  }, USE.NAMES = FALSE)
+  
+  
+  for (pg in seq_along(lns)) {
+  
+    # Call vectorized function on entire page header/footer segment
+    
+    if (token_check(rs$page_header_left)) {
+      for (i in seq_len(length(rs$page_header_left))) {
+        if (token_check(rs$page_header_left[i])) {
+  
+          lns[[pg]] <- replace_tokens(lns[[pg]], rs$page_header_left[i], "left")
+        }
+      }
+    }
+    
+    if (token_check(rs$page_header_right)) {
+      for (i in seq_len(length(rs$page_header_right))) {
+        if (token_check(rs$page_header_right[i])) {
+  
+          lns[[pg]] <- replace_tokens(lns[[pg]], rs$page_header_right[i], "right")
+        }
+      }
+    }
+    
+    if (token_check(rs$page_footer_left)) {
+      for (i in seq_len(length(rs$page_footer_left))) {
+        if (token_check(rs$page_footer_left[i])) {
+          lns[[pg]] <- replace_tokens(lns[[pg]], rs$page_footer_left[i], "left")
+        }
+      }
+    }
+    if (token_check(rs$page_footer_center)) {
+      for (i in seq_len(length(rs$page_footer_center))) {
+        if (token_check(rs$page_footer_center[i])) {
+          lns[[pg]] <- replace_tokens(lns[[pg]], rs$page_footer_center[i], "centre")
+        }
+      }
+    }
+    if (token_check(rs$page_footer_right)) {
+      
+      for (i in seq_len(length(rs$page_footer_right))) {
+        if (token_check( rs$page_footer_right[i])) {
+          lns[[pg]] <- replace_tokens(lns[[pg]], rs$page_footer_right[i], "right")
+        }
+      }
+    }
+    if (!is.null(rs$title_hdr)) {
+      if (token_check(rs$title_hdr$right)) {
+        for (i in seq_len(length(rs$title_hdr$right))) {
+          if (token_check(rs$title_hdr$right[i])) {
+            lns[[pg]] <- replace_tokens(lns[[pg]], rs$title_hdr$right[i], "right")
+          }
+        }
+      }
+    }
+    
+    for (cntnt in rs$content) {
+      if (!is.null(cntnt$object$title_hdr)) { 
+        if (token_check(cntnt$object$title_hdr$right)) {
+          for (i in seq_len(length(cntnt$object$title_hdr$right))) {
+            if (token_check(cntnt$object$title_hdr$right[i])) {
+              lns[[pg]] <- replace_tokens(lns[[pg]], cntnt$object$title_hdr$right[i], "right")
+            }
+          }
+        }
+        
+      }
+    }
+    
+  }
+  
+  
+  return(lns)
+}
+
+
 
 # Write Text Driver Function ----------------------------------------------
+
 
 
 #' @title
@@ -139,6 +420,8 @@ paginate_content <- function(rs, ls) {
   
   return(ret)
 }
+
+
 
 #' @title Write out content
 #' @description This loop writes out pages created in paginate_content

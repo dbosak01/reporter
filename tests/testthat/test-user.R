@@ -299,7 +299,6 @@ test_that("user2: demo table with stub works.", {
 
 test_that("user3: listings works.", {
   
-  if (dev) {
     # Data Filepath
     dir_data <- file.path(data_dir, "data")
     
@@ -361,18 +360,13 @@ test_that("user3: listings works.", {
     
     expect_equal(file.exists(rtfpth), TRUE)
     
-    rtfpth <- file.path(base_path, "user/user3.rtf")
-    write_report(rpt, rtfpth, output_type = "RTF")
-    expect_equal(file.exists(rtfpth), TRUE)
     
-    if (rmarkdown::pandoc_available("1.12.3")) {
-      pdfpth <- file.path(base_path, "user/user3.pdf")
-      write_report(rpt, pdfpth, output_type = "PDF")
-      expect_equal(file.exists(pdfpth), TRUE)
-    }
+
+    pdfpth <- file.path(base_path, "user/user3.pdf")
+    write_report(rpt, pdfpth, output_type = "PDF")
+    expect_equal(file.exists(pdfpth), TRUE)
     
-  } else
-    expect_equal(TRUE, TRUE)
+    
 })
 
 test_that("user4: Adverse Events table works.", {
@@ -516,13 +510,12 @@ test_that("user4: Adverse Events table works.", {
     res <- write_report(rpt, rtfpth, output_type = "RTF")
     expect_equal(file.exists(rtfpth), TRUE)
     #print(res)
-    
-    if (rmarkdown::pandoc_available("1.12.3")) {
-      pdfpth <- file.path(base_path, "user/user4.pdf")
-      res <- write_report(rpt, pdfpth, output_type = "PDF")
-      expect_equal(file.exists(pdfpth), TRUE)
+
+    pdfpth <- file.path(base_path, "user/user4.pdf")
+    res <- write_report(rpt, pdfpth, output_type = "PDF")
+    expect_equal(file.exists(pdfpth), TRUE)
       #print(res)
-    }
+    
   } else
     expect_equal(TRUE, TRUE)
 })
@@ -634,10 +627,9 @@ test_that("user6: listings with page break works as expected.", {
     res <- write_report(rpt, output_type = "RTF")
     expect_equal(file.exists(res$modified_path), TRUE)
     
-    if (rmarkdown::pandoc_available("1.12.3")) {
-      res <- write_report(rpt, output_type = "PDF")
-      expect_equal(file.exists(res$modified_path), TRUE)
-    }
+    res <- write_report(rpt, output_type = "PDF")
+    expect_equal(file.exists(res$modified_path), TRUE)
+    
   
   } else
     expect_equal(TRUE, TRUE)

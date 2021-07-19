@@ -818,18 +818,30 @@ test_that("PDF with special chars works as expected.", {
   # 
   # str3 <- paste0("<", hc, ">")
   
-  str4 <- paste("Here are some special chars â ã Ï Ó µ ¿ ‰ \n", 
-               "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
-               "Ω ± ∑ π α β")
+  str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰", 
+            "Special symbols µ Ω £ there to mess things up") # , 
+               # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
+               # "Ω ± ∑ π α β")
   
-  # str5 <- charToRaw(str4)
+ # stri_enc_detect(str4)
+  
+  # lns <- stri_encode(str4, from = NULL,
+  #                    to = "ANSI1251")
   # 
-  # str6 <- paste0("<", paste0(str5, collapse = " "), ">")
+  # 
+  # str5 <- charToRaw(as.character(str4, "!"))
+  # stri_enc_detect(str5)
+  # 
+  # rawToChar(str5)
+# 
+#   str6 <- paste0("<", paste0(str5, collapse = " "), ">")
   # 
   fp <- file.path(base_path, "pdf/direct14.pdf")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
-    add_content(create_text(str4), align = "left") 
+    add_content(create_text(str4), align = "left") %>% 
+    titles(str4) %>% 
+    footnotes(str4)
   
   
   res <- write_report(rpt)
@@ -837,6 +849,8 @@ test_that("PDF with special chars works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
   # cat(str4)
+  
+
   
 })
 
