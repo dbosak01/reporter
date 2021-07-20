@@ -817,7 +817,7 @@ test_that("PDF with special chars works as expected.", {
   # hc <- paste0(str2, collapse = " ")
   # 
   # str3 <- paste0("<", hc, ">")
-  
+  library(magrittr)
   str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰", 
             "Special symbols µ Ω £ there to mess things up") # , 
                # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
