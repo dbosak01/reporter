@@ -38,7 +38,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   
   # Set up control columns
-  dat <- as.data.frame(ts$data)  
+  dat <- as.data.frame(ts$data, stringsAsFactors = FALSE)  
   dat$..blank <- ""
   dat$..row <- NA
   dat$..page_by <- NA
@@ -391,7 +391,7 @@ get_table_header <- function(rs, ts, pi) {
   ln <- c()
 
   # Wrap header labels if needed
-  d <- data.frame(as.list(lbls))
+  d <- data.frame(as.list(lbls), stringsAsFactors = FALSE)
   names(d) <- names(lbls)
   d <- split_cells(d, w)
   d <- push_down(d)
@@ -474,7 +474,8 @@ get_spanning_header <- function(rs, ts, pi) {
   # - Seed span_num with negative index numbers to identify unspanned columns
   # - Also add one to each column width for the blank space between columns 
   d <- data.frame(colname = cols, colwidth = w + 1, 
-                  span_num = seq(from = -1, to = -length(cols), by = -1))
+                  span_num = seq(from = -1, to = -length(cols), by = -1), 
+                  stringsAsFactors = FALSE)
   
   wlvl <- list()  # Create one data structure for each level
   for (l in lvls) {
@@ -548,7 +549,7 @@ get_spanning_header <- function(rs, ts, pi) {
     s <- wlvl[[l]]
     
     # Wrap header labels if needed
-    d <- data.frame(as.list(s$label))
+    d <- data.frame(as.list(s$label), stringsAsFactors = FALSE)
     w <- s$width
     j <- s$align
     names(d) <- s$name

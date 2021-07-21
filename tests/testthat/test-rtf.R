@@ -66,7 +66,7 @@ test_that("rtf3: Table with break between sections works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -131,7 +131,7 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
   
   
   # Create data frame
-  df <- data.frame(arm, subjid, name, sex, age)
+  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -163,7 +163,7 @@ test_that("rtf6: Table with spanning headers works as expected.", {
   fp <- file.path(base_path, "rtf/test6.rtf")
   
   
-  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
   rownames(df) = NULL
   
   df$qsec <- fattr(df$qsec, format = "%.1f")
@@ -237,7 +237,7 @@ test_that("rtf8: Two page RTF report works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
 
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
 
   df1 <- df[df$arm == "A", ]
   df2 <- df[df$arm == "B", ]

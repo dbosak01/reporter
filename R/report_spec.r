@@ -882,7 +882,8 @@ set_char_margins <- function(rs, margin) {
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
-#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5], 
+#'                   stringsAsFactors = FALSE)
 #' 
 #' # Create the report object
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
@@ -996,7 +997,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' 
 #' # Prepare data
 #' dat <- data.frame(category = rownames(USPersonalExpenditure),
-#'                   USPersonalExpenditure)
+#'                   USPersonalExpenditure, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat) %>% 
@@ -1144,7 +1145,7 @@ title_header <- function(x, ..., right = "",
 #' 
 #' # Prepare data
 #' dat <- data.frame(category = rownames(USPersonalExpenditure),
-#'                   USPersonalExpenditure)
+#'                   USPersonalExpenditure, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat) %>% 
@@ -1271,7 +1272,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' 
 #' # Prepare data
 #' dat <- data.frame(category = rownames(USPersonalExpenditure),
-#'                   USPersonalExpenditure)
+#'                   USPersonalExpenditure, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat) %>% 
@@ -1417,7 +1418,8 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
-#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5], 
+#'                   stringsAsFactors = FALSE)
 #' 
 #' # Create the report object
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 

@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 #  
 #  # Prepare data
 #  dat <- mtcars[1:10, ]
-#  dat <- data.frame(vehicle = rownames(dat), dat)
+#  dat <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
 #  
 #  # Define table
 #  tbl <- create_table(dat, show_cols = 1:8) %>%

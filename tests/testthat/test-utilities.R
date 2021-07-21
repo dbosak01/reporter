@@ -75,7 +75,7 @@ test_that("split_cells works as expected.", {
   ..page <- NA
   ..row <- NA
   
-  df <- data.frame(a1, b1, c1, ..blank, ..page, ..row)
+  df <- data.frame(a1, b1, c1, ..blank, ..page, ..row, stringsAsFactors = FALSE)
   df
   
   w <- c(a1 = .5, b1 = 1.5, c1 = 1.25)
@@ -109,7 +109,8 @@ test_that("align_cells works as expected.", {
 test_that("clear_missing works as expected.", {
   
   
-  df <- data.frame(a = c(1, 2, 3), b = c("A", "B", "C"))
+  df <- data.frame(a = c(1, 2, 3), b = c("A", "B", "C"), 
+                   stringsAsFactors = FALSE)
   
   df2 <- clear_missing(df)
 
@@ -123,7 +124,7 @@ test_that("push_down works as expected.", {
   
   x <- data.frame(a1 = c("a", "b", "c", "", ""), 
             b1  = c("a", rep("", 4)), 
-            c1 = c("a", "b", "c", "d", "e"))
+            c1 = c("a", "b", "c", "d", "e"), stringsAsFactors = FALSE)
   
   res2 <- push_down(x)
   
@@ -138,7 +139,8 @@ test_that("create_stub works as expected.", {
   x <- data.frame(a1 = c("a", "a", "a", "a", "a", "a"), 
                   b1  = c(NA, "b", "b", NA, "b", "b"), 
                   c1 = c(NA, NA, "c", NA, NA, "c"), 
-                  d1 = c("Here", "is", "some", "stuff", "shouldn't", "touch"))
+                  d1 = c("Here", "is", "some", "stuff", "shouldn't", "touch"), 
+                  stringsAsFactors = FALSE)
   
   
   tbl <- create_table(x) %>% stub(c("a1", "b1", "c1"))

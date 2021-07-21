@@ -62,7 +62,8 @@ library(magrittr)
 # Create temp file path
 tmp <- file.path(tempdir(), "mtcars.txt")
 
-dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5], 
+                  stringsAsFactors = FALSE)
 
 # Create the report object
 rpt <- create_report(tmp, orientation = "portrait") \%>\% 

@@ -320,7 +320,7 @@ create_stub <- function(dat, ts) {
     # print(names(d))
     
     # Combine with stub column
-    dat <- data.frame(stub = st, d)
+    dat <- data.frame(stub = st, d, stringsAsFactors = FALSE)
     
     # Have to restore names, otherwise data.frame will mess them up
     names(dat) <- c("stub", names(d))
