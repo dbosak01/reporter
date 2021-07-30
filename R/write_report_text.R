@@ -466,7 +466,7 @@ write_content <- function(rs, ls, pt) {
         last_page <- FALSE
       
       
-      f <- file(rs$modified_path, open="a+", encoding = "native.enc")
+      f <- file(rs$modified_path, open="aT", encoding = "native.enc")
       
       if (rs$blank_margins)
         writeLines(enc2utf8(blank_margin_top), con = f, useBytes = TRUE)
@@ -715,11 +715,13 @@ write_page_numbers <- function(rs) {
     }
   }
   if (!is.null(rs$title_hdr)) {
-    if (token_check(rs$title_hdr$right)) {
-      for (i in seq_len(length(rs$title_hdr$right))) {
-        if (token_check(rs$title_hdr$right[i])) {
-          pg <- 1
-          lns <- replace_tokens(lns, rs$title_hdr$right[i], "right")
+    for (th in rs$title_hdr) {
+      if (token_check(th$right)) {
+        for (i in seq_len(length(th$right))) {
+          if (token_check(th$right[i])) {
+            pg <- 1
+            lns <- replace_tokens(lns, th$right[i], "right")
+          }
         }
       }
     }
@@ -727,15 +729,16 @@ write_page_numbers <- function(rs) {
   
   for (cntnt in rs$content) {
    if (!is.null(cntnt$object$title_hdr)) { 
-     if (token_check(cntnt$object$title_hdr$right)) {
-       for (i in seq_len(length(cntnt$object$title_hdr$right))) {
-         if (token_check(cntnt$object$title_hdr$right[i])) {
-          pg <- 1
-          lns <- replace_tokens(lns, cntnt$object$title_hdr$right[i], "right")
+     for (th in cntnt$object$title_hdr) {
+       if (token_check(th$right)) {
+         for (i in seq_len(length(th$right))) {
+           if (token_check(th$right[i])) {
+            pg <- 1
+            lns <- replace_tokens(lns, th$right[i], "right")
+           }
          }
        }
      }
-     
    }
   }
   

@@ -1631,7 +1631,7 @@ test_that("test50: Table with long numeric values sizes as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   subjid <- 100:109
   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
-            "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma", 
+            "al-Kazemi, Najwa and more and more", "Schaffer, Ashley", "Laner, Tahma", 
             "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
             "Smith, Shaileigh")
   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
@@ -1648,8 +1648,8 @@ test_that("test50: Table with long numeric values sizes as expected.", {
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
     define(subjid, label = "Subject ID for a patient", n = 10) %>%
-    define(name, label = "Subject Name") %>%
-    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(name, label = "Subject Name", width = 1) %>%
+    define(sex, label = "Sex", n = 10, align = "left") %>%
     define(age, label = "Age", n = 10) %>%
     define(arm, label = "Arm",
            blank_after = TRUE,

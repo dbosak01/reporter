@@ -169,8 +169,8 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
                             lpg_rows, content_offset, ts)
-  # print("splits")
-  # print(splits)
+   # print("splits")
+   # print(splits)
   
   # Subset splits by preview, if requested
   if (!is.null(rs$preview)) {

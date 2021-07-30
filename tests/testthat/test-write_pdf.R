@@ -840,23 +840,25 @@ test_that("PDF with special chars works as expected.", {
 # 
 #   str6 <- paste0("<", paste0(str5, collapse = " "), ">")
   # 
-  fp <- file.path(base_path, "pdf/direct14.pdf")
+  fp <- file.path(base_path, "pdf/direct14")
   
   txt <- create_text(str4) %>% 
     titles(str4) %>% 
-    footnotes("Ï Ó µ ¿")
+    footnotes("Ï Ó µ ¿ 你 好")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
     titles("Ï Ó µ ¿") %>% 
-    page_header("special chars â ã Ï Ó") %>% 
-    page_footer("special chars â ã Ï Ó") %>% 
+    page_header("special chars â ã Ï Ó Здраво") %>% 
+    page_footer("special chars Привет") %>% 
     add_content(txt, align = "left") %>% 
     footnotes(str4)
   
   
-  res <- write_report(rpt)
+  res1 <- write_report(rpt, output_type = "PDF")
+  res2 <- write_report(rpt, output_type = "TXT")
   
-  expect_equal(file.exists(fp), TRUE)
+  expect_equal(file.exists(paste0(res1$file_path, ".pdf")), TRUE)
+  expect_equal(file.exists(paste0(res2$file_path, ".txt")), TRUE)
   
   # cat(str4)
   
