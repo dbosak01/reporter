@@ -9,7 +9,7 @@
 #' The function only supports plot objects returned by 
 #' \code{\link[ggplot2]{ggplot}} or \code{\link[survminer]{ggsurvplot}}.  
 #' It does not support the Base R 
-#' \code{\link[base]{plot}} function. 
+#' \code{plot} function. 
 #' @details 
 #' To add a plot to a report, use the \code{create_plot} function.  The 
 #' function allows you to set a width and height for the plot.  The
