@@ -466,7 +466,7 @@ write_content <- function(rs, ls, pt) {
         last_page <- FALSE
       
       
-      f <- file(rs$modified_path, open="aT", encoding = "native.enc")
+      f <- file(rs$modified_path, open="a", encoding = "native.enc")
       
       if (rs$blank_margins)
         writeLines(enc2utf8(blank_margin_top), con = f, useBytes = TRUE)
@@ -491,8 +491,7 @@ write_content <- function(rs, ls, pt) {
       }
       
       if (!is.null(pg)) {
-        tmp <- trimws(format(pg, width = rs$line_size,
-                      justify = get_justify(cont$align)),
+        tmp <- trimws(pad_any(pg, rs$line_size, get_justify(cont$align)),
                       which = "right")
         writeLines(enc2utf8(paste0(blank_margin_left, tmp)), 
                    con = f, useBytes = TRUE)

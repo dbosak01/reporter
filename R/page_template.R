@@ -624,34 +624,69 @@ page_info <- function(data, keys, font_name, col_width, col_align,
 # Utilities ---------------------------------------------------------------
 
 #' @noRd
-pad_right <- function(s, w) {
+pad_right <- Vectorize(function(s, w) {
   
-  ret <- format(s, width = w, justify = "left")
+  l <- w - nchar(s)
+  
+  if (l < 0)
+    ret <- s
+  else
+    ret <- paste0(s, paste0(rep_len(" ", length.out = w - nchar(s)), collapse = ""))
 
   return(ret)
-  
-  
-}
+}, USE.NAMES = FALSE)
 
 #' @noRd
-pad_left <- function(s, w) {
+pad_left <- Vectorize(function(s, w) {
   
-  ret <- format(s, width = w, justify = "right")
+  l <- w - nchar(s)
+  
+  if (l < 0)
+    ret <- s
+  else 
+    ret <- paste0(paste0(rep_len(" ", length.out =l), collapse = ""), s)
+  
   
   return(ret)
   
-  
-}
+}, USE.NAMES = FALSE)
 
 #' @noRd
-pad_both <- function(s, w) {
+pad_both <- Vectorize(function(s, w) {
   
-  ret <- format(s, width = w, justify = "centre")
+ # ret <- format(s, width = w, justify = "centre")
+  
+  l <- w - nchar(s)
+  
+  if (l < 0)
+    ret <- s
+  else {
+  
+    lp <- floor(l / 2)
+    rp <- ceiling(l / 2)
+    
+    ret <- paste0(paste0(rep_len(" ", length.out = lp), collapse = ""), 
+                s, paste0(rep_len(" ", length.out = rp), collapse = ""))
+  
+  }
   
   return(ret)
   
   
+}, USE.NAMES = FALSE)
+
+pad_any <- function(s, w, j) {
+  
+  if (j == "left")
+    ret <- pad_right(s, w)
+  else if (j == "right")
+    ret <- pad_left(s, w)
+  else if (j %in% c("center", "centre"))
+    ret <- pad_both(s, w)
+  else 
+    ret <- pad_right(s, w)
+  
+  return(ret)
+  
 }
-
-
 

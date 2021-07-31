@@ -818,10 +818,20 @@ test_that("PDF with special chars works as expected.", {
   # 
   # str3 <- paste0("<", hc, ">")
   library(magrittr)
-  str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰", 
-            "Special symbols µ Ω £ there to mess things up") # , 
+  str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰ ", 
+            "Special symbols µ Ω £ there Привет to mess things up ") # , 
                # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
                # "Ω ± ∑ π α β")
+  str4
+  
+  # f <- file(file.path(base_path, "pdf/fork.txt"), open = "wt", encoding = "native.enc")
+  # 
+  # writeLines(enc2utf8(str4), con = f, useBytes = TRUE)
+  # writeLines(enc2utf8(trimws(str4, which = "right")), con = f, useBytes = TRUE)
+  # 
+  # 
+  # close(f)
+  
   
   # stri_enc_detect(str4)
   # 
@@ -856,9 +866,11 @@ test_that("PDF with special chars works as expected.", {
   
   res1 <- write_report(rpt, output_type = "PDF")
   res2 <- write_report(rpt, output_type = "TXT")
-  
+  res3 <- write_report(rpt, output_type = "RTF")
+
   expect_equal(file.exists(paste0(res1$file_path, ".pdf")), TRUE)
   expect_equal(file.exists(paste0(res2$file_path, ".txt")), TRUE)
+  expect_equal(file.exists(paste0(res3$file_path, ".rtf")), TRUE)
   
   # cat(str4)
   
