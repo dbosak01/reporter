@@ -144,7 +144,7 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
       img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), as.numeric(spec[[2]]), rs$units)
       ret[length(ret) + 1] <- spec[[1]]
       
-      # Create latex codes
+      # Create rtf codes
       if (spec[[4]] == "left") {
         ltx <- paste0("\\par\\ql\n"  )
 

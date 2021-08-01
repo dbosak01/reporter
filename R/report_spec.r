@@ -199,7 +199,7 @@ create_report <- function(file_path = "", output_type = "TXT",
   x$units <- units              # Unit of measure
   x$paper_size <- paper_size
   x$page_size <- get_page_size(paper_size, units)
-  x$pages <- 1                  # Track # of pages in report
+  x$pages <- 0                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
   x$missing <- missing
   x$font_type <- font_type #font_type      # For future use.  Not used now.
@@ -464,7 +464,7 @@ editor_settings <- read.table(header = TRUE, text = '
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
                           font_size = 10, line_size = NULL, line_count = NULL,
-                          uchar = "\U00AF") {
+                          uchar = "\xAF") {
   
   if (!"report_spec" %in% class(x)) {
     stop("Input object must be of class 'report_spec'.") 
@@ -1936,13 +1936,8 @@ write_report <- function(x, file_path = NULL,
   
   } else if (x$output_type == "PDF") {
     
-    uchar_orig <- x$uchar
-    
-    x$uchar <- "-"
     
     ret <- write_report_pdf(x)
-    
-    x$uchar <- uchar_orig
 
   } else {
    stop(paste("Output type currently not supported:", x$output_type))

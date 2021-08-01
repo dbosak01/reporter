@@ -41,7 +41,7 @@ create_report_text <- function(rs) {
       ls[[1]]$pages <- ls[[1]]$pages[seq(1, rs$preview)]
   }
   
-  # Write pages to file
+  # Combine all content pages 
   res <- create_content(rs, ls, pt)
   rs <- res$rs
   ls <- res$ls
@@ -58,7 +58,7 @@ create_report_text <- function(rs) {
 
 
 #' @title Create content for PDF and RTF output type.
-#' @description This loop writes out pages created in paginate_content
+#' @description This loop prepares pages created in paginate_content
 #' @noRd
 create_content <- function(rs, ls, pt) {
   
@@ -90,11 +90,12 @@ create_content <- function(rs, ls, pt) {
     
     
     for (pg in cont$pages) {
-      
+    
       page <- page + 1
       
       # Vector to hold lines on a page
-      lns <- c()
+      if (page_open == FALSE)
+        lns <- c()
       
       if (page == length(cont$pages))
         last_page <- TRUE
@@ -143,21 +144,16 @@ create_content <- function(rs, ls, pt) {
         if (!is.null(pt$page_footer))
           lns <- append(lns, paste0(blank_margin_left, pt$page_footer))
         
-        # Complete page 
-        if (last_object == FALSE | last_page == FALSE) {
-          
-          if (is.null(rs$pages))
-            rs$pages <- 1
-          else 
-            rs$pages <- rs$pages + 1 
-          
-          ret[[length(ret) + 1]] <- lns
-          
-        } else if (last_page == TRUE) {
-          
-          ret[[length(ret) + 1]] <- lns 
-          
-        }
+        # Increment total page count
+        if (is.null(rs$pages))
+          rs$pages <- 1
+        else 
+          rs$pages <- rs$pages + 1 
+        
+        # If page not open, add to list
+        ret[[length(ret) + 1]] <- lns 
+        
+        
       }
   
       
@@ -636,8 +632,12 @@ write_page_numbers <- function(rs) {
   # Read file into vector
   lns <- readLines(rs$modified_path, encoding = "UTF-8")
   
+
+  # Adjust page count
+  rs$pages <- rs$pages + 1
+  
   # Set up page variables
-  tpg <- rs$pages
+  tpg <- rs$pages 
   pg <- 1
   
   # Define vectorized function to replace tokens

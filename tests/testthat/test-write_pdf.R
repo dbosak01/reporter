@@ -616,6 +616,7 @@ test_that("Simplest direct table works as expected.", {
   
   rpt <- create_report(fp, output_type = "PDF") %>%
     add_content(create_table(mtcars[1:10, ]), align = "left") %>% 
+    page_footer("Page [pg] of [tpg]") %>% 
     set_margins(top = .5) 
   
   
@@ -636,8 +637,10 @@ test_that("Direct table with 2 pages works as expected.", {
   fp <- file.path(base_path, "pdf/direct8.pdf")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
-    add_content(create_table(mtcars[1:10, ])) %>% 
-    add_content(create_table(mtcars[11:32, ])) 
+    add_content(create_table(mtcars[1:10, ]), page_break = FALSE) %>% 
+    add_content(create_text("Hello")) %>% 
+    add_content(create_text("There")) %>% 
+    page_footer(right = "Page [pg] of [tpg]")
   
   res <- write_report(rpt)
   
