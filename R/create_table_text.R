@@ -403,8 +403,8 @@ get_table_header <- function(rs, ts, pi) {
 
     for (nm in names(d)) {
       if (!is.control(nm))
-        r <- paste0(r, format(d[i, nm], width = w[[nm]],
-                            justify = get_justify(lbla[[nm]])), " ")
+        r <- paste0(r, pad_any(d[i, nm],  w[[nm]],
+                             get_justify(lbla[[nm]])), " ")
     }
     
     ln[[length(ln) + 1]] <- r 
@@ -575,11 +575,11 @@ get_spanning_header <- function(rs, ts, pi) {
         if (!is.control(nm)) {
 
           if (j[[nm]] == "right") # Adjust 1 space for right alignment
-            r <- paste0(r, format(d[i, nm], width = w[[nm]] -1,
-                                  justify = get_justify(j[[nm]])), " ")
+            r <- paste0(r, pad_any(d[i, nm], w[[nm]] -1,
+                                  get_justify(j[[nm]])), " ")
           else
-            r <- paste0(r, format(d[i, nm], width = w[[nm]],
-                                  justify = get_justify(j[[nm]])))
+            r <- paste0(r, pad_any(d[i, nm], w[[nm]],
+                                   get_justify(j[[nm]])))
           
 
         }

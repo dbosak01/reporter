@@ -654,7 +654,6 @@ pad_left <- Vectorize(function(s, w) {
 #' @noRd
 pad_both <- Vectorize(function(s, w) {
   
- # ret <- format(s, width = w, justify = "centre")
   
   l <- w - nchar(s)
   

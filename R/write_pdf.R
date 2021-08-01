@@ -274,11 +274,20 @@ get_header <- function(page_count = 1,
   lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
                                            Pages = ref(3)))
 
+  if (Sys.info()[["sysname"]] == "Windows") {
   
-  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
-                                           Subtype = "/Type1", 
-                                           BaseFont = paste0("/", font_name),
-                                           Encoding = "/WinAnsiEncoding"))
+    lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
+                                             Subtype = "/Type1", 
+                                             BaseFont = paste0("/", font_name),
+                                             Encoding = "/WinAnsiEncoding"))
+  
+  } else {
+    lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
+                                             Subtype = "/Type1", 
+                                             BaseFont = paste0("/", font_name),
+                                             Encoding = "/StandardEncoding"))
+    
+  }
   
   if (page_count > 10)
     kds <- paste(page_ids, "0 R\n", collapse = " ")
@@ -1019,7 +1028,7 @@ get_byte_stream <- function(contents, startx, starty,
   
   # Convert text characters to byte codes
   for (ln in contents) {
-    cnts[length(cnts) + 1] <- paste0(charToRaw(ln), collapse = " ")
+    cnts[length(cnts) + 1] <- paste0(charToRaw(ln), collapse = "")
   
   }
   

@@ -327,8 +327,8 @@ get_plot_body <- function(plt, plot_path, align, rs,
     } else {
       
       # Start a new page
-      ret[[length(ret) + 1]] <- format(tmp, width = rs$line_size, 
-                                       justify = get_justify(align))
+      ret[[length(ret) + 1]] <- pad_any(tmp, rs$line_size, 
+                                        get_justify(align))
       tmp <- rws[i]
       
       # Set to zero on second page and leave it that way
@@ -344,8 +344,8 @@ get_plot_body <- function(plt, plot_path, align, rs,
     if (max(nchar(trimws(tmp))) > 0) {
       
       # Add last page
-      ret[[length(ret) + 1]] <- format(tmp, width = rs$line_width, 
-                                       justify = get_justify(align))
+      ret[[length(ret) + 1]] <- pad_any(tmp,  rs$line_size, 
+                                        get_justify(align))
     }
     
   }

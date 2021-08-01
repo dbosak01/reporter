@@ -654,16 +654,16 @@ test_that("simple jpg document works as expected.", {
   
   library(ggplot2)
   
-  ip <- file.path(data_dir, "pdf/plot.jpg")
+  ip <- file.path(data_dir, "data/plot.jpg")
   fp <- file.path(base_path, "pdf/direct9.pdf")
   
-  
-  if (file.exists(ip))
-    file.remove(ip)
-  
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
-  ggsave(filename= ip, plot = p, width = 9, height = 5, units = "in")
+  # 
+  # if (file.exists(ip))
+  #   file.remove(ip)
+  # 
+  # p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  # 
+  # ggsave(filename= ip, plot = p, width = 9, height = 5, units = "in")
   
   r <- create_pdf(fp) %>% 
     add_page(page_image(ip, height = 5, width = 9, xpos = 1, ypos = 1))
@@ -682,16 +682,16 @@ test_that("Test jpg alignment works as expected.", {
   
   library(ggplot2)
   
-  ip <- file.path(data_dir, "pdf/plot.jpg")
+  ip <- file.path(data_dir, "data/plot.jpg")
 
   
-  
-  if (file.exists(ip))
-    file.remove(ip)
-  
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
-  ggsave(filename= ip, plot = p, width = 6, height = 3, units = "in")
+  # 
+  # if (file.exists(ip))
+  #   file.remove(ip)
+  # 
+  # p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  # 
+  # ggsave(filename= ip, plot = p, width = 6, height = 3, units = "in")
   
   
   fp <- file.path(base_path, "pdf/direct10a.pdf")
@@ -735,17 +735,17 @@ test_that("simple jpg document works as expected in centimeters.", {
 
   library(ggplot2)
 
-  ip <- file.path(data_dir, "pdf/plot.jpg")
+  ip <- file.path(data_dir, "data/plot.jpg")
   fp <- file.path(base_path, "pdf/direct11.pdf")
 
 
-  if (file.exists(ip))
-    file.remove(ip)
-
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-
-  ggsave(filename= ip, plot = p, width = 23, height = 13,
-         units = "cm")
+  # if (file.exists(ip))
+  #   file.remove(ip)
+  # 
+  # p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  # 
+  # ggsave(filename= ip, plot = p, width = 23, height = 13,
+  #        units = "cm")
 
   r <- create_pdf(fp, page_height = 27.94, page_width = 21.59, units = "cm") %>%
     add_page(page_image(ip, height = 13, width = 23, xpos = 2.5,
@@ -818,8 +818,10 @@ test_that("PDF with special chars works as expected.", {
   # 
   # str3 <- paste0("<", hc, ">")
   library(magrittr)
-  str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰ ", 
-            "Special symbols µ Ω £ there Привет to mess things up ") # , 
+  
+  # ± ≠ ⋜ ⋝ ° ƒ ×
+  str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰ + - / %", 
+            "Special symbols µ £ ¿ there  to mess things up ° ^ é ñ ± € ƒ") # ∆ ∈ ∑ √ ∫ Привет , 
                # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
                # "Ω ± ∑ π α β")
   str4
@@ -854,12 +856,12 @@ test_that("PDF with special chars works as expected.", {
   
   txt <- create_text(str4) %>% 
     titles(str4) %>% 
-    footnotes("Ï Ó µ ¿ 你 好")
+    footnotes("Ï Ó µ ¿")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
     titles("Ï Ó µ ¿") %>% 
-    page_header("special chars â ã Ï Ó Здраво") %>% 
-    page_footer("special chars Привет") %>% 
+    page_header("special chars â ã Ï Ó µ") %>% #  Здраво
+    page_footer("special chars â ã Ï Ó µ") %>% #  Привет
     add_content(txt, align = "left") %>% 
     footnotes(str4)
   

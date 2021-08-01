@@ -123,9 +123,7 @@ create_content <- function(rs, ls, pt) {
       }
       
       if (!is.null(pg)) {
-        tmp <- trimws(format(pg, width = rs$line_size,
-                             justify = get_justify(cont$align)),
-                      which = "right")
+        tmp <- pad_any(pg, rs$line_size, get_justify(cont$align))
         lns <- append(lns, paste0(blank_margin_left, tmp))
         
       }
@@ -197,7 +195,7 @@ update_page_numbers <- function(rs, lns) {
       
       tmp <- sub("[tpg]", tpg, srch, fixed = TRUE)
       tmp <- sub("[pg]", pg, tmp, fixed = TRUE)
-      tmp <- format(tmp, width = nchar(srch), justify = just)
+      tmp <- pad_any(tmp, nchar(srch), just)
       ret <- sub(srch, tmp, x, fixed = TRUE)
     }
     
@@ -661,7 +659,7 @@ write_page_numbers <- function(rs) {
       
       tmp <- sub("[tpg]", tpg, srch, fixed = TRUE)
       tmp <- sub("[pg]", pg, tmp, fixed = TRUE)
-      tmp <- format(tmp, width = nchar(srch), justify = just)
+      tmp <- pad_any(tmp, nchar(srch), just)
       ret <- sub(srch, tmp, x, fixed = TRUE)
     }
     
