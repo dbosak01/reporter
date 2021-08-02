@@ -215,7 +215,10 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 369)
+  if (Sys.info()[["sysname"]] == "Windows")
+    expect_equal(length(hdrtxt), 369)
+  else 
+    expect_equal(length(hdrtxt), 370)
   
   # Check two pages
   hdr <- get_header(page_count = 2,
@@ -229,7 +232,10 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 377)
+  if (Sys.info()[["sysname"]] == "Windows")
+    expect_equal(length(hdrtxt), 377)
+  else 
+    expect_equal(length(hdrtxt), 378)
   
   # Check three pages
   hdr <- get_header(page_count = 3,
@@ -241,7 +247,10 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  expect_equal(length(hdrtxt), 383)
+  if (Sys.info()[["sysname"]] == "Windows")
+    expect_equal(length(hdrtxt), 383)
+  else
+    expect_equal(length(hdrtxt), 384)
   
 })
 
