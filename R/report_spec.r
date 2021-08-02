@@ -1936,8 +1936,13 @@ write_report <- function(x, file_path = NULL,
   
   } else if (x$output_type == "PDF") {
     
+    uchar_orig <- x$uchar
+    
+    x$uchar <- "-"
     
     ret <- write_report_pdf(x)
+    
+    x$uchar <- uchar_orig
 
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
