@@ -464,7 +464,7 @@ editor_settings <- read.table(header = TRUE, text = '
 options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
                           min_margin = NULL, blank_margins = FALSE,
                           font_size = 10, line_size = NULL, line_count = NULL,
-                          uchar = "\xAF") {
+                          uchar = "\U00AF") {
   
   if (!"report_spec" %in% class(x)) {
     stop("Input object must be of class 'report_spec'.") 
