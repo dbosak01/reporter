@@ -274,20 +274,20 @@ get_header <- function(page_count = 1,
   lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
                                            Pages = ref(3)))
 
-  if (Sys.info()[["sysname"]] == "Windows") {
+  # if (Sys.info()[["sysname"]] == "Windows") {
   
     lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
                                              Subtype = "/Type1", 
                                              BaseFont = paste0("/", font_name),
                                              Encoding = "/WinAnsiEncoding"))
   
-  } else {
-    lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
-                                             Subtype = "/Type1", 
-                                             BaseFont = paste0("/", font_name),
-                                             Encoding = "/StandardEncoding"))
-    
-  }
+  # } else {
+  #   lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
+  #                                            Subtype = "/Type1", 
+  #                                            BaseFont = paste0("/", font_name),
+  #                                            Encoding = "/StandardEncoding"))
+  #   
+  # }
   
   if (page_count > 10)
     kds <- paste(page_ids, "0 R\n", collapse = " ")
@@ -1028,7 +1028,7 @@ get_byte_stream <- function(contents, startx, starty,
   
   # Convert text characters to byte codes
   for (ln in contents) {
-    cnts[length(cnts) + 1] <- paste0(charToRaw(ln), collapse = "")
+    cnts[length(cnts) + 1] <- paste0(charToRaw(viconv(ln)), collapse = "")
   
   }
   
@@ -1052,7 +1052,7 @@ get_text_stream <- function(contents, startx, starty,
   
   ret <- paste0("BT /F1 ", fontsize, 
                 " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td (", 
-                contents, ")Tj ET")
+                viconv(contents), ")Tj ET")
   
   # Not working
   #ret <- memCompress(ret, type = "gzip")
@@ -1102,3 +1102,19 @@ get_image_text <- function(img_ref, height, width, xpos, ypos) {
   
 }
 
+
+viconv <- Vectorize(function(vstr) {
+  
+
+  #print(paste0(Encoding(vstr), ": ", vstr))
+  
+  if (Encoding(vstr) == "UTF-8") {
+    ret <- iconv(vstr, from =Encoding(vstr), to = "CP1252", sub = "Unicode")
+  } else {
+    
+    ret <- vstr
+  } 
+  
+  return(ret)
+  
+}, USE.NAMES = FALSE, SIMPLIFY = TRUE)

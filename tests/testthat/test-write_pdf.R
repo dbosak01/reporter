@@ -215,10 +215,10 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  if (Sys.info()[["sysname"]] == "Windows")
+  # if (Sys.info()[["sysname"]] == "Windows")
     expect_equal(length(hdrtxt), 369)
-  else 
-    expect_equal(length(hdrtxt), 370)
+  # else 
+  #   expect_equal(length(hdrtxt), 370)
   
   # Check two pages
   hdr <- get_header(page_count = 2,
@@ -232,10 +232,10 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  if (Sys.info()[["sysname"]] == "Windows")
+  # if (Sys.info()[["sysname"]] == "Windows")
     expect_equal(length(hdrtxt), 377)
-  else 
-    expect_equal(length(hdrtxt), 378)
+  # else 
+  #   expect_equal(length(hdrtxt), 378)
   
   # Check three pages
   hdr <- get_header(page_count = 3,
@@ -247,10 +247,10 @@ test_that("get_header works as expected.", {
   
   #cat(rawToChar(hdrtxt))
   
-  if (Sys.info()[["sysname"]] == "Windows")
+  # if (Sys.info()[["sysname"]] == "Windows")
     expect_equal(length(hdrtxt), 383)
-  else
-    expect_equal(length(hdrtxt), 384)
+  # else
+  #   expect_equal(length(hdrtxt), 384)
   
 })
 
@@ -820,6 +820,32 @@ test_that("Simplest direct plot works as expected.", {
 })
 
 
+test_that("viconv function works as expected.", {
+  
+  v <- c("A B", "â ã")
+  
+  str <-  viconv(enc2utf8(v))
+
+  expect_equal(Encoding(str), c("unknown", "latin1"))
+  
+  
+  # str3 <- viconv(enc2utf8(v), as_raw = TRUE)
+  # 
+  # expect_equal(str3[[1]], charToRaw("A B"))
+  # 
+  # charToRaw(v[2])
+  # 
+  # r <- raw(3)
+  # 
+  # r[1] <- as.raw(226)
+  # r[2] <- as.raw(32)
+  # r[3] <- as.raw(227)
+  # 
+  # expect_equal(str3[[2]], r)
+
+})
+
+
 test_that("PDF with special chars works as expected.", {
   
   # 
@@ -837,6 +863,13 @@ test_that("PDF with special chars works as expected.", {
                # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
                # "Ω ± ∑ π α β")
   str4
+  
+  # str5 <- enc2utf8(str4)
+  # 
+  # Encoding(str5)
+  # 
+  # str6 <- iconv(str5, from ="UTF-8", to = "CP1252", sub = "Unicode")
+  # Encoding(str6)
   
   # f <- file(file.path(base_path, "pdf/fork.txt"), open = "wt", encoding = "native.enc")
   # 
