@@ -859,7 +859,7 @@ test_that("PDF with special chars works as expected.", {
   
   # ± ≠ ⋜ ⋝ ° ƒ ×
   str4 <- c("Here are some special chars â ã Ï Ó µ ¿ ‰ + - / %", 
-            "Special symbols µ £ ¿ there  to mess things up ° ^ é ñ ± € ƒ") # ∆ ∈ ∑ √ ∫ Привет , 
+            "Special symbols µ £ ¿ there  to mess things up ° ^ é ñ ± € ∆ ƒ") # ∆ ∈ ∑ √ ∫ Привет , 
                # "\xe2 \xe3 \xcf \xd3 \265 \277 \211 \234 £\n",
                # "Ω ± ∑ π α β")
   str4

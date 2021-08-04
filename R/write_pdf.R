@@ -1102,18 +1102,24 @@ get_image_text <- function(img_ref, height, width, xpos, ypos) {
   
 }
 
-
 viconv <- Vectorize(function(vstr) {
   
-
+  
   #print(paste0(Encoding(vstr), ": ", vstr))
   
   if (Encoding(vstr) == "UTF-8") {
-    ret <- iconv(vstr, from =Encoding(vstr), to = "CP1252", sub = "Unicode")
+    ret <- iconv(vstr, from =Encoding(vstr), to = "CP1252", sub = "?")
+    
+    if (length(grep("???", ret, fixed = TRUE)) > 0) {
+      ret <- gsub("???", "?", ret, fixed = TRUE)
+      if (Encoding(ret) == "UTF-8")
+        ret <- iconv(ret, from ="UTF-8", to = "CP1252", sub = "?")
+    }
+    
   } else {
     
     ret <- vstr
-  } 
+  }
   
   return(ret)
   
