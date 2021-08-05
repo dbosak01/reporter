@@ -124,7 +124,8 @@ create_content <- function(rs, ls, pt) {
       }
       
       if (!is.null(pg)) {
-        tmp <- pad_any(pg, rs$line_size, get_justify(cont$align))
+        tmp <- trimws(pad_any(pg, rs$line_size, get_justify(cont$align)), 
+                      which = "right")
         lns <- append(lns, paste0(blank_margin_left, tmp))
         
       }

@@ -1906,8 +1906,8 @@ write_report <- function(x, file_path = NULL,
     x <- options_fixed(x, editor = x$editor, 
                        cpuom = x$cpuom, lpuom = x$lpuom,
                        min_margin = x$min_margin, blank_margins = x$blank_margins,
-                       font_size = x$font_size, line_size = x$line_size, 
-                       line_count = x$line_count,
+                       font_size = x$font_size, line_size = x$user_line_size, 
+                       line_count = x$user_line_count,
                        uchar = x$uchar)
   }
   

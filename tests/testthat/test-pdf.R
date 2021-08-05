@@ -732,5 +732,37 @@ test_that("pdf24: PDF Table with Plot and borders on content works as expected."
 
 })
 
-
+test_that("pdf25: PDF Table with custom options works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test25.pdf")
+  
+  
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("My table", borders = "all") %>% 
+    footnotes("My table footnotes", borders = "all", align = "right")
+  
+  tbl2 <- create_table(mtcars[11:20, ]) %>% 
+    titles("My table", borders = "all") %>% 
+    footnotes("My table footnotes", borders = "all", align = "right")
+  
+  
+  rpt <- create_report(fp) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    add_content(tbl2, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    options_fixed(font_size = 12, line_size = 80, line_count = 30,
+                  uchar = "~")
+  
+  
+  res <- write_report(rpt, output_type = "pdf")
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+})
 
