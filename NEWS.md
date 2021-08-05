@@ -13,6 +13,7 @@ and `column_defaults()` functions.  These parameters will replace curly brace
 escape on those functions.
 Curly brace escape will remain active for backward compatibility, but is 
 no longer documented.
+* Fixed bug in RTF that was causing page overflows in LibreOffice Writer.
 
 
 # reporter 1.1.2
