@@ -785,3 +785,59 @@ test_that("rtf24: RTF Table with Plot and borders works as expected.", {
 })
 
 
+test_that("rtf25: RTF Table with custom options works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf/test25.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  
+  plt <- create_plot(p, height = 4, width = 8) %>% 
+    titles("My plot", borders = "all") %>% 
+    footnotes("My plot footnotes", borders = "all")
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("My table", borders = "all") %>% 
+    footnotes("My table footnotes", borders = "all", align = "right")
+  
+  
+  rpt <- create_report(fp) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    add_content(plt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    options_fixed(font_size = 12, line_size = 60, line_count = 10,
+                  uchar = "A")
+  
+  
+  res <- write_report(rpt, output_type = "RTF")
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+})
+
+test_that("test26: line_size and line_count overrides work as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test26.rtf")
+  
+  
+  rpt <- create_report(fp) %>%
+    options_fixed(line_size = 40, line_count = 30) %>% 
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt, output_type = "RTF")
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
+

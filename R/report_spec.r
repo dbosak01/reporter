@@ -480,7 +480,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
           x$cpuom <- 4.687
         else if (x$units == "char")
           x$cpuom <- 1
-      } else if (!(cpuom >= 1 & cpuom <= 14)) {
+      } else if (!(cpuom >= 1 & cpuom <= 15)) {
         
         stop(paste0("cpi parameter on create_report() ",
                     "function is invalid: '", cpuom,
@@ -549,6 +549,8 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       # print(paste("lpuom:", x$lpuom))
     }
     
+    
+    x$uchar <- uchar
     x$blank_margins <- blank_margins
   
   } else if (x$output_type == "PDF") {
@@ -578,6 +580,11 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       x$lpuom <- 1
       x$min_margin <- round(e$mmi / 12)
     }
+    
+    if (uchar == "\U00AF")
+      x$uchar <- "-"
+    else 
+      x$uchar <- uchar
     
     x$blank_margins <- FALSE
     
@@ -610,6 +617,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
     
     x$blank_margins <- FALSE
     
+    if (uchar == "\U00AF") {
+      if (Sys.info()[["sysname"]] != "Windows")
+        x$uchar <- "-"
+      else 
+        x$uchar <- uchar
+    } else 
+      x$uchar <- uchar
+    
   }
   
   if (!is.null(line_size)) {
@@ -631,7 +646,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
   x$line_height <- 1 / x$lpuom
   x$user_line_size <- line_size
   x$user_line_count <- line_count
-  x$uchar <- uchar
   
   return(x)
   
@@ -1889,7 +1903,12 @@ write_report <- function(x, file_path = NULL,
     }
     x$output_type <- toupper(output_type)
 
-    x <- options_fixed(x, font_size = x$font_size)
+    x <- options_fixed(x, editor = x$editor, 
+                       cpuom = x$cpuom, lpuom = x$lpuom,
+                       min_margin = x$min_margin, blank_margins = x$blank_margins,
+                       font_size = x$font_size, line_size = x$line_size, 
+                       line_count = x$line_count,
+                       uchar = x$uchar)
   }
   
 
@@ -1936,13 +1955,9 @@ write_report <- function(x, file_path = NULL,
   
   } else if (x$output_type == "PDF") {
     
-    uchar_orig <- x$uchar
-    
-    x$uchar <- "-"
-    
+
     ret <- write_report_pdf(x)
-    
-    x$uchar <- uchar_orig
+
 
   } else {
    stop(paste("Output type currently not supported:", x$output_type))

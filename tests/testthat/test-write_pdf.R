@@ -904,7 +904,7 @@ test_that("PDF with special chars works as expected.", {
     footnotes("Ï Ó µ ¿")
   
   rpt <- create_report(fp, output_type = "PDF") %>%
-    titles("Ï Ó µ ¿") %>% 
+    titles("Ï Ó µ ¿", borders = "bottom") %>% 
     page_header("special chars â ã Ï Ó µ") %>% #  Здраво
     page_footer("special chars â ã Ï Ó µ") %>% #  Привет
     add_content(txt, align = "left") %>% 

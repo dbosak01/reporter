@@ -1,7 +1,7 @@
 Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
-Version: 1.2
+Version: 1.1.3
 Author: David Bosak
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports.
@@ -18,7 +18,6 @@ License: CC BY-NC 4.0
 Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues
-SystemRequirements: pandoc (>= 1.12.3)
 Depends: R (>= 3.6.0)
 Suggests: 
     testthat,

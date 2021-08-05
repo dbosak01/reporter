@@ -172,8 +172,10 @@
 <a href="#reporter-113" class="anchor"></a>reporter 1.1.3<small> Unreleased </small>
 </h1>
 <ul>
-<li>Allow user to add more than one title header.</li>
-<li>Add GitHub Actions for prior R version checks.</li>
+<li>Made package compatible back to R 3.6.</li>
+<li>Added GitHub Actions for prior R version checks.</li>
+<li>Figured out how to generate PDF files directly, instead of using Latex/Rmarkdown/MikTex/Pandoc. Will greatly reduce dependencies and make the <strong>reporter</strong> package much easier to install and test. Also makes it much easier to accurately render the PDF file.</li>
+<li>Allow user to add more than one <code>title header()</code>.</li>
 <li>Made <em>output_type</em> parameter case insensitive.</li>
 <li>Added <em>standard_eval</em> parameter to <code><a href="../reference/define.html">define()</a></code>, <code><a href="../reference/spanning_header.html">spanning_header()</a></code>, and <code><a href="../reference/column_defaults.html">column_defaults()</a></code> functions. These parameters will replace curly brace escape on those functions. Curly brace escape will remain active for backward compatibility, but is no longer documented.</li>
 </ul>
