@@ -233,6 +233,11 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     strsplit(txt$text, split = "\n", fixed = TRUE)), 
     width = line_width, normalize = FALSE)
   
+  
+  # Make sure rows are the same length
+  s <- pad_any(s, line_width + 1, 
+               get_justify(txt$align))
+  
   # Add blank above content if requested
   a <- NULL
   if (content_blank_row %in% c("both", "above"))
@@ -290,6 +295,8 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     }
     
   }
+  
+
   
   return(ret)
   
