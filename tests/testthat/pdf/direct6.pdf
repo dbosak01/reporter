@@ -1,61 +1,52 @@
 %PDF-1.7
-%»É√£√è√ì
-1 0 obj<</Type /Catalog /Pages 4 0 R>>
+%‚„œ”
+1 0 obj<</Type /Catalog /Pages 3 0 R>>
 endobj
-2 0 obj<</Font <</F1 3 0 R>>>>
+2 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding>>
 endobj
-3 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier>>
+3 0 obj<</Type /Pages /Kids [4 0 R 6 0 R 8 0 R] /Count 3 /MediaBox [0 0 792 612]>>
 endobj
-4 0 obj<</Type /Pages /Kids [5 0 R 6 0 R 7 0 R] /Count 3>>
+4 0 obj<</Type /Page /Parent 3 0 R /Contents 5 0 R /Resources <</Font <</F1 2 0 R>> /ProcSet [/PDF /Text]>>>>
 endobj
-5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 8 0 R>>
-endobj
-6 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 9 0 R>>
-endobj
-7 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /MediaBox [0 0 792 612] /Contents 10 0 R>>
-endobj
-8 0 obj<</Length 145>>
+5 0 obj<</Length 169>>
 stream
-BT /F1 10 Tf 87 Tz 59 535 Td (Hello)Tj ET
-
-BT /F1 10 Tf 87 Tz 59 523.1 Td (There)Tj ET
-
-BT /F1 10 Tf 87 Tz 59 511.2 Td (Here is some text)Tj ET
-
+BT /F1 10 Tf 87 Tz 67 535 Td <48656c6c6f>Tj ET
+BT /F1 10 Tf 87 Tz 67 523.1 Td <5468657265>Tj ET
+BT /F1 10 Tf 87 Tz 67 511.2 Td <4865726520697320736f6d652074657874>Tj ET
 endstream
 endobj
-9 0 obj<</Length 104>>
+6 0 obj<</Type /Page /Parent 3 0 R /Contents 7 0 R /Resources <</Font <</F1 2 0 R>> /ProcSet [/PDF /Text]>>>>
+endobj
+7 0 obj<</Length 128>>
 stream
-BT /F1 10 Tf 87 Tz 59 535 Td (Hey!)Tj ET
-
-BT /F1 10 Tf 87 Tz 59 523.1 Td (Here is a second page!)Tj ET
-
+BT /F1 10 Tf 87 Tz 67 535 Td <48657921>Tj ET
+BT /F1 10 Tf 87 Tz 67 523.1 Td <486572652069732061207365636f6e64207061676521>Tj ET
 endstream
 endobj
-10 0 obj<</Length 49>>
+8 0 obj<</Type /Page /Parent 3 0 R /Contents 9 0 R /Resources <</Font <</F1 2 0 R>> /ProcSet [/PDF /Text]>>>>
+endobj
+9 0 obj<</Length 63>>
 stream
-BT /F1 10 Tf 87 Tz 59 535 Td (Third page!)Tj ET
-
+BT /F1 10 Tf 87 Tz 67 535 Td <41207468697264207061676521>Tj ET
 endstream
 endobj
-11 0 obj<</Producer (reporter v1.2) /Author (David Bosak) /Title (PDF 1.0) /Subject (Reporting) /Creator (R version 4.0.5 (2021-03-31)) /Keywords (one two three)
- /CreationDate (D:20210710205220-04'00') /ModDate (D:20210710205220-04'00')>>
+10 0 obj<</Producer (reporter v1.1.3) /Author (dbosa) /Title () /Subject () /Creator (R version 4.1.0 (2021-05-18)) /Keywords ()
+ /CreationDate (D:20210805171058-04'00') /ModDate (D:20210805171058-04'00')>>
 endobj
 xref
-0 12
+0 11
 0000000000 65535 f 
-0000000019 00000 n 
-0000000065 00000 n 
-0000000103 00000 n 
-0000000168 00000 n 
-0000000234 00000 n 
-0000000335 00000 n 
-0000000436 00000 n 
-0000000538 00000 n 
-0000000730 00000 n 
-0000000881 00000 n 
-0000000977 00000 n 
-trailer <</Size 12 /Root 1 0 R /Info 11 0 R>>
+0000000015 00000 n 
+0000000061 00000 n 
+0000000153 00000 n 
+0000000243 00000 n 
+0000000360 00000 n 
+0000000576 00000 n 
+0000000693 00000 n 
+0000000868 00000 n 
+0000000985 00000 n 
+0000001094 00000 n 
+trailer <</Size 11 /Root 1 0 R /Info 10 0 R>>
 startxref
-1224
+1308
 %%EOF

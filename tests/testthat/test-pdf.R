@@ -1,6 +1,8 @@
 
 context("PDF Tests")
 
+
+base_path <- "/home/dbosak01/packages/reporter/tests/testthat"
 base_path <- "c:/packages/reporter/tests/testthat"
 
 base_path <- tempdir()

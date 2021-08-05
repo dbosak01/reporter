@@ -1,16 +1,14 @@
-special chars â ã Ï Ó Здраво                                                                                
-                                                   Ï Ó µ ¿
+special chars â ã Ï Ó µ                                                                                                        
+                                                            Ï Ó µ ¿
+-------------------------------------------------------------------------------------------------------------------------------
 
-                                 Here are some special chars â ã Ï Ó µ ¿ ‰
-                            Special symbols µ Ω £ there Привет to mess things up
+                                       Here are some special chars â ã Ï Ó µ ¿ ‰ + - / %
+                                 Special symbols µ £ ¿ there  to mess things up ° ^ é ñ ± € ∆ ƒ
 
-Here are some special chars â ã Ï Ó µ ¿ ‰
-Special symbols µ Ω £ there Привет to mess things up
+Here are some special chars â ã Ï Ó µ ¿ ‰ + - / %
+Special symbols µ £ ¿ there  to mess things up ° ^ é ñ ± € ∆ ƒ
 
-Ï Ó µ ¿ 你 好
-
-
-
+Ï Ó µ ¿
 
 
 
@@ -39,7 +37,9 @@ Special symbols µ Ω £ there Привет to mess things up
 
 
 
-Here are some special chars â ã Ï Ó µ ¿ ‰
-Special symbols µ Ω £ there Привет to mess things up
 
-special chars Привет                                                                                        
+
+Here are some special chars â ã Ï Ó µ ¿ ‰ + - / %
+Special symbols µ £ ¿ there  to mess things up ° ^ é ñ ± € ∆ ƒ
+
+special chars â ã Ï Ó µ                                                                                                        

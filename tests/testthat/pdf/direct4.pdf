@@ -1,36 +1,33 @@
 %PDF-1.7
 %‚„œ”
-1 0 obj<</Type /Catalog /Pages 4 0 R>>
+1 0 obj<</Type /Catalog /Pages 3 0 R>>
 endobj
-2 0 obj<</Font <</F1 3 0 R>>>>
+2 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding>>
 endobj
-3 0 obj<</Type /Font /Subtype /Type1 /BaseFont /Courier>>
+3 0 obj<</Type /Pages /Kids [4 0 R] /Count 1 /MediaBox [0 0 792 612]>>
 endobj
-4 0 obj<</Type /Pages /Kids [5 0 R] /Count 1 /MediaBox [0 0 792 612]>>
+4 0 obj<</Type /Page /Parent 3 0 R /Contents 5 0 R /Resources <</Font <</F1 2 0 R>> /ProcSet [/PDF /Text]>>>>
 endobj
-5 0 obj<</Type /Page /Parent 4 0 R /Resources 2 0 R /ProcSet [/PDF /Text] /Contents 6 0 R>>
-endobj
-6 0 obj<</Length 142>>
+5 0 obj<</Length 169>>
 stream
-BT /F1 10 Tf 87 Tz 23 571 Td (Hello)Tj ET
-BT /F1 10 Tf 87 Tz 23 559.1 Td (There)Tj ET
-BT /F1 10 Tf 87 Tz 23 547.2 Td (Here is some text)Tj ET
+BT /F1 10 Tf 87 Tz 31 571 Td <48656c6c6f>Tj ET
+BT /F1 10 Tf 87 Tz 31 559.1 Td <5468657265>Tj ET
+BT /F1 10 Tf 87 Tz 31 547.2 Td <4865726520697320736f6d652074657874>Tj ET
 endstream
 endobj
-7 0 obj<</Producer (reporter v1.2) /Author (dbosa) /Title () /Subject () /Creator (R version 4.0.5 (2021-03-31)) /Keywords ()
- /CreationDate (D:20210714000752-04'00') /ModDate (D:20210714000752-04'00')>>
+6 0 obj<</Producer (reporter v1.1.3) /Author (dbosa) /Title () /Subject () /Creator (R version 4.1.0 (2021-05-18)) /Keywords ()
+ /CreationDate (D:20210805162122-04'00') /ModDate (D:20210805162122-04'00')>>
 endobj
 xref
-0 8
+0 7
 0000000000 65535 f 
 0000000015 00000 n 
 0000000061 00000 n 
-0000000099 00000 n 
-0000000164 00000 n 
-0000000242 00000 n 
-0000000341 00000 n 
-0000000530 00000 n 
-trailer <</Size 8 /Root 1 0 R /Info 7 0 R>>
+0000000153 00000 n 
+0000000231 00000 n 
+0000000348 00000 n 
+0000000564 00000 n 
+trailer <</Size 7 /Root 1 0 R /Info 6 0 R>>
 startxref
-741
+777
 %%EOF

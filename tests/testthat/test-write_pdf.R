@@ -290,9 +290,9 @@ test_that("pdf_page works as expected.", {
 test_that("create full document works as expected.", {
   
   
-  pg <- pdf_page(5, 6)
+  pg <- pdf_page(4, 5)
   
-  strm <- pdf_text_stream(6, c(
+  strm <- pdf_text_stream(5, c(
                      "BT /F1 12 Tf 175 600 Td (Hello here is some more)Tj ET",
                      "BT /F1 12 Tf 175 580 Td (There I like text.)Tj ET",
                      "BT /F1 12 Tf 175 560 Td (World and more)Tj ET", 
@@ -300,9 +300,9 @@ test_that("create full document works as expected.", {
   
 
   
-  doc <- pdf_document(get_header(1, page_ids = 5), pg, strm)
+  doc <- pdf_document(get_header(1, page_ids = 4), pg, strm)
   
-  expect_equal(length(doc), 6)
+  expect_equal(length(doc), 5)
   expect_equal("pdf_document" %in% class(doc), TRUE)
   
   res <- render(doc)
@@ -373,7 +373,7 @@ test_that("vraw function works as expected.", {
   
   expect_equal(length(str2), 3)
   
-  expect_equal(length(unlist(str2)), 19)
+  expect_equal(length(unlist(str2)), 18)
   
   
 })
