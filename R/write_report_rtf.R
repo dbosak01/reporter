@@ -143,17 +143,18 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
       # 3 = width
       # 4 = align
       
-      img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), as.numeric(spec[[2]]), rs$units)
+      img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), 
+                           as.numeric(spec[[2]]), rs$units, rs$font_size)
       ret[length(ret) + 1] <- spec[[1]]
       
       # Create rtf codes
       if (spec[[4]] == "left") {
-        ltx <- paste0("\\par\\ql\n"  )
+        ltx <- paste0("\\par\\sl0\\ql\n"  )
 
       } else if (spec[[4]] == "right") {
-        ltx <- paste0("\\par\\qr\n"  )
+        ltx <- paste0("\\par\\sl0\\qr\n"  )
       } else  {
-        ltx <- paste0("\\par\\qc\n"  )
+        ltx <- paste0("\\par\\sl0\\qc\n"  )
       }
 
       # Replace original line with RTF codes

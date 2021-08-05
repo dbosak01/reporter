@@ -819,7 +819,7 @@ test_that("rtf25: RTF Table with custom options works as expected.", {
   expect_equal(res$pages, 2)
 })
 
-test_that("test26: line_size and line_count overrides work as expected.", {
+test_that("rtf26: line_size and line_count overrides work as expected.", {
   
   fp <- file.path(base_path, "rtf/test26.rtf")
   
