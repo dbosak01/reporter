@@ -373,7 +373,7 @@ test_that("vraw function works as expected.", {
   
   expect_equal(length(str2), 3)
   
-  expect_equal(length(unlist(str2)), 18)
+  expect_equal(length(unlist(str2)), 19)
   
   
 })
