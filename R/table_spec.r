@@ -124,10 +124,11 @@
 #' dat <- mtcars[1:10, 1:7]
 #' 
 #' # Calculate means for all columns
-#' dat_sum <- data.frame(all_cars = "All cars average", as.list(sapply(dat, mean)))
+#' dat_sum <- data.frame(all_cars = "All cars average", as.list(sapply(dat, mean)), 
+#'                       stringsAsFactors = FALSE)
 #' 
 #' # Get vehicle names into first column
-#' dat_mod <- data.frame(vehicle = rownames(dat), dat)
+#' dat_mod <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
 #'                       
 #' # Create table for averages
 #' tbl1 <- create_table(dat_sum) %>% 
@@ -346,7 +347,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' 
 #' # Prepare data
 #' dat <- mtcars[1:10, ]
-#' dat <- data.frame(vehicle = rownames(dat), dat)
+#' dat <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat, show_cols = 1:8) %>% 
@@ -609,7 +610,7 @@ define_c <- function(var, label = NULL, format = NULL,
 #' 
 #' # Prepare data
 #' dat <- mtcars[1:10, ]
-#' dat <- data.frame(vehicle = rownames(dat), dat)
+#' dat <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat, show_cols = 1:8) %>% 

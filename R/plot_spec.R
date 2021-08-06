@@ -9,7 +9,7 @@
 #' The function only supports plot objects returned by 
 #' \code{\link[ggplot2]{ggplot}} or \code{\link[survminer]{ggsurvplot}}.  
 #' It does not support the Base R 
-#' \code{\link[base]{plot}} function. 
+#' \code{plot} function. 
 #' @details 
 #' To add a plot to a report, use the \code{create_plot} function.  The 
 #' function allows you to set a width and height for the plot.  The
@@ -214,7 +214,7 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
   
   for (dat in dat_lst) {
   
-    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".png")
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
     p$data <- dat
     
@@ -327,8 +327,8 @@ get_plot_body <- function(plt, plot_path, align, rs,
     } else {
       
       # Start a new page
-      ret[[length(ret) + 1]] <- format(tmp, width = rs$line_size, 
-                                       justify = get_justify(align))
+      ret[[length(ret) + 1]] <- pad_any(tmp, rs$line_size, 
+                                        get_justify(align))
       tmp <- rws[i]
       
       # Set to zero on second page and leave it that way
@@ -344,8 +344,8 @@ get_plot_body <- function(plt, plot_path, align, rs,
     if (max(nchar(trimws(tmp))) > 0) {
       
       # Add last page
-      ret[[length(ret) + 1]] <- format(tmp, width = rs$line_width, 
-                                       justify = get_justify(align))
+      ret[[length(ret) + 1]] <- pad_any(tmp,  rs$line_size, 
+                                        get_justify(align))
     }
     
   }

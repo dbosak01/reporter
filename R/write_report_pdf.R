@@ -12,72 +12,135 @@
 #' @noRd
 write_report_pdf <- function(rs) {
   
-  if (rmarkdown::pandoc_available("1.12.3") == FALSE) {
-   stop("pandoc version >= 1.12.3 is required. Install to continue.") 
-  }
   
-  debug <- FALSE
+  if (file.exists(rs$modified_path))
+    file.remove(rs$modified_path)
   
-  orig_path <- rs$modified_path
   
-  # Create temp path for text output
-  if (debug) {
-    
-    b_path <- file.path(getwd(), "tests/testthat")
-    
-    tmp_path <- file.path(b_path, "output/tmp.txt")
-    rmd_path <- file.path(b_path, "output/tmp.Rmd")
-    if (file.exists(tmp_path))
-      file.remove(tmp_path)
-    if (file.exists(rmd_path))
-      file.remove(rmd_path)
-    if (file.exists(orig_path))
-      file.remove(orig_path)
-  } else {
-    tmp_dir <- tempdir()
-    if (!file.exists(tmp_dir))
-      dir.create(tmp_dir)
-    tmp_path <- tempfile(fileext = ".txt", tmpdir = tmp_dir)
-    rmd_path <- tempfile(fileext = ".Rmd", tmpdir = tmp_dir)
-    #rmd_path <- sub(".pdf", ".Rmd", orig_path)
-  }
-  # print(tmp_path)
-  # print(rmd_path)
-  # print(getwd())
+  # Create text output 
+  res <- create_report_text(rs)
   
-  if (file.exists(orig_path))
-    file.remove(orig_path)
-  
-  # Replace original path
-  rs$modified_path <- tmp_path
-  
-  # Create text output normally to temp location
-  rs <- write_report_text(rs)
-  
-  # Read lines from text output
-  ls <- readLines(tmp_path, encoding = "UTF-8")
+  rs <- res[["rs"]]
+  ls <- res[["ls"]]
 
   # Revise text and write to pdf
-  fls <- write_pdf_output(rs, ls, rmd_path, orig_path, tmp_dir)
-
-  # Restore original path
-  rs$modified_path <- orig_path
-  
-  # Clean up
-  if (!debug) {
-    file.remove(tmp_path)
-    file.remove(rmd_path)
-    #nms <- list.files(tmp_dir, pattern = "(.*)\\.png", full.names = TRUE)
-    if (length(fls) > 0)
-      file.remove(fls)
-    #unlink(tmp_dir, recursive = TRUE)
-  }
+  fls <- write_pdf_output(rs, ls, rs$modified_path)
   
   return(rs)
 }
 
 #' @noRd
-write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
+write_pdf_output <- function(rs, ls, pdf_path) {
+  
+  pgs <- list()
+  pg <- list(text = c(), images = c())
+
+  # Loop through text pages
+  for (i in seq_along(ls)) {
+  
+    
+    # Replace fill lines with blanks
+    if (rs$has_graphics) {
+      
+      ls[[i]] <- gsub("```fill```", "", ls[[i]], fixed = TRUE)
+      
+      # Need to split up text and images
+      for (ln in ls[[i]]) {
+        
+        res <- grep("```([^}]*)```", ln)
+        if (length(res) > 0) {
+          pg$text <- append(pg$text, "")
+          pi <- parse_image(ln)
+          pi$line_start <- length(pg$text)
+          pg$images[[length(pg$images) + 1]] <- pi
+        } else {
+          pg$text <- append(pg$text, ln)   
+        }
+        
+      }
+      
+    } else 
+      pg$text <- ls[[i]]
+    
+
+    
+    pgs[[length(pgs) + 1]] <- pg
+    pg <- list(text = c(), images = c())
+  }
+  
+  
+  if (file.exists(pdf_path))
+    file.remove(pdf_path)
+  
+  r <- create_pdf(filename = pdf_path,
+                  margin_top = rs$margin_top,
+                  margin_left = rs$margin_left,
+                  fontsize = rs$font_size,
+                  page_height = rs$page_size[2],
+                  page_width = rs$page_size[1],
+                  orientation = rs$orientation,
+                  units = rs$units,
+                  info = TRUE)
+  
+  for (pg in pgs) {
+    
+    if (length(pg$images) > 0) {
+      
+      imgs <- list()
+      for (img in pg$images) {
+
+        imgs[[length(imgs) + 1]] <- page_image(img$filename,
+                                             height = img$height,
+                                             width = img$width,
+                                             align = img$align,
+                                             line_start = img$line_start)
+                  
+      }
+     
+      r <- add_page(r, page_text(pg$text), imgs)
+                    
+    } else {
+      r <- add_page(r, page_text(pg$text)) 
+    }
+  }
+  
+  
+  write_pdf(r)
+  
+  
+  return(pdf_path)
+  
+}
+
+parse_image <- function(image_string) {
+ 
+  ret <- list()
+  
+  # Remove braces
+  rw <- trimws(gsub("`", "", image_string, fixed = TRUE))  
+  
+  # Split on pipe
+  spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
+  
+  pth <- gsub("\\", "/", spec[[1]], fixed = TRUE)
+  
+  # 1 = path
+  # 2 = height
+  # 3 = width
+  # 4 = align 
+  
+  ret$filename <- pth
+  ret$height <- as.numeric(spec[[2]])
+  ret$width <- as.numeric(spec[[3]])
+  ret$align <- spec[[4]]
+  
+  return(ret)
+  
+}
+
+#' Old rmarkdown version
+#' @noRd
+write_pdf_output2 <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   
   # Set up vectors
   hdr <- c() 
@@ -211,15 +274,15 @@ write_pdf_output <- function(rs, ls, rmd_path, pdf_path, tmp_dir) {
   # Can't figure out how to get rid of it.
   # So going to suppress it for now.
   # Other fonts sizes shouldn't have any warnings.
-  if (rs$font_size == 8) {
-    suppressWarnings(rmarkdown::render(rmd_path, 
-                                       rmarkdown::pdf_document(), t1, 
-                                       quiet = TRUE))
-  } else {
-    rmarkdown::render(rmd_path, 
-                      rmarkdown::pdf_document(), t1, 
-                      quiet = TRUE)
-  }
+  # if (rs$font_size == 8) {
+  #   suppressWarnings(rmarkdown::render(rmd_path, 
+  #                                      rmarkdown::pdf_document(), t1, 
+  #                                      quiet = TRUE))
+  # } else {
+  #   rmarkdown::render(rmd_path, 
+  #                     rmarkdown::pdf_document(), t1, 
+  #                     quiet = TRUE)
+  # }
   
   file.copy(t1, pdf_path)
 

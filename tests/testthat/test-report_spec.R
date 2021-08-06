@@ -57,7 +57,7 @@ test_that("options_fixed traps invalid parameters appropriately", {
   
   ret <- create_report()
   
-  expect_error(options_fixed(ret, cpuom = 15))
+  expect_error(options_fixed(ret, cpuom = 16))
   
   
 })

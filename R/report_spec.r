@@ -199,7 +199,7 @@ create_report <- function(file_path = "", output_type = "TXT",
   x$units <- units              # Unit of measure
   x$paper_size <- paper_size
   x$page_size <- get_page_size(paper_size, units)
-  x$pages <- 1                  # Track # of pages in report
+  x$pages <- 0                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
   x$missing <- missing
   x$font_type <- font_type #font_type      # For future use.  Not used now.
@@ -480,7 +480,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
           x$cpuom <- 4.687
         else if (x$units == "char")
           x$cpuom <- 1
-      } else if (!(cpuom >= 1 & cpuom <= 14)) {
+      } else if (!(cpuom >= 1 & cpuom <= 15)) {
         
         stop(paste0("cpi parameter on create_report() ",
                     "function is invalid: '", cpuom,
@@ -549,6 +549,8 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       # print(paste("lpuom:", x$lpuom))
     }
     
+    
+    x$uchar <- uchar
     x$blank_margins <- blank_margins
   
   } else if (x$output_type == "PDF") {
@@ -578,6 +580,11 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       x$lpuom <- 1
       x$min_margin <- round(e$mmi / 12)
     }
+    
+    if (uchar == "\U00AF")
+      x$uchar <- "-"
+    else 
+      x$uchar <- uchar
     
     x$blank_margins <- FALSE
     
@@ -610,6 +617,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
     
     x$blank_margins <- FALSE
     
+    if (uchar == "\U00AF") {
+      if (Sys.info()[["sysname"]] != "Windows")
+        x$uchar <- "-"
+      else 
+        x$uchar <- uchar
+    } else 
+      x$uchar <- uchar
+    
   }
   
   if (!is.null(line_size)) {
@@ -631,7 +646,6 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
   x$line_height <- 1 / x$lpuom
   x$user_line_size <- line_size
   x$user_line_count <- line_count
-  x$uchar <- uchar
   
   return(x)
   
@@ -882,7 +896,8 @@ set_char_margins <- function(rs, margin) {
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
-#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5], 
+#'                   stringsAsFactors = FALSE)
 #' 
 #' # Create the report object
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
@@ -996,7 +1011,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' 
 #' # Prepare data
 #' dat <- data.frame(category = rownames(USPersonalExpenditure),
-#'                   USPersonalExpenditure)
+#'                   USPersonalExpenditure, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat) %>% 
@@ -1144,7 +1159,7 @@ title_header <- function(x, ..., right = "",
 #' 
 #' # Prepare data
 #' dat <- data.frame(category = rownames(USPersonalExpenditure),
-#'                   USPersonalExpenditure)
+#'                   USPersonalExpenditure, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat) %>% 
@@ -1205,6 +1220,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   ttl$blank_row <- blank_row
   ttl$borders <- borders
   ttl$align <- align
+  
 
   x$titles[[length(x$titles) + 1]] <- ttl
   
@@ -1270,7 +1286,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' 
 #' # Prepare data
 #' dat <- data.frame(category = rownames(USPersonalExpenditure),
-#'                   USPersonalExpenditure)
+#'                   USPersonalExpenditure, stringsAsFactors = FALSE)
 #' 
 #' # Define table
 #' tbl <- create_table(dat) %>% 
@@ -1416,7 +1432,8 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' # Create temp file path
 #' tmp <- file.path(tempdir(), "mtcars.txt")
 #' 
-#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5])
+#' dat <- data.frame(name = rownames(mtcars[1:10, ]), mtcars[1:10, 1:5], 
+#'                   stringsAsFactors = FALSE)
 #' 
 #' # Create the report object
 #' rpt <- create_report(tmp, orientation = "portrait") %>% 
@@ -1886,7 +1903,12 @@ write_report <- function(x, file_path = NULL,
     }
     x$output_type <- toupper(output_type)
 
-    x <- options_fixed(x, font_size = x$font_size)
+    x <- options_fixed(x, editor = x$editor, 
+                       cpuom = x$cpuom, lpuom = x$lpuom,
+                       min_margin = x$min_margin, blank_margins = x$blank_margins,
+                       font_size = x$font_size, line_size = x$user_line_size, 
+                       line_count = x$user_line_count,
+                       uchar = x$uchar)
   }
   
 
@@ -1933,7 +1955,9 @@ write_report <- function(x, file_path = NULL,
   
   } else if (x$output_type == "PDF") {
     
+
     ret <- write_report_pdf(x)
+
 
   } else {
    stop(paste("Output type currently not supported:", x$output_type))

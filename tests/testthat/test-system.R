@@ -68,7 +68,7 @@ test_that("test3: Simple table with formats works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
   
   
   afmt <- value(condition(x == "A", "Placebo"),
@@ -123,7 +123,7 @@ test_that("test4: Two page report works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
 
   df1 <- df[df$arm == "A", ]
   df2 <- df[df$arm == "B", ]
@@ -259,7 +259,7 @@ test_that("test7: Table with long cell and label values wraps as expected.", {
 
   
   # Create data frame
-  df <- data.frame(arm, subjid, name, sex, age)
+  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
   
 
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -294,7 +294,7 @@ test_that("test8: Table with spanning headers works as expected.", {
   fp <- file.path(base_path, "output/test8.out")
   
 
-  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
   rownames(df) = NULL
   
   df$qsec <- fattr(df$qsec, format = "%.1f")
@@ -333,7 +333,7 @@ test_that("test9: Page wrap works as expected.", {
   fp <- file.path(base_path, "output/test9.out")
   
   dat <- mtcars[1:10, ]
-  df <- data.frame(vehicle = rownames(dat), dat)
+  df <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
   
   tbl <- create_table(df) %>% 
     spanning_header(mpg, hp,
@@ -368,7 +368,7 @@ test_that("test10: Page wrap with spanning header works as expected.", {
   fp <- file.path(base_path, "output/test10.out")
   
   
-  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
   rownames(df) = NULL
   
   tbl <- create_table(df) %>% 
@@ -419,7 +419,7 @@ test_that("test11: Table with break between sections works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -796,7 +796,7 @@ test_that("test22: Multiple id_var parameters work as expected.", {
   
   fp <- file.path(base_path, "output/test22.out")
   
-  dat <- data.frame(vehicle = rownames(mtcars), mtcars)
+  dat <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
   
   tbl <- create_table(dat) %>%
     define(vehicle, id_var = TRUE, width = 3) %>% 
@@ -1119,7 +1119,7 @@ test_that("test36: Report with NAs in data works as expected.", {
   arm <- c(rep("A", 5), rep("B", 4), NA)
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
   
   
   afmt <- value(condition(x == "A", "Placebo"),
@@ -1430,7 +1430,7 @@ test_that("test46: Another title_header test to check alignment.", {
 
   # Prepare data
   dat <- data.frame(category = rownames(USPersonalExpenditure),
-                    USPersonalExpenditure)
+                    USPersonalExpenditure, stringsAsFactors = FALSE)
 
   # Define table
   tbl <- create_table(dat) %>%
@@ -1480,7 +1480,7 @@ test_that("test47: CM Table with long cell and label values wraps as expected.",
   
   
   # Create data frame
-  df <- data.frame(arm, subjid, name, sex, age)
+  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -1537,7 +1537,7 @@ test_that("test48: Three level stub works as expected.", {
   values <- c(41, 53, 43, 39, 47, 52, 38, 25, 37, 23, 78, 21)
 
   # Create data frame
-  df <- data.frame(cat, grp, ci, values)
+  df <- data.frame(cat, grp, ci, values, stringsAsFactors = FALSE)
 
   tbl1 <- create_table(df) %>%
     stub(c(cat, grp, ci), "Estimates", width = 2.5) %>% 
@@ -1592,7 +1592,8 @@ test_that("test49: Stub and width settings works as expected.", {
   values4 <- c(32, 28, 94, 32, 09, 42, 67, 65, 56, 12, 91, 32)
   
   # Create data frame
-  df <- data.frame(cat, grp, ci, values1, values2, values3, values4)
+  df <- data.frame(cat, grp, ci, values1, values2, values3, values4, 
+                   stringsAsFactors = FALSE)
   
   tbl1 <- create_table(df, width = 9) %>%
     stub(c(cat, grp, ci), "Estimates", width = 3) %>% 
@@ -1630,7 +1631,7 @@ test_that("test50: Table with long numeric values sizes as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   subjid <- 100:109
   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
-            "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma", 
+            "al-Kazemi, Najwa and more and more", "Schaffer, Ashley", "Laner, Tahma", 
             "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
             "Smith, Shaileigh")
   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
@@ -1641,13 +1642,14 @@ test_that("test50: Table with long numeric values sizes as expected.", {
   calc <- age * rnd
   
   # Create data frame
-  df <- data.frame(arm, subjid, name, sex, age, rnd, calc)
+  df <- data.frame(arm, subjid, name, sex, age, rnd, calc, 
+                   stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
     define(subjid, label = "Subject ID for a patient", n = 10) %>%
-    define(name, label = "Subject Name") %>%
-    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(name, label = "Subject Name", width = 1) %>%
+    define(sex, label = "Sex", n = 10, align = "left") %>%
     define(age, label = "Age", n = 10) %>%
     define(arm, label = "Arm",
            blank_after = TRUE,
@@ -2257,7 +2259,7 @@ test_that("test69: Table with spanning headers no underline works as expected.",
   fp <- file.path(base_path, "output/test69.out")
   
   
-  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
   rownames(df) = NULL
   
   df$qsec <- fattr(df$qsec, format = "%.1f")
@@ -2300,7 +2302,8 @@ test_that("test70: Column widths work as expected.", {
   dat <- unlist(rep("AAAAAAAAA B", 10))
   
   df <- data.frame(col1 = dat, col2 = dat, col3 = dat, col4 = dat, col5 = dat,
-                   col6 = dat, col7 = dat, col8 = dat, col9 = dat)
+                   col6 = dat, col7 = dat, col8 = dat, col9 = dat, 
+                   stringsAsFactors = FALSE)
   
   tbl <- create_table(df) %>% 
     spanning_header(1, 2, "Span 1") %>% 
@@ -2332,7 +2335,8 @@ test_that("test71: Column widths work as expected with fractional widths.", {
   dat <- unlist(rep("AAA", 10))
   
   df <- data.frame(col1 = dat, col2 = dat, col3 = dat, col4 = dat, col5 = dat,
-                   col6 = dat, col7 = dat, col8 = dat, col9 = dat)
+                   col6 = dat, col7 = dat, col8 = dat, col9 = dat, 
+                   stringsAsFactors = FALSE)
   
   tbl <- create_table(df) %>% 
     spanning_header(1, 2, "Span 1") %>% 

@@ -27,7 +27,8 @@ initially focus on printable, file-based
 output formats, as there are already numerous R packages that 
 provide tabular reporting in HTML. 
 
-PDF output has special installation requirements.  See \link{NotesOnPDF}
+PDF output may have limitations not associated with TXT and RTF.  
+See \link{NotesOnPDF}
 for more information.
 }
 \section{Key Features}{

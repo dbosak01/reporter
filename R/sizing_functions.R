@@ -320,7 +320,7 @@ create_stub <- function(dat, ts) {
     # print(names(d))
     
     # Combine with stub column
-    dat <- data.frame(stub = st, d)
+    dat <- data.frame(stub = st, d, stringsAsFactors = FALSE)
     
     # Have to restore names, otherwise data.frame will mess them up
     names(dat) <- c("stub", names(d))
@@ -356,16 +356,21 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   nms <- names(labels)
   #print(nms)
   dwidths <- c()
+  mwidths <- c()
   
   # Set default widths based on length of data
   for (nm in nms) {
-  
     
     #w <- max(strwidth(dat[[nm]], units="inches", family=font_family))
     if (is.control(nm) | all(is.na(dat[[nm]]) == TRUE))
       w <- 0
-    else
+    else {
       w <- max(nchar(as.character(dat[[nm]])), na.rm = TRUE) * char_width
+      
+      sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
+      mwidths[[nm]]  <- max(nchar(as.character(sd)), na.rm = TRUE) * char_width 
+      
+    }
      
     if (w > max_col_width)
       w <- max_col_width
@@ -392,7 +397,6 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
       dwidths[[nm]] <- max(l) + char_width
     else
       dwidths[[nm]] <- w + char_width
-    
   }
   
   # Set names for easy access
@@ -414,7 +418,11 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   for (def in defs) {
     
     if (def$var_c %in% names(dat) & !is.null(def$width) && def$width > 0) {
-      ret[[def$var_c]] <- def$width
+      if (def$width >= mwidths[[def$var_c]])
+        ret[[def$var_c]] <- def$width
+      else 
+        ret[[def$var_c]] <- mwidths[[def$var_c]] + char_width
+      
       defnms[length(defnms) + 1] <- def$var_c
     }
     

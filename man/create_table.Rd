@@ -141,10 +141,11 @@ tmp <- file.path(tempdir(), "mtcars.txt")
 dat <- mtcars[1:10, 1:7]
 
 # Calculate means for all columns
-dat_sum <- data.frame(all_cars = "All cars average", as.list(sapply(dat, mean)))
+dat_sum <- data.frame(all_cars = "All cars average", as.list(sapply(dat, mean)), 
+                      stringsAsFactors = FALSE)
 
 # Get vehicle names into first column
-dat_mod <- data.frame(vehicle = rownames(dat), dat)
+dat_mod <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
                       
 # Create table for averages
 tbl1 <- create_table(dat_sum) \%>\% 

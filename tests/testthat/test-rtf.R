@@ -66,7 +66,7 @@ test_that("rtf3: Table with break between sections works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -131,7 +131,7 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
   
   
   # Create data frame
-  df <- data.frame(arm, subjid, name, sex, age)
+  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
   
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
@@ -163,7 +163,7 @@ test_that("rtf6: Table with spanning headers works as expected.", {
   fp <- file.path(base_path, "rtf/test6.rtf")
   
   
-  df <- data.frame(vehicle = rownames(mtcars), mtcars)
+  df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
   rownames(df) = NULL
   
   df$qsec <- fattr(df$qsec, format = "%.1f")
@@ -237,7 +237,7 @@ test_that("rtf8: Two page RTF report works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
 
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
 
   df1 <- df[df$arm == "A", ]
   df2 <- df[df$arm == "B", ]
@@ -784,4 +784,58 @@ test_that("rtf24: RTF Table with Plot and borders works as expected.", {
   expect_equal(res$pages, 2)
 })
 
+
+test_that("rtf25: RTF Table with custom options works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf/test25.rtf")
+  
+
+  
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    titles("My table", borders = "all") %>% 
+    footnotes("My table footnotes", borders = "all", align = "right")
+  
+  tbl2 <- create_table(mtcars[11:20, ]) %>% 
+    titles("My table", borders = "all") %>% 
+    footnotes("My table footnotes", borders = "all", align = "right")
+  
+  
+  rpt <- create_report(fp) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    add_content(tbl2, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
+    options_fixed(font_size = 12, line_size = 80, line_count = 30,
+                  uchar = "-")
+  
+  
+  res <- write_report(rpt, output_type = "RTF")
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+})
+
+test_that("rtf26: line_size and line_count overrides work as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test26.rtf")
+  
+  
+  rpt <- create_report(fp) %>%
+    options_fixed(line_size = 40, line_count = 30) %>% 
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) 
+  
+  
+  res <- write_report(rpt, output_type = "RTF")
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
 

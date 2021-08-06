@@ -312,7 +312,7 @@ calls would be made with a different set or range of variables.</p>
 
 <span class='co'># Prepare data</span>
 <span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span>
-<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>vehicle <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>, <span class='va'>dat</span><span class='op'>)</span>
+<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>vehicle <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>, <span class='va'>dat</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># Define table</span>
 <span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span>, show_cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 

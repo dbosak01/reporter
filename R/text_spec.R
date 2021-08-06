@@ -233,6 +233,11 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     strsplit(txt$text, split = "\n", fixed = TRUE)), 
     width = line_width, normalize = FALSE)
   
+  
+  # Make sure rows are the same length
+  s <- pad_any(s, line_width + 1, 
+               get_justify(txt$align))
+  
   # Add blank above content if requested
   a <- NULL
   if (content_blank_row %in% c("both", "above"))
@@ -268,8 +273,8 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     } else {
       
       # Start a new page
-      ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
-                                       justify = get_justify(txt$align))
+      ret[[length(ret) + 1]] <- pad_any(tmp, line_width, 
+                                        get_justify(txt$align))
       tmp <- rws[i]
       
       # Set to zero on second page and leave it that way
@@ -285,11 +290,13 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     if (max(nchar(trimws(tmp))) > 0) {
     
       # Add last page
-      ret[[length(ret) + 1]] <- format(tmp, width = line_width, 
-                                       justify = get_justify(txt$align))
+      ret[[length(ret) + 1]] <- pad_any(tmp, line_width, 
+                                       get_justify(txt$align))
     }
     
   }
+  
+
   
   return(ret)
   

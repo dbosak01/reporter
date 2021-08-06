@@ -62,7 +62,7 @@ tmp <- file.path(tempdir(), "expenses.txt")
 
 # Prepare data
 dat <- data.frame(category = rownames(USPersonalExpenditure),
-                  USPersonalExpenditure)
+                  USPersonalExpenditure, stringsAsFactors = FALSE)
 
 # Define table
 tbl <- create_table(dat) \%>\% 

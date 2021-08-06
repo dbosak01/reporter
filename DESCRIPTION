@@ -18,7 +18,6 @@ License: CC BY-NC 4.0
 Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues
-SystemRequirements: pandoc (>= 1.12.3)
 Depends: R (>= 3.6.0)
 Suggests: 
     testthat,
@@ -26,15 +25,16 @@ Suggests:
     dplyr,
     tidyr,
     readr,
-    knitr,          
-    ggplot2,
+    knitr,
     rmarkdown,
+    ggplot2,
     gridExtra,
     survminer,
     utils,
     logr
 Imports: fmtr,
          stringi,
-         crayon
+         crayon,
+         jpeg
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

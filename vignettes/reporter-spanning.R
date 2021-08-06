@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 #  
 #  # Prepare Data
 #  dat <- mtcars[1:10, ]
-#  df <- data.frame(vehicle = rownames(dat), dat)
+#  df <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
 #  
 #  # Define Table with spanning headers
 #  tbl <- create_table(df) %>%

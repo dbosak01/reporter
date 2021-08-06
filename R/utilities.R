@@ -528,7 +528,7 @@ align_cells <- function(x, len) {
   }
   
   names(ret)  <- names(x)
-  ret <- as.data.frame(ret)
+  ret <- as.data.frame(ret, stringsAsFactors = FALSE)
   
   return(ret)
   

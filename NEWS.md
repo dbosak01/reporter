@@ -1,13 +1,20 @@
 # reporter 1.1.3
 
-* Allow user to add more than one title header.
-* Add GitHub Actions for prior R version checks.
+* Made package compatible back to R 3.6.
+* Added GitHub Actions for prior R version checks.
+* Figured out how to generate PDF files directly, instead of using 
+Latex/Rmarkdown/MikTex/Pandoc.  Will greatly reduce dependencies and make
+the **reporter** package much easier to install and test.  Also makes it much
+easier to accurately render the PDF file.
+* Allow user to add more than one `title header()`.
 * Made _output_type_ parameter case insensitive.
 * Added _standard_eval_ parameter to `define()`, `spanning_header()`,
 and `column_defaults()` functions.  These parameters will replace curly brace 
 escape on those functions.
 Curly brace escape will remain active for backward compatibility, but is 
 no longer documented.
+* Fixed bug in RTF that was causing page overflows in LibreOffice Writer.
+
 
 # reporter 1.1.2
 

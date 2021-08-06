@@ -4,12 +4,18 @@
 \alias{NotesOnPDF}
 \title{Notes on PDF output type}
 \description{
-The PDF output type has some limitations not associated with 
-TXT and RTF output.  PDF has special installation requirements and package
-dependencies.
+As of \strong{reporter} v1.1.3, the package will 
+generate PDF files directly, without using \strong{rmarkdown} as an 
+intermediary. This technique eliminates dependencies, makes the package 
+easier to install, and greatly improves performance.  It is recommended
+to use the most recent version of the package if possible.
+
+For versions of \strong{reporter} prior to v1.1.3, the package has
+additional dependencies and installation requirements.  See details below.
 }
 \details{
-The PDF output type requires the \strong{rmarkdown} package and a 
+For \strong{reporter} v1.1.2 and below, 
+PDF output type requires the \strong{rmarkdown} package and a 
 LaTeX renderer like \strong{MiKTeX}.  
 \strong{MiKTeX} must be installed separately, and will
 not be installed as part of the \strong{reporter} install.  This program must
@@ -17,12 +23,9 @@ furthermore be added to the \code{path} environment variable on the system
 where \strong{reporter} will run, so that \strong{reporter} can find it.
 
 PDF output also supports a limited character set.  Some Unicode characters
-can cause the LaTeX rendering to fail.  Common Unicode characters like 
+can cause the PDF rendering to fail.  Common characters like 
 mathematical operators and Greek letters are supported.  However, 
 other special characters and characters from Asian languages may not 
 be supported, depending on the operating system and installed operating 
-system languages. 
-
-Future versions of \strong{reporter} will eliminate the LaTeX 
-intermediary and broaden the allowed character set.
+system languages.
 }
