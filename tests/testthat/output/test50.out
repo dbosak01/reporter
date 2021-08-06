@@ -1,35 +1,35 @@
                                                   Table 1.0
 
-                    Subject
-                         ID
-                      for a
-                    patient                                      Sex      Age
-                Arm  (N=10) Subject Name                        (N=10) (N=10)   rnd   calc
-                ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+                            Subject
+                                 ID
+                              for a
+                            patient Subject     Sex       Age
+                        Arm  (N=10) Name        (N=10) (N=10)       rnd       calc
+                        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-            A       100 Quintana, Gabriel                     M        41  0.707752  29.017832
-                    101 Allison, Blas                         F        53 0.3180838 16.8584414
-                    102 Minniear, Presley                     F        43 0.9174493 39.4503199
-                    103 al-Kazemi, Najwa                      M        39 0.4395207 17.1413073
-                        and more and more
-                    104 Schaffer, Ashley                      M        47 0.5307518 24.9453346
+                        A       100 Quintana,   M          41  0.707752  29.017832
+                                    Gabriel
+                                101 Allison,    F          53 0.3180838 16.8584414
+                                    Blas
+                                102 Minniear,   F          43 0.9174493 39.4503199
+                                    Presley
+                                103 al-Kazemi,  M          39 0.4395207 17.1413073
+                                    Najwa and
+                                    more and
+                                    more
+                                104 Schaffer,   M          47 0.5307518 24.9453346
+                                    Ashley
 
-            B       105 Laner, Tahma                          F        52 0.8501806 44.2093912
-                    106 Perry, Sean                           M        21 0.4584808  9.6280968
-                    107 Crews, Deshawn Joseph                 F        38  0.101637   3.862206
-                    108 Person, Ladon                         F        62 0.7061505  43.781331
-                    109 Smith, Shaileigh                      M        26 0.7819369 20.3303594
-
-
-
-
-
-
-
-
-
-
-
+                        B       105 Laner,      F          52 0.8501806 44.2093912
+                                    Tahma
+                                106 Perry, Sean M          21 0.4584808  9.6280968
+                                107 Crews,      F          38  0.101637   3.862206
+                                    Deshawn
+                                    Joseph
+                                108 Person,     F          62 0.7061505  43.781331
+                                    Ladon
+                                109 Smith,      M          26 0.7819369 20.3303594
+                                    Shaileigh
 
 
 
