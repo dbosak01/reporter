@@ -71,9 +71,29 @@ test_that("Titles, footnotes, header, and footer limits work as expected.", {
   expect_error(footnotes(rpt, st))
   expect_error(page_header(rpt, left=st))
   expect_error(page_footer(rpt, left=st))
-
-
+  
+  
 })
+
+
+
+test_that("Title/footnotes parameter checks work as expected.", {
+  
+  rpt <- create_report("fork.out")
+  
+  
+  # Parameter checks
+  expect_error(page_footer(rpt, "Hello", blank_row = "fork"))
+  expect_error(titles(rpt, "Hello", blank_row = "fork"))
+  expect_error(titles(rpt, "Hello", borders  = "fork"))
+  expect_error(title_header(titles(rpt, "Hello"), "Hello"))
+  expect_error(titles(title_header(rpt, "Hello"), "Hello"))
+  expect_error(title_header(rpt, "Hello", blank_row = "fork"))
+  expect_error(title_header(rpt, "Hello", borders = "fork"))
+  expect_error(title_header(page_header(rpt, "Hello"), "Hello"))
+  expect_error(page_header(title_header(rpt, "Hello"), "Hello"))
+})
+
 
 test_that("Footnotes traps invalid parameter as expected.", {
   
@@ -197,6 +217,10 @@ test_that("page_by function works as expected.", {
   expect_equal(pg$page_by$label, "mpg: ")
   expect_equal(pg$page_by$align, "left")
   expect_equal(pg$page_by$blank_row, "below")
+  
+  # Parameter checks
+  expect_error(page_by(tbl, align = "fork"))
+  expect_error(page_by(tbl, blank_row = "fork"))
   
   
 })

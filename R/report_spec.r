@@ -252,23 +252,24 @@ create_report <- function(file_path = "", output_type = "TXT",
 #' # Here is an example
 #' # This function commented out for now, until variable width fonts are available.
 #' @noRd  
-options_variable <- function(x, font_name="Courier New", font_size=10) {
-  
-  # Trap missing or invalid font_name parameter.
-  if (!font_name %in% c("Courier New", "Times New Roman", "Arial", "Calibri")) {
-    
-    stop(paste0("font_name parameter on create_report() ",
-                "function is invalid: '", font_name,
-                "'\n\tValid values are: 'Arial', 'Calibri', 'Courier New', ",
-                "and 'Times New Roman'."))
-  }
-  
-  x$font_size <-font_size
-  x$font_name <- font_name
-  x$font_family <- get_font_family(font_name)
-  
-  return(x)
-}
+NULL
+# options_variable <- function(x, font_name="Courier New", font_size=10) {
+#   
+#   # Trap missing or invalid font_name parameter.
+#   if (!font_name %in% c("Courier New", "Times New Roman", "Arial", "Calibri")) {
+#     
+#     stop(paste0("font_name parameter on create_report() ",
+#                 "function is invalid: '", font_name,
+#                 "'\n\tValid values are: 'Arial', 'Calibri', 'Courier New', ",
+#                 "and 'Times New Roman'."))
+#   }
+#   
+#   x$font_size <-font_size
+#   x$font_name <- font_name
+#   x$font_family <- get_font_family(font_name)
+#   
+#   return(x)
+# }
 
 
 #' @description This is a lookup table to get standard settings for various 
@@ -820,33 +821,34 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   return(x)
 }
 
-#' @noRd
-set_char_margins <- function(rs, margin) {
-  
-  ret <- NULL
-  if (!is.null(rs$font_size)) {
-    if (rs$font_size == 8) {
-      if (margin %in% c("right", "left"))
-        ret <- 15
-      else if (margin %in% c("top", "bottom"))
-        ret <- 4
-    }  
-    if (rs$font_size == 10) {
-      if (margin %in% c("right", "left"))
-        ret <- 12
-      else if (margin %in% c("top", "bottom"))
-        ret <- 3
-    }  
-    if (rs$font_size == 12) {
-      if (margin %in% c("right", "left"))
-        ret <- 10
-      else if (margin %in% c("top", "bottom"))
-        ret <- 3
-    }  
-  }
-  
-  return(ret)
-}
+# Not used now.  May be used in future.
+# @noRd
+# set_char_margins <- function(rs, margin) {
+#   
+#   ret <- NULL
+#   if (!is.null(rs$font_size)) {
+#     if (rs$font_size == 8) {
+#       if (margin %in% c("right", "left"))
+#         ret <- 15
+#       else if (margin %in% c("top", "bottom"))
+#         ret <- 4
+#     }  
+#     if (rs$font_size == 10) {
+#       if (margin %in% c("right", "left"))
+#         ret <- 12
+#       else if (margin %in% c("top", "bottom"))
+#         ret <- 3
+#     }  
+#     if (rs$font_size == 12) {
+#       if (margin %in% c("right", "left"))
+#         ret <- 10
+#       else if (margin %in% c("top", "bottom"))
+#         ret <- 3
+#     }  
+#   }
+#   
+#   return(ret)
+# }
 
 # Page Template Items -----------------------------------------------
 

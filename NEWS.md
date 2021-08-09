@@ -1,3 +1,7 @@
+# reporter 1.1.4
+
+* Added support for covr and codecov.
+
 # reporter 1.1.3
 
 * Made package compatible back to R 3.6.

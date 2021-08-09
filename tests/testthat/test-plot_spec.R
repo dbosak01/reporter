@@ -21,11 +21,20 @@ test_that("plot print() function works as expected.", {
     titles("Test Title") %>% 
     footnotes("Test footnote")
   
+  res <- capture.output(print(plt))
+  
   #print(plt)
+  
+  expect_equal(length(res) > 0, TRUE)
+  
+  res <- capture.output(print(plt, verbose = TRUE))
   
   #print(plt, verbose = TRUE)
   
-  expect_equal(TRUE, TRUE)
+  expect_equal(length(res) > 0, TRUE)
+  
+  
+  
   
 })
   
