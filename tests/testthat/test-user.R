@@ -9,6 +9,7 @@ data_dir <- "."
 
 dev <- FALSE
 
+
 test_that("user1: demo table works.", {
 
   if (dev) {
@@ -153,8 +154,7 @@ test_that("user1: demo table works.", {
   
   } else 
     expect_equal(TRUE, TRUE)
-    
-
+  
   
 })
 
