@@ -173,10 +173,10 @@ test_that("preview parameter checks work as expected.", {
 })
 
 
-test_that("font_type parameter checks work as expected.", {
+test_that("font parameter checks work as expected.", {
   
-  expect_error(create_report(font_type = "fork"))
-  expect_error(create_report(font_type = NULL))
+  expect_error(create_report(font = "fork"))
+  expect_error(create_report(font_size = 14))
   
 })
 

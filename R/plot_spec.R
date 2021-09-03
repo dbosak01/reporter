@@ -275,9 +275,9 @@ get_plot_body <- function(plt, plot_path, align, rs,
   
   # Get titles and footnotes
   w <- ceiling(plt$width / rs$char_width)
-  ttls <- get_titles(plt$titles, w + 1, rs$uchar) 
+  ttls <- get_titles(plt$titles, w, rs$uchar) 
   ttl_hdr <- get_title_header(plt$title_hdr, w, rs$uchar)
-  ftnts <- get_footnotes(plt$footnotes, w + 1, rs$uchar) 
+  ftnts <- get_footnotes(plt$footnotes, w, rs$uchar) 
   pgbys <- get_page_by(pgby, w, pgval)
   
   pltpth <- gsub("\\", "/", plot_path, fixed = TRUE)

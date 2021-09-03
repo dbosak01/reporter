@@ -111,7 +111,7 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
                                 "\\margb", round(rs$margin_bottom  * conv))
 
   # Line spacing values determined be trial and error.
-  # Needed for LibreOffice.  Appear to be ingnored in Word.
+  # Needed for LibreOffice.  Appear to be ignored in Word.
   if (rs$font_size == 10)
     hdr[length(hdr) + 1] <- "\\sl-225\\slmult0\\fs20"
   else if (rs$font_size == 12)

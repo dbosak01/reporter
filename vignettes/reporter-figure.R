@@ -31,9 +31,8 @@ knitr::opts_chunk$set(
 #    page_footer(Sys.time(), "Confidential", "Page [pg] of [tpg]")
 #  
 #  # Write out report
-#  if (rmarkdown::pandoc_available("1.12.3")) {
-#    res <- write_report(rpt)
-#  }
+#  res <- write_report(rpt)
+#  
 #  
 #  # View report
 #  # file.show(tmp)

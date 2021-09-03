@@ -112,7 +112,7 @@ test_that("user1: demo table works.", {
   
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE) %>%
-      column_defaults(from = "ARM A", to = "ARM D", width = 1) %>% 
+      column_defaults(from = "ARM A", to = "ARM D", width = 1.25) %>% 
       define(var, blank_after = TRUE, dedupe = TRUE,
              format = block_fmt, label = "") %>%
       define(label, label = "") %>%
@@ -123,6 +123,8 @@ test_that("user1: demo table works.", {
   
     # Define Report
     rpt <- create_report(fp) %>%
+      set_margins(top = 1, bottom = 1) %>% 
+      options_fixed(font_size = 10) %>% 
       titles("Table 14.1/4",
              "Demographics and Baseline to Characteristics",
              "Specify Population") %>%
@@ -920,3 +922,117 @@ test_that("user12: Complex table works as expected.", {
     expect_equal(TRUE, TRUE)
   
 })
+
+# Also testing alignments and line lengths
+test_that("Simple demographic report with 12 pt font wraps as expected.", {
+  
+
+  
+  # Create temporary path
+  fp <- file.path(base_path, "user/user13")
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    stub(c("var", "label")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center", n = 19) %>% 
+    define(B, label = "Group B", align = "center", n = 13)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, output_type = "RTF", units = "inches") %>% 
+    set_margins(top = 1, bottom = 1) %>%
+    options_fixed(font_size = 12) %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Test Title Right Aligned", align = "right") %>% 
+    titles("Table 1.0", "MTCARS Summary Table", 
+           "----------------------------------------", borders = "all", 
+           align = "center") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974", 
+              "----------------------------------------", 
+              borders = "all", align = "right") %>%
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  # Write out report
+  res <-  write_report(rpt)
+  
+  # View report
+  # file.show(fp)
+  
+  expect_equal(file.exists(res$modified_path), TRUE)
+  
+})
+  
+
+# Also testing alignments and line lengths
+test_that("Title header alignment works as expected.", {
+  
+
+  # Create temporary path
+  fp <- file.path(base_path, "user/user14")
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    stub(c("var", "label")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center", n = 19) %>% 
+    define(B, label = "Group B", align = "center", n = 13)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, output_type = "RTF", units = "inches") %>% 
+    set_margins(top = 1, bottom = 1) %>%
+    options_fixed(font_size = 12) %>% 
+    title_header("Test Title Left Aligned", right = "Testme", 
+                 borders = "all") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974", 
+              borders = "all", align = "right") %>%
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  # Write out report
+  res <-  write_report(rpt)
+  
+  # View report
+  # file.show(fp)
+  
+  expect_equal(file.exists(res$modified_path), TRUE)
+  
+})
+
+
+
+  

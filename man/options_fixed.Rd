@@ -12,7 +12,7 @@ options_fixed(
   lpuom = NULL,
   min_margin = NULL,
   blank_margins = FALSE,
-  font_size = 10,
+  font_size = NULL,
   line_size = NULL,
   line_count = NULL,
   uchar = "¯"
