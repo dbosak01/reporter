@@ -1,10 +1,10 @@
-
+<!--
 # reporter 1.2.0
 
-* Added Arial, Times, and Courier fonts to RTF output type.  This change required a 
+* Added Arial, Times, and Courier fonts to RTF output type.  This change required a
 significant rewrite to RTF report creation functions.  Font is controlled using
 the _font_ parameter on the `create_report()` function.  Old text-style RTF
-output is still available using the "fixed" font.
+output is still available using the "fixed" font.-->
 
 # reporter 1.1.4
 
