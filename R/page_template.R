@@ -11,12 +11,12 @@ page_template_text <- function(rs) {
   
   pt$page_header <- get_page_header(rs)
   pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size, rs$uchar)
-  pt$titles <- get_titles(rs$titles, rs$line_size + 1, rs$uchar)
+  pt$titles <- get_titles(rs$titles, rs$line_size, rs$uchar)
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
     if (!is.null(rs$footnotes[[1]])) {
       if (rs$footnotes[[1]]$valign == "bottom")
-        pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size + 1, rs$uchar)
+        pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar)
     }
   
   }
@@ -115,8 +115,8 @@ get_titles <- function(titles, width, uchar = "-") {
         ret[length(ret) + 1] <- ""
       
       if (any(ttl$borders %in% c("top", "all")) & length(ttl$titles) > 0)
-        ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll - 1), 
-                                               collapse = ""), " ")
+        ret[length(ret) + 1] <-  paste0(rep(uchar, ll), 
+                                               collapse = "")
       
       for (i in seq_along(ttl$titles)) {
       
@@ -161,8 +161,8 @@ get_titles <- function(titles, width, uchar = "-") {
       }
       
       if (any(ttl$borders %in% c("bottom", "all")) & length(ttl$titles) > 0)
-        ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
-                                              collapse = ""), " ")
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll ), 
+                                              collapse = "")
       
       if (ttl$blank_row %in% c("below", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
@@ -446,8 +446,8 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
         ret[length(ret) + 1] <- ""
       
       if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0)
-        ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
-                                              collapse = ""), " ")
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll), 
+                                              collapse = "")
       
       for (i in seq_along(ftn$footnotes)) {
         
@@ -490,8 +490,8 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
       }
       
       if (any(ftn$borders %in% c("bottom", "all")) & length(ftn$footnotes) > 0)
-        ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll - 1), 
-                                              collapse = ""), " ")
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll), 
+                                              collapse = "")
       
       if (ftn$blank_row %in% c("below", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""

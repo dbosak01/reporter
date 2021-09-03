@@ -457,7 +457,7 @@ test_that("rtf14: Simplest portrait table works as expected.", {
   
   rpt <- create_report(fp, output_type = "RTF", orientation = "portrait") %>% 
     page_header("left", "right") %>% 
-    titles("Table 1.0", "MTCARS Data Frame") %>% 
+    titles("Table 1.0", "MTCARS Data Frame", borders = "all") %>% 
     add_content(create_table(mtcars)) %>% 
     page_footer("Left", right = "right")
   
@@ -475,7 +475,7 @@ test_that("rtf15: Simplest landscape table works as expected.", {
   
   rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>% 
     page_header("left", "right") %>% 
-    titles("Table 1.0", "MTCARS Data Frame") %>% 
+    titles("Table 1.0", "MTCARS Data Frame", borders = "all") %>% 
     add_content(create_table(mtcars)) %>% 
     page_footer("Left", right = "right")
   
@@ -547,11 +547,12 @@ test_that("rtf18: Plot with page by on report works as expected.", {
 
   rpt <- create_report(fp, output_type = "RTF") %>%
     page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
+           blank_row = "none", borders = "all") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_by(cyl, "Cylinders: ") %>% 
     add_content(plt) %>%
-    footnotes("* Motor Trend, 1974") %>%
+    footnotes("* Motor Trend, 1974", borders = "all") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   
   
@@ -605,7 +606,7 @@ test_that("rtf19: Plot with page by on plot works as expected.", {
   
 })
 
-# Problem on this one.  Title header not aligned with plot.
+
 test_that("test20: Title Header on Plot works as expected.", {
   
   fp <- file.path(base_path, "rtf/test20.rtf")
@@ -615,8 +616,8 @@ test_that("test20: Title Header on Plot works as expected.", {
   
   plt <- create_plot(p, height = 5, width = 7) %>% 
     title_header("Figure 1.0", "MTCARS Plot", 
-                 right = c("Client", "Page", "More")) %>% 
-    footnotes("* Motor Trend, 1974")
+                 right = c("Client", "Page", "More"), borders = "all") %>% 
+    footnotes("* Motor Trend, 1974", borders = "all")
   
   rpt <- create_report(fp, units = "inches", output_type = "RTF") %>%
     options_fixed(font_size = 12) %>% 

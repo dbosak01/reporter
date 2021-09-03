@@ -224,8 +224,8 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
                           content_blank_row) {
   
   # Get titles and footnotes
-  ttls <- get_titles(txt$titles, line_width + 1, rs$uchar) 
-  ftnts <- get_footnotes(txt$footnotes, line_width + 1, rs$uchar) 
+  ttls <- get_titles(txt$titles, line_width, rs$uchar) 
+  ftnts <- get_footnotes(txt$footnotes, line_width, rs$uchar) 
   ttl_hdr <- get_title_header(txt$title_hdr, line_width, rs$uchar)
   
   # Wrap the text 
