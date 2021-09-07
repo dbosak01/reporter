@@ -32,7 +32,8 @@ Suggests:
     survminer,
     utils,
     logr,
-    covr
+    covr,
+    graphics
 Imports: fmtr,
          stringi,
          crayon,

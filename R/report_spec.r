@@ -131,8 +131,8 @@
 #' @export
 create_report <- function(file_path = "", output_type = "TXT", 
                           orientation ="landscape", units = "inches",
-                          paper_size = "letter", missing = "") { #,
-                          #font = "fixed", font_size = NULL) {
+                          paper_size = "letter", missing = "") {#,
+                         # font = "fixed", font_size = NULL) {
   font = "fixed"
   font_size = NULL
 

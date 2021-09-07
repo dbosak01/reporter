@@ -850,6 +850,40 @@ ccm <- function(x) {
   return(2.54 * x)
 }
 
+
+#' @description Estimate number of wraps based on text, width, and a font.
+#' @import graphics
+#' @noRd
+get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
+  
+  
+  f <- "mono"
+  if (tolower(font) == "arial")
+    f <- "sans"
+  else if (tolower(font) == "times")
+    f <- "serif"
+  
+  par(family = f, ps = font_size)
+  val <- strwidth(txt, units = units) * .975 / width
+  # print(val)
+  ret <- ceiling(val)
+
+  
+  return(ret)
+}
+
+#' @description Subtract 1 from number of lines to get excess lines
+#' @noRd 
+get_excess_lines <- function(txt, width, font, font_size = 10, units = "inches") {
+  
+  res <- get_lines_rtf(txt, width, font, font_size = 10, units)
+  
+  if (res > 0)
+    res <- res - 1
+  
+  return(res)
+}
+
 # 
 # getCols <- function(vars = NULL, env = environment(), vars_c = NULL) {
 #   

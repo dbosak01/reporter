@@ -21,7 +21,7 @@ write_report_rtf2 <- function(rs) {
   if (file.exists(orig_path))
     file.remove(orig_path)
   
-  rs <- page_setup_font(rs)
+  rs <- page_setup_rtf(rs)
 
   ls <- list("Hello") #create_report_general(rs)
   
@@ -42,14 +42,9 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
   body <- c() 
   
   ret <- c()
+
   
-  
-  # Get conversion factor to twips
-  if (rs$units == "inches") {
-    conv <- 1440
-  } else {
-    conv <- 566.9291
-  }
+  conv <- rs$twip_conversion
   
   fnt <- rs$font
   if (tolower(rs$font) == "times")
@@ -70,13 +65,15 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
   hdr[length(hdr) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
                                  "\\margr", round(rs$margin_right * conv),
                                  "\\margt", round(rs$margin_top * conv),
-                                 "\\margb", round(rs$margin_bottom  * conv))
+                                 "\\margb", round(rs$margin_bottom  * conv),
+                                 "\\headery", round(rs$margin_top  * conv),
+                                 "\\footery", round(rs$margin_bottom  * conv))
   
-  ph <- get_rtf_page_header(rs, conv)
+  ph <- get_page_header_rtf(rs)
   if (ph != "")
     hdr[length(hdr) + 1] <- ph
   
-  pf <- get_rtf_page_footer(rs, conv)
+  pf <- get_page_footer_rtf(rs)
   if (pf != "")
     hdr[length(hdr) + 1] <- pf
   
@@ -90,40 +87,13 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
     hdr[length(hdr) + 1] <- "\\sl-180\\slmult0\\fs16"
   }
   
-  if (rs$page_header_blank_row == "below")
-    hdr[length(hdr) + 1] <- "\\line"
-  
-  rt <- get_rtf_report_titles(rs, conv)
-  if (rt != "")
-    hdr[length(hdr) + 1] <- rt
-  
-  # rs, tbl, conv, widths
-  # w <- rep(.75, ncol(mtcars))
-  # body <- get_rtf_table_lines(rs, mtcars[1:10, ], conv, w) 
+  body <- get_rtf_body(rs, conv)
   
   # Start with all lines
   #body <- encodeRTF(ls)
   
   # if (rs$has_graphics) {
-  #   # Remove fill lines
-  #   fill_tags <- grep("```fill```", body, fixed = TRUE)
-  #   body <- body[-fill_tags]
-  #   
-  #   # Replace any plot tags with latex codes
-  #   plt_tags <- grep("```([^}]*)```", body)
-  #   
-  #   for (i in plt_tags) {
-  #     
-  #     # Remove braces
-  #     rw <- trimws(gsub("`", "", body[i], fixed = TRUE))
-  #     
-  #     # Split on pipe
-  #     spec <- strsplit(rw, "|", fixed = TRUE)[[1]]
-  #     
-  #     # 1 = path
-  #     # 2 = height
-  #     # 3 = width
-  #     # 4 = align
+
   #     
   #     img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), 
   #                          as.numeric(spec[[2]]), rs$units, rs$font_size)
@@ -138,23 +108,8 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
   #     } else  {
   #       ltx <- paste0("\\par\\sl0\\qc\n"  )
   #     }
-  #     
-  #     # Replace original line with RTF codes
-  #     body[[i]] <- paste0(ltx, img)
-  #   }
-  # }
+
   
-  # Get page breaks
-  # pgs <- grepl("\f", body, fixed = TRUE)
-  
-  # Adjust by one to get previous line
-  # pgs <- pgs[2:length(pgs)]
-  
-  # Add one for end of document
-  # pgs[length(pgs) + 1] <- TRUE 
-  # print(length(body))
-  # print(length(pgs))
-  # print(pgs)
   
   # body <- gsub("\f", "\\page ", body, fixed = TRUE)
   # body <- paste0(body, ifelse(pgs, "", "\\line"))
@@ -176,135 +131,96 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
 }
 
 
-# Template Functions ------------------------------------------------------
+# Write RTF Driver Functions ----------------------------------------------
 
-get_rtf_page_header <- function(rs, conv) {
+# should be renamed to paginate_content_rtf
+get_rtf_body <- function(rs, conv) {
   
-  ret <- ""
+  hdr <- c()
+  # if (rs$page_header_blank_row == "below")
+  #   hdr[length(hdr) + 1] <- "\\line"
   
-  hl <- rs$page_header_left
-  hr <- rs$page_header_right
-
-  maxh <- max(length(hl), length(hr))
+  bdy <- c()
   
-  if (maxh > 0) {
+  lpg_rows <- 0
+  
+  for (cntnt in rs$content) {
     
-    fs <- rs$font_size * 2
     
-    c2 <- rs$content_size[["width"]] * conv
-    c1 <- c2 / 2
-  
-    ret <- paste0("{\\header \\fs", fs)
-    
-    for (i in seq(1, maxh)) {
-      ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, "\\cellx", c2 , " ")
+    if (any(class(cntnt$object) == "table_spec")) {
       
-      if (length(hl) >= i)
-        ret <- paste0(ret, hl[[i]], "\\cell")
-      else 
-        ret <- paste0(ret, "\\cell")
+      res <- create_table_pages_rtf(rs, cntnt, conv)
       
-      if (length(hr) >= i)
-        ret <- paste0(ret, "\\qr ", hr[[i]], "\\cell\\row\n")
-      else 
-        ret <- paste0(ret, "\\qr \\cell\\row\n")
+      
+    } else if (any(class(cntnt$object) == "text_spec")) {
+      
+      res <- create_text_pages_rtf(rs, cntnt, lpg_rows, conv)
+      
+      
+    } else if (any(class(cntnt$object) == "plot_spec")) {
+      
+      res <- create_plot_pages_rtf(rs, cntnt, conv)
       
     }
     
-    ret <- paste0(ret, "}")
+    bdy <- append(bdy, res)
+    
   }
   
+  
+  ret <- c(hdr, bdy)
+  
   return(ret)
+  
+}
+
+# Spec Functions ----------------------------------------------------------
+
+create_table_pages_rtf <- function(rs, cntnt, conv) {
+  
+
+  ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], conv)
+  
+  ts <- cntnt$object
+  
+  dt <- ts$data
+  
+  wdths <- rep(.75, ncol(dt)) #get_rtf_widths
+  
+  # rs, tbl, conv, widths, 
+  # algns, halgns, talgn, brdrs
+  
+  algns <- rep("left", ncol(dt))
+  halgns <- algns
+  talgn <- cntnt$align 
+  brdrs <- "outside"
+  
+  
+  tbl <- get_table_lines_rtf(rs, dt, conv, wdths, algns, 
+                             halgns, talgn, brdrs)
+  
+  
+  lns <- append(ttls, tbl)
+  
+  return(lns)
 }
 
 
 
-get_rtf_page_footer <- function(rs, conv) {
-  
-  ret <- ""
-  
-  fl <- rs$page_footer_left
-  fc <- rs$page_footer_center
-  fr <- rs$page_footer_right
-  
-  maxf <- max(length(fl), length(fc), length(fr))
-  
-  if (maxf > 0) {
-    
-    fs <- rs$font_size * 2
-    
-    c3 <- rs$content_size[["width"]] * conv
-    c1 <- c3 / 3
-    c2 <- c1 * 2
-    
-    ret <- paste0("{\\footer \\fs", fs)
-    
-    for (i in seq(1, maxf)) {
-      
-      ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
-                    "\\cellx", c2 , "\\cellx", c3, " ")
-      
-      if (length(fl) >= i)
-        ret <- paste0(ret, fl[[i]], "\\cell")
-      else 
-        ret <- paste0(ret, "\\cell")
-      
-      if (length(fc) >= i)
-        ret <- paste0(ret, "\\qc ", fc[[i]], "\\cell")
-      else 
-        ret <- paste0(ret, "\\qc \\cell")
-      
-      if (length(fr) >= i)
-        ret <- paste0(ret, "\\qr ", fr[[i]], "\\cell\\row\n")
-      else 
-        ret <- paste0(ret, "\\qr \\cell\\row\n")
-      
-    }
-    
-    ret <- paste0(ret, "}")
-  }
-  
-  return(ret)
-}
 
-get_rtf_report_titles <- function(rs, conv) {
-  
-  ret <- ""
-
-  c1 <- rs$content_size[["width"]] * conv
-  
-  if (length(rs$titles) > 0) {
-  
-    for (ttls in rs$titles) {
-      
-      if (ttls$align == "center")
-        algn <- "\\qc"
-      else if (ttls$align == "right")
-        algn <- "\\qr"
-      else 
-        algn <- "\\ql"
-      
-      for (ttl in ttls$titles) {
-        
-        ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
-                      algn, " ", ttl, "\\cell\\row\n")
-      }
-    }
-    ret <- paste0(ret, "\\pard")
-  }
-  
-  return(ret)
-}
 
 
 # Table Functions ---------------------------------------------------------
 
 
 
-get_rtf_table_lines <- function(rs, tbl, conv, widths) {
+get_table_lines_rtf <- function(rs, tbl, conv, widths, 
+                                algns, halgns, talgn, brdrs) {
  
-  ret <- c()
+  # Get line height.  Don't want to leave editor default.
+  rh <- rs$line_height
   
+  # Get cell widths
   sz <- c()
   for (k in seq_along(widths)) {
     if (k == 1)
@@ -314,33 +230,91 @@ get_rtf_table_lines <- function(rs, tbl, conv, widths) {
       
   }
   
+  # Table alignment
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
+  
+  # Cell alignment
+  ca <- c()
+  for (k in seq_along(algns)) {
+    if (algns[k] == "left")
+      ca[k] <- "\\ql"
+    else if (algns[k] == "right")
+      ca[k] <- "\\qr"
+    else if (algns[k] %in% c("center", "centre"))
+      ca[k] <- "\\qc"
+  }
+  
+  # Header Cell alignment
+  ha <- c()
+  for (k in seq_along(halgns)) {
+    if (halgns[k] == "left")
+      ha[k] <- "\\ql"
+    else if (halgns[k] == "right")
+      ha[k] <- "\\qr"
+    else if (halgns[k] %in% c("center", "centre"))
+      ha[k] <- "\\qc"
+  }
+    
+  hdr <- c()
+  
+  # Table Header
+  hdr[1] <-  paste0("\\trowd\\trgaph0", ta)
+  
+  # Loop for cell definitions
+  for(j in seq_along(tbl)) {
+    
+    b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
+    hdr[1] <- paste0(hdr[1], b, "\\clbrdrb\\brdrs\\cellx", sz[j])
+    
+  }
+  
+  # Loop for column names
+  nms <- names(tbl)
+  for(k in seq_along(nms)) {
+    hdr[1] <- paste0(hdr[1], ha[k], " ", nms[k], "\\cell")
+  }
+  
+  hdr[1] <- paste(hdr[1], "\\row")
+  
+  
+  bdy <- c()
+  
+  # Table Body
   for(i in seq_len(nrow(tbl))) {
     
-    ret[i] <- "\\trowd\\trgaph0"
+    bdy[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
     
     # Loop for cell definitions
     for(j in seq_len(ncol(tbl))) {
-      
-      ret[i] <- paste0(ret[i], "\\cellx", sz[j])
-      
+      b <- get_cell_borders(i, j, nrow(tbl), ncol(tbl), brdrs)
+      bdy[i] <- paste0(bdy[i], b, "\\cellx", sz[j])
     }
     
     # Loop for cell values
     for(j in seq_len(ncol(tbl))) {
       
-      ret[i] <- paste0(ret[i], " ", tbl[i, j], "\\cell")
+      bdy[i] <- paste0(bdy[i], ca[j], " ", tbl[i, j], "\\cell")
       
     }
     
-    ret[i] <- paste0(ret[i], "\\row")
+    bdy[i] <- paste0(bdy[i], "\\row")
     
     
   }
   
-  ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
+  bdy[length(bdy)] <- paste0(bdy[length(bdy)], "\\pard")
+  
+  # Add header and body
+  ret <- append(hdr, bdy)
   
   return(ret)
 }
+
+
 
 # Setup Functions ---------------------------------------------------------
 
@@ -349,7 +323,7 @@ get_rtf_table_lines <- function(rs, tbl, conv, widths) {
 #' @details  Calculates available space for content and prepares text lines
 #' for page template.
 #' @noRd
-page_setup_font <- function(rs) {
+page_setup_rtf <- function(rs) {
   
   debug <- FALSE
 
@@ -358,6 +332,33 @@ page_setup_font <- function(rs) {
   rs$content_size <- get_content_size(rs)
   if (debug)
     print(paste0("Content Size: ", rs$content_size))
+  
+  
+  if (rs$font_size == 8)
+    lh <- round(.11 * 1440)
+  else if (rs$font_size == 10)
+    lh <- round(.16 * 1440 )
+  else if (rs$font_size == 12)
+    lh <- round(.2 * 1440)
+  
+  
+  # Get conversion factor to twips
+  if (rs$units == "inches") {
+    conv <- 1440
+  } else {
+    conv <- 566.9291
+  }
+  
+  rs$twip_conversion <- conv
+  rs$line_height <- lh
+  
+  if (is.null(rs$user_line_count))
+    rs$line_count <- floor(rs$content_size[[1]] * conv / lh)
+  else 
+    rs$line_count <- rs$user_line_count
+  
+  print(rs$content_size[[1]])
+  print(rs$line_count)
   
   # Line size is the number of characters that will fit in the content size width
   # if (is.null(rs$user_line_size)) {

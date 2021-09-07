@@ -164,7 +164,7 @@ print.plot_spec <- function(x, ..., verbose = FALSE){
 }
 
 
-# Write Functions -------------------------------------------------------
+# Write Text Functions -------------------------------------------------------
 
 #' @description A function to output strings for plot content
 #' @details Basic logic is to write the plot as a png file to a temporary
@@ -353,3 +353,197 @@ get_plot_body <- function(plt, plot_path, align, rs,
   return(ret)
   
 }
+
+
+
+# Write RTF Functions -----------------------------------------------------
+
+
+#' @description A function to output strings for plot content
+#' @details Basic logic is to write the plot as a png file to a temporary
+#' location, then put a token in the text that references the temp location.
+#' Later code will pick up the image and insert it into the report.  Blank
+#' lines are generated to fill up the page based on a calculation using
+#' the plot height and width.
+#' @param rs The Report Spec
+#' @param cntnt The text content to output
+#' @param lpg_rows Last page rows.
+#' @noRd
+create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  # Get plot spec 
+  plt <- cntnt$object
+  
+  
+  # Get data in case we need it for page by
+  raw <- plt$plot$data
+  
+  # Determine if there is a page by
+  pgby <- NULL
+  if (!is.null(rs$page_by))
+    pgby <- rs$page_by
+  if (!is.null(plt$page_by))
+    pgby <- plt$page_by
+  
+  if (!is.null(pgby)) {
+    if (!pgby$var %in% names(raw))
+      stop("Page by variable not found in plot data.")
+    
+    dat_lst <- split(raw, raw[[pgby$var]])
+  } else {
+    dat_lst <- list(raw) 
+  }
+  
+  u <- ifelse(rs$units == "inches", "in", rs$units)
+  p <- plt$plot
+  ret <- list()
+  cntr <- 1
+  
+  for (dat in dat_lst) {
+    
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+    
+    p$data <- dat
+    
+    pgval <- NULL
+    if (!is.null(pgby)) {
+      # print(pgby$var)
+      # print(dat)
+      pgval <- dat[1, c(pgby$var)]
+    }
+    
+    # Save plot to temp file
+    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+      
+      # Deal with survival plots
+      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                      width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u )
+      
+      
+    } else {
+      
+      # Any other type of plots
+      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u)
+    }
+    
+    # Get rtf page bodies
+    # Can return multiple pages if it breaks across pages
+    # Not sure what that means for a plot, but that is the logic
+    pgs <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
+                         lpg_rows, cntnt$blank_row, pgby, pgval)
+    
+    # Within a content creation function, assumed that it will take 
+    # care of filling out blanks for each page.  Only the last page
+    # can have empty rows.
+    for (pg in pgs) {
+      rem <- rs$body_line_count - length(pg)
+      if (rem > 0 & cntr < length(dat_lst))
+        blnks <- rep("", rem)
+      else 
+        blnks <- c()
+      
+      # Combine all pages with all previous pages
+      ret <- c(ret, list(c(pg, blnks)))
+    }
+    
+    cntr <- cntr + 1
+    
+  }
+  
+  return(ret)
+}
+
+#' Create list of vectors of strings for each page 
+#' @noRd
+get_plot_body_rtf <- function(plt, plot_path, align, rs,
+                          lpg_rows, content_blank_row, pgby, pgval) {
+  
+  # Get titles and footnotes
+  w <- ceiling(plt$width / rs$char_width)
+  ttls <- get_titles(plt$titles, w, rs$uchar) 
+  ttl_hdr <- get_title_header(plt$title_hdr, w, rs$uchar)
+  ftnts <- get_footnotes(plt$footnotes, w, rs$uchar) 
+  pgbys <- get_page_by(pgby, w, pgval)
+  
+  pltpth <- gsub("\\", "/", plot_path, fixed = TRUE)
+  
+  
+  s <- c(paste0("```", pltpth, "|", plt$height, 
+                "|", plt$width, "|", align, "```"))
+  
+  h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed? Appears so.
+  
+  fill <- rep("```fill```", h) 
+  s <- c(s, fill)
+  
+  
+  # Add blank above content if requested
+  a <- NULL
+  if (content_blank_row %in% c("both", "above"))
+    a <- ""
+  
+  
+  # Add blank below content if requested
+  b <- NULL
+  if (content_blank_row %in% c("both", "below"))
+    b <- ""
+  
+  # Combine titles, blanks, body, and footnotes
+  rws <- c(a, ttls, ttl_hdr, pgbys, s, ftnts, b)
+  
+  # Page list
+  ret <- list()  
+  
+  # Create tmp variable for 1 page of content
+  tmp <- c()
+  
+  # Offset the first page with remaining rows from the 
+  # last page of the previous content
+  offset <- lpg_rows 
+  #print(paste("Offset:", offset))
+  
+  # Assign content to pages
+  for (i in seq_along(rws)) {
+    if (length(tmp) < (rs$body_line_count - offset)) {
+      
+      # Append to existing page
+      tmp[length(tmp) + 1] <- rws[i]
+      
+    } else {
+      
+      # Start a new page
+      ret[[length(ret) + 1]] <- pad_any(tmp, rs$line_size, 
+                                        get_justify(align))
+      tmp <- rws[i]
+      
+      # Set to zero on second page and leave it that way
+      offset <- 0  
+    }
+  }
+  
+  # Deal with last page
+  if (length(tmp) > 0 ) {
+    
+    
+    # If page is not empty
+    if (max(nchar(trimws(tmp))) > 0) {
+      
+      # Add last page
+      ret[[length(ret) + 1]] <- pad_any(tmp,  rs$line_size, 
+                                        get_justify(align))
+    }
+    
+  }
+  
+  return(ret)
+  
+}
+
