@@ -88,18 +88,18 @@ test_that("get_splits_text works as expected", {
 
 test_that("prep_data works as expected", {
   
-  smp <- sample(1:nrow(iris), 20)
-  dat <- iris[smp, ]
-  datx <- dat[order(dat$Species), ]
-  datx$Species <- as.character(datx$Species)
-  mw <- max(nchar(datx$Species))
+  # smp <- sample(1:nrow(iris), 20)
+  # dat <- iris[smp, ]
+  # datx <- dat[order(dat$Species), ]
+  # datx$Species <- as.character(datx$Species)
+   mw <- max(nchar(as.character(iris$Species)))
   
   
-  tbl <- create_table(datx) %>% 
+  tbl <- create_table(iris) %>% 
     define(Species, blank_after = TRUE, dedupe = TRUE, indent = .25)
 
   
-  d <- prep_data(datx, tbl, .0833333, "")
+  d <- prep_data(iris, tbl, .0833333, "")
 
   
   expect_equal(sum(d$..blank != ""), 3)

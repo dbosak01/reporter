@@ -4,14 +4,14 @@
 * Added Arial, Times, and Courier fonts to RTF output type.  This change required a
 significant rewrite to RTF report creation functions.  Font is controlled using
 the _font_ parameter on the `create_report()` function.  Old text-style RTF
-output is still available using the "fixed" font.-->
+output is still available using the "fixed" font.
+* Added _valign_ parameter to `footnotes()` function.-->
 
-# reporter 1.1.4
+# reporter 1.1.6
 
 * Added support for covr and codecov.
 * Fixed overflow bug on RTF on Windows when using 12pt font.
 * Fixed line length/alignment issues on titles and footnotes.
-* Added _valign_ parameter to `footnotes()` function.
 
 # reporter 1.1.3
 

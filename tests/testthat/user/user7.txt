@@ -1,4 +1,4 @@
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    STUDYID SUBJID SITEID AGE AGEU  AGEGR1      SEX RACE                      RACEN
@@ -43,7 +43,7 @@ BBC-13-025 BBC     025        13  24 YEARS 18-29 years M   WHITE                
 BBC-13-026 BBC     026        13  51 YEARS 50-65 years F   WHITE                         5
 
 Time                                                                                            Page 1 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    ETHNIC                 ETHNICN COUNTRY ARM   ACTARM TRT01P TRT01PN TRT01A TRT01AN TRTSDT
@@ -88,7 +88,7 @@ BBC-13-025 NOT HISPANIC OR LATINO       2         ARM A        ARM A        1 AR
 BBC-13-026 NOT HISPANIC OR LATINO       2         ARM B        ARM B        2 ARM B        2 02NOV2006
 
 Time                                                                                            Page 2 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    TRTEDT    TRTDURN TRTDURU TR01SDT   TR01EDT   INCNFL RANDFL RANDEXC1 RANDEXC2 RANDEXC3 RANDEXC4
@@ -133,7 +133,7 @@ BBC-13-025 03JAN2007      72 DAY     24OCT2006 03JAN2007 Y      Y
 BBC-13-026 24JAN2007      84 DAY     02NOV2006 24JAN2007 Y      Y
 
 Time                                                                                            Page 3 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    SAFFL SAFEXC1 SAFEXC2                                                    MITTFL
@@ -178,7 +178,7 @@ BBC-13-025 Y                                                                    
 BBC-13-026 Y                                                                        Y
 
 Time                                                                                            Page 4 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    MITTEXC1
@@ -223,7 +223,7 @@ BBC-13-025
 BBC-13-026
 
 Time                                                                                            Page 5 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    MITTEXC2                                                     PPROTFL
@@ -268,7 +268,7 @@ BBC-13-025                                                              N
 BBC-13-026                                                              Y
 
 Time                                                                                            Page 6 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX1
@@ -313,7 +313,7 @@ BBC-13-025
 BBC-13-026
 
 Time                                                                                            Page 7 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX2
@@ -358,7 +358,7 @@ BBC-13-025
 BBC-13-026
 
 Time                                                                                            Page 8 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX3
@@ -403,7 +403,7 @@ BBC-13-025 Subject did not receive at least 85% of prescribed doses of
 BBC-13-026
 
 Time                                                                                            Page 9 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX4                                                     COMPLFL
@@ -448,7 +448,7 @@ BBC-13-025                                                              Y
 BBC-13-026                                                              Y
 
 Time                                                                                           Page 10 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    STDYDISP                                                     STDYREAS              INCNDT
@@ -493,7 +493,7 @@ BBC-13-025 Subject Completed All Visits And Protocol Requirements               
 BBC-13-026 Subject Completed All Visits And Protocol Requirements                             25OCT2006
 
 Time                                                                                           Page 11 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    RANDDT    DTHDT DTHFL MISSDOSE TP1TRTR TP2TRTR TP3TRTR PSORTRTR FUPVISIT AEREPORT
@@ -538,7 +538,7 @@ BBC-13-025 24OCT2006       N           15 N       N       N       N        Y    
 BBC-13-026 02NOV2006       N            2 N       N       N       N        Y        Y
 
 Time                                                                                           Page 12 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    STUDYID SUBJID SITEID AGE AGEU  AGEGR1      SEX RACE                      RACEN
@@ -583,7 +583,7 @@ BBC-15-156 BBC     156        15  35 YEARS 30-39 years F   WHITE                
 
 
 Time                                                                                           Page 13 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    ETHNIC                 ETHNICN COUNTRY ARM   ACTARM TRT01P TRT01PN TRT01A TRT01AN TRTSDT
@@ -628,7 +628,7 @@ BBC-15-156 NOT HISPANIC OR LATINO       2         ARM B        ARM B        2 AR
 
 
 Time                                                                                           Page 14 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    TRTEDT    TRTDURN TRTDURU TR01SDT   TR01EDT   INCNFL RANDFL RANDEXC1 RANDEXC2 RANDEXC3 RANDEXC4
@@ -673,7 +673,7 @@ BBC-15-156 05APR2007      85 DAY     11JAN2007 05APR2007 Y      Y
 
 
 Time                                                                                           Page 15 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    SAFFL SAFEXC1 SAFEXC2                                                    MITTFL
@@ -718,7 +718,7 @@ BBC-15-156 Y                                                                    
 
 
 Time                                                                                           Page 16 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    MITTEXC1
@@ -763,7 +763,7 @@ BBC-15-156
 
 
 Time                                                                                           Page 17 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    MITTEXC2                                                     PPROTFL
@@ -808,7 +808,7 @@ BBC-15-156                                                              N
 
 
 Time                                                                                           Page 18 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX1
@@ -853,7 +853,7 @@ BBC-15-156
 
 
 Time                                                                                           Page 19 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX2
@@ -898,7 +898,7 @@ BBC-15-156
 
 
 Time                                                                                           Page 20 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX3
@@ -943,7 +943,7 @@ BBC-15-156 Subject did not receive at least 85% of prescribed doses of
            study medication
 
 Time                                                                                           Page 21 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX4                                                     COMPLFL
@@ -988,7 +988,7 @@ BBC-15-156                                                              Y
 
 
 Time                                                                                           Page 22 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    STDYDISP                                                     STDYREAS              INCNDT
@@ -1033,7 +1033,7 @@ BBC-15-156 Subject Completed All Visits And Protocol Requirements               
 
 
 Time                                                                                           Page 23 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    RANDDT    DTHDT DTHFL MISSDOSE TP1TRTR TP2TRTR TP3TRTR PSORTRTR FUPVISIT AEREPORT
@@ -1078,7 +1078,7 @@ BBC-15-156 11JAN2007       N           13 N       N       N       N        Y    
 
 
 Time                                                                                           Page 24 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    STUDYID SUBJID SITEID AGE AGEU  AGEGR1      SEX RACE                      RACEN
@@ -1123,7 +1123,7 @@ BBC-16-160 BBC     160        16  44 YEARS 40-49 years M   WHITE                
 
 
 Time                                                                                           Page 25 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    ETHNIC                 ETHNICN COUNTRY ARM   ACTARM TRT01P TRT01PN TRT01A TRT01AN TRTSDT
@@ -1168,7 +1168,7 @@ BBC-16-160 HISPANIC OR LATINO           1         ARM D        ARM D        4 AR
 
 
 Time                                                                                           Page 26 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    TRTEDT    TRTDURN TRTDURU TR01SDT   TR01EDT   INCNFL RANDFL RANDEXC1 RANDEXC2 RANDEXC3 RANDEXC4
@@ -1213,7 +1213,7 @@ BBC-16-160 19MAR2007      82 DAY     28DEC2006 19MAR2007 Y      Y
 
 
 Time                                                                                           Page 27 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    SAFFL SAFEXC1 SAFEXC2                                                    MITTFL
@@ -1258,7 +1258,7 @@ BBC-16-160 Y                                                                    
 
 
 Time                                                                                           Page 28 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    MITTEXC1
@@ -1303,7 +1303,7 @@ BBC-16-160
 
 
 Time                                                                                           Page 29 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    MITTEXC2                                                     PPROTFL
@@ -1348,7 +1348,7 @@ BBC-16-160                                                              Y
 
 
 Time                                                                                           Page 30 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX1
@@ -1393,7 +1393,7 @@ BBC-16-160
 
 
 Time                                                                                           Page 31 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX2
@@ -1438,7 +1438,7 @@ BBC-16-160
 
 
 Time                                                                                           Page 32 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX3
@@ -1483,7 +1483,7 @@ BBC-16-160
 
 
 Time                                                                                           Page 33 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    PPROTEX4                                                     COMPLFL
@@ -1528,7 +1528,7 @@ BBC-16-160                                                              Y
 
 
 Time                                                                                           Page 34 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    STDYDISP                                                     STDYREAS              INCNDT
@@ -1573,7 +1573,7 @@ BBC-16-160 Subject Completed All Visits And Protocol Requirements               
 
 
 Time                                                                                           Page 35 of 36
-                                                 Listing 1.0
+                                                Listing 1.0
                                                 ADSL Dataset
 
 USUBJID    RANDDT    DTHDT DTHFL MISSDOSE TP1TRTR TP2TRTR TP3TRTR PSORTRTR FUPVISIT AEREPORT
