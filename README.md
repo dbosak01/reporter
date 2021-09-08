@@ -3,7 +3,6 @@
 [![reporter version](https://www.r-pkg.org/badges/version/reporter)](https://cran.r-project.org/package=reporter)
 [![reporter lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://cran.r-project.org/package=reporter)
 [![reporter downloads](https://cranlogs.r-pkg.org/badges/grand-total/reporter)](https://cran.r-project.org/package=reporter)
-[![Travis build status](https://www.travis-ci.com/dbosak01/reporter.svg?branch=master)](https://www.travis-ci.com/dbosak01/reporter)
 [![R-CMD-check](https://github.com/dbosak01/reporter/workflows/R-CMD-check/badge.svg)](https://github.com/dbosak01/reporter/actions)
 [![Codecov test coverage](https://codecov.io/gh/dbosak01/reporter/branch/master/graph/badge.svg)](https://codecov.io/gh/dbosak01/reporter?branch=master)
 

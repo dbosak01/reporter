@@ -7,7 +7,7 @@ the _font_ parameter on the `create_report()` function.  Old text-style RTF
 output is still available using the "fixed" font.
 * Added _valign_ parameter to `footnotes()` function.-->
 
-# reporter 1.1.5
+# reporter 1.1.6
 
 * Added support for covr and codecov.
 * Fixed overflow bug on RTF on Windows when using 12pt font.
