@@ -21,29 +21,37 @@ write_report_rtf2 <- function(rs) {
   if (file.exists(orig_path))
     file.remove(orig_path)
   
+  # Establish content and body sizes
   rs <- page_setup_rtf(rs)
-
-  ls <- list("Hello") #create_report_general(rs)
   
-  # Revise text and write to rtf
-  fls <- write_rtf_output2(rs, ls, orig_path)
+  # Document header is mostly independent of content
+  hdr <- get_rtf_document(rs) 
+  
+  # Get content and break it into pages
+  # Needs to return a list of pages so preview can work
+  # Page numbers need to be included
+  bdy <- paginate_content_rtf(rs)
+  
+  # Get column widths? Seems not necessary?
+  
+  # Deal with preview
+  
+  # Write content to file system
+  # Later we can just return the stream
+  write_content_rtf(orig_path, hdr, bdy)
   
   return(rs)
 }
 
 
-# May need some adjustments/sophistication/options to this function
-#' @return Vector of graphic file paths
+#' @description Returns header for RTF document.  This is independent of content,
+#' except for the page header and footer.
 #' @noRd
-write_rtf_output2 <- function(rs, ls, orig_path) {
+get_rtf_document <- function(rs) {
   
   # Set up vectors
-  hdr <- c() 
-  body <- c() 
-  
   ret <- c()
 
-  
   conv <- rs$twip_conversion
   
   fnt <- rs$font
@@ -51,18 +59,18 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
     fnt <- "Times New Roman"
   
   # Prepare header
-  hdr[length(hdr) + 1] <- paste0("{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 ", fnt , ";}}")
+  ret[length(ret) + 1] <- paste0("{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 ", fnt , ";}}")
   if (rs$orientation == "landscape") {
-    hdr[length(hdr) + 1] <- "\\landscape\\horzdoc"
-    hdr[length(hdr) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
+    ret[length(ret) + 1] <- "\\landscape\\horzdoc"
+    ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
                                    "\\paperh", round(rs$page_size[1] * conv))
   } else {
-    hdr[length(hdr) + 1] <- "\\vertdoc"
-    hdr[length(hdr) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
+    ret[length(ret) + 1] <- "\\vertdoc"
+    ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
                                    "\\paperh", round(rs$page_size[2] * conv))
   }
   
-  hdr[length(hdr) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
+  ret[length(ret) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
                                  "\\margr", round(rs$margin_right * conv),
                                  "\\margt", round(rs$margin_top * conv),
                                  "\\margb", round(rs$margin_bottom  * conv),
@@ -70,105 +78,117 @@ write_rtf_output2 <- function(rs, ls, orig_path) {
                                  "\\footery", round(rs$margin_bottom  * conv))
   
   ph <- get_page_header_rtf(rs)
-  if (ph != "")
-    hdr[length(hdr) + 1] <- ph
+  if (ph$rtf != "")
+    ret[length(ret) + 1] <- ph$rtf
   
   pf <- get_page_footer_rtf(rs)
-  if (pf != "")
-    hdr[length(hdr) + 1] <- pf
+  if (pf$rtf != "")
+    ret[length(ret) + 1] <- pf$rtf
   
   # Line spacing values determined be trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
   if (rs$font_size == 10) {
-    hdr[length(hdr) + 1] <- "\\sl-225\\slmult0\\fs20"
+    ret[length(ret) + 1] <- "\\sl-225\\slmult0\\fs20"
   } else if (rs$font_size == 12) {
-    hdr[length(hdr) + 1] <- "\\sl-275\\slmult0\\fs24"
+    ret[length(ret) + 1] <- "\\sl-275\\slmult0\\fs24"
   } else if (rs$font_size == 8) {
-    hdr[length(hdr) + 1] <- "\\sl-180\\slmult0\\fs16"
+    ret[length(ret) + 1] <- "\\sl-180\\slmult0\\fs16"
   }
-  
-  body <- get_rtf_body(rs, conv)
-  
-  # Start with all lines
-  #body <- encodeRTF(ls)
-  
-  # if (rs$has_graphics) {
 
-  #     
-  #     img <- get_image_rtf(spec[[1]], as.numeric(spec[[3]]), 
-  #                          as.numeric(spec[[2]]), rs$units, rs$font_size)
-  #     ret[length(ret) + 1] <- spec[[1]]
-  #     
-  #     # Create rtf codes
-  #     if (spec[[4]] == "left") {
-  #       ltx <- paste0("\\par\\sl0\\ql\n"  )
-  #       
-  #     } else if (spec[[4]] == "right") {
-  #       ltx <- paste0("\\par\\sl0\\qr\n"  )
-  #     } else  {
-  #       ltx <- paste0("\\par\\sl0\\qc\n"  )
-  #     }
-
-  
-  
-  # body <- gsub("\f", "\\page ", body, fixed = TRUE)
-  # body <- paste0(body, ifelse(pgs, "", "\\line"))
-  
-  # Write to file  
-  f <- file(orig_path, open="a")
-  
-  writeLines(hdr, con = f)
-  
-  writeLines(body, con = f)
-  
-  writeLines("}", con = f)
-  
-  close(f)
-  
   
   return(ret)
   
 }
 
+#' @noRd
+write_content_rtf <- function(path, hdr, body) {
+  
+  
+  # Write to file  
+  f <- file(path, open="a")
+  
+  writeLines(hdr, con = f)
+  
+  for (pg in body){
+  
+    writeLines(pg, con = f)
+  }
+  
+  writeLines("\\fs0\\par}", con = f)
+  
+  close(f)
+  
+}
+
+# Don't forget to deal with encoding issues 
+#body <- encodeRTF(ls)
+
+
 
 # Write RTF Driver Functions ----------------------------------------------
 
 # should be renamed to paginate_content_rtf
-get_rtf_body <- function(rs, conv) {
+#' @noRd
+paginate_content_rtf <- function(rs) {
+
   
-  hdr <- c()
-  # if (rs$page_header_blank_row == "below")
-  #   hdr[length(hdr) + 1] <- "\\line"
+  ret <- c()
+  last_object <- FALSE
+  lpg_twips <- 0
+  pgs <- list()  # list of vectors with page rtf lines
   
-  bdy <- c()
-  
-  lpg_rows <- 0
-  
-  for (cntnt in rs$content) {
+  # Loop through content objects
+  for (i in seq_along(rs$content)) {
     
+    # Set last object flag
+    if (i == length(rs$content))
+      last_object <- TRUE
+    else 
+      last_object <- FALSE
     
-    if (any(class(cntnt$object) == "table_spec")) {
-      
-      res <- create_table_pages_rtf(rs, cntnt, conv)
-      
-      
-    } else if (any(class(cntnt$object) == "text_spec")) {
-      
-      res <- create_text_pages_rtf(rs, cntnt, lpg_rows, conv)
-      
-      
-    } else if (any(class(cntnt$object) == "plot_spec")) {
-      
-      res <- create_plot_pages_rtf(rs, cntnt, conv)
+    # Put content and object in variables for convenience
+    cntnt <- rs$content[[i]] 
+    obj <- cntnt$object
+    
+    # Remove blank row if last content object
+    cbr <- obj$blank_row
+    if (last_object) {
+      if (all(cbr == "below")) 
+        cbr <- "none"
+      else if (all(cbr == "all"))
+        cbr <- "above"
       
     }
     
-    bdy <- append(bdy, res)
+    # Break each content type into a list of pages
+    if (any(class(obj) == "table_spec")) {
+      
+      res <- create_table_pages_rtf(rs, cntnt, lpg_twips)
+      
+      
+    } else if (any(class(obj) == "text_spec")) {
+      
+      res <- create_text_pages_rtf(rs, cntnt, lpg_twips, cbr)
+      
+      
+    } else if (any(class(obj) == "plot_spec")) {
+      
+      # Needs fixing
+      tmp_dir <- file.path(tempdir(), "temp.jpg")
+      res <- create_plot_pages_rtf(rs, cntnt, lpg_twips, tmp_dir)
+      
+    }
+    
+    pgs <- append(pgs, res)
     
   }
   
+  # Need to append content here
   
-  ret <- c(hdr, bdy)
+  
+  
+  # Can return something else if needed here
+  ret <- pgs
   
   return(ret)
   
@@ -176,14 +196,16 @@ get_rtf_body <- function(rs, conv) {
 
 # Spec Functions ----------------------------------------------------------
 
-create_table_pages_rtf <- function(rs, cntnt, conv) {
+#' @noRd
+create_table_pages_rtf <- function(rs, cntnt, lpg_twips) {
   
 
-  ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], conv)
+  ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], rs)
   
   ts <- cntnt$object
   
   dt <- ts$data
+  conv <- rs$twip_conversion
   
   wdths <- rep(.75, ncol(dt)) #get_rtf_widths
   
@@ -200,7 +222,7 @@ create_table_pages_rtf <- function(rs, cntnt, conv) {
                              halgns, talgn, brdrs)
   
   
-  lns <- append(ttls, tbl)
+  lns <- append(ttls$rtf, tbl)
   
   return(lns)
 }
@@ -213,12 +235,12 @@ create_table_pages_rtf <- function(rs, cntnt, conv) {
 # Table Functions ---------------------------------------------------------
 
 
-
+#' @noRd
 get_table_lines_rtf <- function(rs, tbl, conv, widths, 
                                 algns, halgns, talgn, brdrs) {
  
   # Get line height.  Don't want to leave editor default.
-  rh <- rs$line_height
+  rh <- rs$row_height
   
   # Get cell widths
   sz <- c()
@@ -325,21 +347,27 @@ get_table_lines_rtf <- function(rs, tbl, conv, widths,
 #' @noRd
 page_setup_rtf <- function(rs) {
   
-  debug <- FALSE
-
+  debug <- TRUE
   
   # Content size is the page size minus margins, in units of measure
   rs$content_size <- get_content_size(rs)
-  if (debug)
-    print(paste0("Content Size: ", rs$content_size))
   
   
-  if (rs$font_size == 8)
-    lh <- round(.11 * 1440)
-  else if (rs$font_size == 10)
-    lh <- round(.16 * 1440 )
-  else if (rs$font_size == 12)
-    lh <- round(.2 * 1440)
+  if (rs$font_size == 8) {
+    rh <- round(.11 * 1440)
+    lh <- round(.1 * 1440)
+    pb <- "\\page\\fs0\\par\\fs16\\pard"
+  } else if (rs$font_size == 10) {
+    rh <- round(.16 * 1440)
+    lh <- round(.1875 * 1440)  # 270
+    rh <- lh
+    pb <- "\\page\\fs0\\par\\fs20\\pard"
+  } else if (rs$font_size == 12) {
+    rh <- round(.2 * 1440)
+    lh <- round(.1875 * 1440) #270
+    rh <- lh
+    pb <- "\\page\\fs0\\par\\fs24\\pard"
+  }
   
   
   # Get conversion factor to twips
@@ -350,38 +378,35 @@ page_setup_rtf <- function(rs) {
   }
   
   rs$twip_conversion <- conv
+  rs$row_height <- rh
   rs$line_height <- lh
+  rs$page_break_rtf <- pb
   
   if (is.null(rs$user_line_count))
-    rs$line_count <- floor(rs$content_size[[1]] * conv / lh)
+    rs$line_count <- floor(rs$content_size[[1]] * conv / rh)
   else 
     rs$line_count <- rs$user_line_count
   
-  print(rs$content_size[[1]])
-  print(rs$line_count)
+  if (debug) {
+    print(paste("Content Height:", rs$content_size[[1]]))
+    print(paste("Content Width:", rs$content_size[[2]]))
+    print(paste("Line Count:", rs$line_count))
+    print(paste("Line Height:", rs$line_height))
+  }
   
-  # Line size is the number of characters that will fit in the content size width
-  # if (is.null(rs$user_line_size)) {
-  #   if (rs$output_type == "RTF") {
-  #     # 1 char adjustment to avoid occasional wrapping 
-  #     rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width) - 1 
-  #   } else {
-  #     rs$line_size <- floor(rs$content_size[["width"]] / rs$char_width) 
-  #   }
-  # } else 
-  #   rs$line_size <- rs$user_line_size
-  # if (debug)
-  #   print(paste0("Line Size: ", rs$line_size))
-  # 
-  # # Line count is the number of lines that will fit in the content size height
-  # if (is.null(rs$user_line_count))
-  #   rs$line_count <- floor(rs$content_size[["height"]] / rs$line_height)
-  # else
-  #   rs$line_count <- rs$user_line_count
-  # if (debug)
-  #   print(paste0("Line Count: ", rs$line_count))
+  hdr <- get_page_header_rtf(rs)
+  ftr <- get_page_footer_rtf(rs)
   
-
+  # Small adjustment by one line height
+  rs$body_size <- 
+    c(height = (rs$content_size[[1]] * conv) - hdr$twips - ftr$twips - lh, 
+      width = rs$content_size[[2]] * conv)
+  
+  if (debug) {
+    print(paste("Body Height:", rs$body_size[[1]]))
+    print(paste("Body Width:", rs$body_size[[2]]))
+  }
+  
   
   return(rs)
 }

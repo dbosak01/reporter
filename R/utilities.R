@@ -770,31 +770,9 @@ get_header_height <- function(rs) {
   if(length(rs$page_header_left) < length(rs$page_header_right))
     phdr <- rs$page_header_right
   
-  if (rs$output_type == "docx") { 
-    
-    # DOCX not available
-    
-    # hh <- sum(strheight(phdr, units = "inches", family = rs$font_family))
-    # 
-    # # Get height of titles
-    # th <- sum(strheight(rs$titles, units = "inches", family = rs$font_family))
-    # 
-    # # Add buffer for table margins, etc.
-    # buff <- .1  # Will need to adjust this
-    # 
-    # if (rs$units == "cm") {
-    #   hh <- ccm(hh)
-    #   th <- ccm(th)
-    #   buff <- ccm(buff)
-    # }
-    
-  } else {
-    
-    hh <- length(phdr) * rs$line_height
-    th <- length(rs$titles) * rs$line_height
-    buff <- 0
-    
-  }
+  hh <- length(phdr) * rs$row_height
+  th <- length(rs$titles) * rs$row_height
+  buff <- 0
   
   # Add all heights
   ret <- hh + th + buff
@@ -812,32 +790,10 @@ get_footer_height <- function(rs) {
   if(length(pftr) < length(rs$page_footer_center))
     pftr <- rs$page_footer_center
   
-  if (rs$output_type == "docx") {
-  
-    # DOCX not available
+  fh <- length(pftr) * rs$row_height
+  fth <- length(rs$footnotes) * rs$row_height
+  buff <- rs$row_height # Space between footnotes and page footer
     
-    # fh <- sum(strheight(pftr, units = "inches", family = rs$font_family))
-    # 
-    # # Get height of footnotes
-    # fth <- sum(strheight(rs$footnotes, units = "inches", family = rs$font_family))
-    # 
-    # # Add buffer for table margins, etc.
-    # buff <- .1  # Need to adjust
-    # 
-    # if (rs$units == "cm") {
-    #   fh <- ccm(fh)
-    #   fth <- ccm(fth)
-    #   buff <- ccm(buff)
-    # }
-    
-  } else {
-    
-    fh <- length(pftr) * rs$line_height
-    fth <- length(rs$footnotes) * rs$line_height
-    buff <- rs$line_height # Space between footnotes and page footer
-    
-  }
-  
   # Add all heights
   ret <- fh + fth + buff
   
@@ -884,47 +840,5 @@ get_excess_lines <- function(txt, width, font, font_size = 10, units = "inches")
   return(res)
 }
 
-# 
-# getCols <- function(vars = NULL, env = environment(), vars_c = NULL) {
-#   
-#   if (!is.null(vars)) {
-#     print(typeof(substitute(vars, env = env)))
-#           
-#     # Determine if it is a vector or not.  "language" is a vector.
-#     if (typeof(substitute(vars, env = env)) == "language") 
-#       v <- substitute(vars, env = environment())
-#     else {
-#       v <- substitute(list(vars), env = env)
-#     }
-#     
-#     # Turn each item into a character
-#     vars_c <- c()
-#     if (length(v) > 1) {
-#       for (i in 2:length(v)) {
-#         if (suppressWarnings(!is.na(as.integer(as.character(v[[i]])))))
-#           vars_c[[length(vars_c) + 1]] <- as.integer(as.character(v[[i]])) 
-#         else
-#           vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
-#       }
-#       
-#     }
-#   
-#     # Convert list to vector
-#     vars_c <- unlist(vars_c)
-#   
-#   }
-#   
-#   return(vars_c)
-#   
-# }
-# 
-# 
-# getCols(fork)
-# getCols("fork")
-# getCols(1)
-# getCols(c(fork, bork))
-# getCols(c("fork", "bork"))
-# getCols(c(1, 2))
-# v <- c("fork", "bork")
-# getCols(vars_c = v)
+
 

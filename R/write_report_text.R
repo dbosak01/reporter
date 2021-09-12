@@ -542,7 +542,7 @@ page_setup <- function(rs) {
   debug <- FALSE
   
   if (debug) {
-    print(paste("Line height:", rs$line_height))
+    print(paste("Row height:", rs$row_height))
     print(paste("Character width:", rs$char_width))
   }
   
@@ -566,7 +566,7 @@ page_setup <- function(rs) {
   
   # Line count is the number of lines that will fit in the content size height
   if (is.null(rs$user_line_count))
-    rs$line_count <- floor(rs$content_size[["height"]] / rs$line_height)
+    rs$line_count <- floor(rs$content_size[["height"]] / rs$row_height)
   else
     rs$line_count <- rs$user_line_count
   if (debug)
@@ -604,7 +604,7 @@ page_setup <- function(rs) {
   
   # Calculate blank margins, if specified
   if (rs$blank_margins) {
-    rs$blank_margin_top <- floor((rs$margin_top - rs$min_margin) / rs$line_height)
+    rs$blank_margin_top <- floor((rs$margin_top - rs$min_margin) / rs$row_height)
   } else 
     rs$blank_margin_top <- 0
   if (debug)

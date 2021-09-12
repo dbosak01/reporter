@@ -286,7 +286,7 @@ get_plot_body <- function(plt, plot_path, align, rs,
   s <- c(paste0("```", pltpth, "|", plt$height, 
                   "|", plt$width, "|", align, "```"))
   
-  h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed? Appears so.
+  h <- ceiling(plt$height / rs$row_height) + 1  # adjustment needed? Appears so.
 
   fill <- rep("```fill```", h) 
   s <- c(s, fill)
@@ -479,7 +479,7 @@ get_plot_body_rtf <- function(plt, plot_path, align, rs,
   s <- c(paste0("```", pltpth, "|", plt$height, 
                 "|", plt$width, "|", align, "```"))
   
-  h <- ceiling(plt$height / rs$line_height) + 1  # adjustment needed? Appears so.
+  h <- ceiling(plt$height / rs$row_height) + 1  # adjustment needed? Appears so.
   
   fill <- rep("```fill```", h) 
   s <- c(s, fill)

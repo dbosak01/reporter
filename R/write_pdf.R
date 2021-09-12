@@ -447,7 +447,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
 #' @noRd
 calc_points <- function(cnt, margin_left, margin_top, 
                         page_height, page_width, 
-                        units, line_height) {
+                        units, row_height) {
   
   pw <- page_width
   ph <- page_height
@@ -490,7 +490,7 @@ calc_points <- function(cnt, margin_left, margin_top,
       ret$xpos <- ((pw * inchsize)/2) - (ret$wth / 2)
     
     ret$ypos <- (ph * inchsize) - ret$hgt - 
-      (line_height * (cnt$line_start - 1)) - (mt * inchsize)
+      (row_height * (cnt$line_start - 1)) - (mt * inchsize)
     
   } else {
     ret$xpos <- xp * inchsize

@@ -88,10 +88,6 @@ test_that("get_splits_text works as expected", {
 
 test_that("prep_data works as expected", {
   
-  # smp <- sample(1:nrow(iris), 20)
-  # dat <- iris[smp, ]
-  # datx <- dat[order(dat$Species), ]
-  # datx$Species <- as.character(datx$Species)
    mw <- max(nchar(as.character(iris$Species)))
   
   

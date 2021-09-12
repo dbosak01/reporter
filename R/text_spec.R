@@ -299,8 +299,6 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     
   }
   
-
-  
   return(ret)
   
 }
@@ -308,8 +306,9 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
 
 # Write RTF Functions -------------------------------------------------------
 
+
 #' @noRd
-create_text_pages_rtf <- function(rs, cntnt, lpg_rows, conv) {
+create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
   
   if (!"report_spec" %in% class(rs))
     stop("Report spec expected for parameter rs")
@@ -327,7 +326,7 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_rows, conv) {
     w <- txt$width
   
   rws <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
-                           lpg_rows, cntnt$blank_row, conv)
+                           lpg_twips, content_blank_row)
   
   return(rws)
   
@@ -337,16 +336,30 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_rows, conv) {
 #' Create list of vectors of strings for each page 
 #' @import stringi
 #' @noRd
-get_text_body_rtf <- function(rs, txt, line_width, line_count, lpg_rows, 
+get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips, 
                               content_blank_row, conv) {
 
+  bh <- rs$body_size[["height"]]
+  bw <- rs$body_size[["width"]]
+  lw <- rs$content_size[["width"]]
+  conv <- rs$twip_conversion
   
-  # Get titles and footnotes
-  ttls <- get_titles_rtf(txt$titles, line_width, conv) 
-  ftnts <- get_footnotes_rtf(txt$footnotes, line_width, conv) 
-  ttl_hdr <- get_title_header_rtf(txt$title_hdr, line_width, conv)
+  # Get report titles and footnotes
+  rttls <- get_titles_rtf(rs$titles, lw, rs)
+  rftnts <- get_titles_rtf(rs$footnotes, lw, rs)
+  rttl_hdr <- get_title_header_rtf(rs$title_hdr, lw, rs)
   
-
+  # Get content titles and footnotes
+  ttls <- get_titles_rtf(txt$titles, width, rs) 
+  ftnts <- get_footnotes_rtf(txt$footnotes, width, rs) 
+  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs)
+  
+  hgt <- bh - rttls$twips - rftnts$twips - rttl_hdr$twips 
+  hgt <- hgt - ttls$twips - ftnts$twips - ttl_hdr$twips 
+  
+  
+  txtpgs <- get_text_pages_rtf(rs, txt$text, hgt, width, lpg_twips)
+  
   if (txt$align == "right") 
     algn <- "\\qr"
   else if (txt$align %in% c("center", "centre"))
@@ -354,31 +367,44 @@ get_text_body_rtf <- function(rs, txt, line_width, line_count, lpg_rows,
   else 
     algn <- "\\ql"
   
-  s <- paste0( algn, " ", txt$text, "\\line\\pard")
+  ret <- list()
   
-  print(get_lines_rtf(txt$text, line_width, rs$font, rs$font_size, rs$units))
-  
+  for (i in seq_along(txtpgs)) {
+    
+    pg <- txtpgs[[i]]
+    
+    s <- paste0( algn, " ", pg, "\\line\\pard")
 
-  # Add blank above content if requested
-  a <- NULL
-  if (content_blank_row %in% c("both", "above"))
-    a <- "\\line"
-  
-  
-  # Add blank below content if requested
-  b <- NULL
-  if (content_blank_row %in% c("both", "below"))
-    b <- "\\line"
-  
-  # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, s, ftnts, b)
-  
-  ret <- rws
-  # Page list
-  #ret <- list()  
-  
-  # Create tmp variable for 1 page of content
-  tmp <- c()
+
+    # Add blank above content if requested
+    a <- NULL
+    if (i == 1 & content_blank_row %in% c("both", "above"))
+      a <- "\\line"
+    
+    
+    # Add blank below content if requested
+    b <- NULL
+    if (i == length(txtpgs) & content_blank_row %in% c("both", "below"))
+      b <- "\\line"
+    else if (length(txtpgs) > 1 & i != length(txtpgs))
+      b <- rs$page_break_rtf
+    
+    spcs <- NULL
+    
+    
+    # Combine titles, blanks, body, and footnotes
+    ret[[length(ret) + 1]] <- c(a, rttls$rtf, rttl_hdr$rtf,
+                              ttls$rtf, s, spcs, ftnts$rtf, rftnts$rtf, b)
+    
+    
+  }
+
+  # ret <- rws
+  # # Page list
+  # #ret <- list()  
+  # 
+  # # Create tmp variable for 1 page of content
+  # tmp <- c()
   
   # # Offset the first page with remaining rows from the 
   # # last page of the previous content
@@ -421,6 +447,92 @@ get_text_body_rtf <- function(rs, txt, line_width, line_count, lpg_rows,
   
   
   return(ret)
+  
+}
+
+#' @description height in twips, width in unit of measure.
+#' @noRd
+get_text_pages_rtf <- function(rs, txt, height, width, lpg_twips) {
+  
+  lh <- rs$line_height
+  offst <- floor(lpg_twips / lh)
+  lns <- floor(height / lh) 
+  print(height)
+  print(lh)
+  print(lns)
+  
+  tpgs <- split_text_rtf(txt, lns, width, rs$font, rs$font_size, rs$units, offst)
+  
+
+  
+  return(tpgs)
+}
+
+
+#' @description lines is the number of lines per page or cell before breaking.
+#' Width is the width of the page or cell.
+#' @noRd
+split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0) {
+  
+  pgs <- c()
+  lnlngth <- 0
+  ln <- c()
+  cnt <- 0
+  lns <- c()
+  
+  # Split text into words
+  wrds <- strsplit(txt, " ")[[1]]
+  
+  # Set font
+  f <- "mono"
+  if (tolower(font) == "arial")
+    f <- "sans"
+  else if (tolower(font) == "times")
+    f <- "serif"
+  
+  # Set font and size
+  par(family = f, ps = font_size)
+
+  # Get lengths for all words plus space after
+  lngths <-  (strwidth(wrds, units = units) + strwidth(" ", units = units)) * 1.03
+
+  # Loop through words and add up lines
+  for (i in seq_along(wrds)) {
+    
+    lnlngth <- lnlngth + lngths[i] 
+    if (lnlngth <= width)
+      ln <- append(ln, wrds[i])
+    else {
+      cnt <- cnt + 1
+
+      # If cnt exceeds allowed lines per page, start a new page
+      if (cnt <= lines - offset) {
+        lns <- append(lns, paste(ln, collapse = " "))
+        ln <- wrds[i]
+        lnlngth <- lngths[i]
+      } else {
+        pgs <- append(pgs, paste(lns, collapse = " "))
+
+        lns <- paste(ln, collapse = " ")
+        ln <- wrds[i]
+        lnlngth <- lngths[i]
+        # After first page, set this to zero.
+        offset <- 0
+        cnt <- 1
+      }
+
+    }
+    
+    
+  }
+  
+  if (length(lns) > 0 | length(ln) > 0) {
+    lns <- append(lns, paste(ln, collapse = " "))
+    
+    pgs <- append(pgs, paste(lns, collapse = " ")) 
+  }
+  
+  return(pgs)
   
 }
 

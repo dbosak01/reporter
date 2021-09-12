@@ -12,7 +12,7 @@ get_page_header_rtf <- function(rs) {
   hl <- rs$page_header_left
   hr <- rs$page_header_right
   conv <- rs$twip_conversion
-  lh <- rs$line_height
+  lh <- rs$row_height
   
   maxh <- max(length(hl), length(hr))
   
@@ -33,7 +33,7 @@ get_page_header_rtf <- function(rs) {
       
       if (length(hl) >= i) {
         ret <- paste0(ret, hl[[i]], "\\cell")
-        cnt <- cnt + get_excess_lines(hl[[i]], rs$content_size[["width"]], 
+        cnt <- cnt + get_excess_lines(hl[[i]], rs$content_size[["width"]]/2, 
                                       rs$font, 
                                       rs$font_size, rs$units)
         
@@ -42,7 +42,7 @@ get_page_header_rtf <- function(rs) {
       
       if (length(hr) >= i) {
         ret <- paste0(ret, "\\qr ", hr[[i]], "\\cell\\row\n")
-        cnt <- cnt + get_excess_lines(hr[[i]], rs$content_size[["width"]], 
+        cnt <- cnt + get_excess_lines(hr[[i]], rs$content_size[["width"]]/2, 
                                       rs$font, 
                                       rs$font_size, rs$units)
       } else 
@@ -70,11 +70,14 @@ get_page_header_rtf <- function(rs) {
 get_page_footer_rtf <- function(rs) {
   
   ret <- ""
+  cnt <- 0
+  twps <- 0
   
   fl <- rs$page_footer_left
   fc <- rs$page_footer_center
   fr <- rs$page_footer_right
   conv <- rs$twip_conversion
+  lh <- rs$row_height
   
   maxf <- max(length(fl), length(fc), length(fr))
   
@@ -86,6 +89,8 @@ get_page_footer_rtf <- function(rs) {
     c1 <- c3 / 3
     c2 <- c1 * 2
     
+    cnt <- maxf
+    
     ret <- paste0("{\\footer \\fs", fs)
     
     for (i in seq(1, maxf)) {
@@ -93,19 +98,25 @@ get_page_footer_rtf <- function(rs) {
       ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
                     "\\cellx", c2 , "\\cellx", c3, " ")
       
-      if (length(fl) >= i)
+      if (length(fl) >= i) {
         ret <- paste0(ret, fl[[i]], "\\cell")
-      else 
+        cnt <- cnt + get_excess_lines(fl[[i]], rs$content_size[["width"]] / 3,
+                                      rs$font, rs$font_size, rs$units)
+      } else 
         ret <- paste0(ret, "\\cell")
       
-      if (length(fc) >= i)
+      if (length(fc) >= i) {
         ret <- paste0(ret, "\\qc ", fc[[i]], "\\cell")
-      else 
+        cnt <- cnt + get_excess_lines(fc[[i]], rs$content_size[["width"]] / 3,
+                                      rs$font, rs$font_size, rs$units)
+      } else 
         ret <- paste0(ret, "\\qc \\cell")
       
-      if (length(fr) >= i)
+      if (length(fr) >= i) {
         ret <- paste0(ret, "\\qr ", fr[[i]], "\\cell\\row\n")
-      else 
+        cnt <- cnt + get_excess_lines(fr[[i]], rs$content_size[["width"]] / 3,
+                                      rs$font, rs$font_size, rs$units)
+      } else 
         ret <- paste0(ret, "\\qr \\cell\\row\n")
       
     }
@@ -113,7 +124,11 @@ get_page_footer_rtf <- function(rs) {
     ret <- paste0(ret, "}")
   }
   
-  return(ret)
+  res <- list(rtf = paste0(ret, collapse = ""),
+              lines = cnt, 
+              twips = cnt * lh)
+  
+  return(res)
 }
 
 #' @noRd
@@ -121,17 +136,22 @@ get_titles_rtf <- function(ttllst, width, rs) {
   
   ret <- c()
   cnt <- 0
+  twps <- 0
   
   conv <- rs$twip_conversion
+  lh <- rs$row_height
   
   w <- width * conv
+
   
   if (length(ttllst) > 0) {
     
     for (ttls in ttllst) {
       
-      if (any(ttls$blank_row %in% c("above", "both")))
+      if (any(ttls$blank_row %in% c("above", "both"))) {
         ret <- append(ret, "\\line\n")
+        cnt <- cnt + 1 
+      }
       
       if (ttls$align == "center")
         algn <- "\\qc"
@@ -144,36 +164,49 @@ get_titles_rtf <- function(ttllst, width, rs) {
         
         ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w, 
                                   algn, " ", ttl, "\\cell\\row\n"))
+        cnt <- cnt + 1
+        cnt <- cnt + get_excess_lines(ttl, width, rs$font, 
+                                      rs$font_size, rs$units)
       }
       
       
-      if (any(ttls$blank_row %in% c("below", "both")))
-        ret <- append(ret, "\\line\n")
+      if (any(ttls$blank_row %in% c("below", "both"))) {
+        ret <- append(ret, "\\par\n")
+        cnt <- cnt + 1
+      }
+        
       
     }
     
     ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
   }
   
-  res <- list(rtf = paste0(ret, collapse = ""), lines = cnt)
+  res <- list(rtf = paste0(ret, collapse = ""), 
+              lines = cnt, 
+              twips = cnt * lh)
   
-  return(ret)
+  return(res)
 }
 
 #' @noRd
-get_footnotes_rtf <- function(ftnlst, width, conv) {
+get_footnotes_rtf <- function(ftnlst, width, rs) {
   
   ret <- c()
+  cnt <- 0
+  twps <- 0
   
-  w <- width * conv
+  w <- width * rs$twip_conversion 
+  lh <- rs$row_height
   
   if (length(ftnlst) > 0) {
     
     for (ftnts in ftnlst) {
       
       
-      if (any(ftnts$blank_row %in% c("above", "both")))
+      if (any(ftnts$blank_row %in% c("above", "both"))) {
         ret <- append(ret, "\\line\n")
+        cnt <- cnt + 1 
+      }
       
       if (ftnts$align == "center")
         algn <- "\\qc"
@@ -186,24 +219,37 @@ get_footnotes_rtf <- function(ftnlst, width, conv) {
         
         ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w, 
                                   algn, " ", ftn, "\\cell\\row\n"))
+        cnt <- cnt + 1
+        cnt <- cnt + get_excess_lines(ftn, w, rs$font, rs$font_size, rs$units)
       }
       
-      if (any(ftnts$blank_row %in% c("below", "both")))
+      if (any(ftnts$blank_row %in% c("below", "both"))) {
         ret <- append(ret, "\\line\n")
+        cnt <- cnt + 1
+      }
     }
     
     ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
   }
   
-  return(ret)
+  
+  res <- list(rtf = paste0(ret, collapse = ""),
+              lines = cnt, 
+              twips = cnt * lh)
+  
+  return(res)
 }
 
 
-get_title_header_rtf <- function(thdrlst, width, conv) {
+get_title_header_rtf <- function(thdrlst, width, rs) {
   
   ret <- c()
+  cnt <- 0
+  twps <- 0
   
-  w <- width * conv
+  w1 <- width * .7 * rs$twip_conversion
+  w2 <- width * .3 * rs$twip_conversion
+  lh <- rs$row_height
   
   if (length(thdrlst) > 0) {
     
@@ -211,8 +257,10 @@ get_title_header_rtf <- function(thdrlst, width, conv) {
       
       mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
       
-      if (any(ttlhdr$blank_row %in% c("above", "both")))
+      if (any(ttlhdr$blank_row %in% c("above", "both"))) {
         ret <- append(ret, "\\line\n")
+        cnt <- cnt + 1
+      }
       
       for(i in seq_len(mx)) {
       
@@ -227,19 +275,30 @@ get_title_header_rtf <- function(thdrlst, width, conv) {
         else 
           hdr <- ""
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w, 
+        ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w1, "\\cellx", w2,
                                   "\\ql ", ttl, "\\cell\\qr ",
                                   hdr, "\\cell\\row\n"))
+        cnt <- cnt + 1
+        cnt <- cnt + get_excess_lines(ttl, width * .7, 
+                                      rs$font, rs$font_size, rs$units)
+        cnt <- cnt + get_excess_lines(hdr, width * .3, 
+                                      rs$font, rs$font_size, rs$units)
       }
       
-      if (any(ttlhdr$blank_row %in% c("below", "both")))
+      if (any(ttlhdr$blank_row %in% c("below", "both"))) {
         ret <- append(ret, "\\line\n")
+        cnt <- cnt + 1
+      }
     }
     
     ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
   }
   
-  return(ret)
+  res <- list(rtf = paste0(ret, collapse = ""),
+              lines = cnt,
+              twips = cnt * lh)
+  
+  return(res)
 }
 
 

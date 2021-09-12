@@ -72,6 +72,15 @@
 #' To display missing values as is, set the missing parameter to NULL.  To
 #' replace missing values with a character string (such as ".", "-", or "<NA>")
 #' pass the desired character string to the missing parameter.
+#' @param font The font to use on the report.  The font specified will be
+#' used for the entire report.  Valid values are "Courier", "Arial", "Times",
+#' and "fixed".  The value of "fixed" will create a fixed-width, text style
+#' report in Courier font.  The \code{font} parameter only applies to RTF reports
+#' at this time.  The default value is "fixed".
+#' @param font_size The size of the font to use on the report. The \code{font_size}
+#' specified will be used for the entire report.  Valid values are 8, 10, 
+#' and 12.  The \code{font_size} parameter only applies to RTF and PDF output types.
+#' The default value is 10.
 #' @return A new report_spec object.
 #' @family report
 #' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
@@ -131,10 +140,10 @@
 #' @export
 create_report <- function(file_path = "", output_type = "TXT", 
                           orientation ="landscape", units = "inches",
-                          paper_size = "letter", missing = "") {#,
-                         # font = "fixed", font_size = NULL) {
-  font = "fixed"
-  font_size = NULL
+                          paper_size = "letter", missing = "",
+                          font = "fixed", font_size = NULL) {
+  # font = "fixed"
+  # font_size = NULL
 
   x <- structure(list(), class = c("report_spec", "list"))
 
@@ -215,7 +224,7 @@ create_report <- function(file_path = "", output_type = "TXT",
   if (output_type %in% c("TXT", "PDF", "RTF")) {
     
     # Set default options for text
-    # This sets line_height and char_width
+    # This sets row_height and char_width
     # which are needed for all conversions from 
     # units to text
     x <- options_fixed(x)
@@ -658,7 +667,7 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
 
   x$font_size <- font_size
   x$char_width <- 1 / x$cpuom
-  x$line_height <- 1 / x$lpuom
+  x$row_height <- 1 / x$lpuom
   x$user_line_size <- line_size
   x$user_line_count <- line_count
   
