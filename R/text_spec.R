@@ -442,11 +442,15 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
   else if (tolower(font) == "times")
     f <- "serif"
   
+  lngths <- c()
+  
   # Set font and size
-  par(family = f, ps = font_size)
-
-  # Get lengths for all words plus space after
-  lngths <-  (strwidth(wrds, units = units) + strwidth(" ", units = units)) * 1.03
+  R.devices::devEval(c("pdf"), name = "Get Font width", {
+    par(family = f, ps = font_size)
+  
+    # Get lengths for all words plus space after
+    lngths <-  (strwidth(wrds, units = units) + strwidth(" ", units = units)) * 1.03
+  })
 
   # Loop through words and add up lines
   for (i in seq_along(wrds)) {

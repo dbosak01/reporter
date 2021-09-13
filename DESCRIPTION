@@ -37,6 +37,7 @@ Suggests:
 Imports: fmtr,
          stringi,
          crayon,
-         jpeg
+         jpeg,
+         R.devices
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

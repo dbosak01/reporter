@@ -809,6 +809,7 @@ ccm <- function(x) {
 
 #' @description Estimate number of wraps based on text, width, and a font.
 #' @import graphics
+#' @import R.devices
 #' @noRd
 get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   
@@ -819,8 +820,11 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   else if (tolower(font) == "times")
     f <- "serif"
   
-  par(family = f, ps = font_size)
-  val <- strwidth(txt, units = units) * .975 / width
+  R.devices::devEval(c("pdf"), name = "Get Font width", {
+    par(family = f, ps = font_size)
+    val <- strwidth(txt, units = units) * .975 / width
+  })
+  
   # print(val)
   ret <- ceiling(val)
 
