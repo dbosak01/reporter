@@ -151,10 +151,6 @@ test_that("rtf2-3: One page text spec works as expected.", {
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
-    # page_header("Left", c("Right1",  paste("Right here is something that might wrap.",
-    #                                        "If it is long enough so let's make it longer", 
-    #                                        "If it is long enough so let's make it longer",
-    #                                        "If it is long enough so let's make it longer"))) %>%
     page_header("Left", "Right") %>% 
     add_content(txt) %>%
     page_footer("Left1", "Center1", "Right1")
@@ -248,7 +244,7 @@ test_that("rtf2-5: split_text_rtf works as expected.", {
   
 })
 
-test_that("rtf2-6: Two page text spec works as expected.", {
+test_that("rtf2-6: Two page text spec works as expected in 12pt font.", {
   
   
   fp <- file.path(base_path, "rtf2/test6.rtf")
@@ -262,10 +258,6 @@ test_that("rtf2-6: Two page text spec works as expected.", {
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
-    # page_header("Left", c("Right1",  paste("Right here is something that might wrap.",
-    #                                        "If it is long enough so let's make it longer", 
-    #                                        "If it is long enough so let's make it longer",
-    #                                        "If it is long enough so let's make it longer"))) %>%
     page_header("Left", "Right") %>% 
     add_content(txt) %>%
     page_footer("Left1", "Center1", "Right1")
@@ -279,7 +271,7 @@ test_that("rtf2-6: Two page text spec works as expected.", {
 })
 
 
-test_that("rtf2-6: Two page text spec increased margins works as expected.", {
+test_that("rtf2-6: Three page text spec increased margins works as expected.", {
   
   
   fp <- file.path(base_path, "rtf2/test7.rtf")
@@ -293,10 +285,6 @@ test_that("rtf2-6: Two page text spec increased margins works as expected.", {
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 2, bottom = 2) %>%
-    # page_header("Left", c("Right1",  paste("Right here is something that might wrap.",
-    #                                        "If it is long enough so let's make it longer", 
-    #                                        "If it is long enough so let's make it longer",
-    #                                        "If it is long enough so let's make it longer"))) %>%
     page_header("Left", c("Right1", "Right2")) %>% 
     add_content(txt) %>%
     page_footer("Left1", "Center1", "Right1")
@@ -308,3 +296,58 @@ test_that("rtf2-6: Two page text spec increased margins works as expected.", {
   
   
 })
+
+
+test_that("rtf2-6: Two page text spec works as expected in 10pt font.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test8.rtf")
+  
+  cnttxt <- paste(rep(cnt, 12), collapse = "")
+  
+  txt <- create_text(cnttxt) %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>% 
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("rtf2-6: Two page text spec works as expected in 8pt font.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test9.rtf")
+  
+  cnttxt <- paste(rep(cnt, 20), collapse = "")
+  
+  txt <- create_text(cnttxt) %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 8) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>% 
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+

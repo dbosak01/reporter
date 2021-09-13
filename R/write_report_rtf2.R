@@ -354,18 +354,16 @@ page_setup_rtf <- function(rs) {
   
   
   if (rs$font_size == 8) {
-    rh <- round(.11 * 1440)
-    lh <- round(.1 * 1440)
+    rh <- 185 #round(.11 * 1440)
+    lh <- 185 #round(.1 * 1440) 
     pb <- "\\page\\fs0\\par\\fs16\\pard"
   } else if (rs$font_size == 10) {
-    rh <- round(.16 * 1440)
-    lh <- round(.1875 * 1440)  # 270
-    rh <- lh
+    rh <- 225 #round(.165 * 1440)
+    lh <- 225 #round(.165 * 1440)  # 270
     pb <- "\\page\\fs0\\par\\fs20\\pard"
   } else if (rs$font_size == 12) {
-    rh <- round(.2 * 1440)
-    lh <- round(.1875 * 1440) #270
-    rh <- lh
+    rh <- 270 #round(.2 * 1440)
+    lh <- 270 #round(.1875 * 1440) #270
     pb <- "\\page\\fs0\\par\\fs24\\pard"
   }
   

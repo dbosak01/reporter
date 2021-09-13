@@ -357,15 +357,14 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
   hgt <- bh - rttls$twips - rftnts$twips - rttl_hdr$twips 
   hgt <- hgt - ttls$twips - ftnts$twips - ttl_hdr$twips 
   
-  
-  txtpgs <- get_text_pages_rtf(rs, txt$text, hgt, width, lpg_twips)
-  
   if (txt$align == "right") 
     algn <- "\\qr"
   else if (txt$align %in% c("center", "centre"))
     algn <- "\\qc"
   else 
     algn <- "\\ql"
+  
+  txtpgs <- get_text_pages_rtf(rs, txt$text, hgt, width, lpg_twips)
   
   ret <- list()
   
@@ -399,53 +398,6 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
     
   }
 
-  # ret <- rws
-  # # Page list
-  # #ret <- list()  
-  # 
-  # # Create tmp variable for 1 page of content
-  # tmp <- c()
-  
-  # # Offset the first page with remaining rows from the 
-  # # last page of the previous content
-  # offset <- lpg_rows 
-  # #print(paste("Offset:", offset))
-  # 
-  # # Assign content to pages
-  # for (i in seq_along(rws)) {
-  #   if (length(tmp) < (line_count - offset)) {
-  #     
-  #     # Append to existing page
-  #     tmp[length(tmp) + 1] <- rws[i]
-  #     
-  #   } else {
-  #     
-  #     # Start a new page
-  #     ret[[length(ret) + 1]] <- pad_any(tmp, line_width, 
-  #                                       get_justify(txt$align))
-  #     tmp <- rws[i]
-  #     
-  #     # Set to zero on second page and leave it that way
-  #     offset <- 0  
-  #   }
-  # }
-  # 
-  # # Deal with last page
-  # if (length(tmp) > 0 ) {
-  #   
-  #   
-  #   # If page is not empty
-  #   if (max(nchar(trimws(tmp))) > 0) {
-  #     
-  #     # Add last page
-  #     ret[[length(ret) + 1]] <- pad_any(tmp, line_width, 
-  #                                       get_justify(txt$align))
-  #   }
-  #   
-  # }
-  
-  
-  
   return(ret)
   
 }
@@ -511,7 +463,7 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
         ln <- wrds[i]
         lnlngth <- lngths[i]
       } else {
-        pgs <- append(pgs, paste(lns, collapse = " "))
+        pgs[[length(pgs) + 1]] <- lns
 
         lns <- paste(ln, collapse = " ")
         ln <- wrds[i]
@@ -529,7 +481,7 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
   if (length(lns) > 0 | length(ln) > 0) {
     lns <- append(lns, paste(ln, collapse = " "))
     
-    pgs <- append(pgs, paste(lns, collapse = " ")) 
+    pgs[[length(pgs) + 1]] <- lns
   }
   
   return(pgs)
