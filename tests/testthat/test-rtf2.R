@@ -94,7 +94,7 @@ test_that("rtf2-1: Simplest table works as expected.", {
   dat <- mtcars[1:15, ]
   #attr(dat[[2]], "label") <- "Cylin."
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
@@ -271,7 +271,7 @@ test_that("rtf2-6: Two page text spec works as expected in 12pt font.", {
 })
 
 
-test_that("rtf2-6: Three page text spec increased margins works as expected.", {
+test_that("rtf2-7: Three page text spec increased margins works as expected.", {
 
 
   fp <- file.path(base_path, "rtf2/test7.rtf")
@@ -298,7 +298,7 @@ test_that("rtf2-6: Three page text spec increased margins works as expected.", {
 })
 
 
-test_that("rtf2-6: Two page text spec works as expected in 10pt font.", {
+test_that("rtf2-8: Two page text spec works as expected in 10pt font.", {
 
 
   fp <- file.path(base_path, "rtf2/test8.rtf")
@@ -325,7 +325,7 @@ test_that("rtf2-6: Two page text spec works as expected in 10pt font.", {
 })
 
 
-test_that("rtf2-6: Two page text spec works as expected in 8pt font.", {
+test_that("rtf2-9: Two page text spec works as expected in 8pt font.", {
 
 
   fp <- file.path(base_path, "rtf2/test9.rtf")
@@ -350,4 +350,49 @@ test_that("rtf2-6: Two page text spec works as expected in 8pt font.", {
 
 
 })
+
+test_that("rtf2-10: Long table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test10.rtf")
+  
+  dat <- iris
+  #attr(dat[[2]], "label") <- "Cylin."
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Irises") %>%
+    add_content(create_table(dat)) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-11: get_width function works as expected.", {
+  
+  res1 <- get_text_width("This is cool.", "Arial", 12)
+  res1
+  
+  res2 <- get_text_width("This is cool.", "Arial", 10)
+  res2
+  
+  expect_equal(res1 > res2, TRUE)
+
+  
+  res3 <- get_text_width("This is cool.", "Courier", 10)
+  res3
+  expect_equal(res2 < res3, TRUE)
+  
+
+})
+
+
 

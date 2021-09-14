@@ -211,3 +211,28 @@ test_that("get_col_formats works as expected", {
   
 })
 
+test_that("get_page_wraps works as expected.", {
+  
+  
+  tbl <- create_table(mtcars) %>% 
+    define(mpg, width = 1) %>% 
+    define(cyl, width = 1) %>% 
+    define(disp, width = 1) %>% 
+    define(hp, width = 1) %>% 
+    define(drat, width = 1) %>% 
+    define(wt, width = 1)
+  
+  wdths <- rep(1, 11)
+  names(wdths) <- names(mtcars)
+
+  res <- get_page_wraps(4, tbl, wdths, .2)
+    
+  expect_equal(length(res), 4)
+  expect_equal(all(c("mpg", "cyl", "disp") %in% res[[1]]), TRUE)
+  expect_equal(all(c("mpg", "cyl", "disp") %in% res[[2]]), FALSE)
+
+  
+})
+
+
+

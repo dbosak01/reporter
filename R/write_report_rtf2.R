@@ -196,10 +196,184 @@ paginate_content_rtf <- function(rs) {
 
 # Spec Functions ----------------------------------------------------------
 
+
 #' @noRd
 create_table_pages_rtf <- function(rs, cntnt, lpg_twips) {
   
+  ts <- cntnt$object
+  content_blank_row <- cntnt$blank_row
+  
+  pgby_var <- NA
+  if (!is.null(rs$page_by))
+    pgby_var <- rs$page_by$var
+  else if (!is.null(ts$page_by))
+    pgby_var <- ts$page_by$var
+  
+  
+  if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
+    
+    stop("ERROR: At least one column must be defined if show_cols = \"none\".")
+  }
+  
+  font_name <- rs$font
+  
+  # Set up control columns
+  dat <- as.data.frame(ts$data, stringsAsFactors = FALSE)  
+  dat$..blank <- ""
+  dat$..row <- NA
+  dat$..page_by <- NA
+  
+  # If page_break variable has been defined, use it
+  if (is.null(ts$page_var)) {
+    if (is.na(pgby_var))
+      dat$..page <- NA
+    else 
+      dat$..page <-  dat[[pgby_var]]
+    
+  } else 
+    dat$..page <- dat[[ts$page_var]]
+  
+  # If page by is defined, use it
+  if (!is.na(pgby_var)) {
+    dat$..page_by <-  dat[[pgby_var]]
+    if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
+      message("Page by variable not sorted.")
+  }
+  
+  # Get vector of all included column names
+  # Not all columns in dataset are necessarily included
+  # depends on show_cols parameter on create_table and
+  # visible parameter on column definitions
+  keys <- get_table_cols(ts)
+  # print("keys")
+  # print(keys)
+  
+  # Filter dataset by included columns
+  dat <- get_data_subset(dat, keys, rs$preview)
+  # print("Key columns:")
+  # print(dat)
+  
+  # Update column definitions with column defaults
+  ts$col_defs <- set_column_defaults(ts, keys)
+  # print("col_defs:")
+  # print(ts$col_defs)
+  
+  # Get labels
+  labels <- get_labels(dat, ts)
+  # print("Labels:")
+  # print(labels)
+  
+  # Get column alignments
+  aligns <- get_aligns(dat, ts)
+  
+  # Get alignment for labels
+  # Follows column alignment by default
+  label_aligns <- get_label_aligns(ts, aligns)
+  # print("Label Aligns:")
+  # print(label_aligns)
+  
+  # Clear out existing formats
+  cdat <- clear_formats(dat)
+  
+  # Get column formats
+  formats(cdat) <- get_col_formats(dat, ts)
+  # print("formats:")
+  # print(formats(cdat))
+  
+  # Apply formatting
+  fdat <- fdata(cdat)
+  # print("fdata:")
+  # print(fdat)
+  
+  # Prep data for blank lines, indents, and stub columns
+  fdat <- prep_data(fdat, ts, rs$char_width, rs$missing)
+  # print("prep_data")
+  # print(fdat)
+  # str(fdat)
+  
+  # Reset keys, since prep_data can add/remove columns for stub
+  keys <- names(fdat)
+  # print("Keys")
+  # print(keys)
+  # print("Aligns")
+  # print(aligns)
+  
+  # Copy any width attributes to formatted data frame
+  if ("width" %in% ts$use_attributes)
+    widths(fdat) <- widths(dat)
+  # print("Original Widths")
+  # print(widths(dat))
+  
+  # Get column widths
+  widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width, rs$units) # ? fix this
+  print("Widths UOM")
+  print(widths_uom)
+  
+  # Split long text strings into multiple rows
+  #fdat <- split_cells(fdat, widths_twips)  # ?  Work on this
+  print("split_cells")
+  print(fdat)
+  
+  
+  # Break columns into pages
+  gtr <- .2
+  wraps <- get_page_wraps(rs$content_size[["width"]], ts, widths_uom, gtr)
+  # print("wraps")
+  # print(wraps)
+  
+  
+  # Create a temporary page info to pass into get_content_offsets
+  tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
+                 label_align = label_aligns)
+  # print("Temp PI")
+  # print(tmp_pi)
+  
+  # Offsets are needed to calculate splits and page breaks
+  content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row)
+  
+  # split rows
+  splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
+                            lpg_twips, content_offset, ts)
+  # print("splits")
+  # print(splits)
+  
+  
+  
+  ### Old
+  
+  
+  ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], rs)
+  
+  ts <- cntnt$object
+  
+  dt <- ts$data
+  conv <- rs$twip_conversion
+  
+  wdths <- rep(.75, ncol(dt)) #get_rtf_widths
+  
+  # rs, tbl, conv, widths, 
+  # algns, halgns, talgn, brdrs
+  
+  algns <- rep("left", ncol(dt))
+  halgns <- algns
+  talgn <- cntnt$align 
+  brdrs <- "outside"
+  
+  
+  tbl <- get_table_lines_rtf(rs, dt, conv, wdths, algns, 
+                             halgns, talgn, brdrs)
+  
+  
+  lns <- append(ttls$rtf, tbl)
+  
+  return(lns)
+}
 
+
+
+#' @noRd
+create_table_pages_rtf_back <- function(rs, cntnt, lpg_twips) {
+  
   ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], rs)
   
   ts <- cntnt$object

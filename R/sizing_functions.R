@@ -1,7 +1,7 @@
 
 
 
-# Sizing Functions --------------------------------------------------------
+# Text Sizing Functions --------------------------------------------------------
 
 # @description Splits the data according to height
 # @details Logic is to try and estimate the vertical height of each cell
@@ -94,10 +94,112 @@ get_data_subset <- function(dat, keys, pages) {
   return(ret)
 }
 
+#' Gets the page wraps for both text and variable width reports
+#' @noRd
+get_page_wraps <- function(content_width, ts, widths, gutter) {
+  
+  defs <- ts$col_defs
+  
+  # Get ID variable from definitions
+  # These need to be shown on each page
+  # Also get page wraps
+  if (!is.null(ts$stub)) 
+    id_vars <- c("stub")
+  else
+    id_vars <- c()
+  
+  wraps <- c()
+  nms <- c()
+  for (def in defs) {
+    if (!is.null(def$id_var) && def$id_var)
+      id_vars[length(id_vars) + 1] <- def$var_c
+    
+    wraps[length(wraps) + 1] <- def$page_wrap
+    nms[length(nms) + 1] <- def$var_c
+  }
+  names(wraps) <- nms
+  
+  #print(id_vars)
+  
+  ret <- list() # list of columns for each page
+  pg <- c()     # columns on a page
+  tw <- content_width  # width of the page
+  
+  for (nm in names(widths)) {
+    
+    if (!is.control(nm)) {
+      #If ID vars exist, add them to list
+      if (length(pg) == 0 && length(id_vars) > 0) {
+        
+        # Plus gutter in between columns
+        pg <- widths[id_vars] + gutter
+        
+        if (any(is.na(pg)))
+          stop(paste0("ID column width for '", 
+                      paste(id_vars[is.na(pg)], sep = " ", collapse = ""),
+                      " not found."))
+        
+        names(pg) <- id_vars
+        
+      }
+      
+      # Force a page wrap if requested in definition
+      force_wrap <- FALSE
+      if (is.null(wraps) == FALSE) 
+        if (is.na(wraps[nm]) == FALSE) 
+          if (wraps[nm] == TRUE)
+            force_wrap <- TRUE
+      
+      # print(paste("Name:", nm))
+      # print(paste("Force wrap:", force_wrap))
+      # print(paste("Sum of widths:", sum(pg, widths[nm] + 1)))
+      # print(paste("Page:", pg))
+      # print(paste("Widths:", widths[nm]))
+      # print(paste("Total width:", tw))
+      # print("")
+      
+      
+      if ((sum(pg, widths[nm]) >  tw | force_wrap) & (!nm %in% id_vars)) {
+        
+        # If sum of widths exceed page size, add page to list and reset pg
+        # Also add control cols so downstream functions can use them
+        ret[[length(ret) + 1]] <- c(names(pg), control_cols)
+        pg <- c()
+        
+        # Add widths for ID vars
+        if (length(id_vars) > 0) {
+          pg <- widths[id_vars] + gutter
+          names(pg) <- id_vars
+        }
+        
+        # Add width for current column
+        pg[nm] <- widths[nm] + gutter
+        
+      } else {
+        
+        # If sum of widths does not exceed page size, add to pg and keep going
+        pg[nm] <- widths[nm] + gutter
+        
+      } 
+    }
+    
+  }
+  
+  # Pick any remaining columns
+  if (length(pg) > 0) {
+    # Add page to list
+    ret[[length(ret) + 1]] <- c(names(pg), control_cols)
+  }
+  
+  
+  return(ret)
+  
+}
+
 
 #' Gets the page wraps
 #' @noRd
-get_page_wraps <- function(line_size, ts, widths) {
+get_page_wraps_back <- function(line_size, ts, widths) {
   
   defs <- ts$col_defs
   
@@ -196,6 +298,7 @@ get_page_wraps <- function(line_size, ts, widths) {
   return(ret)
   
 }
+
 
 
 #' @description Preps the data
@@ -522,6 +625,207 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
   }
   
 
+  
+  return(ret)
+}
+
+
+
+#' Get the column widths
+# @import graphics
+#' @import stringi
+#' @noRd
+get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
+  
+  
+  # Need to redo this function for non-character widths
+  
+  char_width <- 1
+  
+  defs <- ts$col_defs
+  if (uom == "cm") {
+    #12.7
+    max_col_width = 12.7  
+    min_col_width = .254
+  } else if (uom == "inches") {
+    max_col_width = 5  
+    min_col_width = .1
+  } else if (uom == "char") {
+    max_col_width = 60
+    min_col_width = 2
+  }
+  
+  nms <- names(labels)
+  #print(nms)
+  dwidths <- c()
+  mwidths <- c()
+  
+  # Set default widths based on length of data
+  for (nm in nms) {
+    
+    #w <- max(strwidth(dat[[nm]], units="inches", family=font_family))
+    w <- strwidth("this is cool", units="inches", font = 12, family="sans")
+    w
+    if (is.control(nm) | all(is.na(dat[[nm]]) == TRUE))
+      w <- 0
+    else {
+      w <- max(nchar(as.character(dat[[nm]])), na.rm = TRUE) * char_width
+      
+      sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
+      mwidths[[nm]]  <- max(nchar(as.character(sd)), na.rm = TRUE) * char_width 
+      
+    }
+    
+    if (w > max_col_width)
+      w <- max_col_width
+    else if (w < min_col_width)
+      w <- min_col_width
+    else
+      w <- (ceiling(w * 100)/100) 
+    
+    # print(paste("w:", w))
+    # print(paste("Label:", labels[[nm]]))
+    
+    # Determine width of words in label for this column
+    s <- stri_split(labels[[nm]], regex=" |\n|\r|\t", simplify = TRUE)
+    #l <- strwidth(s[[1]], units="inches", family=font_family)
+    l <- max(nchar(as.character(s)), na.rm = TRUE) * char_width
+    
+    # print(paste("s:", s))
+    # print(paste("l:", l))
+    
+    # If the max word width is greater than the data width,
+    # set column width to max label word width
+    # so as not to break any words in the label
+    if (max(l) > w)
+      dwidths[[nm]] <- max(l) + char_width
+    else
+      dwidths[[nm]] <- w + char_width
+  }
+  
+  # Set names for easy access
+  #names(dwidths) <- names(dat)
+  
+  # Set default widths
+  ret <-  dwidths
+  #print("Default Widths")
+  #print(ret)
+  
+  # Let widths on orig df override defaults
+  orig <- widths(dat)
+  for (nm in names(orig)) {
+    ret[[nm]] <- orig[[nm]]
+  }
+  
+  defnms <- c()
+  # Let user definitions override everything
+  for (def in defs) {
+    
+    if (def$var_c %in% names(dat) & !is.null(def$width) && def$width > 0) {
+      if (def$width >= mwidths[[def$var_c]])
+        ret[[def$var_c]] <- def$width
+      else 
+        ret[[def$var_c]] <- mwidths[[def$var_c]] + char_width
+      
+      defnms[length(defnms) + 1] <- def$var_c
+    }
+    
+  }
+  
+  # Deal with stub
+  if (!is.null(ts$stub)) {
+    
+    # Add stub width if exists   
+    if (!is.null(ts$stub$width)) {
+      ret[["stub"]] <- ts$stub$width
+      defnms[length(defnms) + 1] <- "stub"
+    }
+    
+    # print(ret[["stub"]])
+    # print(ts$stub$width)
+  }
+  
+  # Turn into vector if needed
+  ret <- unlist(ret)
+  
+  # Remove control columns
+  ret <- ret[!sapply(names(ret), is.control)]
+  
+  # Deal with table width
+  if (!is.null(ts$width)) {
+    # print(paste("Table width:", ts$width))
+    
+    # Adjusted to keep 
+    #blnkw <- (length(ret) - 0) * char_width
+    # print(paste("Blank width:", blnkw))
+    # print(paste("Before:", sum(ret)))
+    # print(ret)
+    
+    if (sum(ret) < ts$width) {
+      
+      # Get columns not defined by user
+      variable <- ret[!names(ret) %in% defnms]
+      fixed <- ret[names(ret) %in% defnms]
+      
+      available <- ts$width - sum(fixed)
+      
+      variable <- variable * available / sum(variable)
+      
+      for (nm in names(variable))
+        ret[[nm]] <- variable[[nm]]
+      
+      # print("diff")
+      # Add one character to first column so it fills the entire page
+      ret[[1]] <- ret[[1]] + char_width
+      
+    } else {
+      # If table width is less than the sum of the columns.
+      # This means the table should wrap to the next page, 
+      # but each page should be set to the table width.
+      # Having a hard time figuring out how to do this.
+      # Will come back to it later.
+      # print("Here")
+      # ret2 <- c()
+      # pg <- c() 
+      # for (i in seq_along(ret)) {
+      #   print(ret[i])
+      #   print(paste("sumpg:", sum(pg)))
+      #   print(paste("lengthpg:", length(pg)))
+      #   print(paste("char_width:", char_width))
+      #   blnkw <- (length(pg) - 1) * char_width
+      #   tot <- sum(pg) + blnkw
+      #   print(paste("tot:", tot))
+      #   if (tot + ret[i] > ts$width) {
+      # 
+      #     pg <- pg * ((ts$width - blnkw) / sum(pg))
+      #     ret2 <- c(ret2, pg)
+      #     print(ret2)
+      #     pg <- c(ret[[i]])
+      #   } else {
+      #     pg[length(pg) + 1] <- ret[[i]]
+      #     print(paste("pg:", pg))
+      #   }
+      #   
+      # }
+      # 
+      # if (length(pg) > 0) {
+      #   blnkw <- (length(pg) - 1) * char_width
+      #   pg <- pg * ((ts$width - blnkw) / sum(pg))
+      #   ret2 <- c(ret2, pg)
+      #   
+      # }
+      # 
+      # names(ret2) <- names(ret)
+      # print(paste("ret2:", ret2))
+      # ret <- ret2
+    }
+    
+    # print(paste("After:", sum(ret)))
+    # print(ret)
+    
+  }
+  
+  
   
   return(ret)
 }
@@ -910,6 +1214,8 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
   
   return(x)
 }
+
+
 
 
 

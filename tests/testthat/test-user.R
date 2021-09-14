@@ -628,7 +628,6 @@ test_that("user6: listings with page break works as expected.", {
     
     expect_equal(length(lns), res$pages * res$line_count)
     
-    
     res <- write_report(rpt, output_type = "RTF")
     expect_equal(file.exists(res$modified_path), TRUE)
     

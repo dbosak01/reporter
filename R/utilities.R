@@ -808,8 +808,6 @@ ccm <- function(x) {
 
 
 #' @description Estimate number of wraps based on text, width, and a font.
-#' @import graphics
-#' @import R.devices
 #' @noRd
 get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   
@@ -820,10 +818,12 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   else if (tolower(font) == "times")
     f <- "serif"
   
-  R.devices::devEval(c("pdf"), name = "Get Font width", {
-    par(family = f, ps = font_size)
-    val <- strwidth(txt, units = units) * .975 / width
-  })
+  # R.devices::devEval(c("pdf"), name = "Get Font width", {
+  #   par(family = f, ps = font_size)
+  #   val <- strwidth(txt, units = units) * .975 / width
+  # })
+  
+  val <- get_text_width(txt, units = units, font = font, font_size = font_size) * .975/width
   
   # print(val)
   ret <- ceiling(val)
@@ -831,6 +831,31 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   
   return(ret)
 }
+
+
+#' @description Estimate number of wraps based on text, width, and a font.
+#' @import graphics
+#' @import R.devices
+#' @noRd
+get_text_width <- function(txt, font, font_size = 10, units = "inches") {
+  
+  
+  f <- "mono"
+  if (tolower(font) == "arial")
+    f <- "sans"
+  else if (tolower(font) == "times")
+    f <- "serif"
+  
+  R.devices::devEval("nulldev", {
+    par(family = f, ps = font_size)
+    ret <- strwidth(txt, units = units) * .975 
+  })
+  
+
+  return(ret)
+}
+
+
 
 #' @description Subtract 1 from number of lines to get excess lines
 #' @noRd 

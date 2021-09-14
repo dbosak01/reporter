@@ -132,11 +132,11 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # Try to figure out a way to put these widths in report spec
   #rs$column_widths[length(rs$column_widths) + 1] <- widths_uom
 
-  # Convert to text measurements
-  # Adjust by -1 to account for space between columns
+  # # Convert to text measurements
+  # # Adjust by -1 to account for space between columns
   widths_char <- round(widths_uom / rs$char_width) - 1
-  # print("Widths Char")
-  # print(widths_char)
+  # # print("Widths Char")
+  # # print(widths_char)
 
   # Split long text strings into multiple rows
   fdat <- split_cells(fdat, widths_char)
@@ -153,7 +153,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, widths_char)
+  wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1)
   # print("wraps")
   # print(wraps)
 
