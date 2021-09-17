@@ -197,109 +197,6 @@ get_page_wraps <- function(content_width, ts, widths, gutter) {
 }
 
 
-#' Gets the page wraps
-#' @noRd
-get_page_wraps_back <- function(line_size, ts, widths) {
-  
-  defs <- ts$col_defs
-  
-  # Get ID variable from definitions
-  # These need to be shown on each page
-  # Also get page wraps
-  if (!is.null(ts$stub)) 
-    id_vars <- c("stub")
-  else
-    id_vars <- c()
-  
-  wraps <- c()
-  nms <- c()
-  for (def in defs) {
-    if (!is.null(def$id_var) && def$id_var)
-      id_vars[length(id_vars) + 1] <- def$var_c
-    
-    wraps[length(wraps) + 1] <- def$page_wrap
-    nms[length(nms) + 1] <- def$var_c
-  }
-  names(wraps) <- nms
-
-  #print(id_vars)
-  
-  ret <- list() # list of columns for each page
-  pg <- c()     # columns on a page
-  tw <- line_size  # width of the page
-  
-  for (nm in names(widths)) {
-
-    if (!is.control(nm)) {
-      #If ID vars exist, add them to list
-      if (length(pg) == 0 && length(id_vars) > 0) {
-
-        # Plus 1 for blank space after
-        pg <- widths[id_vars] + 1
-
-        if (any(is.na(pg)))
-          stop(paste0("ID column width for '", 
-                      paste(id_vars[is.na(pg)], sep = " ", collapse = ""),
-                      " not found."))
-
-        names(pg) <- id_vars
-
-      }
-      
-      # Force a page wrap if requested in definition
-      force_wrap <- FALSE
-      if (is.null(wraps) == FALSE) 
-        if (is.na(wraps[nm]) == FALSE) 
-          if (wraps[nm] == TRUE)
-            force_wrap <- TRUE
-      
-      # print(paste("Name:", nm))
-      # print(paste("Force wrap:", force_wrap))
-      # print(paste("Sum of widths:", sum(pg, widths[nm] + 1)))
-      # print(paste("Page:", pg))
-      # print(paste("Widths:", widths[nm]))
-      # print(paste("Total width:", tw))
-      # print("")
-      
-
-      if ((sum(pg, widths[nm]) >  tw | force_wrap) & (!nm %in% id_vars)) {
-        
-        # If sum of widths exceed page size, add page to list and reset pg
-        # Also add control cols so downstream functions can use them
-        ret[[length(ret) + 1]] <- c(names(pg), control_cols)
-        pg <- c()
-        
-        # Add widths for ID vars
-        if (length(id_vars) > 0) {
-          pg <- widths[id_vars] + 1
-          names(pg) <- id_vars
-        }
-        
-        # Add width for current column
-        pg[nm] <- widths[nm] + 1
-        
-      } else {
-        
-        # If sum of widths does not exceed page size, add to pg and keep going
-        pg[nm] <- widths[nm] + 1
-
-      } 
-    }
-    
-  }
-  
-  # Pick any remaining columns
-  if (length(pg) > 0) {
-    # Add page to list
-    ret[[length(ret) + 1]] <- c(names(pg), control_cols)
-  }
-
-  
-  return(ret)
-  
-}
-
-
 
 #' @description Preps the data
 #' @details 
@@ -632,15 +529,11 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
 
 
 #' Get the column widths
-# @import graphics
 #' @import stringi
 #' @noRd
-get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
+get_col_widths_variable <- function(dat, ts, labels, font, 
+                               font_size, uom, gutter_width) {
   
-  
-  # Need to redo this function for non-character widths
-  
-  char_width <- 1
   
   defs <- ts$col_defs
   if (uom == "cm") {
@@ -663,16 +556,17 @@ get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
   # Set default widths based on length of data
   for (nm in nms) {
     
-    #w <- max(strwidth(dat[[nm]], units="inches", family=font_family))
-    w <- strwidth("this is cool", units="inches", font = 12, family="sans")
-    w
+
     if (is.control(nm) | all(is.na(dat[[nm]]) == TRUE))
       w <- 0
     else {
-      w <- max(nchar(as.character(dat[[nm]])), na.rm = TRUE) * char_width
+      w <-  max(get_text_width(dat[[nm]], units=uom, font=font, font_size = font_size))
       
       sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
-      mwidths[[nm]]  <- max(nchar(as.character(sd)), na.rm = TRUE) * char_width 
+      
+      # Would prefer to not calculate this again.  w and mwidths seem redundant.
+      mwidths[[nm]]  <- max(get_text_width(as.character(sd), units=uom, 
+                            font=font, font_size = font_size))
       
     }
     
@@ -688,8 +582,8 @@ get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
     
     # Determine width of words in label for this column
     s <- stri_split(labels[[nm]], regex=" |\n|\r|\t", simplify = TRUE)
-    #l <- strwidth(s[[1]], units="inches", family=font_family)
-    l <- max(nchar(as.character(s)), na.rm = TRUE) * char_width
+    l <- max(get_text_width(as.character(s), units=uom, 
+                            font=font, font_size = font_size))
     
     # print(paste("s:", s))
     # print(paste("l:", l))
@@ -698,9 +592,9 @@ get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
     # set column width to max label word width
     # so as not to break any words in the label
     if (max(l) > w)
-      dwidths[[nm]] <- max(l) + char_width
+      dwidths[[nm]] <- max(l) + gutter_width
     else
-      dwidths[[nm]] <- w + char_width
+      dwidths[[nm]] <- w + gutter_width
   }
   
   # Set names for easy access
@@ -725,7 +619,7 @@ get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
       if (def$width >= mwidths[[def$var_c]])
         ret[[def$var_c]] <- def$width
       else 
-        ret[[def$var_c]] <- mwidths[[def$var_c]] + char_width
+        ret[[def$var_c]] <- mwidths[[def$var_c]] + gutter_width
       
       defnms[length(defnms) + 1] <- def$var_c
     }
@@ -776,7 +670,7 @@ get_col_widths_rtf <- function(dat, ts, labels, font, font_size, uom) {
       
       # print("diff")
       # Add one character to first column so it fills the entire page
-      ret[[1]] <- ret[[1]] + char_width
+      ret[[1]] <- ret[[1]] + gutter_width
       
     } else {
       # If table width is less than the sum of the columns.
@@ -1100,7 +994,7 @@ get_table_cols <- function(x) {
 #' @param page_size The size of the available space in rows
 #' @noRd
 get_splits_text <- function(x, widths, page_size, lpg_rows, 
-                            content_offsets, ts) {
+                            content_offsets, ts, count_row_var = FALSE) {
   
   defs <- ts$col_defs
   
@@ -1108,7 +1002,7 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
   # Calculate where page breaks should occur
   # Based on available height, content size, and offsets
   # Function adds a ..page variable with page indicator
-  pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets)
+  pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets, count_row_var)
 
   
   # Eliminate pages that have only blank lines
@@ -1136,7 +1030,8 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
 #' @param content_offsets Blank rows requested above or below content
 #' @return Data frame with ..page column populated with page numbers.
 #' @noRd
-get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
+get_page_breaks <- function(x, page_size, lpg_rows, content_offsets, 
+                            count_row_var = FALSE ){
   
   pg <- 1
   counter <- 0
@@ -1156,7 +1051,10 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets){
   
   for (i in seq_len(nrow(x))){
     
-    counter <- counter + 1
+    if (count_row_var)
+      counter <- counter + x$..row[i]
+    else
+      counter <- counter + 1
     
     if (i == nrow(x)) {
       # Exception where last line is equal to number of available lines

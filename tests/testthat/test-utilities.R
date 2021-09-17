@@ -254,3 +254,52 @@ test_that("data with extra names on variables doesn't crash labels function.", {
   
 })
 
+
+test_that("split_cells_variable works as expected.", {
+  
+  # split_cells_variable <- function(x, col_widths, font, font_size, units)
+  
+  df <- data.frame(car = c("Dart", "Bart", "Here is another car name"),
+                   cyl = c(8, 3, 4),
+                   disp = c("My lovely disp and it gets longer", 
+                            "Here is a big long string value to exceed 2 inches",
+                            "Short"))
+  
+  tbl <- create_table(df) %>% 
+    define(car, label = "Cars", width = 1) %>% 
+    define(cyl, width = 1.5) %>% 
+    define(disp, width = 2) 
+  
+  lbls <- get_labels(df, tbl)
+  
+  cw <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
+  cw
+  
+  res <- split_cells_variable(df, cw, "Arial", 12, "inches")
+  res
+  
+  expect_equal(any(class(res) == "data.frame"), TRUE)
+  expect_equal(res[1, "..row"], 2)  
+  expect_equal(res[3, "..row"], 3) 
+  
+})
+
+
+test_that("rtf2-11: get_width function works as expected.", {
+  
+  res1 <- get_text_width("This is cool.", "Arial", 12)
+  res1
+  
+  res2 <- get_text_width("This is cool.", "Arial", 10)
+  res2
+  
+  expect_equal(res1 > res2, TRUE)
+  
+  
+  res3 <- get_text_width("This is cool.", "Courier", 10)
+  res3
+  expect_equal(res2 < res3, TRUE)
+  
+  
+})
+

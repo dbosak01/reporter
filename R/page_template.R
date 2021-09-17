@@ -599,7 +599,7 @@ get_page_footer <- function(rs) {
 #' contained in this object.
 #' @noRd
 page_info <- function(data, keys, font_name, col_width, col_align,
-                      label, label_align, page_by = NULL) {
+                      label, label_align, page_by = NULL, table_align = NULL) {
   
   ret <- structure(list(), class = c("page_info", "list"))
   
@@ -613,6 +613,7 @@ page_info <- function(data, keys, font_name, col_width, col_align,
   ret$total_pages <- 0
   ret$page_number <- 0
   ret$page_by <- page_by
+  ret$table_align <- table_align
   
   return(ret)
   

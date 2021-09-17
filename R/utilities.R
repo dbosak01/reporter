@@ -499,6 +499,89 @@ split_cells <- function(x, col_widths) {
 }
 
 
+
+#' Split data frame cells based on expected column width.
+#' For variable width reports, will just insert a carriage return at the 
+#' split points.
+#' @param x A data frame
+#' @param col_widths A named vector of columns widths in the unit of measure
+#' @return The data frame with long values split by carriage returns.
+#' @import stringi
+#' @noRd
+split_cells_variable <- function(x, col_widths, font, font_size, units) {
+  
+  dat <- NULL           # Resulting data frame
+  row_values <- list()  # A list to hold cell values for one row 
+  max_length <- 1       # The maximum number of splits of a cell in that row
+  
+  for (i in seq_len(nrow(x))) {
+    for (nm in names(x)) {
+      
+      if (any(typeof(x[[nm]]) == "character") & 
+          !is.control(nm) ) {
+        
+        tmp <- ""
+        
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+          
+          cell <- ""
+          
+        } else {
+          
+          cell <- paste0(unlist(split_text_rtf(x[[i, nm]], 1000, col_widths[[nm]],
+                                      font, font_size, units)), collapse = "\n")
+        }
+        
+        
+      } else {
+        cell <- x[i, nm]
+      }
+      # print(paste("cell: ", cell))
+      
+      if (identical(cell, character(0)))
+        cell <- ""
+      
+      nch <- stri_count_fixed(cell, pattern = "\n") + 1
+      # print(nch)
+      # print(cell)
+      # print(max_length)
+      
+      if (!is.na(nch)) { 
+        if (nch > max_length)
+          max_length <- nch
+      }
+      
+      row_values[[length(row_values) + 1]] <- cell
+      # print(paste("Row:", row_values))
+    }
+    
+    # print(names(x))
+    names(row_values) <- names(x)
+    
+    row_values$..row <- max_length
+    
+    if (is.null(dat))
+      dat <- as.data.frame(row_values)
+    else
+      dat <- rbind(dat, row_values)
+    
+    max_length <- 1
+    row_values <- list()
+    
+  }
+  
+  rownames(dat) <- NULL
+  # # Reset names
+  # if ("..row" %in% names(x)) 
+  #   names(dat) <- c(names(x))
+  # else
+  #   names(dat) <- c(names(x), "..row")
+
+  
+  return(dat)
+}
+
+
 #' Given a jagged set of vectors, align to the longest by filling with 
 #' empty strings
 #' @param x A list of vectors of varying lengths
@@ -807,6 +890,10 @@ ccm <- function(x) {
 }
 
 
+# RTF Functions -----------------------------------------------------------
+
+
+
 #' @description Estimate number of wraps based on text, width, and a font.
 #' @noRd
 get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
@@ -818,12 +905,10 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   else if (tolower(font) == "times")
     f <- "serif"
   
-  # R.devices::devEval(c("pdf"), name = "Get Font width", {
-  #   par(family = f, ps = font_size)
-  #   val <- strwidth(txt, units = units) * .975 / width
-  # })
+  names(width) <- NULL
   
-  val <- get_text_width(txt, units = units, font = font, font_size = font_size) * .975/width
+  val <- get_text_width(txt, units = units, 
+                        font = font, font_size = font_size) * .975/width
   
   # print(val)
   ret <- ceiling(val)
@@ -847,8 +932,10 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
     f <- "serif"
   
   R.devices::devEval("nulldev", {
+  #  pdf(NULL)
     par(family = f, ps = font_size)
     ret <- strwidth(txt, units = units) * .975 
+   # dev.off()
   })
   
 

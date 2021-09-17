@@ -11,7 +11,8 @@ create_table(
   width = NULL,
   first_row_blank = FALSE,
   n_format = upcase_parens,
-  headerless = FALSE
+  headerless = FALSE,
+  borders = "none"
 )
 }
 \arguments{
@@ -58,6 +59,10 @@ The default formatting function is \code{\link{upcase_parens}}.}
 \item{headerless}{Whether to create a headerless table. A headerless
 table displays the table data only. Default is FALSE, meaning the table
 will have a header.}
+
+\item{borders}{Whether and where to place a border. Valid values are 'top',
+'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
+Default is "none".}
 }
 \description{
 The \code{create_table} function creates a table object to which 

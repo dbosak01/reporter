@@ -30,3 +30,41 @@ test_that("text print() function works as expected.", {
   
 })
 
+
+test_that("split_text_rtf() works as expected.", {
+  
+  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                "qui officia deserunt mollit anim id est laborum.")
+  
+  
+  res <- split_text_rtf(cnt, 4, 5, "Arial", 12, "inches")
+  
+  res
+  expect_equal(length(res), 2)
+  
+  
+  res <- split_text_rtf(cnt, 4, 3, "Arial", 12, "inches", 2)
+  
+  res
+  expect_equal(length(res), 4)
+  
+  
+  cnt2 <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                "qui officia deserunt mollit anim id est laborum.")
+  
+  # 
+  # res <- split_text_rtf("here is a\n longish string and here \nis another string",
+  #                       5, 2, "Arial", 12, "inches")
+  # 
+  # res
+})

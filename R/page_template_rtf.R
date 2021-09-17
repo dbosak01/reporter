@@ -2,6 +2,38 @@
 # Page Template RTF Functions ---------------------------------------------
 
 
+#' Create a page template with header, titles, footnotes, and footer
+#' @param rs The report spec
+#' @return The page template object
+#' @noRd
+page_template_rtf<- function(rs) {
+  
+  pt <- structure(list(), class = c("page_template_rtf", "list"))
+  
+  pt$page_header <- get_page_header_rtf(rs)
+  pt$title_hdr <- get_title_header_rtf(rs$title_hdr, rs$line_size, rs)
+  pt$titles <- get_titles_rtf(rs$titles, rs$line_size, rs)
+  pt$footnotes <- c()
+  if (!is.null(rs$footnotes)) {
+    if (!is.null(rs$footnotes[[1]])) {
+      if (rs$footnotes[[1]]$valign == "bottom")
+        pt$footnotes <- get_footnotes_rtf(rs$footnotes, rs$line_size, rs)
+    }
+    
+  }
+  pt$page_footer <- get_page_footer_rtf(rs)
+  
+  pt$lines <- sum(pt$page_header$lines, pt$page_footer$lines,
+                  pt$title_hdr$lines, pt$titles$lines, pt$footnotes$lines)
+  
+  pt$twips <- sum(pt$page_header$twips, pt$page_footer$twips,
+                  pt$title_hdr$twips, pt$titles$twips, pt$footnotes$twips)
+  
+  # Page by not here.  Messes up line counts.
+  
+  return(pt)
+}
+
 #' @noRd
 get_page_header_rtf <- function(rs) {
   
@@ -20,8 +52,8 @@ get_page_header_rtf <- function(rs) {
     
     fs <- rs$font_size * 2
     
-    c2 <- rs$content_size[["width"]] * conv
-    c1 <- c2 / 2
+    c2 <- round(rs$content_size[["width"]] * conv)
+    c1 <- round(c2 / 2)
     
     ret <- paste0("{\\header \\fs", fs)
     
@@ -85,9 +117,9 @@ get_page_footer_rtf <- function(rs) {
     
     fs <- rs$font_size * 2
     
-    c3 <- rs$content_size[["width"]] * conv
-    c1 <- c3 / 3
-    c2 <- c1 * 2
+    c3 <- round(rs$content_size[["width"]] * conv)
+    c1 <- round(c3 / 3)
+    c2 <- round(c1 * 2)
     
     cnt <- maxf
     
@@ -141,7 +173,7 @@ get_titles_rtf <- function(ttllst, width, rs) {
   conv <- rs$twip_conversion
   lh <- rs$row_height
   
-  w <- width * conv
+  w <- round(width * conv)
 
   
   if (length(ttllst) > 0) {
@@ -195,7 +227,7 @@ get_footnotes_rtf <- function(ftnlst, width, rs) {
   cnt <- 0
   twps <- 0
   
-  w <- width * rs$twip_conversion 
+  w <- round(width * rs$twip_conversion)
   lh <- rs$row_height
   
   if (length(ftnlst) > 0) {
@@ -247,8 +279,8 @@ get_title_header_rtf <- function(thdrlst, width, rs) {
   cnt <- 0
   twps <- 0
   
-  w1 <- width * .7 * rs$twip_conversion
-  w2 <- width * .3 * rs$twip_conversion
+  w1 <- round(width * .7 * rs$twip_conversion)
+  w2 <- round(width * .3 * rs$twip_conversion)
   lh <- rs$row_height
   
   if (length(thdrlst) > 0) {
@@ -302,6 +334,67 @@ get_title_header_rtf <- function(thdrlst, width, rs) {
 }
 
 
+#' Get page by text strings suitable for printing
+#' @import stringi
+#' @param titles Page by object
+#' @param width The width to set the page by strings to
+#' @return A vector of strings
+#' @noRd
+get_page_by_rtf <- function(pgby, width, value, rs) {
+  
+  if (is.null(width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  if (is.null(value))
+    value <- ""
+  
+  ll <- width
+  ret <- c()
+  cnt <- 0
+  
+  if (!is.null(pgby)) { 
+    
+    if (!any(class(pgby) == "page_by"))
+      stop("pgby parameter value is not a page_by.")
+    
+    if (pgby$blank_row %in% c("above", "both")) {
+      ret[length(ret) + 1] <- "\\par\n"
+      cnt <- cnt + 1 
+    }
+    
+    algn <- "\\ql"
+    if (pgby$align == "right")
+      algn <- "\\qr"
+    else if (pgby$align %in% c("center", "centre"))
+      algn <- "\\qc"
+    
+    
+    w1 <- round(width * rs$twip_conversion)
+    
+    ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0\\cellx", w1, algn, " ",
+                              pgby$label, value, "\\cell\\row\n")
+    
+    
+    cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
+                               rs$font, rs$font_size, rs$units)
+    
+  
+    if (pgby$blank_row %in% c("below", "both")) {
+      ret[length(ret) + 1] <- "\\par\n"
+      cnt <- cnt + 1 
+    }
+    
+    
+  }
+  
+  res <- list(rtf = paste0(ret, collapse = ""), 
+              lines = cnt, 
+              twips = cnt * rs$line_height)
+  
+  return(res)
+}
 
 # Utilities ---------------------------------------------------------------
 

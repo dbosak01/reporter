@@ -386,7 +386,7 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
     if (i == length(txtpgs) & content_blank_row %in% c("both", "below"))
       b <- "\\line"
     else if (length(txtpgs) > 1 & i != length(txtpgs))
-      b <- rs$page_break_rtf
+      b <- "" #rs$page_break_rtf
     
     spcs <- NULL
     
@@ -409,9 +409,9 @@ get_text_pages_rtf <- function(rs, txt, height, width, lpg_twips) {
   lh <- rs$line_height
   offst <- floor(lpg_twips / lh)
   lns <- floor(height / lh) 
-  print(height)
-  print(lh)
-  print(lns)
+  # print(height)
+  # print(lh)
+  # print(lns)
   
   tpgs <- split_text_rtf(txt, lns, width, rs$font, rs$font_size, rs$units, offst)
   
@@ -424,7 +424,79 @@ get_text_pages_rtf <- function(rs, txt, height, width, lpg_twips) {
 #' @description lines is the number of lines per page or cell before breaking.
 #' Width is the width of the page or cell.
 #' @noRd
-split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0) {
+split_text_rtf_new <- function(txt, lines, width, font, font_size, units, offset = 0) {
+  
+  pgs <- c()
+  lns <- c()
+  cnt <- 0
+  lnlngth <- 0
+  ln <- c()
+
+  paras <- strsplit(txt, "\n", fixed = TRUE)[[1]]
+  
+  for (par in paras) {
+
+    # Split text into words
+    wrds <- strsplit(par, " ", fixed = TRUE)[[1]]
+    
+    # Set font
+    f <- "mono"
+    if (tolower(font) == "arial")
+      f <- "sans"
+    else if (tolower(font) == "times")
+      f <- "serif"
+    
+    lngths <- c()
+    
+    
+    lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
+               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+  
+    # Loop through words and add up lines
+    for (i in seq_along(wrds)) {
+      
+      lnlngth <- lnlngth + lngths[i] 
+      if (lnlngth <= width)
+        ln <- append(ln, wrds[i])
+      else {
+        cnt <- cnt + 1
+  
+        # If cnt exceeds allowed lines per page, start a new page
+        if (cnt <= lines - offset) {
+          lns <- append(lns, paste(ln, collapse = " "))
+          ln <- wrds[i]
+          lnlngth <- lngths[i]
+        } else {
+          pgs[[length(pgs) + 1]] <- lns
+  
+          lns <- paste(ln, collapse = " ")
+          ln <- wrds[i]
+          lnlngth <- lngths[i]
+          # After first page, set this to zero.
+          offset <- 0
+          cnt <- 1
+        }
+      }
+    }
+    
+    if (length(lns) > 0 | length(ln) > 0) {
+      lns <- append(lns, paste(ln, collapse = " "))
+      
+      pgs[[length(pgs) + 1]] <- lns
+    }
+  
+  }
+  
+  return(pgs)
+  
+}
+
+
+#' @description lines is the number of lines per page or cell before breaking.
+#' Width is the width of the page or cell.
+#' @noRd
+split_text_rtf <- function(txt, lines, width, font, 
+                                font_size, units, offset = 0) {
   
   pgs <- c()
   lnlngth <- 0
@@ -433,7 +505,7 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
   lns <- c()
   
   # Split text into words
-  wrds <- strsplit(txt, " ")[[1]]
+  wrds <- strsplit(txt, " ", fixed = TRUE)[[1]]
   
   # Set font
   f <- "mono"
@@ -453,8 +525,8 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
   # })
   
   lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
-             get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
-
+               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+  
   # Loop through words and add up lines
   for (i in seq_along(wrds)) {
     
@@ -463,7 +535,7 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
       ln <- append(ln, wrds[i])
     else {
       cnt <- cnt + 1
-
+      
       # If cnt exceeds allowed lines per page, start a new page
       if (cnt <= lines - offset) {
         lns <- append(lns, paste(ln, collapse = " "))
@@ -471,7 +543,7 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
         lnlngth <- lngths[i]
       } else {
         pgs[[length(pgs) + 1]] <- lns
-
+        
         lns <- paste(ln, collapse = " ")
         ln <- wrds[i]
         lnlngth <- lngths[i]
@@ -479,7 +551,7 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
         offset <- 0
         cnt <- 1
       }
-
+      
     }
     
     
@@ -494,4 +566,3 @@ split_text_rtf <- function(txt, lines, width, font, font_size, units, offset = 0
   return(pgs)
   
 }
-

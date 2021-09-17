@@ -106,6 +106,9 @@
 #' @param headerless Whether to create a headerless table. A headerless
 #' table displays the table data only. Default is FALSE, meaning the table
 #' will have a header. 
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
+#' Default is "none".
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,
@@ -178,7 +181,8 @@
 create_table <- function(x, show_cols = "all", use_attributes = "all",
                          width = NULL, 
                          first_row_blank=FALSE,
-                         n_format = upcase_parens, headerless = FALSE) {
+                         n_format = upcase_parens, headerless = FALSE,
+                         borders = "none") {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -199,6 +203,12 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
                "or a vector of any of the following attributes names: 'label',",
                "'format', 'width', or 'justify'"))
   }
+  
+  if (!all(borders %in% c("top", "bottom", "left", "right", 
+                          "all", "none", "outside", "inside")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'left', 'right', 'all', ",
+               "'none', 'outside', or 'inside'."))
     
   
   ret <- structure(list(), class = c("table_spec", "list"))
@@ -220,6 +230,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   ret$stub <- NULL
   ret$width <- width
   ret$page_var <- NULL
+  ret$borders <- borders
   if (any(use_attributes == "all"))
     ret$use_attributes <- c("label", "width", "justify", "format")
   else if (all(use_attributes == "none"))

@@ -27,10 +27,13 @@ write_report_rtf2 <- function(rs) {
   # Document header is mostly independent of content
   hdr <- get_rtf_document(rs) 
   
+  # Put content in a new variable
+  ls <- rs$content
+  
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
   # Page numbers need to be included
-  bdy <- paginate_content_rtf(rs)
+  bdy <- paginate_content_rtf(rs, ls)
   
   # Get column widths? Seems not necessary?
   
@@ -38,7 +41,7 @@ write_report_rtf2 <- function(rs) {
   
   # Write content to file system
   # Later we can just return the stream
-  write_content_rtf(orig_path, hdr, bdy)
+  write_content_rtf(rs, hdr, bdy, rs$page_template)
   
   return(rs)
 }
@@ -100,54 +103,29 @@ get_rtf_document <- function(rs) {
   
 }
 
+
+
 #' @noRd
-write_content_rtf <- function(path, hdr, body) {
+paginate_content_rtf <- function(rs, ls) {
   
-  
-  # Write to file  
-  f <- file(path, open="a")
-  
-  writeLines(hdr, con = f)
-  
-  for (pg in body){
-  
-    writeLines(pg, con = f)
-  }
-  
-  writeLines("\\fs0\\par}", con = f)
-  
-  close(f)
-  
-}
-
-# Don't forget to deal with encoding issues 
-#body <- encodeRTF(ls)
-
-
-
-# Write RTF Driver Functions ----------------------------------------------
-
-# should be renamed to paginate_content_rtf
-#' @noRd
-paginate_content_rtf <- function(rs) {
-
   
   ret <- c()
   last_object <- FALSE
+  table_widths <- list()
   lpg_twips <- 0
   pgs <- list()  # list of vectors with page rtf lines
   
   # Loop through content objects
-  for (i in seq_along(rs$content)) {
+  for (i in seq_along(ls)) {
     
     # Set last object flag
-    if (i == length(rs$content))
+    if (i == length(ls))
       last_object <- TRUE
     else 
       last_object <- FALSE
     
     # Put content and object in variables for convenience
-    cntnt <- rs$content[[i]] 
+    cntnt <- ls[[i]] 
     obj <- cntnt$object
     
     # Remove blank row if last content object
@@ -164,351 +142,144 @@ paginate_content_rtf <- function(rs) {
     if (any(class(obj) == "table_spec")) {
       
       res <- create_table_pages_rtf(rs, cntnt, lpg_twips)
-      
+      pgs <- append(pgs, res$page_list)
       
     } else if (any(class(obj) == "text_spec")) {
       
       res <- create_text_pages_rtf(rs, cntnt, lpg_twips, cbr)
-      
+      pgs <- append(pgs, res)
       
     } else if (any(class(obj) == "plot_spec")) {
       
       # Needs fixing
       tmp_dir <- file.path(tempdir(), "temp.jpg")
       res <- create_plot_pages_rtf(rs, cntnt, lpg_twips, tmp_dir)
-      
-    }
+      pgs <- append(pgs, res)
+    }   
     
-    pgs <- append(pgs, res)
-    
+    ls[[i]]$pages <- pgs
+
+    # Need to do something to append blank rows 
+    # and/or next content object to the previous content page.
   }
-  
-  # Need to append content here
-  
   
   
   # Can return something else if needed here
-  ret <- pgs
+  ret <- list(widths = c(), pages = ls)
   
   return(ret)
   
 }
 
-# Spec Functions ----------------------------------------------------------
 
 
+#' @title Write out content
+#' @description This loop writes out pages created in paginate_content
 #' @noRd
-create_table_pages_rtf <- function(rs, cntnt, lpg_twips) {
+write_content_rtf <- function(rs, hdr, body, pt) {
   
-  ts <- cntnt$object
-  content_blank_row <- cntnt$blank_row
+  # Kill existing file
+  if (file.exists(rs$modified_path))
+    file.remove(rs$modified_path)
   
-  pgby_var <- NA
-  if (!is.null(rs$page_by))
-    pgby_var <- rs$page_by$var
-  else if (!is.null(ts$page_by))
-    pgby_var <- ts$page_by$var
+  counter <- 0
+  page <- 0
+  last_object <- FALSE
+  last_page <- FALSE
+  page_open <- FALSE
   
   
-  if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
+  f <- file(rs$modified_path, open="a", encoding = "native.enc")
+  
+  writeLines(hdr, con = f, useBytes = TRUE)
+  
+
+  for (cont in body$pages) {
     
-    stop("ERROR: At least one column must be defined if show_cols = \"none\".")
-  }
-  
-  font_name <- rs$font
-  
-  # Set up control columns
-  dat <- as.data.frame(ts$data, stringsAsFactors = FALSE)  
-  dat$..blank <- ""
-  dat$..row <- NA
-  dat$..page_by <- NA
-  
-  # If page_break variable has been defined, use it
-  if (is.null(ts$page_var)) {
-    if (is.na(pgby_var))
-      dat$..page <- NA
+    
+    # Increment counter
+    counter <- counter + 1
+    page <- 0
+    
+    # Set last_object flag
+    if (counter == length(body$pages))
+      last_object <- TRUE
     else 
-      dat$..page <-  dat[[pgby_var]]
+      last_object <- FALSE
     
-  } else 
-    dat$..page <- dat[[ts$page_var]]
-  
-  # If page by is defined, use it
-  if (!is.na(pgby_var)) {
-    dat$..page_by <-  dat[[pgby_var]]
-    if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
-      message("Page by variable not sorted.")
-  }
-  
-  # Get vector of all included column names
-  # Not all columns in dataset are necessarily included
-  # depends on show_cols parameter on create_table and
-  # visible parameter on column definitions
-  keys <- get_table_cols(ts)
-  # print("keys")
-  # print(keys)
-  
-  # Filter dataset by included columns
-  dat <- get_data_subset(dat, keys, rs$preview)
-  # print("Key columns:")
-  # print(dat)
-  
-  # Update column definitions with column defaults
-  ts$col_defs <- set_column_defaults(ts, keys)
-  # print("col_defs:")
-  # print(ts$col_defs)
-  
-  # Get labels
-  labels <- get_labels(dat, ts)
-  # print("Labels:")
-  # print(labels)
-  
-  # Get column alignments
-  aligns <- get_aligns(dat, ts)
-  
-  # Get alignment for labels
-  # Follows column alignment by default
-  label_aligns <- get_label_aligns(ts, aligns)
-  # print("Label Aligns:")
-  # print(label_aligns)
-  
-  # Clear out existing formats
-  cdat <- clear_formats(dat)
-  
-  # Get column formats
-  formats(cdat) <- get_col_formats(dat, ts)
-  # print("formats:")
-  # print(formats(cdat))
-  
-  # Apply formatting
-  fdat <- fdata(cdat)
-  # print("fdata:")
-  # print(fdat)
-  
-  # Prep data for blank lines, indents, and stub columns
-  fdat <- prep_data(fdat, ts, rs$char_width, rs$missing)
-  # print("prep_data")
-  # print(fdat)
-  # str(fdat)
-  
-  # Reset keys, since prep_data can add/remove columns for stub
-  keys <- names(fdat)
-  # print("Keys")
-  # print(keys)
-  # print("Aligns")
-  # print(aligns)
-  
-  # Copy any width attributes to formatted data frame
-  if ("width" %in% ts$use_attributes)
-    widths(fdat) <- widths(dat)
-  # print("Original Widths")
-  # print(widths(dat))
-  
-  # Get column widths
-  widths_uom <- get_col_widths(fdat, ts, labels, rs$char_width, rs$units) # ? fix this
-  print("Widths UOM")
-  print(widths_uom)
-  
-  # Split long text strings into multiple rows
-  #fdat <- split_cells(fdat, widths_twips)  # ?  Work on this
-  print("split_cells")
-  print(fdat)
-  
-  
-  # Break columns into pages
-  gtr <- .2
-  wraps <- get_page_wraps(rs$content_size[["width"]], ts, widths_uom, gtr)
-  # print("wraps")
-  # print(wraps)
-  
-  
-  # Create a temporary page info to pass into get_content_offsets
-  tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
-                 label_align = label_aligns)
-  # print("Temp PI")
-  # print(tmp_pi)
-  
-  # Offsets are needed to calculate splits and page breaks
-  content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row)
-  
-  # split rows
-  splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
-                            lpg_twips, content_offset, ts)
-  # print("splits")
-  # print(splits)
-  
-  
-  
-  ### Old
-  
-  
-  ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], rs)
-  
-  ts <- cntnt$object
-  
-  dt <- ts$data
-  conv <- rs$twip_conversion
-  
-  wdths <- rep(.75, ncol(dt)) #get_rtf_widths
-  
-  # rs, tbl, conv, widths, 
-  # algns, halgns, talgn, brdrs
-  
-  algns <- rep("left", ncol(dt))
-  halgns <- algns
-  talgn <- cntnt$align 
-  brdrs <- "outside"
-  
-  
-  tbl <- get_table_lines_rtf(rs, dt, conv, wdths, algns, 
-                             halgns, talgn, brdrs)
-  
-  
-  lns <- append(ttls$rtf, tbl)
-  
-  return(lns)
-}
-
-
-
-#' @noRd
-create_table_pages_rtf_back <- function(rs, cntnt, lpg_twips) {
-  
-  ttls <- get_titles_rtf(rs$titles, rs$content_size[["width"]], rs)
-  
-  ts <- cntnt$object
-  
-  dt <- ts$data
-  conv <- rs$twip_conversion
-  
-  wdths <- rep(.75, ncol(dt)) #get_rtf_widths
-  
-  # rs, tbl, conv, widths, 
-  # algns, halgns, talgn, brdrs
-  
-  algns <- rep("left", ncol(dt))
-  halgns <- algns
-  talgn <- cntnt$align 
-  brdrs <- "outside"
-  
-  
-  tbl <- get_table_lines_rtf(rs, dt, conv, wdths, algns, 
-                             halgns, talgn, brdrs)
-  
-  
-  lns <- append(ttls$rtf, tbl)
-  
-  return(lns)
-}
-
-
-
-
-
-
-# Table Functions ---------------------------------------------------------
-
-
-#' @noRd
-get_table_lines_rtf <- function(rs, tbl, conv, widths, 
-                                algns, halgns, talgn, brdrs) {
- 
-  # Get line height.  Don't want to leave editor default.
-  rh <- rs$row_height
-  
-  # Get cell widths
-  sz <- c()
-  for (k in seq_along(widths)) {
-    if (k == 1)
-      sz[k] <- widths[k] * conv
-    else 
-      sz[k] <- widths[k] * conv + sz[k - 1]
+    
+    for (pg in cont$pages) {
       
-  }
-  
-  # Table alignment
-  ta <- "\\trql"
-  if (talgn == "right")
-    ta <- "\\trqr"
-  else if (talgn %in% c("center", "centre"))
-    ta <- "\\trqc"
-  
-  # Cell alignment
-  ca <- c()
-  for (k in seq_along(algns)) {
-    if (algns[k] == "left")
-      ca[k] <- "\\ql"
-    else if (algns[k] == "right")
-      ca[k] <- "\\qr"
-    else if (algns[k] %in% c("center", "centre"))
-      ca[k] <- "\\qc"
-  }
-  
-  # Header Cell alignment
-  ha <- c()
-  for (k in seq_along(halgns)) {
-    if (halgns[k] == "left")
-      ha[k] <- "\\ql"
-    else if (halgns[k] == "right")
-      ha[k] <- "\\qr"
-    else if (halgns[k] %in% c("center", "centre"))
-      ha[k] <- "\\qc"
-  }
-    
-  hdr <- c()
-  
-  # Table Header
-  hdr[1] <-  paste0("\\trowd\\trgaph0", ta)
-  
-  # Loop for cell definitions
-  for(j in seq_along(tbl)) {
-    
-    b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
-    hdr[1] <- paste0(hdr[1], b, "\\clbrdrb\\brdrs\\cellx", sz[j])
-    
-  }
-  
-  # Loop for column names
-  nms <- names(tbl)
-  for(k in seq_along(nms)) {
-    hdr[1] <- paste0(hdr[1], ha[k], " ", nms[k], "\\cell")
-  }
-  
-  hdr[1] <- paste(hdr[1], "\\row")
-  
-  
-  bdy <- c()
-  
-  # Table Body
-  for(i in seq_len(nrow(tbl))) {
-    
-    bdy[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
-    
-    # Loop for cell definitions
-    for(j in seq_len(ncol(tbl))) {
-      b <- get_cell_borders(i, j, nrow(tbl), ncol(tbl), brdrs)
-      bdy[i] <- paste0(bdy[i], b, "\\cellx", sz[j])
-    }
-    
-    # Loop for cell values
-    for(j in seq_len(ncol(tbl))) {
+      page <- page + 1
       
-      bdy[i] <- paste0(bdy[i], ca[j], " ", tbl[i, j], "\\cell")
+      if (page == length(cont$pages))
+        last_page <- TRUE
+      else
+        last_page <- FALSE
+      
+      
+      #print(page_open)
+      if (page_open == FALSE) {
+
+        
+        if (!is.null(rs$title_hdr))
+          writeLines(pt$title_hdr$rtf, con = f, useBytes = TRUE)
+        
+        if (!is.null(rs$titles))
+          writeLines(pt$titles$rtf, con = f, useBytes = TRUE)
+        
+      }
+      
+      if (!is.null(pg)) {
+
+        writeLines(pg, con = f, useBytes = TRUE)
+        
+      }
+      
+      # Set page_open flag based on status of page_break and current objects
+      if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
+        page_open <- TRUE
+      else 
+        page_open <- FALSE
+      
+      if (page_open == FALSE) {
+        
+        if (!is.null(rs$footnotes))
+          writeLines(pt$footnotes$rtf, con = f, useBytes = TRUE)
+        
+        
+        # Add form feed character for text page break
+        if (last_object == FALSE | last_page == FALSE) {
+          
+          if (is.null(rs$pages))
+            rs$pages <- 1
+          else 
+            rs$pages <- rs$pages + 1 
+          
+          writeLines(rs$page_break_rtf, con = f, useBytes = TRUE) 
+          
+        }
+      }
+      
+
       
     }
     
-    bdy[i] <- paste0(bdy[i], "\\row")
-    
-    
   }
   
-  bdy[length(bdy)] <- paste0(bdy[length(bdy)], "\\pard")
+  writeLines("\\fs0\\par}", con = f, useBytes = TRUE)
   
-  # Add header and body
-  ret <- append(hdr, bdy)
+  close(f)
   
-  return(ret)
+  return(rs)
+  
 }
+
+
+# Don't forget to deal with encoding issues 
+#body <- encodeRTF(ls)
+
+
 
 
 
@@ -521,24 +292,30 @@ get_table_lines_rtf <- function(rs, tbl, conv, widths,
 #' @noRd
 page_setup_rtf <- function(rs) {
   
-  debug <- TRUE
+  debug <- FALSE
   
   # Content size is the page size minus margins, in units of measure
   rs$content_size <- get_content_size(rs)
   
-  
+  # A lot of these values are guesses.  Need to test.
   if (rs$font_size == 8) {
     rh <- 185 #round(.11 * 1440)
     lh <- 185 #round(.1 * 1440) 
     pb <- "\\page\\fs0\\par\\fs16\\pard"
+    gtr <- .15  
+    cw <- .1
   } else if (rs$font_size == 10) {
     rh <- 225 #round(.165 * 1440)
     lh <- 225 #round(.165 * 1440)  # 270
     pb <- "\\page\\fs0\\par\\fs20\\pard"
+    gtr <- .18
+    cw <- .11
   } else if (rs$font_size == 12) {
     rh <- 270 #round(.2 * 1440)
     lh <- 270 #round(.1875 * 1440) #270
     pb <- "\\page\\fs0\\par\\fs24\\pard"
+    gtr <- .2
+    cw <- .12
   }
   
   
@@ -553,6 +330,9 @@ page_setup_rtf <- function(rs) {
   rs$row_height <- rh
   rs$line_height <- lh
   rs$page_break_rtf <- pb
+  rs$gutter_width <- gtr
+  rs$char_width <- cw
+  rs$line_size <- rs$content_size[["width"]]
   
   if (is.null(rs$user_line_count))
     rs$line_count <- floor(rs$content_size[[1]] * conv / rh)
@@ -564,21 +344,47 @@ page_setup_rtf <- function(rs) {
     print(paste("Content Width:", rs$content_size[[2]]))
     print(paste("Line Count:", rs$line_count))
     print(paste("Line Height:", rs$line_height))
+    print(paste("Gutter Width:", rs$gutter_width))
+    print(paste("Char Width:", rs$char_width))
   }
   
-  hdr <- get_page_header_rtf(rs)
-  ftr <- get_page_footer_rtf(rs)
-  
+  # Get page template
+  pt <- page_template_rtf(rs)
+  rs$page_template <- pt
+
+  # Body size in twips
   # Small adjustment by one line height
+  # This gets used to determine lines on a page.
   rs$body_size <- 
-    c(height = (rs$content_size[[1]] * conv) - hdr$twips - ftr$twips - lh, 
-      width = rs$content_size[[2]] * conv)
+    c(height = floor((rs$content_size[[1]] * conv) - pt$page_header$twips - pt$page_footer$twips - lh), 
+      width = floor(rs$content_size[[2]] * conv))
   
   if (debug) {
     print(paste("Body Height:", rs$body_size[[1]]))
     print(paste("Body Width:", rs$body_size[[2]]))
   }
   
+  
+  # Get the page template row count
+  # Include all the rows associated with the page template
+  rs$page_template_header_count <- sum(pt$page_header$lines, pt$titles$lines, 
+    pt$title_hdr$lines, pt$page_by$lines)
+  if (debug)
+    print(paste("Page Template Header Count:", rs$page_template_header_count))
+  
+  rs$page_template_footer_count <- sum(pt$footnotes$lines, pt$page_footer$lines)
+  if (debug)
+    print(paste("Page Template Footer Count:", rs$page_template_footer_count))
+  
+  rs$page_template_row_count <- rs$page_template_header_count + 
+    rs$page_template_footer_count
+  if (debug)
+    print(paste("Page Template Row Count:", rs$page_template_row_count))
+  
+  # Body line count is the number of rows available for content on each page
+  rs$body_line_count <- rs$line_count - rs$page_template_row_count
+  if (debug)
+    print(paste0("Body Line Count: ", rs$body_line_count))
   
   return(rs)
 }
