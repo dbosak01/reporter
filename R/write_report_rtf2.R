@@ -116,19 +116,17 @@ get_rtf_document <- function(rs) {
 #' @noRd
 paginate_content_rtf <- function(rs, ls) {
   
-  
   ret <- c()
   last_object <- FALSE
   last_page_lines <- 0
   table_widths <- list()
   lpg_twips <- 0
-
   
   # Loop through content objects
   for (i in seq_along(ls)) {
     
     pgs <- list()  # list of vectors with page rtf lines
-    lns <- 0
+    lns <- c()
     
     # Set last object flag
     if (i == length(ls))
@@ -154,16 +152,25 @@ paginate_content_rtf <- function(rs, ls) {
     if (any(class(obj) == "table_spec")) {
       
       res <- create_table_pages_rtf(rs, cntnt, lpg_twips)
+      
+      # Collect multiple pages and line counts
       for (j in seq_len(length(res$page_list))) {
         pgs[[length(pgs) + 1]] <- res$page_list[[j]]$rtf
         lns <- append(lns, res$page_list[[j]]$lines)
       }
+      
+      # Retrieve table widths.  These are useful for debugging.
+      # Assigned to returning report object.
       table_widths[[length(table_widths) + 1]] <- res$widths
       
     } else if (any(class(obj) == "text_spec")) {
       
       res <- create_text_pages_rtf(rs, cntnt, lpg_twips, cbr)
-      pgs <- append(pgs, res)
+      for (j in seq_len(length(res$rtf))) {
+        pgs[[length(pgs) + 1]] <- res$rtf[[j]]
+        lns[[length(lns) + 1]] <- res$lines[[j]]
+      
+      }
       
     } else if (any(class(obj) == "plot_spec")) {
       
@@ -177,7 +184,19 @@ paginate_content_rtf <- function(rs, ls) {
     ls[[i]]$pages <- pgs
     ls[[i]]$lines <- lns
     
+    # This section of code is appending blank lines to get
+    # footnotes at the bottom of the page.  The complication
+    # is when there are multiple pieces of content, and user-defined
+    # page breaks.  So these can't be added earlier in
+    # the process.  In short, these blanks are for in between
+    # pieces of content.  Blanks within a piece of content are 
+    # handled in the create_table_*, create_text_*, and create_plot_* 
+    # functions.
+    
+    # Capture last page
     last_page <- pgs[[length(pgs)]]
+    
+    # Capture number of lines on the last page
     last_page_lines <- lns[[length(lns)]] + last_page_lines
     
     # print(last_page_lines)
@@ -185,6 +204,8 @@ paginate_content_rtf <- function(rs, ls) {
     if (length(pgs) > 1)
       last_page_lines <- lns[[length(lns)]]
     
+    # If there is a page break or it's the last object in the
+    # content list, add the blank lines if needed.
     if (ls[[i]]$page_break | last_object) {
       
       blnks <- c()
@@ -213,6 +234,9 @@ paginate_content_rtf <- function(rs, ls) {
 
 #' @title Write out content
 #' @description This loop writes out pages created in paginate_content
+#' Page template items added to the report (titles/footnotes/title_header)
+#' are added in this step.  That means these items need to have been accounted
+#' for in the previous steps.
 #' @noRd
 write_content_rtf <- function(rs, hdr, body, pt) {
   
@@ -385,9 +409,11 @@ page_setup_rtf <- function(rs) {
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
   
-  if (is.null(rs$user_line_count))
-    rs$line_count <- floor(rs$content_size[[1]] * conv / rh)
-  else 
+  if (is.null(rs$user_line_count)) {
+    # There is one row above the page footer that is not printable.
+    # Therefore adjust by 1.
+    rs$line_count <- floor(rs$content_size[[1]] * conv / rh) - 1
+  } else 
     rs$line_count <- rs$user_line_count
   
   if (debug) {

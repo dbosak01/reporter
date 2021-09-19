@@ -1,3 +1,5 @@
+# The page template is everything except the content: page header/footer,
+# titles, footnotes, etc.
 
 # Page Template RTF Functions ---------------------------------------------
 

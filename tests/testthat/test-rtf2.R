@@ -264,7 +264,7 @@ test_that("rtf2-7: Three page table works as expected.", {
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
-    add_content(tbl) %>%
+    add_content(tbl, blank_row = "none") %>%
     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
     footnotes("My footnote 1", "My footnote 2") 
   

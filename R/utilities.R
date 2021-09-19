@@ -529,7 +529,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units) {
         } else {
           
           cell <- paste0(unlist(split_text_rtf(x[[i, nm]], 1000, col_widths[[nm]],
-                                      font, font_size, units)), collapse = "\n")
+                                      font, font_size, units)$rtf), collapse = "\n")
         }
         
         

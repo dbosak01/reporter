@@ -144,7 +144,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   content_offset <- get_content_offsets_rtf(rs, ts, tmp_pi, content_blank_row)
   
  # off <- sum(content_offset$twips[["upper"]], content_offset$twips[["lower"]])
-  rws <- floor(rs$body_size[["height"]]  / rs$row_height)
+  rws <- rs$body_line_count 
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rws, 
                             lpg_rows, content_offset$lines, ts, TRUE)  
@@ -285,10 +285,9 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   blnks <- c()
     
-  # Adjust by one row
-   t <- sum(ttls$lines, pgby$lines, shdrs$lines, 
-            hdrs$lines, ftnts$lines, lpg_rows,
-            length(a), length(b), 1)
+  t <- sum(ttls$lines, pgby$lines, shdrs$lines, 
+           hdrs$lines, ftnts$lines, lpg_rows,
+           length(a), length(b))
 
   len_diff <- rs$body_line_count - length(rws) - t
   if (wrap_flag & len_diff > 0) {
@@ -318,6 +317,8 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
   # Need to do something about this.
   # Width is normally the width of the table, not the page
   wdth <- rs$content_size[["width"]]
+  if (!is.null(pi$col_width))
+    wdth <- sum(pi$col_width)
   
   # Default to zero
   shdrs <- list(lines = 0, twips = 0)

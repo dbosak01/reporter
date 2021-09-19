@@ -45,13 +45,13 @@ test_that("split_text_rtf() works as expected.", {
   res <- split_text_rtf(cnt, 4, 5, "Arial", 12, "inches")
   
   res
-  expect_equal(length(res), 2)
+  expect_equal(length(res$rtf), 2)
   
   
   res <- split_text_rtf(cnt, 4, 3, "Arial", 12, "inches", 2)
   
   res
-  expect_equal(length(res), 4)
+  expect_equal(length(res$rtf), 4)
   
   
   cnt2 <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",

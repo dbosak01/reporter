@@ -318,17 +318,18 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
   
   txt <- cntnt$object
   
+  # Default to content width
   w <- rs$content_size[["width"]] 
-  
-  
+
   # If user supplies a width, override default
   if (!is.null(txt$width))
     w <- txt$width
   
-  rws <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
+  res <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
                            lpg_twips, content_blank_row)
   
-  return(rws)
+
+  return(res)
   
   
 }
@@ -364,9 +365,12 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
   else 
     algn <- "\\ql"
   
-  txtpgs <- get_text_pages_rtf(rs, txt$text, hgt, width, lpg_twips)
+  tpgs <- get_text_pages_rtf(rs, txt$text, hgt, width, lpg_twips)
+  txtpgs <- tpgs$rtf
+  lns <- tpgs$lines
   
   ret <- list()
+  cnt <- c()
   
   for (i in seq_along(txtpgs)) {
     
@@ -395,10 +399,14 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
     ret[[length(ret) + 1]] <- c(a, rttls$rtf, rttl_hdr$rtf,
                               ttls$rtf, s, spcs, ftnts$rtf, rftnts$rtf, b)
     
-    
+    cnt[[length(cnt) + 1]] <- sum(length(a), rttls$lines, rttl_hdr$lines, 
+                                  ttls$lines, lns[[i]], length(spcs), ftnts$lines,
+                                  rftnts$lines, length(b))
   }
+  
+  res <- list(rtf = ret, lines = cnt)
 
-  return(ret)
+  return(res)
   
 }
 
@@ -413,83 +421,15 @@ get_text_pages_rtf <- function(rs, txt, height, width, lpg_twips) {
   # print(lh)
   # print(lns)
   
-  tpgs <- split_text_rtf(txt, lns, width, rs$font, rs$font_size, rs$units, offst)
+  ret <- split_text_rtf(txt, lns, width, rs$font, rs$font_size, rs$units, offst)
   
 
   
-  return(tpgs)
+  return(ret)
 }
 
 
-#' @description lines is the number of lines per page or cell before breaking.
-#' Width is the width of the page or cell.
-#' @noRd
-split_text_rtf_new <- function(txt, lines, width, font, font_size, units, offset = 0) {
-  
-  pgs <- c()
-  lns <- c()
-  cnt <- 0
-  lnlngth <- 0
-  ln <- c()
 
-  paras <- strsplit(txt, "\n", fixed = TRUE)[[1]]
-  
-  for (par in paras) {
-
-    # Split text into words
-    wrds <- strsplit(par, " ", fixed = TRUE)[[1]]
-    
-    # Set font
-    f <- "mono"
-    if (tolower(font) == "arial")
-      f <- "sans"
-    else if (tolower(font) == "times")
-      f <- "serif"
-    
-    lngths <- c()
-    
-    
-    lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
-               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
-  
-    # Loop through words and add up lines
-    for (i in seq_along(wrds)) {
-      
-      lnlngth <- lnlngth + lngths[i] 
-      if (lnlngth <= width)
-        ln <- append(ln, wrds[i])
-      else {
-        cnt <- cnt + 1
-  
-        # If cnt exceeds allowed lines per page, start a new page
-        if (cnt <= lines - offset) {
-          lns <- append(lns, paste(ln, collapse = " "))
-          ln <- wrds[i]
-          lnlngth <- lngths[i]
-        } else {
-          pgs[[length(pgs) + 1]] <- lns
-  
-          lns <- paste(ln, collapse = " ")
-          ln <- wrds[i]
-          lnlngth <- lngths[i]
-          # After first page, set this to zero.
-          offset <- 0
-          cnt <- 1
-        }
-      }
-    }
-    
-    if (length(lns) > 0 | length(ln) > 0) {
-      lns <- append(lns, paste(ln, collapse = " "))
-      
-      pgs[[length(pgs) + 1]] <- lns
-    }
-  
-  }
-  
-  return(pgs)
-  
-}
 
 
 #' @description lines is the number of lines per page or cell before breaking.
@@ -503,6 +443,7 @@ split_text_rtf <- function(txt, lines, width, font,
   ln <- c()
   cnt <- 0
   lns <- c()
+  cnts <- c()
   
   # Split text into words
   wrds <- strsplit(txt, " ", fixed = TRUE)[[1]]
@@ -516,13 +457,6 @@ split_text_rtf <- function(txt, lines, width, font,
   
   lngths <- c()
   
-  # Set font and size
-  # R.devices::devEval(c("pdf"), name = "Get Font width", {
-  #   par(family = f, ps = font_size)
-  # 
-  #   # Get lengths for all words plus space after
-  #   lngths <-  (strwidth(wrds, units = units) + strwidth(" ", units = units)) * 1.03
-  # })
   
   lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
                get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
@@ -543,6 +477,7 @@ split_text_rtf <- function(txt, lines, width, font,
         lnlngth <- lngths[i]
       } else {
         pgs[[length(pgs) + 1]] <- lns
+        cnts[[length(cnts) + 1]] <- cnt
         
         lns <- paste(ln, collapse = " ")
         ln <- wrds[i]
@@ -561,8 +496,12 @@ split_text_rtf <- function(txt, lines, width, font,
     lns <- append(lns, paste(ln, collapse = " "))
     
     pgs[[length(pgs) + 1]] <- lns
+    cnts[[length(cnts) + 1]] <- cnt
   }
   
-  return(pgs)
+  res <- list(rtf = pgs, 
+              lines = cnts)
+  
+  return(res)
   
 }
