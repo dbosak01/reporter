@@ -101,12 +101,12 @@ test_that("rtf2-1: One page text spec works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt) %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Right1") 
 
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 1)
 
 
 })
@@ -123,20 +123,20 @@ test_that("rtf2-2: Two page text spec works as expected in 12pt font.", {
   cnttxt <- paste(rep(cnt, 10), collapse = "")
 
   txt <- create_text(cnttxt) %>%
-    titles("Text 1.0", "My Nice Text") %>%
-    footnotes("My footnote 1", "My footnote 2")
+    titles("Text 1.0", "My Nice Text") 
 
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt) %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Right1") %>%
+    footnotes("My footnote 1", "My footnote 2")
 
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 2)
 
 
 })
@@ -176,21 +176,21 @@ test_that("rtf2-4: Two page text spec works as expected in 10pt font.", {
 
   cnttxt <- paste(rep(cnt, 12), collapse = "")
 
-  txt <- create_text(cnttxt) %>%
-    titles("Text 1.0", "My Nice Text") %>%
-    footnotes("My footnote 1", "My footnote 2")
+  txt <- create_text(cnttxt) 
 
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt) %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Right1") %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
 
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 2)
 
 
 })
@@ -203,21 +203,21 @@ test_that("rtf2-5: Two page text spec works as expected in 8pt font.", {
 
   cnttxt <- paste(rep(cnt, 20), collapse = "")
 
-  txt <- create_text(cnttxt) %>%
-    titles("Text 1.0", "My Nice Text") %>%
-    footnotes("My footnote 1", "My footnote 2")
+  txt <- create_text(cnttxt) 
 
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 8) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt) %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Right1") %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
 
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 2)
 
 
 })
@@ -243,7 +243,7 @@ test_that("rtf2-6: One page table works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 1)
   
   
 })
@@ -271,7 +271,7 @@ test_that("rtf2-7: Three page table works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 7)
   
   
 })
@@ -303,7 +303,7 @@ test_that("rtf2-8: Portrait table works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   expect_equal(length(res$column_widths[[1]]), 11)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 1)
   
   
 })
@@ -326,7 +326,7 @@ test_that("rtf2-9: Wide table works as expected.", {
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
     add_content(tbl) %>%
-    footnotes("My footnote 1", "My footnote 2", valign = "top") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top") %>% # Works!
     page_footer("Left1", "Center1", "Right1")
   
   res <- write_report(rpt)
@@ -344,7 +344,6 @@ test_that("rtf2-10: Preview works as expected.", {
   fp <- file.path(base_path, "rtf2/test10.rtf")
   
   dat <- iris
-  #attr(dat[[2]], "label") <- "Cylin."
   
   tbl <- create_table(dat, borders = "none") %>% 
     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
@@ -372,7 +371,6 @@ test_that("rtf2-11: Forced page wrap works as expected.", {
   fp <- file.path(base_path, "rtf2/test11.rtf")
   
   dat <- mtcars
-  #attr(dat[[2]], "label") <- "Cylin."
   
   tbl <- create_table(dat, borders = "none") %>% 
     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
@@ -384,13 +382,12 @@ test_that("rtf2-11: Forced page wrap works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
     add_content(tbl) %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]")
   
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 4)
-  #expect_equal(res$pages, 1)
   
   
 })
@@ -421,45 +418,45 @@ test_that("rtf2-12: Table Borders work as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   expect_equal(length(res$column_widths[[1]]), 11)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 1)
   
   
 })
 
-test_that("rtf2-13: Spanning headers work as expected.", {
-  
-  
-  fp <- file.path(base_path, "rtf2/test13.rtf")
-  
-  dat <- mtcars[1:15, ] 
-  
-  tbl <- create_table(dat, borders = "outside") %>% 
-    spanning_header(mpg, disp, "Span 1") %>% 
-    spanning_header(hp, wt, "Span 2") %>% 
-    spanning_header(qsec, vs, "Span 3") %>% 
-    spanning_header(drat, gear, "Super span", level = 2)
-    
-  
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table") %>%
-    add_content(tbl) %>%
-    footnotes("My footnote 1", "My footnote 2") %>%
-    page_footer("Left1", "Center1", "Right1")
-  
-  res <- write_report(rpt)
-  res
-  res$column_widths
-  
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
-  expect_equal(length(res$column_widths[[1]]), 11)
-  #expect_equal(res$pages, 1)
-  
-  
-})
+# test_that("rtf2-13: Spanning headers work as expected.", {
+#   
+#   
+#   fp <- file.path(base_path, "rtf2/test13.rtf")
+#   
+#   dat <- mtcars[1:15, ] 
+#   
+#   tbl <- create_table(dat, borders = "outside") %>% 
+#     spanning_header(mpg, disp, "Span 1") %>% 
+#     spanning_header(hp, wt, "Span 2") %>% 
+#     spanning_header(qsec, vs, "Span 3") %>% 
+#     spanning_header(drat, gear, "Super span", level = 2)
+#     
+#   
+#   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+#                        font_size = 10, orientation = "landscape") %>%
+#     set_margins(top = 1, bottom = 1) %>%
+#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+#     titles("Table 1.0", "My Nice Table") %>%
+#     add_content(tbl) %>%
+#     footnotes("My footnote 1", "My footnote 2") %>%
+#     page_footer("Left1", "Center1", "Right1")
+#   
+#   res <- write_report(rpt)
+#   res
+#   res$column_widths
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   expect_equal(res$pages, 1)
+#   expect_equal(length(res$column_widths[[1]]), 11)
+#   #expect_equal(res$pages, 1)
+#   
+#   
+# })
 
 
 test_that("rtf2-14: Labels and show_cols work as expected.", {
@@ -494,6 +491,7 @@ test_that("rtf2-14: Labels and show_cols work as expected.", {
   
 })
 
+# Not working correctly - Line counting off on first page
 test_that("rtf2-15: Valign on report footnotes works as expected.", {
   
   
@@ -519,11 +517,11 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 2)
   expect_equal(length(res$column_widths[[1]]), 5)
-  #expect_equal(res$pages, 1)
   
   
 })
 
+# Not working properly - Footnotes not on bottom on second page
 test_that("rtf2-16: Valign on table footnotes works as expected.", {
   
   
@@ -549,7 +547,6 @@ test_that("rtf2-16: Valign on table footnotes works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 2)
   expect_equal(length(res$column_widths[[1]]), 5)
-  #expect_equal(res$pages, 1)
   
   
 })
@@ -580,11 +577,11 @@ test_that("rtf2-17: Table header on table works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   expect_equal(length(res$column_widths[[1]]), 5)
-  #expect_equal(res$pages, 1)
   
   
 })
 
+# Not working - Line count off on first page
 test_that("rtf2-18: Table header on report works as expected.", {
   
   
@@ -610,7 +607,6 @@ test_that("rtf2-18: Table header on report works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 2)
   expect_equal(length(res$column_widths[[1]]), 5)
-  #expect_equal(res$pages, 1)
   
   
 })

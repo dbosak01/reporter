@@ -122,6 +122,9 @@ paginate_content_rtf <- function(rs, ls) {
   table_widths <- list()
   lpg_twips <- 0
   
+  hrf <- has_report_footnotes(rs)
+
+  
   # Loop through content objects
   for (i in seq_along(ls)) {
     
@@ -174,7 +177,7 @@ paginate_content_rtf <- function(rs, ls) {
       
     } else if (any(class(obj) == "plot_spec")) {
       
-      # Needs fixing
+      # Plots not started rtf2 conversion
       tmp_dir <- file.path(tempdir(), "temp.jpg")
       res <- create_plot_pages_rtf(rs, cntnt, lpg_twips, tmp_dir)
       pgs <- append(pgs, res)
@@ -206,7 +209,7 @@ paginate_content_rtf <- function(rs, ls) {
     
     # If there is a page break or it's the last object in the
     # content list, add the blank lines if needed.
-    if (ls[[i]]$page_break | last_object) {
+    if ((ls[[i]]$page_break | last_object) & hrf) {
       
       blnks <- c()
       bl <- rs$body_line_count - last_page_lines 
@@ -465,3 +468,4 @@ page_setup_rtf <- function(rs) {
   
   return(rs)
 }
+

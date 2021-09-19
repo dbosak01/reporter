@@ -340,23 +340,21 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
 get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips, 
                               content_blank_row, conv) {
 
-  bh <- rs$body_size[["height"]]
-  bw <- rs$body_size[["width"]]
-  lw <- rs$content_size[["width"]]
-  conv <- rs$twip_conversion
-  
-  # Get report titles and footnotes
-  rttls <- get_titles_rtf(rs$titles, lw, rs)
-  rftnts <- get_titles_rtf(rs$footnotes, lw, rs)
-  rttl_hdr <- get_title_header_rtf(rs$title_hdr, lw, rs)
-  
+
   # Get content titles and footnotes
   ttls <- get_titles_rtf(txt$titles, width, rs) 
   ftnts <- get_footnotes_rtf(txt$footnotes, width, rs) 
   ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs)
   
-  hgt <- bh - rttls$twips - rftnts$twips - rttl_hdr$twips 
-  hgt <- hgt - ttls$twips - ftnts$twips - ttl_hdr$twips 
+  t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
+  hgt <- rs$body_line_count - t
+
+  tpgs <- split_text_rtf(txt$text, hgt, width, rs$font, 
+                 rs$font_size, rs$units, lpg_twips)
+  
+  txtpgs <- tpgs$rtf
+  lns <- tpgs$lines
+  
   
   if (txt$align == "right") 
     algn <- "\\qr"
@@ -364,10 +362,6 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
     algn <- "\\qc"
   else 
     algn <- "\\ql"
-  
-  tpgs <- get_text_pages_rtf(rs, txt$text, hgt, width, lpg_twips)
-  txtpgs <- tpgs$rtf
-  lns <- tpgs$lines
   
   ret <- list()
   cnt <- c()
@@ -396,12 +390,12 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
     
     
     # Combine titles, blanks, body, and footnotes
-    ret[[length(ret) + 1]] <- c(a, rttls$rtf, rttl_hdr$rtf,
-                              ttls$rtf, s, spcs, ftnts$rtf, rftnts$rtf, b)
+    ret[[length(ret) + 1]] <- c(a, 
+                              ttls$rtf, s, spcs, ftnts$rtf,  b)
     
-    cnt[[length(cnt) + 1]] <- sum(length(a), rttls$lines, rttl_hdr$lines, 
+    cnt[[length(cnt) + 1]] <- sum(length(a), 
                                   ttls$lines, lns[[i]], length(spcs), ftnts$lines,
-                                  rftnts$lines, length(b))
+                                  length(b))
   }
   
   res <- list(rtf = ret, lines = cnt)
@@ -409,26 +403,6 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
   return(res)
   
 }
-
-#' @description height in twips, width in unit of measure.
-#' @noRd
-get_text_pages_rtf <- function(rs, txt, height, width, lpg_twips) {
-  
-  lh <- rs$line_height
-  offst <- floor(lpg_twips / lh)
-  lns <- floor(height / lh) 
-  # print(height)
-  # print(lh)
-  # print(lns)
-  
-  ret <- split_text_rtf(txt, lns, width, rs$font, rs$font_size, rs$units, offst)
-  
-
-  
-  return(ret)
-}
-
-
 
 
 
@@ -476,12 +450,16 @@ split_text_rtf <- function(txt, lines, width, font,
         ln <- wrds[i]
         lnlngth <- lngths[i]
       } else {
-        pgs[[length(pgs) + 1]] <- lns
-        cnts[[length(cnts) + 1]] <- cnt
         
+        # Assign current lines and counts
+        pgs[[length(pgs) + 1]] <- lns
+        cnts[[length(cnts) + 1]] <- length(lns)
+        
+        # Assign overflow to next page
         lns <- paste(ln, collapse = " ")
         ln <- wrds[i]
         lnlngth <- lngths[i]
+        
         # After first page, set this to zero.
         offset <- 0
         cnt <- 1
@@ -496,7 +474,7 @@ split_text_rtf <- function(txt, lines, width, font,
     lns <- append(lns, paste(ln, collapse = " "))
     
     pgs[[length(pgs) + 1]] <- lns
-    cnts[[length(cnts) + 1]] <- cnt
+    cnts[[length(cnts) + 1]] <- length(lns)
   }
   
   res <- list(rtf = pgs, 

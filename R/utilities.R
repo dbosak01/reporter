@@ -801,6 +801,26 @@ log_logr <- function(x) {
   }
 }
 
+#' @noRd
+has_report_footnotes <- function(rs) {
+  
+  ret <- FALSE
+  
+  if (!is.null(rs$footnotes)) {
+    
+    for (ftn in rs$footnotes) {
+      if (ftn$valign == "bottom") { 
+        ret <- TRUE
+        break()
+      }
+    }
+    
+  }
+  
+  return(ret)
+}
+
+
 
 # Sizing utilities --------------------------------------------------------
 

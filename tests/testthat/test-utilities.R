@@ -285,7 +285,7 @@ test_that("split_cells_variable works as expected.", {
 })
 
 
-test_that("rtf2-11: get_width function works as expected.", {
+test_that("get_width function works as expected.", {
   
   res1 <- get_text_width("This is cool.", "Arial", 12)
   res1
@@ -300,6 +300,24 @@ test_that("rtf2-11: get_width function works as expected.", {
   res3
   expect_equal(res2 < res3, TRUE)
   
+  
+})
+
+test_that("has_report_footnotes works as expected.", {
+  
+  rpt <- create_report("") 
+  
+  expect_equal(has_report_footnotes(rpt), FALSE)
+  
+  rpt2 <- rpt %>% 
+    footnotes("Hello")
+  
+  expect_equal(has_report_footnotes(rpt2), TRUE)
+  
+  rpt3 <- rpt %>% 
+    footnotes("Hello", valign = "top")
+  
+  expect_equal(has_report_footnotes(rpt3), FALSE)
   
 })
 
