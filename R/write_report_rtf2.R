@@ -122,7 +122,7 @@ paginate_content_rtf <- function(rs, ls) {
   table_widths <- list()
   lpg_twips <- 0
   
-  hrf <- has_report_footnotes(rs)
+  hrf <- has_bottom_footnotes(rs)
 
   
   # Loop through content objects

@@ -491,7 +491,7 @@ test_that("rtf2-14: Labels and show_cols work as expected.", {
   
 })
 
-# Not working correctly - Line counting off on first page
+
 test_that("rtf2-15: Valign on report footnotes works as expected.", {
   
   
@@ -521,7 +521,7 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
   
 })
 
-# Not working properly - Footnotes not on bottom on second page
+
 test_that("rtf2-16: Valign on table footnotes works as expected.", {
   
   
@@ -581,7 +581,7 @@ test_that("rtf2-17: Table header on table works as expected.", {
   
 })
 
-# Not working - Line count off on first page
+
 test_that("rtf2-18: Table header on report works as expected.", {
   
   
@@ -598,7 +598,7 @@ test_that("rtf2-18: Table header on report works as expected.", {
     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>% 
     title_header("Table 1.0", "My Nice Table", right = c("Page [pg] of [tpg]", 
                                                          "Right2", "Right3")) %>%
-    footnotes("My footnote 1", "My footnote 2", valign = "top")
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom")
   
   res <- write_report(rpt)
   res

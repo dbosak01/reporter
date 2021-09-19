@@ -365,8 +365,13 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
       ret["blank_upper"] <- 1
   
   ftnts <- get_footnotes(ts$footnotes, rs$line_size) 
+  rftnts <- get_footnotes(rs$footnotes, rs$line_size) 
   
-  ret["lower"] <- length(ftnts) 
+  if (has_top_footnotes(rs)) {
+    ret["lower"] <- length(ftnts) + length(rftnts)
+  } else {
+    ret["lower"] <- length(ftnts) 
+  }
 
   if (content_blank_row %in% c("both", "below"))
     ret["blank_lower"] <- 1

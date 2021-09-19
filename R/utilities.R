@@ -802,7 +802,7 @@ log_logr <- function(x) {
 }
 
 #' @noRd
-has_report_footnotes <- function(rs) {
+has_bottom_footnotes <- function(rs) {
   
   ret <- FALSE
   
@@ -820,6 +820,25 @@ has_report_footnotes <- function(rs) {
   return(ret)
 }
 
+
+#' @noRd
+has_top_footnotes <- function(rs) {
+  
+  ret <- FALSE
+  
+  if (!is.null(rs$footnotes)) {
+    
+    for (ftn in rs$footnotes) {
+      if (ftn$valign == "top") { 
+        ret <- TRUE
+        break()
+      }
+    }
+    
+  }
+  
+  return(ret)
+}
 
 
 # Sizing utilities --------------------------------------------------------

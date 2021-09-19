@@ -303,21 +303,40 @@ test_that("get_width function works as expected.", {
   
 })
 
-test_that("has_report_footnotes works as expected.", {
+test_that("has_bottom_footnotes works as expected.", {
   
   rpt <- create_report("") 
   
-  expect_equal(has_report_footnotes(rpt), FALSE)
+  expect_equal(has_bottom_footnotes(rpt), FALSE)
   
   rpt2 <- rpt %>% 
     footnotes("Hello")
   
-  expect_equal(has_report_footnotes(rpt2), TRUE)
+  expect_equal(has_bottom_footnotes(rpt2), TRUE)
   
   rpt3 <- rpt %>% 
     footnotes("Hello", valign = "top")
   
-  expect_equal(has_report_footnotes(rpt3), FALSE)
+  expect_equal(has_bottom_footnotes(rpt3), FALSE)
   
 })
+
+test_that("has_top_footnotes works as expected.", {
+  
+  rpt <- create_report("") 
+  
+  expect_equal(has_top_footnotes(rpt), FALSE)
+  
+  rpt2 <- rpt %>% 
+    footnotes("Hello")
+  
+  expect_equal(has_top_footnotes(rpt2), FALSE)
+  
+  rpt3 <- rpt %>% 
+    footnotes("Hello", valign = "top")
+  
+  expect_equal(has_top_footnotes(rpt3), TRUE)
+  
+})
+
 

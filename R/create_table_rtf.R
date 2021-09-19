@@ -290,7 +290,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
            length(a), length(b))
 
   len_diff <- rs$body_line_count - length(rws) - t
-  if (wrap_flag & len_diff > 0) {
+  if ((wrap_flag & len_diff > 0) | (vflag == "bottom" & len_diff > 0)) {
     if (vflag == "bottom")
       blnks <- rep("\\par", len_diff)
   }
@@ -360,9 +360,15 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
   }
   
   ftnts <- get_footnotes_rtf(ts$footnotes, wdth, rs) 
-
-  ret[["lower"]] <- ftnts$twips
-  cnt[["lower"]] <- ftnts$lines
+  rftnts <- get_footnotes_rtf(rs$footnotes, wdth, rs)
+  
+  if (has_top_footnotes(rs)) {
+    ret[["lower"]] <- ftnts$twips + rftnts$twips
+    cnt[["lower"]] <- ftnts$lines + rftnts$lines
+  } else {
+    ret[["lower"]] <- ftnts$twips
+    cnt[["lower"]] <- ftnts$lines
+  }
   
   if (content_blank_row %in% c("both", "below")) {
     ret[["blank_lower"]] <- rs$line_height
