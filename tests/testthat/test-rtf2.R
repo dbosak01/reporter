@@ -234,7 +234,7 @@ test_that("rtf2-6: One page table works as expected.", {
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
     add_content(create_table(dat)) %>%
     footnotes("My footnote 1", "My footnote 2") %>%
@@ -258,15 +258,15 @@ test_that("rtf2-7: Three page table works as expected.", {
   #attr(dat[[2]], "label") <- "Cylin."
   
   tbl <- create_table(dat, borders = "none") %>% 
-    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
-    footnotes("My footnote 1", "My footnote 2") 
+    titles("Table 1.0", "My Nice Irises", "Another Title") 
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
     add_content(tbl) %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    footnotes("My footnote 1", "My footnote 2") 
   
   res <- write_report(rpt)
   
@@ -278,4 +278,340 @@ test_that("rtf2-7: Three page table works as expected.", {
 
 
 
+test_that("rtf2-8: Portrait table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test8.rtf")
+  
+  dat <- mtcars[1:15, ] 
+  
+  tbl <- create_table(dat) 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "portrait") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 11)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("rtf2-9: Wide table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test9.rtf")
+  
+  dat <- mtcars[1:15, ] 
+  
+  tbl <- create_table(dat) %>% 
+  column_defaults(width = 1)
+
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "portrait") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  
+  
+})
+
+
+test_that("rtf2-10: Preview works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test10.rtf")
+  
+  dat <- iris
+  #attr(dat[[2]], "label") <- "Cylin."
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2") 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt, preview = 2)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  
+  
+})
+
+
+test_that("rtf2-11: Forced page wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test11.rtf")
+  
+  dat <- mtcars
+  #attr(dat[[2]], "label") <- "Cylin."
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2") %>% 
+    define(wt, page_wrap = TRUE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("rtf2-12: Table Borders work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test12.rtf")
+  
+  dat <- mtcars[1:15, ] 
+  
+  tbl <- create_table(dat, borders = c("left", "right", "bottom", "top"))
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 11)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-13: Spanning headers work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test13.rtf")
+  
+  dat <- mtcars[1:15, ] 
+  
+  tbl <- create_table(dat, borders = "outside") %>% 
+    spanning_header(mpg, disp, "Span 1") %>% 
+    spanning_header(hp, wt, "Span 2") %>% 
+    spanning_header(qsec, vs, "Span 3") %>% 
+    spanning_header(drat, gear, "Super span", level = 2)
+    
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 11)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("rtf2-14: Labels and show_cols work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test14.rtf")
+  
+  dat <- mtcars[1:15, ] 
+  
+  attr(dat$mpg, "label") <- "Miles Per Gallon"
+  attr(dat$cyl, "label") <- "Cylinders"
+  
+  tbl <- create_table(dat, show_cols = 1:5) %>% 
+    define(mpg, width = 1.25) %>% 
+    define(disp, label = "Displacement")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+test_that("rtf2-15: Valign on report footnotes works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test15.rtf")
+  
+  dat <- iris[1:50, ] 
+  
+  tbl <- create_table(dat) 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-16: Valign on table footnotes works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test16.rtf")
+  
+  dat <- iris[1:50, ] 
+  
+  tbl <- create_table(dat) %>% 
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("rtf2-17: Table header on table works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test17.rtf")
+  
+  dat <- iris[1:25, ] 
+  
+  tbl <- create_table(dat) %>% 
+    title_header("Table 1.0", "My Nice Table", right = c("Right1", 
+                                                   "Right2", "Page [pg] of [tpg]")) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  #expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-18: Table header on report works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test18.rtf")
+  
+  dat <- iris[1:50, ] 
+  
+  tbl <- create_table(dat) 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>% 
+    title_header("Table 1.0", "My Nice Table", right = c("Page [pg] of [tpg]", 
+                                                         "Right2", "Right3")) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  #expect_equal(res$pages, 1)
+  
+  
+})
 

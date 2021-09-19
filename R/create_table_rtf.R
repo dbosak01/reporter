@@ -223,27 +223,29 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   ls <- rs$content_size[["width"]]
   # Need to fix this to get table with
-  # if (length(rws) > 0)
-  #   ls <- max(nchar(rws))
+  if (!is.null(pi$col_width))
+     ls <- sum(pi$col_width, na.rm = TRUE)
   
   if (!is.null(ts$title_hdr))
-    ttls <- get_title_header_rtf(ts$title_hdr, ls, rs)
+    ttls <- get_title_header_rtf(ts$title_hdr, ls, rs, pi$table_align)
   else
-    ttls <- get_titles_rtf(ts$titles, ls, rs) 
+    ttls <- get_titles_rtf(ts$titles, ls, rs, pi$table_align) 
   
   ftnts <- list(lines = 0, twips = 0)
-  vflag <- FALSE
+  vflag <- "none"
   
   # Deal with valign parameter
   if (!is.null(ts$footnotes)) {
     if (!is.null(ts$footnotes[[length(ts$footnotes)]])) {
       if (ts$footnotes[[length(ts$footnotes)]]$valign == "bottom") {
         
-        vflag <- TRUE
-        ftnts <- get_footnotes_rtf(ts$footnotes, rs$content_size[["width"]], rs) 
+        vflag <- "bottom"
+        ftnts <- get_footnotes_rtf(ts$footnotes, 
+                                   rs$content_size[["width"]], rs, 
+                                   pi$table_align) 
       } else {
-        
-        ftnts <- get_footnotes_rtf(ts$footnotes, ls, rs) 
+        vflag <- "top"
+        ftnts <- get_footnotes_rtf(ts$footnotes, ls, rs, pi$table_align) 
       }
       
     }
@@ -252,8 +254,10 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
     if (!is.null(rs$footnotes[[1]])) {
       if (!is.null(rs$footnotes[[1]]$valign)) {
         if (rs$footnotes[[1]]$valign == "top") {
-          
-          ftnts <- get_footnotes_rtf(rs$footnotes, rs$content_size[["width"]], rs) 
+          vflag <- "top"
+          ftnts <- get_footnotes_rtf(rs$footnotes, 
+                                     rs$content_size[["width"]], rs, 
+                                     pi$table_align) 
         } 
       }
     }
@@ -280,36 +284,22 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
     b <- "\\par"
   
   blnks <- c()
-  if (vflag) {
-    ret <- c(a, ttls$rtf, pgby$rtf, shdrs$rtf, hdrs$rtf, rws, b)
-    lncnt <- length(a) + length(b) + ttls$lines + pgby$lines + shdrs$lines + hdrs$lines  
     
-    len_diff <- rs$body_line_count - lpg_rows - lncnt - length(ftnts$lines)
-    
-    # At some point will have to deal with wrap flag
-    # Right now cannot put anything in between end of content
-    # and the start of the footnote.  Edge case but should still
-    # fix at some point.
-    if (len_diff > 0) {
-      blnks <- rep("\\par", len_diff)
-      ret <- c(ret, blnks, ftnts) 
-    }
-    
-  } else { 
-    
+  # Adjust by one row
+   t <- sum(ttls$lines, pgby$lines, shdrs$lines, 
+            hdrs$lines, ftnts$lines, lpg_rows,
+            length(a), length(b), 1)
 
-    ret <- c(a, ttls$rtf, pgby$rtf, shdrs$rtf, hdrs$rtf, rws, ftnts$rtf, b)
-    t <- sum(ttls$twips, pgby$twips, shdrs$twips, hdrs$twips, ftnts$twips)
-    t <- t + (length(a) * rh) + (length(b) * rh) + (lpg_rows * rh)
-    
-    len_diff <- floor((rs$body_size[["height"]] - t)/rh) - length(rws)
-    if (wrap_flag & len_diff > 0) {
+  len_diff <- rs$body_line_count - length(rws) - t
+  if (wrap_flag & len_diff > 0) {
+    if (vflag == "bottom")
       blnks <- rep("\\par", len_diff)
-      ret <- c(ret, blnks) 
-    }
-    
   }
   
+  ret <- list(rtf = c(a, ttls$rtf, pgby$rtf, shdrs$rtf, 
+                      hdrs$rtf, rws, blnks, ftnts$rtf, b),
+              lines = t + length(rws) + length(blnks))
+    
   return(ret) 
 }
 
@@ -662,20 +652,25 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' @noRd
 get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   
+  nms <- names(widths)
+  nms <- nms[!is.na(nms)]
+  nms <- nms[!is.controlv(nms)]
+  wdths <- widths[nms]
+  t <- tbl[ , nms]
   
   # Get line height.  Don't want to leave editor default.
   rh <- rs$row_height
   conv <- rs$twip_conversion
-  nms <- names(tbl)
+  
   
   # Get cell widths
   sz <- c()
-  for (k in seq_along(widths)) {
+  for (k in seq_along(wdths)) {
     if (!is.control(nms[k])) {
       if (k == 1)
-        sz[k] <- round(widths[k] * conv)
+        sz[k] <- round(wdths[k] * conv)
       else 
-        sz[k] <- round(widths[k] * conv + sz[k - 1])
+        sz[k] <- round(wdths[k] * conv + sz[k - 1])
     }
   }
   
@@ -702,22 +697,22 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   ret <- c()
   
   # Table Body
-  for(i in seq_len(nrow(tbl))) {
+  for(i in seq_len(nrow(t))) {
     
     ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
     
     # Loop for cell definitions
-    for(j in seq_len(ncol(tbl))) {
+    for(j in seq_len(ncol(t))) {
       if (!is.control(nms[j])) {
-        b <- get_cell_borders(i, j, nrow(tbl), ncol(tbl), brdrs)
+        b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs)
         ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
       }
     }
     
     # Loop for cell values
-    for(j in seq_len(ncol(tbl))) {
+    for(j in seq_len(ncol(t))) {
       if (!is.control(nms[j])) {
-        ret[i] <- paste0(ret[i], ca[j], " ", tbl[i, j], "\\cell")
+        ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
       }
       
     }

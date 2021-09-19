@@ -146,6 +146,6 @@ test_that("create_table_rtf works as expected.", {
   res <- create_table_rtf(rpt, tbl, pi, "below", FALSE, 0)
   res
   
-  expect_equal(length(res), 14)
+  expect_equal(length(res$rtf), 14)
   
 })

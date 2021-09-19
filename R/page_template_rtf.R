@@ -64,7 +64,7 @@ get_page_header_rtf <- function(rs) {
                     "\\cellx", c1, "\\cellx", c2 , " ")
       
       if (length(hl) >= i) {
-        ret <- paste0(ret, hl[[i]], "\\cell")
+        ret <- paste0(ret, get_page_numbers_rtf(hl[[i]]), "\\cell")
         cnt <- cnt + get_excess_lines(hl[[i]], rs$content_size[["width"]]/2, 
                                       rs$font, 
                                       rs$font_size, rs$units)
@@ -73,7 +73,7 @@ get_page_header_rtf <- function(rs) {
         ret <- paste0(ret, "\\cell")
       
       if (length(hr) >= i) {
-        ret <- paste0(ret, "\\qr ", hr[[i]], "\\cell\\row\n")
+        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(hr[[i]]), "\\cell\\row\n")
         cnt <- cnt + get_excess_lines(hr[[i]], rs$content_size[["width"]]/2, 
                                       rs$font, 
                                       rs$font_size, rs$units)
@@ -131,21 +131,21 @@ get_page_footer_rtf <- function(rs) {
                     "\\cellx", c2 , "\\cellx", c3, " ")
       
       if (length(fl) >= i) {
-        ret <- paste0(ret, fl[[i]], "\\cell")
+        ret <- paste0(ret, get_page_numbers_rtf(fl[[i]]), "\\cell")
         cnt <- cnt + get_excess_lines(fl[[i]], rs$content_size[["width"]] / 3,
                                       rs$font, rs$font_size, rs$units)
       } else 
         ret <- paste0(ret, "\\cell")
       
       if (length(fc) >= i) {
-        ret <- paste0(ret, "\\qc ", fc[[i]], "\\cell")
+        ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(fc[[i]]), "\\cell")
         cnt <- cnt + get_excess_lines(fc[[i]], rs$content_size[["width"]] / 3,
                                       rs$font, rs$font_size, rs$units)
       } else 
         ret <- paste0(ret, "\\qc \\cell")
       
       if (length(fr) >= i) {
-        ret <- paste0(ret, "\\qr ", fr[[i]], "\\cell\\row\n")
+        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(fr[[i]]), "\\cell\\row\n")
         cnt <- cnt + get_excess_lines(fr[[i]], rs$content_size[["width"]] / 3,
                                       rs$font, rs$font_size, rs$units)
       } else 
@@ -164,7 +164,7 @@ get_page_footer_rtf <- function(rs) {
 }
 
 #' @noRd
-get_titles_rtf <- function(ttllst, width, rs) {
+get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
@@ -174,6 +174,12 @@ get_titles_rtf <- function(ttllst, width, rs) {
   lh <- rs$row_height
   
   w <- round(width * conv)
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
 
   
   if (length(ttllst) > 0) {
@@ -194,7 +200,7 @@ get_titles_rtf <- function(ttllst, width, rs) {
       
       for (ttl in ttls$titles) {
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w, 
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, "\\cellx", w, 
                                   algn, " ", ttl, "\\cell\\row\n"))
         cnt <- cnt + 1
         cnt <- cnt + get_excess_lines(ttl, width, rs$font, 
@@ -221,7 +227,7 @@ get_titles_rtf <- function(ttllst, width, rs) {
 }
 
 #' @noRd
-get_footnotes_rtf <- function(ftnlst, width, rs) {
+get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
@@ -229,6 +235,12 @@ get_footnotes_rtf <- function(ftnlst, width, rs) {
   
   w <- round(width * rs$twip_conversion)
   lh <- rs$row_height
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
   
   if (length(ftnlst) > 0) {
     
@@ -249,7 +261,7 @@ get_footnotes_rtf <- function(ftnlst, width, rs) {
       
       for (ftn in ftnts$footnotes) {
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w, 
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, "\\cellx", w, 
                                   algn, " ", ftn, "\\cell\\row\n"))
         cnt <- cnt + 1
         cnt <- cnt + get_excess_lines(ftn, w, rs$font, rs$font_size, rs$units)
@@ -273,15 +285,21 @@ get_footnotes_rtf <- function(ftnlst, width, rs) {
 }
 
 
-get_title_header_rtf <- function(thdrlst, width, rs) {
+get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
   twps <- 0
   
-  w1 <- round(width * .7 * rs$twip_conversion)
-  w2 <- round(width * .3 * rs$twip_conversion)
+  w1 <- round(width * rs$twip_conversion)
+  w2 <- round(width * .7 * rs$twip_conversion)
   lh <- rs$row_height
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
   
   if (length(thdrlst) > 0) {
     
@@ -290,24 +308,25 @@ get_title_header_rtf <- function(thdrlst, width, rs) {
       mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
       
       if (any(ttlhdr$blank_row %in% c("above", "both"))) {
-        ret <- append(ret, "\\line\n")
+        ret <- append(ret, "\\par\n")
         cnt <- cnt + 1
       }
       
       for(i in seq_len(mx)) {
       
       
-        if (!is.null(ttlhdr$titles[[i]]))
+        if (length(ttlhdr$titles) >= i)
           ttl <- ttlhdr$titles[[i]]
         else 
           ttl <- ""
         
-        if (!is.null(ttlhdr$right[[i]]))
-          hdr <- ttlhdr$right[[i]]
+        if (length(ttlhdr$right) >= i)
+          hdr <- get_page_numbers_rtf(ttlhdr$right[[i]], FALSE)
         else 
           hdr <- ""
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0\\cellx", w1, "\\cellx", w2,
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, "\\cellx", w2, 
+                                  "\\cellx", w1,
                                   "\\ql ", ttl, "\\cell\\qr ",
                                   hdr, "\\cell\\row\n"))
         cnt <- cnt + 1
@@ -318,7 +337,7 @@ get_title_header_rtf <- function(thdrlst, width, rs) {
       }
       
       if (any(ttlhdr$blank_row %in% c("below", "both"))) {
-        ret <- append(ret, "\\line\n")
+        ret <- append(ret, "\\par\n")
         cnt <- cnt + 1
       }
     }
@@ -452,4 +471,16 @@ get_cell_borders <- function(row, col, nrow, ncol, brdrs) {
   
   return(ret)
   
+}
+
+get_page_numbers_rtf <- function(val, tpg = TRUE) {
+  
+  ret <- val
+  
+  ret <- gsub("[pg]", "\\chpgn ", ret, fixed = TRUE)
+  
+  if (tpg)
+    ret <- gsub("[tpg]", "{\\field{\\*\\fldinst  NUMPAGES }}", ret, fixed = TRUE)
+
+  return(ret)
 }

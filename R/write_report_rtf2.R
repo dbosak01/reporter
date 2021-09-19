@@ -35,13 +35,21 @@ write_report_rtf2 <- function(rs) {
   # Page numbers need to be included
   bdy <- paginate_content_rtf(rs, ls)
   
-  # Get column widths? Seems not necessary?
+  # Get column widths
+  rs$column_widths <- bdy[["widths"]]
   
   # Deal with preview
+  if (!is.null(rs$preview)) {
+    if (rs$preview < length(bdy[[1]]$pages))
+      bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
+  }
   
   # Write content to file system
   # Later we can just return the stream
-  write_content_rtf(rs, hdr, bdy, rs$page_template)
+  rs <- write_content_rtf(rs, hdr, bdy, rs$page_template)
+  
+  # Update page numbers for title headers
+  update_page_numbers_rtf(orig_path, rs$pages)
   
   return(rs)
 }
@@ -111,12 +119,16 @@ paginate_content_rtf <- function(rs, ls) {
   
   ret <- c()
   last_object <- FALSE
+  last_page_lines <- 0
   table_widths <- list()
   lpg_twips <- 0
-  pgs <- list()  # list of vectors with page rtf lines
+
   
   # Loop through content objects
   for (i in seq_along(ls)) {
+    
+    pgs <- list()  # list of vectors with page rtf lines
+    lns <- 0
     
     # Set last object flag
     if (i == length(ls))
@@ -142,7 +154,11 @@ paginate_content_rtf <- function(rs, ls) {
     if (any(class(obj) == "table_spec")) {
       
       res <- create_table_pages_rtf(rs, cntnt, lpg_twips)
-      pgs <- append(pgs, res$page_list)
+      for (j in seq_len(length(res$page_list))) {
+        pgs[[length(pgs) + 1]] <- res$page_list[[j]]$rtf
+        lns <- append(lns, res$page_list[[j]]$lines)
+      }
+      table_widths[[length(table_widths) + 1]] <- res$widths
       
     } else if (any(class(obj) == "text_spec")) {
       
@@ -157,15 +173,37 @@ paginate_content_rtf <- function(rs, ls) {
       pgs <- append(pgs, res)
     }   
     
+    # Separate pages and line counts
     ls[[i]]$pages <- pgs
+    ls[[i]]$lines <- lns
+    
+    last_page <- pgs[[length(pgs)]]
+    last_page_lines <- lns[[length(lns)]] + last_page_lines
+    
+    # print(last_page_lines)
+    
+    if (length(pgs) > 1)
+      last_page_lines <- lns[[length(lns)]]
+    
+    if (ls[[i]]$page_break | last_object) {
+      
+      blnks <- c()
+      bl <- rs$body_line_count - last_page_lines 
+      if (bl > 0)
+        blnks <- rep("\\par", bl)
+      
+      last_page <- append(last_page, blnks)
+      last_page_lines <- 0 
+      
+    }
+    
+    ls[[i]]$pages[[length(pgs)]] <- last_page
 
-    # Need to do something to append blank rows 
-    # and/or next content object to the previous content page.
   }
   
   
   # Can return something else if needed here
-  ret <- list(widths = c(), pages = ls)
+  ret <- list(widths = table_widths, pages = ls)
   
   return(ret)
   
@@ -222,10 +260,10 @@ write_content_rtf <- function(rs, hdr, body, pt) {
       if (page_open == FALSE) {
 
         
-        if (!is.null(rs$title_hdr))
+        if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$rtf))
           writeLines(pt$title_hdr$rtf, con = f, useBytes = TRUE)
         
-        if (!is.null(rs$titles))
+        if (!is.null(rs$titles) & !is.null(pt$titles$rtf))
           writeLines(pt$titles$rtf, con = f, useBytes = TRUE)
         
       }
@@ -244,7 +282,7 @@ write_content_rtf <- function(rs, hdr, body, pt) {
       
       if (page_open == FALSE) {
         
-        if (!is.null(rs$footnotes))
+        if (!is.null(rs$footnotes) & !is.null(pt$footnotes$rtf))
           writeLines(pt$footnotes$rtf, con = f, useBytes = TRUE)
         
         
@@ -261,8 +299,11 @@ write_content_rtf <- function(rs, hdr, body, pt) {
         }
       }
       
-
-      
+      if (last_object == TRUE & last_page == TRUE) {
+        
+        rs$pages <- rs$pages + 1 
+        
+      }
     }
     
   }
@@ -276,10 +317,20 @@ write_content_rtf <- function(rs, hdr, body, pt) {
 }
 
 
-# Don't forget to deal with encoding issues 
-#body <- encodeRTF(ls)
+update_page_numbers_rtf <- function(path, tpg) {
+  
 
-
+  lns <- readLines(path, encoding = "UTF-8")
+  
+  lns <- gsub("[tpg]", tpg, lns, fixed = TRUE)
+  
+  f <- file(path, open = "w+", encoding = "native.enc")
+  
+  writeLines(lns, con = f, useBytes = TRUE)
+  
+  close(f)
+  
+}
 
 
 
@@ -302,19 +353,19 @@ page_setup_rtf <- function(rs) {
     rh <- 185 #round(.11 * 1440)
     lh <- 185 #round(.1 * 1440) 
     pb <- "\\page\\fs0\\par\\fs16\\pard"
-    gtr <- .15  
+    gtr <- .05 
     cw <- .1
   } else if (rs$font_size == 10) {
     rh <- 225 #round(.165 * 1440)
     lh <- 225 #round(.165 * 1440)  # 270
     pb <- "\\page\\fs0\\par\\fs20\\pard"
-    gtr <- .18
+    gtr <- .05
     cw <- .11
   } else if (rs$font_size == 12) {
     rh <- 270 #round(.2 * 1440)
     lh <- 270 #round(.1875 * 1440) #270
     pb <- "\\page\\fs0\\par\\fs24\\pard"
-    gtr <- .2
+    gtr <- .05
     cw <- .12
   }
   

@@ -13,7 +13,7 @@ test_that("get_titles_rtf function works as expected.", {
   t <- get_titles_rtf(rpt$titles, 6, rpt)
   t
   expect_equal(t$rtf,
-        "\\trowd\\trgaph0\\cellx8640\\qc Hello\\cell\\row\n\\par\n\\pard")
+        "\\trowd\\trgaph0\\trqc\\cellx8640\\qc Hello\\cell\\row\n\\par\n\\pard")
   expect_equal(t$lines, 2)
   # expect_equal(t$twips, 576)
   
@@ -31,7 +31,7 @@ test_that("get_footnotes_rtf function works as expected.", {
   f <- get_footnotes_rtf(rpt$footnotes, 6, rpt)
   f
   expect_equal(f$rtf,
-      "\\line\n\\trowd\\trgaph0\\cellx8640\\ql Goodbye\\cell\\row\n\\pard")
+      "\\line\n\\trowd\\trgaph0\\trqc\\cellx8640\\ql Goodbye\\cell\\row\n\\pard")
   expect_equal(f$lines, 2)
   # expect_equal(f$twips, 576)
   
@@ -186,6 +186,16 @@ test_that("page_template_rtf works as expected.", {
   res
   expect_equal(res$lines, 6)
   expect_equal(res$titles$lines, 2)
+  
+  
+})
+
+test_that("get_page_numbers_rtf works as expected.", {
+  
+  res <- get_page_numbers_rtf("Page [pg] of [tpg]")
+  
+  res
+  expect_equal(res, "Page \\chpgn  of {\\field{\\*\\fldinst  NUMPAGES }}")
   
   
 })
