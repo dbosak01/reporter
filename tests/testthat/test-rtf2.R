@@ -521,7 +521,7 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
   
 })
 
-
+# Minor problem with line count extra line on second page
 test_that("rtf2-16: Valign on table footnotes works as expected.", {
   
   
@@ -560,9 +560,10 @@ test_that("rtf2-17: Table header on table works as expected.", {
   dat <- iris[1:25, ] 
   
   tbl <- create_table(dat) %>% 
-    title_header("Table 1.0", "My Nice Table", right = c("Right1", 
-                                                   "Right2", "Page [pg] of [tpg]")) %>%
-    footnotes("My footnote 1", "My footnote 2", valign = "top")
+    title_header("Table 1.0", "My Nice Table", 
+                 right = c("Right1", 
+                           "Right2", "Page [pg] of [tpg]")) %>%
+    footnotes("My footnote 1", "My footnote 2")
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -611,3 +612,69 @@ test_that("rtf2-18: Table header on report works as expected.", {
   
 })
 
+
+test_that("rtf2-19: Title and Footnote borders work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test19.rtf")
+  
+  dat <- iris[1:25, ] 
+  
+  tbl <- create_table(dat, borders = "all") %>% 
+    titles("Table 1.0", "My Nice Report with Borders",
+                 borders = c("top", "bottom", "left", "right"),
+           blank_row = "none") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"), 
+              blank_row = "none")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("rtf2-20: Title Header borders work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test20.rtf")
+  
+  dat <- iris[1:25, ] 
+  
+  tbl <- create_table(dat, borders = "all") %>% 
+    title_header("Table 1.0", "My Nice Report with Borders",
+                 right = c("Right1", "Right2", "Right3"),
+           borders = c("top", "bottom", "left", "right"),
+           blank_row = "none") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"), 
+              blank_row = "none")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})

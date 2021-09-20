@@ -376,6 +376,8 @@ page_setup_rtf <- function(rs) {
   rs$content_size <- get_content_size(rs)
   
   # A lot of these values are guesses.  Need to test.
+  # Row height and line height were defined independently in case
+  # they are different.  Right now, appear to be the same.
   if (rs$font_size == 8) {
     rh <- 185 #round(.11 * 1440)
     lh <- 185 #round(.1 * 1440) 

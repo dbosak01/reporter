@@ -19,7 +19,8 @@ title header.  Pass the header strings as a vector of strings.}
 'below', 'both', or 'none'.  Default is 'below'.}
 
 \item{borders}{Whether and where to place a border. Valid values are 'top',
-'bottom', 'all', or 'none'.  Default is 'none'.}
+'bottom', 'left', 'right', 'all', or 'none'.  Default is 'none'.   The 
+'left' and 'right' border specifications only apply to RTF reports.}
 }
 \value{
 The modified report.

@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -179,7 +179,9 @@
   orientation <span class='op'>=</span> <span class='st'>"landscape"</span>,
   units <span class='op'>=</span> <span class='st'>"inches"</span>,
   paper_size <span class='op'>=</span> <span class='st'>"letter"</span>,
-  missing <span class='op'>=</span> <span class='st'>""</span>
+  missing <span class='op'>=</span> <span class='st'>""</span>,
+  font <span class='op'>=</span> <span class='st'>"fixed"</span>,
+  font_size <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -225,6 +227,21 @@ to replace them with an empty string, which removes them from the report.
 To display missing values as is, set the missing parameter to NULL.  To
 replace missing values with a character string (such as ".", "-", or "&lt;NA&gt;")
 pass the desired character string to the missing parameter.</p></td>
+    </tr>
+    <tr>
+      <th>font</th>
+      <td><p>The font to use on the report.  The font specified will be
+used for the entire report.  Valid values are "Courier", "Arial", "Times",
+and "fixed".  The value of "fixed" will create a fixed-width, text style
+report in Courier font.  The <code>font</code> parameter only applies to RTF reports
+at this time.  The default value is "fixed".</p></td>
+    </tr>
+    <tr>
+      <th>font_size</th>
+      <td><p>The size of the font to use on the report. The <code>font_size</code>
+specified will be used for the entire report.  Valid values are 8, 10, 
+and 12.  The <code>font_size</code> parameter only applies to RTF and PDF output types.
+The default value is 10.</p></td>
     </tr>
     </table>
 

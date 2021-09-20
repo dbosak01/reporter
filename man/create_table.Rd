@@ -62,7 +62,8 @@ will have a header.}
 
 \item{borders}{Whether and where to place a border. Valid values are 'top',
 'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
-Default is "none".}
+Default is 'none'.  The 'left', 'right', 'outside', and 'inside' 
+border specifications only apply to RTF reports.}
 }
 \description{
 The \code{create_table} function creates a table object to which 

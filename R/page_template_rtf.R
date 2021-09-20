@@ -200,12 +200,14 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
       else 
         algn <- "\\ql"
       
-      for (ttl in ttls$titles) {
+      for (i in seq_along(ttls$titles)) {
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, "\\cellx", w, 
-                                  algn, " ", ttl, "\\cell\\row\n"))
+        b <- get_cell_borders(i, 1, length(ttls$titles), 1, ttls$borders)
+        
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
+                                  algn, " ", ttls$titles[[i]], "\\cell\\row\n"))
         cnt <- cnt + 1
-        cnt <- cnt + get_excess_lines(ttl, width, rs$font, 
+        cnt <- cnt + get_excess_lines(ttls$titles[[i]], width, rs$font, 
                                       rs$font_size, rs$units)
       }
       
@@ -261,12 +263,15 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
       else 
         algn <- "\\ql"
       
-      for (ftn in ftnts$footnotes) {
+      for (i in seq_along(ftnts$footnotes)) {
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, "\\cellx", w, 
-                                  algn, " ", ftn, "\\cell\\row\n"))
+        b <- get_cell_borders(i, 1, length(ftnts$footnotes), 1, ftnts$borders)
+        
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
+                                  algn, " ", ftnts$footnotes[[i]], "\\cell\\row\n"))
         cnt <- cnt + 1
-        cnt <- cnt + get_excess_lines(ftn, w, rs$font, rs$font_size, rs$units)
+        cnt <- cnt + get_excess_lines(ftnts$footnotes[[i]], w, rs$font, 
+                                      rs$font_size, rs$units)
       }
       
       if (any(ftnts$blank_row %in% c("below", "both"))) {
@@ -316,7 +321,6 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
       
       for(i in seq_len(mx)) {
       
-      
         if (length(ttlhdr$titles) >= i)
           ttl <- ttlhdr$titles[[i]]
         else 
@@ -327,8 +331,11 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
         else 
           hdr <- ""
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, "\\cellx", w2, 
-                                  "\\cellx", w1,
+        b1 <- get_cell_borders(i, 1, mx, 2, ttlhdr$borders)
+        b2 <- get_cell_borders(i, 2, mx, 2, ttlhdr$borders)
+        
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b1, "\\cellx", w2, 
+                                  b2, "\\cellx", w1,
                                   "\\ql ", ttl, "\\cell\\qr ",
                                   hdr, "\\cell\\row\n"))
         cnt <- cnt + 1

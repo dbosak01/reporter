@@ -85,7 +85,7 @@ S3 object of class 'table_spec'." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -186,7 +186,8 @@ S3 object of class 'table_spec'.</p>
   width <span class='op'>=</span> <span class='cn'>NULL</span>,
   first_row_blank <span class='op'>=</span> <span class='cn'>FALSE</span>,
   n_format <span class='op'>=</span> <span class='va'>upcase_parens</span>,
-  headerless <span class='op'>=</span> <span class='cn'>FALSE</span>
+  headerless <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  borders <span class='op'>=</span> <span class='st'>"none"</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -249,6 +250,13 @@ The default formatting function is <code><a href='lowcase_parens.html'>upcase_pa
       <td><p>Whether to create a headerless table. A headerless
 table displays the table data only. Default is FALSE, meaning the table
 will have a header.</p></td>
+    </tr>
+    <tr>
+      <th>borders</th>
+      <td><p>Whether and where to place a border. Valid values are 'top',
+'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
+Default is 'none'.  The 'left', 'right', 'outside', and 'inside' 
+border specifications only apply to RTF reports.</p></td>
     </tr>
     </table>
 

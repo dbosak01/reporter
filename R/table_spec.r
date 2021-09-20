@@ -108,7 +108,8 @@
 #' will have a header. 
 #' @param borders Whether and where to place a border. Valid values are 'top',
 #' 'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
-#' Default is "none".
+#' Default is 'none'.  The 'left', 'right', 'outside', and 'inside' 
+#' border specifications only apply to RTF reports.
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,

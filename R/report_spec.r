@@ -1024,7 +1024,8 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is 'below'.
 #' @param borders Whether and where to place a border. Valid values are 'top',
-#' 'bottom', 'all', or 'none'.  Default is 'none'.  
+#' 'bottom', 'left', 'right', 'all', or 'none'.  Default is 'none'.   The 
+#' 'left' and 'right' border specifications only apply to RTF reports.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1105,9 +1106,9 @@ title_header <- function(x, ..., right = "",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (!all(borders %in% c("top", "bottom", "all", "none")))
+  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'all', or 'none'."))
+               "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
   
   # Assign attributes
   ttl_hdr$titles <-  c(...)
@@ -1172,7 +1173,8 @@ title_header <- function(x, ..., right = "",
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is "below".
 #' @param borders Whether and where to place a border. Valid values are 'top',
-#' 'bottom', 'all', or 'none'.  Default is "none".
+#' 'bottom', 'left', 'right', 'all', or 'none'.  Default is "none".  The 
+#' 'left' and 'right' border specifications only apply to RTF reports.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1236,9 +1238,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (!all(borders %in% c("top", "bottom", "all", "none")))
+  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'all', or 'none'."))
+               "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
 
   # Assign attributes
   ttl$titles <-  c(...)
@@ -1296,7 +1298,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
 #' For fixed width reports, the 
 #' border character will be taken from the value of the \code{uchar} parameter
-#' on the \code{\link{options_fixed}} function.
+#' on the \code{\link{options_fixed}} function.  The 
+#' 'left' and 'right' border specifications only apply to RTF reports.
 #' @param valign The vertical position to align the footnotes.  Valid
 #' values are: 'top' and 'bottom'.  For footnotes attached to a report,
 #' default is 'bottom'.  For footnotes attached to content, default is 'top'.
@@ -1374,9 +1377,9 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (any(!borders %in% c("top", "bottom", "all", "none")))
+  if (any(!borders %in% c("top", "bottom", "left", "right", "all", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'all', or 'none'."))
+               "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
 
   ftn$footnotes <- ft
   ftn$blank_row <- blank_row
