@@ -38,7 +38,7 @@ test_that("get_table_header_rtf works as expected.", {
   
   dat <- mtcars[1:10, 1:5]
   
-  tbl <- create_table(dat)
+  tbl <- create_table(dat) 
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12) %>%
@@ -57,7 +57,8 @@ test_that("get_table_header_rtf works as expected.", {
   
   nms <- names(dat)
   names(nms) <- nms
-  nms[1] <- "Miles Per Gallon (MPG) and more and more"
+  nms[1] <- "Miles Per Gallon"
+  nms[2] <- "Wrap\nOne\nTwo"
   
 
   res <- get_table_header_rtf(rpt, tbl, wdth, nms, algns, "center")
@@ -65,7 +66,7 @@ test_that("get_table_header_rtf works as expected.", {
   res  
   
   expect_equal(length(res$rtf), 1)
-  expect_equal(res$lines, 2)
+  expect_equal(res$lines, 3)
   
 })
 
@@ -149,3 +150,44 @@ test_that("create_table_rtf works as expected.", {
   expect_equal(length(res$rtf), 14)
   
 })
+
+test_that("get_spanning_header_rtf works as expected.", {
+  
+  
+  fp <- ""
+  
+  dat <- mtcars[1:15, ]
+  
+  tbl <- create_table(dat, borders = "none") %>%
+    spanning_header(mpg, disp, "Span 1", n = 10) %>%
+    spanning_header(hp, wt, "Span 2") %>%
+    spanning_header(qsec, vs, "Span 3") %>%
+    spanning_header(drat, gear, "Super span", level = 2)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  cols <- rep(.6, ncol(dat))
+  names(cols) <- names(dat)
+  
+  pi <- list(keys = names(dat), col_width = cols, table_align = "center")
+  
+  res <- get_spanning_header_rtf(rpt, tbl, pi)
+  res
+  
+  expect_equal(length(res), 3)
+  expect_equal(length(res$rtf), 2)
+  expect_equal(res$lines, 3)
+  
+})
+
+

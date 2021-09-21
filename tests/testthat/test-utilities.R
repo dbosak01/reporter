@@ -339,4 +339,66 @@ test_that("has_top_footnotes works as expected.", {
   
 })
 
+test_that("get_spanning_info works as expected.", {
+  
+  
+  fp <- ""
+  
+  dat <- mtcars[1:15, ]
+  
+  tbl <- create_table(dat, borders = "none") %>%
+    spanning_header(mpg, disp, "Span 1") %>%
+    spanning_header(hp, wt, "Span 2") %>%
+    spanning_header(qsec, vs, "Span 3") %>%
+    spanning_header(drat, gear, "Super span", level = 2)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  rpt <- page_setup(rpt)
+  
+  cols <- rep(.6, ncol(dat))
+  names(cols) <- names(dat)
+  
+  pi <- list(keys = names(dat), col_width = cols)
+  w <- round(pi$col_width / rpt$char_width) - 1
+  
+  res <- get_spanning_info(rpt, tbl, pi, w)
+  res
+  
+  expect_equal(length(res), 2)
+  expect_equal(nrow(res[[1]]), 6)
+  
+})
+
+test_that("get_lines_rtf works as expected.", {
+  
+  
+  expect_equal(get_lines_rtf("Here There", 3, "Arial", 10), 1)
+  expect_equal(get_lines_rtf("Here\nThere", 3, "Arial", 10), 2)
+  
+  expect_equal(get_lines_rtf("Here\nThere now here is something else\nanother split", 
+                             2, "Arial", 12), 4)
+  
+  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                "qui officia deserunt mollit anim id est laborum.")
+  
+  expect_equal(get_lines_rtf(cnt, 9, "Arial", 10), 3)
+  
+  
+
+})
+
 

@@ -95,20 +95,6 @@ test_that("get_page_footer_rtf works as expected.", {
   
 })
 
-test_that("get_lines_rtf works as expected.", {
-
-  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
-                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
-                "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
-                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
-                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
-                "qui officia deserunt mollit anim id est laborum.")
-
-  expect_equal(get_lines_rtf(cnt, 9, "Arial", 10), 3)
-  
-  
-})
 
 
 test_that("get_pageby_rtf works as expected.", {

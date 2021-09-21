@@ -441,104 +441,109 @@ get_table_header <- function(rs, ts, pi) {
 #' @noRd
 get_spanning_header <- function(rs, ts, pi) {
   
-  spns <- ts$col_spans
-  cols <- pi$keys
-  cols <- cols[!is.controlv(cols)]
-  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
-  w <- w[cols]
-  
-  # print("Cols:")
-  # print(cols)
-  #print(w)
-
-  # Figure out how many levels there are, 
-  # and organize spans by level
-  lvls <- c()     # Unique levels
-  slvl <- list()  # Will be a list of lists of spans
-  for (spn in spns) {
-
-    if (!spn$level %in% lvls) {
-      lvls[length(lvls) + 1] <- spn$level
-      slvl[[spn$level]] <- list()
-    }
-    slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
-  }
-  
-  # Get unique levels and sort in decreasing order so we go from top down
-  lvls <- sort(unique(lvls), decreasing = TRUE)
-  # print("Levels:")
-  # print(lvls)
+  # spns <- ts$col_spans
+  # cols <- pi$keys
+  # cols <- cols[!is.controlv(cols)]
+  # w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
+  # w <- w[cols]
   # 
-  # print("Spanning levels:")
-  # print(slvl)
+  # # print("Cols:")
+  # # print(cols)
+  # #print(w)
+  # 
+  # # Figure out how many levels there are, 
+  # # and organize spans by level
+  # lvls <- c()     # Unique levels
+  # slvl <- list()  # Will be a list of lists of spans
+  # for (spn in spns) {
+  # 
+  #   if (!spn$level %in% lvls) {
+  #     lvls[length(lvls) + 1] <- spn$level
+  #     slvl[[spn$level]] <- list()
+  #   }
+  #   slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
+  # }
+  # 
+  # # Get unique levels and sort in decreasing order so we go from top down
+  # lvls <- sort(unique(lvls), decreasing = TRUE)
+  # # print("Levels:")
+  # # print(lvls)
+  # # 
+  # # print("Spanning levels:")
+  # # print(slvl)
+  # 
+  # # Create data structure to map spans to columns and columns widths by level
+  # # - Seed span_num with negative index numbers to identify unspanned columns
+  # # - Also add one to each column width for the blank space between columns 
+  # d <- data.frame(colname = cols, colwidth = w + 1, 
+  #                 span_num = seq(from = -1, to = -length(cols), by = -1), 
+  #                 stringsAsFactors = FALSE)
+  # 
+  # wlvl <- list()  # Create one data structure for each level
+  # for (l in lvls) {
+  # 
+  #   t <- d  # Copy to temporary variable
+  #   
+  #   # if column is in spanning column list, populate structure with index.
+  #   # Otherwise, leave as negative value.
+  #   for (i in 1:length(slvl[[l]])) {
+  #     cl <- slvl[[l]][[i]]$span_cols
+  #     
+  #     
+  #     # Span specifications can be a vector of column names or numbers
+  #     if (typeof(cl) == "character")
+  #       t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
+  #     else 
+  #       t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
+  #     
+  # 
+  #   }
+  #   
+  #   # Aggregate data structures to get span widths for each span
+  #   s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
+  # 
+  #   # Then put back in original column order
+  #   s$span <- factor(s$span, levels = unique(t$span_num))
+  #   s <- s[order(s$span), ]
+  #   rownames(s) <- NULL
+  # 
+  #   # Prep data structure
+  #   s$span <- unique(t$span_num)
+  #   s$label <- ""
+  #   s$align <- ""
+  #   s$n <- NA
+  #   s$name <- ""
+  #   s$underline <- TRUE
+  #   
+  #   # Populate data structure with labels, alignments, and n values from 
+  #   # spanning column objects
+  #   counter <- 1
+  #   for (index in s$span) {
+  #     if (index > 0) {
+  #       s$label[counter] <- slvl[[l]][[index]]["label"]
+  #       s$align[counter] <- slvl[[l]][[index]]$label_align
+  #       s$underline[counter] <- slvl[[l]][[index]]$underline
+  #       if (!is.null(slvl[[l]][[index]]$n))
+  #         s$n[counter] <- slvl[[l]][[index]]$n
+  # 
+  #     }
+  #     s$name[counter] <- paste0("Span", counter)
+  #     counter <- counter + 1
+  #   }
+  #   
+  #   # Apply n counts to labels
+  #   if (!is.null(ts$n_format)) {
+  #     s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
+  #   }
+  # 
+  #   wlvl[[l]] <- s
+  # 
+  # }
   
-  # Create data structure to map spans to columns and columns widths by level
-  # - Seed span_num with negative index numbers to identify unspanned columns
-  # - Also add one to each column width for the blank space between columns 
-  d <- data.frame(colname = cols, colwidth = w + 1, 
-                  span_num = seq(from = -1, to = -length(cols), by = -1), 
-                  stringsAsFactors = FALSE)
-  
-  wlvl <- list()  # Create one data structure for each level
-  for (l in lvls) {
-
-    t <- d  # Copy to temporary variable
-    
-    # if column is in spanning column list, populate structure with index.
-    # Otherwise, leave as negative value.
-    for (i in 1:length(slvl[[l]])) {
-      cl <- slvl[[l]][[i]]$span_cols
-      
-      
-      # Span specifications can be a vector of column names or numbers
-      if (typeof(cl) == "character")
-        t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
-      else 
-        t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
-      
-
-    }
-    
-    # Aggregate data structures to get span widths for each span
-    s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
-
-    # Then put back in original column order
-    s$span <- factor(s$span, levels = unique(t$span_num))
-    s <- s[order(s$span), ]
-    rownames(s) <- NULL
-
-    # Prep data structure
-    s$span <- unique(t$span_num)
-    s$label <- ""
-    s$align <- ""
-    s$n <- NA
-    s$name <- ""
-    s$underline <- TRUE
-    
-    # Populate data structure with labels, alignments, and n values from 
-    # spanning column objects
-    counter <- 1
-    for (index in s$span) {
-      if (index > 0) {
-        s$label[counter] <- slvl[[l]][[index]]["label"]
-        s$align[counter] <- slvl[[l]][[index]]$label_align
-        s$underline[counter] <- slvl[[l]][[index]]$underline
-        if (!is.null(slvl[[l]][[index]]$n))
-          s$n[counter] <- slvl[[l]][[index]]$n
-
-      }
-      s$name[counter] <- paste0("Span", counter)
-      counter <- counter + 1
-    }
-    
-    # Apply n counts to labels
-    if (!is.null(ts$n_format)) {
-      s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
-    }
-
-    wlvl[[l]] <- s
-
-  }
+  # Put spanning info in function to eliminate redundancy with rtf version
+  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
+  wlvl <- get_spanning_info(rs, ts, pi, w, 1)
+  lvls <- sort(seq_along(wlvl), decreasing = TRUE)
   
   # At this point we have a data frame with labels, etc. and spanning
   # column widths, and are ready to create spanning header rows
@@ -547,7 +552,6 @@ get_spanning_header <- function(rs, ts, pi) {
   # Format labels for each level
   ln <- c()
   for (l in lvls) {
-    
     s <- wlvl[[l]]
     
     # Wrap header labels if needed

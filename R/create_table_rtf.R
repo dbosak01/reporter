@@ -212,7 +212,8 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   hdrs <- list(lines = 0, twips = 0)
   
   if (ts$headerless == FALSE) {
-    #shdrs <- get_spanning_header_rtf(rs, ts, pi)   
+    shdrs <- get_spanning_header_rtf(rs, ts, pi)   
+
     hdrs <- get_table_header_rtf(rs, ts, pi$col_width, 
                                  pi$label, pi$label_align, pi$table_align)  
   }
@@ -325,7 +326,7 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
   hdrs <- list(lines = 0, twips = 0)
   
   if (ts$headerless == FALSE) {
-    #shdrs <- get_spanning_header(rs, ts, pi)   
+    shdrs <- get_spanning_header_rtf(rs, ts, pi)   
 
     hdrs <- get_table_header_rtf(rs, ts, pi$col_width, 
                                  pi$label, pi$label_align, 
@@ -415,7 +416,10 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   else if (talgn %in% c("center", "centre"))
     ta <- "\\trqc"
 
-  brdrs <- ts$borders
+  if (length(ts$col_spans) == 0)
+    brdrs <- ts$borders
+  else
+    brdrs <- "none"
   
   # Header Cell alignment
   ha <- c()
@@ -437,7 +441,7 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   for(j in seq_along(tbl)) {
     if (!is.control(nms[j])) {
       b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
-      ret[1] <- paste0(ret[1], b, "\\clbrdrb\\brdrs\\cellx", sz[j])
+      ret[1] <- paste0(ret[1], "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
     }
   }
   
@@ -447,11 +451,11 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
 
   for(k in seq_along(lbls)) {
     if (!is.control(nms[k])) {
-      ret[1] <- paste0(ret[1], ha[k], " ", lbls[k], "\\cell")
+      ret[1] <- paste0(ret[1], ha[k], " ", n2ln(lbls[k]), "\\cell")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
-      xtr <- get_excess_lines(lbls[k], widths[k], rs$font, rs$font_size, rs$units)
+      xtr <- get_lines_rtf(lbls[k], widths[k], rs$font, rs$font_size, rs$units)
       if (xtr > cnt)
         cnt <- xtr
     }
@@ -468,7 +472,7 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
 }
 
 # Need to fix this
-#' @description Return a vector of strings for the table spanning headers
+#' @description Return a vector of rtf strings for the table spanning headers
 #' @details Basic idea of this function is to figure out which columns 
 #' the header spans, add widths, then call get_table_header.  Everything
 #' from there is the same.  
@@ -479,105 +483,34 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
   spns <- ts$col_spans
   cols <- pi$keys
   cols <- cols[!is.controlv(cols)]
-  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
+  w <- pi$col_width 
   w <- w[cols]
+  gutter <- 0
+  cnt <- c()
   
   # print("Cols:")
   # print(cols)
   #print(w)
-  
-  # Figure out how many levels there are, 
-  # and organize spans by level
-  lvls <- c()     # Unique levels
-  slvl <- list()  # Will be a list of lists of spans
-  for (spn in spns) {
-    
-    if (!spn$level %in% lvls) {
-      lvls[length(lvls) + 1] <- spn$level
-      slvl[[spn$level]] <- list()
-    }
-    slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
-  }
-  
-  # Get unique levels and sort in decreasing order so we go from top down
-  lvls <- sort(unique(lvls), decreasing = TRUE)
-  # print("Levels:")
-  # print(lvls)
-  # 
-  # print("Spanning levels:")
-  # print(slvl)
-  
-  # Create data structure to map spans to columns and columns widths by level
-  # - Seed span_num with negative index numbers to identify unspanned columns
-  # - Also add one to each column width for the blank space between columns 
-  d <- data.frame(colname = cols, colwidth = w + 1, 
-                  span_num = seq(from = -1, to = -length(cols), by = -1), 
-                  stringsAsFactors = FALSE)
-  
-  wlvl <- list()  # Create one data structure for each level
-  for (l in lvls) {
-    
-    t <- d  # Copy to temporary variable
-    
-    # if column is in spanning column list, populate structure with index.
-    # Otherwise, leave as negative value.
-    for (i in 1:length(slvl[[l]])) {
-      cl <- slvl[[l]][[i]]$span_cols
-      
-      
-      # Span specifications can be a vector of column names or numbers
-      if (typeof(cl) == "character")
-        t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
-      else 
-        t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
-      
-      
-    }
-    
-    # Aggregate data structures to get span widths for each span
-    s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
-    
-    # Then put back in original column order
-    s$span <- factor(s$span, levels = unique(t$span_num))
-    s <- s[order(s$span), ]
-    rownames(s) <- NULL
-    
-    # Prep data structure
-    s$span <- unique(t$span_num)
-    s$label <- ""
-    s$align <- ""
-    s$n <- NA
-    s$name <- ""
-    s$underline <- TRUE
-    
-    # Populate data structure with labels, alignments, and n values from 
-    # spanning column objects
-    counter <- 1
-    for (index in s$span) {
-      if (index > 0) {
-        s$label[counter] <- slvl[[l]][[index]]["label"]
-        s$align[counter] <- slvl[[l]][[index]]$label_align
-        s$underline[counter] <- slvl[[l]][[index]]$underline
-        if (!is.null(slvl[[l]][[index]]$n))
-          s$n[counter] <- slvl[[l]][[index]]$n
-        
-      }
-      s$name[counter] <- paste0("Span", counter)
-      counter <- counter + 1
-    }
-    
-    # Apply n counts to labels
-    if (!is.null(ts$n_format)) {
-      s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
-    }
-    
-    wlvl[[l]] <- s
-    
-  }
+  wlvl <- get_spanning_info(rs, ts, pi, w, gutter)
+  lvls <- sort(seq_along(wlvl), decreasing = TRUE)
   
   # At this point we have a data frame with labels, etc. and spanning
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
+  
+  conv <- rs$twip_conversion
+  talgn <- pi$table_align
+
+  # Table alignment
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
+
+  # Get borders
+  brdrs <- ts$borders
+  rh <- rs$row_height
   
   # Format labels for each level
   ln <- c()
@@ -585,74 +518,85 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
     
     s <- wlvl[[l]]
     
-    # Wrap header labels if needed
-    d <- data.frame(as.list(s$label), stringsAsFactors = FALSE)
-    w <- s$width
-    j <- s$align
-    names(d) <- s$name
-    names(w) <- s$name
-    names(j) <- s$name
+    widths <- s$width
+    names(widths) <- s$name
+    algns <- s$align
+    names(algns) <- s$name
+    lbls <- s$label
+    names(lbls) <- s$name
     
-    # print("Ready for split cells")
-    # print(paste("d:", d))
-    # print(paste("w:", w))
-    d <- split_cells(d, w)
-    d <- push_down(d)
+    # Get cell widths
+    sz <- c()
+    for (k in seq_along(widths)) {
+
+      if (k == 1)
+        sz[k] <- round(widths[k] * conv)
+      else
+        sz[k] <- round(widths[k] * conv + sz[k - 1])
+      
+    }
     
-    #print(d)
+    # Header Cell alignment
+    ha <- c()
+    for (k in seq_along(algns)) {
+
+      if (algns[k] == "right")
+        ha[k] <- "\\qr"
+      else if (algns[k] %in% c("center", "centre"))
+        ha[k] <- "\\qc"
+      else
+        ha[k] <- "\\ql"
+      
+    }
+
+    r <- ""
+    cnt[length(cnt) + 1] <- 1 
+    
+    # Table Header
+    r <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
     
     # Label justification, width, and row concatenation
-    for (i in seq_len(nrow(d))) {
+
+    # Loop for cell definitions
+    for(j in seq_along(sz)) {
       
-      r <- ""
-      
-      
-      
-      for (nm in names(d)) {
-        if (!is.control(nm)) {
-          
-          if (j[[nm]] == "right") # Adjust 1 space for right alignment
-            r <- paste0(r, pad_any(d[i, nm], w[[nm]] -1,
-                                   get_justify(j[[nm]])), " ")
-          else
-            r <- paste0(r, pad_any(d[i, nm], w[[nm]],
-                                   get_justify(j[[nm]])))
-          
-          
-        }
-      }
-      
-      ln[[length(ln) + 1]] <- r
+      # Get cell borders
+      b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
+      if (s$span[j] > 0 & s$underline[j])
+        r <- paste0(r, "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
+      else 
+        r <- paste0(r, "\\clvertalb", b, "\\cellx", sz[j])
     }
     
-    r <- ""
-    #print(s)
-    
-    for (i in seq_len(nrow(s))) {
+    # Loop for labels
+    for(k in seq_along(lbls)) {
+
+      # Concat label
+      r <- paste0(r, ha[k], " ", n2ln(lbls[k]), "\\cell")
+      # print(lbls[k])
+      # print(widths[k])
+      # Add in extra lines for labels that wrap
+      xtr <- get_lines_rtf(lbls[k], widths[k], rs$font, rs$font_size, rs$units)
+      if (xtr > cnt[length(cnt)])
+        cnt[length(cnt)] <- xtr
       
-      if (s$span[i] > 0) {
-        
-        if (s$underline[i])
-          r <- paste0(r, paste0(rep(rs$uchar, s$width[i] - 1), collapse = ""), " ")
-        else 
-          r <- paste0(r, paste0(rep(" ", s$width[i] - 1), collapse = ""), " ")
-        
-        
-      } else {
-        r <- paste0(r, paste0(rep(" ", s$width[i]), collapse = ""))
-      }
     }
     
-    # r <- ifelse(s$span > 0, paste0(r, paste0(rep("-", 4), collapse = ""), " "),
-    #                         paste0(r, rep(" ", 4), collapse = ""))
+    
+    r <- paste0(r, "\\row")
+    
     ln[[length(ln) + 1]] <- r
     
-    #print(ln)
   }
+  
   
   ret <- unlist(ln)
   
-  return(ret)
+  res <- list(rtf = ret, 
+              lines = sum(cnt), 
+              twips = sum(cnt) * rh)
+  
+  return(res)
 }
 
 

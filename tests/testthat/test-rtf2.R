@@ -400,7 +400,8 @@ test_that("rtf2-12: Table Borders work as expected.", {
   
   dat <- mtcars[1:15, ] 
   
-  tbl <- create_table(dat, borders = c("left", "right", "bottom", "top"))
+  tbl <- create_table(dat, borders = c("left", "right", "bottom", "top")) %>% 
+    define(mpg, label = "Miles Per Gallon")
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -423,40 +424,38 @@ test_that("rtf2-12: Table Borders work as expected.", {
   
 })
 
-# test_that("rtf2-13: Spanning headers work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "rtf2/test13.rtf")
-#   
-#   dat <- mtcars[1:15, ] 
-#   
-#   tbl <- create_table(dat, borders = "outside") %>% 
-#     spanning_header(mpg, disp, "Span 1") %>% 
-#     spanning_header(hp, wt, "Span 2") %>% 
-#     spanning_header(qsec, vs, "Span 3") %>% 
-#     spanning_header(drat, gear, "Super span", level = 2)
-#     
-#   
-#   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-#                        font_size = 10, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     footnotes("My footnote 1", "My footnote 2") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 11)
-#   #expect_equal(res$pages, 1)
-#   
-#   
-# })
+
+test_that("rtf2-13: Spanning headers work as expected.", {
+
+
+  fp <- file.path(base_path, "rtf2/test13.rtf")
+
+  dat <- mtcars[1:15, ]
+
+  tbl <- create_table(dat, borders = c("top", "bottom")) %>%
+    spanning_header(cyl, disp, "Span 1", label_align = "left") %>% 
+    spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
+    spanning_header(qsec, vs, "Span 3", n = 10) %>%
+    spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2)
+
+
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
 
 
 test_that("rtf2-14: Labels and show_cols work as expected.", {
@@ -552,7 +551,7 @@ test_that("rtf2-16: Valign on table footnotes works as expected.", {
 })
 
 
-test_that("rtf2-17: Table header on table works as expected.", {
+test_that("rtf2-17: Title header on table works as expected.", {
   
   
   fp <- file.path(base_path, "rtf2/test17.rtf")

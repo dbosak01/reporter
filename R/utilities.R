@@ -840,6 +840,119 @@ has_top_footnotes <- function(rs) {
   return(ret)
 }
 
+get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
+  
+  spns <- ts$col_spans
+  cols <- pi$keys
+  cols <- cols[!is.controlv(cols)]
+  w <- widths
+  w <- w[cols]
+  
+  # print("Cols:")
+  # print(cols)
+  #print(w)
+  
+  # Figure out how many levels there are, 
+  # and organize spans by level
+  lvls <- c()     # Unique levels
+  slvl <- list()  # Will be a list of lists of spans
+  for (spn in spns) {
+    
+    if (!spn$level %in% lvls) {
+      lvls[length(lvls) + 1] <- spn$level
+      slvl[[spn$level]] <- list()
+    }
+    slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
+  }
+  
+  # Get unique levels and sort in decreasing order so we go from top down
+  lvls <- sort(unique(lvls), decreasing = TRUE)
+  # print("Levels:")
+  # print(lvls)
+  # 
+  # print("Spanning levels:")
+  # print(slvl)
+  
+  # Create data structure to map spans to columns and columns widths by level
+  # - Seed span_num with negative index numbers to identify unspanned columns
+  # - Also add one to each column width for the blank space between columns 
+  d <- data.frame(colname = cols, colwidth = w + gutter, 
+                  span_num = seq(from = -1, to = -length(cols), by = -1), 
+                  stringsAsFactors = FALSE)
+  
+  wlvl <- list()  # Create one data structure for each level
+  for (l in lvls) {
+    
+    t <- d  # Copy to temporary variable
+    
+    # if column is in spanning column list, populate structure with index.
+    # Otherwise, leave as negative value.
+    for (i in 1:length(slvl[[l]])) {
+      cl <- slvl[[l]][[i]]$span_cols
+      
+      
+      # Span specifications can be a vector of column names or numbers
+      if (typeof(cl) == "character")
+        t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
+      else 
+        t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
+      
+      
+    }
+    
+    # Aggregate data structures to get span widths for each span
+    s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
+    
+    # Then put back in original column order
+    s$span <- factor(s$span, levels = unique(t$span_num))
+    s <- s[order(s$span), ]
+    rownames(s) <- NULL
+    
+    # Prep data structure
+    s$span <- unique(t$span_num)
+    s$label <- ""
+    s$align <- ""
+    s$n <- NA
+    s$name <- ""
+    s$underline <- TRUE
+    
+    # Populate data structure with labels, alignments, and n values from 
+    # spanning column objects
+    counter <- 1
+    for (index in s$span) {
+      if (index > 0) {
+        s$label[counter] <- slvl[[l]][[index]]["label"]
+        s$align[counter] <- slvl[[l]][[index]]$label_align
+        s$underline[counter] <- slvl[[l]][[index]]$underline
+        if (!is.null(slvl[[l]][[index]]$n))
+          s$n[counter] <- slvl[[l]][[index]]$n
+        
+      }
+      s$name[counter] <- paste0("Span", counter)
+      counter <- counter + 1
+    }
+    
+    # Apply n counts to labels
+    if (!is.null(ts$n_format)) {
+      s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
+    }
+    
+    wlvl[[l]] <- s
+    
+  }
+  
+  
+  return(wlvl)
+  
+}
+
+#' @noRd
+n2ln <- function(strng) {
+  
+  ret <- gsub("\n", "\\line ", strng, fixed = TRUE) 
+  
+  return(ret)
+}
 
 # Sizing utilities --------------------------------------------------------
 
@@ -934,6 +1047,7 @@ ccm <- function(x) {
 
 
 #' @description Estimate number of wraps based on text, width, and a font.
+#' @import stringi
 #' @noRd
 get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   
@@ -946,11 +1060,13 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   
   names(width) <- NULL
   
-  val <- get_text_width(txt, units = units, 
+  lns <- unlist(stri_split_fixed(txt, "\n"))
+  
+  val <- get_text_width(lns, units = units, 
                         font = font, font_size = font_size) * .975/width
   
   # print(val)
-  ret <- ceiling(val)
+  ret <- sum(ceiling(val))
 
   
   return(ret)
@@ -971,10 +1087,10 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
     f <- "serif"
   
   R.devices::devEval("nulldev", {
-  #  pdf(NULL)
+    #pdf(NULL)
     par(family = f, ps = font_size)
     ret <- strwidth(txt, units = units) * .975 
-   # dev.off()
+    #dev.off()
   })
   
 
