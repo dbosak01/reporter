@@ -841,3 +841,118 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
   
   
 })
+
+# Works!
+test_that("rtf2-26: RTF Table with Plot on same page works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test26.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 4, width = 8)
+  tbl <- create_table(mtcars[1:3, ])
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    
+    add_content(plt, page_break = FALSE, blank_row = "none") %>%
+    add_content(tbl) %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+
+# Works possible spacing issues.
+test_that("rtf2-27: Plot with page by on plot works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test27.rtf")
+  
+  
+  dat <- mtcars[order(mtcars$cyl), ]
+  
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+  
+  
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+  
+  plt <- create_plot(p, height = 4, width = 8) %>% 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    page_by(cyl, "Cylinders: ") %>% 
+    footnotes("* Motor Trend, 1974") 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt) %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+  
+  
+})
+
+# Works possible spacing issues.
+test_that("rtf2-28: Plot with page by on report works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test28.rtf")
+  
+  
+  dat <- mtcars[order(mtcars$cyl), ]
+  
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+  
+  
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+  
+  plt <- create_plot(p, height = 4, width = 8)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = 10) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
+           blank_row = "none", borders = "none") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_by(cyl, "Cylinders: ") %>% 
+    add_content(plt) %>%
+    footnotes("* Motor Trend, 1974", borders = "none") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+  
+  
+})
+
+

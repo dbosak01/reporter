@@ -404,6 +404,8 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
   p <- plt$plot
   ret <- list()
   cntr <- 1
+  pgs <- list()
+  cnts <- c()
   
   for (dat in dat_lst) {
     
@@ -437,11 +439,11 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
     # Get rtf page bodies
     # Can return multiple pages if it breaks across pages
     # Not sure what that means for a plot, but that is the logic
-    pgs <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
+    res <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
                          lpg_rows, cntnt$blank_row, pgby, pgval)
     
-    ret <- list(rtf = list(pgs$rtf),
-                lines = list(pgs$lines))
+    pgs[[length(pgs) + 1]] <- res$rtf
+    cnts[[length(cnts) + 1]] <- res$lines
     
     # Within a content creation function, assumed that it will take 
     # care of filling out blanks for each page.  Only the last page
@@ -460,6 +462,9 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
     # cntr <- cntr + 1
     
   }
+  
+  ret <- list(rtf = pgs,
+              lines = cnts)
   
   return(ret)
 }
