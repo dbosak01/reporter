@@ -489,20 +489,29 @@ get_plot_body_rtf <- function(plt, plot_path, align, rs,
   pgbys <- get_page_by_rtf(pgby, w, pgval, rs, align)
   
 
-  img <- get_image_rtf(plot_path, plt$width, plt$height, rs$units, rs$font_size)
+  img <- get_image_rtf(plot_path, plt$width, plt$height, rs$units)
   
   # Create rtf codes
   if (align == "left") {
-    ltx <- paste0("\\par\\sl0\\ql\n"  )
+    hd <- paste0("\\par\\sl0\\ql\n"  )
     
   } else if (align == "right") {
-    ltx <- paste0("\\par\\sl0\\qr\n"  )
+    hd <- paste0("\\par\\sl0\\qr\n"  )
   } else  {
-    ltx <- paste0("\\par\\sl0\\qc\n"  )
+    hd <- paste0("\\par\\sl0\\qc\n"  )
   }
   
-  # Replace original line with RTF codes
-  img <- paste0(ltx, img)
+  # Restore sizing and alignment
+  if (rs$font_size == 8) {
+    ft <- "\\par\\sl-180\\ql"
+  } else if (rs$font_size ==  12) {
+    ft <- "\\par\\sl-275\\ql"
+  } else {
+    ft <- "\\par\\sl-225\\ql"
+  }
+  
+  # Contruct RTF codes for image
+  img <- paste0(hd, img, ft)
   imght <- round((plt$height * rs$twip_conversion) / rs$line_height)
   
   # Add blank above content if requested
