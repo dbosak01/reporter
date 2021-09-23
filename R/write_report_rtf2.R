@@ -159,7 +159,7 @@ paginate_content_rtf <- function(rs, ls) {
       # Collect multiple pages and line counts
       for (j in seq_len(length(res$page_list))) {
         pgs[[length(pgs) + 1]] <- res$page_list[[j]]$rtf
-        lns <- append(lns, res$page_list[[j]]$lines)
+        lns[[length(lns) + 1]] <- res$page_list[[j]]$lines
       }
       
       # Retrieve table widths.  These are useful for debugging.
@@ -178,9 +178,12 @@ paginate_content_rtf <- function(rs, ls) {
     } else if (any(class(obj) == "plot_spec")) {
       
       # Plots not started rtf2 conversion
-      tmp_dir <- file.path(tempdir(), "temp.jpg")
-      res <- create_plot_pages_rtf(rs, cntnt, lpg_twips, tmp_dir)
-      pgs <- append(pgs, res)
+      res <- create_plot_pages_rtf(rs, cntnt, lpg_twips, tempdir())
+      for (j in seq_len(length(res$rtf))) {
+        pgs[[length(pgs) + 1]] <- res$rtf[[j]]
+        lns[[length(lns) + 1]] <- res$lines[[j]]
+        
+      }
     }   
     
     # Separate pages and line counts

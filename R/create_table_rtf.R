@@ -41,7 +41,21 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   
   # If page by is defined, use it
   if (!is.na(pgby_var)) {
-    dat$..page_by <-  dat[[pgby_var]]
+
+    # Clear out factors on page by if they exist
+    # Needed because split cells used to convert everything to characters
+    if (any(class(dat[[pgby_var]]) == "factor")) {
+      dat[[pgby_var]] <- as.character(dat[[pgby_var]] )
+      dat$..page_by <- dat[[pgby_var]] 
+      
+      if (any(class(dat$..page) == "factor")) 
+        dat$..page <- dat[[pgby_var]]
+      
+    } else {
+      
+      dat$..page_by <-  dat[[pgby_var]] 
+    }
+    
     if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
       message("Page by variable not sorted.")
   }
@@ -143,10 +157,9 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   # Offsets are needed to calculate splits and page breaks
   content_offset <- get_content_offsets_rtf(rs, ts, tmp_pi, content_blank_row)
   
- # off <- sum(content_offset$twips[["upper"]], content_offset$twips[["lower"]])
-  rws <- rs$body_line_count 
+
   # split rows
-  splits <- get_splits_text(fdat, widths_uom, rws, 
+  splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
                             lpg_rows, content_offset$lines, ts, TRUE)  
   # print("splits")
   # print(splits)
@@ -266,10 +279,11 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   #print("Titles")
   #print(ttls)
   
-  if (!is.null(rs$page_by))
-    pgby <- get_page_by_rtf(rs$page_by, rs$content_size[["width"]], pi$page_by)
-  else if(!is.null(ts$page_by))
-    pgby <- get_page_by_rtf(ts$page_by, ls, pi$page_by)
+  if (!is.null(rs$page_by)) {
+    pgby <- get_page_by_rtf(rs$page_by, rs$content_size[["width"]], 
+                            pi$page_by, rs, pi$table_align)
+  } else if(!is.null(ts$page_by))
+    pgby <- get_page_by_rtf(ts$page_by, ls, pi$page_by, rs, pi$table_align)
   else 
     pgby <- c()
   
@@ -342,9 +356,9 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
   # Get page by if it exists
   pgb <- list(lines = 0, twips = 0)
   if (!is.null(ts$page_by))
-    pgb <- get_page_by_rtf(ts$page_by, wdth, NULL)
+    pgb <- get_page_by_rtf(ts$page_by, wdth, NULL, rs, pi$table_align)
   else if (!is.null(rs$page_by))
-    pgb <- get_page_by_rtf(rs$page_by, wdth, NULL)
+    pgb <- get_page_by_rtf(rs$page_by, wdth, NULL, rs, pi$table_align)
 
   
   #print(length(pgb))
@@ -371,6 +385,12 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
     cnt[["lower"]] <- ftnts$lines
   }
   
+  # Add extra offset if table has a lot of borders turned on
+  if (any(ts$object$borders %in% c("all", "inside"))) {
+    ret[["lower"]] <- ret[["lower"]] + rs$row_height
+    cnt[["lower"]] <- cnt[["lower"]] + 1
+  }
+    
   if (content_blank_row %in% c("both", "below")) {
     ret[["blank_lower"]] <- rs$line_height
     cnt[["blank_lower"]] <- 1 

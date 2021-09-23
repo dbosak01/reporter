@@ -437,24 +437,27 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
     # Get rtf page bodies
     # Can return multiple pages if it breaks across pages
     # Not sure what that means for a plot, but that is the logic
-    pgs <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
+    pgs <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
                          lpg_rows, cntnt$blank_row, pgby, pgval)
+    
+    ret <- list(rtf = list(pgs$rtf),
+                lines = list(pgs$lines))
     
     # Within a content creation function, assumed that it will take 
     # care of filling out blanks for each page.  Only the last page
     # can have empty rows.
-    for (pg in pgs) {
-      rem <- rs$body_line_count - length(pg)
-      if (rem > 0 & cntr < length(dat_lst))
-        blnks <- rep("", rem)
-      else 
-        blnks <- c()
-      
-      # Combine all pages with all previous pages
-      ret <- c(ret, list(c(pg, blnks)))
-    }
-    
-    cntr <- cntr + 1
+    # for (pg in pgs) {
+    #   rem <- rs$body_line_count - length(pg)
+    #   if (rem > 0 & cntr < length(dat_lst))
+    #     blnks <- rep("\\par", rem)  # Only change?
+    #   else 
+    #     blnks <- c()
+    #   
+    #   # Combine all pages with all previous pages
+    #   ret <- c(ret, list(c(pg, blnks)))
+    # }
+    # 
+    # cntr <- cntr + 1
     
   }
   
@@ -466,82 +469,97 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
 get_plot_body_rtf <- function(plt, plot_path, align, rs,
                           lpg_rows, content_blank_row, pgby, pgval) {
   
+  # Default to content width
+  w <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(plt$width))
+    w <- plt$width
+  
+
   # Get titles and footnotes
-  w <- ceiling(plt$width / rs$char_width)
-  ttls <- get_titles(plt$titles, w, rs$uchar) 
-  ttl_hdr <- get_title_header(plt$title_hdr, w, rs$uchar)
-  ftnts <- get_footnotes(plt$footnotes, w, rs$uchar) 
-  pgbys <- get_page_by(pgby, w, pgval)
+  ttls <- get_titles_rtf(plt$titles, w, rs, align) 
+  ttl_hdr <- get_title_header_rtf(plt$title_hdr, w, rs, align)
+  ftnts <- get_footnotes_rtf(plt$footnotes, w, rs, align) 
+  pgbys <- get_page_by_rtf(pgby, w, pgval, rs, align)
   
-  pltpth <- gsub("\\", "/", plot_path, fixed = TRUE)
+
+  img <- get_image_rtf(plot_path, plt$width, plt$height, rs$units, rs$font_size)
   
+  # Create rtf codes
+  if (align == "left") {
+    ltx <- paste0("\\par\\sl0\\ql\n"  )
+    
+  } else if (align == "right") {
+    ltx <- paste0("\\par\\sl0\\qr\n"  )
+  } else  {
+    ltx <- paste0("\\par\\sl0\\qc\n"  )
+  }
   
-  s <- c(paste0("```", pltpth, "|", plt$height, 
-                "|", plt$width, "|", align, "```"))
-  
-  h <- ceiling(plt$height / rs$row_height) + 1  # adjustment needed? Appears so.
-  
-  fill <- rep("```fill```", h) 
-  s <- c(s, fill)
-  
+  # Replace original line with RTF codes
+  img <- paste0(ltx, img)
+  imght <- round((plt$height * rs$twip_conversion) / rs$line_height)
   
   # Add blank above content if requested
   a <- NULL
   if (content_blank_row %in% c("both", "above"))
-    a <- ""
+    a <- "\\par"
   
   
   # Add blank below content if requested
   b <- NULL
   if (content_blank_row %in% c("both", "below"))
-    b <- ""
+    b <- "\\par"
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, pgbys, s, ftnts, b)
+  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, img, ftnts$rtf, b)
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght,
+             ftnts$lines, length(b))
   
   # Page list
-  ret <- list()  
+  ret <- list(rtf = rws,
+              lines = lns)  
   
   # Create tmp variable for 1 page of content
   tmp <- c()
   
   # Offset the first page with remaining rows from the 
   # last page of the previous content
-  offset <- lpg_rows 
-  #print(paste("Offset:", offset))
-  
-  # Assign content to pages
-  for (i in seq_along(rws)) {
-    if (length(tmp) < (rs$body_line_count - offset)) {
-      
-      # Append to existing page
-      tmp[length(tmp) + 1] <- rws[i]
-      
-    } else {
-      
-      # Start a new page
-      ret[[length(ret) + 1]] <- pad_any(tmp, rs$line_size, 
-                                        get_justify(align))
-      tmp <- rws[i]
-      
-      # Set to zero on second page and leave it that way
-      offset <- 0  
-    }
-  }
-  
-  # Deal with last page
-  if (length(tmp) > 0 ) {
-    
-    
-    # If page is not empty
-    if (max(nchar(trimws(tmp))) > 0) {
-      
-      # Add last page
-      ret[[length(ret) + 1]] <- pad_any(tmp,  rs$line_size, 
-                                        get_justify(align))
-    }
-    
-  }
+  # offset <- lpg_rows 
+  # #print(paste("Offset:", offset))
+  # 
+  # # Assign content to pages
+  # for (i in seq_along(rws)) {
+  #   if (length(tmp) < (rs$body_line_count - offset)) {
+  #     
+  #     # Append to existing page
+  #     tmp[length(tmp) + 1] <- rws[i]
+  #     
+  #   } else {
+  #     
+  #     # Start a new page
+  #     ret[[length(ret) + 1]] <- pad_any(tmp, rs$line_size, 
+  #                                       get_justify(align))
+  #     tmp <- rws[i]
+  #     
+  #     # Set to zero on second page and leave it that way
+  #     offset <- 0  
+  #   }
+  # }
+  # 
+  # # Deal with last page
+  # if (length(tmp) > 0 ) {
+  #   
+  #   
+  #   # If page is not empty
+  #   if (max(nchar(trimws(tmp))) > 0) {
+  #     
+  #     # Add last page
+  #     ret[[length(ret) + 1]] <- pad_any(tmp,  rs$line_size, 
+  #                                       get_justify(align))
+  #   }
+  #   
+  # }
   
   return(ret)
   

@@ -111,12 +111,12 @@ test_that("get_pageby_rtf works as expected.", {
   
   rpt$line_height
   
-  res <- get_page_by_rtf(tbl$page_by, 6, "fork", rpt)
+  res <- get_page_by_rtf(tbl$page_by, 6, "fork", rpt, "left")
   res  
   
   expect_equal(res$lines, 2)
   expect_equal(res$rtf, 
-    "\\trowd\\trgaph0\\cellx8640\\ql Cylinders:fork\\cell\\row\n\\par\n")
+    "\\trowd\\trgaph0\\trql\\cellx8640\\ql Cylinders:fork\\cell\\row\n\\par\n")
   
 })
 

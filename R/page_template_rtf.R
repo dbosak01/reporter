@@ -368,7 +368,7 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
 #' @param width The width to set the page by strings to
 #' @return A vector of strings
 #' @noRd
-get_page_by_rtf <- function(pgby, width, value, rs) {
+get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -381,6 +381,12 @@ get_page_by_rtf <- function(pgby, width, value, rs) {
   ll <- width
   ret <- c()
   cnt <- 0
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
   
   if (!is.null(pgby)) { 
     
@@ -401,7 +407,7 @@ get_page_by_rtf <- function(pgby, width, value, rs) {
     
     w1 <- round(width * rs$twip_conversion)
     
-    ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0\\cellx", w1, algn, " ",
+    ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, "\\cellx", w1, algn, " ",
                               pgby$label, value, "\\cell\\row\n")
     
     

@@ -13,6 +13,9 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
               "qui officia deserunt mollit anim id est laborum.")
 
+fnt <- "Arial"
+fsz <- 10
+
 test_that("rtf2-0a: Fixed report is correct.", {
 
 
@@ -249,7 +252,7 @@ test_that("rtf2-6: One page table works as expected.", {
 })
 
 
-test_that("rtf2-7: Three page table works as expected.", {
+test_that("rtf2-7: Multi page table works as expected.", {
   
   
   fp <- file.path(base_path, "rtf2/test7.rtf")
@@ -674,6 +677,167 @@ test_that("rtf2-20: Title Header borders work as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+# Not sure if this is correct.  Seems like not.
+test_that("rtf2-21: Page wrap with spanning header works as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test21.rtf")
+  
+  
+  df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
+  rownames(df) = NULL
+  
+  tbl <- create_table(df) %>% 
+    spanning_header(2, 5,
+                    label = "Span 1", label_align = "center", n = 10) %>%
+    spanning_header(6, 8,
+                    label = "Span 2", label_align = "center", n = 10) %>%
+    spanning_header(9, 12,
+                    label = "Span 3", label_align = "center", n = 10) %>%
+    spanning_header(6, 12, label = "Super Span",
+                    label_align = "center",
+                    level = 2) %>%
+    define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
+    define(mpg, format = "%.1f") %>% 
+    define(wt, page_wrap = TRUE) %>% 
+    define(vs, page_wrap = TRUE)
+  
+  rpt <- create_report(fp, output_type = "RTF", 
+                       orientation = "portrait", font = fnt) %>%
+    add_content(tbl) %>% 
+    titles("Table 1.0", "MTCARS Subset Test") %>% 
+    footnotes("My footnote")
+  
+  #print(rpt)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  expect_equal(res$pages, 3)
+})
+
+# This is a good one for testing height calculations.
+test_that("rtf2-22: Page by works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test22.rtf")
+  
+  dat <- iris
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By") %>%
+    page_by(Species, label = "Species: ", align = "right")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+   # page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+# Text align not working, but two contents on page is.
+test_that("rtf2-23: Two contents on one page works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test23.rtf")
+  
+  dat <- mtcars[1:15, ]
+  
+  tbl <- create_table(dat) %>% 
+    titles("Table 1.0", "My Nice Table") %>%
+    footnotes("My footnote 1", "My footnote 2")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    add_content(tbl, page_break = FALSE) %>%
+    add_content(create_text(cnt, width = 5), align = "center") %>% 
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+# Works!
+test_that("rtf2-24: Two tables one headerless works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test24.rtf")
+  
+  dat <- mtcars
+  dat2 <- mtcars[16:20, ]
+  
+  tbl <- create_table(dat) %>% 
+    titles("Table 1.0", "My Nice Table") %>% 
+    column_defaults(width = .5)
+
+  tbl2 <- create_table(dat2, headerless = TRUE) %>% 
+    column_defaults(width = .5)
+    
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    add_content(tbl, page_break = FALSE, blank_row = "none") %>%
+    add_content(tbl2, align = "center") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  
+  
+})
+
+# Works!
+test_that("rtf2-25: Simplest RTF Plot works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test25.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 4, width = 8)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size =10) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
   
   
 })
