@@ -30,6 +30,10 @@
 #' or \code{\link[survminer]{ggsurvplot}}.
 #' @param height The height of the plot in the specified units of measure. 
 #' @param width The width of the plot in the specified units of measure. 
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
+#' Default is 'none'.  The 'left', 'right', and 'outside' 
+#' border specifications only apply to RTF reports.
 #' @return The plot specification.
 #' @family plot
 #' @seealso 
@@ -64,19 +68,26 @@
 #' # Uncomment to view RTF file
 #' # shell.exec(tmp)
 #' @export
-create_plot <- function(x, height, width) {
+create_plot <- function(x, height, width, borders = "none") {
   
   
   if (!any(class(x) %in% c("gg", "ggplot", "ggcoxzph", "ggsurv")))
     stop("plot object must be of type 'ggplot' or 'ggsurv'.")
+  
+  
+  if (!all(borders %in% c("top", "bottom", "left", "right", 
+                          "all", "none", "outside")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'left', 'right', 'all', ",
+               "'none', or 'outside'."))
   
   ret <- structure(list(), class = c("plot_spec", "list"))
   
   ret$plot <- x
   ret$height <- height 
   ret$width <- width
+  ret$borders <- borders
 
-  
   return(ret)
 }
 
@@ -471,46 +482,65 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
 
 #' Create list of vectors of strings for each page 
 #' @noRd
-get_plot_body_rtf <- function(plt, plot_path, align, rs,
+get_plot_body_rtf <- function(plt, plot_path, talign, rs,
                           lpg_rows, content_blank_row, pgby, pgval) {
   
   # Default to content width
-  w <- rs$content_size[["width"]] 
+  wth <- rs$content_size[["width"]] 
   
   # If user supplies a width, override default
   if (!is.null(plt$width))
-    w <- plt$width
+    wth <- plt$width
   
+
 
   # Get titles and footnotes
-  ttls <- get_titles_rtf(plt$titles, w, rs, align) 
-  ttl_hdr <- get_title_header_rtf(plt$title_hdr, w, rs, align)
-  ftnts <- get_footnotes_rtf(plt$footnotes, w, rs, align) 
-  pgbys <- get_page_by_rtf(pgby, w, pgval, rs, align)
+  ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
+  ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
+  ftnts <- get_footnotes_rtf(plt$footnotes, wth, rs, talign) 
+  pgbys <- get_page_by_rtf(pgby, wth, pgval, rs, talign)
   
-
+  # Get image RTF codes
   img <- get_image_rtf(plot_path, plt$width, plt$height, rs$units)
   
-  # Create rtf codes
-  if (align == "left") {
-    hd <- paste0("\\par\\sl0\\ql\n"  )
-    
-  } else if (align == "right") {
-    hd <- paste0("\\par\\sl0\\qr\n"  )
+  # Assign table alignment codes
+  if (talign == "left") {
+    talgn <- "\\trql" 
+  } else if (talign == "right") {
+    talgn <- "\\trqr"
   } else  {
-    hd <- paste0("\\par\\sl0\\qc\n"  )
+    talgn <- "\\trqc"
   }
+  
+  algn <- "\\qc" 
+  # Assign plot alignment codes
+  # if (plt$align == "left") {
+  #   algn <- "\\ql"
+  # } else if (plt$align == "right") {
+  #   algn <- "\\qr"
+  # } else  {
+  #   algn <- "\\qc" 
+  # }
+  
+  # Convert width to twips
+  w <- round(wth * rs$twip_conversion)
+  
+  # Get border codes
+  b <- get_cell_borders(1, 1, 1, 1, plt$borders)
+  
+  # Concat all header codes
+  hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
   
   # Restore sizing and alignment
   if (rs$font_size == 8) {
-    ft <- "\\par\\sl-180\\ql"
+    ft <- "\\cell\\row\n\\pard\\sl-180\\ql"
   } else if (rs$font_size ==  12) {
-    ft <- "\\par\\sl-275\\ql"
+    ft <- "\\cell\\row\n\\pard\\sl-275\\ql"
   } else {
-    ft <- "\\par\\sl-225\\ql"
+    ft <- "\\cell\\row\n\\pard\\sl-225\\ql"
   }
   
-  # Contruct RTF codes for image
+  # Concat RTF codes for image
   img <- paste0(hd, img, ft)
   imght <- round((plt$height * rs$twip_conversion) / rs$line_height)
   

@@ -820,16 +820,16 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
   
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
-  plt <- create_plot(p, height = 4, width = 8)
+  plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>% 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    footnotes("* Motor Trend, 1974") 
   
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size =10) %>%
     page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "center") %>%
-    footnotes("* Motor Trend, 1974") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    add_content(plt, align = "right") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
   
   
   res <- write_report(rpt)
@@ -915,7 +915,7 @@ test_that("rtf2-27: Plot with page by on plot works as expected.", {
   
 })
 
-# Works possible spacing issues.
+# Works but with spacing issues.
 test_that("rtf2-28: Plot with page by on report works as expected.", {
   
   library(ggplot2)
