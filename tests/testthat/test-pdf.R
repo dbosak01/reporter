@@ -768,3 +768,19 @@ test_that("pdf25: PDF Table with custom options works as expected.", {
   expect_equal(res$pages, 2)
 })
 
+test_that("pdf26: Table Borders that spans multiple pages work as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test26.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris, borders = "all")) %>% 
+    footnotes("Here is a footnote")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 5)
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})

@@ -289,13 +289,23 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (content_blank_row %in% c("above", "both"))
     a <- ""
   
+  # Add top border if requested
+  tbrdr <- NULL
+  if (any(ts$borders %in% c("top", "all", "outside")))
+    tbrdr <-  paste0(rep(rs$uchar,  ls - 1), collapse = "")
+  
+  # Add bottom border if requested
+  bbrdr <- NULL
+  if (any(ts$borders %in% c("bottom", "all", "outside")))
+    bbrdr <-  paste0(rep(rs$uchar,  ls - 1), collapse = "")
+  
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
     b <- ""
   
   blnks <- c()
   if (vflag) {
-    ret <- c(a, ttls, pgby, shdrs, hdrs, rws, b)
+    ret <- c(a, ttls, pgby, tbrdr, shdrs, hdrs, rws, bbrdr, b)
 
     len_diff <- rs$body_line_count - lpg_rows - length(ret) - length(ftnts)
     
@@ -310,7 +320,7 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
       
   } else { 
     
-    ret <- c(a, ttls, pgby, shdrs, hdrs, rws, ftnts, b)
+    ret <- c(a, ttls, pgby, tbrdr, shdrs, hdrs, rws, bbrdr, ftnts, b)
     
     len_diff <- rs$body_line_count - lpg_rows - length(ret)
     if (wrap_flag & len_diff > 0) {
@@ -358,8 +368,15 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   #print(length(pgb))
   
   # print(paste("Table titles:", ttls))
+  tbrdr <- 0
+  if (any(ts$borders %in% c("all", "top", "outside")))
+      tbrdr <- 1
+      
+  bbrdr <- 0
+  if (any(ts$borders %in% c("all", "bottom", "outside")))
+    bbrdr <- 1
   
-  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb)
+  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb) + tbrdr
   
   if (content_blank_row %in% c("above", "both"))
       ret["blank_upper"] <- 1
@@ -368,9 +385,9 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   rftnts <- get_footnotes(rs$footnotes, rs$line_size) 
   
   if (has_top_footnotes(rs)) {
-    ret["lower"] <- length(ftnts) + length(rftnts)
+    ret["lower"] <- length(ftnts) + length(rftnts) + bbrdr
   } else {
-    ret["lower"] <- length(ftnts) 
+    ret["lower"] <- length(ftnts) + bbrdr
   }
 
   if (content_blank_row %in% c("both", "below"))

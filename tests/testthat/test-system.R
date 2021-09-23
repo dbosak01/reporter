@@ -2402,4 +2402,53 @@ test_that("test72: Check column alignment", {
 
 
 
+test_that("test73: Table Borders with ttls/fnts on table works as expected.", {
+  
+  fp <- file.path(base_path, "output/test73.out")
+  
+  tbl <- create_table(iris, borders = "all") %>% 
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>% 
+    footnotes("Here is a footnote", "And another")
+  
+  rpt <- create_report(fp) %>%
+    page_header("Left", "Right") %>% 
+    add_content(tbl) %>% 
+    page_footer("left", "", "right")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+
+test_that("test74: Table Borders with ttls/fnts on report works as expected.", {
+  
+  fp <- file.path(base_path, "output/test74.out")
+  
+  tbl <- create_table(iris, borders = "all") 
+  
+  rpt <- create_report(fp) %>%
+    page_header("Left", "Right") %>% 
+    add_content(tbl) %>% 
+    page_footer("left", "", "right") %>% 
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>% 
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
 

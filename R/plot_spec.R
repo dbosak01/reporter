@@ -298,6 +298,7 @@ get_plot_body <- function(plt, plot_path, align, rs,
                   "|", plt$width, "|", align, "```"))
   
   h <- ceiling(plt$height / rs$row_height) + 1  # adjustment needed? Appears so.
+  w <- ceiling(plt$width / rs$char_width) 
 
   fill <- rep("```fill```", h) 
   s <- c(s, fill)
@@ -308,14 +309,23 @@ get_plot_body <- function(plt, plot_path, align, rs,
   if (content_blank_row %in% c("both", "above"))
     a <- ""
   
+  # Add top border if requested
+  tbrdr <- NULL
+  if (any(plt$borders %in% c("top", "all")))
+    tbrdr <-  paste0(rep(rs$uchar, w), collapse = "")
+  
+  # Add bottom border if requested
+  bbrdr <- NULL
+  if (any(plt$borders %in% c("bottom", "all", "outside")))
+    bbrdr <-  paste0(rep(rs$uchar, w), collapse = "")
   
   # Add blank below content if requested
   b <- NULL
-  if (content_blank_row %in% c("both", "below"))
+  if (content_blank_row %in% c("both", "below", "outside"))
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, pgbys, s, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, pgbys, tbrdr, s, bbrdr, ftnts, b)
   
   # Page list
   ret <- list()  

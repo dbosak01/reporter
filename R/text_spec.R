@@ -257,6 +257,15 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
   if (content_blank_row %in% c("both", "above"))
       a <- ""
   
+  # Add top border if requested
+  tbrdr <- NULL
+  if (any(txt$borders %in% c("top", "all", "outside")))
+    tbrdr <-  paste0(rep(rs$uchar, line_width), collapse = "")
+  
+  # Add bottom border if requested
+  bbrdr <- NULL
+  if (any(txt$borders %in% c("bottom", "all", "outside")))
+    bbrdr <-  paste0(rep(rs$uchar, line_width), collapse = "")
   
   # Add blank below content if requested
   b <- NULL
@@ -264,7 +273,7 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, s, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, tbrdr, s, bbrdr, ftnts, b)
   
   # Page list
   ret <- list()  

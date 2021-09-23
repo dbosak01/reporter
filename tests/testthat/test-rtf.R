@@ -840,3 +840,49 @@ test_that("rtf26: line_size and line_count overrides work as expected.", {
   
 })
 
+
+test_that("rtf27: Plot Borders work as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf/test27.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  
+  plt <- create_plot(p, height = 4, width = 8, borders = "all") %>% 
+    titles("My plot", borders = "none") %>% 
+    footnotes("My plot footnotes", borders = "none")
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "right") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+})
+
+test_that("rtf28: Table Borders that spans multiple pages work as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test28.rtf")
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris, borders = "all")) %>% 
+    footnotes("Here is a footnote")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
