@@ -186,7 +186,8 @@ paginate_content_rtf <- function(rs, ls) {
       }
     }   
     
-    # Separate pages and line counts
+    # Store pages and lines with content objects
+    # The content settings will be used when writing content
     ls[[i]]$pages <- pgs
     ls[[i]]$lines <- lns
     

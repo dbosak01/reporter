@@ -22,6 +22,10 @@
 #' no width is specified, the full page width will be used.
 #' @param align How to align the text within the content area.  Valid values
 #' are 'left', 'right', 'center', or 'centre'.  Default is 'left'.
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
+#' Default is 'none'.  The 'left', 'right', and 'outside' 
+#' border specifications only apply to RTF reports.
 #' @return The text specification.
 #' @family text
 #' @seealso 
@@ -72,7 +76,7 @@
 #' # * Cicero, 1st century BCE
 #' #
 #' @export
-create_text <- function(txt, width = NULL, align = "left") {
+create_text <- function(txt, width = NULL, align = "left", borders = "none") {
   
   if (!"character" %in% class(txt))
     stop("value must be of class 'character'")
@@ -94,11 +98,18 @@ create_text <- function(txt, width = NULL, align = "left") {
     
   }
   
+  if (!all(borders %in% c("top", "bottom", "left", "right", 
+                          "all", "none", "outside")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'left', 'right', 'all', ",
+               "'none', or 'outside'."))
+  
   ret <- structure(list(), class = c("text_spec", "list"))
   
   ret$text <- txt
   ret$align <- align
   ret$width <- width
+  ret$borders <- borders
   
   return(ret)
   
@@ -326,7 +337,7 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
     w <- txt$width
   
   res <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
-                           lpg_twips, content_blank_row)
+                           lpg_twips, content_blank_row, cntnt$align)
   
 
   return(res)
@@ -338,60 +349,84 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
 #' @import stringi
 #' @noRd
 get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips, 
-                              content_blank_row, conv) {
+                              content_blank_row, talgn) {
 
 
   # Get content titles and footnotes
-  ttls <- get_titles_rtf(txt$titles, width, rs) 
-  ftnts <- get_footnotes_rtf(txt$footnotes, width, rs) 
-  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs)
+  ttls <- get_titles_rtf(txt$titles, width, rs, talgn) 
+  ftnts <- get_footnotes_rtf(txt$footnotes, width, rs, talgn) 
+  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
   
   t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
   hgt <- rs$body_line_count - t
 
+  # Break text content into pages if necessary
   tpgs <- split_text_rtf(txt$text, hgt, width, rs$font, 
                  rs$font_size, rs$units, lpg_twips)
   
+  # Capture rtf pages and line counts
   txtpgs <- tpgs$rtf
   lns <- tpgs$lines
   
+  # Calculate text width in twips
+  w <- round(width * rs$twip_conversion)
   
+  # Get content alignment codes
+  if (talgn == "right") 
+    tgn <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    tgn <- "\\trqc"
+  else 
+    tgn <- "\\trql"
+  
+  # Get text alignment codes
   if (txt$align == "right") 
     algn <- "\\qr"
   else if (txt$align %in% c("center", "centre"))
     algn <- "\\qc"
   else 
     algn <- "\\ql"
+
+  # Get cell border codes
+  b <- get_cell_borders(1, 1, 1, 1, txt$borders)  
+  
+  # Prepare row header and footer
+  rwhd <- paste0("\\trowd\\trgaph0", tgn, b, "\\cellx", w, algn, " ")
+  rwft <- paste0("\\cell\\row\\pard")
   
   ret <- list()
   cnt <- c()
   
+  # Gather rtf and line counts for each page
   for (i in seq_along(txtpgs)) {
     
     pg <- txtpgs[[i]]
     
-    s <- paste0( algn, " ", pg, "\\line\\pard")
-
+    # Put line ending on all but last line
+    if (length(pg) > 1) {
+      s <- paste0(pg[seq(1, length(pg) - 1)], "\\line ")
+      s <- c(s, pg[length(pg)])
+    } else
+      s <- pg
 
     # Add blank above content if requested
     a <- NULL
     if (i == 1 & content_blank_row %in% c("both", "above"))
-      a <- "\\line"
+      a <- "\\par"
     
     
     # Add blank below content if requested
     b <- NULL
     if (i == length(txtpgs) & content_blank_row %in% c("both", "below"))
-      b <- "\\line"
-    else if (length(txtpgs) > 1 & i != length(txtpgs))
-      b <- "" #rs$page_break_rtf
+      b <- "\\par"
+
     
     spcs <- NULL
     
     
     # Combine titles, blanks, body, and footnotes
     ret[[length(ret) + 1]] <- c(a, 
-                              ttls$rtf, s, spcs, ftnts$rtf,  b)
+                              ttls$rtf, rwhd, s, rwft, spcs, ftnts$rtf,  b)
     
     cnt[[length(cnt) + 1]] <- sum(length(a), 
                                   ttls$lines, lns[[i]], length(spcs), ftnts$lines,

@@ -95,7 +95,7 @@ test_that("rtf2-1: One page text spec works as expected.", {
 
   fp <- file.path(base_path, "rtf2/test1.rtf")
 
-  txt <- create_text(cnt) %>%
+  txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
     titles("Text 1.0", "My Nice Text") %>%
     footnotes("My footnote 1", "My footnote 2")
 
@@ -103,7 +103,7 @@ test_that("rtf2-1: One page text spec works as expected.", {
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
-    add_content(txt) %>%
+    add_content(txt, align = "right") %>%
     page_footer("Left1", "Center1", "Right1") 
 
   res <- write_report(rpt)
