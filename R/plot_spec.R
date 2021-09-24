@@ -256,20 +256,22 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
     # Can return multiple pages if it breaks across pages
     # Not sure what that means for a plot, but that is the logic
     pgs <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
-                         lpg_rows, cntnt$blank_row, pgby, pgval)
+                         lpg_rows, cntnt$blank_row, pgby, pgval, 
+                         cntr < length(dat_lst))
     
     # Within a content creation function, assumed that it will take 
     # care of filling out blanks for each page.  Only the last page
     # can have empty rows.
     for (pg in pgs) {
-      rem <- rs$body_line_count - length(pg)
-      if (rem > 0 & cntr < length(dat_lst))
-        blnks <- rep("", rem)
-      else 
-        blnks <- c()
-      
+      # rem <- rs$body_line_count - length(pg)
+      # if (rem > 0 & cntr < length(dat_lst))
+      #   blnks <- rep("", rem)
+      # else
+      #   blnks <- c()
+
       # Combine all pages with all previous pages
-      ret <- c(ret, list(c(pg, blnks)))
+      #ret <- c(ret, list(c(pg, blnks)))
+      ret <- c(ret, list(pg))
     }
     
     cntr <- cntr + 1
@@ -282,13 +284,15 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
 #' Create list of vectors of strings for each page 
 #' @noRd
 get_plot_body <- function(plt, plot_path, align, rs,
-                          lpg_rows, content_blank_row, pgby, pgval) {
+                          lpg_rows, content_blank_row, pgby, pgval, wrap_flag) {
   
   # Get titles and footnotes
   w <- ceiling(plt$width / rs$char_width)
   ttls <- get_titles(plt$titles, w, rs$uchar) 
   ttl_hdr <- get_title_header(plt$title_hdr, w, rs$uchar)
-  ftnts <- get_footnotes(plt$footnotes, w, rs$uchar) 
+  #ftnts <- get_footnotes(plt$footnotes, w, rs$uchar) 
+
+  
   pgbys <- get_page_by(pgby, w, pgval)
   
   pltpth <- gsub("\\", "/", plot_path, fixed = TRUE)
@@ -325,7 +329,14 @@ get_plot_body <- function(plt, plot_path, align, rs,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, pgbys, tbrdr, s, bbrdr, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, pgbys, tbrdr, s, bbrdr)
+  
+  
+  ftnts <- get_page_footnotes_text(rs, plt, w, lpg_rows, length(rws),
+                                   wrap_flag, content_blank_row)
+  
+  rws <- c(rws, ftnts)
+  
   
   # Page list
   ret <- list()  

@@ -364,6 +364,13 @@ update_page_numbers_rtf <- function(path, tpg) {
 }
 
 
+append_footnotes_rtf <- function(pg, cntnt, ftnts) {
+  
+  ret <- c() 
+  
+  
+}
+
 
 # Setup Functions ---------------------------------------------------------
 

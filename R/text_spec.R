@@ -273,7 +273,16 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, tbrdr, s, bbrdr, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, tbrdr, s, bbrdr)
+  
+  # Set to true for now.  Need to fix text paging below.
+  wrap_flag <- FALSE
+  
+  # Get footnotes
+  ftnts <- get_page_footnotes_text(rs, txt, line_width, lpg_rows, 
+                                   length(rws), wrap_flag, content_blank_row)
+  # Append footnotes 
+  rws <- c(rws, ftnts)
   
   # Page list
   ret <- list()  

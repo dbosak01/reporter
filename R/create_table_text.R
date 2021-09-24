@@ -245,33 +245,7 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   else
     ttls <- get_titles(ts$titles, ls, rs$uchar) 
   
-  ftnts <- c()
-  vflag <- FALSE
-  
-  # Deal with valign paramter
-  if (!is.null(ts$footnotes)) {
-    if (!is.null(ts$footnotes[[length(ts$footnotes)]])) {
-      if (ts$footnotes[[length(ts$footnotes)]]$valign == "bottom") {
 
-        vflag <- TRUE
-        ftnts <- get_footnotes(ts$footnotes, rs$line_size, rs$uchar) 
-      } else {
-        
-        ftnts <- get_footnotes(ts$footnotes, ls, rs$uchar) 
-      }
-    
-    }
-  } else {
-
-    if (!is.null(rs$footnotes[[1]])) {
-      if (!is.null(rs$footnotes[[1]]$valign)) {
-        if (rs$footnotes[[1]]$valign == "top") {
-
-          ftnts <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar) 
-        } 
-      }
-    }
-  }
   #print("Titles")
   #print(ttls)
   
@@ -299,40 +273,91 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (any(ts$borders %in% c("bottom", "all", "outside")))
     bbrdr <-  paste0(rep(rs$uchar,  ls - 1), collapse = "")
   
+  
+  # Append everything together
+  ret <- c(a, ttls, pgby, tbrdr, shdrs, hdrs, rws, bbrdr)
+  
+  # Footnotes are complicated enough that they need their own function
+  ftnts <- get_page_footnotes_text(rs, ts, ls, lpg_rows, 
+                                   length(ret), wrap_flag, content_blank_row)
+  
+  # Append footnotes 
+  ret <- c(ret, ftnts)
+  
+
+  
+  return(ret) 
+}
+
+#' @description Function to deal with complexities of footnotes.  Complexities
+#' include valign parameter and width parameter.
+#' @noRd
+get_page_footnotes_text <- function(rs, spec, spec_width, 
+                                    lpg_rows, row_count, wrap_flag,
+                                    content_blank_row) {
+  
+  ftnts <- c()
+  vflag <- FALSE
+  
+  # Deal with valign parameter
+  if (!is.null(spec$footnotes)) {
+    if (!is.null(spec$footnotes[[length(spec$footnotes)]])) {
+      if (spec$footnotes[[length(spec$footnotes)]]$valign == "bottom") {
+        
+        vflag <- TRUE
+        ftnts <- get_footnotes(spec$footnotes, rs$line_size, rs$uchar) 
+      } else {
+        
+        ftnts <- get_footnotes(spec$footnotes, spec_width, rs$uchar) 
+      }
+      
+    }
+  } else {
+    
+    if (!is.null(rs$footnotes[[1]])) {
+      if (!is.null(rs$footnotes[[1]]$valign)) {
+        if (rs$footnotes[[1]]$valign == "top") {
+          
+          ftnts <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar) 
+        } 
+      }
+    }
+  }
+  
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
     b <- ""
   
-  blnks <- c()
+  ublnks <- c()
+  lblnks <- c()
+  
+  len_diff <- rs$body_line_count - lpg_rows - row_count - length(ftnts) - length(b)
+  
   if (vflag) {
-    ret <- c(a, ttls, pgby, tbrdr, shdrs, hdrs, rws, bbrdr, b)
-
-    len_diff <- rs$body_line_count - lpg_rows - length(ret) - length(ftnts)
     
     # At some point will have to deal with wrap flag
     # Right now cannot put anything in between end of content
     # and the start of the footnote.  Edge case but should still
     # fix at some point.
     if (len_diff > 0) {
-      blnks <- rep("", len_diff)
-      ret <- c(ret, blnks, ftnts) 
+      ublnks <- c(b, rep("", len_diff))
     }
-      
+    
   } else { 
-    
-    ret <- c(a, ttls, pgby, tbrdr, shdrs, hdrs, rws, bbrdr, ftnts, b)
-    
-    len_diff <- rs$body_line_count - lpg_rows - length(ret)
+  
+  
     if (wrap_flag & len_diff > 0) {
-      blnks <- rep("", len_diff)
-      ret <- c(ret, blnks) 
+      lblnks <- c(rep("", len_diff), b)
+    } else {
+      lblnks <- b
     }
     
   }
   
-
+  ret <- c(ublnks, ftnts, lblnks)
   
-  return(ret) 
+  return(ret)
+  
 }
 
 # Sub-Functions -----------------------------------------------------------

@@ -784,3 +784,52 @@ test_that("pdf26: Table Borders that spans multiple pages work as expected.", {
   expect_equal(res$pages, 5)
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
+
+
+test_that("test27: Table Borders with ttls/fnts on table works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test27.pdf")
+  
+  tbl <- create_table(iris, borders = "all") %>% 
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>% 
+    footnotes("Here is a footnote", "And another")
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Left", "Right") %>% 
+    add_content(tbl) %>% 
+    page_footer("left", "", "right")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
+
+test_that("test28: Table Borders with ttls/fnts on report works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test28.pdf")
+  
+  tbl <- create_table(iris, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Left", "Right") %>% 
+    add_content(tbl) %>% 
+    page_footer("left", "", "right") %>% 
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>% 
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
+
+
