@@ -845,7 +845,7 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
   
 })
 
-# Not working any more.
+# Working but looks like par filler is off by 1 row
 test_that("rtf2-26: RTF Table with Plot on same page works as expected.", {
   
   library(ggplot2)
@@ -880,7 +880,7 @@ test_that("rtf2-26: RTF Table with Plot on same page works as expected.", {
 })
 
 
-# Works possible spacing issues.
+# Works but putting filler pars where it is not necessary
 test_that("rtf2-27: Plot with page by on plot works as expected.", {
   
   library(ggplot2)
@@ -988,6 +988,8 @@ test_that("rtf2-29: Simplest RTF Plot with valign top works as expected.", {
   
 })
 
+
+# Need extra par before footnote.  Appears to be issue with line counts passed back to content loop.
 test_that("rtf2-30: Simplest RTF Plot with valign bottom works as expected.", {
   
   library(ggplot2)
