@@ -1051,9 +1051,13 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   
   for (i in seq_len(nrow(x))){
     
-    if (count_row_var)
-      counter <- counter + x$..row[i]
-    else
+    if (count_row_var) {
+      if (is.na(x$..row[i])) {
+        counter <- counter + 1
+      } else
+        counter <- counter + x$..row[i]
+      
+    } else
       counter <- counter + 1
     
     if (i == nrow(x)) {
@@ -1085,8 +1089,8 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
     
     # After comparison, set last page value
     lastPage <- currentPage
-
-    if (counter > (page_size  - offset - ttfl) | userForce) {
+    
+    if ((counter > (page_size  - offset - ttfl)) | userForce) {
       #print(paste("Page count:", counter))
       counter <- 0
       

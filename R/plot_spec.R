@@ -472,7 +472,8 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
     # Can return multiple pages if it breaks across pages
     # Not sure what that means for a plot, but that is the logic
     res <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
-                         lpg_rows, cntnt$blank_row, pgby, pgval)
+                         lpg_rows, cntnt$blank_row, pgby, pgval, 
+                         cntr < length(dat_lst))
     
     pgs[[length(pgs) + 1]] <- res$rtf
     cnts[[length(cnts) + 1]] <- res$lines
@@ -491,7 +492,7 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
     #   ret <- c(ret, list(c(pg, blnks)))
     # }
     # 
-    # cntr <- cntr + 1
+    cntr <- cntr + 1
     
   }
   
@@ -504,7 +505,7 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
 #' Create list of vectors of strings for each page 
 #' @noRd
 get_plot_body_rtf <- function(plt, plot_path, talign, rs,
-                          lpg_rows, content_blank_row, pgby, pgval) {
+                          lpg_rows, content_blank_row, pgby, pgval, wrap_flag) {
   
   # Default to content width
   wth <- rs$content_size[["width"]] 
@@ -518,7 +519,7 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   # Get titles and footnotes
   ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
   ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
-  ftnts <- get_footnotes_rtf(plt$footnotes, wth, rs, talign) 
+  #ftnts <- get_footnotes_rtf(plt$footnotes, wth, rs, talign) 
   pgbys <- get_page_by_rtf(pgby, wth, pgval, rs, talign)
   
   # Get image RTF codes
@@ -577,10 +578,17 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
     b <- "\\par"
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, img, ftnts$rtf, b)
-  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght,
-             ftnts$lines, length(b))
+  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, img)
   
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght)
+  
+  ftnts <- get_page_footnotes_rtf(rs, plt, wth, lpg_rows, lns,
+                                   wrap_flag, content_blank_row, talign)
+  
+  rws <- c(rws, ftnts$rtf)
+  lns <- sum(lns, ftnts$lines)
+  
+
   # Page list
   ret <- list(rtf = rws,
               lines = lns)  

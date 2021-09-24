@@ -235,8 +235,10 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders)
   
+  # Default to content width
   ls <- rs$content_size[["width"]]
-  # Need to fix this to get table with
+  
+  # Get table width
   if (!is.null(pi$col_width))
      ls <- sum(pi$col_width, na.rm = TRUE)
   
@@ -245,21 +247,57 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   else
     ttls <- get_titles_rtf(ts$titles, ls, rs, pi$table_align) 
   
+  
+  if (!is.null(rs$page_by)) {
+    pgby <- get_page_by_rtf(rs$page_by, rs$content_size[["width"]], 
+                            pi$page_by, rs, pi$table_align)
+  } else if(!is.null(ts$page_by))
+    pgby <- get_page_by_rtf(ts$page_by, ls, pi$page_by, rs, pi$table_align)
+  else 
+    pgby <- c()
+  
+  
+  a <- NULL
+  if (content_blank_row %in% c("above", "both"))
+    a <- "\\par"
+  
+  
+  blnks <- c()
+    
+  
+  rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
+           hdrs$lines, length(rws),
+           length(a))
+  
+  ftnts <- get_page_footnotes_rtf(rs, ts, ls, lpg_rows, rc,
+                                  wrap_flag, content_blank_row,  pi$table_align)
+
+  
+  ret <- list(rtf = c(a, ttls$rtf, pgby$rtf, shdrs$rtf, 
+                      hdrs$rtf, rws,  ftnts$rtf),
+              lines = rc  + ftnts$lines)
+    
+  return(ret) 
+}
+
+get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
+                                   wrap_flag, content_blank_row, talgn) {
+  
   ftnts <- list(lines = 0, twips = 0)
   vflag <- "none"
   
   # Deal with valign parameter
-  if (!is.null(ts$footnotes)) {
-    if (!is.null(ts$footnotes[[length(ts$footnotes)]])) {
-      if (ts$footnotes[[length(ts$footnotes)]]$valign == "bottom") {
+  if (!is.null(spec$footnotes)) {
+    if (!is.null(spec$footnotes[[length(spec$footnotes)]])) {
+      if (spec$footnotes[[length(spec$footnotes)]]$valign == "bottom") {
         
         vflag <- "bottom"
-        ftnts <- get_footnotes_rtf(ts$footnotes, 
+        ftnts <- get_footnotes_rtf(spec$footnotes, 
                                    rs$content_size[["width"]], rs, 
-                                   pi$table_align) 
+                                   talgn) 
       } else {
         vflag <- "top"
-        ftnts <- get_footnotes_rtf(ts$footnotes, ls, rs, pi$table_align) 
+        ftnts <- get_footnotes_rtf(spec$footnotes, spec_width, rs, talgn) 
       }
       
     }
@@ -271,50 +309,43 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
           vflag <- "top"
           ftnts <- get_footnotes_rtf(rs$footnotes, 
                                      rs$content_size[["width"]], rs, 
-                                     pi$table_align) 
+                                     talgn) 
         } 
       }
     }
   }
-  #print("Titles")
-  #print(ttls)
-  
-  if (!is.null(rs$page_by)) {
-    pgby <- get_page_by_rtf(rs$page_by, rs$content_size[["width"]], 
-                            pi$page_by, rs, pi$table_align)
-  } else if(!is.null(ts$page_by))
-    pgby <- get_page_by_rtf(ts$page_by, ls, pi$page_by, rs, pi$table_align)
-  else 
-    pgby <- c()
-  
-  # print("Create table text:")
-  # print(length(pgby))
-  
-  a <- NULL
-  if (content_blank_row %in% c("above", "both"))
-    a <- "\\par"
   
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
     b <- "\\par"
   
-  blnks <- c()
+  ublnks <- c()
+  lblnks <- c()
+  
+  len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - length(b)
+  
+  if (vflag == "bottom" & len_diff > 0) {
+  
+      ublnks <- c(b, rep("\\par", len_diff))
+  
+  } else {
     
-  t <- sum(ttls$lines, pgby$lines, shdrs$lines, 
-           hdrs$lines, ftnts$lines, lpg_rows,
-           length(a), length(b))
+    if ((wrap_flag & len_diff > 0)) {
 
-  len_diff <- rs$body_line_count - length(rws) - t
-  if ((wrap_flag & len_diff > 0) | (vflag == "bottom" & len_diff > 0)) {
-    if (vflag == "bottom")
-      blnks <- rep("\\par", len_diff)
+      lblnks <- c(rep("\\par", len_diff), b)
+    } else {
+      lblnks <- b
+    }
+      
+    
   }
   
-  ret <- list(rtf = c(a, ttls$rtf, pgby$rtf, shdrs$rtf, 
-                      hdrs$rtf, rws, blnks, ftnts$rtf, b),
-              lines = t + length(rws) + length(blnks))
-    
-  return(ret) 
+  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
+  ret <- list(rtf = c(ublnks, ftnts$rtf, lblnks),
+              lines = tlns,
+              twips = tlns * rs$twip_conversion)
+  
+  return(ret)
 }
 
 # Sub-Functions ---------------------------------------------------------

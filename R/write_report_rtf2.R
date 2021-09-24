@@ -120,7 +120,6 @@ paginate_content_rtf <- function(rs, ls) {
   last_object <- FALSE
   last_page_lines <- 0
   table_widths <- list()
-  lpg_twips <- 0
   
   hrf <- has_bottom_footnotes(rs)
 
@@ -154,7 +153,7 @@ paginate_content_rtf <- function(rs, ls) {
     # Break each content type into a list of pages
     if (any(class(obj) == "table_spec")) {
       
-      res <- create_table_pages_rtf(rs, cntnt, lpg_twips)
+      res <- create_table_pages_rtf(rs, cntnt, last_page_lines)
       
       # Collect multiple pages and line counts
       for (j in seq_len(length(res$page_list))) {
@@ -168,7 +167,7 @@ paginate_content_rtf <- function(rs, ls) {
       
     } else if (any(class(obj) == "text_spec")) {
       
-      res <- create_text_pages_rtf(rs, cntnt, lpg_twips, cbr)
+      res <- create_text_pages_rtf(rs, cntnt, last_page_lines, cbr)
       for (j in seq_len(length(res$rtf))) {
         pgs[[length(pgs) + 1]] <- res$rtf[[j]]
         lns[[length(lns) + 1]] <- res$lines[[j]]
@@ -178,7 +177,7 @@ paginate_content_rtf <- function(rs, ls) {
     } else if (any(class(obj) == "plot_spec")) {
       
       # Plots not started rtf2 conversion
-      res <- create_plot_pages_rtf(rs, cntnt, lpg_twips, tempdir())
+      res <- create_plot_pages_rtf(rs, cntnt, last_page_lines, tempdir())
       for (j in seq_len(length(res$rtf))) {
         pgs[[length(pgs) + 1]] <- res$rtf[[j]]
         lns[[length(lns) + 1]] <- res$lines[[j]]

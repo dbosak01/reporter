@@ -337,7 +337,7 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
 
 
 #' @noRd
-create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
+create_text_pages_rtf <- function(rs, cntnt, lpg_rows, content_blank_row) {
   
   if (!"report_spec" %in% class(rs))
     stop("Report spec expected for parameter rs")
@@ -355,7 +355,7 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
     w <- txt$width
   
   res <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
-                           lpg_twips, content_blank_row, cntnt$align)
+                           lpg_rows, content_blank_row, cntnt$align)
   
 
   return(res)
@@ -366,12 +366,13 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_twips, content_blank_row) {
 #' Create list of vectors of strings for each page 
 #' @import stringi
 #' @noRd
-get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips, 
+get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows, 
                               content_blank_row, talgn) {
 
 
   # Get content titles and footnotes
   ttls <- get_titles_rtf(txt$titles, width, rs, talgn) 
+  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
   ftnts <- get_footnotes_rtf(txt$footnotes, width, rs, talgn) 
   ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
   
@@ -380,7 +381,7 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
 
   # Break text content into pages if necessary
   tpgs <- split_text_rtf(txt$text, hgt, width, rs$font, 
-                 rs$font_size, rs$units, lpg_twips)
+                 rs$font_size, rs$units, lpg_rows)
   
   # Capture rtf pages and line counts
   txtpgs <- tpgs$rtf
@@ -418,6 +419,11 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
   # Gather rtf and line counts for each page
   for (i in seq_along(txtpgs)) {
     
+    if (i == length(txtpgs))
+      wrap_flag <- FALSE
+    else 
+      wrap_flag <- TRUE
+    
     pg <- txtpgs[[i]]
     
     # Put line ending on all but last line
@@ -431,24 +437,21 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_twips,
     a <- NULL
     if (i == 1 & content_blank_row %in% c("both", "above"))
       a <- "\\par"
-    
-    
-    # Add blank below content if requested
-    b <- NULL
-    if (i == length(txtpgs) & content_blank_row %in% c("both", "below"))
-      b <- "\\par"
-
-    
-    spcs <- NULL
-    
-    
+  
+  
     # Combine titles, blanks, body, and footnotes
-    ret[[length(ret) + 1]] <- c(a, 
-                              ttls$rtf, rwhd, s, rwft, spcs, ftnts$rtf,  b)
+    rws <- c(a, ttls$rtf, ttl_hdr$rtf, rwhd, s, rwft)
+
+    # Sum up lines
+    cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
     
-    cnt[[length(cnt) + 1]] <- sum(length(a), 
-                                  ttls$lines, lns[[i]], length(spcs), ftnts$lines,
-                                  length(b))
+    # Get footnotes
+    ftnts <- get_page_footnotes_rtf(rs, txt, width, lpg_rows, cnts,
+                                    wrap_flag, content_blank_row, talgn)
+    
+    ret[[length(ret) + 1]] <- c(rws, ftnts$rtf)
+    cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
+    
   }
   
   res <- list(rtf = ret, lines = cnt)

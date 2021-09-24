@@ -191,3 +191,68 @@ test_that("get_spanning_header_rtf works as expected.", {
 })
 
 
+
+test_that("get_page_footnotes_rtf works as expected.", {
+  
+  
+  tbl1 <- create_table(iris)
+  
+  rpt1 <- create_report("") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(tbl1) %>% 
+    footnotes("Here is a footnote", valign = "top")
+  
+  rpt1 <- page_setup_rtf(rpt1)
+  
+  res1 <- get_page_footnotes_rtf(rpt1, tbl1, 6,
+                                  0, 25, TRUE, "below", "center")
+  
+  expect_equal(res1$lines, 2)
+  
+  tbl2 <- create_table(iris)
+  
+  rpt2 <- create_report("") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(tbl1) %>% 
+    footnotes("Here is a footnote", valign = "bottom")
+  
+  rpt2 <- page_setup_rtf(rpt2)
+  
+  res2 <- get_page_footnotes_rtf(rpt2, tbl2, 6,
+                                  0, 25, TRUE, "below", "center")  
+  
+  expect_equal(res2$lines, 0)
+  
+  
+  tbl3 <- create_table(iris)  %>% 
+    footnotes("Here is a footnote", valign = "bottom")
+  
+  rpt3 <- create_report("") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(tbl1)
+  
+  rpt3 <- page_setup_rtf(rpt3)
+  
+  res3 <- get_page_footnotes_rtf(rpt3, tbl3, 6,
+                                  0, 25, TRUE, "below", "center")  
+  
+  expect_equal(res3$lines, 18)
+  
+  tbl4 <- create_table(iris)  %>% 
+    footnotes("Here is a footnote", valign = "top")
+  
+  rpt4 <- create_report("") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(tbl1)
+  
+  rpt4 <- page_setup_rtf(rpt4)
+  
+  res4 <- get_page_footnotes_rtf(rpt4, tbl4, 26,
+                                  0, 25, TRUE, "below", "center")  
+  
+  expect_equal(res4$lines, 2)
+  
+})
+
+
+

@@ -166,7 +166,7 @@ test_that("rtf2-3: Three page text spec increased margins works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  #expect_equal(res$pages, 1)
+  expect_equal(res$pages, 3)
 
 
 })
@@ -232,7 +232,7 @@ test_that("rtf2-6: One page table works as expected.", {
   fp <- file.path(base_path, "rtf2/test6.rtf")
   
   dat <- mtcars[1:15, ]
-  #attr(dat[[2]], "label") <- "Cylin."
+    attr(dat[[2]], "label") <- "Cylin."
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -251,17 +251,20 @@ test_that("rtf2-6: One page table works as expected.", {
   
 })
 
-
+# Blank row not totally clearing out. Everything else good.
 test_that("rtf2-7: Multi page table works as expected.", {
   
   
   fp <- file.path(base_path, "rtf2/test7.rtf")
   
   dat <- iris
-  #attr(dat[[2]], "label") <- "Cylin."
+ 
   
   tbl <- create_table(dat, borders = "none") %>% 
-    titles("Table 1.0", "My Nice Irises", "Another Title") 
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>% 
+    define(Sepal.Length, label = "Sepal Length", width = 1, align = "center") %>% 
+    define(Sepal.Width, label = "Sepal Width", width = 1, align = "centre") %>% 
+    define(Species, blank_after = TRUE)
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12, orientation = "landscape") %>%
@@ -523,7 +526,7 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
   
 })
 
-# Minor problem with line count extra line on second page
+# Works
 test_that("rtf2-16: Valign on table footnotes works as expected.", {
   
   
@@ -662,7 +665,7 @@ test_that("rtf2-20: Title Header borders work as expected.", {
            blank_row = "none") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"), 
-              blank_row = "none")
+              blank_row = "above")
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -681,7 +684,7 @@ test_that("rtf2-20: Title Header borders work as expected.", {
   
 })
 
-# Not sure if this is correct.  Seems like not.
+# Cell wrapping is throwing off line counts
 test_that("rtf2-21: Page wrap with spanning header works as expected.", {
   
   fp <- file.path(base_path, "rtf2/test21.rtf")
@@ -720,7 +723,7 @@ test_that("rtf2-21: Page wrap with spanning header works as expected.", {
   expect_equal(res$pages, 3)
 })
 
-# This is a good one for testing height calculations.
+# This is a good one for testing height calculations.  Looks good for now.
 test_that("rtf2-22: Page by works as expected.", {
   
   
@@ -736,7 +739,7 @@ test_that("rtf2-22: Page by works as expected.", {
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
-   # page_footer("Left1", "Center1", "Right1") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
     footnotes("My footnote 1", "My footnote 2")
   
   res <- write_report(rpt)
@@ -750,7 +753,7 @@ test_that("rtf2-22: Page by works as expected.", {
   
 })
 
-# Text align not working, but two contents on page is.
+# Works!  
 test_that("rtf2-23: Two contents on one page works as expected.", {
   
   
@@ -766,7 +769,7 @@ test_that("rtf2-23: Two contents on one page works as expected.", {
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-    add_content(tbl, page_break = FALSE) %>%
+    add_content(tbl, page_break = FALSE, blank_row = "below") %>%
     add_content(create_text(cnt, width = 5), align = "center") %>% 
     page_footer("Left1", "Center1", "Right1")
   
@@ -778,7 +781,7 @@ test_that("rtf2-23: Two contents on one page works as expected.", {
   
 })
 
-# Works!
+# Working.
 test_that("rtf2-24: Two tables one headerless works as expected.", {
   
   
@@ -842,7 +845,7 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
   
 })
 
-# Works!
+# Not working any more.
 test_that("rtf2-26: RTF Table with Plot on same page works as expected.", {
   
   library(ggplot2)
@@ -915,7 +918,7 @@ test_that("rtf2-27: Plot with page by on plot works as expected.", {
   
 })
 
-# Works but with spacing issues.
+# Working but last page needs extra spacer before footnote.
 test_that("rtf2-28: Plot with page by on report works as expected.", {
   
   library(ggplot2)
@@ -955,4 +958,116 @@ test_that("rtf2-28: Plot with page by on report works as expected.", {
   
 })
 
+test_that("rtf2-29: Simplest RTF Plot with valign top works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test29.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 4, width = 8)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974", valign = "top") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-30: Simplest RTF Plot with valign bottom works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test30.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 4, width = 8) %>%
+    footnotes("* Motor Trend, 1974", valign = "bottom")
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-31: Simplest RTF Text with valign top works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test31.rtf")
+  
+  txt <- create_text(cnt, width = 6)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Text 1.0", "MTCARS Miles per Cylinder Text") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center") %>%
+    footnotes("* Motor Trend, 1974", valign = "top") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-32: Simplest RTF Text with valign bottom works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test32.rtf")
+  
+  txt <- create_text(cnt, width = 6) %>%
+    footnotes("* Motor Trend, 1974", valign = "bottom")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
 

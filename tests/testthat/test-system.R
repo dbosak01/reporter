@@ -2401,7 +2401,7 @@ test_that("test72: Check column alignment", {
 })
 
 
-
+# Table borders off by one, only on Text
 test_that("test73: Table Borders with ttls/fnts on table works as expected.", {
   
   fp <- file.path(base_path, "output/test73.out")
@@ -2427,6 +2427,7 @@ test_that("test73: Table Borders with ttls/fnts on table works as expected.", {
   
 })
 
+# Table borders off by 1, only on Text
 test_that("test74: Table Borders with ttls/fnts on report works as expected.", {
   
   fp <- file.path(base_path, "output/test74.out")
