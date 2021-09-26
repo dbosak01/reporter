@@ -1151,31 +1151,32 @@ test_that("rtf2-34: Table with break between sections works as expected.", {
     define(sex, label = "Sex") %>% 
     define(age, label = "Age") %>% 
     define(arm, label = "Arm", 
-           blank_after = TRUE, 
+           blank_after = FALSE, 
            dedupe = TRUE, 
-           align = "right") %>% 
-    spanning_header(sex, arm, label = "Here is a spanning header")
+           align = "right") #%>% 
+   # spanning_header(sex, arm, label = "Here is a spanning header")
   
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = 10) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = 12) %>%
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
-    titles("Table 1.0", "Analysis Data Subject Listing\nAnd more stuff", 
+   # options_fixed(line_count = 46) %>% 
+    titles("Table 1.0", "Analysis Data Subject Listing\n And more stuff", 
            "Safety Population", align = "center") %>%
     footnotes("Program Name: table1_0.R", 
-              "Here is a big long footnote that is going to wrap\nat least once") %>%
+              "Here is a big long footnote that is going to wrap\n at least once") %>%
     page_footer(left = "Time", center = "Confidential", 
                 right = "Page [pg] of [tpg]") %>%
     add_content(tbl1) 
   
   
   res <- write_report(rpt)
-  
+  res
   expect_equal(file.exists(fp), TRUE)
 
   
 })
 
-# Footnote spacing is off short by several rows
+
 test_that("rtf2-35: Title Header and page header/footer wrapping work as expected.", {
   
   

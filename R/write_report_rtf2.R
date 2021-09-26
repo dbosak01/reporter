@@ -395,14 +395,14 @@ page_setup_rtf <- function(rs) {
     gtr <- .05 
     cw <- .1
   } else if (rs$font_size == 10) {
-    rh <- 225 #round(.165 * 1440)
-    lh <- 225 #round(.165 * 1440)  # 270
+    rh <- 227 #round(.165 * 1440) # 225
+    lh <- 227 #round(.165 * 1440)  
     pb <- "\\page\\fs0\\par\\fs20\\pard"
     gtr <- .05
     cw <- .11
   } else if (rs$font_size == 12) {
-    rh <- 270 #round(.2 * 1440)
-    lh <- 270 #round(.1875 * 1440) #270
+    rh <- 271 #round(.2 * 1440)
+    lh <- 271 #round(.1875 * 1440) #270
     pb <- "\\page\\fs0\\par\\fs24\\pard"
     gtr <- .05
     cw <- .12
