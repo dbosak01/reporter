@@ -2,8 +2,10 @@
 context("RTF2 Tests")
 
 base_path <- "c:/packages/reporter/tests/testthat"
+data_dir <- base_path
 
 base_path <- tempdir()
+data_dir <- "."
 
 cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
               "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -684,7 +686,7 @@ test_that("rtf2-20: Title Header borders work as expected.", {
   
 })
 
-# Cell wrapping is throwing off line counts
+# Cell wrapping is throwing off line counts - Better but inter-page footnote spacing off
 test_that("rtf2-21: Page wrap with spanning header works as expected.", {
   
   fp <- file.path(base_path, "rtf2/test21.rtf")
@@ -1072,4 +1074,203 @@ test_that("rtf2-32: Simplest RTF Text with valign bottom works as expected.", {
   
   
 })
+
+test_that("rtf2-33: Table with long cell and label values wraps as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test33.rtf")
+  
+  
+  # Setup
+  arm <- c(rep("A", 5), rep("B", 5))
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  
+  
+  # Create data frame
+  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID for a patient", n = 10, align = "left", 
+           width = 1) %>%
+    define(name, label = "Subject Name", width = 1) %>%
+    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(age, label = "Age", n = 10) %>%
+    define(arm, label = "Arm",
+           blank_after = TRUE,
+           dedupe = TRUE)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", 
+                       font_size = 10) %>%
+    titles("Table 1.0", align = "center") %>%
+    
+    add_content(tbl1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+})
+
+# Footnote spacing off by one row
+test_that("rtf2-34: Table with break between sections works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test34.rtf")
+  
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 5))
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID", align = "left", width = 1) %>% 
+    define(name, label = "Subject Name", width = 1) %>% 
+    define(sex, label = "Sex") %>% 
+    define(age, label = "Age") %>% 
+    define(arm, label = "Arm", 
+           blank_after = TRUE, 
+           dedupe = TRUE, 
+           align = "right") %>% 
+    spanning_header(sex, arm, label = "Here is a spanning header")
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = 10) %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing\nAnd more stuff", 
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R", 
+              "Here is a big long footnote that is going to wrap\nat least once") %>%
+    page_footer(left = "Time", center = "Confidential", 
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+
+  
+})
+
+# Footnote spacing is off short by several rows
+test_that("rtf2-35: Title Header and page header/footer wrapping work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test35.rtf")
+  
+  dat <- iris[1:10, ] 
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    title_header("Table 1.0", "My Nice Report with Borders",
+                 right = c("Right1", "Right2", 
+                           "Right3 long enough to wrap around at least once"),
+                 borders = "none",
+                 blank_row = "none") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+              borders = "none", 
+              blank_row = "above")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header(c("Left1", "Left2\nwrap"), "Right 1") %>% 
+    page_footer("Left1", 
+                "Center1 here is a whole bunch of stuff to try and make it wrap", 
+                "Right1\nwrap\n and wrap again")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+# Almost perfect.  2 pages wrapped inappropriately.
+test_that("user3: listings works.", {
+  
+  # Data Filepath
+  dir_data <- file.path(data_dir, "data")
+  
+  fp <- file.path(base_path, "rtf2/user3.rtf")
+  
+  # Removing to make last page exactly equal to available rows on page.
+  # In this case, any added blank rows should be skipped.
+  fil <- c("ABC-14-124",
+           "ABC-15-153",
+           "ABC-15-154",
+           "ABC-15-155",
+           "ABC-15-156",
+           "ABC-16-045",
+           "ABC-16-046",
+           "ABC-16-047",
+           "ABC-16-157",
+           "ABC-16-158",
+           "ABC-16-159", 
+           "ABC-16-160")
+  
+  # Load Data
+  data_demo   <- file.path(dir_data, "dm.csv") %>%
+    read.csv() 
+  
+  data_demo <- data_demo[!data_demo$USUBJID %in% fil, ]
+  
+  
+  # Test that any assigned formats are applied
+  attr(data_demo$SUBJID, "width") <- 1
+  attr(data_demo$SUBJID, "justify") <- "left"
+  attr(data_demo$SUBJID, "format") <- "S:%s"
+  #print(widths(data_demo))
+  
+  # Define table
+  tbl <- create_table(data_demo) %>% 
+    define(USUBJID, id_var = TRUE) 
+  
+  
+  # Define Report
+  rpt <- create_report(fp, font = "Arial", font_size = 10) %>%
+    titles("Listing 1.0",
+           "Demographics Dataset") %>%
+    add_content(tbl, align = "left") %>% 
+    page_footer(left = "Time", right = "Page [pg] of [tpg]")
+  
+  #Write out report
+  res <- write_report(rpt, output_type = "RTF")
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+  
+  # pdfpth <- file.path(base_path, "user/user3.pdf")
+  # write_report(rpt, pdfpth, output_type = "PDF")
+  # expect_equal(file.exists(pdfpth), TRUE)
+  
+  
+})
+
 

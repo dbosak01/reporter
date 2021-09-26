@@ -20,9 +20,9 @@ test_that("gen_groups() works as expected.", {
 test_that("get_font_family() works as expected.", {
   
   expect_equal(get_font_family("Arial"), "sans")
-  expect_equal(get_font_family("Calibri"), "sans")
-  expect_equal(get_font_family("Courier New"), "mono")
-  expect_equal(get_font_family("Times New Roman"), "serif")
+  expect_error(get_font_family("Calibri"))
+  expect_equal(get_font_family("Courier"), "mono")
+  expect_equal(get_font_family("Times"), "serif")
   expect_error(get_font_family("Wingdings"))
   
 })
@@ -401,4 +401,139 @@ test_that("get_lines_rtf works as expected.", {
 
 })
 
+# 
+# test_that("get_text_width performs well.", {
+#   
+#   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+#                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+#                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+#                 "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+#                 "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+#                 "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+#                 "qui officia deserunt mollit anim id est laborum.")
+#   
+#   
+#   cnts <- unlist(rep(cnt, 1000))
+#   
+#   # Try 1
+#   stm <- Sys.time()
+# 
+#   
+#   for (cn in cnts) {
+#     
+#     res <- get_text_width(cnt, "Arial", 10, "inches")
+#     
+#   }
+#   
+#   dif <- Sys.time() - stm
+#   dif 
+#   
+#   
+#   # Try 2
+#   stm <- Sys.time()
+#   
+#   pdf(NULL)
+#   
+#   par(family = "sans", ps = 10)
+# 
+#   
+#   for (cn in cnts) {
+#     
+#     ret <- strwidth(cnt, units = "inches") * .975 
+#     
+#   }
+#   
+#   dev.off()
+#   
+#   dif <- Sys.time() - stm
+#   dif 
+#   
+#   # Try 3
+#   stm <- Sys.time()
+#   
+#   R.devices::devEval("nulldev", {
+#   
+#   par(family = "sans", ps = 10)
+#   
+#   
+#   for (cn in cnts) {
+#     
+#     ret <- strwidth(cnt, units = "inches") * .975 
+#     
+#   }
+#   
+#   })
+#   
+#   dif <- Sys.time() - stm
+#   dif 
+#   
+#   
+# })
+
+
+test_that("split_string_rtf() works as expected.", {
+  
+  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                "nisi ut aliquip ex ea commodo consequat.\n Duis aute irure dolor in ", 
+                "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                "qui officia deserunt mollit anim id est laborum.")
+  
+  pdf(NULL)
+  par(family = "sans", ps = 10)
+  
+  res <- split_string_rtf(cnt, 4, "inches")
+  res
+  
+  
+  expect_equal(length(res$rtf), 1)
+  expect_equal(res$line, 8)
+  
+  res2 <- split_string_rtf(NA, 4, "inches")
+  res2
+  
+  expect_equal(length(res2$rtf), 1)
+  expect_equal(res2$lines, 1)
+  
+  res3 <- split_string_rtf("hereisareallylongstringlongerthanoneinch", 
+                           1, "inches")
+  res3
+  
+  expect_equal(length(res3$rtf), 1)
+  expect_equal(res3$lines, 1)
+  
+  
+  res4 <- split_string_rtf("here is areallylongstringlongerthan one inch", 
+                           1, "inches")
+  res4
+  
+  expect_equal(length(res4$rtf), 1)
+  expect_equal(res4$lines, 3)
+  
+  dev.off()
+  
+
+  
+  
+})
+
+test_that("split_cells_variable() works as expected.", {
+  
+  dat <- data.frame(col1 = c("hello", "there", "here is a big long\nline to wrap and wrap"),
+                    col2 = c(1, 2, 3),
+                    col3 = c("my big string I want to wrap", "fork", "bork"),
+                    ..row = c(NA, NA, NA))
+  
+  res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1), 
+                              "Arial", 12, "inches")
+  res
+  
+  expect_equal(nrow(res), 3)
+  expect_equal(ncol(res), 4)
+  expect_equal(res$..row, c(3, 1, 4))
+  
+  
+})
 

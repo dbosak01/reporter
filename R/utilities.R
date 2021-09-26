@@ -145,24 +145,20 @@ copy_labels <- function(x, y) {
 get_font_family <- function(font_name) {
   
   # Trap missing or invalid font_name parameter
-  if (!font_name %in% c("Arial", "Courier New", "Times New Roman", "Calibri")) {
+  if (!tolower(font_name) %in% c("arial", "courier", "times")) {
     
     stop(paste0("ERROR: font_name parameter on get_font_family() ",
                 "function is invalid: '", font_name,
-      "'\n\tValid values are: 'Arial', 'Calibri', 'Times New Roman', 'Courier'."
+      "'\n\tValid values are: 'Arial', 'Courier', and 'Times'."
       ))
   }
   
-  fam <- ""
+  fam <- "mono"
   # mono, serif, sans
-  if(font_name == "Courier New") {
-    fam <- "mono"
-  } else if (font_name == "Arial") {
+  if (tolower(font_name) == "arial") {
     fam <- "sans"
-  } else if (font_name == "Times New Roman") {
+  } else if (tolower(font_name) == "times") {
     fam <- "serif"
-  } else if (font_name == "Calibri") {
-    fam <- "sans"
   }
   
   return(fam)
@@ -499,6 +495,176 @@ split_cells <- function(x, col_widths) {
 }
 
 
+#' @description Calling function is responsible for opening the 
+#' device context and assigning the font.  This function will use 
+#' strwidth to determine number of wraps of a string within a particular
+#' width.  Lines are returned as a single rtf string separated by an rtf
+#' line ending.  
+#' @noRd
+split_string_rtf <- function(strng, width, units) {
+  
+  lnlngth <- 0
+  ln <- c()
+  lns <- c()
+  
+  if (!is.na(strng)) {
+    
+    splits <- unlist(stri_split_fixed(strng, "\n"))
+  
+    for (split in splits) {
+      
+      wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
+      
+      lngths <- (strwidth(wrds, units = units) + 
+                   strwidth(" ", units = units)) * 1.03 
+      
+      # Loop through words and add up lines
+      for (i in seq_along(wrds)) {
+        
+        lnlngth <- lnlngth + lngths[i] 
+        if (lnlngth <= width)
+          ln <- append(ln, wrds[i])
+        else {
+          
+          if (length(ln) == 0) {
+            
+            lns[length(lns) + 1] <- wrds[i]
+            lnlngth <- 0
+            
+          } else {
+            # Assign current lines and counts
+            lns[length(lns) + 1] <- paste(ln, collapse = " ")
+              
+            # Assign overflow to next line
+            ln <- wrds[i]
+            lnlngth <- lngths[i]
+          }
+        }
+        
+        
+      }
+      
+      # Deal with last line
+      if (length(ln) > 0) {
+
+        lns[length(lns) + 1] <- paste(ln, collapse = " ")
+
+      }
+      
+      # Reset ln and lnlngth
+      ln <- c()
+      lnlngth <- 0
+      
+    }
+    
+
+  } else {
+    
+    lns <- ""
+    
+  }
+  
+  # Concat lines and add line ending to all but last line
+  ret <- list(rtf = paste0(lns, collapse = "\\line "),
+              lines = length(lns))
+  
+  return(ret)
+}
+
+#' Split data frame cells based on expected column width.
+#' For variable width reports, will just insert a carriage return at the 
+#' split points.
+#' @param x A data frame
+#' @param col_widths A named vector of columns widths in the unit of measure
+#' @return The data frame with long values split by carriage returns.
+#' @import stringi
+#' @import grDevices
+#' @noRd
+split_cells_variable <- function(x, col_widths, font, font_size, units) {
+  
+  dat <- NULL           # Resulting data frame
+  row_values <- list()  # A list to hold cell values for one row 
+  max_length <- 1       # The maximum number of splits of a cell in that row
+  
+  fnt <- "mono"
+  if (tolower(font) == "arial")
+    fnt <- "sans"
+  else if (tolower(font) == "times")
+    fnt <- "serif"
+  
+  
+  pdf(NULL)
+  par(family = fnt, ps = font_size)
+  
+  
+  for (i in seq_len(nrow(x))) {
+    for (nm in names(x)) {
+      
+      nch <- 1
+      
+      if (any(typeof(x[[nm]]) == "character") & 
+          !is.control(nm) ) {
+        
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+          
+          cell <- ""
+          
+        } else {
+          
+          res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
+          cell <- res$rtf
+          nch <- res$lines
+        }
+        
+        
+      } else {
+        cell <- x[i, nm]
+      }
+      # print(paste("cell: ", cell))
+      
+      if (identical(cell, character(0)))
+        cell <- ""
+      
+      # print(nch)
+      # print(cell)
+      # print(max_length)
+      
+      if (nch > max_length)
+        max_length <- nch
+      
+      
+      row_values[[length(row_values) + 1]] <- cell
+      # print(paste("Row:", row_values))
+    }
+    
+    # print(names(x))
+    names(row_values) <- names(x)
+    
+    row_values$..row <- max_length
+    
+    if (is.null(dat))
+      dat <- as.data.frame(row_values)
+    else
+      dat <- rbind(dat, row_values)
+    
+    max_length <- 1
+    row_values <- list()
+    
+  }
+  
+  dev.off()
+  
+  rownames(dat) <- NULL
+  # # Reset names
+  # if ("..row" %in% names(x)) 
+  #   names(dat) <- c(names(x))
+  # else
+  #   names(dat) <- c(names(x), "..row")
+
+  
+  return(dat)
+}
+
 
 #' Split data frame cells based on expected column width.
 #' For variable width reports, will just insert a carriage return at the 
@@ -508,7 +674,7 @@ split_cells <- function(x, col_widths) {
 #' @return The data frame with long values split by carriage returns.
 #' @import stringi
 #' @noRd
-split_cells_variable <- function(x, col_widths, font, font_size, units) {
+split_cells_variable_back <- function(x, col_widths, font, font_size, units) {
   
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
@@ -529,7 +695,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units) {
         } else {
           
           cell <- paste0(unlist(split_text_rtf(x[[i, nm]], 1000, col_widths[[nm]],
-                                      font, font_size, units)$rtf), collapse = "\n")
+                                               font, font_size, units)$rtf), collapse = "\n")
         }
         
         
@@ -576,7 +742,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units) {
   #   names(dat) <- c(names(x))
   # else
   #   names(dat) <- c(names(x), "..row")
-
+  
   
   return(dat)
 }
@@ -1075,7 +1241,6 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
 
 #' @description Estimate number of wraps based on text, width, and a font.
 #' @import graphics
-#' @import R.devices
 #' @noRd
 get_text_width <- function(txt, font, font_size = 10, units = "inches") {
   
@@ -1086,12 +1251,12 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
   else if (tolower(font) == "times")
     f <- "serif"
   
-  R.devices::devEval("nulldev", {
-    #pdf(NULL)
+  #R.devices::devEval("nulldev", {
+    pdf(NULL)
     par(family = f, ps = font_size)
     ret <- strwidth(txt, units = units) * .975 
-    #dev.off()
-  })
+    dev.off()
+  #})
   
 
   return(ret)

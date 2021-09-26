@@ -58,7 +58,7 @@ test_that("get_table_header_rtf works as expected.", {
   nms <- names(dat)
   names(nms) <- nms
   nms[1] <- "Miles Per Gallon"
-  nms[2] <- "Wrap\nOne\nTwo"
+  nms[2] <- "Wrap One Two"
   
 
   res <- get_table_header_rtf(rpt, tbl, wdth, nms, algns, "center")
@@ -66,7 +66,7 @@ test_that("get_table_header_rtf works as expected.", {
   res  
   
   expect_equal(length(res$rtf), 1)
-  expect_equal(res$lines, 3)
+  expect_equal(res$lines, 2)
   
 })
 
@@ -165,7 +165,7 @@ test_that("get_spanning_header_rtf works as expected.", {
     spanning_header(drat, gear, "Super span", level = 2)
   
   
-  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
@@ -197,7 +197,7 @@ test_that("get_page_footnotes_rtf works as expected.", {
   
   tbl1 <- create_table(iris)
   
-  rpt1 <- create_report("") %>%
+  rpt1 <- create_report("", font = "Courier") %>%
     titles("IRIS Data Frame") %>%
     add_content(tbl1) %>% 
     footnotes("Here is a footnote", valign = "top")
@@ -211,7 +211,7 @@ test_that("get_page_footnotes_rtf works as expected.", {
   
   tbl2 <- create_table(iris)
   
-  rpt2 <- create_report("") %>%
+  rpt2 <- create_report("", font = "Arial") %>%
     titles("IRIS Data Frame") %>%
     add_content(tbl1) %>% 
     footnotes("Here is a footnote", valign = "bottom")
@@ -227,7 +227,7 @@ test_that("get_page_footnotes_rtf works as expected.", {
   tbl3 <- create_table(iris)  %>% 
     footnotes("Here is a footnote", valign = "bottom")
   
-  rpt3 <- create_report("") %>%
+  rpt3 <- create_report("", font = "Times") %>%
     titles("IRIS Data Frame") %>%
     add_content(tbl1)
   
@@ -241,7 +241,7 @@ test_that("get_page_footnotes_rtf works as expected.", {
   tbl4 <- create_table(iris)  %>% 
     footnotes("Here is a footnote", valign = "top")
   
-  rpt4 <- create_report("") %>%
+  rpt4 <- create_report("", font = "Times") %>%
     titles("IRIS Data Frame") %>%
     add_content(tbl1)
   

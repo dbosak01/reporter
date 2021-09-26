@@ -132,10 +132,10 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   # print("Widths UOM")
   # print(widths_uom)
   
-  # Split long text strings into multiple rows - This is super slow.  Do I need it?
-  # Need to be rewritten in C
-  # fdat <- split_cells_variable(fdat, widths_uom, rs$font, 
-  #                              rs$font_size, rs$units) 
+  # Split long text strings into multiple rows. Number of rows are stored in
+  # ..row variable. If too slow, may need to be rewritten in C
+  fdat <- split_cells_variable(fdat, widths_uom, rs$font, 
+                                rs$font_size, rs$units) 
   # print("split_cells")
   # print(fdat)
   
@@ -263,10 +263,17 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   
   blnks <- c()
+  
+  # Get row count by summing ..row variable
+  if ("..row" %in% names(pi$data)) {
+    rcnt <- sum(pi$data$..row)
+  } else {
+    rcnt <- nrow(pi$data) 
+  }
     
   
   rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
-           hdrs$lines, length(rws),
+           hdrs$lines, rcnt,
            length(a))
   
   ftnts <- get_page_footnotes_rtf(rs, ts, ls, lpg_rows, rc,
@@ -499,18 +506,23 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   cnt <-  1 
   
   # Loop for column names
-
+  pdf(NULL)
+  par(family = get_font_family(rs$font), ps = rs$font_size)
+  
   for(k in seq_along(lbls)) {
     if (!is.control(nms[k])) {
-      ret[1] <- paste0(ret[1], ha[k], " ", n2ln(lbls[k]), "\\cell")
-      # print(lbls[k])
-      # print(widths[k])
+      
+      # Split label strings if they exceed column width
+      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+      ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
+
       # Add in extra lines for labels that wrap
-      xtr <- get_lines_rtf(lbls[k], widths[k], rs$font, rs$font_size, rs$units)
+      xtr <- tmp$lines
       if (xtr > cnt)
         cnt <- xtr
     }
   }
+  dev.off()
   
   ret[1] <- paste(ret[1], "\\row")
   
@@ -619,19 +631,27 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
         r <- paste0(r, "\\clvertalb", b, "\\cellx", sz[j])
     }
     
+    # Open device context
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
+    
     # Loop for labels
     for(k in seq_along(lbls)) {
 
+      # Split label strings if they exceed column width
+      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+      
       # Concat label
-      r <- paste0(r, ha[k], " ", n2ln(lbls[k]), "\\cell")
+      r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
-      xtr <- get_lines_rtf(lbls[k], widths[k], rs$font, rs$font_size, rs$units)
+      xtr <- tmp$lines
       if (xtr > cnt[length(cnt)])
         cnt[length(cnt)] <- xtr
       
     }
+    dev.off()
     
     
     r <- paste0(r, "\\row")

@@ -36,6 +36,7 @@ page_template_rtf<- function(rs) {
   return(pt)
 }
 
+#' @import grDevices
 #' @noRd
 get_page_header_rtf <- function(rs) {
   
@@ -59,30 +60,47 @@ get_page_header_rtf <- function(rs) {
     
     ret <- paste0("{\\header \\fs", fs)
     
-    cnt <- maxh
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
+    
     
     for (i in seq(1, maxh)) {
       ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
                     "\\cellx", c1, "\\cellx", c2 , " ")
       
       if (length(hl) >= i) {
-        ret <- paste0(ret, get_page_numbers_rtf(hl[[i]]), "\\cell")
-        cnt <- cnt + get_excess_lines(hl[[i]], rs$content_size[["width"]]/2, 
-                                      rs$font, 
-                                      rs$font_size, rs$units)
         
-      } else 
-        ret <- paste0(ret, "\\cell")
+        # Split strings if they exceed width
+        tmp <- split_string_rtf(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+        
+        ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
+        lcnt <- tmp$lines
+        
+      } else {
+        ret <- paste0(ret, "\\ql \\cell")
+        lcnt <- 1 
+      }
       
       if (length(hr) >= i) {
-        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(hr[[i]]), "\\cell\\row\n")
-        cnt <- cnt + get_excess_lines(hr[[i]], rs$content_size[["width"]]/2, 
-                                      rs$font, 
-                                      rs$font_size, rs$units)
-      } else 
+        
+        # Split strings if they exceed width
+        tmp2 <- split_string_rtf(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+        
+        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
+        rcnt <- tmp2$lines
+        
+      } else {
         ret <- paste0(ret, "\\qr \\cell\\row\n")
+        rcnt <- 1
+      }
       
+      if (lcnt > rcnt)
+        cnt <- cnt + lcnt
+      else 
+        cnt <- cnt + rcnt
     }
+    
+    dev.off()
     
     if (rs$page_header_blank_row == "below") {
       ret <- paste0(ret, "\\par\\pard")
@@ -99,7 +117,7 @@ get_page_header_rtf <- function(rs) {
   return(res)
 }
 
-
+#' @import grDevices
 #' @noRd
 get_page_footer_rtf <- function(rs) {
   
@@ -123,9 +141,10 @@ get_page_footer_rtf <- function(rs) {
     c1 <- round(c3 / 3)
     c2 <- round(c1 * 2)
     
-    cnt <- maxf
-    
     ret <- paste0("{\\footer \\fs", fs)
+    
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
     
     for (i in seq(1, maxf)) {
       
@@ -133,27 +152,44 @@ get_page_footer_rtf <- function(rs) {
                     "\\cellx", c2 , "\\cellx", c3, " ")
       
       if (length(fl) >= i) {
-        ret <- paste0(ret, get_page_numbers_rtf(fl[[i]]), "\\cell")
-        cnt <- cnt + get_excess_lines(fl[[i]], rs$content_size[["width"]] / 3,
-                                      rs$font, rs$font_size, rs$units)
-      } else 
-        ret <- paste0(ret, "\\cell")
+        
+        # Split strings if they exceed width
+        tmp1 <- split_string_rtf(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+        
+        ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
+        lcnt <- tmp1$lines
+      } else {
+        ret <- paste0(ret, "\\ql \\cell")
+        lcnt <- 1
+      }
       
       if (length(fc) >= i) {
-        ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(fc[[i]]), "\\cell")
-        cnt <- cnt + get_excess_lines(fc[[i]], rs$content_size[["width"]] / 3,
-                                      rs$font, rs$font_size, rs$units)
-      } else 
+        
+        # Split strings if they exceed width
+        tmp2 <- split_string_rtf(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+        
+        ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
+        ccnt <- tmp2$lines
+      } else {
         ret <- paste0(ret, "\\qc \\cell")
+        ccnt <- 1
+      }
       
       if (length(fr) >= i) {
-        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(fr[[i]]), "\\cell\\row\n")
-        cnt <- cnt + get_excess_lines(fr[[i]], rs$content_size[["width"]] / 3,
-                                      rs$font, rs$font_size, rs$units)
-      } else 
+        
+        tmp3 <- split_string_rtf(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+        
+        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
+        rcnt <- tmp3$lines
+      } else {
         ret <- paste0(ret, "\\qr \\cell\\row\n")
+        rcnt <- 1
+      }
+      
+      cnt <- cnt + max(lcnt, ccnt, rcnt)
       
     }
+    dev.off()
     
     ret <- paste0(ret, "}")
   }
@@ -165,6 +201,7 @@ get_page_footer_rtf <- function(rs) {
   return(res)
 }
 
+#' @import grDevices
 #' @noRd
 get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
   
@@ -200,17 +237,24 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
       else 
         algn <- "\\ql"
       
+      # Open device context
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
       for (i in seq_along(ttls$titles)) {
         
         b <- get_cell_borders(i, 1, length(ttls$titles), 1, ttls$borders)
         
+        # Split title strings if they exceed width
+        tmp <- split_string_rtf(ttls$titles[[i]], width, rs$units)
+        
+        # Concatenate title string
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-                                  algn, " ", ttls$titles[[i]], "\\cell\\row\n"))
-        cnt <- cnt + 1
-        cnt <- cnt + get_excess_lines(ttls$titles[[i]], width, rs$font, 
-                                      rs$font_size, rs$units)
+                                  algn, " ", tmp$rtf, "\\cell\\row\n"))
+
+        cnt <- cnt + tmp$lines
       }
-      
+      dev.off()
       
       if (any(ttls$blank_row %in% c("below", "both"))) {
         ret <- append(ret, "\\par\n")
@@ -230,6 +274,7 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
   return(res)
 }
 
+#' @import grDevices
 #' @noRd
 get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
   
@@ -263,16 +308,21 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
       else 
         algn <- "\\ql"
       
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
       for (i in seq_along(ftnts$footnotes)) {
         
         b <- get_cell_borders(i, 1, length(ftnts$footnotes), 1, ftnts$borders)
         
+        # Split footnote strings if they exceed width
+        tmp <- split_string_rtf(ftnts$footnotes[[i]], width, rs$units)
+        
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-                                  algn, " ", ftnts$footnotes[[i]], "\\cell\\row\n"))
-        cnt <- cnt + 1
-        cnt <- cnt + get_excess_lines(ftnts$footnotes[[i]], w, rs$font, 
-                                      rs$font_size, rs$units)
+                                  algn, " ", tmp$rtf, "\\cell\\row\n"))
+        cnt <- cnt + tmp$lines
       }
+      dev.off()
       
       if (any(ftnts$blank_row %in% c("below", "both"))) {
         ret <- append(ret, "\\line\n")
@@ -291,7 +341,8 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
   return(res)
 }
 
-
+#' @import grDevices
+#' @noRd
 get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
   
   ret <- c()
@@ -319,17 +370,30 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
         cnt <- cnt + 1
       }
       
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
       for(i in seq_len(mx)) {
       
-        if (length(ttlhdr$titles) >= i)
-          ttl <- ttlhdr$titles[[i]]
-        else 
+        if (length(ttlhdr$titles) >= i) {
+          # Split strings if they exceed width
+          tmp1 <- split_string_rtf(ttlhdr$titles[[i]], width * .7, rs$units)
+          ttl <- tmp1$rtf
+          tcnt <- tmp1$lines
+        } else {
           ttl <- ""
+          tcnt <- 1 
+        }
         
-        if (length(ttlhdr$right) >= i)
-          hdr <- get_page_numbers_rtf(ttlhdr$right[[i]], FALSE)
-        else 
+        if (length(ttlhdr$right) >= i) {
+          tmp2 <- split_string_rtf(ttlhdr$right[[i]],
+                                   width * .3, rs$units)
+          hdr <- get_page_numbers_rtf(tmp2$rtf)
+          hcnt <- tmp2$lines
+        } else {
           hdr <- ""
+          hcnt <- 1
+        }
         
         b1 <- get_cell_borders(i, 1, mx, 2, ttlhdr$borders)
         b2 <- get_cell_borders(i, 2, mx, 2, ttlhdr$borders)
@@ -338,12 +402,13 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
                                   b2, "\\cellx", w1,
                                   "\\ql ", ttl, "\\cell\\qr ",
                                   hdr, "\\cell\\row\n"))
-        cnt <- cnt + 1
-        cnt <- cnt + get_excess_lines(ttl, width * .7, 
-                                      rs$font, rs$font_size, rs$units)
-        cnt <- cnt + get_excess_lines(hdr, width * .3, 
-                                      rs$font, rs$font_size, rs$units)
+        if (tcnt > hcnt)
+          cnt <- cnt + tcnt
+        else 
+          cnt <- cnt + hcnt
       }
+      
+      dev.off()
       
       if (any(ttlhdr$blank_row %in% c("below", "both"))) {
         ret <- append(ret, "\\par\n")

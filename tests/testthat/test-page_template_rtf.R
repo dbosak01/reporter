@@ -48,7 +48,7 @@ test_that("get_title_header_rtf function works as expected.", {
   th <- get_title_header_rtf(rpt2$title_hdr, 6, rpt2)
   th
   expect_equal(nchar(th$rtf) > 1, TRUE)
-  expect_equal(th$lines, 5)
+  expect_equal(th$lines, 6)
   #  expect_equal(th$twips, 1440)
   
 })

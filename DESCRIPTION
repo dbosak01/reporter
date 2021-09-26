@@ -32,12 +32,12 @@ Suggests:
     survminer,
     utils,
     logr,
-    covr,
-    graphics
+    covr
 Imports: fmtr,
          stringi,
          crayon,
          jpeg,
-         R.devices
+         graphics,
+         grDevices
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
