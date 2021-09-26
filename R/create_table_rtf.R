@@ -36,8 +36,12 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
     else 
       dat$..page <-  dat[[pgby_var]]
     
-  } else 
-    dat$..page <- dat[[ts$page_var]]
+  } else {
+    if (any(class(dat[[ts$page_var]]) == "factor"))
+      dat$..page <- as.character(dat[[ts$page_var]])
+    else 
+      dat$..page <- dat[[ts$page_var]]
+  }
   
   # If page by is defined, use it
   if (!is.na(pgby_var)) {
@@ -49,7 +53,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
       dat$..page_by <- dat[[pgby_var]] 
       
       if (any(class(dat$..page) == "factor")) 
-        dat$..page <- dat[[pgby_var]]
+        dat$..page <- as.character(dat[[pgby_var]])
       
     } else {
       
@@ -142,7 +146,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   
   # Break columns into pages
   wraps <- get_page_wraps(rs$line_size, ts, 
-                          widths_uom, rs$gutter_width)
+                          widths_uom, 0)  # No gutter width for RTF
   # print("wraps")
   # print(wraps)
   
@@ -678,7 +682,12 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
   wdths <- widths[nms]
-  t <- tbl[ , nms]
+  if (length(nms) == 1) {
+    t <- as.data.frame(tbl[[nms]])
+    names(t) <- nms
+  } else 
+    t <- tbl[ , nms]
+
   
   # Get line height.  Don't want to leave editor default.
   rh <- rs$row_height

@@ -101,8 +101,8 @@ test_that("rtf2-1: One page text spec works as expected.", {
     titles("Text 1.0", "My Nice Text") %>%
     footnotes("My footnote 1", "My footnote 2")
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 12) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt, align = "right") %>%
@@ -125,12 +125,12 @@ test_that("rtf2-2: Two page text spec works as expected in 12pt font.", {
 
   fp <- file.path(base_path, "rtf2/test2.rtf")
 
-  cnttxt <- paste(rep(cnt, 10), collapse = "")
+  cnttxt <- paste(rep(cnt, 12), collapse = "")
 
   txt <- create_text(cnttxt) %>%
     titles("Text 1.0", "My Nice Text") 
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
@@ -152,14 +152,14 @@ test_that("rtf2-3: Three page text spec increased margins works as expected.", {
 
   fp <- file.path(base_path, "rtf2/test3.rtf")
 
-  cnttxt <- paste(rep(cnt, 10), collapse = "")
+  cnttxt <- paste(rep(cnt, 15), collapse = "")
 
   txt <- create_text(cnttxt) %>%
     titles("Text 1.0", "My Nice Text") %>%
     footnotes("My footnote 1", "My footnote 2")
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 12) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz) %>%
     set_margins(top = 2, bottom = 2) %>%
     page_header("Left", c("Right1", "Right2")) %>%
     add_content(txt) %>%
@@ -183,7 +183,7 @@ test_that("rtf2-4: Two page text spec works as expected in 10pt font.", {
 
   txt <- create_text(cnttxt) 
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = 10) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
@@ -210,7 +210,7 @@ test_that("rtf2-5: Two page text spec works as expected in 8pt font.", {
 
   txt <- create_text(cnttxt) 
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = 8) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
@@ -236,8 +236,8 @@ test_that("rtf2-6: One page table works as expected.", {
   dat <- mtcars[1:15, ]
     attr(dat[[2]], "label") <- "Cylin."
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -253,7 +253,7 @@ test_that("rtf2-6: One page table works as expected.", {
   
 })
 
-# Blank row not totally clearing out. Everything else good.
+
 test_that("rtf2-7: Multi page table works as expected.", {
   
   
@@ -268,7 +268,7 @@ test_that("rtf2-7: Multi page table works as expected.", {
     define(Sepal.Width, label = "Sepal Width", width = 1, align = "centre") %>% 
     define(Species, blank_after = TRUE)
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
@@ -295,8 +295,8 @@ test_that("rtf2-8: Portrait table works as expected.", {
   
   tbl <- create_table(dat) 
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "portrait") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "portrait") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -328,8 +328,8 @@ test_that("rtf2-9: Wide table works as expected.", {
   column_defaults(width = 1)
 
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "portrait") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "portrait") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -372,20 +372,21 @@ test_that("rtf2-10: Preview works as expected.", {
   
 })
 
-
+# This is awesome. Shows cell wrapping, page break, and valign
 test_that("rtf2-11: Forced page wrap works as expected.", {
   
   
   fp <- file.path(base_path, "rtf2/test11.rtf")
   
-  dat <- mtcars
+  dat <- data.frame(labels = rownames(mtcars), mtcars)
   
   tbl <- create_table(dat, borders = "none") %>% 
     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
-    footnotes("My footnote 1", "My footnote 2") %>% 
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>% 
+    define(labels, id_var = TRUE) %>% 
     define(wt, page_wrap = TRUE)
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
@@ -411,8 +412,8 @@ test_that("rtf2-12: Table Borders work as expected.", {
   tbl <- create_table(dat, borders = c("left", "right", "bottom", "top")) %>% 
     define(mpg, label = "Miles Per Gallon")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -432,7 +433,7 @@ test_that("rtf2-12: Table Borders work as expected.", {
   
 })
 
-
+# Nice.
 test_that("rtf2-13: Spanning headers work as expected.", {
 
 
@@ -447,8 +448,8 @@ test_that("rtf2-13: Spanning headers work as expected.", {
     spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2)
 
 
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -476,12 +477,12 @@ test_that("rtf2-14: Labels and show_cols work as expected.", {
   attr(dat$mpg, "label") <- "Miles Per Gallon"
   attr(dat$cyl, "label") <- "Cylinders"
   
-  tbl <- create_table(dat, show_cols = 1:5) %>% 
+  tbl <- create_table(dat, show_cols = c("mpg", "hp", "cyl", "disp", "drat")) %>% 
     define(mpg, width = 1.25) %>% 
     define(disp, label = "Displacement")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -504,12 +505,13 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
   
   fp <- file.path(base_path, "rtf2/test15.rtf")
   
-  dat <- iris[1:50, ] 
+  dat <- iris[1:100, ] 
   
-  tbl <- create_table(dat) 
+  tbl <- create_table(dat) %>% 
+    define(Species, page_break = TRUE)
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -522,10 +524,10 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
   res$column_widths
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 2)
+  expect_equal(res$pages, 4)
   expect_equal(length(res$column_widths[[1]]), 5)
   
-  
+  class(dat$Species)
 })
 
 # Works
@@ -534,10 +536,11 @@ test_that("rtf2-16: Valign on table footnotes works as expected.", {
   
   fp <- file.path(base_path, "rtf2/test16.rtf")
   
-  dat <- iris[1:50, ] 
+  dat <- iris[1:100, ] 
   
   tbl <- create_table(dat) %>% 
-    footnotes("My footnote 1", "My footnote 2", valign = "bottom")
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>% 
+    define(Species, page_break = TRUE)
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -552,12 +555,11 @@ test_that("rtf2-16: Valign on table footnotes works as expected.", {
   res$column_widths
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 2)
+  expect_equal(res$pages, 4)
   expect_equal(length(res$column_widths[[1]]), 5)
   
   
 })
-
 
 test_that("rtf2-17: Title header on table works as expected.", {
   
@@ -566,7 +568,7 @@ test_that("rtf2-17: Title header on table works as expected.", {
   
   dat <- iris[1:25, ] 
   
-  tbl <- create_table(dat) %>% 
+  tbl <- create_table(dat, width = 9) %>% 
     title_header("Table 1.0", "My Nice Table", 
                  right = c("Right1", 
                            "Right2", "Page [pg] of [tpg]")) %>%

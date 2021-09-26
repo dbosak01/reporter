@@ -670,7 +670,7 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       
       # print("diff")
       # Add one character to first column so it fills the entire page
-      ret[[1]] <- ret[[1]] + gutter_width
+      #ret[[1]] <- ret[[1]] + gutter_width
       
     } else {
       # If table width is less than the sum of the columns.

@@ -66,7 +66,7 @@ get_page_header_rtf <- function(rs) {
     
     for (i in seq(1, maxh)) {
       ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
-                    "\\cellx", c1, "\\cellx", c2 , " ")
+                    "\\cellx", c1, "\\cellx", c2)
       
       if (length(hl) >= i) {
         
@@ -149,7 +149,7 @@ get_page_footer_rtf <- function(rs) {
     for (i in seq(1, maxf)) {
       
       ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
-                    "\\cellx", c2 , "\\cellx", c3, " ")
+                    "\\cellx", c2 , "\\cellx", c3)
       
       if (length(fl) >= i) {
         
@@ -388,7 +388,7 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
         if (length(ttlhdr$right) >= i) {
           tmp2 <- split_string_rtf(ttlhdr$right[[i]],
                                    width * .3, rs$units)
-          hdr <- get_page_numbers_rtf(tmp2$rtf)
+          hdr <- get_page_numbers_rtf(tmp2$rtf, FALSE)
           hcnt <- tmp2$lines
         } else {
           hdr <- ""
