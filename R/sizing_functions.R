@@ -1086,21 +1086,40 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
     } else
       userForce <- FALSE
     
-    
     # After comparison, set last page value
     lastPage <- currentPage
     
+    # Force a break if the next row has wraps that exceed the page size
+    if (count_row_var & i < nrow(x)) {
+      nextRowCount <- x$..row[i + 1]
+      if (!is.na(nextRowCount)) {
+        if (nextRowCount > 1) {
+          if (page_size  - offset - ttfl - nextRowCount - counter < -1) {
+            userForce <- TRUE
+            # print(pg)
+            # print(page_size  - offset - ttfl - nextRowCount - counter)
+          }
+        }
+      }
+    }
+    
+    # If line count is greater than page size, start a new page
     if ((counter > (page_size  - offset - ttfl)) | userForce) {
-      #print(paste("Page count:", counter))
-      counter <- 0
       
       # Don't understand why this adjustment is needed.  But it is.
       # Have to figure it out, because it seems wrong.
       if (pg == 1)
         page_size <- page_size - 1
       
+      # Increment page count
       pg <- pg + 1
+      
+      # Reset line counter
+      counter <- 0
+      
+      # Set offset to zero on first page
       offset <- 0
+
     }
   
     x$..page[i] <- pg

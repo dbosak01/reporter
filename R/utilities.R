@@ -515,8 +515,8 @@ split_string_rtf <- function(strng, width, units) {
       
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
       
-      lngths <- (strwidth(wrds, units = units) + 
-                   strwidth(" ", units = units)) * 1.03 
+      lngths <- (suppressWarnings(strwidth(wrds, units = units)) + 
+                   suppressWarnings(strwidth(" ", units = units))) * 1.03 
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {
@@ -564,8 +564,11 @@ split_string_rtf <- function(strng, width, units) {
     
   }
   
-  # Concat lines and add line ending to all but last line
-  ret <- list(rtf = paste0(lns, collapse = "\\line "),
+  # Concat lines and add line ending to all but last line.
+  # Also translate any special characters to a unicode rtf token
+  # Doing it here handles for the entire report, as every piece runs
+  # through here.
+  ret <- list(rtf = paste0(encodeRTF(lns), collapse = "\\line "),
               lines = length(lns))
   
   return(ret)
@@ -642,10 +645,14 @@ split_cells_variable <- function(x, col_widths, font, font_size, units) {
     
     row_values$..row <- max_length
     
-    if (is.null(dat))
-      dat <- as.data.frame(row_values)
-    else
+    if (is.null(dat)) {
+      dat <- as.data.frame(row_values, stringsAsFactors = FALSE, 
+                           check.names = FALSE)
+    } else {
+      # names(dat)
+      # names(row_values)
       dat <- rbind(dat, row_values)
+    }
     
     max_length <- 1
     row_values <- list()

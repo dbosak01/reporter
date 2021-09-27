@@ -2,7 +2,10 @@ Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
 Version: 1.2.0
-Author: David Bosak
+Authors@R: c( 
+    person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
+    person("Archytas Clinical Solutions", role = "cph")
+    )
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports.
     Originally designed to create tables, listings, and figures for the 

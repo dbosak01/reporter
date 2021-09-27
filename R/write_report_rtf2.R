@@ -363,12 +363,6 @@ update_page_numbers_rtf <- function(path, tpg) {
 }
 
 
-append_footnotes_rtf <- function(pg, cntnt, ftnts) {
-  
-  ret <- c() 
-  
-  
-}
 
 
 # Setup Functions ---------------------------------------------------------
@@ -395,8 +389,8 @@ page_setup_rtf <- function(rs) {
     gtr <- .05 
     cw <- .1
   } else if (rs$font_size == 10) {
-    rh <- 227 #round(.165 * 1440) # 225
-    lh <- 227 #round(.165 * 1440)  
+    rh <- 228 #round(.165 * 1440) # 225
+    lh <- 228 #round(.165 * 1440)  
     pb <- "\\page\\fs0\\par\\fs20\\pard"
     gtr <- .05
     cw <- .11
