@@ -1343,11 +1343,12 @@ test_that("rtf2-user1: demo table works.", {
       options_fixed(font_size = 10) %>% 
       titles("Table 14.1/4",
              "Demographics and Baseline to Characteristics",
-             "Specify Population") %>%
+             "Specify Population Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%
       add_content(tbl) %>% 
-      #footnotes("Special symbols \U221e to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%   
-      footnotes("Special symbols µ Ω £ there to mess things up: ") %>% 
-      page_footer("Time", right = "Page [pg] of [tpg]")
+      footnotes("Special symbols \U221e to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%   
+      footnotes("Special symbols µ Ω £ there to mess things up: ", "Page [pg] of [tpg]") %>% 
+      page_header("Left µ Ω £ ", "Right") %>% 
+      page_footer("Time µ Ω £ ", right = "Page [pg] of [tpg]")
     
     # Write out report
     res <- write_report(rpt)
@@ -1466,24 +1467,27 @@ test_that("rtf2-user2: demo table with stub works.", {
     block_fmt <- c(AGE = "Age", SEX = "Sex", RACE2 = "Race")
     
     # Define table
-    tbl <- create_table(demo, first_row_blank = TRUE) %>%
-      stub(c("var", "label")) %>% 
+    tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
+      stub(c("var", "label"), width = 2.5) %>% 
+      column_defaults(width = 1) %>% 
       define(var, blank_after = TRUE, 
              format = block_fmt, label = "", label_row = TRUE) %>%
       define(label, label = "", indent = .25) %>%
       define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
       define(`ARM B`, align = "center", label = "Drug 10mg", n = 38) %>%
       define(`ARM C`, align = "center", label = "Drug 20mg", n = 38) %>%
-      define(`ARM D`, align = "center", label = "Competitor", n = 38)
+      define(`ARM D`, align = "center", label = "Competitor", n = 38) %>% 
+      titles("Table 14.1/4",
+             "Demographics and Baseline Characteristics",
+             "Specify Population", borders = "outside", blank_row = "none") %>%
+      footnotes("Here is a footnote", borders = "outside")  
     
     # Define Report
     rpt <- create_report(fp, output_type = "RTF", 
                          font = "Arial", font_size = 10) %>%
-      titles("Table 14.1/4",
-             "Demographics and Baseline Characteristics",
-             "Specify Population") %>%
       add_content(tbl) %>% 
-      footnotes("Here is a footnote")
+      page_header("Sponsor", "Drug") %>% 
+      page_footer(left = "Time", right = "Page [pg] of [tpg]")
     
     # Write out report
     res <- write_report(rpt)
@@ -1540,6 +1544,7 @@ test_that("user3: listings works.", {
       titles("Listing 1.0",
              "Demographics Dataset") %>%
       add_content(tbl, align = "left") %>% 
+      page_header("Sponsor", "Drug") %>% 
       page_footer(left = "Time", right = "Page [pg] of [tpg]")
     
     #Write out report

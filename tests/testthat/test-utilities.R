@@ -263,7 +263,7 @@ test_that("split_cells_variable works as expected.", {
                    cyl = c(8, 3, 4),
                    disp = c("My lovely disp and it gets longer", 
                             "Here is a big long string value to exceed 2 inches",
-                            "Short"))
+                            "Short"), stringsAsFactors = FALSE)
   
   tbl <- create_table(df) %>% 
     define(car, label = "Cars", width = 1) %>% 
@@ -401,75 +401,6 @@ test_that("get_lines_rtf works as expected.", {
 
 })
 
-# 
-# test_that("get_text_width performs well.", {
-#   
-#   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
-#                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-#                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
-#                 "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
-#                 "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
-#                 "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
-#                 "qui officia deserunt mollit anim id est laborum.")
-#   
-#   
-#   cnts <- unlist(rep(cnt, 1000))
-#   
-#   # Try 1
-#   stm <- Sys.time()
-# 
-#   
-#   for (cn in cnts) {
-#     
-#     res <- get_text_width(cnt, "Arial", 10, "inches")
-#     
-#   }
-#   
-#   dif <- Sys.time() - stm
-#   dif 
-#   
-#   
-#   # Try 2
-#   stm <- Sys.time()
-#   
-#   pdf(NULL)
-#   
-#   par(family = "sans", ps = 10)
-# 
-#   
-#   for (cn in cnts) {
-#     
-#     ret <- strwidth(cnt, units = "inches") * .975 
-#     
-#   }
-#   
-#   dev.off()
-#   
-#   dif <- Sys.time() - stm
-#   dif 
-#   
-#   # Try 3
-#   stm <- Sys.time()
-#   
-#   R.devices::devEval("nulldev", {
-#   
-#   par(family = "sans", ps = 10)
-#   
-#   
-#   for (cn in cnts) {
-#     
-#     ret <- strwidth(cnt, units = "inches") * .975 
-#     
-#   }
-#   
-#   })
-#   
-#   dif <- Sys.time() - stm
-#   dif 
-#   
-#   
-# })
-
 
 test_that("split_string_rtf() works as expected.", {
   
@@ -524,7 +455,7 @@ test_that("split_cells_variable() works as expected.", {
   dat <- data.frame(col1 = c("hello", "there", "here is a big long\nline to wrap and wrap"),
                     col2 = c(1, 2, 3),
                     col3 = c("my big string I want to wrap", "fork", "bork"),
-                    ..row = c(NA, NA, NA))
+                    ..row = c(NA, NA, NA), stringsAsFactors = FALSE)
   
   res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1), 
                               "Arial", 12, "inches")

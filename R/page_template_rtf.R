@@ -319,7 +319,8 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
         tmp <- split_string_rtf(ftnts$footnotes[[i]], width, rs$units)
         
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-                                  algn, " ", tmp$rtf, "\\cell\\row\n"))
+                                  algn, " ", get_page_numbers_rtf(tmp$rtf, FALSE), 
+                                  "\\cell\\row\n"))
         cnt <- cnt + tmp$lines
       }
       dev.off()

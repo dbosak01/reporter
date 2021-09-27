@@ -187,7 +187,7 @@ test_that("test5: Table with break between sections works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
   
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
 
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%

@@ -1173,8 +1173,8 @@ title_header <- function(x, ..., right = "",
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is "below".
 #' @param borders Whether and where to place a border. Valid values are 'top',
-#' 'bottom', 'left', 'right', 'all', or 'none'.  Default is "none".  The 
-#' 'left' and 'right' border specifications only apply to RTF reports.
+#' 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
+#' The 'left' and 'right' border specifications only apply to RTF reports.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1238,9 +1238,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "none")))
+  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "outside", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
+               "'top', 'bottom', 'left', 'right', 'all', 'outside', or 'none'."))
 
   # Assign attributes
   ttl$titles <-  c(...)
@@ -1295,7 +1295,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @param blank_row Whether to print a blank row above or below the footnote.
 #' Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.
 #' @param borders Whether to print a border above or below the footnote. Valid
-#' values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
+#' values are 'top', 'bottom', 'outside', 'inside', 'all',  or 'none'.  
+#' Default is 'none'.  
 #' For fixed width reports, the 
 #' border character will be taken from the value of the \code{uchar} parameter
 #' on the \code{\link{options_fixed}} function.  The 
@@ -1377,9 +1378,10 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (any(!borders %in% c("top", "bottom", "left", "right", "all", "none")))
+  if (any(!borders %in% c("top", "bottom", "left", "right", "all", 
+                          "outside", "inside", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
+      "'top', 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'."))
 
   ftn$footnotes <- ft
   ftn$blank_row <- blank_row
