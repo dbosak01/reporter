@@ -13,7 +13,7 @@ test_that("get_titles_rtf function works as expected.", {
   t <- get_titles_rtf(rpt$titles, 6, rpt)
   t
   expect_equal(t$rtf,
-        "\\trowd\\trgaph0\\trqc\\cellx8640\\qc Hello\\cell\\row\n\\par\n\\pard")
+        "\\trowd\\trgaph0\\trqc\\cellx8640\\qc Hello\\line\\cell\\row\n\\pard")
   expect_equal(t$lines, 2)
   # expect_equal(t$twips, 576)
   
@@ -145,6 +145,14 @@ test_that("rtf2-2: get_cell_borders works as expected.", {
   expect_equal(get_cell_borders(2, 4, 4, 4, c("inside")),
                "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs")
   
+  expect_equal(get_cell_borders(2, 4, 4, 4, "all", "B"), 
+               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrr\\brdrs")    
+  
+  expect_equal(get_cell_borders(2, 3, 4, 4, "all", "B"), 
+               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs")  
+  
+  expect_equal(get_cell_borders(2, 1, 4, 4, "all", "B"), 
+               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs") 
   
 })
 

@@ -263,7 +263,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
-    a <- "\\par"
+    a <- paste0("\\par", a)
   
   
   blnks <- c()
@@ -275,17 +275,20 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
     rcnt <- nrow(pi$data) 
   }
     
-  
+  # Determine sum of all lines
   rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
            hdrs$lines, rcnt,
            length(a))
   
+  # Get footnotes, passing in sum of all current lines
   ftnts <- get_page_footnotes_rtf(rs, ts, ls, lpg_rows, rc,
                                   wrap_flag, content_blank_row,  pi$table_align)
 
+  # Deal with cell padding.  Don't count this in line count.
+  cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
   
-  ret <- list(rtf = c(a, ttls$rtf, pgby$rtf, shdrs$rtf, 
-                      hdrs$rtf, rws,  ftnts$rtf),
+  ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, cp, shdrs$rtf, 
+                      hdrs$rtf, rws, cp, ftnts$rtf),
               lines = rc  + ftnts$lines)
     
   return(ret) 
@@ -678,6 +681,10 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' @noRd
 get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   
+  if ("..blank" %in% names(tbl))
+    flgs <- tbl$..blank
+  else 
+    flgs <- NA
   nms <- names(widths)
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
@@ -735,7 +742,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
     # Loop for cell definitions
     for(j in seq_len(ncol(t))) {
       if (!is.control(nms[j])) {
-        b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs)
+        b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs, flgs[i])
         ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
       }
     }

@@ -104,8 +104,8 @@ test_that("rtf2-1: One page text spec works as expected.", {
   fp <- file.path(base_path, "rtf2/test1.rtf")
 
   txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
-    titles("Text 1.0", "My Nice Text") %>%
-    footnotes("My footnote 1", "My footnote 2")
+    titles("Text 1.0", "My Nice Text", borders = "outside") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
 
   rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = fsz) %>%
@@ -633,17 +633,17 @@ test_that("rtf2-19: Title and Footnote borders work as expected.", {
   
   fp <- file.path(base_path, "rtf2/test19.rtf")
   
-  dat <- iris[1:25, ] 
+  dat <- iris[1:20, ] 
   
   tbl <- create_table(dat, borders = "all") %>% 
     titles("Table 1.0", "My Nice Report with Borders",
                  borders = c("top", "bottom", "left", "right"),
-           blank_row = "none") %>%
+           blank_row = "both") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"), 
-              blank_row = "none")
+              blank_row = "both")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
@@ -672,10 +672,10 @@ test_that("rtf2-20: Title Header borders work as expected.", {
     title_header("Table 1.0", "My Nice Report with Borders",
                  right = c("Right1", "Right2", "Right3"),
            borders = c("top", "bottom", "left", "right"),
-           blank_row = "none") %>%
+           blank_row = "both") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"), 
-              blank_row = "above")
+              blank_row = "both")
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -1497,6 +1497,7 @@ test_that("rtf2-user2: demo table with stub works.", {
     
   } else
     expect_equal(TRUE, TRUE)
+  
 })
 
 test_that("user3: listings works.", {

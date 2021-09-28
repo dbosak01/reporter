@@ -266,12 +266,12 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # Add top border if requested
   tbrdr <- NULL
   if (any(ts$borders %in% c("top", "all", "outside")))
-    tbrdr <-  paste0(rep(rs$uchar,  ls - 1), collapse = "")
+    tbrdr <-  paste0(paste0(rep(rs$uchar,  ls - 1), collapse = ""), " ")
   
   # Add bottom border if requested
   bbrdr <- NULL
   if (any(ts$borders %in% c("bottom", "all", "outside")))
-    bbrdr <-  paste0(rep(rs$uchar,  ls - 1), collapse = "")
+    bbrdr <-  paste0(paste0(rep(rs$uchar,  ls - 1), collapse = ""), " ")
   
   
   # Append everything together

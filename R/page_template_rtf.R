@@ -248,18 +248,23 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
         # Split title strings if they exceed width
         tmp <- split_string_rtf(ttls$titles[[i]], width, rs$units)
         
+        bl <- ""
+        if (i == length(ttls$titles)) {
+          if (any(ttls$blank_row %in% c("below", "both"))) {
+            bl <-  "\\line"
+            cnt <- cnt + 1
+          }
+        }
+        
         # Concatenate title string
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-                                  algn, " ", tmp$rtf, "\\cell\\row\n"))
+                                  algn, " ", tmp$rtf, bl, "\\cell\\row\n"))
 
         cnt <- cnt + tmp$lines
       }
       dev.off()
       
-      if (any(ttls$blank_row %in% c("below", "both"))) {
-        ret <- append(ret, "\\par\n")
-        cnt <- cnt + 1
-      }
+
         
       
     }
@@ -318,17 +323,22 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
         # Split footnote strings if they exceed width
         tmp <- split_string_rtf(ftnts$footnotes[[i]], width, rs$units)
         
+        bl <- ""
+        if (i == length(ftnts$footnotes)) {
+          if (any(ftnts$blank_row %in% c("below", "both"))) {
+            bl <-  "\\line\n"
+            cnt <- cnt + 1
+          }
+        }
+        
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
                                   algn, " ", get_page_numbers_rtf(tmp$rtf, FALSE), 
-                                  "\\cell\\row\n"))
+                                  bl, "\\cell\\row\n"))
         cnt <- cnt + tmp$lines
       }
       dev.off()
       
-      if (any(ftnts$blank_row %in% c("below", "both"))) {
-        ret <- append(ret, "\\line\n")
-        cnt <- cnt + 1
-      }
+
     }
     
     ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
@@ -365,16 +375,20 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
     for (ttlhdr in thdrlst) {
       
       mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
-      
-      if (any(ttlhdr$blank_row %in% c("above", "both"))) {
-        ret <- append(ret, "\\par\n")
-        cnt <- cnt + 1
-      }
+    
       
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
       
       for(i in seq_len(mx)) {
+        
+        ba <- ""
+        if (i == 1) {
+          if (any(ttlhdr$blank_row %in% c("above", "both"))) {
+            ba <- "\\line\n"
+            cnt <- cnt + 1
+          }
+        }
       
         if (length(ttlhdr$titles) >= i) {
           # Split strings if they exceed width
@@ -399,10 +413,18 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
         b1 <- get_cell_borders(i, 1, mx, 2, ttlhdr$borders)
         b2 <- get_cell_borders(i, 2, mx, 2, ttlhdr$borders)
         
-        ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b1, "\\cellx", w2, 
+        bl <- ""
+        if (i == mx) {
+          if (any(ttlhdr$blank_row %in% c("below", "both"))) {
+            bl <-  "\\line\n"
+            cnt <- cnt + 1
+          }
+        }
+        
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ba, ta, b1, "\\cellx", w2, 
                                   b2, "\\cellx", w1,
-                                  "\\ql ", ttl, "\\cell\\qr ",
-                                  hdr, "\\cell\\row\n"))
+                                  "\\ql ", ttl, "\\cell\\qr ", ba,
+                                  hdr, bl, "\\cell\\row\n"))
         if (tcnt > hcnt)
           cnt <- cnt + tcnt
         else 
@@ -411,10 +433,6 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
       
       dev.off()
       
-      if (any(ttlhdr$blank_row %in% c("below", "both"))) {
-        ret <- append(ret, "\\par\n")
-        cnt <- cnt + 1
-      }
     }
     
     ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
@@ -499,12 +517,13 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
 # Utilities ---------------------------------------------------------------
 
 
-get_cell_borders <- function(row, col, nrow, ncol, brdrs) {
+get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "") {
   
   t <- ""
   b <- ""
   l <- ""
   r <- ""
+  
   
   if ("all" %in% brdrs) {
     t <- "\\clbrdrt\\brdrs"
@@ -546,6 +565,18 @@ get_cell_borders <- function(row, col, nrow, ncol, brdrs) {
     if (col == ncol & any(brdrs %in% c("outside", "right")))
       r <- "\\clbrdrr\\brdrs"
     
+  }
+  
+  # Deal with flag
+  if (!is.na(flag)) {
+    if (flag %in% c("L", "B")) {
+      
+      if (col != ncol)
+        r <- ""
+      
+      if (col != 1)
+        l <- ""
+    }
   }
   
   ret <- paste0(t, b, l, r)

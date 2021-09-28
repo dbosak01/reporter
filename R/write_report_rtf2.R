@@ -386,20 +386,23 @@ page_setup_rtf <- function(rs) {
     rh <- 185 #round(.11 * 1440)
     lh <- 185 #round(.1 * 1440) 
     pb <- "\\page\\fs0\\par\\fs16\\pard"
-    gtr <- .05 
+    gtr <- .1 
     cw <- .1
+    cp <- 40
   } else if (rs$font_size == 10) {
     rh <- 228 #round(.165 * 1440) # 225
     lh <- 228 #round(.165 * 1440)  
     pb <- "\\page\\fs0\\par\\fs20\\pard"
-    gtr <- .05
+    gtr <- .1
     cw <- .11
+    cp <- 40
   } else if (rs$font_size == 12) {
     rh <- 271 #round(.2 * 1440)
     lh <- 271 #round(.1875 * 1440) #270
     pb <- "\\page\\fs0\\par\\fs24\\pard"
-    gtr <- .05
+    gtr <- .1
     cw <- .12
+    cp <- 40
   }
   
   
@@ -417,6 +420,7 @@ page_setup_rtf <- function(rs) {
   rs$gutter_width <- gtr
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
+  rs$cell_padding <- cp
   
   if (is.null(rs$user_line_count)) {
     # There is one row above the page footer that is not printable.

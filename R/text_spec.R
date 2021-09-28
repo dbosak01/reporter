@@ -438,9 +438,11 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
     if (i == 1 & content_blank_row %in% c("both", "above"))
       a <- "\\par"
   
+    # Deal with cell padding.  Don't count this in line count.
+    cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
   
     # Combine titles, blanks, body, and footnotes
-    rws <- c(a, ttls$rtf, ttl_hdr$rtf, rwhd, s, rwft)
+    rws <- c(a, cp, ttls$rtf, ttl_hdr$rtf, cp, rwhd, s, rwft)
 
     # Sum up lines
     cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
@@ -449,7 +451,7 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
     ftnts <- get_page_footnotes_rtf(rs, txt, width, lpg_rows, cnts,
                                     wrap_flag, content_blank_row, talgn)
     
-    ret[[length(ret) + 1]] <- c(rws, ftnts$rtf)
+    ret[[length(ret) + 1]] <- c(rws, cp, ftnts$rtf)
     cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
     
   }

@@ -25,7 +25,8 @@ footnotes(
 Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
 
 \item{borders}{Whether to print a border above or below the footnote. Valid
-values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
+values are 'top', 'bottom', 'outside', 'inside', 'all',  or 'none'.  
+Default is 'none'.  
 For fixed width reports, the 
 border character will be taken from the value of the \code{uchar} parameter
 on the \code{\link{options_fixed}} function.  The 
