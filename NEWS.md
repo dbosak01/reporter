@@ -5,7 +5,10 @@
 significant rewrite to RTF report creation functions.  Font is controlled using
 the _font_ parameter on the `create_report()` function.  Old text-style RTF
 output is still available using the "fixed" font.
+* Added _font_size_ parameter to `create_report()` function.
 * Added _valign_ parameter to `footnotes()` function.
+* Added _width_ paremeter to `titles()`, `title_header()`, and `footnotes()`
+functions.
 
 # reporter 1.1.6
 

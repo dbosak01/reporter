@@ -3,7 +3,8 @@ Type: Package
 Title: Creates Statistical Reports 
 Version: 1.2.0
 Authors@R: c( 
-    person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
+    person("David", "Bosak",  role = c("aut", "cre")),
+    person("Kevin", "Kramer", role = "ctb"),
     person("Archytas Clinical Solutions", role = "cph")
     )
 Maintainer: David Bosak <dbosak01@gmail.com>

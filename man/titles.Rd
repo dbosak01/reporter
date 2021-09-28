@@ -4,7 +4,14 @@
 \alias{titles}
 \title{Adds a title block}
 \usage{
-titles(x, ..., align = "center", blank_row = "below", borders = "none")
+titles(
+  x,
+  ...,
+  align = "center",
+  blank_row = "below",
+  borders = "none",
+  width = NULL
+)
 }
 \arguments{
 \item{x}{The object to assign titles to.  Valid objects are a report, or
@@ -21,6 +28,19 @@ a table, text, or plot specification.}
 \item{borders}{Whether and where to place a border. Valid values are 'top',
 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
 The 'left' and 'right' border specifications only apply to RTF reports.}
+
+\item{width}{The width of the titles block.  If the titles are attached
+to the report, valid values are 'page' or a numeric width, and the default
+is 'page'. If the titles are attached to the
+table, plot, or text content, the valid values are 'page', 'content' or a 
+numeric value, and the default is 'content'.  The value 'content' means the 
+titles will be aligned to the width of the table, plot, or text
+content.  The value
+'page' means the titles will be aligned to the width of the page. 
+In addition to these two convenience settings, you 
+may also specify a specific width in the current units of measure.  The
+units of measure is determined by the 'units' parameter on 
+\code{\link{create_report}}.}
 }
 \value{
 The modified report.

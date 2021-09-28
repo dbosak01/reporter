@@ -203,7 +203,7 @@ get_page_footer_rtf <- function(rs) {
 
 #' @import grDevices
 #' @noRd
-get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
+get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
@@ -212,7 +212,7 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
   conv <- rs$twip_conversion
   lh <- rs$row_height
   
-  w <- round(width * conv)
+
   
   ta <- "\\trql"
   if (talgn == "right")
@@ -224,6 +224,16 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
   if (length(ttllst) > 0) {
     
     for (ttls in ttllst) {
+      
+      
+      if (ttls$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttls$width == "content")
+        width <- content_width
+      else if (is.numeric(ttls$width))
+        width <- ttls$width
+        
+      w <- round(width * conv)
       
       if (any(ttls$blank_row %in% c("above", "both"))) {
         ret <- append(ret, "\\line\n")
@@ -281,13 +291,13 @@ get_titles_rtf <- function(ttllst, width, rs, talgn = "center") {
 
 #' @import grDevices
 #' @noRd
-get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
+get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
   twps <- 0
   
-  w <- round(width * rs$twip_conversion)
+  conv <- rs$twip_conversion
   lh <- rs$row_height
   
   ta <- "\\trql"
@@ -300,6 +310,14 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
     
     for (ftnts in ftnlst) {
       
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+      
+      w <- round(width * conv)
       
       if (any(ftnts$blank_row %in% c("above", "both"))) {
         ret <- append(ret, "\\line\n")
@@ -354,14 +372,14 @@ get_footnotes_rtf <- function(ftnlst, width, rs, talgn = "center") {
 
 #' @import grDevices
 #' @noRd
-get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
+get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
   twps <- 0
   
-  w1 <- round(width * rs$twip_conversion)
-  w2 <- round(width * .7 * rs$twip_conversion)
+  conv <- rs$twip_conversion
+
   lh <- rs$row_height
   
   ta <- "\\trql"
@@ -373,6 +391,16 @@ get_title_header_rtf <- function(thdrlst, width, rs, talgn = "center") {
   if (length(thdrlst) > 0) {
     
     for (ttlhdr in thdrlst) {
+      
+      if (ttlhdr$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttlhdr$width == "content")
+        width <- content_width
+      else if (is.numeric(ttlhdr$width))
+        width <- ttlhdr$width
+      
+      w1 <- round(width * conv)
+      w2 <- round(width * .7 * conv)
       
       mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
     

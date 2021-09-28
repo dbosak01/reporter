@@ -307,7 +307,7 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
         
         vflag <- "bottom"
         ftnts <- get_footnotes_rtf(spec$footnotes, 
-                                   rs$content_size[["width"]], rs, 
+                                   spec_width, rs, 
                                    talgn) 
       } else {
         vflag <- "top"
@@ -322,7 +322,7 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
         if (rs$footnotes[[1]]$valign == "top") {
           vflag <- "top"
           ftnts <- get_footnotes_rtf(rs$footnotes, 
-                                     rs$content_size[["width"]], rs, 
+                                     spec_width, rs, 
                                      talgn) 
         } 
       }

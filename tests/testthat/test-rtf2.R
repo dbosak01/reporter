@@ -607,8 +607,8 @@ test_that("rtf2-18: Title header on report works as expected.", {
   
   tbl <- create_table(dat) 
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>% 
@@ -643,8 +643,8 @@ test_that("rtf2-19: Title and Footnote borders work as expected.", {
               borders = c("top", "bottom", "left", "right"), 
               blank_row = "both")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "fixed",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
@@ -677,8 +677,8 @@ test_that("rtf2-20: Title Header borders work as expected.", {
               borders = c("top", "bottom", "left", "right"), 
               blank_row = "both")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
@@ -841,7 +841,7 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
     footnotes("* Motor Trend, 1974") 
   
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size =10) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, align = "right") %>%
@@ -914,7 +914,7 @@ test_that("rtf2-27: Plot with page by on plot works as expected.", {
     page_by(cyl, "Cylinders: ") %>% 
     footnotes("* Motor Trend, 1974") 
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = fsz) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt) %>%
@@ -950,7 +950,7 @@ test_that("rtf2-28: Plot with page by on report works as expected.", {
   plt <- create_plot(p, height = 4, width = 8)
   
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = 10) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
            blank_row = "none", borders = "none") %>%
@@ -1118,8 +1118,8 @@ test_that("rtf2-33: Table with long cell and label values wraps as expected.", {
            dedupe = TRUE)
   
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial", 
-                       font_size = 10) %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt, 
+                       font_size = fsz) %>%
     titles("Table 1.0", align = "center") %>%
     
     add_content(tbl1)
@@ -1203,14 +1203,111 @@ test_that("rtf2-35: Title Header and page header/footer wrapping work as expecte
               borders = "none", 
               blank_row = "above")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_header(c("Left1", "Left2\nwrap"), "Right 1") %>% 
     page_footer("Left1", 
                 "Center1 here is a whole bunch of stuff to try and make it wrap", 
                 "Right1\nwrap\n and wrap again")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("rtf2-36: Title and Footnote widths work as expected on table.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test36.rtf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat) %>% 
+    titles("Table 1.0", "My Nice Report with Widths",
+           width = "page") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              width = "page")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("rtf2-37: Title and Footnote widths work as expected on report", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test37.rtf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1") %>% 
+    titles("Table 1.0", "My Nice Report with Widths",
+           borders = c("top", "bottom", "left", "right"),
+           width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"), 
+               width = 7)
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("rtf2-38: Title and Footnote specific widths work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test38.rtf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") %>% 
+    titles("Table 1.0", "My Nice Report with Borders",
+           borders = c("top", "bottom", "left", "right"),
+            width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"), 
+              width = 7)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1") 
   
   res <- write_report(rpt)
   res

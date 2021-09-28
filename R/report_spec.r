@@ -1026,6 +1026,18 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @param borders Whether and where to place a border. Valid values are 'top',
 #' 'bottom', 'left', 'right', 'all', or 'none'.  Default is 'none'.   The 
 #' 'left' and 'right' border specifications only apply to RTF reports.
+#' @param width The width of the title header.  If the title header is attached
+#' to the report, valid values are 'page' or a numeric width, and the default
+#' is 'page'. If the title header is attached to the
+#' table, plot, or text content, the valid values are 'page', 'content' or a 
+#' numeric value, and the default is 'content'.  The value 'content' means the 
+#' footnotes will be aligned to the width of the table, plot, or text
+#' content.  The value
+#' 'page' means the footnotes will be aligned to the width of the page. 
+#' In addition to these two convenience settings, you 
+#' may also specify a specific width in the current units of measure.  The
+#' units of measure is determined by the 'units' parameter on 
+#' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1076,7 +1088,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' #     * In billions of dollars
 #' @export
 title_header <- function(x, ..., right = "", 
-                         blank_row = "below", borders = "none") {
+                         blank_row = "below", borders = "none", width = NULL) {
   
 
   diff <- setdiff(class(x), c("list"))
@@ -1110,11 +1122,29 @@ title_header <- function(x, ..., right = "",
     stop(paste("Borders parameter invalid.  Valid values are", 
                "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
   
+  if (is.null(width)) {
+    if (any(class(x) %in% c("report_spec"))) 
+      width <- "page"
+    else 
+      width <- "content"
+  } else {
+    if (any(class(x) %in% c("report_spec"))) {
+      if (!width %in% c("page") & !is.numeric(width))
+        stop("Width parameter invalid.  Valid values are 'page' or a number.")
+    } else {
+      if (!width %in% c("page", "content") & !is.numeric(width))
+        stop(paste("Width parameter invalid.  Valid values are 'page',",
+                   "'content' or a number."))
+    }
+    
+  }
+  
   # Assign attributes
   ttl_hdr$titles <-  c(...)
   ttl_hdr$blank_row <- blank_row
   ttl_hdr$borders <- borders
   ttl_hdr$right <- right
+  ttl_hdr$width <- width
   
   x$title_hdr[[length(x$title_hdr) + 1]] <- ttl_hdr
   
@@ -1175,6 +1205,18 @@ title_header <- function(x, ..., right = "",
 #' @param borders Whether and where to place a border. Valid values are 'top',
 #' 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
 #' The 'left' and 'right' border specifications only apply to RTF reports.
+#' @param width The width of the titles block.  If the titles are attached
+#' to the report, valid values are 'page' or a numeric width, and the default
+#' is 'page'. If the titles are attached to the
+#' table, plot, or text content, the valid values are 'page', 'content' or a 
+#' numeric value, and the default is 'content'.  The value 'content' means the 
+#' titles will be aligned to the width of the table, plot, or text
+#' content.  The value
+#' 'page' means the titles will be aligned to the width of the page. 
+#' In addition to these two convenience settings, you 
+#' may also specify a specific width in the current units of measure.  The
+#' units of measure is determined by the 'units' parameter on 
+#' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1223,7 +1265,7 @@ title_header <- function(x, ..., right = "",
 #' #     * In billions of dollars
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below", 
-                   borders = "none"){
+                   borders = "none", width = NULL){
 
   # Create title structure
   ttl <- structure(list(), class = c("title_spec", "list"))
@@ -1242,11 +1284,33 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     stop(paste("Borders parameter invalid.  Valid values are", 
                "'top', 'bottom', 'left', 'right', 'all', 'outside', or 'none'."))
 
+  
+
+  if (is.null(width)) {
+    if (any(class(x) %in% c("report_spec"))) 
+      width <- "page"
+    else 
+      width <- "content"
+    
+  } else {
+    if (any(class(x) %in% c("report_spec"))) {
+      if (!width %in% c("content") & !is.numeric(width))
+        stop("Width parameter invalid.  Valid values are 'page' or a number.")
+    } else {
+      if (!width %in% c("page", "content") & !is.numeric(width))
+        stop(paste("Width parameter invalid.  Valid values are 'page',",
+                   "'content' or a number."))
+    }
+    
+  }
+      
+  
   # Assign attributes
   ttl$titles <-  c(...)
   ttl$blank_row <- blank_row
   ttl$borders <- borders
   ttl$align <- align
+  ttl$width <- width
   
 
   x$titles[[length(x$titles) + 1]] <- ttl
@@ -1304,6 +1368,18 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @param valign The vertical position to align the footnotes.  Valid
 #' values are: 'top' and 'bottom'.  For footnotes attached to a report,
 #' default is 'bottom'.  For footnotes attached to content, default is 'top'.
+#' @param width The width of the footnotes block.  If the footnotes are attached
+#' to the report, valid values are 'page' or a numeric width, and the default
+#' is 'page'. If the footnotes are attached to the
+#' table, plot, or text content, the valid values are 'page', 'content' or a 
+#' numeric value, and the default is 'content'.  The value 'content' means the 
+#' footnotes will be aligned to the width of the table, plot, or text
+#' content.  The value
+#' 'page' means the footnotes will be aligned to the width of the page. 
+#' In addition to these two convenience settings, you 
+#' may also specify a specific width in the current unit of measure.  The
+#' unit of measure is determined by the 'units' parameter on 
+#' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1353,9 +1429,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' #     * In billions of dollars
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
-                      borders = "none"
-                      , valign = NULL
-                      ){
+                      borders = "none", valign = NULL, width = NULL){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1382,18 +1456,29 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
                           "outside", "inside", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
       "'top', 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'."))
+  
+  if (is.null(width)) {
+    if (any(class(x) %in% c("report_spec"))) 
+      width <- "page"
+    else 
+      width <- "content"
+  } else {
+    if (any(class(x) %in% c("report_spec"))) {
+      if (!width %in% c("content") & !is.numeric(width))
+        stop("Width parameter invalid.  Valid values are 'page' or a number.")
+    } else {
+      if (!width %in% c("page", "content") & !is.numeric(width))
+        stop(paste("Width parameter invalid.  Valid values are 'page',",
+                   "'content' or a number."))
+    }
+  }
 
   ftn$footnotes <- ft
   ftn$blank_row <- blank_row
   ftn$align <- align
   ftn$borders <- borders
-  
-  if ("report_spec" %in% class(x)) {
-    ftn$container <- "report" 
-  } else {
-    ftn$container <- "content" 
-  }
-  
+  ftn$width <- width  
+
   if (is.null(valign)) {
     if ("report_spec" %in% class(x))
       ftn$valign <- "bottom"
