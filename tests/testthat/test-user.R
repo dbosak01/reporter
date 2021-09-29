@@ -7,7 +7,7 @@ data_dir <- base_path
 base_path <- tempdir()
 data_dir <- "."
 
-dev <- TRUE
+dev <- FALSE
 
 
 test_that("user1: demo table works.", {

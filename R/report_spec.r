@@ -1011,7 +1011,8 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' \code{blank_row} parameter.
 #'
 #' Each title string must fit within the available space.  The \strong{reporter}
-#' package will not wrap titles.  If a title does not fit within the 
+#' package will not wrap titles on fixed-width reports.  
+#' If a title does not fit within the 
 #' available space, an error will be generated.  In these situations, either
 #' shorten the title or split it into multiple titles that each fit within the
 #' available space. 
@@ -1189,7 +1190,8 @@ title_header <- function(x, ..., right = "",
 #' \code{blank_row} parameter.
 #' 
 #' Each title string must fit within the available space.  The \strong{reporter}
-#' package will not wrap titles.  If a title does not fit within the 
+#' package will not wrap titles on fixed-width reports.  
+#' If a title does not fit within the 
 #' available space, a warning will be generated and the title will be 
 #' truncated.  In these situations, either
 #' shorten the title or split it into multiple titles that each fit within the
@@ -1346,7 +1348,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' \code{blank_row} parameter.
 #' 
 #' Each footnote string must fit within the available space.  The \strong{reporter}
-#' package will not wrap footnotes.  If a footnote does not fit within the 
+#' package will not wrap footnotes on fixed-width reports.  
+#' If a footnote does not fit within the 
 #' available space, a warning will be generated and the footnote will be 
 #' truncated.  In these situations, either
 #' shorten the footnote or split it into multiple footnotes that each fit within 
