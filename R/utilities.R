@@ -145,24 +145,20 @@ copy_labels <- function(x, y) {
 get_font_family <- function(font_name) {
   
   # Trap missing or invalid font_name parameter
-  if (!font_name %in% c("Arial", "Courier New", "Times New Roman", "Calibri")) {
+  if (!tolower(font_name) %in% c("arial", "courier", "times")) {
     
     stop(paste0("ERROR: font_name parameter on get_font_family() ",
                 "function is invalid: '", font_name,
-      "'\n\tValid values are: 'Arial', 'Calibri', 'Times New Roman', 'Courier'."
+      "'\n\tValid values are: 'Arial', 'Courier', and 'Times'."
       ))
   }
   
-  fam <- ""
+  fam <- "mono"
   # mono, serif, sans
-  if(font_name == "Courier New") {
-    fam <- "mono"
-  } else if (font_name == "Arial") {
+  if (tolower(font_name) == "arial") {
     fam <- "sans"
-  } else if (font_name == "Times New Roman") {
+  } else if (tolower(font_name) == "times") {
     fam <- "serif"
-  } else if (font_name == "Calibri") {
-    fam <- "sans"
   }
   
   return(fam)
@@ -499,6 +495,185 @@ split_cells <- function(x, col_widths) {
 }
 
 
+#' @description Calling function is responsible for opening the 
+#' device context and assigning the font.  This function will use 
+#' strwidth to determine number of wraps of a string within a particular
+#' width.  Lines are returned as a single rtf string separated by an rtf
+#' line ending.  
+#' @noRd
+split_string_rtf <- function(strng, width, units) {
+  
+  lnlngth <- 0
+  ln <- c()
+  lns <- c()
+  
+  if (!is.na(strng)) {
+    
+    splits <- unlist(stri_split_fixed(strng, "\n"))
+  
+    for (split in splits) {
+      
+      wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
+      
+      lngths <- (suppressWarnings(strwidth(wrds, units = units)) + 
+                   suppressWarnings(strwidth(" ", units = units))) * 1.03 
+      
+      # Loop through words and add up lines
+      for (i in seq_along(wrds)) {
+        
+        lnlngth <- lnlngth + lngths[i] 
+        if (lnlngth <= width)
+          ln <- append(ln, wrds[i])
+        else {
+          
+          if (length(ln) == 0) {
+            
+            lns[length(lns) + 1] <- wrds[i]
+            lnlngth <- 0
+            
+          } else {
+            # Assign current lines and counts
+            lns[length(lns) + 1] <- paste(ln, collapse = " ")
+              
+            # Assign overflow to next line
+            ln <- wrds[i]
+            lnlngth <- lngths[i]
+          }
+        }
+        
+        
+      }
+      
+      # Deal with last line
+      if (length(ln) > 0) {
+
+        lns[length(lns) + 1] <- paste(ln, collapse = " ")
+
+      }
+      
+      # Reset ln and lnlngth
+      ln <- c()
+      lnlngth <- 0
+      
+    }
+    
+
+  } else {
+    
+    lns <- ""
+    
+  }
+  
+  # Concat lines and add line ending to all but last line.
+  # Also translate any special characters to a unicode rtf token
+  # Doing it here handles for the entire report, as every piece runs
+  # through here.
+  ret <- list(rtf = paste0(encodeRTF(lns), collapse = "\\line "),
+              lines = length(lns))
+  
+  return(ret)
+}
+
+#' Split data frame cells based on expected column width.
+#' For variable width reports, will just insert a carriage return at the 
+#' split points.
+#' @param x A data frame
+#' @param col_widths A named vector of columns widths in the unit of measure
+#' @return The data frame with long values split by carriage returns.
+#' @import stringi
+#' @import grDevices
+#' @noRd
+split_cells_variable <- function(x, col_widths, font, font_size, units) {
+  
+  dat <- NULL           # Resulting data frame
+  row_values <- list()  # A list to hold cell values for one row 
+  max_length <- 1       # The maximum number of splits of a cell in that row
+  
+  fnt <- "mono"
+  if (tolower(font) == "arial")
+    fnt <- "sans"
+  else if (tolower(font) == "times")
+    fnt <- "serif"
+  
+  
+  pdf(NULL)
+  par(family = fnt, ps = font_size)
+  
+  
+  for (i in seq_len(nrow(x))) {
+    for (nm in names(x)) {
+      
+      nch <- 1
+      
+      if (any(typeof(x[[nm]]) == "character") & 
+          !is.control(nm) ) {
+        
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+          
+          cell <- ""
+          
+        } else {
+          
+          res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
+          cell <- res$rtf
+          nch <- res$lines
+        }
+        
+        
+      } else {
+        cell <- x[i, nm]
+      }
+      # print(paste("cell: ", cell))
+      
+      if (identical(cell, character(0)))
+        cell <- ""
+      
+      # print(nch)
+      # print(cell)
+      # print(max_length)
+      
+      if (nch > max_length)
+        max_length <- nch
+      
+      
+      row_values[[length(row_values) + 1]] <- cell
+      # print(paste("Row:", row_values))
+    }
+    
+    # print(names(x))
+    names(row_values) <- names(x)
+    
+    row_values$..row <- max_length
+    
+    if (is.null(dat)) {
+      dat <- as.data.frame(row_values, stringsAsFactors = FALSE, 
+                           check.names = FALSE)
+    } else {
+      # names(dat)
+      # names(row_values)
+      dat <- rbind(dat, row_values)
+    }
+    
+    max_length <- 1
+    row_values <- list()
+    
+  }
+  
+  dev.off()
+  
+  rownames(dat) <- NULL
+  # # Reset names
+  # if ("..row" %in% names(x)) 
+  #   names(dat) <- c(names(x))
+  # else
+  #   names(dat) <- c(names(x), "..row")
+
+  
+  return(dat)
+}
+
+
+
 #' Given a jagged set of vectors, align to the longest by filling with 
 #' empty strings
 #' @param x A list of vectors of varying lengths
@@ -718,6 +893,158 @@ log_logr <- function(x) {
   }
 }
 
+#' @noRd
+has_bottom_footnotes <- function(rs) {
+  
+  ret <- FALSE
+  
+  if (!is.null(rs$footnotes)) {
+    
+    for (ftn in rs$footnotes) {
+      if (ftn$valign == "bottom") { 
+        ret <- TRUE
+        break()
+      }
+    }
+    
+  }
+  
+  return(ret)
+}
+
+
+#' @noRd
+has_top_footnotes <- function(rs) {
+  
+  ret <- FALSE
+  
+  if (!is.null(rs$footnotes)) {
+    
+    for (ftn in rs$footnotes) {
+      if (ftn$valign == "top") { 
+        ret <- TRUE
+        break()
+      }
+    }
+    
+  }
+  
+  return(ret)
+}
+
+get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
+  
+  spns <- ts$col_spans
+  cols <- pi$keys
+  cols <- cols[!is.controlv(cols)]
+  w <- widths
+  w <- w[cols]
+  
+  # print("Cols:")
+  # print(cols)
+  #print(w)
+  
+  # Figure out how many levels there are, 
+  # and organize spans by level
+  lvls <- c()     # Unique levels
+  slvl <- list()  # Will be a list of lists of spans
+  for (spn in spns) {
+    
+    if (!spn$level %in% lvls) {
+      lvls[length(lvls) + 1] <- spn$level
+      slvl[[spn$level]] <- list()
+    }
+    slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
+  }
+  
+  # Get unique levels and sort in decreasing order so we go from top down
+  lvls <- sort(unique(lvls), decreasing = TRUE)
+  # print("Levels:")
+  # print(lvls)
+  # 
+  # print("Spanning levels:")
+  # print(slvl)
+  
+  # Create data structure to map spans to columns and columns widths by level
+  # - Seed span_num with negative index numbers to identify unspanned columns
+  # - Also add one to each column width for the blank space between columns 
+  d <- data.frame(colname = cols, colwidth = w + gutter, 
+                  span_num = seq(from = -1, to = -length(cols), by = -1), 
+                  stringsAsFactors = FALSE)
+  
+  wlvl <- list()  # Create one data structure for each level
+  for (l in lvls) {
+    
+    t <- d  # Copy to temporary variable
+    
+    # if column is in spanning column list, populate structure with index.
+    # Otherwise, leave as negative value.
+    for (i in 1:length(slvl[[l]])) {
+      cl <- slvl[[l]][[i]]$span_cols
+      
+      
+      # Span specifications can be a vector of column names or numbers
+      if (typeof(cl) == "character")
+        t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
+      else 
+        t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
+      
+      
+    }
+    
+    # Aggregate data structures to get span widths for each span
+    s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
+    
+    # Then put back in original column order
+    s$span <- factor(s$span, levels = unique(t$span_num))
+    s <- s[order(s$span), ]
+    rownames(s) <- NULL
+    
+    # Prep data structure
+    s$span <- unique(t$span_num)
+    s$label <- ""
+    s$align <- ""
+    s$n <- NA
+    s$name <- ""
+    s$underline <- TRUE
+    
+    # Populate data structure with labels, alignments, and n values from 
+    # spanning column objects
+    counter <- 1
+    for (index in s$span) {
+      if (index > 0) {
+        s$label[counter] <- slvl[[l]][[index]]["label"]
+        s$align[counter] <- slvl[[l]][[index]]$label_align
+        s$underline[counter] <- slvl[[l]][[index]]$underline
+        if (!is.null(slvl[[l]][[index]]$n))
+          s$n[counter] <- slvl[[l]][[index]]$n
+        
+      }
+      s$name[counter] <- paste0("Span", counter)
+      counter <- counter + 1
+    }
+    
+    # Apply n counts to labels
+    if (!is.null(ts$n_format)) {
+      s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
+    }
+    
+    wlvl[[l]] <- s
+    
+  }
+  
+  
+  return(wlvl)
+  
+}
+
+#' @noRd
+n2ln <- function(strng) {
+  
+  ret <- gsub("\n", "\\line ", strng, fixed = TRUE) 
+  
+  return(ret)
+}
 
 # Sizing utilities --------------------------------------------------------
 
@@ -770,31 +1097,9 @@ get_header_height <- function(rs) {
   if(length(rs$page_header_left) < length(rs$page_header_right))
     phdr <- rs$page_header_right
   
-  if (rs$output_type == "docx") { 
-    
-    # DOCX not available
-    
-    # hh <- sum(strheight(phdr, units = "inches", family = rs$font_family))
-    # 
-    # # Get height of titles
-    # th <- sum(strheight(rs$titles, units = "inches", family = rs$font_family))
-    # 
-    # # Add buffer for table margins, etc.
-    # buff <- .1  # Will need to adjust this
-    # 
-    # if (rs$units == "cm") {
-    #   hh <- ccm(hh)
-    #   th <- ccm(th)
-    #   buff <- ccm(buff)
-    # }
-    
-  } else {
-    
-    hh <- length(phdr) * rs$line_height
-    th <- length(rs$titles) * rs$line_height
-    buff <- 0
-    
-  }
+  hh <- length(phdr) * rs$row_height
+  th <- length(rs$titles) * rs$row_height
+  buff <- 0
   
   # Add all heights
   ret <- hh + th + buff
@@ -812,32 +1117,10 @@ get_footer_height <- function(rs) {
   if(length(pftr) < length(rs$page_footer_center))
     pftr <- rs$page_footer_center
   
-  if (rs$output_type == "docx") {
-  
-    # DOCX not available
+  fh <- length(pftr) * rs$row_height
+  fth <- length(rs$footnotes) * rs$row_height
+  buff <- rs$row_height # Space between footnotes and page footer
     
-    # fh <- sum(strheight(pftr, units = "inches", family = rs$font_family))
-    # 
-    # # Get height of footnotes
-    # fth <- sum(strheight(rs$footnotes, units = "inches", family = rs$font_family))
-    # 
-    # # Add buffer for table margins, etc.
-    # buff <- .1  # Need to adjust
-    # 
-    # if (rs$units == "cm") {
-    #   fh <- ccm(fh)
-    #   fth <- ccm(fth)
-    #   buff <- ccm(buff)
-    # }
-    
-  } else {
-    
-    fh <- length(pftr) * rs$line_height
-    fth <- length(rs$footnotes) * rs$line_height
-    buff <- rs$line_height # Space between footnotes and page footer
-    
-  }
-  
   # Add all heights
   ret <- fh + fth + buff
   
@@ -851,8 +1134,12 @@ ccm <- function(x) {
 }
 
 
+# RTF Functions -----------------------------------------------------------
+
+
+
 #' @description Estimate number of wraps based on text, width, and a font.
-#' @import graphics
+#' @import stringi
 #' @noRd
 get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   
@@ -863,14 +1150,45 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
   else if (tolower(font) == "times")
     f <- "serif"
   
-  par(family = f, ps = font_size)
-  val <- strwidth(txt, units = units) * .975 / width
+  names(width) <- NULL
+  
+  lns <- unlist(stri_split_fixed(txt, "\n"))
+  
+  val <- get_text_width(lns, units = units, 
+                        font = font, font_size = font_size) * .975/width
+  
   # print(val)
-  ret <- ceiling(val)
+  ret <- sum(ceiling(val))
 
   
   return(ret)
 }
+
+
+#' @description Estimate number of wraps based on text, width, and a font.
+#' @import graphics
+#' @noRd
+get_text_width <- function(txt, font, font_size = 10, units = "inches") {
+  
+  
+  f <- "mono"
+  if (tolower(font) == "arial")
+    f <- "sans"
+  else if (tolower(font) == "times")
+    f <- "serif"
+  
+  #R.devices::devEval("nulldev", {
+    pdf(NULL)
+    par(family = f, ps = font_size)
+    ret <- suppressWarnings(strwidth(txt, units = units)) * .975 
+    dev.off()
+  #})
+  
+
+  return(ret)
+}
+
+
 
 #' @description Subtract 1 from number of lines to get excess lines
 #' @noRd 
@@ -884,47 +1202,5 @@ get_excess_lines <- function(txt, width, font, font_size = 10, units = "inches")
   return(res)
 }
 
-# 
-# getCols <- function(vars = NULL, env = environment(), vars_c = NULL) {
-#   
-#   if (!is.null(vars)) {
-#     print(typeof(substitute(vars, env = env)))
-#           
-#     # Determine if it is a vector or not.  "language" is a vector.
-#     if (typeof(substitute(vars, env = env)) == "language") 
-#       v <- substitute(vars, env = environment())
-#     else {
-#       v <- substitute(list(vars), env = env)
-#     }
-#     
-#     # Turn each item into a character
-#     vars_c <- c()
-#     if (length(v) > 1) {
-#       for (i in 2:length(v)) {
-#         if (suppressWarnings(!is.na(as.integer(as.character(v[[i]])))))
-#           vars_c[[length(vars_c) + 1]] <- as.integer(as.character(v[[i]])) 
-#         else
-#           vars_c[[length(vars_c) + 1]] <- as.character(v[[i]]) 
-#       }
-#       
-#     }
-#   
-#     # Convert list to vector
-#     vars_c <- unlist(vars_c)
-#   
-#   }
-#   
-#   return(vars_c)
-#   
-# }
-# 
-# 
-# getCols(fork)
-# getCols("fork")
-# getCols(1)
-# getCols(c(fork, bork))
-# getCols(c("fork", "bork"))
-# getCols(c(1, 2))
-# v <- c("fork", "bork")
-# getCols(vars_c = v)
+
 

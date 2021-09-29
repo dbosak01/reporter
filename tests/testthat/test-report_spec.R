@@ -225,6 +225,35 @@ test_that("page_by function works as expected.", {
   
 })
 
+test_that("Width parameter on titles and footnotes works as expected.", {
+  
+  tbl <- create_table(mtcars)
+  
+  th <- title_header(tbl, "Table 1.0", right = c("One", "Two"), 
+                             width = "content")
+  
+  expect_equal(th$title_hdr[[1]]$width, "content")
+  expect_error( title_header(tbl, "Table 1.0", right = c("One", "Two"), 
+                             width = "bork"))
+  
+  tbl2 <- create_table(mtcars)
+  ttl <- titles(tbl2, "Table 1.0", 
+                     width = "page") 
+  
+  expect_equal(ttl$titles[[1]]$width, "page")
+  expect_error( titles(tbl2, "Table 1.0", width = as.Date("2021-09-16")))
+  
+  ftnt <- footnotes(tbl2, "Table 1.0", 
+                width = 6)
+  
+  expect_equal(ftnt$footnotes[[1]]$width, 6)
+  expect_error( footnotes(tbl2, "Table 1.0", width = "fork"))
+  
+  tbl3 <- create_table(mtcars)
+  ttl <- titles(tbl3, "Table 1.0") 
+  
+  expect_equal(ttl$titles[[1]]$width, "content")
 
+})
 
 

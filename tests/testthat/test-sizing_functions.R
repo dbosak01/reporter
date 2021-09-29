@@ -88,10 +88,6 @@ test_that("get_splits_text works as expected", {
 
 test_that("prep_data works as expected", {
   
-  # smp <- sample(1:nrow(iris), 20)
-  # dat <- iris[smp, ]
-  # datx <- dat[order(dat$Species), ]
-  # datx$Species <- as.character(datx$Species)
    mw <- max(nchar(as.character(iris$Species)))
   
   
@@ -214,4 +210,54 @@ test_that("get_col_formats works as expected", {
 
   
 })
+
+test_that("get_page_wraps works as expected.", {
+  
+  
+  tbl <- create_table(mtcars) %>% 
+    define(mpg, width = 1) %>% 
+    define(cyl, width = 1) %>% 
+    define(disp, width = 1) %>% 
+    define(hp, width = 1) %>% 
+    define(drat, width = 1) %>% 
+    define(wt, width = 1)
+  
+  wdths <- rep(1, 11)
+  names(wdths) <- names(mtcars)
+
+  res <- get_page_wraps(4, tbl, wdths, .2)
+    
+  expect_equal(length(res), 4)
+  expect_equal(all(c("mpg", "cyl", "disp") %in% res[[1]]), TRUE)
+  expect_equal(all(c("mpg", "cyl", "disp") %in% res[[2]]), FALSE)
+
+  
+})
+
+
+test_that("get_col_widths_rtf works as expected.", {
+  
+  # dat, ts, labels, font, 
+  # font_size, uom, gutter_width
+  
+  df <- mtcars
+  
+  tbl <- create_table(df) %>% 
+    define(mpg, label = "Miles Per Gallon") %>% 
+    define(cyl, width = 1.5) %>% 
+    define(disp, width = 2) 
+
+  lbls <- get_labels(df, tbl)
+    
+  res <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
+  res
+  
+  expect_equal(res[["mpg"]] < 1, TRUE)
+  expect_equal(res[["cyl"]], 1.5)
+  expect_equal(res[["disp"]], 2)
+  expect_equal(res[["hp"]] < .5, TRUE)
+  
+  
+})
+
 

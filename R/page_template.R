@@ -1,3 +1,6 @@
+# The page template is everything except the content: page header/footer,
+# titles, footnotes, etc.
+
 
 # Page Template Functions ----------------------------------------------
 
@@ -10,13 +13,16 @@ page_template_text <- function(rs) {
   pt <- structure(list(), class = c("page_template_text", "list"))
   
   pt$page_header <- get_page_header(rs)
-  pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size, rs$uchar)
-  pt$titles <- get_titles(rs$titles, rs$line_size, rs$uchar)
+  pt$title_hdr <- get_title_header(rs$title_hdr, rs$line_size, rs$line_size, 
+                                   rs$uchar, rs$char_width)
+  pt$titles <- get_titles(rs$titles, rs$line_size, rs$line_size, 
+                          rs$uchar, rs$char_width)
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
     if (!is.null(rs$footnotes[[1]])) {
       if (rs$footnotes[[1]]$valign == "bottom")
-        pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar)
+        pt$footnotes <- get_footnotes(rs$footnotes, rs$line_size, rs$line_size, 
+                                      rs$uchar, rs$char_width)
     }
   
   }
@@ -92,15 +98,13 @@ get_page_header <- function(rs) {
 #' @param width The width to set the title strings to
 #' @return A vector of strings
 #' @noRd
-get_titles <- function(titles, width, uchar = "-") {
+get_titles <- function(titles, content_width, page_width, uchar, char_width) {
   
-  if (is.null(width)) {
+  if (is.null(content_width)) {
     stop("width cannot be null.") 
     
   }
   
-
-  ll <- width
   ret <- c()
   
   if (!is.null(titles)) { 
@@ -110,6 +114,15 @@ get_titles <- function(titles, width, uchar = "-") {
       if (!any(class(ttl) == "title_spec")) {
         stop("titles parameter value is not a title spec.")
       }
+      
+      if (ttl$width == "page")
+        width <- page_width
+      else if (ttl$width == "content")
+        width <- content_width
+      else if (is.numeric(ttl$width))
+        width <- ceiling(ttl$width / char_width)
+      
+      ll <- width 
           
       if (ttl$blank_row %in% c("above", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
@@ -240,15 +253,14 @@ get_page_by <- function(pgby, width, value) {
 #' @param width The width to set the title header to
 #' @return A vector of strings
 #' @noRd
-get_title_header <- function(title_hdr, width, uchar = "-") {
+get_title_header <- function(title_hdr, content_width, page_width, 
+                             uchar = "-", char_width) {
   
-  if (is.null(width)) {
+  if (is.null(content_width)) {
     stop("width cannot be null.") 
     
   }
   
-  
-  ll <- width
   ret <- c()
   
   if (!is.null(title_hdr)) { 
@@ -258,11 +270,22 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
       if (!any(class(ttl_hdr) == "title_hdr"))
         stop("title header parameter value is not a title header.")
       
+      if (ttl_hdr$width == "page")
+        width <- page_width
+      else if (ttl_hdr$width == "content")
+        width <- content_width
+      else if (is.numeric(ttl_hdr$width))
+        width <- ceiling(ttl_hdr$width / char_width)
+      
+      ll <- width 
+      
       if (ttl_hdr$blank_row %in% c("above", "both") & length(ttl_hdr$titles) > 0)
         ret[length(ret) + 1] <- ""
       
-      if (any(ttl_hdr$borders %in% c("top", "all")) & length(ttl_hdr$titles) > 0)
-        ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+      if (any(ttl_hdr$borders %in% c("top", "all")) & length(ttl_hdr$titles) > 0) {
+        #ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+        ret[length(ret) + 1] <-  paste0(rep(uchar, ll), collapse = "")
+      }
       
       maxlen <- length(ttl_hdr$titles)
       if (length(ttl_hdr$right) > maxlen)
@@ -288,7 +311,8 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
         if (gp >= 0) {
           
   
-            ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
+            #ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
+            ln <- paste0(pad_right(t, ll - nchar(h)), h)
   
           
         } else {
@@ -313,8 +337,11 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
       }
       
       if (any(ttl_hdr$borders %in% c("bottom", "all")) & 
-          length(ttl_hdr$titles) > 0)
-        ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+          length(ttl_hdr$titles) > 0) {
+        #ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
+        ret[length(ret) + 1] <-  paste0(rep(uchar, ll), collapse = "")
+        
+      }
       
       if (ttl_hdr$blank_row %in% c("below", "both") & 
           length(ttl_hdr$titles) > 0)
@@ -330,110 +357,18 @@ get_title_header <- function(title_hdr, width, uchar = "-") {
 
 
 
-#' Get title header text strings suitable for printing
-#' @import stringi
-#' @param title_hdr A title_hdr object
-#' @param width The width to set the title header to
-#' @return A vector of strings
-#' @noRd
-get_title_header_back <- function(title_hdr, width, uchar = "-") {
-  
-  if (is.null(width)) {
-    stop("width cannot be null.") 
-    
-  }
-  
-  
-  ll <- width
-  ret <- c()
-  
-  if (!is.null(title_hdr)) { 
-    
-    if (!any(class(title_hdr) == "title_hdr"))
-      stop("title header parameter value is not a title header.")
-    
-    if (title_hdr$blank_row %in% c("above", "both") & length(title_hdr$titles) > 0)
-      ret[length(ret) + 1] <- ""
-    
-    if (any(title_hdr$borders %in% c("top", "all")) & length(title_hdr$titles) > 0)
-      ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
-    
-    maxlen <- length(title_hdr$titles)
-    if (length(title_hdr$right) > maxlen)
-      maxlen <- length(title_hdr$right)
-    
-    hdr <- title_hdr$right
-    
-    for (i in seq_len(maxlen)) {
-      
-      if (i <= length(title_hdr$titles))
-        t <- title_hdr$titles[i]
-      else 
-        t <- ""
-      
-      if (i <= length(hdr))
-        h <- hdr[i]
-      else 
-        h <- ""
-      
-      gp <- ll - nchar(t) - nchar(h)
-      
-      #print("titles")
-      if (gp >= 0) {
-        
-        
-        ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
-        
-        
-      } else {
-        warning(paste0("Title header exceeds available width.\n",
-                       "Title: ", t, "\n",
-                       "Header: ", h, "\n",
-                       "Title length: ", nchar(t), "\n",
-                       "Header length: ", nchar(h), "\n",
-                       "Line length: ", ll, "\n"))
-        
-        tgp <- ll - 3
-        if (tgp >= 0) {
-          
-          ln <- paste0(substr(paste0(pad_right(t, ll - nchar(h)), h, " "), 
-                              1, tgp), "...")
-          
-        } else ln <- ""
-      }
-      
-      
-      ret[length(ret) + 1] <- ln
-    }
-    
-    if (any(title_hdr$borders %in% c("bottom", "all")) & 
-        length(title_hdr$titles) > 0)
-      ret[length(ret) + 1] <-  paste0(paste0(rep(uchar, ll), collapse = ""), " ")
-    
-    if (title_hdr$blank_row %in% c("below", "both") & 
-        length(title_hdr$titles) > 0)
-      ret[length(ret) + 1] <- ""
-    
-    
-  }
-  
-  
-  return(ret)
-}
-
-
 #' Get footnote text strings suitable for printing
 #' @param rs The report spec
 #' @return A vector of strings
 #' @noRd
-get_footnotes <- function(footnotes, width, uchar = "-") {
+get_footnotes <- function(footnotes, content_width, page_width, 
+                          uchar = "-", char_width) {
   
-  if (is.null(width)) {
+  if (is.null(char_width)) {
     stop("width cannot be null.") 
     
   }
   
-  ll <- width
   ret <- c()
   
   if (!is.null(footnotes)) {
@@ -442,12 +377,24 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
       if (!any(class(ftn) == "footnote_spec"))
         stop("footnotes parameter value is not a footnote spec.")
       
+      if (ftn$width == "page")
+        width <- page_width
+      else if (ftn$width == "content")
+        width <- content_width
+      else if (is.numeric(ftn$width))
+        width <- ceiling(ftn$width / char_width)
+      
+      ll <- width 
+      
       if (ftn$blank_row %in% c("above", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""
       
-      if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0)
-        ret[length(ret) + 1] <- paste0(rep(uchar, ll), 
-                                              collapse = "")
+      if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0) {
+        # ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll), 
+        #                                       collapse = ""), " ")
+        
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll), collapse = "")
+      }
       
       for (i in seq_along(ftn$footnotes)) {
         
@@ -457,6 +404,13 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
         
         #print("footnotes")
         if (gp > 0) {
+          
+          # if (ftn$align == "left")
+          #   ln <- pad_right(paste0(f, " "), ll + 1)
+          # else if (ftn$align == "right")
+          #   ln <- pad_left(paste0(f, " "), ll + 1)
+          # else if (ftn$align == "center" | ftn$align == "centre")
+          #   ln <- pad_both(paste0(f, " "), ll + 1)
           
           if (ftn$align == "left")
             ln <- pad_right(f, ll)
@@ -489,9 +443,11 @@ get_footnotes <- function(footnotes, width, uchar = "-") {
         ret[length(ret) + 1] <- ln
       }
       
-      if (any(ftn$borders %in% c("bottom", "all")) & length(ftn$footnotes) > 0)
-        ret[length(ret) + 1] <- paste0(rep(uchar, ll), 
-                                              collapse = "")
+      if (any(ftn$borders %in% c("bottom", "all")) & length(ftn$footnotes) > 0) {
+        # ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll), 
+        #                                       collapse = ""), " ")
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll), collapse = "")
+      }
       
       if (ftn$blank_row %in% c("below", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""
@@ -599,7 +555,7 @@ get_page_footer <- function(rs) {
 #' contained in this object.
 #' @noRd
 page_info <- function(data, keys, font_name, col_width, col_align,
-                      label, label_align, page_by = NULL) {
+                      label, label_align, page_by = NULL, table_align = NULL) {
   
   ret <- structure(list(), class = c("page_info", "list"))
   
@@ -613,6 +569,7 @@ page_info <- function(data, keys, font_name, col_width, col_align,
   ret$total_pages <- 0
   ret$page_number <- 0
   ret$page_by <- page_by
+  ret$table_align <- table_align
   
   return(ret)
   

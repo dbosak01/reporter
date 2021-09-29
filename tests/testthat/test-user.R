@@ -7,7 +7,7 @@ data_dir <- base_path
 base_path <- tempdir()
 data_dir <- "."
 
-dev <- TRUE
+dev <- FALSE
 
 
 test_that("user1: demo table works.", {
@@ -627,7 +627,6 @@ test_that("user6: listings with page break works as expected.", {
     lns <- readLines(res$modified_path)
     
     expect_equal(length(lns), res$pages * res$line_count)
-    
     
     res <- write_report(rpt, output_type = "RTF")
     expect_equal(file.exists(res$modified_path), TRUE)

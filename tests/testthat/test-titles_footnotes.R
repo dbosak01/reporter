@@ -4,6 +4,14 @@ base_path <- "c:/packages/reporter/tests/testthat"
 
 base_path <- tempdir()
 
+cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+              "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+              "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+              "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+              "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+              "qui officia deserunt mollit anim id est laborum.")
+
 test_that("ttfn1: single title right aligned works.", {
   
   fp <- file.path(base_path, "titles/ttfn1.out")
@@ -489,4 +497,361 @@ test_that("ttfn23: Multiple title_headers with multiple titles works as expected
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+
+test_that("ttfn24: Title and Footnote widths work as expected on table.", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn24.out")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat) %>% 
+    titles("Table 1.0", "My Nice Report with Widths",
+           width = "page", align = "right") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              width = "page", align = "right")
+  
+  rpt <- create_report(fp, output_type = "TXT", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("ttfn25: Title and Footnote widths work as expected on report", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn25.out")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "TXT", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1") %>% 
+    titles("Table 1.0", "My Nice Report with Widths",
+           borders = c("top", "bottom"),
+           width = 7, align = "right") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+              borders = c("top", "bottom"), 
+              width = 7, align = "right")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("ttfn26: Title and Footnote specific widths work as expected.", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn26.out")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") %>% 
+    titles("Table 1.0", "My Nice Report with Borders",
+           borders = c("top", "bottom"),
+           width = 7, align = "right") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom"), 
+              width = 7, align = "right")
+  
+  rpt <- create_report(fp, output_type = "TXT", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1") 
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("ttfn27: Title and Footnote widths work as expected on RTF report", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn27.rtf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1") %>% 
+    titles("Table 1.0", "My Nice Report with Widths",
+           borders = c("top", "bottom"),
+           width = 7, align = "right") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+              borders = c("top", "bottom"), 
+              width = 7, align = "right")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("ttfn28: Title and Footnote widths work as expected on PDF report", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn28.pdf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "PDF", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1") %>% 
+    titles("Table 1.0", "My Nice Report with Widths",
+           borders = c("top", "bottom"),
+           width = 7, align = "left") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+              borders = c("top", "bottom"), 
+              width = 7, align = "left")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("ttfn29: Title Header widths work as expected on PDF report", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn29.pdf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "PDF", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1") %>% 
+    title_header("Table 1.0", "My Nice Report with Widths", right = c("Right"),
+           borders = c("top", "bottom"),
+           width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+              borders = c("top", "bottom"), 
+              width = 7, align = "right")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+
+test_that("ttfn30: Title Header widths work as expected on RTF report", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn30.rtf")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all") 
+  
+  rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "right") %>%
+    page_footer("Left1", "Center1", "Right1") %>% 
+    title_header("Table 1.0", "My Nice Report with Widths", right = "Right",
+           borders = c("top", "bottom"),
+           width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+              borders = c("top", "bottom"), 
+              width = 7, align = "right")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("ttfn31: Title Header specific widths work as expected.", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn31.out")
+  
+  dat <- iris[1:20, ] 
+  
+  tbl <- create_table(dat, borders = "all", width = 7.9) %>% 
+    title_header("Table 1.0", "My Nice Report with Borders", right = "Right",
+           borders = c("top", "bottom"),
+           width = 8) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom"), 
+              width = 8, align = "left")
+  
+  rpt <- create_report(fp, output_type = "TXT", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl, align = "center") %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") 
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("ttfn32: Text Spec specific widths work as expected.", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn32.out")
+
+  
+  txt <- create_text(cnt, borders = "all", width = 7) %>% 
+    title_header("Table 1.0", "My Nice Report with Width", right = "Right",
+                 borders = c("top", "bottom"),
+                 width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom"), 
+              width = 7, align = "left")
+  
+  rpt <- create_report(fp, output_type = "TXT", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center") %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") 
+  
+  res <- write_report(rpt)
+  res
+
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+  
+  
+})
+
+test_that("ttfn33: Plot Spec specific widths work as expected on RTF.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "titles/ttfn33.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  
+  plt <- create_plot(p, borders = "all", height = 3, width = 7) %>% 
+    title_header("Table 1.0", "My Nice Report with Width", right = "Right",
+                 borders = c("top", "bottom"),
+                 width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom"), 
+              width = 7, align = "left")
+  
+  rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") 
+  
+  res <- write_report(rpt)
+  res
+  
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+  
+})
+
+test_that("ttfn34: Plot Spec specific widths work as expected on PDF.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "titles/ttfn34.pdf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  
+  plt <- create_plot(p, borders = "all", height = 3, width = 7) %>% 
+    title_header("Table 1.0", "My Nice Report with Width", right = "Right",
+                 borders = c("top", "bottom"),
+                 width = 7) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom"), 
+              width = 7, align = "left")
+  
+  rpt <- create_report(fp, output_type = "PDF", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") 
+  
+  res <- write_report(rpt)
+  res
+  
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+  
+})
+
+
 

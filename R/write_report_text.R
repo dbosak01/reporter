@@ -113,13 +113,18 @@ create_content <- function(rs, ls, pt) {
         if (!is.null(pt$page_header))
           lns <- append(lns, paste0(blank_margin_left, pt$page_header))
         
-        if (!is.null(pt$title_hdr))
-          lns <- append(lns, paste0(blank_margin_left, 
-                                     trimws(pt$title_hdr, which = "right")))
+        if (!is.null(pt$title_hdr)) {
+          tmp <- trimws(pad_any(pt$title_hdr, rs$line_size, get_justify(cont$align)),
+                        which = "right")
+          lns <- append(lns, paste0(blank_margin_left, tmp))
+        }
         
-        if (!is.null(pt$titles))
-          lns <- append(lns, paste0(blank_margin_left, 
-                                     trimws(pt$titles, which = "right")))
+        if (!is.null(pt$titles)) {
+          
+          tmp <- trimws(pad_any(pt$titles, rs$line_size, get_justify(cont$align)),
+                        which = "right")
+          lns <- append(lns, paste0(blank_margin_left, tmp))
+        }
         
       }
       
@@ -138,9 +143,11 @@ create_content <- function(rs, ls, pt) {
       
       if (page_open == FALSE) {
         
-        if (!is.null(pt$footnotes))
-          lns <- append(lns, paste0(blank_margin_left,
-                                     trimws(pt$footnotes, which = "right")))
+        if (!is.null(pt$footnotes)) {
+          tmp <- trimws(pad_any(pt$footnotes, rs$line_size, get_justify(cont$align)),
+                        which = "right")
+          lns <- append(lns, paste0(blank_margin_left, tmp))
+        }
         
         if (!is.null(pt$page_footer))
           lns <- append(lns, paste0(blank_margin_left, pt$page_footer))
@@ -473,15 +480,20 @@ write_content <- function(rs, ls, pt) {
           writeLines(enc2utf8(paste0(blank_margin_left, pt$page_header)), 
                      con = f, useBytes = TRUE)
         
-        if (!is.null(pt$title_hdr))
-          writeLines(enc2utf8(paste0(blank_margin_left, 
-                                     trimws(pt$title_hdr, which = "right"))), 
+        if (!is.null(pt$title_hdr)) {
+          tmp <- trimws(pad_any(pt$title_hdr, rs$line_size, get_justify(cont$align)),
+                        which = "right")
+          
+          writeLines(enc2utf8(paste0(blank_margin_left, tmp)), 
                      con = f, useBytes = TRUE)
+        }
         
-        if (!is.null(pt$titles))
-           writeLines(enc2utf8(paste0(blank_margin_left, 
-                             trimws(pt$titles, which = "right"))), 
+        if (!is.null(pt$titles)) {
+           tmp <- trimws(pad_any(pt$titles, rs$line_size, get_justify(cont$align)),
+                        which = "right")
+           writeLines(enc2utf8(paste0(blank_margin_left, tmp)), 
                       con = f, useBytes = TRUE)
+        }
         
       }
       
@@ -501,10 +513,12 @@ write_content <- function(rs, ls, pt) {
       
       if (page_open == FALSE) {
         
-        if (!is.null(pt$footnotes))
-          writeLines(enc2utf8(paste0(blank_margin_left,
-                            trimws(pt$footnotes, which = "right"))), 
+        if (!is.null(pt$footnotes)) {
+          tmp <- trimws(pad_any(pt$footnotes, rs$line_size, get_justify(cont$align)),
+                        which = "right")
+          writeLines(enc2utf8(paste0(blank_margin_left, tmp)), 
                      con = f, useBytes = TRUE)
+        }
         
         if (!is.null(pt$page_footer))
           writeLines(enc2utf8(paste0(blank_margin_left, pt$page_footer)), 
@@ -542,7 +556,7 @@ page_setup <- function(rs) {
   debug <- FALSE
   
   if (debug) {
-    print(paste("Line height:", rs$line_height))
+    print(paste("Row height:", rs$row_height))
     print(paste("Character width:", rs$char_width))
   }
   
@@ -566,7 +580,7 @@ page_setup <- function(rs) {
   
   # Line count is the number of lines that will fit in the content size height
   if (is.null(rs$user_line_count))
-    rs$line_count <- floor(rs$content_size[["height"]] / rs$line_height)
+    rs$line_count <- floor(rs$content_size[["height"]] / rs$row_height)
   else
     rs$line_count <- rs$user_line_count
   if (debug)
@@ -604,7 +618,7 @@ page_setup <- function(rs) {
   
   # Calculate blank margins, if specified
   if (rs$blank_margins) {
-    rs$blank_margin_top <- floor((rs$margin_top - rs$min_margin) / rs$line_height)
+    rs$blank_margin_top <- floor((rs$margin_top - rs$min_margin) / rs$row_height)
   } else 
     rs$blank_margin_top <- 0
   if (debug)

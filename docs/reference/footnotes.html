@@ -85,7 +85,7 @@ Footnotes may also be added directly to table, text, or plot content." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -185,7 +185,8 @@ Footnotes may also be added directly to table, text, or plot content.</p>
   align <span class='op'>=</span> <span class='st'>"left"</span>,
   blank_row <span class='op'>=</span> <span class='st'>"above"</span>,
   borders <span class='op'>=</span> <span class='st'>"none"</span>,
-  valign <span class='op'>=</span> <span class='cn'>NULL</span>
+  valign <span class='op'>=</span> <span class='cn'>NULL</span>,
+  width <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -212,16 +213,33 @@ Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.</p></
     <tr>
       <th>borders</th>
       <td><p>Whether to print a border above or below the footnote. Valid
-values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
+values are 'top', 'bottom', 'outside', 'inside', 'all',  or 'none'.  
+Default is 'none'.  
 For fixed width reports, the 
 border character will be taken from the value of the <code>uchar</code> parameter
-on the <code><a href='options_fixed.html'>options_fixed</a></code> function.</p></td>
+on the <code><a href='options_fixed.html'>options_fixed</a></code> function.  The 
+'left' and 'right' border specifications only apply to RTF reports.</p></td>
     </tr>
     <tr>
       <th>valign</th>
       <td><p>The vertical position to align the footnotes.  Valid
 values are: 'top' and 'bottom'.  For footnotes attached to a report,
 default is 'bottom'.  For footnotes attached to content, default is 'top'.</p></td>
+    </tr>
+    <tr>
+      <th>width</th>
+      <td><p>The width of the footnotes block.  If the footnotes are attached
+to the report, valid values are 'page' or a numeric width, and the default
+is 'page'. If the footnotes are attached to the
+table, plot, or text content, the valid values are 'page', 'content' or a 
+numeric value, and the default is 'content'.  The value 'content' means the 
+footnotes will be aligned to the width of the table, plot, or text
+content.  The value
+'page' means the footnotes will be aligned to the width of the page. 
+In addition to these two convenience settings, you 
+may also specify a specific width in the current unit of measure.  The
+unit of measure is determined by the 'units' parameter on 
+<code><a href='create_report.html'>create_report</a></code>.</p></td>
     </tr>
     </table>
 

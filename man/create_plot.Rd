@@ -4,7 +4,7 @@
 \alias{create_plot}
 \title{Create plot content}
 \usage{
-create_plot(x, height, width)
+create_plot(x, height, width, borders = "none")
 }
 \arguments{
 \item{x}{The plot to create.  Specifically, this parameter should be 
@@ -14,6 +14,11 @@ or \code{\link[survminer]{ggsurvplot}}.}
 \item{height}{The height of the plot in the specified units of measure.}
 
 \item{width}{The width of the plot in the specified units of measure.}
+
+\item{borders}{Whether and where to place a border. Valid values are 'top',
+'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
+Default is 'none'.  The 'left', 'right', and 'outside' 
+border specifications only apply to RTF reports.}
 }
 \value{
 The plot specification.

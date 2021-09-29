@@ -1,8 +1,12 @@
 Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
-Version: 1.1.6
-Author: David Bosak
+Version: 1.2.0
+Authors@R: c( 
+    person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
+    person("Kevin", "Kramer", role = "ctb"),
+    person("Archytas Clinical Solutions", role = "cph")
+    )
 Maintainer: David Bosak <dbosak01@gmail.com>
 Description: Contains functions to create regulatory-style statistical reports.
     Originally designed to create tables, listings, and figures for the 
@@ -32,11 +36,12 @@ Suggests:
     survminer,
     utils,
     logr,
-    covr,
-    graphics
+    covr
 Imports: fmtr,
          stringi,
          crayon,
-         jpeg
+         jpeg,
+         graphics,
+         grDevices
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

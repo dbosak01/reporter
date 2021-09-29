@@ -1,7 +1,7 @@
 
 # Right now only png supported
 #' @noRd
-get_image_rtf <- function(file_path, width, height, units, font_size) {
+get_image_rtf <- function(file_path, width, height, units) {
   
   if (!units %in% c("inches", "cm")) {
     stop("Invalid units.") 
@@ -18,12 +18,8 @@ get_image_rtf <- function(file_path, width, height, units, font_size) {
   ret <- paste0("{\\pict\\pngblip\\picwgoal",round(width*conv),"\\pichgoal",round(height*conv)," \n")
   
   # Convert image to byte codes
-  if (font_size == 8)
-    ret <- paste0(ret, get_image_bytes(file_path), "\n} \\par\\sl-180\\ql")
-  else if (font_size == 12)
-    ret <- paste0(ret, get_image_bytes(file_path), "\n} \\par\\sl-275\\ql")
-  else 
-    ret <- paste0(ret, get_image_bytes(file_path), "\n} \\par\\sl-225\\ql")
+  ret <- paste0(ret, get_image_bytes(file_path), "\n}")
+
   
   return(ret)
 }

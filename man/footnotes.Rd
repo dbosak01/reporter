@@ -10,7 +10,8 @@ footnotes(
   align = "left",
   blank_row = "above",
   borders = "none",
-  valign = NULL
+  valign = NULL,
+  width = NULL
 )
 }
 \arguments{
@@ -25,14 +26,29 @@ footnotes(
 Valid values are 'above', 'below', 'both', or 'none'.  Default is 'above'.}
 
 \item{borders}{Whether to print a border above or below the footnote. Valid
-values are 'top', 'bottom', 'all',  or 'none'.  Default is 'none'.  
+values are 'top', 'bottom', 'outside', 'inside', 'all',  or 'none'.  
+Default is 'none'.  
 For fixed width reports, the 
 border character will be taken from the value of the \code{uchar} parameter
-on the \code{\link{options_fixed}} function.}
+on the \code{\link{options_fixed}} function.  The 
+'left' and 'right' border specifications only apply to RTF reports.}
 
 \item{valign}{The vertical position to align the footnotes.  Valid
 values are: 'top' and 'bottom'.  For footnotes attached to a report,
 default is 'bottom'.  For footnotes attached to content, default is 'top'.}
+
+\item{width}{The width of the footnotes block.  If the footnotes are attached
+to the report, valid values are 'page' or a numeric width, and the default
+is 'page'. If the footnotes are attached to the
+table, plot, or text content, the valid values are 'page', 'content' or a 
+numeric value, and the default is 'content'.  The value 'content' means the 
+footnotes will be aligned to the width of the table, plot, or text
+content.  The value
+'page' means the footnotes will be aligned to the width of the page. 
+In addition to these two convenience settings, you 
+may also specify a specific width in the current unit of measure.  The
+unit of measure is determined by the 'units' parameter on 
+\code{\link{create_report}}.}
 }
 \value{
 The modified report.

@@ -10,7 +10,9 @@ create_report(
   orientation = "landscape",
   units = "inches",
   paper_size = "letter",
-  missing = ""
+  missing = "",
+  font = "fixed",
+  font_size = NULL
 )
 }
 \arguments{
@@ -42,6 +44,17 @@ to replace them with an empty string, which removes them from the report.
 To display missing values as is, set the missing parameter to NULL.  To
 replace missing values with a character string (such as ".", "-", or "<NA>")
 pass the desired character string to the missing parameter.}
+
+\item{font}{The font to use on the report.  The font specified will be
+used for the entire report.  Valid values are "Courier", "Arial", "Times",
+and "fixed".  The value of "fixed" will create a fixed-width, text style
+report in Courier font.  The \code{font} parameter only applies to RTF reports
+at this time.  The default value is "fixed".}
+
+\item{font_size}{The size of the font to use on the report. The \code{font_size}
+specified will be used for the entire report.  Valid values are 8, 10, 
+and 12.  The \code{font_size} parameter only applies to RTF and PDF output types.
+The default value is 10.}
 }
 \value{
 A new report_spec object.

@@ -132,11 +132,11 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # Try to figure out a way to put these widths in report spec
   #rs$column_widths[length(rs$column_widths) + 1] <- widths_uom
 
-  # Convert to text measurements
-  # Adjust by -1 to account for space between columns
+  # # Convert to text measurements
+  # # Adjust by -1 to account for space between columns
   widths_char <- round(widths_uom / rs$char_width) - 1
-  # print("Widths Char")
-  # print(widths_char)
+  # # print("Widths Char")
+  # # print(widths_char)
 
   # Split long text strings into multiple rows
   fdat <- split_cells(fdat, widths_char)
@@ -153,7 +153,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, widths_char)
+  wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1)
   # print("wraps")
   # print(wraps)
 
@@ -240,38 +240,13 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (length(rws) > 0)
     ls <- max(nchar(rws))
   
-  if (!is.null(ts$title_hdr))
-    ttls <- get_title_header(ts$title_hdr, ls - 1, rs$uchar)
-  else
-    ttls <- get_titles(ts$titles, ls, rs$uchar) 
+  if (!is.null(ts$title_hdr)) {
+    ttls <- get_title_header(ts$title_hdr, ls , rs$line_size, 
+                             rs$uchar, rs$char_width)
+  } else
+    ttls <- get_titles(ts$titles, ls, rs$line_size, rs$uchar, rs$char_width) 
   
-  ftnts <- c()
-  vflag <- FALSE
-  
-  # Deal with valign paramter
-  if (!is.null(ts$footnotes)) {
-    if (!is.null(ts$footnotes[[length(ts$footnotes)]])) {
-      if (ts$footnotes[[length(ts$footnotes)]]$valign == "bottom") {
 
-        vflag <- TRUE
-        ftnts <- get_footnotes(ts$footnotes, rs$line_size, rs$uchar) 
-      } else {
-        
-        ftnts <- get_footnotes(ts$footnotes, ls, rs$uchar) 
-      }
-    
-    }
-  } else {
-
-    if (!is.null(rs$footnotes[[1]])) {
-      if (!is.null(rs$footnotes[[1]]$valign)) {
-        if (rs$footnotes[[1]]$valign == "top") {
-
-          ftnts <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar) 
-        } 
-      }
-    }
-  }
   #print("Titles")
   #print(ttls)
   
@@ -289,40 +264,99 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (content_blank_row %in% c("above", "both"))
     a <- ""
   
+  # Add top border if requested
+  tbrdr <- NULL
+  if (any(ts$borders %in% c("top", "all", "outside")))
+    tbrdr <-  paste0(paste0(rep(rs$uchar,  ls - 1), collapse = ""), " ")
+  
+  # Add bottom border if requested
+  bbrdr <- NULL
+  if (any(ts$borders %in% c("bottom", "all", "outside")))
+    bbrdr <-  paste0(paste0(rep(rs$uchar,  ls - 1), collapse = ""), " ")
+  
+  
+  # Append everything together
+  ret <- c(a, ttls, pgby, tbrdr, shdrs, hdrs, rws, bbrdr)
+  
+  # Footnotes are complicated enough that they need their own function
+  ftnts <- get_page_footnotes_text(rs, ts, ls, lpg_rows, 
+                                   length(ret), wrap_flag, content_blank_row)
+  
+  # Append footnotes 
+  ret <- c(ret, ftnts)
+  
+
+  
+  return(ret) 
+}
+
+#' @description Function to deal with complexities of footnotes.  Complexities
+#' include valign parameter and width parameter.
+#' @noRd
+get_page_footnotes_text <- function(rs, spec, spec_width, 
+                                    lpg_rows, row_count, wrap_flag,
+                                    content_blank_row) {
+  
+  ftnts <- c()
+  vflag <- FALSE
+  
+  # Deal with valign parameter
+  if (!is.null(spec$footnotes)) {
+    if (!is.null(spec$footnotes[[length(spec$footnotes)]])) {
+      if (spec$footnotes[[length(spec$footnotes)]]$valign == "bottom") {
+        vflag <- TRUE
+      } 
+      ftnts <- get_footnotes(spec$footnotes, spec_width, rs$line_size, 
+                             rs$uchar, rs$char_width) 
+      
+    }
+  } else {
+    
+    if (!is.null(rs$footnotes[[1]])) {
+      if (!is.null(rs$footnotes[[1]]$valign)) {
+        if (rs$footnotes[[1]]$valign == "top") {
+          
+          ftnts <- get_footnotes(rs$footnotes, spec_width, rs$line_size, 
+                                 rs$uchar, rs$char_width) 
+        } 
+      }
+    }
+  }
+  
   b <- NULL
   if (content_blank_row %in% c("below", "both"))
     b <- ""
   
-  blnks <- c()
+  ublnks <- c()
+  lblnks <- c()
+  
+  len_diff <- rs$body_line_count - lpg_rows - row_count - length(ftnts) - length(b)
+  
   if (vflag) {
-    ret <- c(a, ttls, pgby, shdrs, hdrs, rws, b)
-
-    len_diff <- rs$body_line_count - lpg_rows - length(ret) - length(ftnts)
     
     # At some point will have to deal with wrap flag
     # Right now cannot put anything in between end of content
     # and the start of the footnote.  Edge case but should still
     # fix at some point.
     if (len_diff > 0) {
-      blnks <- rep("", len_diff)
-      ret <- c(ret, blnks, ftnts) 
+      ublnks <- c(b, rep("", len_diff))
     }
-      
+    
   } else { 
-    
-    ret <- c(a, ttls, pgby, shdrs, hdrs, rws, ftnts, b)
-    
-    len_diff <- rs$body_line_count - lpg_rows - length(ret)
+  
+  
     if (wrap_flag & len_diff > 0) {
-      blnks <- rep("", len_diff)
-      ret <- c(ret, blnks) 
+      lblnks <- c(rep("", len_diff), b)
+    } else {
+      lblnks <- b
     }
     
   }
   
-
+  ret <- c(ublnks, ftnts, lblnks)
   
-  return(ret) 
+  return(ret)
+  
 }
 
 # Sub-Functions -----------------------------------------------------------
@@ -343,11 +377,15 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
     shdrs <- get_spanning_header(rs, ts, pi)   
     hdrs <- get_table_header(rs, ts, pi)  
   }
+  
+  w <- ceiling(sum(pi$col_width) / rs$char_width)
 
   if (is.null(ts$title_hdr))
-    ttls <- get_titles(ts$titles, rs$line_size, rs$uchar) 
-  else 
-    ttls <- get_title_header(ts$title_hdr, rs$line_size, rs$uchar)
+    ttls <- get_titles(ts$titles, w, rs$line_size, rs$uchar, rs$char_width) 
+  else {
+    ttls <- get_title_header(ts$title_hdr, w, rs$line_size, rs$uchar, 
+                             rs$char_width)
+  }
   
   pgb <- c()
   if (!is.null(ts$page_by))
@@ -358,15 +396,27 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   #print(length(pgb))
   
   # print(paste("Table titles:", ttls))
+  tbrdr <- 0
+  if (any(ts$borders %in% c("all", "top", "outside")))
+      tbrdr <- 1
+      
+  bbrdr <- 0
+  if (any(ts$borders %in% c("all", "bottom", "outside")))
+    bbrdr <- 1
   
-  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb)
+  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb) + tbrdr
   
   if (content_blank_row %in% c("above", "both"))
       ret["blank_upper"] <- 1
   
-  ftnts <- get_footnotes(ts$footnotes, rs$line_size) 
+  ftnts <- get_footnotes(ts$footnotes, w, rs$line_size, rs$uchar, rs$char_width) 
+  rftnts <- get_footnotes(rs$footnotes, w, rs$line_size, rs$uchar, rs$char_width) 
   
-  ret["lower"] <- length(ftnts) 
+  if (has_top_footnotes(rs)) {
+    ret["lower"] <- length(ftnts) + length(rftnts) + bbrdr
+  } else {
+    ret["lower"] <- length(ftnts) + bbrdr
+  }
 
   if (content_blank_row %in% c("both", "below"))
     ret["blank_lower"] <- 1
@@ -436,104 +486,109 @@ get_table_header <- function(rs, ts, pi) {
 #' @noRd
 get_spanning_header <- function(rs, ts, pi) {
   
-  spns <- ts$col_spans
-  cols <- pi$keys
-  cols <- cols[!is.controlv(cols)]
-  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
-  w <- w[cols]
-  
-  # print("Cols:")
-  # print(cols)
-  #print(w)
-
-  # Figure out how many levels there are, 
-  # and organize spans by level
-  lvls <- c()     # Unique levels
-  slvl <- list()  # Will be a list of lists of spans
-  for (spn in spns) {
-
-    if (!spn$level %in% lvls) {
-      lvls[length(lvls) + 1] <- spn$level
-      slvl[[spn$level]] <- list()
-    }
-    slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
-  }
-  
-  # Get unique levels and sort in decreasing order so we go from top down
-  lvls <- sort(unique(lvls), decreasing = TRUE)
-  # print("Levels:")
-  # print(lvls)
+  # spns <- ts$col_spans
+  # cols <- pi$keys
+  # cols <- cols[!is.controlv(cols)]
+  # w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
+  # w <- w[cols]
   # 
-  # print("Spanning levels:")
-  # print(slvl)
+  # # print("Cols:")
+  # # print(cols)
+  # #print(w)
+  # 
+  # # Figure out how many levels there are, 
+  # # and organize spans by level
+  # lvls <- c()     # Unique levels
+  # slvl <- list()  # Will be a list of lists of spans
+  # for (spn in spns) {
+  # 
+  #   if (!spn$level %in% lvls) {
+  #     lvls[length(lvls) + 1] <- spn$level
+  #     slvl[[spn$level]] <- list()
+  #   }
+  #   slvl[[spn$level]][[length(slvl[[spn$level]]) + 1]] <- spn
+  # }
+  # 
+  # # Get unique levels and sort in decreasing order so we go from top down
+  # lvls <- sort(unique(lvls), decreasing = TRUE)
+  # # print("Levels:")
+  # # print(lvls)
+  # # 
+  # # print("Spanning levels:")
+  # # print(slvl)
+  # 
+  # # Create data structure to map spans to columns and columns widths by level
+  # # - Seed span_num with negative index numbers to identify unspanned columns
+  # # - Also add one to each column width for the blank space between columns 
+  # d <- data.frame(colname = cols, colwidth = w + 1, 
+  #                 span_num = seq(from = -1, to = -length(cols), by = -1), 
+  #                 stringsAsFactors = FALSE)
+  # 
+  # wlvl <- list()  # Create one data structure for each level
+  # for (l in lvls) {
+  # 
+  #   t <- d  # Copy to temporary variable
+  #   
+  #   # if column is in spanning column list, populate structure with index.
+  #   # Otherwise, leave as negative value.
+  #   for (i in 1:length(slvl[[l]])) {
+  #     cl <- slvl[[l]][[i]]$span_cols
+  #     
+  #     
+  #     # Span specifications can be a vector of column names or numbers
+  #     if (typeof(cl) == "character")
+  #       t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
+  #     else 
+  #       t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
+  #     
+  # 
+  #   }
+  #   
+  #   # Aggregate data structures to get span widths for each span
+  #   s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
+  # 
+  #   # Then put back in original column order
+  #   s$span <- factor(s$span, levels = unique(t$span_num))
+  #   s <- s[order(s$span), ]
+  #   rownames(s) <- NULL
+  # 
+  #   # Prep data structure
+  #   s$span <- unique(t$span_num)
+  #   s$label <- ""
+  #   s$align <- ""
+  #   s$n <- NA
+  #   s$name <- ""
+  #   s$underline <- TRUE
+  #   
+  #   # Populate data structure with labels, alignments, and n values from 
+  #   # spanning column objects
+  #   counter <- 1
+  #   for (index in s$span) {
+  #     if (index > 0) {
+  #       s$label[counter] <- slvl[[l]][[index]]["label"]
+  #       s$align[counter] <- slvl[[l]][[index]]$label_align
+  #       s$underline[counter] <- slvl[[l]][[index]]$underline
+  #       if (!is.null(slvl[[l]][[index]]$n))
+  #         s$n[counter] <- slvl[[l]][[index]]$n
+  # 
+  #     }
+  #     s$name[counter] <- paste0("Span", counter)
+  #     counter <- counter + 1
+  #   }
+  #   
+  #   # Apply n counts to labels
+  #   if (!is.null(ts$n_format)) {
+  #     s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
+  #   }
+  # 
+  #   wlvl[[l]] <- s
+  # 
+  # }
   
-  # Create data structure to map spans to columns and columns widths by level
-  # - Seed span_num with negative index numbers to identify unspanned columns
-  # - Also add one to each column width for the blank space between columns 
-  d <- data.frame(colname = cols, colwidth = w + 1, 
-                  span_num = seq(from = -1, to = -length(cols), by = -1), 
-                  stringsAsFactors = FALSE)
-  
-  wlvl <- list()  # Create one data structure for each level
-  for (l in lvls) {
-
-    t <- d  # Copy to temporary variable
-    
-    # if column is in spanning column list, populate structure with index.
-    # Otherwise, leave as negative value.
-    for (i in 1:length(slvl[[l]])) {
-      cl <- slvl[[l]][[i]]$span_cols
-      
-      
-      # Span specifications can be a vector of column names or numbers
-      if (typeof(cl) == "character")
-        t$span_num <- ifelse(t$colname %in% cl, i, t$span_num)
-      else 
-        t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
-      
-
-    }
-    
-    # Aggregate data structures to get span widths for each span
-    s <- aggregate(x = list(width = t$colwidth), by = list(span = t$span_num), FUN = sum)
-
-    # Then put back in original column order
-    s$span <- factor(s$span, levels = unique(t$span_num))
-    s <- s[order(s$span), ]
-    rownames(s) <- NULL
-
-    # Prep data structure
-    s$span <- unique(t$span_num)
-    s$label <- ""
-    s$align <- ""
-    s$n <- NA
-    s$name <- ""
-    s$underline <- TRUE
-    
-    # Populate data structure with labels, alignments, and n values from 
-    # spanning column objects
-    counter <- 1
-    for (index in s$span) {
-      if (index > 0) {
-        s$label[counter] <- slvl[[l]][[index]]["label"]
-        s$align[counter] <- slvl[[l]][[index]]$label_align
-        s$underline[counter] <- slvl[[l]][[index]]$underline
-        if (!is.null(slvl[[l]][[index]]$n))
-          s$n[counter] <- slvl[[l]][[index]]$n
-
-      }
-      s$name[counter] <- paste0("Span", counter)
-      counter <- counter + 1
-    }
-    
-    # Apply n counts to labels
-    if (!is.null(ts$n_format)) {
-      s$label <- ifelse(is.na(s$n), s$label, paste0(s$label, ts$n_format(s$n))) 
-    }
-
-    wlvl[[l]] <- s
-
-  }
+  # Put spanning info in function to eliminate redundancy with rtf version
+  w <- round(pi$col_width / rs$char_width) - 1 # Adjust for gutter
+  wlvl <- get_spanning_info(rs, ts, pi, w, 1)
+  lvls <- sort(seq_along(wlvl), decreasing = TRUE)
   
   # At this point we have a data frame with labels, etc. and spanning
   # column widths, and are ready to create spanning header rows
@@ -542,7 +597,6 @@ get_spanning_header <- function(rs, ts, pi) {
   # Format labels for each level
   ln <- c()
   for (l in lvls) {
-    
     s <- wlvl[[l]]
     
     # Wrap header labels if needed
@@ -615,7 +669,8 @@ get_spanning_header <- function(rs, ts, pi) {
   return(ret)
 }
 
-
+#' @description At this point, can just put out the cells in the page.
+#' All the wrapping and splitting has been taken care of.
 #' @noRd
 get_table_body <- function(dat) {
   

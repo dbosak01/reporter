@@ -490,5 +490,17 @@ test_that("standard_eval parameter works as expected for stub", {
   
 })
 
-
-
+test_that("create_table borders parameter works as expected.", {
+  
+  
+  expect_error(create_table(mtcars, borders = "fork"))
+  
+  tbl <- create_table(mtcars, borders = "all")
+  
+  expect_equal(tbl$borders, "all")
+  
+  tbl <- create_table(mtcars, borders = c("outside", "inside"))
+  
+  expect_equal(tbl$borders, c("outside", "inside"))
+  
+})

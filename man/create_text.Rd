@@ -4,7 +4,7 @@
 \alias{create_text}
 \title{Create text content}
 \usage{
-create_text(txt, width = NULL, align = "left")
+create_text(txt, width = NULL, align = "left", borders = "none")
 }
 \arguments{
 \item{txt}{The text to create.}
@@ -14,6 +14,11 @@ no width is specified, the full page width will be used.}
 
 \item{align}{How to align the text within the content area.  Valid values
 are 'left', 'right', 'center', or 'centre'.  Default is 'left'.}
+
+\item{borders}{Whether and where to place a border. Valid values are 'top',
+'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
+Default is 'none'.  The 'left', 'right', and 'outside' 
+border specifications only apply to RTF reports.}
 }
 \value{
 The text specification.

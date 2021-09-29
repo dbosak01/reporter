@@ -4,7 +4,14 @@
 \alias{title_header}
 \title{Adds a title header block}
 \usage{
-title_header(x, ..., right = "", blank_row = "below", borders = "none")
+title_header(
+  x,
+  ...,
+  right = "",
+  blank_row = "below",
+  borders = "none",
+  width = NULL
+)
 }
 \arguments{
 \item{x}{The object to assign titles to.  Valid objects are a report,
@@ -19,7 +26,21 @@ title header.  Pass the header strings as a vector of strings.}
 'below', 'both', or 'none'.  Default is 'below'.}
 
 \item{borders}{Whether and where to place a border. Valid values are 'top',
-'bottom', 'all', or 'none'.  Default is 'none'.}
+'bottom', 'left', 'right', 'all', or 'none'.  Default is 'none'.   The 
+'left' and 'right' border specifications only apply to RTF reports.}
+
+\item{width}{The width of the title header.  If the title header is attached
+to the report, valid values are 'page' or a numeric width, and the default
+is 'page'. If the title header is attached to the
+table, plot, or text content, the valid values are 'page', 'content' or a 
+numeric value, and the default is 'content'.  The value 'content' means the 
+footnotes will be aligned to the width of the table, plot, or text
+content.  The value
+'page' means the footnotes will be aligned to the width of the page. 
+In addition to these two convenience settings, you 
+may also specify a specific width in the current units of measure.  The
+units of measure is determined by the 'units' parameter on 
+\code{\link{create_report}}.}
 }
 \value{
 The modified report.

@@ -370,3 +370,28 @@ test_that("text14: Title and footnote with borders on text output works as expec
   expect_equal(length(lns), res$pages * res$line_count)
 })
 
+
+test_that("text15: Text borders work as expected.", {
+  
+  fp <- file.path(base_path, "text/text15.out")
+  
+  txt <- create_text(cnt, borders = "all") %>% 
+    titles("Report 1.0", "Simple Text Report", blank_row = "below",
+           borders = "none") %>%
+    footnotes("Footnote one", "Footnote 2", borders = "none") 
+  
+  rpt <- create_report(fp, orientation = "portrait") %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Other left", "", "Other Right") %>% 
+    add_content(txt) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})
+
+

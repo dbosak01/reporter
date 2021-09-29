@@ -22,6 +22,10 @@
 #' no width is specified, the full page width will be used.
 #' @param align How to align the text within the content area.  Valid values
 #' are 'left', 'right', 'center', or 'centre'.  Default is 'left'.
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
+#' Default is 'none'.  The 'left', 'right', and 'outside' 
+#' border specifications only apply to RTF reports.
 #' @return The text specification.
 #' @family text
 #' @seealso 
@@ -72,7 +76,7 @@
 #' # * Cicero, 1st century BCE
 #' #
 #' @export
-create_text <- function(txt, width = NULL, align = "left") {
+create_text <- function(txt, width = NULL, align = "left", borders = "none") {
   
   if (!"character" %in% class(txt))
     stop("value must be of class 'character'")
@@ -94,11 +98,18 @@ create_text <- function(txt, width = NULL, align = "left") {
     
   }
   
+  if (!all(borders %in% c("top", "bottom", "left", "right", 
+                          "all", "none", "outside")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'left', 'right', 'all', ",
+               "'none', or 'outside'."))
+  
   ret <- structure(list(), class = c("text_spec", "list"))
   
   ret$text <- txt
   ret$align <- align
   ret$width <- width
+  ret$borders <- borders
   
   return(ret)
   
@@ -227,9 +238,12 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
                           content_blank_row) {
   
   # Get titles and footnotes
-  ttls <- get_titles(txt$titles, line_width, rs$uchar) 
-  ftnts <- get_footnotes(txt$footnotes, line_width, rs$uchar) 
-  ttl_hdr <- get_title_header(txt$title_hdr, line_width, rs$uchar)
+  ttls <- get_titles(txt$titles, line_width, rs$line_size, 
+                     rs$uchar, rs$char_width) 
+  ftnts <- get_footnotes(txt$footnotes, line_width,  rs$line_size, 
+                         rs$uchar, rs$char_width) 
+  ttl_hdr <- get_title_header(txt$title_hdr, line_width, rs$line_size, 
+                              rs$uchar, rs$char_width)
   
   # Wrap the text 
   s <- stri_wrap(unlist(
@@ -238,7 +252,7 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
   
   
   # Make sure rows are the same length
-  s <- pad_any(s, line_width + 1, 
+  s <- pad_any(s, line_width, 
                get_justify(txt$align))
   
   # Add blank above content if requested
@@ -246,6 +260,15 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
   if (content_blank_row %in% c("both", "above"))
       a <- ""
   
+  # Add top border if requested
+  tbrdr <- NULL
+  if (any(txt$borders %in% c("top", "all", "outside")))
+    tbrdr <-  paste0(rep(rs$uchar, line_width), collapse = "")
+  
+  # Add bottom border if requested
+  bbrdr <- NULL
+  if (any(txt$borders %in% c("bottom", "all", "outside")))
+    bbrdr <- paste0(rep(rs$uchar, line_width), collapse = "")
   
   # Add blank below content if requested
   b <- NULL
@@ -253,7 +276,16 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     b <- ""
   
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, s, ftnts, b)
+  rws <- c(a, ttls, ttl_hdr, tbrdr, s, bbrdr)
+  
+  # Set to true for now.  Need to fix text paging below.
+  wrap_flag <- FALSE
+  
+  # Get footnotes
+  ftnts <- get_page_footnotes_text(rs, txt, line_width, lpg_rows, 
+                                   length(rws), wrap_flag, content_blank_row)
+  # Append footnotes 
+  rws <- c(rws, ftnts)
   
   # Page list
   ret <- list()  
@@ -299,8 +331,6 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
     
   }
   
-
-  
   return(ret)
   
 }
@@ -308,8 +338,9 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
 
 # Write RTF Functions -------------------------------------------------------
 
+
 #' @noRd
-create_text_pages_rtf <- function(rs, cntnt, lpg_rows, conv) {
+create_text_pages_rtf <- function(rs, cntnt, lpg_rows, content_blank_row) {
   
   if (!"report_spec" %in% class(rs))
     stop("Report spec expected for parameter rs")
@@ -319,17 +350,18 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_rows, conv) {
   
   txt <- cntnt$object
   
+  # Default to content width
   w <- rs$content_size[["width"]] 
-  
-  
+
   # If user supplies a width, override default
   if (!is.null(txt$width))
     w <- txt$width
   
-  rws <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
-                           lpg_rows, cntnt$blank_row, conv)
+  res <- get_text_body_rtf(rs, txt, w, rs$body_line_count, 
+                           lpg_rows, content_blank_row, cntnt$align)
   
-  return(rws)
+
+  return(res)
   
   
 }
@@ -337,90 +369,258 @@ create_text_pages_rtf <- function(rs, cntnt, lpg_rows, conv) {
 #' Create list of vectors of strings for each page 
 #' @import stringi
 #' @noRd
-get_text_body_rtf <- function(rs, txt, line_width, line_count, lpg_rows, 
-                              content_blank_row, conv) {
+get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows, 
+                              content_blank_row, talgn) {
 
-  
-  # Get titles and footnotes
-  ttls <- get_titles_rtf(txt$titles, line_width, conv) 
-  ftnts <- get_footnotes_rtf(txt$footnotes, line_width, conv) 
-  ttl_hdr <- get_title_header_rtf(txt$title_hdr, line_width, conv)
-  
 
+  # Get content titles and footnotes
+  ttls <- get_titles_rtf(txt$titles, width, rs, talgn) 
+  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
+  ftnts <- get_footnotes_rtf(txt$footnotes, width, rs, talgn) 
+  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
+  
+  t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
+  hgt <- rs$body_line_count - t
+
+  # Break text content into pages if necessary
+  tpgs <- split_text_rtf(txt$text, hgt, width, rs$font, 
+                 rs$font_size, rs$units, lpg_rows)
+  
+  # Capture rtf pages and line counts
+  txtpgs <- tpgs$rtf
+  lns <- tpgs$lines
+  
+  # Calculate text width in twips
+  w <- round(width * rs$twip_conversion)
+  
+  # Get content alignment codes
+  if (talgn == "right") 
+    tgn <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    tgn <- "\\trqc"
+  else 
+    tgn <- "\\trql"
+  
+  # Get text alignment codes
   if (txt$align == "right") 
     algn <- "\\qr"
   else if (txt$align %in% c("center", "centre"))
     algn <- "\\qc"
   else 
     algn <- "\\ql"
-  
-  s <- paste0( algn, " ", txt$text, "\\line\\pard")
-  
-  print(get_lines_rtf(txt$text, line_width, rs$font, rs$font_size, rs$units))
-  
 
-  # Add blank above content if requested
-  a <- NULL
-  if (content_blank_row %in% c("both", "above"))
-    a <- "\\line"
+  # Get cell border codes
+  b <- get_cell_borders(1, 1, 1, 1, txt$borders)  
   
+  # Prepare row header and footer
+  rwhd <- paste0("\\trowd\\trgaph0", tgn, b, "\\cellx", w, algn, " ")
+  rwft <- paste0("\\cell\\row\\pard")
   
-  # Add blank below content if requested
-  b <- NULL
-  if (content_blank_row %in% c("both", "below"))
-    b <- "\\line"
+  ret <- list()
+  cnt <- c()
   
-  # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls, ttl_hdr, s, ftnts, b)
+  # Gather rtf and line counts for each page
+  for (i in seq_along(txtpgs)) {
+    
+    if (i == length(txtpgs))
+      wrap_flag <- FALSE
+    else 
+      wrap_flag <- TRUE
+    
+    pg <- txtpgs[[i]]
+    
+    # Put line ending on all but last line
+    if (length(pg) > 1) {
+      s <- paste0(pg[seq(1, length(pg) - 1)], "\\line ")
+      s <- c(s, pg[length(pg)])
+    } else
+      s <- pg
+
+    # Add blank above content if requested
+    a <- NULL
+    if (i == 1 & content_blank_row %in% c("both", "above"))
+      a <- "\\par"
   
-  ret <- rws
-  # Page list
-  #ret <- list()  
+    # Deal with cell padding.  Don't count this in line count.
+    cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
   
-  # Create tmp variable for 1 page of content
-  tmp <- c()
+    # Combine titles, blanks, body, and footnotes
+    rws <- c(a, cp, ttls$rtf, ttl_hdr$rtf, cp, rwhd, s, rwft)
+
+    # Sum up lines
+    cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
+    
+    # Get footnotes
+    ftnts <- get_page_footnotes_rtf(rs, txt, width, lpg_rows, cnts,
+                                    wrap_flag, content_blank_row, talgn)
+    
+    ret[[length(ret) + 1]] <- c(rws, cp, ftnts$rtf)
+    cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
+    
+  }
   
-  # # Offset the first page with remaining rows from the 
-  # # last page of the previous content
-  # offset <- lpg_rows 
-  # #print(paste("Offset:", offset))
-  # 
-  # # Assign content to pages
-  # for (i in seq_along(rws)) {
-  #   if (length(tmp) < (line_count - offset)) {
-  #     
-  #     # Append to existing page
-  #     tmp[length(tmp) + 1] <- rws[i]
-  #     
-  #   } else {
-  #     
-  #     # Start a new page
-  #     ret[[length(ret) + 1]] <- pad_any(tmp, line_width, 
-  #                                       get_justify(txt$align))
-  #     tmp <- rws[i]
-  #     
-  #     # Set to zero on second page and leave it that way
-  #     offset <- 0  
-  #   }
-  # }
-  # 
-  # # Deal with last page
-  # if (length(tmp) > 0 ) {
-  #   
-  #   
-  #   # If page is not empty
-  #   if (max(nchar(trimws(tmp))) > 0) {
-  #     
-  #     # Add last page
-  #     ret[[length(ret) + 1]] <- pad_any(tmp, line_width, 
-  #                                       get_justify(txt$align))
-  #   }
-  #   
-  # }
-  
-  
-  
-  return(ret)
+  res <- list(rtf = ret, lines = cnt)
+
+  return(res)
   
 }
 
+
+
+
+#' @description lines is the number of lines per page or cell before breaking.
+#' Width is the width of the page or cell.
+#' @noRd
+split_text_rtf <- function(txt, lines, width, font, 
+                           font_size, units, offset = 0) {
+  
+  pgs <- c()
+  lnlngth <- 0
+  ln <- c()
+  cnt <- 0
+  lns <- c()
+  cnts <- c()
+  
+  # Split text into words
+  wrds <- strsplit(txt, " ", fixed = TRUE)[[1]]
+  
+  # Set font
+  f <- "mono"
+  if (tolower(font) == "arial")
+    f <- "sans"
+  else if (tolower(font) == "times")
+    f <- "serif"
+  
+  lngths <- c()
+  
+  
+  lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
+               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+  
+  # Loop through words and add up lines
+  for (i in seq_along(wrds)) {
+    
+    lnlngth <- lnlngth + lngths[i] 
+    if (lnlngth <= width)
+      ln <- append(ln, wrds[i])
+    else {
+      cnt <- cnt + 1
+      
+      # If cnt exceeds allowed lines per page, start a new page
+      if (cnt <= lines - offset) {
+        lns <- append(lns, paste(ln, collapse = " "))
+        ln <- wrds[i]
+        lnlngth <- lngths[i]
+      } else {
+        
+        # Assign current lines and counts
+        pgs[[length(pgs) + 1]] <- lns
+        cnts[[length(cnts) + 1]] <- length(lns)
+        
+        # Assign overflow to next page
+        lns <- paste(ln, collapse = " ")
+        ln <- wrds[i]
+        lnlngth <- lngths[i]
+        
+        # After first page, set this to zero.
+        offset <- 0
+        cnt <- 1
+      }
+      
+    }
+    
+    
+  }
+  
+  if (length(lns) > 0 | length(ln) > 0) {
+    lns <- append(lns, paste(ln, collapse = " "))
+    
+    pgs[[length(pgs) + 1]] <- lns
+    cnts[[length(cnts) + 1]] <- length(lns)
+  }
+  
+  res <- list(rtf = pgs, 
+              lines = cnts)
+  
+  return(res)
+  
+}
+
+
+#' @description lines is the number of lines per page or cell before breaking.
+#' Width is the width of the page or cell.
+#' @noRd
+split_text_rtf_back <- function(txt, lines, width, font, 
+                                font_size, units, offset = 0) {
+  
+  pgs <- c()
+  lnlngth <- 0
+  ln <- c()
+  cnt <- 0
+  lns <- c()
+  cnts <- c()
+  
+  # Split text into words
+  wrds <- strsplit(txt, " ", fixed = TRUE)[[1]]
+  
+  # Set font
+  f <- "mono"
+  if (tolower(font) == "arial")
+    f <- "sans"
+  else if (tolower(font) == "times")
+    f <- "serif"
+  
+  lngths <- c()
+  
+  
+  lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
+               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+  
+  # Loop through words and add up lines
+  for (i in seq_along(wrds)) {
+    
+    lnlngth <- lnlngth + lngths[i] 
+    if (lnlngth <= width)
+      ln <- append(ln, wrds[i])
+    else {
+      cnt <- cnt + 1
+      
+      # If cnt exceeds allowed lines per page, start a new page
+      if (cnt <= lines - offset) {
+        lns <- append(lns, paste(ln, collapse = " "))
+        ln <- wrds[i]
+        lnlngth <- lngths[i]
+      } else {
+        
+        # Assign current lines and counts
+        pgs[[length(pgs) + 1]] <- lns
+        cnts[[length(cnts) + 1]] <- length(lns)
+        
+        # Assign overflow to next page
+        lns <- paste(ln, collapse = " ")
+        ln <- wrds[i]
+        lnlngth <- lngths[i]
+        
+        # After first page, set this to zero.
+        offset <- 0
+        cnt <- 1
+      }
+      
+    }
+    
+    
+  }
+  
+  if (length(lns) > 0 | length(ln) > 0) {
+    lns <- append(lns, paste(ln, collapse = " "))
+    
+    pgs[[length(pgs) + 1]] <- lns
+    cnts[[length(cnts) + 1]] <- length(lns)
+  }
+  
+  res <- list(rtf = pgs, 
+              lines = cnts)
+  
+  return(res)
+  
+}
