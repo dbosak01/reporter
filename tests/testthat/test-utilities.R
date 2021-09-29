@@ -301,6 +301,10 @@ test_that("get_width function works as expected.", {
   expect_equal(res2 < res3, TRUE)
   
   
+  res4 <- get_text_width("This is cool.", "Courier", 10, units = "cm")
+  res4
+  expect_equal(res3 == cin(res4), TRUE)
+  
 })
 
 test_that("has_bottom_footnotes works as expected.", {
@@ -439,6 +443,14 @@ test_that("split_string_rtf() works as expected.", {
   res4 <- split_string_rtf("here is areallylongstringlongerthan one inch", 
                            1, "inches")
   res4
+  
+  expect_equal(length(res4$rtf), 1)
+  expect_equal(res4$lines, 3)
+  
+  
+  res5 <- split_string_rtf("here is areally long string longer than 3 cm", 
+                           3, "cm")
+  res5
   
   expect_equal(length(res4$rtf), 1)
   expect_equal(res4$lines, 3)

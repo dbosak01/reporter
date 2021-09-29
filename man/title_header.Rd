@@ -69,7 +69,8 @@ the title block may be controlled using the
 \code{blank_row} parameter.
 
 Each title string must fit within the available space.  The \strong{reporter}
-package will not wrap titles.  If a title does not fit within the 
+package will not wrap titles on fixed-width reports.  
+If a title does not fit within the 
 available space, an error will be generated.  In these situations, either
 shorten the title or split it into multiple titles that each fit within the
 available space.

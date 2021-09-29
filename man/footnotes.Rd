@@ -76,7 +76,8 @@ Blank rows above or below the footnote block may be controlled using the
 \code{blank_row} parameter.
 
 Each footnote string must fit within the available space.  The \strong{reporter}
-package will not wrap footnotes.  If a footnote does not fit within the 
+package will not wrap footnotes on fixed-width reports.  
+If a footnote does not fit within the 
 available space, a warning will be generated and the footnote will be 
 truncated.  In these situations, either
 shorten the footnote or split it into multiple footnotes that each fit within 

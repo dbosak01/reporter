@@ -58,7 +58,7 @@ get_page_header_rtf <- function(rs) {
     c2 <- round(rs$content_size[["width"]] * conv)
     c1 <- round(c2 / 2)
     
-    ret <- paste0("{\\header \\fs", fs)
+    ret <- paste0("{\\header \\f0\\fs", fs)
     
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -141,7 +141,7 @@ get_page_footer_rtf <- function(rs) {
     c1 <- round(c3 / 3)
     c2 <- round(c1 * 2)
     
-    ret <- paste0("{\\footer \\fs", fs)
+    ret <- paste0("{\\footer \\f0\\fs", fs)
     
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)

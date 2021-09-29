@@ -417,10 +417,14 @@ page_setup_rtf <- function(rs) {
   rs$row_height <- rh
   rs$line_height <- lh
   rs$page_break_rtf <- pb
-  rs$gutter_width <- gtr
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
   rs$cell_padding <- cp
+  
+  if (rs$units == "cm")
+    rs$gutter_width <- ccm(gtr)
+  else 
+    rs$gutter_width <- gtr
   
   if (is.null(rs$user_line_count)) {
     # There is one row above the page footer that is not printable.

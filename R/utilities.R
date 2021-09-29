@@ -67,79 +67,6 @@ gen_groups <- function(tot, group_cnt, last_indices = FALSE) {
 
 
 
-#' split_df_pages
-#'
-#' A function to split a dataframe into pages according to vectors rows and cols
-#'
-#' @param df A dataframe to split
-#' @param rows A vector of row counts on which to split.  Will recycle
-#' if needed.
-#' @param cols A vector of column counts on which to split.  Will recycle
-#' if needed.
-#' @param idcols A vector of id columns to include on each page.
-#' @return A list of dataframes sized according to the specifications
-#' in \code{rows} and \code{cols}
-#' @examples
-#' # With row labels and no identity column
-# split_df_pages(mtcars, 16, c(5, 6))
-#
-# # With identity column
-# split_df_pages(starwars,10, 5, 1)
-#' @noRd
-split_df_pages <- function(df, rows, cols, idcols = NULL) {
-  
-  # Initialize list of dataframe to return
-  ret <- list()
-  
-  # Get the row indicies for each target dataframe
-  row_indices <- gen_groups(nrow(df), rows)
-  
-  # Split the incoming dataframe according to indicies
-  split_data <- split(df, row_indices)
-  
-  # Reapply the labels lost during the split
-  data_labeled <- list()
-  for(sds in seq_along(split_data)){
-    data_labeled[[sds]] <- copy_labels(split_data[[1]], df)
-  }
-  
-  # Generate the column indices to split data vertically
-  col_indices <- gen_groups(ncol(df), cols, last_indices = TRUE)
-  
-  # Split data vertically and add each to return list
-  counter <- 1
-  for(i in data_labeled){
-    startpos <- 1
-    for(j in col_indices){
-      if (is.null(idcols)){
-        ret[[counter]] <- i[ , startpos:j]
-      } else {
-        ret[[counter]] <- i[ , unique(c(idcols, startpos:j))]
-      }
-      startpos <- j + 1
-      counter <- counter + 1
-    }
-  }
-  
-  return(ret)
-}
-
-#' Copy labels from one data frame to another.
-#' Written to avoid creating dependencies on labeling packages.
-#' @noRd
-copy_labels <- function(x, y) {
-  
-  for (i in names(x)) {
-    
-    attr(x[[i]], "label") <- attr(y[[i]], "label")
-    
-  }
-  
-  return(x)
-  
-}
-
-
 #' Get the font family from the font name
 #' @noRd
 get_font_family <- function(font_name) {
@@ -507,6 +434,12 @@ split_string_rtf <- function(strng, width, units) {
   ln <- c()
   lns <- c()
   
+  un <- "inches"
+  w <- width
+  if (units == "cm")
+    w <- cin(width)
+  
+  
   if (!is.na(strng)) {
     
     splits <- unlist(stri_split_fixed(strng, "\n"))
@@ -515,14 +448,14 @@ split_string_rtf <- function(strng, width, units) {
       
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
       
-      lngths <- (suppressWarnings(strwidth(wrds, units = units)) + 
-                   suppressWarnings(strwidth(" ", units = units))) * 1.03 
+      lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
+                   suppressWarnings(strwidth(" ", units = un))) * 1.03 
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {
         
         lnlngth <- lnlngth + lngths[i] 
-        if (lnlngth <= width)
+        if (lnlngth <= w)
           ln <- append(ln, wrds[i])
         else {
           
@@ -1038,13 +971,6 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   
 }
 
-#' @noRd
-n2ln <- function(strng) {
-  
-  ret <- gsub("\n", "\\line ", strng, fixed = TRUE) 
-  
-  return(ret)
-}
 
 # Sizing utilities --------------------------------------------------------
 
@@ -1072,67 +998,17 @@ get_content_size <- function(rs) {
 }
 
 
-#' @param rs Report spec
-#' @param pt Page Template
-#' @noRd
-get_body_size <- function(rs) {
-  
-
-  # Calculate header and footer heights
-  h_h <- get_header_height(rs)
-  f_h <- get_footer_height(rs)
-  
-  # Calculate available space for page body
-  ret <- c(height = rs$content_size[["height"]] - h_h - f_h,
-           width = rs$content_size[["width"]])
-  
-  return(ret)
-}
-
-#' @noRd
-get_header_height <- function(rs) {
-  
-  # Get height of page header
-  phdr <- rs$page_header_left
-  if(length(rs$page_header_left) < length(rs$page_header_right))
-    phdr <- rs$page_header_right
-  
-  hh <- length(phdr) * rs$row_height
-  th <- length(rs$titles) * rs$row_height
-  buff <- 0
-  
-  # Add all heights
-  ret <- hh + th + buff
-  
-  return(ret)
-}
-
-#' @noRd
-get_footer_height <- function(rs) {
-  
-  # Get height of page header
-  pftr <- rs$page_footer_left
-  if(length(rs$page_footer_left) < length(rs$page_footer_right))
-    pftr <- rs$page_footer_right
-  if(length(pftr) < length(rs$page_footer_center))
-    pftr <- rs$page_footer_center
-  
-  fh <- length(pftr) * rs$row_height
-  fth <- length(rs$footnotes) * rs$row_height
-  buff <- rs$row_height # Space between footnotes and page footer
-    
-  # Add all heights
-  ret <- fh + fth + buff
-  
-  return(ret)
-}
-
 #' @noRd
 ccm <- function(x) {
   
   return(2.54 * x)
 }
 
+#' @noRd
+cin <- function(x) {
+  
+  return(x / 2.54)
+}
 
 # RTF Functions -----------------------------------------------------------
 
@@ -1177,30 +1053,23 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
   else if (tolower(font) == "times")
     f <- "serif"
   
+  un <- "inches"
+
+  
   #R.devices::devEval("nulldev", {
     pdf(NULL)
     par(family = f, ps = font_size)
-    ret <- suppressWarnings(strwidth(txt, units = units)) * .975 
+    ret <- suppressWarnings(strwidth(txt, units = un)) * .975 
     dev.off()
   #})
   
 
+  if (units == "cm")
+    ret <- ccm(ret)
+    
   return(ret)
 }
 
-
-
-#' @description Subtract 1 from number of lines to get excess lines
-#' @noRd 
-get_excess_lines <- function(txt, width, font, font_size = 10, units = "inches") {
-  
-  res <- get_lines_rtf(txt, width, font, font_size = 10, units)
-  
-  if (res > 0)
-    res <- res - 1
-  
-  return(res)
-}
 
 
 

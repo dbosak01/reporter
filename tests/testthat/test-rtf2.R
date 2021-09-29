@@ -1320,6 +1320,58 @@ test_that("rtf2-38: Title and Footnote specific widths work as expected.", {
   
 })
 
+test_that("rtf2-39: One page table works as expected in centimeters and times.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test39.rtf")
+  
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Times",
+                       font_size = fsz, orientation = "landscape", 
+                       units = "cm") %>%
+    set_margins(top = 3, bottom = 3) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(create_table(dat)) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("rtf2-40: One page table works as expected in courier.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test40.rtf")
+  
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier",
+                       font_size = fsz, orientation = "landscape", 
+                       units = "cm") %>%
+    set_margins(top = 3, bottom = 3) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(create_table(dat)) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
 
 # User Tests --------------------------------------------------------------
 
@@ -1660,5 +1712,71 @@ test_that("user3: listings works.", {
   
   
 })
+
+
+test_that("user4: listing in cm and times works.", {
+  if (dev == TRUE) {
+    # Data Filepath
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "rtf2/user4.rtf")
+    
+    # Removing to make last page exactly equal to available rows on page.
+    # In this case, any added blank rows should be skipped.
+    fil <- c("ABC-14-124",
+             "ABC-15-153",
+             "ABC-15-154",
+             "ABC-15-155",
+             "ABC-15-156",
+             "ABC-16-045",
+             "ABC-16-046",
+             "ABC-16-047",
+             "ABC-16-157",
+             "ABC-16-158",
+             "ABC-16-159", 
+             "ABC-16-160")
+    
+    # Load Data
+    data_demo   <- file.path(dir_data, "dm.csv") %>%
+      read.csv() 
+    
+    data_demo <- data_demo[!data_demo$USUBJID %in% fil, ]
+    
+    
+    # Test that any assigned formats are applied
+    attr(data_demo$SUBJID, "width") <- 2.54
+    attr(data_demo$SUBJID, "justify") <- "left"
+    attr(data_demo$SUBJID, "format") <- "S:%s"
+    #print(widths(data_demo))
+    
+    # Define table
+    tbl <- create_table(data_demo) %>% 
+      define(USUBJID, id_var = TRUE) 
+    
+    
+    # Define Report
+    rpt <- create_report(fp, font = "Times", font_size = 10, units = "cm") %>%
+      titles("Listing 1.0",
+             "Demographics Dataset") %>%
+      add_content(tbl, align = "left") %>% 
+      page_header("Sponsor", "Drug") %>% 
+      page_footer(left = "Time", right = "Page [pg] of [tpg]")
+    
+    #Write out report
+    res <- write_report(rpt, output_type = "RTF")
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+    
+    # pdfpth <- file.path(base_path, "user/user3.pdf")
+    # write_report(rpt, pdfpth, output_type = "PDF")
+    # expect_equal(file.exists(pdfpth), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+  
+})
+
 
 
