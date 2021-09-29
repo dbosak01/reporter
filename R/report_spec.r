@@ -1460,8 +1460,12 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   if (is.null(width)) {
     if (any(class(x) %in% c("report_spec"))) 
       width <- "page"
-    else 
+    else {
       width <- "content"
+      if (!is.null(valign))
+        if (valign == "bottom")
+          width <- "page"
+    }
   } else {
     if (any(class(x) %in% c("report_spec"))) {
       if (!width %in% c("content") & !is.numeric(width))

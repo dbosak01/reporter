@@ -281,10 +281,9 @@ get_plot_body <- function(plt, plot_path, align, rs,
   
   # Get titles and footnotes
   w <- ceiling(plt$width / rs$char_width)
-  ttls <- get_titles(plt$titles, w, rs$uchar) 
-  ttl_hdr <- get_title_header(plt$title_hdr, w, rs$uchar)
-  #ftnts <- get_footnotes(plt$footnotes, w, rs$uchar) 
-
+  ttls <- get_titles(plt$titles, w, rs$line_size, rs$uchar, rs$char_width) 
+  ttl_hdr <- get_title_header(plt$title_hdr, w, rs$line_size, rs$uchar, 
+                              rs$char_width)
   
   pgbys <- get_page_by(pgby, w, pgval)
   
@@ -496,7 +495,6 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   # Get titles and footnotes
   ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
   ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
-  #ftnts <- get_footnotes_rtf(plt$footnotes, wth, rs, talign) 
   pgbys <- get_page_by_rtf(pgby, wth, pgval, rs, talign)
   
   # Get image RTF codes

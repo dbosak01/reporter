@@ -23,7 +23,7 @@ test_that("get_titles function works as expected.", {
   
   expect_error(get_titles(ttl, 30))
   
-  res3 <- get_titles(ttl$titles, 30)
+  res3 <- get_titles(ttl$titles, 30, 50, "-", 1)
   
   res3
   
@@ -34,7 +34,7 @@ test_that("get_titles function works as expected.", {
                 align = "left", blank_row = "both", borders = "all")
   
   
-  res3 <- get_titles(ttl$titles, 30)
+  res3 <- get_titles(ttl$titles, 30, 50, "-", 1)
   
   res3
   
@@ -67,7 +67,7 @@ test_that("get_footnotes function works as expected.", {
   
   expect_error(get_footnotes(ftn, 30))
   
-  res3 <- get_footnotes(ftn$footnotes, 30)
+  res3 <- get_footnotes(ftn$footnotes, 30, 50, "-", 1)
   
   res3
   
@@ -84,7 +84,7 @@ test_that("get_footnotes function with borders works as expected.", {
   
   expect_error(get_footnotes(ftn, 30))
   
-  res3 <- get_footnotes(ftn$footnotes, 30)
+  res3 <- get_footnotes(ftn$footnotes, 30, 50, "-", 1)
   
   res3
   
@@ -140,7 +140,7 @@ test_that("title_header function works as expected.", {
                      blank_row = "both")
   
   
-  rws <- get_title_header(th$title_hdr, 50)
+  rws <- get_title_header(th$title_hdr, 50, 60, "-", 1)
   
   expect_equal(length(rws), 5)
   expect_equal(rws[1], "")
@@ -149,7 +149,7 @@ test_that("title_header function works as expected.", {
                      right = c("One", "Two", "Three"))
   
   
-  rws <- get_title_header(th$title_hdr, 50)
+  rws <- get_title_header(th$title_hdr, 50, 60, "-", 1)
   
   expect_equal(length(rws), 3)
   expect_equal(trimws(rws[1]), "One")
@@ -158,7 +158,7 @@ test_that("title_header function works as expected.", {
   th <- title_header(create_text("hello"), "Title One", "Title Two",
                      blank_row = "above")
   
-  rws <- get_title_header(th$title_hdr, 50)
+  rws <- get_title_header(th$title_hdr, 50, 60, "-", 1)
   
   expect_equal(length(rws), 3)
   expect_equal(trimws(rws[2]), "Title One")
@@ -166,7 +166,7 @@ test_that("title_header function works as expected.", {
   th <- title_header(create_text("hello"), "Title One", "Title Two",
                      blank_row = "above", borders = "all")
   
-  rws <- get_title_header(th$title_hdr, 50)
+  rws <- get_title_header(th$title_hdr, 50, 60, "-", 1)
   
   expect_equal(length(rws), 5)
   expect_equal(trimws(rws[3]), "Title One")

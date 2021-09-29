@@ -240,10 +240,11 @@ create_table_text <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (length(rws) > 0)
     ls <- max(nchar(rws))
   
-  if (!is.null(ts$title_hdr))
-    ttls <- get_title_header(ts$title_hdr, ls - 1, rs$uchar)
-  else
-    ttls <- get_titles(ts$titles, ls, rs$uchar) 
+  if (!is.null(ts$title_hdr)) {
+    ttls <- get_title_header(ts$title_hdr, ls , rs$line_size, 
+                             rs$uchar, rs$char_width)
+  } else
+    ttls <- get_titles(ts$titles, ls, rs$line_size, rs$uchar, rs$char_width) 
   
 
   #print("Titles")
@@ -303,13 +304,10 @@ get_page_footnotes_text <- function(rs, spec, spec_width,
   if (!is.null(spec$footnotes)) {
     if (!is.null(spec$footnotes[[length(spec$footnotes)]])) {
       if (spec$footnotes[[length(spec$footnotes)]]$valign == "bottom") {
-        
         vflag <- TRUE
-        ftnts <- get_footnotes(spec$footnotes, rs$line_size, rs$uchar) 
-      } else {
-        
-        ftnts <- get_footnotes(spec$footnotes, spec_width, rs$uchar) 
-      }
+      } 
+      ftnts <- get_footnotes(spec$footnotes, spec_width, rs$line_size, 
+                             rs$uchar, rs$char_width) 
       
     }
   } else {
@@ -318,7 +316,8 @@ get_page_footnotes_text <- function(rs, spec, spec_width,
       if (!is.null(rs$footnotes[[1]]$valign)) {
         if (rs$footnotes[[1]]$valign == "top") {
           
-          ftnts <- get_footnotes(rs$footnotes, rs$line_size, rs$uchar) 
+          ftnts <- get_footnotes(rs$footnotes, spec_width, rs$line_size, 
+                                 rs$uchar, rs$char_width) 
         } 
       }
     }
@@ -378,11 +377,15 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
     shdrs <- get_spanning_header(rs, ts, pi)   
     hdrs <- get_table_header(rs, ts, pi)  
   }
+  
+  w <- ceiling(sum(pi$col_width) / rs$char_width)
 
   if (is.null(ts$title_hdr))
-    ttls <- get_titles(ts$titles, rs$line_size, rs$uchar) 
-  else 
-    ttls <- get_title_header(ts$title_hdr, rs$line_size, rs$uchar)
+    ttls <- get_titles(ts$titles, w, rs$line_size, rs$uchar, rs$char_width) 
+  else {
+    ttls <- get_title_header(ts$title_hdr, w, rs$line_size, rs$uchar, 
+                             rs$char_width)
+  }
   
   pgb <- c()
   if (!is.null(ts$page_by))
@@ -406,8 +409,8 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   if (content_blank_row %in% c("above", "both"))
       ret["blank_upper"] <- 1
   
-  ftnts <- get_footnotes(ts$footnotes, rs$line_size) 
-  rftnts <- get_footnotes(rs$footnotes, rs$line_size) 
+  ftnts <- get_footnotes(ts$footnotes, w, rs$line_size, rs$uchar, rs$char_width) 
+  rftnts <- get_footnotes(rs$footnotes, w, rs$line_size, rs$uchar, rs$char_width) 
   
   if (has_top_footnotes(rs)) {
     ret["lower"] <- length(ftnts) + length(rftnts) + bbrdr

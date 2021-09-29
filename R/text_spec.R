@@ -238,9 +238,12 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
                           content_blank_row) {
   
   # Get titles and footnotes
-  ttls <- get_titles(txt$titles, line_width, rs$uchar) 
-  ftnts <- get_footnotes(txt$footnotes, line_width, rs$uchar) 
-  ttl_hdr <- get_title_header(txt$title_hdr, line_width, rs$uchar)
+  ttls <- get_titles(txt$titles, line_width, rs$line_size, 
+                     rs$uchar, rs$char_width) 
+  ftnts <- get_footnotes(txt$footnotes, line_width,  rs$line_size, 
+                         rs$uchar, rs$char_width) 
+  ttl_hdr <- get_title_header(txt$title_hdr, line_width, rs$line_size, 
+                              rs$uchar, rs$char_width)
   
   # Wrap the text 
   s <- stri_wrap(unlist(
@@ -249,7 +252,7 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
   
   
   # Make sure rows are the same length
-  s <- pad_any(s, line_width + 1, 
+  s <- pad_any(s, line_width, 
                get_justify(txt$align))
   
   # Add blank above content if requested
@@ -265,7 +268,7 @@ get_text_body <- function(rs, txt, line_width, line_count, lpg_rows,
   # Add bottom border if requested
   bbrdr <- NULL
   if (any(txt$borders %in% c("bottom", "all", "outside")))
-    bbrdr <-  paste0(rep(rs$uchar, line_width), collapse = "")
+    bbrdr <- paste0(rep(rs$uchar, line_width), collapse = "")
   
   # Add blank below content if requested
   b <- NULL
