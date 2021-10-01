@@ -4,7 +4,7 @@
 # Page Template RTF Functions ---------------------------------------------
 
 
-#' Create a page template with header, titles, footnotes, and footer
+#' Create a page template with header, titles, footnotes, and footer.
 #' @param rs The report spec
 #' @return The page template object
 #' @noRd
