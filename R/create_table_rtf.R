@@ -285,7 +285,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
                                   wrap_flag, content_blank_row,  pi$table_align)
 
   # Deal with cell padding.  Don't count this in line count.
-  cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
+  cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
   
   ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, cp, shdrs$rtf, 
                       hdrs$rtf, rws, cp, ftnts$rtf),
@@ -760,7 +760,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
     
   }
   
-  ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
+  ret[length(ret)] <- paste0(ret[length(ret)], "\\pard", rs$spacing_multiplier)
   
   
   return(ret)

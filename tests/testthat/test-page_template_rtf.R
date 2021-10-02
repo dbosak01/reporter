@@ -13,7 +13,7 @@ test_that("get_titles_rtf function works as expected.", {
   t <- get_titles_rtf(rpt$titles, 6, rpt)
   t
   expect_equal(t$rtf,
-        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\line\\cell\\row\n\\pard")
+        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\line\\cell\\row\n\\pard\\sl-275\\slmult0")
   expect_equal(t$lines, 2)
   # expect_equal(t$twips, 576)
   
@@ -31,7 +31,7 @@ test_that("get_footnotes_rtf function works as expected.", {
   f <- get_footnotes_rtf(rpt$footnotes, 6, rpt)
   f
   expect_equal(f$rtf,
-      "\\line\n\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n\\pard")
+      "\\line\n\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n\\pard\\sl-275\\slmult0")
   expect_equal(f$lines, 2)
   # expect_equal(f$twips, 576)
   

@@ -103,7 +103,7 @@ get_page_header_rtf <- function(rs) {
     dev.off()
     
     if (rs$page_header_blank_row == "below") {
-      ret <- paste0(ret, "\\par\\pard")
+      ret <- paste0(ret, "\\par\\pard", rs$spacing_multiplier)
       cnt <- cnt + 1
     }
     
@@ -279,7 +279,7 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
       
     }
     
-    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
+    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard", rs$spacing_multiplier)
   }
   
   res <- list(rtf = paste0(ret, collapse = ""), 
@@ -359,7 +359,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
 
     }
     
-    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
+    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard", rs$spacing_multiplier)
   }
   
   
@@ -463,7 +463,7 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
       
     }
     
-    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard")
+    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard", rs$spacing_multiplier)
   }
   
   res <- list(rtf = paste0(ret, collapse = ""),

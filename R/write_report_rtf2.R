@@ -99,11 +99,11 @@ get_rtf_document <- function(rs) {
   # Line spacing values determined be trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
   if (rs$font_size == 10) {
-    ret[length(ret) + 1] <- "\\sl-225\\slmult0\\fs20"
+    ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs20")
   } else if (rs$font_size == 12) {
-    ret[length(ret) + 1] <- "\\sl-275\\slmult0\\fs24"
+    ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs24")
   } else if (rs$font_size == 8) {
-    ret[length(ret) + 1] <- "\\sl-180\\slmult0\\fs16"
+    ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs16")
   }
 
   
@@ -389,6 +389,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .1 
     cw <- .1
     cp <- 40
+    sm <- "\\sl-180\\slmult0"
   } else if (rs$font_size == 10) {
     rh <- 228 #round(.165 * 1440) # 225
     lh <- 228 #round(.165 * 1440)  
@@ -396,6 +397,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .1
     cw <- .11
     cp <- 40
+    sm <- "\\sl-225\\slmult0"
   } else if (rs$font_size == 12) {
     rh <- 271 #round(.2 * 1440)
     lh <- 271 #round(.1875 * 1440) #270
@@ -403,6 +405,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .1
     cw <- .12
     cp <- 40
+    sm <- "\\sl-275\\slmult0"
   }
   
   
@@ -416,10 +419,11 @@ page_setup_rtf <- function(rs) {
   rs$twip_conversion <- conv
   rs$row_height <- rh
   rs$line_height <- lh
-  rs$page_break_rtf <- pb
+  rs$page_break_rtf <- paste0(pb, sm)
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
   rs$cell_padding <- cp
+  rs$spacing_multiplier <- sm
   
   if (rs$units == "cm")
     rs$gutter_width <- ccm(gtr)
