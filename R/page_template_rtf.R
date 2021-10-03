@@ -105,6 +105,9 @@ get_page_header_rtf <- function(rs) {
     if (rs$page_header_blank_row == "below") {
       ret <- paste0(ret, "\\par\\pard", rs$spacing_multiplier)
       cnt <- cnt + 1
+    } else {
+      
+      ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", rs$spacing_multiplier) 
     }
     
     ret <- paste0(ret, "}")
