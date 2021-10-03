@@ -32,7 +32,7 @@ test_that("get_footnotes_rtf function works as expected.", {
   f <- get_footnotes_rtf(rpt$footnotes, 6, rpt)
   f
   expect_equal(f$rtf,
-      "\\line\n\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n\\pard\\sl-275\\slmult0")
+      "\\par\n\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n\\pard\\sl-275\\slmult0")
   expect_equal(f$lines, 2)
   # expect_equal(f$twips, 576)
   

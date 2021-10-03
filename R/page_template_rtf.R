@@ -326,7 +326,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
       w <- round(width * conv)
       
       if (any(ftnts$blank_row %in% c("above", "both"))) {
-        ret <- append(ret, "\\line\n")
+        ret <- append(ret, "\\par\n")
         cnt <- cnt + 1 
       }
       
@@ -350,7 +350,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
         bl <- ""
         if (i == length(ftnts$footnotes)) {
           if (any(ftnts$blank_row %in% c("below", "both"))) {
-            bl <-  "\\line\n"
+            bl <-  "\\par\n"
             cnt <- cnt + 1
           }
         }
