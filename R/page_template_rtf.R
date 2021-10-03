@@ -103,11 +103,12 @@ get_page_header_rtf <- function(rs) {
     dev.off()
     
     if (rs$page_header_blank_row == "below") {
-      ret <- paste0(ret, "\\par\\pard", rs$spacing_multiplier)
+      ret <- paste0(ret, "\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
       cnt <- cnt + 1
     } else {
       
-      ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", rs$spacing_multiplier) 
+      ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
+                    rs$spacing_multiplier) 
     }
     
     ret <- paste0(ret, "}")
@@ -194,7 +195,8 @@ get_page_footer_rtf <- function(rs) {
     }
     dev.off()
     
-    ret <- paste0(ret, "}")
+    ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", 
+                  rs$font_rtf, rs$spacing_multiplier, "}")
   }
   
   res <- list(rtf = paste0(ret, collapse = ""),
