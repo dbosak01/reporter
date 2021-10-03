@@ -330,13 +330,18 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   }
   
   b <- NULL
-  if (content_blank_row %in% c("below", "both"))
+  blen <- 0
+  if (content_blank_row %in% c("below", "both")) {
     b <- "\\par"
+    blen <- 1
+  } else {
+    b <- paste0("\\fs1\\sl0\\par\\pard", rs$spacing_multiplier)
+  }
   
   ublnks <- c()
   lblnks <- c()
   
-  len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - length(b)
+  len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen
   
   if (vflag == "bottom" & len_diff > 0) {
   
@@ -354,7 +359,8 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
     
   }
   
-  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
+  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks), 
+              ifelse(blen == 0, -1, 0))
   ret <- list(rtf = c(ublnks, ftnts$rtf, lblnks),
               lines = tlns,
               twips = tlns * rs$twip_conversion)
