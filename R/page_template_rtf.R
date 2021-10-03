@@ -282,7 +282,8 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
       
     }
     
-    ret[length(ret)] <- paste0(ret[length(ret)], "\\pard", rs$spacing_multiplier)
+    ret[length(ret)] <- paste0(ret[length(ret)], "\\fs1\\sl0\\par\\pard", 
+                               rs$font_rtf, rs$spacing_multiplier)
   }
   
   res <- list(rtf = paste0(ret, collapse = ""), 

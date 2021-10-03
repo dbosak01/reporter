@@ -414,7 +414,8 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
   
   # Prepare row header and footer
   rwhd <- paste0("\\trowd\\trgaph0", tgn, b, "\\cellx", w, algn, " ")
-  rwft <- paste0("\\cell\\row\\pard")
+  rwft <- paste0("\\cell\\row\\fs1\\sl0\\par\\pard", rs$font_rtf, 
+                 rs$spacing_multiplier)
   
   ret <- list()
   cnt <- c()

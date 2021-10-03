@@ -425,6 +425,17 @@ page_setup_rtf <- function(rs) {
   rs$cell_padding <- cp
   rs$spacing_multiplier <- sm
   
+  # Line spacing values determined be trial and error.
+  # Needed for LibreOffice.  Appear to be ignored in Word.
+  if (rs$font_size == 10) {
+    rs$font_rtf <-  "\\f0\\fs20"
+  } else if (rs$font_size == 12) {
+    rs$font_rtf <-  "\\f0\\fs24"
+  } else if (rs$font_size == 8) {
+    rs$font_rtf  <- "\\f0\\fs16"
+  }
+  
+  
   if (rs$units == "cm")
     rs$gutter_width <- ccm(gtr)
   else 

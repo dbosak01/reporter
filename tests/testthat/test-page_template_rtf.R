@@ -13,7 +13,8 @@ test_that("get_titles_rtf function works as expected.", {
   t <- get_titles_rtf(rpt$titles, 6, rpt)
   t
   expect_equal(t$rtf,
-        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\line\\cell\\row\n\\pard\\sl-275\\slmult0")
+        paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\line\\cell\\row\n",
+        "\\fs1\\sl0\\par\\pard\\f0\\fs24\\sl-275\\slmult0"))
   expect_equal(t$lines, 2)
   # expect_equal(t$twips, 576)
   
