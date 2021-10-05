@@ -385,7 +385,7 @@ page_setup_rtf <- function(rs) {
   if (rs$font_size == 8) {
     rh <- 185 #round(.11 * 1440)
     lh <- 185 #round(.1 * 1440) 
-    pb <- "\\pagebb\\fs1\\sl0\\par\\pard\\fs16"
+    pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
     gtr <- .1 
     cw <- .1
     cp <- 40
@@ -393,7 +393,7 @@ page_setup_rtf <- function(rs) {
   } else if (rs$font_size == 10) {
     rh <- 228 #round(.165 * 1440) # 225
     lh <- 228 #round(.165 * 1440)  
-    pb <- "\\pagebb\\fs1\\sl0\\par\\pard\\fs20"
+    pb <- "\\fs1\\sl0\\par\\pard\\fs20\\page\\fs1\\sl0\\par\\pard\\fs20"
     gtr <- .1
     cw <- .11
     cp <- 40
@@ -401,7 +401,7 @@ page_setup_rtf <- function(rs) {
   } else if (rs$font_size == 12) {
     rh <- 271 #round(.2 * 1440)
     lh <- 271 #round(.1875 * 1440) #270
-    pb <- "\\pagebb\\fs1\\sl0\\par\\pard\\fs24"
+    pb <- "\\fs1\\sl0\\par\\pard\\fs24\\page\\fs1\\sl0\\par\\pard\\fs24"
     gtr <- .1
     cw <- .12
     cp <- 40

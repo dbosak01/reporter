@@ -324,7 +324,11 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
           ftnts <- get_footnotes_rtf(rs$footnotes, 
                                      spec_width, rs, 
                                      talgn) 
-        } 
+        } else {
+          
+          if (wrap_flag)
+            vflag <- "bottom" 
+        }
       }
     }
   }
@@ -351,8 +355,8 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   } else {
     
     if ((wrap_flag & len_diff > 0)) {
-
-      lblnks <- c(rep("\\par", len_diff), b)
+      if (vflag == "bottom")
+        lblnks <- c(rep("\\par", len_diff), b)
     } else {
       lblnks <- b
     }
@@ -766,9 +770,9 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
     
   }
   
-  # 
-  # ret[length(ret)] <- paste0(ret[length(ret)], "\\fs1\\sl0\\par\\pard", 
-  #                            rs$font_rtf, rs$spacing_multiplier)
+
+  ret[length(ret)] <- paste0(ret[length(ret)], "\\pard",
+                             rs$font_rtf, rs$spacing_multiplier)
   
   
   return(ret)

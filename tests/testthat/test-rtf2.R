@@ -750,6 +750,7 @@ test_that("rtf2-22: Page by works as expected.", {
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
     page_footer("Left1", "Center1", "Right1") %>% 
     footnotes("My footnote 1", "My footnote 2", borders = "none")
   
