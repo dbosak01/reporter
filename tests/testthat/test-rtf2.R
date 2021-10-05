@@ -125,7 +125,7 @@ test_that("rtf2-1: One page text spec works as expected.", {
 
 
 
-
+# Last page wraps
 test_that("rtf2-2: Two page text spec works as expected in 12pt font.", {
 
 
@@ -259,7 +259,7 @@ test_that("rtf2-6: One page table works as expected.", {
   
 })
 
-
+# Last page wraps
 test_that("rtf2-7: Multi page table works as expected.", {
   
   
@@ -671,7 +671,7 @@ test_that("rtf2-20: Title Header borders work as expected.", {
   tbl <- create_table(dat, borders = "all") %>% 
     title_header("Table 1.0", "My Nice Report with Borders",
                  right = c("Right1", "Right2", "Right3"),
-           borders = c("top", "bottom", "left", "right"),
+           borders = c("outside"),
            blank_row = "both") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"), 
@@ -745,15 +745,15 @@ test_that("rtf2-22: Page by works as expected.", {
   dat <- iris
   
   tbl <- create_table(dat, borders = "none") %>% 
-    titles("Table 1.0", "My Nice Report with a Page By") %>%
-    page_by(Species, label = "Species: ", align = "right")
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Species, label = "Species: ", align = "right", borders = "none")
   
   rpt <- create_report(fp, output_type = "RTF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1") %>% 
-    footnotes("My footnote 1", "My footnote 2")
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
   
   res <- write_report(rpt)
   res
@@ -1372,6 +1372,40 @@ test_that("rtf2-40: One page table works as expected in courier.", {
   
 })
 
+# Good for testing borders and spacing are working correctly
+# Need to get this working.
+test_that("rtf2-41: Page by with borders works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test41.rtf")
+  
+  dat <- iris
+  
+  brdrs <- "outside"
+  
+  tbl <- create_table(dat, borders = "all") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = brdrs) %>%
+    page_by(Species, label = "Species: ", align = "left", borders = brdrs,
+            blank_row = "below") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = brdrs)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
 
 # User Tests --------------------------------------------------------------
 
@@ -1628,15 +1662,18 @@ test_that("rtf2-user2: demo table with stub works.", {
       define(`ARM D`, align = "center", label = "Competitor", n = 38) %>% 
       titles("Table 14.1/4",
              "Demographics and Baseline Characteristics",
-             "Specify Population", borders = "outside", blank_row = "none") %>%
-      footnotes("Here is a footnote", borders = "outside")  
+             "Specify Population", borders = "outside", blank_row = "both",
+             align = "right") %>%
+      footnotes("Here is a footnote", "Here is another footnote",
+                borders = "outside", blank_row = "both", align = "right")  
     
     # Define Report
     rpt <- create_report(fp, output_type = "RTF", 
                          font = "Arial", font_size = 10) %>%
-      add_content(tbl) %>% 
+      add_content(tbl, align = "right") %>% 
       page_header("Sponsor", "Drug") %>% 
-      page_footer(left = "Time", right = "Page [pg] of [tpg]")
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") #%>% 
+      #page_by(var = "var", label = "Variable: ")
     
     # Write out report
     res <- write_report(rpt)
