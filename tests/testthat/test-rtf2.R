@@ -124,8 +124,6 @@ test_that("rtf2-1: One page text spec works as expected.", {
 
 
 
-
-# Last page wraps
 test_that("rtf2-2: Two page text spec works as expected in 12pt font.", {
 
 
@@ -837,8 +835,8 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>% 
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-    footnotes("* Motor Trend, 1974") 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "outside") %>%
+    footnotes("* Motor Trend, 1974", borders = "outside") 
   
   
   rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%

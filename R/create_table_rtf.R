@@ -360,8 +360,7 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
     
   }
   
-  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks), 
-              ifelse(blen == 0, -1, 0))
+  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
   ret <- list(rtf = c(ublnks, ftnts$rtf, lblnks),
               lines = tlns,
               twips = tlns * rs$twip_conversion)

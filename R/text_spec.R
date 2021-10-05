@@ -377,7 +377,6 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
   ttls <- get_titles_rtf(txt$titles, width, rs, talgn) 
   ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
   ftnts <- get_footnotes_rtf(txt$footnotes, width, rs, talgn) 
-  ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
   
   t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
   hgt <- rs$body_line_count - t
