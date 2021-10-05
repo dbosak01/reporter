@@ -218,7 +218,8 @@ Default is 'none'.
 For fixed width reports, the 
 border character will be taken from the value of the <code>uchar</code> parameter
 on the <code><a href='options_fixed.html'>options_fixed</a></code> function.  The 
-'left' and 'right' border specifications only apply to RTF reports.</p></td>
+'left', 'right', 'outside', and 'inside' border specifications only apply 
+to RTF reports.</p></td>
     </tr>
     <tr>
       <th>valign</th>
@@ -260,7 +261,8 @@ blocks may be added to the same object.</p>
 <p>Blank rows above or below the footnote block may be controlled using the 
 <code>blank_row</code> parameter.</p>
 <p>Each footnote string must fit within the available space.  The <strong>reporter</strong>
-package will not wrap footnotes.  If a footnote does not fit within the 
+package will not wrap footnotes on fixed-width reports.  
+If a footnote does not fit within the 
 available space, a warning will be generated and the footnote will be 
 truncated.  In these situations, either
 shorten the footnote or split it into multiple footnotes that each fit within 

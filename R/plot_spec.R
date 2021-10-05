@@ -520,17 +520,21 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   # Concat all header codes
   hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
   
+  ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
+  
   # Restore sizing and alignment
-  if (rs$font_size == 8) {
-    ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
-                 rs$spacing_multiplier)
-  } else if (rs$font_size ==  12) {
-    ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
-                 rs$spacing_multiplier)
-  } else {
-    ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf, 
-                 rs$spacing_multiplier)
-  }
+  # if (rs$font_size == 8) {
+  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
+  #                rs$spacing_multiplier)
+  # } else if (rs$font_size ==  12) {
+  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
+  #                rs$spacing_multiplier)
+  # } else {
+  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf, 
+  #                rs$spacing_multiplier)
+  # }
+  
+  
   
   # Concat RTF codes for image
   img <- paste0(hd, img, ft)
@@ -541,11 +545,6 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   if (content_blank_row %in% c("both", "above"))
     a <- "\\par"
   
-  
-  # Add blank below content if requested
-  b <- NULL
-  if (content_blank_row %in% c("both", "below"))
-    b <- "\\par"
   
   # Combine titles, blanks, body, and footnotes
   rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, img)

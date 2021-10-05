@@ -334,9 +334,10 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   if (content_blank_row %in% c("below", "both")) {
     b <- "\\par"
     blen <- 1
-  } else {
-    b <- paste0("\\fs1\\sl0\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
   }
+  # } else {
+  #   b <- paste0("\\fs1\\sl0\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
+  # }
   
   ublnks <- c()
   lblnks <- c()
@@ -766,8 +767,9 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
     
   }
   
-  ret[length(ret)] <- paste0(ret[length(ret)], "\\fs1\\sl0\\par\\pard", 
-                             rs$font_rtf, rs$spacing_multiplier)
+  # 
+  # ret[length(ret)] <- paste0(ret[length(ret)], "\\fs1\\sl0\\par\\pard", 
+  #                            rs$font_rtf, rs$spacing_multiplier)
   
   
   return(ret)

@@ -1025,8 +1025,10 @@ page_header <- function(x, left="", right="", blank_row = "none"){
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is 'below'.
 #' @param borders Whether and where to place a border. Valid values are 'top',
-#' 'bottom', 'left', 'right', 'all', or 'none'.  Default is 'none'.   The 
-#' 'left' and 'right' border specifications only apply to RTF reports.
+#' 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'.  
+#' Default is 'none'.   The 
+#' 'left', 'right', 'outside', and 'inside' border specifications only 
+#' apply to RTF reports.
 #' @param width The width of the title header.  If the title header is attached
 #' to the report, valid values are 'page' or a numeric width, and the default
 #' is 'page'. If the title header is attached to the
@@ -1119,9 +1121,11 @@ title_header <- function(x, ..., right = "",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "none")))
+  if (!all(borders %in% c("top", "bottom", "left", "right", 
+                          "outside", "inside", "all", "none"))) {
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'left', 'right', 'all', or 'none'."))
+      "'top', 'bottom', 'left', 'right', 'outside', 'inside, 'all', or 'none'."))
+  }
   
   if (is.null(width)) {
     if (any(class(x) %in% c("report_spec"))) 
@@ -1205,8 +1209,10 @@ title_header <- function(x, ..., right = "",
 #' @param blank_row Where to place a blank row.  Valid values are 'above',
 #' 'below', 'both', or 'none'.  Default is "below".
 #' @param borders Whether and where to place a border. Valid values are 'top',
-#' 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
-#' The 'left' and 'right' border specifications only apply to RTF reports.
+#' 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'.  
+#' Default is "none".  
+#' The 'left', 'right', 'outside', and 'inside' border specifications 
+#' only apply to RTF reports.
 #' @param width The width of the titles block.  If the titles are attached
 #' to the report, valid values are 'page' or a numeric width, and the default
 #' is 'page'. If the titles are attached to the
@@ -1282,9 +1288,10 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
-  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "outside", "none")))
+  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "outside", 
+                          "inside", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
-               "'top', 'bottom', 'left', 'right', 'all', 'outside', or 'none'."))
+      "'top', 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'."))
 
   
 
@@ -1367,7 +1374,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' For fixed width reports, the 
 #' border character will be taken from the value of the \code{uchar} parameter
 #' on the \code{\link{options_fixed}} function.  The 
-#' 'left' and 'right' border specifications only apply to RTF reports.
+#' 'left', 'right', 'outside', and 'inside' border specifications only apply 
+#' to RTF reports.
 #' @param valign The vertical position to align the footnotes.  Valid
 #' values are: 'top' and 'bottom'.  For footnotes attached to a report,
 #' default is 'bottom'.  For footnotes attached to content, default is 'top'.
@@ -1632,7 +1640,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' left, right, or center. Use the \code{align} parameter to specify the 
 #' alignment. 
 #' 
-#' You must be sort the data by the page by variable prior to reporting.
+#' You must sort the data by the page by variable prior to reporting.
 #' The page by labels will appear in the sorted order.  Failure to sort 
 #' the page by variable prior to reporting may produce unexpected results.
 #' 
@@ -1648,6 +1656,9 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' @param blank_row Indicates whether a blank row is desired above or below
 #' the page by.  Default value is 'none'.  Valid values are 'above', 'below',
 #' 'both', or 'none'.
+#' @param borders Whether and where to place a border. Valid values are 'top',
+#' 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
+#' The 'left' and 'right' border specifications only apply to RTF reports.
 #' @family report
 #' @seealso \code{\link{create_table}} to create a table, and 
 #' \code{\link{create_plot}} to create a plot.  
@@ -1764,7 +1775,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' # 2020-10-25 19:33:35                                                Page 3 of 3 
 #' @export
 page_by <- function(x, var, label = NULL, align = "left",
-                    blank_row = "below") {
+                    blank_row = "below", borders = "none") {
   
   
   # Create page by structure
@@ -1780,6 +1791,11 @@ page_by <- function(x, var, label = NULL, align = "left",
                "'both', or 'none'."))
   }
   
+  
+  if (!all(borders %in% c("top", "bottom", "left", "right", "all", "outside", "none")))
+    stop(paste("Borders parameter invalid.  Valid values are", 
+               "'top', 'bottom', 'left', 'right', 'all', 'outside', or 'none'."))
+  
   var_c <- as.character(substitute(var, env = environment()))
   
   pb$var <- var_c
@@ -1790,6 +1806,7 @@ page_by <- function(x, var, label = NULL, align = "left",
   
   pb$align <- align
   pb$blank_row <- blank_row
+  pb$borders <- borders
 
   x$page_by <- pb
   

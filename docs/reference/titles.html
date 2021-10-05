@@ -215,8 +215,10 @@ a table, text, or plot specification.</p></td>
     <tr>
       <th>borders</th>
       <td><p>Whether and where to place a border. Valid values are 'top',
-'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
-The 'left' and 'right' border specifications only apply to RTF reports.</p></td>
+'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'.  
+Default is "none".  
+The 'left', 'right', 'outside', and 'inside' border specifications 
+only apply to RTF reports.</p></td>
     </tr>
     <tr>
       <th>width</th>
@@ -260,7 +262,8 @@ blocks may be added to the same object if needed.</p>
 <p>Blank rows above or below the title block may be controlled using the 
 <code>blank_row</code> parameter.</p>
 <p>Each title string must fit within the available space.  The <strong>reporter</strong>
-package will not wrap titles.  If a title does not fit within the 
+package will not wrap titles on fixed-width reports.  
+If a title does not fit within the 
 available space, a warning will be generated and the title will be 
 truncated.  In these situations, either
 shorten the title or split it into multiple titles that each fit within the

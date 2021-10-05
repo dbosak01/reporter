@@ -31,7 +31,8 @@ Default is 'none'.
 For fixed width reports, the 
 border character will be taken from the value of the \code{uchar} parameter
 on the \code{\link{options_fixed}} function.  The 
-'left' and 'right' border specifications only apply to RTF reports.}
+'left', 'right', 'outside', and 'inside' border specifications only apply 
+to RTF reports.}
 
 \item{valign}{The vertical position to align the footnotes.  Valid
 values are: 'top' and 'bottom'.  For footnotes attached to a report,

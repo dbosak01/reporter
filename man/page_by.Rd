@@ -4,7 +4,14 @@
 \alias{page_by}
 \title{Adds a page by variable}
 \usage{
-page_by(x, var, label = NULL, align = "left", blank_row = "below")
+page_by(
+  x,
+  var,
+  label = NULL,
+  align = "left",
+  blank_row = "below",
+  borders = "none"
+)
 }
 \arguments{
 \item{x}{The report specification to assign the page by to.}
@@ -23,6 +30,10 @@ values are 'left', 'right', 'center', or 'centre'.}
 \item{blank_row}{Indicates whether a blank row is desired above or below
 the page by.  Default value is 'none'.  Valid values are 'above', 'below',
 'both', or 'none'.}
+
+\item{borders}{Whether and where to place a border. Valid values are 'top',
+'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
+The 'left' and 'right' border specifications only apply to RTF reports.}
 }
 \description{
 The \code{page_by} function adds a page by variable to a report, table,
@@ -39,7 +50,7 @@ appear on all pages of the object.  The page by label may be aligned on the
 left, right, or center. Use the \code{align} parameter to specify the 
 alignment. 
 
-You must be sort the data by the page by variable prior to reporting.
+You must sort the data by the page by variable prior to reporting.
 The page by labels will appear in the sorted order.  Failure to sort 
 the page by variable prior to reporting may produce unexpected results.
 }
