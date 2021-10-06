@@ -747,7 +747,10 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   # Table Body
   for(i in seq_len(nrow(t))) {
     
-    ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
+    if (i ==  1)
+      ret[i] <- paste0("{\\trowd\\trgaph0\\trrh", rh, ta)
+    else 
+      ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
     
     # Loop for cell definitions
     for(j in seq_len(ncol(t))) {
@@ -771,7 +774,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   }
   
 
-  ret[length(ret)] <- paste0(ret[length(ret)], "\\pard",
+  ret[length(ret)] <- paste0(ret[length(ret)], "}\\pard",
                              rs$font_rtf, rs$spacing_multiplier)
   
   
