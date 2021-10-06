@@ -546,8 +546,7 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
     a <- "\\par"
   
   
-  # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, img)
+
   
   # Get sum of all items to this point
   lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght)
@@ -555,6 +554,33 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   # Get footnotes, filler, and content blank line
   ftnts <- get_page_footnotes_rtf(rs, plt, wth, lpg_rows, lns,
                                    wrap_flag, content_blank_row, talign)
+  
+  
+  # On LibreOffice, have to protect the table from the title width or
+  # the table row will inherit the title row width. Terrible problem.
+  tpt <- "{\\pard\\fs1\\sl0\\par}"
+  if (any(plt$borders %in% c("all", "top", "outside"))) {
+    if (ttls$border_flag | rs$page_template$titles$border_flag |  
+        rs$page_template$title_hdr$border_flag)
+      tpt <- ""
+  }
+  
+  # Prevent infection of widths on LibreOffice.
+  bpt <- "{\\pard\\fs1\\sl0\\par}"
+  if (any(plt$borders %in% c("all", "top", "outside"))) {
+    if (!is.null(ftnts)) {
+      if (ftnts$border_flag)
+        bpt <- ""
+    }
+    
+    if (!is.null(rs$page_template$footnotes)) {
+      if (rs$page_template$footnotes$border_flag)
+        bpt <- ""
+    }
+  }
+  
+  # Combine titles, blanks, body, and footnotes
+  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, tpt, img, bpt)
   
   # Combine everything
   rws <- c(rws, ftnts$rtf)

@@ -14,7 +14,7 @@ test_that("get_titles_rtf function works as expected.", {
   t
   expect_equal(t$rtf,
         paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\cell\\row\n",
-        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc  \\cell\\row\n"))
+        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc\\cell\\row\n"))
   expect_equal(t$lines, 2)
   # expect_equal(t$twips, 576)
   
@@ -32,7 +32,7 @@ test_that("get_footnotes_rtf function works as expected.", {
   f <- get_footnotes_rtf(rpt$footnotes, 6, rpt)
   f
   expect_equal(f$rtf,
-      paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql  \\cell\\row\n", 
+      paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql\\cell\\row\n", 
              "\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n"))
   expect_equal(f$lines, 2)
   # expect_equal(f$twips, 576)
@@ -119,7 +119,7 @@ test_that("get_pageby_rtf works as expected.", {
   expect_equal(res$lines, 2)
   expect_equal(res$rtf, 
     paste0("\\trowd\\trgaph0\\trql\\cellx8640\\ql Cylinders:fork\\cell\\row\n", 
-           "\\trowd\\trgaph0\\trql\\cellx8640\\ql  \\cell\\row\n"))
+           "\\trowd\\trgaph0\\trql\\cellx8640\\ql\\cell\\row\n"))
   
 })
 

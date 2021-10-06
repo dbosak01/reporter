@@ -836,8 +836,8 @@ test_that("rtf2-25: Simplest RTF Plot works as expected.", {
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>% 
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "outside") %>%
-    footnotes("* Motor Trend, 1974", borders = "outside") 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+    footnotes("* Motor Trend, 1974", borders = "none") 
   
   
   rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%
@@ -1037,15 +1037,15 @@ test_that("rtf2-31: Simplest RTF Text with valign top works as expected.", {
   
   fp <- file.path(base_path, "rtf2/test31.rtf")
   
-  txt <- create_text(cnt, width = 6)
+  txt <- create_text(cnt, width = 6, borders = "outside")
   
   
   rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
-    titles("Text 1.0", "MTCARS Miles per Cylinder Text") %>%
+    titles("Text 1.0", "MTCARS Miles per Cylinder Text", borders = "outside") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
-    footnotes("* Motor Trend, 1974", valign = "top") %>%
+    footnotes("* Motor Trend, 1974", valign = "top", borders = "outside") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   
   

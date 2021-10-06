@@ -442,9 +442,7 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
   
     # Deal with cell padding.  Don't count this in line count.
     cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
-  
-    # Combine titles, blanks, body, and footnotes
-    rws <- c(a, cp, ttls$rtf, ttl_hdr$rtf, cp, rwhd, s, rwft)
+    
 
     # Sum up lines
     cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
@@ -452,6 +450,32 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
     # Get footnotes
     ftnts <- get_page_footnotes_rtf(rs, txt, width, lpg_rows, cnts,
                                     wrap_flag, content_blank_row, talgn)
+    
+    # On LibreOffice, have to protect the table from the title width or
+    # the table row will inherit the title row width. Terrible problem.
+    tpt <- "{\\pard\\fs1\\sl0\\par}"
+    if (any(txt$borders %in% c("all", "top", "outside"))) {
+      if (ttls$border_flag | rs$page_template$titles$border_flag |  
+          rs$page_template$title_hdr$border_flag)
+        tpt <- ""
+    }
+    
+    # Prevent infection of widths on LibreOffice.
+    bpt <- "{\\pard\\fs1\\sl0\\par}"
+    if (any(txt$borders %in% c("all", "top", "outside"))) {
+      if (!is.null(ftnts)) {
+        if (ftnts$border_flag)
+          bpt <- ""
+      }
+      
+      if (!is.null(rs$page_template$footnotes)) {
+        if (rs$page_template$footnotes$border_flag)
+          bpt <- ""
+      }
+    }
+    
+    # Combine titles, blanks, body, and footnotes
+    rws <- c(a, cp, ttls$rtf, ttl_hdr$rtf, tpt, cp, rwhd, s, rwft, bpt)
     
     ret[[length(ret) + 1]] <- c(rws, cp, ftnts$rtf)
     cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)

@@ -270,7 +270,7 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
             tb <- get_cell_borders(i, 1, length(ttls$titles) + alcnt, 1, ttls$borders)
             
             al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-                                      algn, "  \\cell\\row\n")
+                                      algn, "\\cell\\row\n")
             cnt <- cnt + 1 
 
           }
@@ -286,7 +286,7 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
                                    1, ttls$borders)
             
             bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-                         algn, "  \\cell\\row\n")
+                         algn, "\\cell\\row\n")
             cnt <- cnt + 1
           }
           
@@ -384,7 +384,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
                                    1, ftnts$borders)
             
             al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-                         algn, "  \\cell\\row\n")
+                         algn, "\\cell\\row\n")
             cnt <- cnt + 1 
             
           }
@@ -400,7 +400,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
                                    1, ftnts$borders)
             
             bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-                         algn, "  \\cell\\row\n")
+                         algn, "\\cell\\row\n")
             cnt <- cnt + 1
           }
           if (any(ftnts$borders %in% c("outside", "all", "top")))
@@ -500,7 +500,7 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
                                    1, ttlhdr$borders)
             
             al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1, 
-                         "\\ql  \\cell\\row\n")
+                         "\\ql\\cell\\row\n")
             cnt <- cnt + 1 
             
           }
@@ -516,7 +516,7 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
                                    1, ttlhdr$borders)
             
             bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1, 
-                         "\\ql  \\cell\\row\n")
+                         "\\ql\\cell\\row\n")
             cnt <- cnt + 1
           }
           
@@ -637,7 +637,7 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
 
       ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
                                      "\\cellx", w1, algn, 
-                                  "  \\cell\\row\n")
+                                  "\\cell\\row\n")
       cnt <- cnt + 1 
     }
     
@@ -658,7 +658,7 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
       
       ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
                                      "\\cellx", w1, algn, 
-                                  "  \\cell\\row\n")
+                                  "\\cell\\row\n")
       cnt <- cnt + 1 
     }
     
