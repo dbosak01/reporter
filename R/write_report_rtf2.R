@@ -338,7 +338,7 @@ write_content_rtf <- function(rs, hdr, body, pt) {
     
   }
   
-  writeLines("\\fs0\\sl0\\par}", con = f, useBytes = TRUE)
+  writeLines("{\\pard\\fs1\\sl0  \\par}}", con = f, useBytes = TRUE)
   
   close(f)
   
