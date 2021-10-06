@@ -374,10 +374,19 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   #   b <- paste0("\\fs1\\sl0\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
   # }
   
+  # Add extra offsets if table has a lot of borders turned on
+  # to avoid undesired page wraps
+  boff <- 0
+  if (any(class(spec) == "table_spec") & 
+      any(spec$borders %in% c("all", "inside"))) {
+    
+    boff <- round(row_count * rs$border_height / rs$row_height)
+  }
+  
   ublnks <- c()
   lblnks <- c()
   
-  len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen
+  len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen - boff
   
   if (vflag == "bottom" & len_diff > 0) {
   
@@ -472,10 +481,11 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
     cnt[["lower"]] <- ftnts$lines
   }
   
-  # Add extra offset if table has a lot of borders turned on
-  if (any(ts$object$borders %in% c("all", "inside"))) {
-    ret[["lower"]] <- ret[["lower"]] + rs$row_height
-    cnt[["lower"]] <- cnt[["lower"]] + 1
+  # Add extra offsets if table has a lot of borders turned on
+  # to avoid undesired page wraps
+  if (any(ts$borders %in% c("all", "inside"))) {
+    ret[["lower"]] <- ret[["lower"]] + (rs$row_height * 2)
+    cnt[["lower"]] <- cnt[["lower"]] + 2
   }
     
   if (content_blank_row %in% c("both", "below")) {

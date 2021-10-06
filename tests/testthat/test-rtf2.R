@@ -257,7 +257,7 @@ test_that("rtf2-6: One page table works as expected.", {
   
 })
 
-# Last page wraps
+
 test_that("rtf2-7: Multi page table works as expected.", {
   
   
@@ -377,6 +377,7 @@ test_that("rtf2-10: Preview works as expected.", {
 })
 
 # This is awesome. Shows cell wrapping, page break, and valign
+# Very good for testing.
 test_that("rtf2-11: Forced page wrap works as expected.", {
   
   
@@ -384,7 +385,7 @@ test_that("rtf2-11: Forced page wrap works as expected.", {
   
   dat <- data.frame(labels = rownames(mtcars), mtcars)
   
-  tbl <- create_table(dat, borders = "none") %>% 
+  tbl <- create_table(dat, borders = "all") %>% 
     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>% 
     define(labels, id_var = TRUE) %>% 
@@ -1372,7 +1373,6 @@ test_that("rtf2-40: One page table works as expected in courier.", {
 })
 
 # Good for testing borders and spacing are working correctly
-# Need to get this working.
 test_that("rtf2-41: Page by with borders works as expected.", {
   
   
@@ -1401,6 +1401,35 @@ test_that("rtf2-41: Page by with borders works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 6)
   expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+# Test for borders and page wraps
+test_that("rtf2-42: Long table with borders and footnotes on report.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test42.rtf")
+  
+  dat <- data.frame(labels = rownames(mtcars), mtcars)
+  
+  tbl <- create_table(dat, borders = "all") %>% 
+    define(labels, id_var = TRUE) %>% 
+    define(wt, page_wrap = TRUE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>% 
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom") 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
   
   
 })

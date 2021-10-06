@@ -214,8 +214,18 @@ paginate_content_rtf <- function(rs, ls) {
     # content list, add the blank lines if needed.
     if ((ls[[i]]$page_break | last_object) & hrf) {
       
+      
+      # Add extra offsets if table has a lot of borders turned on
+      # to avoid undesired page wraps
+      boff <- 0
+      if (any(class(obj) == "table_spec") & 
+          any(obj$borders %in% c("all", "inside"))) {
+        
+        boff <- round(last_page_lines * rs$border_height / rs$row_height)
+      }
+      
       blnks <- c()
-      bl <- rs$body_line_count - last_page_lines 
+      bl <- rs$body_line_count - last_page_lines - boff
       if (bl > 0)
         blnks <- rep("\\par", bl)
       
@@ -426,6 +436,7 @@ page_setup_rtf <- function(rs) {
   rs$line_size <- rs$content_size[["width"]]
   rs$cell_padding <- cp
   rs$spacing_multiplier <- sm
+  rs$border_height <- 15
   
   # Line spacing values determined be trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
