@@ -28,7 +28,8 @@ test_that("get_table_body_rtf works as expected.", {
 
   res  
   
-  expect_equal(length(res), 10)
+  expect_equal(length(res$rtf), 10)
+  expect_equal(res$lines, 10)
   
 })
 

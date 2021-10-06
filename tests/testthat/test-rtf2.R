@@ -1760,7 +1760,8 @@ test_that("user3: listings works.", {
              "Demographics Dataset") %>%
       add_content(tbl, align = "left") %>% 
       page_header("Sponsor", "Drug") %>% 
-      page_footer(left = "Time", right = "Page [pg] of [tpg]")
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>% 
+      footnotes("My footnotes")
     
     #Write out report
     res <- write_report(rpt, output_type = "RTF")
@@ -1825,7 +1826,8 @@ test_that("user4: listing in cm and times works.", {
              "Demographics Dataset") %>%
       add_content(tbl, align = "left") %>% 
       page_header("Sponsor", "Drug") %>% 
-      page_footer(left = "Time", right = "Page [pg] of [tpg]")
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>% 
+      footnotes("My footnote")
     
     #Write out report
     res <- write_report(rpt, output_type = "RTF")

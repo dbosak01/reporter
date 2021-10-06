@@ -269,15 +269,15 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   blnks <- c()
   
   # Get row count by summing ..row variable
-  if ("..row" %in% names(pi$data)) {
-    rcnt <- sum(pi$data$..row)
-  } else {
-    rcnt <- nrow(pi$data) 
-  }
+  # if ("..row" %in% names(pi$data)) {
+  #   rcnt <- sum(pi$data$..row)
+  # } else {
+  #   rcnt <- nrow(pi$data) 
+  # }
     
   # Determine sum of all lines
   rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
-           hdrs$lines, rcnt,
+           hdrs$lines, rws$lines,
            length(a))
   
   # Get footnotes, passing in sum of all current lines
@@ -319,7 +319,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   }
   
   ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, tpt, cp, shdrs$rtf, 
-                      hdrs$rtf, rws, bpt, cp, ftnts$rtf),
+                      hdrs$rtf, rws$rtf, bpt, cp, ftnts$rtf),
               lines = rc  + ftnts$lines)
     
   return(ret) 
@@ -377,17 +377,19 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired page wraps
   boff <- 0
-  if (any(class(spec) == "table_spec") & 
+  if (any(class(spec) == "table_spec") &
       any(spec$borders %in% c("all", "inside"))) {
-    
+
     boff <- round(row_count * rs$border_height / rs$row_height)
   }
   
   ublnks <- c()
   lblnks <- c()
   
+  # Determine number of filler lines needed
   len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen - boff
-  
+
+
   if (vflag == "bottom" & len_diff > 0) {
   
       ublnks <- c(b, rep("\\par", len_diff))
@@ -425,7 +427,6 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row) {
   ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   
-  # Need to do something about this.
   # Width is normally the width of the table, not the page
   wdth <- rs$content_size[["width"]]
   if (!is.null(pi$col_width))
@@ -729,7 +730,9 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
   return(res)
 }
 
-
+#' @description This function counts lines per row independantly because
+#' the ..row field does not account for page wrapping.  Need number
+#' of lines on this particular page.
 #' @noRd
 get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   
@@ -737,6 +740,10 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
     flgs <- tbl$..blank
   else 
     flgs <- NA
+  
+  # Count lines per row
+  rws <- c()
+  
   nms <- names(widths)
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
@@ -789,10 +796,12 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   # Table Body
   for(i in seq_len(nrow(t))) {
     
+    
     if (i ==  1)
       ret[i] <- paste0("{\\trowd\\trgaph0\\trrh", rh, ta)
     else 
       ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
+    
     
     # Loop for cell definitions
     for(j in seq_len(ncol(t))) {
@@ -802,13 +811,26 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
       }
     }
     
+    mxrw <- 1
+    
     # Loop for cell values
     for(j in seq_len(ncol(t))) {
+      
+
       if (!is.control(nms[j])) {
+        
+        # Construct rtf
         ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
+        
+        # Count lines in cell 
+        cl <- grep("\\line", t[i, j], fixed = TRUE)
+        if (length(cl) >= mxrw)
+            mxrw <- length(cl) + 1
       }
       
     }
+    
+    rws[i] <- mxrw
     
     ret[i] <- paste0(ret[i], "\\row")
     
@@ -820,7 +842,10 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
                              rs$font_rtf, rs$spacing_multiplier)
   
   
-  return(ret)
+  res <- list(rtf = ret,
+              lines = sum(rws))
+  
+  return(res)
   
   
 }
