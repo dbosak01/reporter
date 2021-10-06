@@ -216,7 +216,7 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
   
   conv <- rs$twip_conversion
   lh <- rs$row_height
-  
+  border_flag <- FALSE
 
   
   ta <- "\\trql"
@@ -248,6 +248,7 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
       else 
         algn <- "\\ql"
       
+      border_flag <- FALSE
       alcnt <- 0
       blcnt <- 0
       
@@ -288,6 +289,9 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
                          algn, "  \\cell\\row\n")
             cnt <- cnt + 1
           }
+          
+          if (any(ttls$borders %in% c("outside", "all", "bottom")))
+            border_flag <- TRUE
         }
         
         b <- get_cell_borders(i + alcnt, 1, 
@@ -315,7 +319,8 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
   
   res <- list(rtf = paste0(ret, collapse = ""), 
               lines = cnt, 
-              twips = cnt * lh)
+              twips = cnt * lh,
+              border_flag = border_flag)
   
   return(res)
 }
@@ -327,6 +332,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
   ret <- c()
   cnt <- 0
   twps <- 0
+  border_flag <- FALSE
   
   conv <- rs$twip_conversion
   lh <- rs$row_height
@@ -360,6 +366,7 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
       
       alcnt <- 0
       blcnt <- 0
+      border_flag <- FALSE
       
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -396,6 +403,8 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
                          algn, "  \\cell\\row\n")
             cnt <- cnt + 1
           }
+          if (any(ftnts$borders %in% c("outside", "all", "top")))
+            border_flag <- TRUE
         }
         
         b <- get_cell_borders(i + alcnt, 1, 
@@ -429,7 +438,8 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
   
   res <- list(rtf = paste0(ret, collapse = ""),
               lines = cnt, 
-              twips = cnt * lh)
+              twips = cnt * lh,
+              border_flag = border_flag)
   
   return(res)
 }
@@ -441,6 +451,7 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
   ret <- c()
   cnt <- 0
   twps <- 0
+  border_flag <- FALSE 
   
   conv <- rs$twip_conversion
 
@@ -470,6 +481,7 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
     
       alcnt <- 0
       blcnt <- 0
+      border_flag <- FALSE
       
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -507,6 +519,9 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
                          "\\ql  \\cell\\row\n")
             cnt <- cnt + 1
           }
+          
+          if (any(ttlhdr$borders %in% c("all", "outside", "bottom")))
+            border_flag <- TRUE
         }
         
         
@@ -559,7 +574,8 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
   
   res <- list(rtf = paste0(ret, collapse = ""),
               lines = cnt,
-              twips = cnt * lh)
+              twips = cnt * lh,
+              border_flag = border_flag)
   
   return(res)
 }
@@ -584,6 +600,7 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
   ll <- width
   ret <- c()
   cnt <- 0
+  border_flag <- FALSE
   
   ta <- "\\trql"
   if (talgn == "right")
@@ -645,12 +662,15 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
       cnt <- cnt + 1 
     }
     
+    if (any(pgby$borders %in% c("all", "outside", "bottom")))
+      border_flag <- TRUE
     
   }
   
   res <- list(rtf = paste0(ret, collapse = ""), 
               lines = cnt, 
-              twips = cnt * rs$line_height)
+              twips = cnt * rs$line_height,
+              border_flag = border_flag)
   
   return(res)
 }

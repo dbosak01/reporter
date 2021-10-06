@@ -287,8 +287,39 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # Deal with cell padding.  Don't count this in line count.
   cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
   
-  ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, cp, shdrs$rtf, 
-                      hdrs$rtf, rws, cp, ftnts$rtf),
+  # On LibreOffice, have to protect the table from the title width or
+  # the table row will inherit the title row width. Terrible problem.
+  tpt <- "{\\pard\\fs1\\sl0\\par}"
+  if (any(ts$borders %in% c("all", "top", "outside"))) {
+    if (ttls$border_flag | rs$page_template$titles$border_flag |  
+        rs$page_template$title_hdr$border_flag)
+      tpt <- ""
+    
+    if (length(pgby) > 0) {
+      if (pgby$border_flag)
+        tpt <- ""
+    }
+  }
+  
+  # Same thing as above with titles.  If footnote block is contiguous
+  # with table and footnotes are wider than table, row width of footnotes
+  # will infect row width of table.  On libre only.  So this is to protect
+  # the table width.
+  bpt <- "{\\pard\\fs1\\sl0\\par}"
+  if (any(ts$borders %in% c("all", "top", "outside"))) {
+    if (!is.null(ftnts)) {
+      if (ftnts$border_flag)
+        bpt <- ""
+    }
+    
+    if (!is.null(rs$page_template$footnotes)) {
+      if (rs$page_template$footnotes$border_flag)
+        bpt <- ""
+    }
+  }
+  
+  ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, tpt, cp, shdrs$rtf, 
+                      hdrs$rtf, rws, bpt, cp, ftnts$rtf),
               lines = rc  + ftnts$lines)
     
   return(ret) 
@@ -297,7 +328,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
 get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
                                    wrap_flag, content_blank_row, talgn) {
   
-  ftnts <- list(lines = 0, twips = 0)
+  ftnts <- list(lines = 0, twips = 0, border_flag = FALSE)
   vflag <- "none"
   
   # Deal with valign parameter
@@ -367,7 +398,8 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
   ret <- list(rtf = c(ublnks, ftnts$rtf, lblnks),
               lines = tlns,
-              twips = tlns * rs$twip_conversion)
+              twips = tlns * rs$twip_conversion,
+              border_flag = ftnts$border_flag)
   
   return(ret)
 }

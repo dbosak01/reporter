@@ -148,7 +148,7 @@ test_that("create_table_rtf works as expected.", {
   res
   
   # Doesn't seem right.  Come back to this.
-  expect_equal(length(res$rtf), 18)
+  expect_equal(length(res$rtf), 20)
   expect_equal(res$lines, 17) 
   
 })
