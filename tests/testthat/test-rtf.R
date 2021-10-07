@@ -998,3 +998,53 @@ test_that("rtf32: Simplest RTF Text with valign bottom works as expected.", {
   
   
 })
+
+
+test_that("rtf33: use_attributes parameter table works as expected.", {
+  
+  
+  fp1 <- file.path(base_path, "rtf/test33a.rtf")
+  fp2 <- file.path(base_path, "rtf/test33b.rtf")
+  fp3 <- file.path(base_path, "rtf/test33c.rtf")
+  
+  
+  dat <- mtcars[1:10, ]
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  attr(dat$cyl, "format") <- "%.1f"
+  attr(dat$hp, "width") <- 2
+  fattr(dat$vs) <- list(width = 2, justify = "center")
+  
+  tbl <- create_table(dat) 
+  
+  # Test default 
+  rpt <- create_report(fp1, output_type = "RTF", font = "fixed") %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp1), TRUE)
+  expect_equal(res$pages, 1)
+  
+  # Test none
+  tbl <- create_table(dat, use_attributes = "none") 
+  
+  rpt <- create_report(fp2, output_type = "RTF", font = "fixed") %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp2), TRUE)
+  
+  
+  # Test some
+  tbl <- create_table(dat, use_attributes = c("format", "width")) 
+  
+  rpt <- create_report(fp3, output_type = "RTF", font = "fixed") %>% 
+    add_content(tbl)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp3), TRUE)
+  expect_equal(res$pages, 1)
+  
+})

@@ -1032,6 +1032,3 @@ test_that("Title header alignment works as expected.", {
   
 })
 
-
-
-  
