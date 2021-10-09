@@ -411,10 +411,10 @@ page_setup_rtf <- function(rs) {
     cp <- 40
     sm <- "\\sl-225\\slmult0"
   } else if (rs$font_size == 12) {
-    rh <- 271 #round(.2 * 1440)
-    lh <- 271 #round(.1875 * 1440) #270
+    rh <- 275 #round(.2 * 1440)
+    lh <- 275 #round(.1875 * 1440) #270
     pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
-    gtr <- .1
+    gtr <- .11
     cw <- .12
     cp <- 40
     sm <- "\\sl-275\\slmult0"
