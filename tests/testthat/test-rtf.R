@@ -1048,3 +1048,4 @@ test_that("rtf33: use_attributes parameter table works as expected.", {
   expect_equal(res$pages, 1)
   
 })
+

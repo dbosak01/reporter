@@ -1940,6 +1940,8 @@ test_that("user5: Portrait in 12pt Arial works as expected.", {
     # Write out report
     res <- write_report(rpt)
   
+    expect_equal(file.exists(fp), TRUE)
+    
   } else 
     expect_equal(TRUE, TRUE)
   
