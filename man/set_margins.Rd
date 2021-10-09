@@ -52,10 +52,10 @@ tmp <- file.path(tempdir(), "bod.txt")
 
 # Define table
 tbl <- create_table(BOD, width = 2.5) \%>\% 
-  titles("Table 3.6", "BODÂ¹ Sample Report") \%>\% 
+  titles("Table 3.6", "BOD¹ Sample Report") \%>\% 
   define(Time, format = "Day \%s", align = "left") \%>\% 
   define(demand, format = "\%2.1f mg/l", label = "Demand") \%>\% 
-  footnotes("Â¹ Biochemical Oxygen Demand")
+  footnotes("¹ Biochemical Oxygen Demand")
        
 # Define report #1 - No blank margins
 rpt <- create_report(tmp, orientation="portrait") \%>\%
