@@ -1,3 +1,7 @@
+# reporter 1.2.5
+
+# Added 'HTML' output type to `create_report()` and `write_report()` functions.
+
 
 # reporter 1.2.0
 
@@ -9,6 +13,8 @@ output is still available using the "fixed" font.
 * Added _valign_ parameter to `footnotes()` function.
 * Added _width_ paremeter to `titles()`, `title_header()`, and `footnotes()`
 functions.
+* Added _borders_ parameter to `create_table()`, `create_text()`, and 
+`create_plot()` functions.
 
 # reporter 1.1.6
 
