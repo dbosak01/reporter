@@ -395,3 +395,31 @@ test_that("text15: Text borders work as expected.", {
 })
 
 
+test_that("text16: Two page text spec with titles and footnotes.", {
+  
+  
+  fp <- file.path(base_path, "text/text16.out")
+  
+  cnttxt <- paste(rep(cnt, 20), collapse = "")
+  
+  txt <- create_text(cnttxt)  %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+  
+})
+
