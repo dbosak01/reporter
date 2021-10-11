@@ -256,4 +256,19 @@ test_that("Width parameter on titles and footnotes works as expected.", {
 
 })
 
+test_that("output_type parameter checks work as expected.", {
+  
+  res <- create_report(output_type = "TXT")
+  expect_equal(res$output_type, "TXT")
+  
+  res <- create_report(output_type = "PDF")
+  expect_equal(res$output_type, "PDF")
+  
+  res <- create_report(output_type = "RTF")
+  expect_equal(res$output_type, "RTF")
+  
+  res <- create_report(output_type = "HTML")
+  expect_equal(res$output_type, "HTML")
+  
 
+})

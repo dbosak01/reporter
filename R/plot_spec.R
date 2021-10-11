@@ -596,3 +596,220 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   
 }
 
+
+# Write HTML Functions -----------------------------------------------------
+
+
+#' @description A function to output strings for plot content
+#' @details Basic logic is to write the plot as a png file to a temporary
+#' location, then put a token in the text that references the temp location.
+#' Later code will pick up the image and insert it into the report.  Blank
+#' lines are generated to fill up the page based on a calculation using
+#' the plot height and width.
+#' @param rs The Report Spec
+#' @param cntnt The text content to output
+#' @param lpg_rows Last page rows.
+#' @noRd
+create_plot_pages_html <- function(rs, cntnt, lpg_rows, tmp_dir) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  # Get plot spec 
+  plt <- cntnt$object
+  
+  
+  # Get data in case we need it for page by
+  raw <- plt$plot$data
+  
+  # Determine if there is a page by
+  pgby <- NULL
+  if (!is.null(rs$page_by))
+    pgby <- rs$page_by
+  if (!is.null(plt$page_by))
+    pgby <- plt$page_by
+  
+  if (!is.null(pgby)) {
+    if (!pgby$var %in% names(raw))
+      stop("Page by variable not found in plot data.")
+    
+    dat_lst <- split(raw, raw[[pgby$var]])
+  } else {
+    dat_lst <- list(raw) 
+  }
+  
+  u <- ifelse(rs$units == "inches", "in", rs$units)
+  p <- plt$plot
+  ret <- list()
+  cntr <- 1
+  pgs <- list()
+  cnts <- c()
+  
+  for (dat in dat_lst) {
+    
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+    
+    p$data <- dat
+    
+    pgval <- NULL
+    if (!is.null(pgby)) {
+      # print(pgby$var)
+      # print(dat)
+      pgval <- dat[1, c(pgby$var)]
+    }
+    
+    # Save plot to temp file
+    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+      
+      # Deal with survival plots
+      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                      width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u )
+      
+      
+    } else {
+      
+      # Any other type of plots
+      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u)
+    }
+    
+    # Get rtf page bodies
+    res <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
+                             lpg_rows, cntnt$blank_row, pgby, pgval, 
+                             cntr < length(dat_lst))
+    
+    pgs[[length(pgs) + 1]] <- res$rtf
+    cnts[[length(cnts) + 1]] <- res$lines
+    
+    cntr <- cntr + 1
+    
+  }
+  
+  ret <- list(rtf = pgs,
+              lines = cnts)
+  
+  return(ret)
+}
+
+#' Create list of vectors of strings for each page 
+#' @noRd
+get_plot_body_html <- function(plt, plot_path, talign, rs,
+                              lpg_rows, content_blank_row, pgby, pgval, wrap_flag) {
+  
+  # Default to content width
+  wth <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(plt$width))
+    wth <- plt$width
+  
+  
+  
+  # Get titles and footnotes
+  ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
+  ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
+  pgbys <- get_page_by_rtf(pgby, wth, pgval, rs, talign)
+  
+  # Get image RTF codes
+  img <- get_image_rtf(plot_path, plt$width, plt$height, rs$units)
+  
+  # Assign table alignment codes
+  if (talign == "left") {
+    talgn <- "\\trql" 
+  } else if (talign == "right") {
+    talgn <- "\\trqr"
+  } else  {
+    talgn <- "\\trqc"
+  }
+  
+  algn <- "\\qc" 
+  
+  # Convert width to twips
+  w <- round(wth * rs$twip_conversion)
+  
+  # Get border codes
+  b <- get_cell_borders(1, 1, 1, 1, plt$borders)
+  
+  # Concat all header codes
+  hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
+  
+  ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
+  
+  # Restore sizing and alignment
+  # if (rs$font_size == 8) {
+  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
+  #                rs$spacing_multiplier)
+  # } else if (rs$font_size ==  12) {
+  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
+  #                rs$spacing_multiplier)
+  # } else {
+  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf, 
+  #                rs$spacing_multiplier)
+  # }
+  
+  
+  
+  # Concat RTF codes for image
+  img <- paste0(hd, img, ft)
+  imght <- round((plt$height * rs$twip_conversion) / rs$line_height)
+  
+  # Add blank above content if requested
+  a <- NULL
+  if (content_blank_row %in% c("both", "above"))
+    a <- "\\par"
+  
+  
+  
+  
+  # Get sum of all items to this point
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght)
+  
+  # Get footnotes, filler, and content blank line
+  ftnts <- get_page_footnotes_rtf(rs, plt, wth, lpg_rows, lns,
+                                  wrap_flag, content_blank_row, talign)
+  
+  
+  # On LibreOffice, have to protect the table from the title width or
+  # the table row will inherit the title row width. Terrible problem.
+  tpt <- "{\\pard\\fs1\\sl0\\par}"
+  if (any(plt$borders %in% c("all", "top", "outside"))) {
+    if (ttls$border_flag | rs$page_template$titles$border_flag |  
+        rs$page_template$title_hdr$border_flag)
+      tpt <- ""
+  }
+  
+  # Prevent infection of widths on LibreOffice.
+  bpt <- "{\\pard\\fs1\\sl0\\par}"
+  if (any(plt$borders %in% c("all", "top", "outside"))) {
+    if (!is.null(ftnts)) {
+      if (ftnts$border_flag)
+        bpt <- ""
+    }
+    
+    if (!is.null(rs$page_template$footnotes)) {
+      if (rs$page_template$footnotes$border_flag)
+        bpt <- ""
+    }
+  }
+  
+  # Combine titles, blanks, body, and footnotes
+  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, tpt, img, bpt)
+  
+  # Combine everything
+  rws <- c(rws, ftnts$rtf)
+  lns <- sum(lns, ftnts$lines)
+  
+  
+  # Page list
+  ret <- list(rtf = rws,
+              lines = lns)  
+  
+  
+  return(ret)
+  
+}
+

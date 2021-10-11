@@ -96,7 +96,7 @@ get_rtf_document <- function(rs) {
   if (pf$rtf != "")
     ret[length(ret) + 1] <- pf$rtf
   
-  # Line spacing values determined be trial and error.
+  # Line spacing values determined by trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
   if (rs$font_size == 10) {
     ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs20")
@@ -438,7 +438,7 @@ page_setup_rtf <- function(rs) {
   rs$spacing_multiplier <- sm
   rs$border_height <- 15
   
-  # Line spacing values determined be trial and error.
+  # Line spacing values determined by trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
   if (rs$font_size == 10) {
     rs$font_rtf <-  "\\f0\\fs20"

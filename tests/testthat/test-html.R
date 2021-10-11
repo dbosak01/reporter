@@ -29,9 +29,10 @@ test_that("html1: Basic table works as expected.", {
   
   dat <- mtcars[1:15, ]
   attr(dat[[2]], "label") <- "Cylin."
+  attr(dat[[2]], "width") <- 1
   
-  rpt <- create_report(fp, output_type = "TXT", font = fnt,
-                       font_size = fsz, orientation = "landscape") %>%
+  rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
                 blank_row = "below") %>%
@@ -56,7 +57,7 @@ test_that("html2: Basic text works as expected.", {
     titles("Text 1.0", "My Nice Text", borders = "outside") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
   
-  rpt <- create_report(fp, output_type = "TXT", font = fnt,
+  rpt <- create_report(fp, output_type = "HTML", font = fnt,
                        font_size = fsz) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
@@ -86,7 +87,7 @@ test_that("html3: Basic plot works as expected.", {
     footnotes("* Motor Trend, 1974", borders = "none") 
   
   
-  rpt <- create_report(fp, output_type = "TXT", font = fnt, font_size =fsz) %>%
+  rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, align = "right") %>%

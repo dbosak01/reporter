@@ -148,11 +148,11 @@ create_report <- function(file_path = "", output_type = "TXT",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF")) {
+  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
+                "'\n\tValid values are: 'TXT', 'PDF', 'RTF', and 'HTML'."))
   } else {
     
     output_type <- toupper(output_type) 
@@ -2101,6 +2101,10 @@ write_report <- function(x, file_path = NULL,
     ret <- write_report_pdf(x)
 
 
+  } else if (x$output_type == "HTML") {
+  
+    ret <- write_report_html(x)
+    
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
   }
