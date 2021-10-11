@@ -263,7 +263,7 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
-    a <- paste0("<br>", a)
+    a <- "<br>"
   
   
   blnks <- c()
@@ -318,7 +318,15 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   #   }
   # }
   
-  ret <- list(html = c(a, ttls$html, pgby$html, "<table>", shdrs$html, 
+  ta <- "align=\"left\" "
+  if (pi$table_align == "right")
+    ta <- "align=\"right\" "
+  else if (pi$table_align %in% c("center", "centre"))
+    ta <- "align=\"center\" "
+  
+  ts <- paste0("<table cellpadding =\"0\" cellspacing = \"0\" ", ta, ">")
+  
+  ret <- list(html = c(a, ttls$html, pgby$html, ts, shdrs$html, 
                       hdrs$html, rws$html, "</table>", ftnts$html),
               lines = rc  + ftnts$lines)
   
@@ -570,6 +578,7 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
   # }
   
   cnt <-  1 
+  bd <- "border-bottom: thin solid;"
   
   # Loop for column names
   # pdf(NULL)
@@ -583,7 +592,8 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
       # Split label strings if they exceed column width
       #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
       #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
-      ret[1] <- paste0(ret[1], "<th>", lbls[k], "</th>\n")
+      ret[1] <- paste0(ret[1], "<td class=\"thdr\">", 
+                       lbls[k], "</td>\n")
       
       # Add in extra lines for labels that wrap
       #xtr <- tmp$lines

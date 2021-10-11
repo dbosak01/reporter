@@ -213,34 +213,36 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
 
   # lh <- rs$row_height
 
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
+  ta <- "align=\"left\" "
+  if (talgn == "right")
+    ta <- "align=\"right\" "
+  else if (talgn %in% c("center", "centre"))
+    ta <- "align=\"center\" "
   
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
   
   if (length(ttllst) > 0) {
     
     for (ttls in ttllst) {
       
       
-      # if (ttls$width == "page")
-      #   width <- rs$content_size[["width"]]
-      # else if (ttls$width == "content")
-      #   width <- content_width
-      # else if (is.numeric(ttls$width))
-      #   width <- ttls$width
-      # 
-      # w <- round(width * conv)
+      if (ttls$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttls$width == "content")
+        width <- content_width
+      else if (is.numeric(ttls$width))
+        width <- ttls$width
+
+      w <- round(width, 3)
       
-      
-      # if (ttls$align == "center")
-      #   algn <- "\\qc"
-      # else if (ttls$align == "right")
-      #   algn <- "\\qr"
-      # else 
-      #   algn <- "\\ql"
+      if (ttls$align %in% c("centre", "center"))
+        algn <- "text-align: center;"
+      else if (ttls$align == "right")
+        algn <- "text-align: right;"
+      else
+        algn <- "text-align: left;"
       
       alcnt <- 0
       blcnt <- 0
@@ -249,7 +251,12 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
       # pdf(NULL)
       # par(family = get_font_family(rs$font), ps = rs$font_size)
       
-      ret[length(ret) + 1] <- "<table>\n"
+      ret[length(ret) + 1] <- paste0("<table cellpadding =\"0\" ", 
+                                     "cellspacing = \"0\" ",
+                                     ta,
+                                     "style=\"width:", w, u, ";", 
+                                     algn, 
+                                     "\">\n")
       
       for (i in seq_along(ttls$titles)) {
         
@@ -263,7 +270,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
 
             #tb <- get_cell_borders(i, 1, length(ttls$titles) + alcnt, 1, ttls$borders)
 
-            al <- paste0("<tr><td></td></tr>\n")
+            al <- paste0("<tr><td>&nbsp;</td></tr>\n")
             cnt <- cnt + 1
 
           }
@@ -281,7 +288,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
             # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
             #              algn, "\\cell\\row\n")
             
-            bl <- paste0("<tr><td></td></tr>\n")
+            bl <- paste0("<tr><td>&nbsp;</td></tr>\n")
             cnt <- cnt + 1
           }
 
@@ -329,36 +336,42 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
   ret <- c()
   cnt <- 0
 
-  # 
+
   # conv <- rs$twip_conversion
   # lh <- rs$row_height
-  # 
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
-  # 
+
+  ta <- "align=\"left\" "
+  if (talgn == "right")
+    ta <- "align=\"right\" "
+  else if (talgn %in% c("center", "centre"))
+    ta <- "align=\"center\" "
+
+  
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+  
+  
   if (length(ftnlst) > 0) {
 
     for (ftnts in ftnlst) {
 
-      # if (ftnts$width == "page")
-      #   width <- rs$content_size[["width"]]
-      # else if (ftnts$width == "content")
-      #   width <- content_width
-      # else if (is.numeric(ftnts$width))
-      #   width <- ftnts$width
-      # 
-      # w <- round(width * conv)
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+
+      w <- round(width, 3)
 
 
-      # if (ftnts$align == "center")
-      #   algn <- "\\qc"
-      # else if (ftnts$align == "right")
-      #   algn <- "\\qr"
-      # else
-      #   algn <- "\\ql"
+      if (ftnts$align %in% c("centre", "center"))
+        algn <- "text-align: center;"
+      else if (ftnts$align == "right")
+        algn <- "text-align: right;"
+      else
+        algn <- "text-align: left;"
 
       alcnt <- 0
       blcnt <- 0
@@ -366,7 +379,12 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
 
       # pdf(NULL)
       # par(family = get_font_family(rs$font), ps = rs$font_size)
-      ret[length(ret) + 1] <- "<table>\n"
+      ret[length(ret) + 1] <- paste0("<table cellpadding =\"0\" ", 
+                                     "cellspacing = \"0\" ",
+                                     ta,
+                                     "style=\"width:", w, u, ";",
+                                     algn,
+                                     "\">\n")
 
       for (i in seq_along(ftnts$footnotes)) {
 
@@ -379,7 +397,7 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
           
             # tb <- get_cell_borders(i, 1, length(ftnts$footnotes) + alcnt,
             #                        1, ftnts$borders)
-            al <- paste0("<tr><td></td></tr>\n")
+            al <- paste0("<tr><td>&nbsp;</td></tr>\n")
 
             # al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
             #              algn, "\\cell\\row\n")
@@ -397,7 +415,7 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
             #                        length(ftnts$footnotes) + alcnt + blcnt,
             #                        1, ftnts$borders)
             
-            bl <- paste0("<tr><td></td></tr>\n")
+            bl <- paste0("<tr><td>&nbsp;</td></tr>\n")
 
             # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
             #              algn, "\\cell\\row\n")

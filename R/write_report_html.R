@@ -69,14 +69,29 @@ get_html_document <- function(rs) {
   if (tolower(rs$font) == "times")
     fnt <- "Times New Roman"
   
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+  
   # Prepare header
   ret[length(ret) + 1] <- paste0("<!DOCTYPE html>\n",
                                  "<html>\n", "<head>")
   
   ret[length(ret) + 1] <- "<style>"
   ret[length(ret) + 1] <- paste0("body {\nfont-family: ", fnt,
-                                 ";\nfont-size: ", rs$font_size, "pt;\n}")
+                                 ";\nfont-size: ", rs$font_size, "pt;\n", 
+                                 "margin-top: ", rs$margin_top, u, ";\n",
+                                 "margin-bottom: ", rs$margin_bottom, u, ";\n",
+                                 "margin-left: ", rs$margin_left, u, ";\n",
+                                 "margin-right: ", rs$margin_right, u, ";\n",
+                                 "}")
+  ret[length(ret) + 1] <- paste0(".thdr {\nfont-weight: normal;\n", 
+                                  "border-bottom: thin solid;\n", 
+                                  "}\n")
+  
   ret[length(ret) + 1] <- "</style>"
+  
+
   
   # Will need stuff in the header: style sheet, etc.
   
