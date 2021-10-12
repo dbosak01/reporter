@@ -546,10 +546,10 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
   # else if (talgn %in% c("center", "centre"))
   #   ta <- "\\trqc"
   
-  # if (length(ts$col_spans) == 0)
-  #   brdrs <- ts$borders
-  # else
-  #   brdrs <- "none"
+  if (length(ts$col_spans) == 0)
+    brdrs <- ts$borders
+  else
+    brdrs <- "none"
   
   # Header Cell alignment
   ha <- c()
@@ -589,11 +589,20 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
       
       cols[1] <- paste0(cols[1], "<col style=\"width:", sz[k], ";\">\n")
       
+      b <- get_cell_borders_html(1, k, 2, ncol(tbl), brdrs)
+      
       # Split label strings if they exceed column width
       #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
       #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
-      ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
-                       lbls[k], "</td>\n")
+      if (b == "") {
+        ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
+                         lbls[k], "</td>\n")
+      } else {
+        ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\" ", 
+                                 "style=\"", b, "\">", 
+                         lbls[k], "</td>\n")
+        
+      }
       
       # Add in extra lines for labels that wrap
       #xtr <- tmp$lines
@@ -774,10 +783,6 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
     t <- tbl[ , nms]
   
   
-  # Get line height.  Don't want to leave editor default.
-  #rh <- rs$row_height
-  #conv <- rs$twip_conversion
-  
   
   # Get cell widths
   sz <- c()
@@ -838,9 +843,14 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
       
       if (!is.control(nms[j])) {
         
-        # Construct rtf
-        #ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
-        ret[i] <- paste0(ret[i], "<td ", ca[j], ">", t[i, j], "</td>")
+        b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i])
+        
+        # Construct html
+        if (b == "")
+          ret[i] <- paste0(ret[i], "<td ", ca[j], ">", t[i, j], "</td>")
+        else 
+          ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
+                           t[i, j], "</td>")
         
         # Count lines in cell 
         # cl <- grep("\\line", t[i, j], fixed = TRUE)

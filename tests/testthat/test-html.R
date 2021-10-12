@@ -30,20 +30,22 @@ test_that("html1: Basic table works as expected.", {
   dat <- mtcars[1:15, ]
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
-  attr(dat[[2]], "justify") <- "left"
+  attr(dat[[2]], "justify") <- "center"
   
   tbl <- create_table(dat, borders = "outside") %>%
-    titles("Table 1.0", "My Nice Table", borders = "outside", 
+    titles("Table 1.0", "My Nice Table", borders = c("outside"), 
            width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside", 
-              align = "left", width = "content")
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right")
   
   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
-                blank_row = "below") %>%
-    add_content(tbl)  %>%
+                blank_row = "below") %>% 
+    add_content(tbl)  %>% 
     page_footer("Left1", "Center1", "Right1")
   
   res <- write_report(rpt)
@@ -62,9 +64,9 @@ test_that("html2: Basic table with title header works as expected.", {
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
   
-  tbl <- create_table(dat, borders = "outside") %>%
+  tbl <- create_table(dat, borders = c("outside")) %>%
     title_header("Table 1.0", "My Nice Table", right = "Right", 
-                 borders = "outside", 
+                 borders = c("outside"), blank_row = "both",
            width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside", 
               align = "left", width = "content")

@@ -275,11 +275,15 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
 
             alcnt <- 1
 
-            #tb <- get_cell_borders(i, 1, length(ttls$titles) + alcnt, 1, ttls$borders)
-
-            al <- paste0("<tr><td>&nbsp;</td></tr>\n")
+            tb <- get_cell_borders_html(i, 1, length(ttls$titles) + alcnt, 
+                                   1, ttls$borders)
+            
+            if (tb == "")
+              al <- "<tr><td>&nbsp;</td></tr>\n"
+            else 
+              al <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
+            
             cnt <- cnt + 1
-
           }
         }
         
@@ -287,23 +291,24 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
         if (i == length(ttls$titles)) {
           if (any(ttls$blank_row %in% c("below", "both"))) {
             blcnt <- 1
-
-            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
-            #                        length(ttls$titles) + alcnt + blcnt,
-            #                        1, ttls$borders)
-
-            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, "\\cell\\row\n")
             
-            bl <- paste0("<tr><td>&nbsp;</td></tr>\n")
+            tb <- get_cell_borders_html(i + alcnt + blcnt, 1,
+                                   length(ttls$titles) + alcnt + blcnt,
+                                   1, ttls$borders)
+
+            if (tb == "")
+              bl <- "<tr><td>&nbsp;</td></tr>\n"
+            else 
+              bl <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
+            
             cnt <- cnt + 1
           }
 
         }
         
-        # b <- get_cell_borders(i + alcnt, 1, 
-        #                       length(ttls$titles) + alcnt + blcnt, 
-        #                       1, ttls$borders)
+        b <- get_cell_borders_html(i + alcnt, 1,
+                              length(ttls$titles) + alcnt + blcnt,
+                              1, ttls$borders)
         
         # Split title strings if they exceed width
         # tmp <- split_string_rtf(ttls$titles[[i]], width, rs$units)
@@ -312,8 +317,16 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
         if (al != "")
           ret <- append(ret, al)
         
-        ret <- append(ret, paste0(
-                                  "<tr><td>", ttls$titles[[i]], "</td></tr>\n"))
+        if (b == "") {
+          ret <- append(ret, paste0("<tr><td>", ttls$titles[[i]], 
+                                    "</td></tr>\n"))
+        } else {
+          
+          ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
+                                    ttls$titles[[i]], 
+                                    "</td></tr>\n"))
+        }
+          
         
         # ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
         #                           algn, " ", tmp$rtf, "\\cell\\row\n"))
@@ -402,12 +415,14 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
 
             alcnt <- 1
           
-            # tb <- get_cell_borders(i, 1, length(ftnts$footnotes) + alcnt,
-            #                        1, ftnts$borders)
-            al <- paste0("<tr><td>&nbsp;</td></tr>\n")
+            tb <- get_cell_borders_html(i, 1, length(ftnts$footnotes) + alcnt,
+                                   1, ftnts$borders)
+            
+            if (tb == "")
+              al <- "<tr><td>&nbsp;</td></tr>\n"
+            else 
+              al <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
 
-            # al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, "\\cell\\row\n")
             cnt <- cnt + 1
 
           }
@@ -418,22 +433,23 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
           if (any(ftnts$blank_row %in% c("below", "both"))) {
             blcnt <- 1
 
-            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
-            #                        length(ftnts$footnotes) + alcnt + blcnt,
-            #                        1, ftnts$borders)
+            tb <- get_cell_borders_html(i + alcnt + blcnt, 1,
+                                   length(ftnts$footnotes) + alcnt + blcnt,
+                                   1, ftnts$borders)
             
-            bl <- paste0("<tr><td>&nbsp;</td></tr>\n")
-
-            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, "\\cell\\row\n")
+            if (tb == "")
+              bl <- "<tr><td>&nbsp;</td></tr>\n"
+            else 
+              bl <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
+            
             cnt <- cnt + 1
           }
 
         }
 
-        # b <- get_cell_borders(i + alcnt, 1,
-        #                       length(ftnts$footnotes) + alcnt + blcnt,
-        #                       1, ftnts$borders)
+        b <- get_cell_borders_html(i + alcnt, 1,
+                              length(ftnts$footnotes) + alcnt + blcnt,
+                              1, ftnts$borders)
 
 
 
@@ -443,9 +459,14 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
         if (al != "")
           ret <- append(ret, al)
 
-        
-        ret <- append(ret, paste0("<tr><td>", ftnts$footnotes[[i]], 
-                                  "</td></tr>\n"))
+        if (b == "")
+          ret <- append(ret, paste0("<tr><td>", ftnts$footnotes[[i]], 
+                                    "</td></tr>\n"))
+        else {
+          ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
+                                    ftnts$footnotes[[i]], 
+                                    "</td></tr>\n"))
+        }
 
         # Concat footnote row
         # ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w,
@@ -526,11 +547,14 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
 
             alcnt <- 1
 
-            # tb <- get_cell_borders(i, 1, mx + alcnt,
-            #                        1, ttlhdr$borders)
+            tb1 <- get_cell_borders_html(i, 1, mx + alcnt,
+                                   2, ttlhdr$borders)
+            tb2 <- get_cell_borders_html(i, 2, mx + alcnt,
+                                        2, ttlhdr$borders)
 
-            al <- paste0("<tr><td style=\"text-align:left\">&nbsp;</td>", 
-                         "<td style=\"text-align:right\">&nbsp;</td></tr>\n")
+            al <- paste0("<tr><td style=\"text-align:left;", tb1, "\">&nbsp;</td>", 
+                         "<td style=\"text-align:right;", tb2, 
+                         "\">&nbsp;</td></tr>\n")
             cnt <- cnt + 1
 
           }
@@ -541,15 +565,16 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
           if (any(ttlhdr$blank_row %in% c("below", "both"))) {
             blcnt <- 1
 
-            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
-            #                        mx + alcnt + blcnt,
-            #                        1, ttlhdr$borders)
-            # 
-            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1,
-            #              "\\ql\\cell\\row\n")
+            tb1 <- get_cell_borders_html(i + alcnt + blcnt, 1,
+                                   mx + alcnt + blcnt,
+                                   2, ttlhdr$borders)
+            tb2 <- get_cell_borders_html(i + alcnt + blcnt, 2,
+                                        mx + alcnt + blcnt,
+                                        2, ttlhdr$borders)
             
-            bl <- paste0("<tr><td style=\"text-align:left\">&nbsp;</td>", 
-                         "<td style=\"text-align:right\">&nbsp;</td></tr>\n")
+            bl <- paste0("<tr><td style=\"text-align:left;", tb1, "\">&nbsp;</td>", 
+                         "<td style=\"text-align:right;", tb2, 
+                         "\">&nbsp;</td></tr>\n")
             cnt <- cnt + 1
           }
 
@@ -578,8 +603,10 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
           hcnt <- 1
         }
 
-        # b1 <- get_cell_borders(i + alcnt, 1, mx + alcnt + blcnt, 2, ttlhdr$borders)
-        # b2 <- get_cell_borders(i + alcnt, 2, mx+ alcnt + blcnt, 2, ttlhdr$borders)
+        b1 <- get_cell_borders_html(i + alcnt, 1, mx + alcnt + blcnt, 
+                                    2, ttlhdr$borders)
+        b2 <- get_cell_borders_html(i + alcnt, 2, mx+ alcnt + blcnt, 
+                                    2, ttlhdr$borders)
 
 
         if (al != "")
@@ -590,8 +617,10 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
         #                           "\\ql ", ttl, "\\cell\\qr ",
         #                           hdr, "\\cell\\row\n"))
         
-        ret <- append(ret, paste0("<tr><td style=\"text-align:left\">", ttl, 
-                                  "</td><td style=\"text-align:right\">", hdr, 
+        ret <- append(ret, paste0("<tr><td style=\"text-align:left;", b1, "\">",
+                                  ttl, 
+                                  "</td><td style=\"text-align:right;", b2, "\">", 
+                                  hdr, 
                                   "</td></tr>\n"))
         
         if (bl != "")
@@ -711,7 +740,11 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
 
 # Utilities ---------------------------------------------------------------
 
-
+#' @description Return border code for a particular cell.  Idea is 
+#' you pass in the size of the table and the particular cell position,
+#' and this function will return the correct border codes.  System works 
+#' great.
+#' @noRd
 get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, flag = "") {
   
   t <- ""
@@ -721,18 +754,25 @@ get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, flag = "") {
   
   
   if ("all" %in% brdrs) {
-    t <- "\\clbrdrt\\brdrs"
-    b <- "\\clbrdrb\\brdrs"
-    l <- "\\clbrdrl\\brdrs"
-    r <- "\\clbrdrr\\brdrs"
+    t <- "border-top:thin solid;"
+    b <- "border-bottom:thin solid;"
+    l <- "border-left:thin solid;"
+    r <- "border-right:thin solid;"
+    
+    if (row > 1)
+      t <- ""
+    
+    if (col < ncol)
+      r <- ""
+    
   } else {
     
     if ("inside" %in% brdrs) {
       
-      t <- "\\clbrdrt\\brdrs"
-      b <- "\\clbrdrb\\brdrs"
-      l <- "\\clbrdrl\\brdrs"
-      r <- "\\clbrdrr\\brdrs"
+      t <- ""
+      b <- "border-bottom:thin solid;"
+      l <- "border-left:thin solid;"
+      r <- ""
       
       if (col == 1) 
         l <- ""
@@ -749,20 +789,21 @@ get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, flag = "") {
     }
     
     if (row == 1 & any(brdrs %in% c("outside", "top")))
-      t <- "\\clbrdrt\\brdrs"
+      t <- "border-top:thin solid;"
     
     if (row == nrow & any(brdrs %in% c("bottom", "outside")))
-      b <- "\\clbrdrb\\brdrs"
+      b <- "border-bottom:thin solid;"
     
     if (col == 1 & any(brdrs %in% c("outside", "left")))
-      l <- "\\clbrdrl\\brdrs"
+      l <- "border-left:thin solid;"
     
     if (col == ncol & any(brdrs %in% c("outside", "right")))
-      r <- "\\clbrdrr\\brdrs"
+      r <- "border-right:thin solid;"
     
   }
   
   # Deal with flag
+  # Flag is for special rows like blanks or labels
   if (!is.na(flag)) {
     if (flag %in% c("L", "B")) {
       

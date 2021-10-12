@@ -15,6 +15,18 @@ font-weight: normal;
 border-bottom: thin solid;
 }
 
+.tdc {
+text-align:center;
+}
+
+.tdl {
+text-align:left;
+}
+
+.tdr {
+text-align:right;
+}
+
 </style>
 </head>
 <body>
@@ -32,13 +44,13 @@ border-bottom: thin solid;
 <table cellpadding ="0" cellspacing = "0" align="center" style="width:5.179in;">
 <colgroup><col style="width:70%;">
 <col style="width:30%;"></colgroup>
-<tr><td style="text-align:left">Table 1.0</td><td style="text-align:right">Right</td></tr>
-<tr><td style="text-align:left">My Nice Table</td><td style="text-align:right"></td></tr>
-<tr><td style="text-align:left">&nbsp;</td><td style="text-align:right">&nbsp;</td></tr>
+<tr><td style="text-align:left;border-top:thin solid;border-left:thin solid;">&nbsp;</td><td style="text-align:right;border-top:thin solid;border-right:thin solid;">&nbsp;</td></tr>
+<tr><td style="text-align:left;border-left:thin solid;">Table 1.0</td><td style="text-align:right;border-right:thin solid;">Right</td></tr>
+<tr><td style="text-align:left;border-left:thin solid;">My Nice Table</td><td style="text-align:right;border-right:thin solid;"></td></tr>
+<tr><td style="text-align:left;border-bottom:thin solid;border-left:thin solid;">&nbsp;</td><td style="text-align:right;border-bottom:thin solid;border-right:thin solid;">&nbsp;</td></tr>
 </table>
 
 <table cellpadding ="0" cellspacing = "0" align="center" >
-<thead>
 <colgroup>
 <col style="width:0.42in;">
 <col style="width:1in;">
@@ -52,43 +64,44 @@ border-bottom: thin solid;
 <col style="width:0.4251625in;">
 <col style="width:0.4160625in;">
 </colgroup>
+<thead>
 <tr>
-<td class="thdr">mpg</td>
-<td class="thdr">Cylin.</td>
-<td class="thdr">disp</td>
-<td class="thdr">hp</td>
-<td class="thdr">drat</td>
-<td class="thdr">wt</td>
-<td class="thdr">qsec</td>
-<td class="thdr">vs</td>
-<td class="thdr">am</td>
-<td class="thdr">gear</td>
-<td class="thdr">carb</td>
+<td class="thdr tdr" style="border-top:thin solid;border-left:thin solid;">mpg</td>
+<td class="thdr tdr" style="border-top:thin solid;">Cylin.</td>
+<td class="thdr tdr" style="border-top:thin solid;">disp</td>
+<td class="thdr tdr" style="border-top:thin solid;">hp</td>
+<td class="thdr tdr" style="border-top:thin solid;">drat</td>
+<td class="thdr tdr" style="border-top:thin solid;">wt</td>
+<td class="thdr tdr" style="border-top:thin solid;">qsec</td>
+<td class="thdr tdr" style="border-top:thin solid;">vs</td>
+<td class="thdr tdr" style="border-top:thin solid;">am</td>
+<td class="thdr tdr" style="border-top:thin solid;">gear</td>
+<td class="thdr tdr" style="border-top:thin solid;border-right:thin solid;">carb</td>
 </tr>
 </thead>
 
 <tbody>
-<tr><td>21</td><td>6</td><td>160</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td></tr>
-<tr><td>21</td><td>6</td><td>160</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td></tr>
-<tr><td>22.8</td><td>4</td><td>108</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr>
-<tr><td>21.4</td><td>6</td><td>258</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td></tr>
-<tr><td>18.7</td><td>8</td><td>360</td><td>175</td><td>3.15</td><td>3.44</td><td>17.02</td><td>0</td><td>0</td><td>3</td><td>2</td></tr>
-<tr><td>18.1</td><td>6</td><td>225</td><td>105</td><td>2.76</td><td>3.46</td><td>20.22</td><td>1</td><td>0</td><td>3</td><td>1</td></tr>
-<tr><td>14.3</td><td>8</td><td>360</td><td>245</td><td>3.21</td><td>3.57</td><td>15.84</td><td>0</td><td>0</td><td>3</td><td>4</td></tr>
-<tr><td>24.4</td><td>4</td><td>146.7</td><td>62</td><td>3.69</td><td>3.19</td><td>20</td><td>1</td><td>0</td><td>4</td><td>2</td></tr>
-<tr><td>22.8</td><td>4</td><td>140.8</td><td>95</td><td>3.92</td><td>3.15</td><td>22.9</td><td>1</td><td>0</td><td>4</td><td>2</td></tr>
-<tr><td>19.2</td><td>6</td><td>167.6</td><td>123</td><td>3.92</td><td>3.44</td><td>18.3</td><td>1</td><td>0</td><td>4</td><td>4</td></tr>
-<tr><td>17.8</td><td>6</td><td>167.6</td><td>123</td><td>3.92</td><td>3.44</td><td>18.9</td><td>1</td><td>0</td><td>4</td><td>4</td></tr>
-<tr><td>16.4</td><td>8</td><td>275.8</td><td>180</td><td>3.07</td><td>4.07</td><td>17.4</td><td>0</td><td>0</td><td>3</td><td>3</td></tr>
-<tr><td>17.3</td><td>8</td><td>275.8</td><td>180</td><td>3.07</td><td>3.73</td><td>17.6</td><td>0</td><td>0</td><td>3</td><td>3</td></tr>
-<tr><td>15.2</td><td>8</td><td>275.8</td><td>180</td><td>3.07</td><td>3.78</td><td>18</td><td>0</td><td>0</td><td>3</td><td>3</td></tr>
-<tr><td>10.4</td><td>8</td><td>472</td><td>205</td><td>2.93</td><td>5.25</td><td>17.98</td><td>0</td><td>0</td><td>3</td><td>4</td></tr>
+<tr><td class="tdr" style="border-top:thin solid;border-left:thin solid;">21</td><td class="tdr" style="border-top:thin solid;">6</td><td class="tdr" style="border-top:thin solid;">160</td><td class="tdr" style="border-top:thin solid;">110</td><td class="tdr" style="border-top:thin solid;">3.9</td><td class="tdr" style="border-top:thin solid;">2.62</td><td class="tdr" style="border-top:thin solid;">16.46</td><td class="tdr" style="border-top:thin solid;">0</td><td class="tdr" style="border-top:thin solid;">1</td><td class="tdr" style="border-top:thin solid;">4</td><td class="tdr" style="border-top:thin solid;border-right:thin solid;">4</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">21</td><td class="tdr">6</td><td class="tdr">160</td><td class="tdr">110</td><td class="tdr">3.9</td><td class="tdr">2.875</td><td class="tdr">17.02</td><td class="tdr">0</td><td class="tdr">1</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">22.8</td><td class="tdr">4</td><td class="tdr">108</td><td class="tdr">93</td><td class="tdr">3.85</td><td class="tdr">2.32</td><td class="tdr">18.61</td><td class="tdr">1</td><td class="tdr">1</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">1</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">21.4</td><td class="tdr">6</td><td class="tdr">258</td><td class="tdr">110</td><td class="tdr">3.08</td><td class="tdr">3.215</td><td class="tdr">19.44</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">1</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">18.7</td><td class="tdr">8</td><td class="tdr">360</td><td class="tdr">175</td><td class="tdr">3.15</td><td class="tdr">3.44</td><td class="tdr">17.02</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">2</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">18.1</td><td class="tdr">6</td><td class="tdr">225</td><td class="tdr">105</td><td class="tdr">2.76</td><td class="tdr">3.46</td><td class="tdr">20.22</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">1</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">14.3</td><td class="tdr">8</td><td class="tdr">360</td><td class="tdr">245</td><td class="tdr">3.21</td><td class="tdr">3.57</td><td class="tdr">15.84</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">24.4</td><td class="tdr">4</td><td class="tdr">146.7</td><td class="tdr">62</td><td class="tdr">3.69</td><td class="tdr">3.19</td><td class="tdr">20</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">2</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">22.8</td><td class="tdr">4</td><td class="tdr">140.8</td><td class="tdr">95</td><td class="tdr">3.92</td><td class="tdr">3.15</td><td class="tdr">22.9</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">2</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">19.2</td><td class="tdr">6</td><td class="tdr">167.6</td><td class="tdr">123</td><td class="tdr">3.92</td><td class="tdr">3.44</td><td class="tdr">18.3</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">17.8</td><td class="tdr">6</td><td class="tdr">167.6</td><td class="tdr">123</td><td class="tdr">3.92</td><td class="tdr">3.44</td><td class="tdr">18.9</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">16.4</td><td class="tdr">8</td><td class="tdr">275.8</td><td class="tdr">180</td><td class="tdr">3.07</td><td class="tdr">4.07</td><td class="tdr">17.4</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">3</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">17.3</td><td class="tdr">8</td><td class="tdr">275.8</td><td class="tdr">180</td><td class="tdr">3.07</td><td class="tdr">3.73</td><td class="tdr">17.6</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">3</td></tr>
+<tr><td class="tdr" style="border-left:thin solid;">15.2</td><td class="tdr">8</td><td class="tdr">275.8</td><td class="tdr">180</td><td class="tdr">3.07</td><td class="tdr">3.78</td><td class="tdr">18</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">3</td></tr>
+<tr><td class="tdr" style="border-bottom:thin solid;border-left:thin solid;">10.4</td><td class="tdr" style="border-bottom:thin solid;">8</td><td class="tdr" style="border-bottom:thin solid;">472</td><td class="tdr" style="border-bottom:thin solid;">205</td><td class="tdr" style="border-bottom:thin solid;">2.93</td><td class="tdr" style="border-bottom:thin solid;">5.25</td><td class="tdr" style="border-bottom:thin solid;">17.98</td><td class="tdr" style="border-bottom:thin solid;">0</td><td class="tdr" style="border-bottom:thin solid;">0</td><td class="tdr" style="border-bottom:thin solid;">3</td><td class="tdr" style="border-bottom:thin solid;border-right:thin solid;">4</td></tr>
 </tbody>
 </table>
 <table cellpadding ="0" cellspacing = "0" align="center" style="width:5.179in;text-align: left;">
-<tr><td>&nbsp;</td></tr>
-<tr><td>My footnote 1</td></tr>
-<tr><td>My footnote 2</td></tr>
+<tr><td style="border-top:thin solid;border-left:thin solid;border-right:thin solid;">&nbsp;</td></tr>
+<tr><td style="border-left:thin solid;border-right:thin solid;">My footnote 1</td></tr>
+<tr><td style="border-bottom:thin solid;border-left:thin solid;border-right:thin solid;">My footnote 2</td></tr>
 </table>
 <br>
 <table cellpadding="0" cellspacing="0" style="width:100%">
