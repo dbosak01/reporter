@@ -900,7 +900,7 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   
   # Create data structure to map spans to columns and columns widths by level
   # - Seed span_num with negative index numbers to identify unspanned columns
-  # - Also add one to each column width for the blank space between columns 
+  # - Also add gutter to each column width for the space between columns 
   d <- data.frame(colname = cols, colwidth = w + gutter, 
                   span_num = seq(from = -1, to = -length(cols), by = -1), 
                   stringsAsFactors = FALSE)
@@ -909,12 +909,13 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   for (l in lvls) {
     
     t <- d  # Copy to temporary variable
-    
+    # print(t)
+    # print(slvl)
+    col_span <- c()
     # if column is in spanning column list, populate structure with index.
     # Otherwise, leave as negative value.
     for (i in 1:length(slvl[[l]])) {
       cl <- slvl[[l]][[i]]$span_cols
-      
       
       # Span specifications can be a vector of column names or numbers
       if (typeof(cl) == "character")
@@ -922,7 +923,8 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
       else 
         t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
       
-      
+      col_span[i] <- length(cl)
+
     }
     
     # Aggregate data structures to get span widths for each span
@@ -940,6 +942,7 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
     s$n <- NA
     s$name <- ""
     s$underline <- TRUE
+    s$col_span <- 1
     
     # Populate data structure with labels, alignments, and n values from 
     # spanning column objects
@@ -954,6 +957,10 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
         
       }
       s$name[counter] <- paste0("Span", counter)
+      if (index > 0) {
+        if (!is.na(col_span[index]))
+          s$col_span[counter] <- col_span[index]
+      }
       counter <- counter + 1
     }
     

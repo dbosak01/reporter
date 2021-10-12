@@ -231,8 +231,8 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (ts$headerless == FALSE) {
     #shdrs <- get_spanning_header_html(rs, ts, pi)   
     
-    hdrs <- get_table_header_html(rs, ts, pi$col_width, 
-                                 pi$label, pi$label_align, pi$table_align)  
+    # Get table header also includes spanning header
+    hdrs <- get_table_header_html(rs, ts, pi)  
   }
   
   # rs, ts, widths,  algns, halgns, talgn
@@ -448,11 +448,9 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   hdrs <- list(lines = 0, twips = 0)
   
   if (ts$headerless == FALSE) {
-    shdrs <- get_spanning_header_html(rs, ts, pi)   
+    #shdrs <- get_spanning_header_html(rs, ts, pi)   
     
-    hdrs <- get_table_header_html(rs, ts, pi$col_width, 
-                                 pi$label, pi$label_align, 
-                                 pi$table_align)  
+    hdrs <- get_table_header_html(rs, ts, pi)  
   }
   
   # Get title headers or titles
@@ -517,13 +515,21 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
 #' of string vectors of label words sized according to the column 
 #' widths, then combine by line/row, and concatenate everything and justify.
 #' @noRd
-get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
+get_table_header_html <- function(rs, ts, pi) {
   
   ret <- c()
   cols <- c()
   cnt <- 0
   rh <- rs$row_height
   tbl <- ts$data
+
+  
+  widths <- pi$col_width
+  lbls <- pi$label
+  halgns <- pi$label_align
+  talgn <- pi$table_align
+  
+  
   #conv <- rs$twip_conversion
   nms <- names(lbls)
   
@@ -615,14 +621,18 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
   cols[1] <- paste0(cols[1], "</colgroup>\n")
   ret[1] <- paste0(ret[1], "</tr>\n")
   
-  res <- list(html = paste0(cols, "<thead>\n", ret, "</thead>\n"),
-              lines = cnt)
+  # Get spanning headers
+  sphdrs <- get_spanning_header_html(rs, ts, pi)
+  
+  res <- list(html = paste0(cols, "<thead>\n", paste0(sphdrs$html, collapse=""), 
+                            ret, "</thead>\n"),
+              lines = cnt + sphdrs$lines)
   
   return(res)
   
 }
 
-# Need to fix this
+
 #' @description Return a vector of html strings for the table spanning headers
 #' @details Basic idea of this function is to figure out which columns 
 #' the header spans, add widths, then call get_table_header.  Everything
@@ -649,8 +659,8 @@ get_spanning_header_html <- function(rs, ts, pi) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
-  conv <- rs$twip_conversion
-  talgn <- pi$table_align
+
+  #talgn <- pi$table_align
   
   # Table alignment
   # ta <- "\\trql"
@@ -661,88 +671,89 @@ get_spanning_header_html <- function(rs, ts, pi) {
   
   # Get borders
   brdrs <- ts$borders
-  rh <- rs$row_height
   
   # Format labels for each level
   ln <- c()
   for (l in lvls) {
     
     s <- wlvl[[l]]
-    
+   # print(s)
     widths <- s$width
     names(widths) <- s$name
     algns <- s$align
     names(algns) <- s$name
     lbls <- s$label
     names(lbls) <- s$name
-    
-    # Get cell widths
-    sz <- c()
-    for (k in seq_along(widths)) {
-      
-      if (k == 1)
-        sz[k] <- round(widths[k] * conv)
-      else
-        sz[k] <- round(widths[k] * conv + sz[k - 1])
-      
-    }
+    cs <- s$col_span
     
     # Header Cell alignment
     ha <- c()
     for (k in seq_along(algns)) {
       
       if (algns[k] == "right")
-        ha[k] <- "\\qr"
+        ha[k] <- "text-align:right;"
       else if (algns[k] %in% c("center", "centre"))
-        ha[k] <- "\\qc"
+        ha[k] <- "text-align:center;"
       else
-        ha[k] <- "\\ql"
+        ha[k] <- "text-align:left;"
       
     }
     
     r <- ""
     cnt[length(cnt) + 1] <- 1 
     
-    # Table Header
-    r <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
+    # Table Header - Table or rows in existing table
+    #r <-  paste0("<tr>", ta)
+    r <-  "<tr>\n"
     
     # Label justification, width, and row concatenation
     
     # Loop for cell definitions
-    for(j in seq_along(sz)) {
-      
-      # Get cell borders
-      b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
-      if (s$span[j] > 0 & s$underline[j])
-        r <- paste0(r, "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
-      else 
-        r <- paste0(r, "\\clvertalb", b, "\\cellx", sz[j])
-    }
+    # for(j in seq_along(sz)) {
+    #   
+    #   # Get cell borders
+    #   b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
+    #   if (s$span[j] > 0 & s$underline[j])
+    #     r <- paste0(r, "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
+    #   else 
+    #     r <- paste0(r, "\\clvertalb", b, "\\cellx", sz[j])
+    # }
     
     # Open device context
-    pdf(NULL)
-    par(family = get_font_family(rs$font), ps = rs$font_size)
+    # pdf(NULL)
+    # par(family = get_font_family(rs$font), ps = rs$font_size)
     
     # Loop for labels
     for(k in seq_along(lbls)) {
       
       # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+      #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
       
-      # Concat label
-      r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
+      # Add colspans
+      vl <- lbls[k]
+      bb <- "border-bottom:thin solid;"
+      if (vl == "") {
+        vl <- "&nbsp;"
+        bb <- ""
+        
+      }
+      
+      r <- paste0(r, "<td colspan=\"", cs[k], 
+                  "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
+                  vl, "</td>\n")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
-      xtr <- tmp$lines
+      xtr <- 1 # tmp$lines
+      
       if (xtr > cnt[length(cnt)])
         cnt[length(cnt)] <- xtr
       
     }
-    dev.off()
+    #dev.off()
     
     
-    r <- paste0(r, "\\row")
+    r <- paste0(r, "</tr>\n")
     
     ln[[length(ln) + 1]] <- r
     
@@ -751,9 +762,8 @@ get_spanning_header_html <- function(rs, ts, pi) {
   
   ret <- unlist(ln)
   
-  res <- list(rtf = ret, 
-              lines = sum(cnt), 
-              twips = sum(cnt) * rh)
+  res <- list(html = ret, 
+              lines = sum(cnt))
   
   return(res)
 }

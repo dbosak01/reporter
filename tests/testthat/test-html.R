@@ -86,6 +86,38 @@ test_that("html2: Basic table with title header works as expected.", {
   
 })
 
+test_that("html3: Spanning headers work as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test3")
+  
+  dat <- mtcars[1:15, ]
+  
+  tbl <- create_table(dat, borders = c("none")) %>%
+    spanning_header(cyl, disp, "Span 1", label_align = "left") %>% 
+    spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
+    spanning_header(qsec, vs, "Span 3", n = 10) %>%
+    spanning_header(drat, gear, "Super Duper\nWrapped Span", 
+                    n = 11, level = 2) %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    footnotes("My footnote 1", "My footnote 2") 
+  
+  rpt <- create_report(fp, output_type = "HTML", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    add_content(tbl) %>% 
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(res$modified_path), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
 # Not working
 # test_that("html3: Multi page table works as expected.", {
 #   

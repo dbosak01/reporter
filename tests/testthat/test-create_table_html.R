@@ -61,8 +61,10 @@ test_that("get_table_header_html works as expected.", {
   nms[1] <- "Miles Per Gallon"
   nms[2] <- "Wrap One Two"
   
+  pi <- list(keys = names(dat), col_width = wdth, label = nms,
+             label_align = algns, table_align = "center")
   
-  res <- get_table_header_html(rpt, tbl, wdth, nms, algns, "center")
+  res <- get_table_header_html(rpt, tbl, pi)
   
   res  
   
@@ -158,40 +160,40 @@ test_that("create_table_html works as expected.", {
 test_that("get_spanning_header_html works as expected.", {
   
   
-  # fp <- ""
-  # 
-  # dat <- mtcars[1:15, ]
-  # 
-  # tbl <- create_table(dat, borders = "none") %>%
-  #   spanning_header(mpg, disp, "Span 1", n = 10) %>%
-  #   spanning_header(hp, wt, "Span 2") %>%
-  #   spanning_header(qsec, vs, "Span 3") %>%
-  #   spanning_header(drat, gear, "Super span", level = 2)
-  # 
-  # 
-  # rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-  #                      font_size = 10, orientation = "landscape") %>%
-  #   set_margins(top = 1, bottom = 1) %>%
-  #   page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-  #   titles("Table 1.0", "My Nice Table") %>%
-  #   add_content(tbl) %>%
-  #   footnotes("My footnote 1", "My footnote 2") %>%
-  #   page_footer("Left1", "Center1", "Right1")
-  # 
-  # rpt <- page_setup_html(rpt)
-  # 
-  # cols <- rep(.6, ncol(dat))
-  # names(cols) <- names(dat)
-  # 
-  # pi <- list(keys = names(dat), col_width = cols, table_align = "center")
-  # 
-  # res <- get_spanning_header_html(rpt, tbl, pi)
-  # res
-  # 
-  # expect_equal(length(res), 3)
-  # expect_equal(length(res$html), 2)
-  # expect_equal(res$lines, 3)
-  # 
+  fp <- ""
+
+  dat <- mtcars[1:15, ]
+
+  tbl <- create_table(dat, borders = "none") %>%
+    spanning_header(mpg, disp, "Span 1", n = 10) %>%
+    spanning_header(hp, wt, "Span 2") %>%
+    spanning_header(qsec, vs, "Span 3") %>%
+    spanning_header(drat, gear, "Super span", level = 2)
+
+
+  rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  rpt <- page_setup_html(rpt)
+
+  cols <- rep(.6, ncol(dat))
+  names(cols) <- names(dat)
+
+  pi <- list(keys = names(dat), col_width = cols, table_align = "center")
+
+  res <- get_spanning_header_html(rpt, tbl, pi)
+  res
+
+  expect_equal(length(res), 2)
+  expect_equal(length(res$html), 2)
+  expect_equal(res$lines, 2) # for now
+
   
   expect_equal(TRUE, TRUE)
 })
