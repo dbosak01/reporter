@@ -40,81 +40,84 @@ get_page_header_html <- function(rs) {
   
   ret <- ""
   cnt <- 0
-  twps <- 0
   
-  # hl <- rs$page_header_left
-  # hr <- rs$page_header_right
-  # conv <- rs$twip_conversion
-  # lh <- rs$row_height
-  # 
-  # maxh <- max(length(hl), length(hr))
-  # 
-  # if (maxh > 0) {
-  #   
-  #   fs <- rs$font_size * 2
-  #   
-  #   c2 <- round(rs$content_size[["width"]] * conv)
-  #   c1 <- round(c2 / 2)
-  #   
-  #   ret <- paste0("{\\header \\f0\\fs", fs)
-  #   
-  #   pdf(NULL)
-  #   par(family = get_font_family(rs$font), ps = rs$font_size)
-  #   
-  #   
-  #   for (i in seq(1, maxh)) {
-  #     ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
-  #                   "\\cellx", c1, "\\cellx", c2)
-  #     
-  #     if (length(hl) >= i) {
-  #       
-  #       # Split strings if they exceed width
-  #       tmp <- split_string_rtf(hl[[i]], rs$content_size[["width"]]/2, rs$units)
-  #       
-  #       ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
-  #       lcnt <- tmp$lines
-  #       
-  #     } else {
-  #       ret <- paste0(ret, "\\ql \\cell")
-  #       lcnt <- 1 
-  #     }
-  #     
-  #     if (length(hr) >= i) {
-  #       
-  #       # Split strings if they exceed width
-  #       tmp2 <- split_string_rtf(hr[[i]], rs$content_size[["width"]]/2, rs$units)
-  #       
-  #       ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
-  #       rcnt <- tmp2$lines
-  #       
-  #     } else {
-  #       ret <- paste0(ret, "\\qr \\cell\\row\n")
-  #       rcnt <- 1
-  #     }
-  #     
-  #     if (lcnt > rcnt)
-  #       cnt <- cnt + lcnt
-  #     else 
-  #       cnt <- cnt + rcnt
-  #   }
-  #   
-  #   dev.off()
-  #   
-  #   if (rs$page_header_blank_row == "below") {
-  #     ret <- paste0(ret, "\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
-  #     cnt <- cnt + 1
-  #   } else {
-  #     
-  #     ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
-  #                   rs$spacing_multiplier) 
-  #   }
-  #   
-  #   ret <- paste0(ret, "}")
-  # }
-  # 
-  # twps <- cnt * lh
+  hl <- rs$page_header_left
+  hr <- rs$page_header_right
+  maxh <- max(length(hl), length(hr))
   
-  res <- list(rtf = ret, lines = cnt, twips = twps)
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+
+  if (maxh > 0) {
+
+
+    ret <- paste0("<table cellpadding = \"0\" cellspacing = \"0\" ",
+                  "style=\"width:100%\">",
+                  "<colgroup>\n<col style=\"width:50%\">\n",
+                  "<col style=\"width:50%\">\n</colgroup>\n")
+
+    # pdf(NULL)
+    # par(family = get_font_family(rs$font), ps = rs$font_size)
+
+
+    for (i in seq(1, maxh)) {
+      ret <- paste0(ret, "<tr>")
+
+      if (length(hl) >= i) {
+
+        # Split strings if they exceed width
+        # tmp <- split_string_rtf(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+        # 
+        # ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
+        # lcnt <- tmp$lines
+        
+        ret <- paste0(ret, "<td style=\"text-align:left\">", hl[[i]],
+                           "</td>\n")
+        
+        lcnt <- 1  # For now
+
+      } else {
+        ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp</td>\n")
+        lcnt <- 1
+      }
+
+      if (length(hr) >= i) {
+
+        # Split strings if they exceed width
+        # tmp2 <- split_string_rtf(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+        # 
+        # ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
+        # rcnt <- tmp2$lines
+        
+        ret <- paste0(ret, "<td style=\"text-align:right\">", hr[[i]], 
+                           "</td></tr>\n")
+        
+        rcnt <- 1 # For now
+
+      } else {
+        ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp</td></tr>\n")
+        rcnt <- 1
+      }
+
+      if (lcnt > rcnt)
+        cnt <- cnt + lcnt
+      else
+        cnt <- cnt + rcnt
+    }
+    
+    ret <- paste0(ret, "</table>")
+
+    # dev.off()
+
+    if (rs$page_header_blank_row == "below") {
+      ret <- paste0(ret, "<br>")
+      cnt <- cnt + 1
+    }
+  }
+
+  
+  res <- list(html = ret, lines = cnt)
   
   return(res)
 }
@@ -124,79 +127,85 @@ get_page_header_html <- function(rs) {
 get_page_footer_html <- function(rs) {
   
   ret <- ""
-  cnt <- 0
-  # twps <- 0
-  # 
-  # fl <- rs$page_footer_left
-  # fc <- rs$page_footer_center
-  # fr <- rs$page_footer_right
-  # conv <- rs$twip_conversion
-  # lh <- rs$row_height
-  # 
-  # maxf <- max(length(fl), length(fc), length(fr))
-  # 
-  # if (maxf > 0) {
-  #   
-  #   fs <- rs$font_size * 2
-  #   
-  #   c3 <- round(rs$content_size[["width"]] * conv)
-  #   c1 <- round(c3 / 3)
-  #   c2 <- round(c1 * 2)
-  #   
-  #   ret <- paste0("{\\footer \\f0\\fs", fs)
-  #   
-  #   pdf(NULL)
-  #   par(family = get_font_family(rs$font), ps = rs$font_size)
-  #   
-  #   for (i in seq(1, maxf)) {
-  #     
-  #     ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
-  #                   "\\cellx", c2 , "\\cellx", c3)
-  #     
-  #     if (length(fl) >= i) {
-  #       
-  #       # Split strings if they exceed width
-  #       tmp1 <- split_string_rtf(fl[[i]], rs$content_size[["width"]]/3, rs$units)
-  #       
-  #       ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
-  #       lcnt <- tmp1$lines
-  #     } else {
-  #       ret <- paste0(ret, "\\ql \\cell")
-  #       lcnt <- 1
-  #     }
-  #     
-  #     if (length(fc) >= i) {
-  #       
-  #       # Split strings if they exceed width
-  #       tmp2 <- split_string_rtf(fc[[i]], rs$content_size[["width"]]/3, rs$units)
-  #       
-  #       ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
-  #       ccnt <- tmp2$lines
-  #     } else {
-  #       ret <- paste0(ret, "\\qc \\cell")
-  #       ccnt <- 1
-  #     }
-  #     
-  #     if (length(fr) >= i) {
-  #       
-  #       tmp3 <- split_string_rtf(fr[[i]], rs$content_size[["width"]]/3, rs$units)
-  #       
-  #       ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
-  #       rcnt <- tmp3$lines
-  #     } else {
-  #       ret <- paste0(ret, "\\qr \\cell\\row\n")
-  #       rcnt <- 1
-  #     }
-  #     
-  #     cnt <- cnt + max(lcnt, ccnt, rcnt)
-  #     
-  #   }
-  #   dev.off()
-  #   
-  #   ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", 
-  #                 rs$font_rtf, rs$spacing_multiplier, "}")
-  # }
-  # 
+  cnt <- 1
+
+  fl <- rs$page_footer_left
+  fc <- rs$page_footer_center
+  fr <- rs$page_footer_right
+
+  maxf <- max(length(fl), length(fc), length(fr))
+
+  if (maxf > 0) {
+
+    ret <- paste0("<br>\n<table cellpadding=\"0\" cellspacing=\"0\" ",
+                  "style=\"width:100%\">\n",
+                  "<colgroup>\n<col style=\"width:33.3%\">\n",
+                  "<col style=\"width:33.3%\">\n",
+                  "<col style=\"width:33.3%\">\n</colgroup>\n")
+
+    # pdf(NULL)
+    # par(family = get_font_family(rs$font), ps = rs$font_size)
+
+    for (i in seq(1, maxf)) {
+
+      ret <- paste0(ret, "<tr>")
+
+      if (length(fl) >= i) {
+
+        # Split strings if they exceed width
+        # tmp1 <- split_string_rtf(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+        # 
+        # ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
+        # lcnt <- tmp1$lines
+        
+        ret <- paste0(ret, "<td style=\"text-align:left\">", fl[[i]],
+                           "</td>")
+        lcnt <- 1 # for now
+      } else {
+        ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp;</td>")
+        lcnt <- 1
+      }
+
+      if (length(fc) >= i) {
+
+        # Split strings if they exceed width
+        # tmp2 <- split_string_rtf(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+        # 
+        # ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
+        
+        ret <- paste0(ret, "<td style=\"text-align:center\">", fc[[i]],
+                           "</td>")
+        ccnt <- 1 #tmp2$lines
+      } else {
+        ret <- paste0(ret, "<td style=\"text-align:center\">&nbsp;</td>")
+        ccnt <- 1
+      }
+
+      if (length(fr) >= i) {
+
+        # tmp3 <- split_string_rtf(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+        # 
+        # ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
+        
+        
+        ret <- paste0(ret, "<td style=\"text-align:right\">", fr[[i]],
+                      "</td>")
+        
+        rcnt <- 1 #tmp3$lines
+      } else {
+        ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp;</td>")
+        rcnt <- 1
+      }
+
+      cnt <- cnt + max(lcnt, ccnt, rcnt)
+
+    }
+    # dev.off()
+
+    ret <- paste0(ret, "</tr>\n")
+  }
+
+  ret <- paste0(ret, "</table>\n")
   
   res <- list(html = paste0(ret, collapse = ""),
               lines = cnt)
@@ -210,8 +219,6 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
-
-  # lh <- rs$row_height
 
   ta <- "align=\"left\" "
   if (talgn == "right")
@@ -471,124 +478,137 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
   ret <- c()
   cnt <- 0
   
-  # conv <- rs$twip_conversion
-  # 
-  # lh <- rs$row_height
-  # 
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
-  # 
-  # if (length(thdrlst) > 0) {
-  #   
-  #   for (ttlhdr in thdrlst) {
-  #     
-  #     if (ttlhdr$width == "page")
-  #       width <- rs$content_size[["width"]]
-  #     else if (ttlhdr$width == "content")
-  #       width <- content_width
-  #     else if (is.numeric(ttlhdr$width))
-  #       width <- ttlhdr$width
-  #     
-  #     w1 <- round(width * conv)
-  #     w2 <- round(width * .7 * conv)
-  #     
-  #     mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
-  #     
-  #     alcnt <- 0
-  #     blcnt <- 0
-  #     border_flag <- FALSE
-  #     
-  #     pdf(NULL)
-  #     par(family = get_font_family(rs$font), ps = rs$font_size)
-  #     
-  #     for(i in seq_len(mx)) {
-  #       
-  #       
-  #       
-  #       al <- ""
-  #       if (i == 1) {
-  #         if (any(ttlhdr$blank_row %in% c("above", "both"))) {
-  #           
-  #           alcnt <- 1
-  #           
-  #           tb <- get_cell_borders(i, 1, mx + alcnt, 
-  #                                  1, ttlhdr$borders)
-  #           
-  #           al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1, 
-  #                        "\\ql\\cell\\row\n")
-  #           cnt <- cnt + 1 
-  #           
-  #         }
-  #       }
-  #       
-  #       bl <- ""
-  #       if (i == mx) {
-  #         if (any(ttlhdr$blank_row %in% c("below", "both"))) {
-  #           blcnt <- 1
-  #           
-  #           tb <- get_cell_borders(i + alcnt + blcnt, 1, 
-  #                                  mx + alcnt + blcnt, 
-  #                                  1, ttlhdr$borders)
-  #           
-  #           bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1, 
-  #                        "\\ql\\cell\\row\n")
-  #           cnt <- cnt + 1
-  #         }
-  #         
-  #         if (any(ttlhdr$borders %in% c("all", "outside", "bottom")))
-  #           border_flag <- TRUE
-  #       }
-  #       
-  #       
-  #       
-  #       if (length(ttlhdr$titles) >= i) {
-  #         # Split strings if they exceed width
-  #         tmp1 <- split_string_rtf(ttlhdr$titles[[i]], width * .7, rs$units)
-  #         ttl <- tmp1$rtf
-  #         tcnt <- tmp1$lines
-  #       } else {
-  #         ttl <- ""
-  #         tcnt <- 1 
-  #       }
-  #       
-  #       if (length(ttlhdr$right) >= i) {
-  #         tmp2 <- split_string_rtf(ttlhdr$right[[i]],
-  #                                  width * .3, rs$units)
-  #         hdr <- get_page_numbers_rtf(tmp2$rtf, FALSE)
-  #         hcnt <- tmp2$lines
-  #       } else {
-  #         hdr <- ""
-  #         hcnt <- 1
-  #       }
-  #       
-  #       b1 <- get_cell_borders(i + alcnt, 1, mx + alcnt + blcnt, 2, ttlhdr$borders)
-  #       b2 <- get_cell_borders(i + alcnt, 2, mx+ alcnt + blcnt, 2, ttlhdr$borders)
-  #       
-  #       
-  #       if (al != "")
-  #         ret <- append(ret, al)
-  #       
-  #       ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b1, "\\cellx", w2, 
-  #                                 b2, "\\cellx", w1,
-  #                                 "\\ql ", ttl, "\\cell\\qr ", 
-  #                                 hdr, "\\cell\\row\n"))
-  #       if (bl != "")
-  #         ret <- append(ret, bl)
-  #       
-  #       if (tcnt > hcnt)
-  #         cnt <- cnt + tcnt
-  #       else 
-  #         cnt <- cnt + hcnt
-  #     }
-  #     
-  #     dev.off()
-  #     
-  #   }
-  #   
-  # }
+  ta <- "align=\"left\" "
+  if (talgn == "right")
+    ta <- "align=\"right\" "
+  else if (talgn %in% c("center", "centre"))
+    ta <- "align=\"center\" "
+  
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+
+  if (length(thdrlst) > 0) {
+
+    for (ttlhdr in thdrlst) {
+
+      if (ttlhdr$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttlhdr$width == "content")
+        width <- content_width
+      else if (is.numeric(ttlhdr$width))
+        width <- ttlhdr$width
+
+      w <- round(width, 3)
+
+      mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
+
+      alcnt <- 0
+      blcnt <- 0
+
+      # pdf(NULL)
+      # par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      ret[length(ret) + 1] <- paste0("<table cellpadding =\"0\" ", 
+                                     "cellspacing = \"0\" ",
+                                     ta,
+                                     "style=\"width:", w, u, ";", 
+                                     "\">\n", 
+                                     "<colgroup><col style=\"width:70%;\">\n",
+                                     "<col style=\"width:30%;\"></colgroup>\n")
+                                     
+
+      for(i in seq_len(mx)) {
+
+        al <- ""
+        if (i == 1) {
+          if (any(ttlhdr$blank_row %in% c("above", "both"))) {
+
+            alcnt <- 1
+
+            # tb <- get_cell_borders(i, 1, mx + alcnt,
+            #                        1, ttlhdr$borders)
+
+            al <- paste0("<tr><td style=\"text-align:left\">&nbsp;</td>", 
+                         "<td style=\"text-align:right\">&nbsp;</td></tr>\n")
+            cnt <- cnt + 1
+
+          }
+        }
+
+        bl <- ""
+        if (i == mx) {
+          if (any(ttlhdr$blank_row %in% c("below", "both"))) {
+            blcnt <- 1
+
+            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
+            #                        mx + alcnt + blcnt,
+            #                        1, ttlhdr$borders)
+            # 
+            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1,
+            #              "\\ql\\cell\\row\n")
+            
+            bl <- paste0("<tr><td style=\"text-align:left\">&nbsp;</td>", 
+                         "<td style=\"text-align:right\">&nbsp;</td></tr>\n")
+            cnt <- cnt + 1
+          }
+
+        }
+
+        if (length(ttlhdr$titles) >= i) {
+          # Split strings if they exceed width
+          # tmp1 <- split_string_rtf(ttlhdr$titles[[i]], width * .7, rs$units)
+          # ttl <- tmp1$rtf
+          ttl <-  ttlhdr$titles[[i]]
+          tcnt <- 1 # tmp1$lines
+        } else {
+          ttl <- ""
+          tcnt <- 1
+        }
+
+        if (length(ttlhdr$right) >= i) {
+          # tmp2 <- split_string_rtf(ttlhdr$right[[i]],
+          #                          width * .3, rs$units)
+          # hdr <- get_page_numbers_rtf(tmp2$rtf, FALSE)
+          
+          hdr <- ttlhdr$right[[i]]
+          hcnt <- 1 # tmp2$lines
+        } else {
+          hdr <- ""
+          hcnt <- 1
+        }
+
+        # b1 <- get_cell_borders(i + alcnt, 1, mx + alcnt + blcnt, 2, ttlhdr$borders)
+        # b2 <- get_cell_borders(i + alcnt, 2, mx+ alcnt + blcnt, 2, ttlhdr$borders)
+
+
+        if (al != "")
+          ret <- append(ret, al)
+
+        # ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b1, "\\cellx", w2,
+        #                           b2, "\\cellx", w1,
+        #                           "\\ql ", ttl, "\\cell\\qr ",
+        #                           hdr, "\\cell\\row\n"))
+        
+        ret <- append(ret, paste0("<tr><td style=\"text-align:left\">", ttl, 
+                                  "</td><td style=\"text-align:right\">", hdr, 
+                                  "</td></tr>\n"))
+        
+        if (bl != "")
+          ret <- append(ret, bl)
+
+        if (tcnt > hcnt)
+          cnt <- cnt + tcnt
+        else
+          cnt <- cnt + hcnt
+      }
+
+      ret[length(ret) + 1] <- "</table>\n"
+      # dev.off()
+
+    }
+
+  }
   
   res <- list(html = paste0(ret, collapse = ""),
               lines = cnt)

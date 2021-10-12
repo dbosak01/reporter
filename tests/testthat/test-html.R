@@ -30,6 +30,7 @@ test_that("html1: Basic table works as expected.", {
   dat <- mtcars[1:15, ]
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
+  attr(dat[[2]], "justify") <- "right"
   
   tbl <- create_table(dat, borders = "outside") %>%
     titles("Table 1.0", "My Nice Table", borders = "outside", 
@@ -51,6 +52,70 @@ test_that("html1: Basic table works as expected.", {
   expect_equal(res$pages, 1)
   
 })
+
+test_that("html2: Basic table with title header works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test2.html")
+  
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+  attr(dat[[2]], "width") <- 1
+  
+  tbl <- create_table(dat, borders = "outside") %>%
+    title_header("Table 1.0", "My Nice Table", right = "Right", 
+                 borders = "outside", 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside", 
+              align = "left", width = "content")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>%
+    add_content(tbl)  %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+# Not working
+# test_that("html3: Multi page table works as expected.", {
+#   
+#   
+#   fp <- file.path(base_path, "html/test3.html")
+#   
+#   dat <- iris
+#   
+#   
+#   tbl <- create_table(dat, borders = "none") %>% 
+#     titles("Table 1.0", "My Nice Irises", "Another Title") %>% 
+#     define(Sepal.Length, label = "Sepal Length", width = 1, align = "center") %>% 
+#     define(Sepal.Width, label = "Sepal Width", width = 1, align = "centre") %>% 
+#     define(Species, blank_after = TRUE)
+#   
+#   rpt <- create_report(fp, output_type = "HTML", font = fnt,
+#                        font_size = 12, orientation = "landscape") %>%
+#     set_margins(top = 1, bottom = 1) %>%
+#     page_header("Left", c("Right1")) %>%
+#     add_content(tbl, blank_row = "none") %>%
+#     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+#     footnotes("My footnote 1", "My footnote 2") 
+#   
+#   res <- write_report(rpt)
+#   
+#   expect_equal(file.exists(fp), TRUE)
+#   expect_equal(res$pages, 7)
+#   
+#   
+# })
+
+
 
 # 
 # test_that("html2: Basic text works as expected.", {

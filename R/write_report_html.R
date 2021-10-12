@@ -88,7 +88,12 @@ get_html_document <- function(rs) {
   ret[length(ret) + 1] <- paste0(".thdr {\nfont-weight: normal;\n", 
                                   "border-bottom: thin solid;\n", 
                                   "}\n")
-  
+  ret[length(ret) + 1] <- paste0(".tdc {\ntext-align:center;\n", 
+                                 "}\n")
+  ret[length(ret) + 1] <- paste0(".tdl {\ntext-align:left;\n", 
+                                 "}\n")
+  ret[length(ret) + 1] <- paste0(".tdr {\ntext-align:right;\n", 
+                                 "}\n")
   ret[length(ret) + 1] <- "</style>"
   
 
@@ -318,6 +323,9 @@ write_content_html <- function(rs, hdr, body, pt) {
       #print(page_open)
       if (page_open == FALSE) {
         
+        if (!is.null(rs$page_template$page_header) & 
+            !is.null(rs$page_template$page_header$html))
+          writeLines(rs$page_template$page_header$html, con = f, useBytes = TRUE)
         
         if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
           writeLines(pt$title_hdr$html, con = f, useBytes = TRUE)
@@ -343,6 +351,11 @@ write_content_html <- function(rs, hdr, body, pt) {
         
         if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
           writeLines(pt$footnotes$html, con = f, useBytes = TRUE)
+        
+        
+        if (!is.null(rs$page_template$page_footer) & 
+            !is.null(rs$page_template$page_footer$html))
+          writeLines(rs$page_template$page_footer$html, con = f, useBytes = TRUE)
         
         
         # Add form feed character for text page break
@@ -412,6 +425,8 @@ page_setup_html <- function(rs) {
   rs$gutter_width <- 0.1
   rs$line_size <- 10000
   rs$body_line_count <- 10000
+  
+  rs$page_break_html <- "<div style=\"page-break-after: always;\"></div>"
   
   # # A lot of these values are guesses.  Need to test.
   # # Row height and line height were defined independently in case

@@ -47,66 +47,64 @@ test_that("get_footnotes_html function works as expected.", {
 })
 
 
-# 
-# test_that("get_title_header_rtf function works as expected.", {
-#   
-#   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
-#     title_header("Hello", right = paste("Right here is something",
-#                                         "really long that will wrap and wrap and wrap and wrap keep wrapping"))
-#   
-#   rpt2 <- page_setup_rtf(rpt2)
-#   
-#   th <- get_title_header_rtf(rpt2$title_hdr, 6, rpt2)
-#   th
-#   expect_equal(nchar(th$rtf) > 1, TRUE)
-#   expect_equal(th$lines, 4)
-#   #  expect_equal(th$twips, 1440)
-#   
-# })
-# 
-# 
-# test_that("get_page_header_rtf works as expected.", {
-#   
-#   rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
-#     page_header(left= c("Hello"),
-#                 right = paste("Right here is something that might wrap.",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer")) %>%
-#     page_footer("Left", "Center", "Right here is something")
-#   
-#   rpt3 <- page_setup_rtf(rpt3)
-#   
-#   ph <- get_page_header_rtf(rpt3)
-#   ph
-#   
-#   expect_equal(ph$lines, 3)
-#   #expect_equal(ph$twips, 864)
-# })
-# 
-# 
-# test_that("get_page_footer_rtf works as expected.", {
-#   
-#   rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
-#     page_header(left= c("Hello"),
-#                 right = paste("Right here is something that might wrap.",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer")) %>%
-#     page_footer("Left", "Center", "Right here is something")
-#   
-#   rpt3 <- page_setup_rtf(rpt3)
-#   
-#   pf <- get_page_footer_rtf(rpt3)
-#   pf
-#   
-#   expect_equal(pf$lines, 1)
-#   #expect_equal(pf$twips, 288)
-#   
-#   
-# })
-# 
-# 
+
+test_that("get_title_header_html function works as expected.", {
+
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = paste("Right here is something",
+                                        "really long that will wrap and wrap and wrap and wrap keep wrapping"))
+
+  rpt2 <- page_setup_html(rpt2)
+
+  th <- get_title_header_html(rpt2$title_hdr, 6, rpt2)
+  th
+  expect_equal(nchar(th$html) > 1, TRUE)
+  expect_equal(th$lines, 2) # For now
+  #  expect_equal(th$twips, 1440)
+
+})
+
+
+test_that("get_page_header_html works as expected.", {
+
+  rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header(left= c("Hello"),
+                right = paste("Right here is something that might wrap.",
+                              "If it is long enough so let's make it longer",
+                              "If it is long enough so let's make it longer",
+                              "If it is long enough so let's make it longer")) %>%
+    page_footer("Left", "Center", "Right here is something")
+
+  rpt3 <- page_setup_html(rpt3)
+
+  ph <- get_page_header_html(rpt3)
+  ph
+
+  expect_equal(ph$lines, 1) # For now
+  #expect_equal(ph$twips, 864)
+})
+
+
+test_that("get_page_footer_html works as expected.", {
+
+  rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header(left= c("Hello"),
+                right = paste("Right here is something that might wrap.",
+                              "If it is long enough so let's make it longer",
+                              "If it is long enough so let's make it longer",
+                              "If it is long enough so let's make it longer")) %>%
+    page_footer("Left", "Center", "Right here is something")
+
+  rpt3 <- page_setup_html(rpt3)
+
+  pf <- get_page_footer_html(rpt3)
+  pf
+
+  expect_equal(pf$lines, 2)
+  
+})
+
+
 # 
 # test_that("get_pageby_rtf works as expected.", {
 #   
