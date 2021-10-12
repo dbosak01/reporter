@@ -30,7 +30,7 @@ test_that("html1: Basic table works as expected.", {
   dat <- mtcars[1:15, ]
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
-  attr(dat[[2]], "justify") <- "right"
+  attr(dat[[2]], "justify") <- "left"
   
   tbl <- create_table(dat, borders = "outside") %>%
     titles("Table 1.0", "My Nice Table", borders = "outside", 

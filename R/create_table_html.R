@@ -553,16 +553,16 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
   
   # Header Cell alignment
   ha <- c()
-  # for (k in seq_along(halgns)) {
-  #   if (!is.control(nms[k])) {
-  #     if (halgns[k] == "left")
-  #       ha[k] <- "\\ql"
-  #     else if (halgns[k] == "right")
-  #       ha[k] <- "\\qr"
-  #     else if (halgns[k] %in% c("center", "centre"))
-  #       ha[k] <- "\\qc"
-  #   }
-  # }
+  for (k in seq_along(halgns)) {
+    if (!is.control(nms[k])) {
+      if (halgns[k] == "left")
+        ha[k] <- "tdl"
+      else if (halgns[k] == "right")
+        ha[k] <- "tdr"
+      else if (halgns[k] %in% c("center", "centre"))
+        ha[k] <- "tdc"
+    }
+  }
   
   # Table Header
   #ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
@@ -592,7 +592,7 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
       # Split label strings if they exceed column width
       #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
       #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
-      ret[1] <- paste0(ret[1], "<td class=\"thdr\">", 
+      ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
                        lbls[k], "</td>\n")
       
       # Add in extra lines for labels that wrap
@@ -606,7 +606,7 @@ get_table_header_html <- function(rs, ts, widths, lbls, halgns, talgn) {
   cols[1] <- paste0(cols[1], "</colgroup>\n")
   ret[1] <- paste0(ret[1], "</tr>\n")
   
-  res <- list(html = paste0("<thead>\n", cols, ret, "</thead>\n"),
+  res <- list(html = paste0(cols, "<thead>\n", ret, "</thead>\n"),
               lines = cnt)
   
   return(res)
@@ -799,16 +799,16 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
   
   # Cell alignment
   ca <- c()
-  # for (k in seq_along(algns)) {
-  #   if (!is.control(nms[k])) {
-  #     if (algns[k] == "left")
-  #       ca[k] <- "\\ql"
-  #     else if (algns[k] == "right")
-  #       ca[k] <- "\\qr"
-  #     else if (algns[k] %in% c("center", "centre"))
-  #       ca[k] <- "\\qc"
-  #   }
-  # }
+  for (k in seq_along(algns)) {
+    if (!is.control(nms[k])) {
+      if (algns[k] == "left")
+        ca[k] <- "class=\"tdl\""
+      else if (algns[k] == "right")
+        ca[k] <- "class=\"tdr\""
+      else if (algns[k] %in% c("center", "centre"))
+        ca[k] <- "class=\"tdc\""
+    }
+  }
   
   ret <- c()
   
@@ -840,7 +840,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
         
         # Construct rtf
         #ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
-        ret[i] <- paste0(ret[i], "<td>", t[i, j], "</td>")
+        ret[i] <- paste0(ret[i], "<td ", ca[j], ">", t[i, j], "</td>")
         
         # Count lines in cell 
         # cl <- grep("\\line", t[i, j], fixed = TRUE)
