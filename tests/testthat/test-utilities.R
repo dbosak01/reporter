@@ -484,12 +484,29 @@ test_that("split_cells_variable() works as expected.", {
 test_that("get_image_html works as expected.", {
   
   
-  tmp <-  tempfile(fileext = ".png")
+  tmp <-  tempfile(fileext = ".jpg")
   tmp2 <- tempfile(fileext = ".html")
   
-  res <- get_image_html(tmp, tmp2)
+  plt <- list(height = 4, width = 8)
+  
+  res <- get_image_html(tmp, tmp2, plt, "inches")
+  res
   
   expect_equal(length(res), 1)
-  expect_equal(res, paste0("<img src=\"./images/", basename(tmp), "\">"))
+  expect_equal(substr(res, 1, 4), "<img")
+  
+})
+
+
+test_that("remove_image_files works as expected.", {
+  
+  pth <- file.path(base_path, "html/test6.html")
+  
+  
+  remove_image_files(pth)
+  
+  # Hard to test. Will just check for error.
+  # And use this test interactively.
+  expect_equal(TRUE, TRUE)
   
 })

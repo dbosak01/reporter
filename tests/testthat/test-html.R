@@ -185,7 +185,7 @@ test_that("html6: Basic plot works as expected.", {
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
-  plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
+  plt <- create_plot(p, height = 4, width = 8, borders = c("none")) %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
     footnotes("* Motor Trend, 1974", borders = "none")
 
@@ -193,7 +193,7 @@ test_that("html6: Basic plot works as expected.", {
   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "right") %>%
+    add_content(plt, align = "center") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
 
 

@@ -18,8 +18,10 @@ write_report_html <- function(rs) {
   
   orig_path <- rs$modified_path
   
-  if (file.exists(orig_path))
+  if (file.exists(orig_path)) {
     file.remove(orig_path)
+  }
+  remove_image_files(orig_path)
   
   # Establish content and body sizes
   rs <- page_setup_html(rs)
@@ -54,6 +56,23 @@ write_report_html <- function(rs) {
   return(rs)
 }
 
+#' @noRd
+remove_image_files <- function(htmlpath) {
+  
+  f <- gsub(".html", "", basename(htmlpath))
+  d <- dirname(htmlpath)
+  im <- paste0(d, "/images")
+  ret <- FALSE
+  
+  if (dir.exists(im)) {
+    fls <- list.files(path = im, paste0("^", f), full.names = TRUE,
+                      include.dirs = FALSE, no.. = TRUE)
+    
+    ret <- file.remove(fls)
+  }
+
+  return(ret)
+}
 
 #' @description Returns header for HTML document.  This is independent of content,
 #' except for the page header and footer.

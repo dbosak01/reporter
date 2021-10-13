@@ -51,7 +51,7 @@ get_image_bytes <- function(file_path) {
 
 }
 
-      
+#' @import stringi      
 #' @noRd
 get_image_html <- function(file_path, report_path, plt, units) {
   
@@ -60,8 +60,11 @@ get_image_html <- function(file_path, report_path, plt, units) {
   if (!file.exists(dr)) {
     dir.create(dr) 
   }
+  
+  fl <-  paste0( gsub(".html", "", basename(report_path), fixed = TRUE), "-", 
+                 stri_rand_strings(1, 4, pattern = "[A-Z0-9]"), ".jpg")
     
-  pth <- file.path(dr, basename(file_path))
+  pth <- file.path(dr, fl)
 
   
   res <- file.copy(file_path, pth)
