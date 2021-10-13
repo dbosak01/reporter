@@ -549,7 +549,7 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
 
   
   # Get sum of all items to this point
-  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght)
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, imght)
   
   # Get footnotes, filler, and content blank line
   ftnts <- get_page_footnotes_rtf(rs, plt, wth, lpg_rows, lns,
@@ -678,18 +678,18 @@ create_plot_pages_html <- function(rs, cntnt, lpg_rows, tmp_dir) {
     }
     
     # Get rtf page bodies
-    res <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
+    res <- get_plot_body_html(plt, tmp_nm, cntnt$align, rs,
                              lpg_rows, cntnt$blank_row, pgby, pgval, 
                              cntr < length(dat_lst))
     
-    pgs[[length(pgs) + 1]] <- res$rtf
+    pgs[[length(pgs) + 1]] <- res$html
     cnts[[length(cnts) + 1]] <- res$lines
     
     cntr <- cntr + 1
     
   }
   
-  ret <- list(rtf = pgs,
+  ret <- list(html = pgs,
               lines = cnts)
   
   return(ret)
@@ -707,105 +707,73 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   if (!is.null(plt$width))
     wth <- plt$width
   
-  
-  
+
   # Get titles and footnotes
-  ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
-  ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
-  pgbys <- get_page_by_rtf(pgby, wth, pgval, rs, talign)
+  ttls <- get_titles_html(plt$titles, wth, rs, talign) 
+  ttl_hdr <- get_title_header_html(plt$title_hdr, wth, rs, talign)
+  pgbys <- get_page_by_html(pgby, wth, pgval, rs, talign)
   
   # Get image RTF codes
-  img <- get_image_rtf(plot_path, plt$width, plt$height, rs$units)
+  img <- get_image_html(plot_path, rs$modified_path, plt, rs$units)
+  
   
   # Assign table alignment codes
   if (talign == "left") {
-    talgn <- "\\trql" 
+    talgn <- "align=\"left\""
   } else if (talign == "right") {
-    talgn <- "\\trqr"
+    talgn <- "align=\"right\""
   } else  {
-    talgn <- "\\trqc"
+    talgn <- "align=\"center\""
   }
   
-  algn <- "\\qc" 
+  # algn <- "\\qc" 
+  u <- rs$units
+  if (u == "inches")
+    u <- "in"
   
   # Convert width to twips
-  w <- round(wth * rs$twip_conversion)
+  w <- paste0("width:", round(wth, 3), u, ";")
   
   # Get border codes
-  b <- get_cell_borders(1, 1, 1, 1, plt$borders)
+  b <- get_cell_borders_html(1, 1, 1, 1, plt$borders)
   
   # Concat all header codes
-  hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
+  hd <- paste0("<table cellpadding=\"0\" cellspacing=\"0\" ", 
+               talgn, " style =\"", w, "\">\n", 
+               "<tr><td style=\"", b, "\">\n")
   
-  ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
-  
-  # Restore sizing and alignment
-  # if (rs$font_size == 8) {
-  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
-  #                rs$spacing_multiplier)
-  # } else if (rs$font_size ==  12) {
-  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
-  #                rs$spacing_multiplier)
-  # } else {
-  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf, 
-  #                rs$spacing_multiplier)
-  # }
-  
-  
+  ft <- "</td></tr></table>\n"
+
   
   # Concat RTF codes for image
   img <- paste0(hd, img, ft)
-  imght <- round((plt$height * rs$twip_conversion) / rs$line_height)
+  
+  # ** Do something with this **
+  imght <- round(plt$height / rs$line_height)
   
   # Add blank above content if requested
   a <- NULL
   if (content_blank_row %in% c("both", "above"))
-    a <- "\\par"
-  
-  
+    a <- "<br>"
   
   
   # Get sum of all items to this point
-  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$line, imght)
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, imght)
   
   # Get footnotes, filler, and content blank line
-  ftnts <- get_page_footnotes_rtf(rs, plt, wth, lpg_rows, lns,
+  ftnts <- get_page_footnotes_html(rs, plt, wth, lpg_rows, lns,
                                   wrap_flag, content_blank_row, talign)
   
-  
-  # On LibreOffice, have to protect the table from the title width or
-  # the table row will inherit the title row width. Terrible problem.
-  tpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(plt$borders %in% c("all", "top", "outside"))) {
-    if (ttls$border_flag | rs$page_template$titles$border_flag |  
-        rs$page_template$title_hdr$border_flag)
-      tpt <- ""
-  }
-  
-  # Prevent infection of widths on LibreOffice.
-  bpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(plt$borders %in% c("all", "top", "outside"))) {
-    if (!is.null(ftnts)) {
-      if (ftnts$border_flag)
-        bpt <- ""
-    }
-    
-    if (!is.null(rs$page_template$footnotes)) {
-      if (rs$page_template$footnotes$border_flag)
-        bpt <- ""
-    }
-  }
-  
   # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, tpt, img, bpt)
+  rws <- c(a, ttls$html, ttl_hdr$html, pgbys$html, img)
   
   # Combine everything
-  rws <- c(rws, ftnts$rtf)
+  rws <- c(rws, ftnts$html)
   lns <- sum(lns, ftnts$lines)
   
   
   # Page list
-  ret <- list(rtf = rws,
+  ret <- list(html = rws,
               lines = lns)  
   
   

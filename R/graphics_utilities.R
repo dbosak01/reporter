@@ -51,6 +51,33 @@ get_image_bytes <- function(file_path) {
 
 }
 
-          
-          
-          
+      
+#' @noRd
+get_image_html <- function(file_path, report_path, plt, units) {
+  
+
+  dr <- file.path(dirname(report_path), "images")
+  if (!file.exists(dr)) {
+    dir.create(dr) 
+  }
+    
+  pth <- file.path(dr, basename(file_path))
+
+  
+  res <- file.copy(file_path, pth)
+  if (all(res == TRUE)) {
+    file.remove(file_path) 
+  }
+  
+  u <- units
+  if (u == "inches")
+    u <- "in"
+  
+  
+  ret <- paste0("<img src=\"./images/", basename(pth), "\"", 
+                " style=\"height:", plt$height, u, ";",
+                " width:", plt$width, u, ";\">")
+  
+  
+  return(ret)
+}

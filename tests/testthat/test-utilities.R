@@ -480,3 +480,16 @@ test_that("split_cells_variable() works as expected.", {
   
 })
 
+
+test_that("get_image_html works as expected.", {
+  
+  
+  tmp <-  tempfile(fileext = ".png")
+  tmp2 <- tempfile(fileext = ".html")
+  
+  res <- get_image_html(tmp, tmp2)
+  
+  expect_equal(length(res), 1)
+  expect_equal(res, paste0("<img src=\"./images/", basename(tmp), "\">"))
+  
+})
