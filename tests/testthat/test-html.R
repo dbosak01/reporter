@@ -119,10 +119,10 @@ test_that("html3: Spanning headers work as expected.", {
 })
 
 # Not working
-# test_that("html3: Multi page table works as expected.", {
+# test_that("html4: Multi page table works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test3.html")
+#   fp <- file.path(base_path, "html/test4.html")
 #   
 #   dat <- iris
 #   
@@ -151,57 +151,57 @@ test_that("html3: Spanning headers work as expected.", {
 
 
 
-# 
-# test_that("html2: Basic text works as expected.", {
-#   
-#   fp <- file.path(base_path, "html/test2.html")
-#   
-#   txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
-#     titles("Text 1.0", "My Nice Text", borders = "outside") %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "outside")
-#   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt,
-#                        font_size = fsz) %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", "Right") %>%
-#     add_content(txt, align = "right") %>%
-#     page_footer("Left1", "Center1", "Right1") 
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
-# 
-# 
-# 
-# test_that("html3: Basic plot works as expected.", {
-#   
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "html/test3.html")
-#   
-#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-#   
-#   plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>% 
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
-#     footnotes("* Motor Trend, 1974", borders = "none") 
-#   
-#   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(plt, align = "right") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
+# Works but left align of content messes up
+test_that("html5: Basic text works as expected.", {
+
+  fp <- file.path(base_path, "html/test5.html")
+
+  txt <- create_text(cnt, width = 6, borders = "outside", align = "center") %>%
+    titles("Text 1.0", "My Nice Text", borders = "outside") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+
+  rpt <- create_report(fp, output_type = "HTML", font = fnt,
+                       font_size = 12) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
+
+
+
+test_that("html6: Basic plot works as expected.", {
+
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "html/test6.html")
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+    footnotes("* Motor Trend, 1974", borders = "none")
+
+
+  rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "right") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
