@@ -105,31 +105,32 @@ test_that("get_page_footer_html works as expected.", {
 })
 
 
-# 
-# test_that("get_pageby_rtf works as expected.", {
-#   
-#   tbl <- create_table(mtcars) %>% 
-#     page_by(cyl, "Cylinders:")
-#   
-#   rpt <- create_report("", font = "Arial", font_size = 12) %>%
-#     titles("Hello") %>%
-#     footnotes("Goodbye") %>% 
-#     add_content(tbl)
-#   
-#   rpt <- page_setup_rtf(rpt)
-#   
-#   rpt$line_height
-#   
-#   res <- get_page_by_rtf(tbl$page_by, 6, "fork", rpt, "left")
-#   res  
-#   
-#   expect_equal(res$lines, 2)
-#   expect_equal(res$rtf, 
-#                paste0("\\trowd\\trgaph0\\trql\\cellx8640\\ql Cylinders:fork\\cell\\row\n", 
-#                       "\\trowd\\trgaph0\\trql\\cellx8640\\ql\\cell\\row\n"))
-#   
-# })
-# 
+
+test_that("get_pageby_html works as expected.", {
+
+  tbl <- create_table(mtcars) %>%
+    page_by(cyl, "Cylinders:")
+
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello") %>%
+    footnotes("Goodbye") %>%
+    add_content(tbl)
+
+  rpt <- page_setup_rtf(rpt)
+
+  rpt$line_height
+
+  res <- get_page_by_html(tbl$page_by, 6, "fork", rpt, "left")
+  res
+
+  expect_equal(res$lines, 2)
+  expect_equal(res$html,
+               paste0("<table style=\"text-align: left;width:6in;\">\n",
+                      "<tr><td style=\"\">Cylinders:fork</td></tr>\n", 
+                      "<tr><td>&nbsp;</td></tr>\n</table>"))
+
+})
+
 # 
 # test_that("rtf2-2: get_cell_borders works as expected.", {
 #   

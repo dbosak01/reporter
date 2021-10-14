@@ -250,3 +250,69 @@ test_that("html7: Multi page table paper_size none works as expected.", {
   
   
 })
+
+# Good for testing
+test_that("html8: Page by works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test8.html")
+  
+  dat <- iris
+  
+  
+  tbl <- create_table(dat, borders = "all") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title", 
+           borders = "outside") %>%
+    page_by(Species, label = "Species: ", borders = "outside") %>% 
+    define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
+    define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre")  %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+                       font_size = 12, orientation = "landscape",
+                       paper_size = "letter") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl, blank_row = "none") %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 9)
+  
+  
+})
+
+
+# Good for testing
+test_that("html9: Page by on report works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test9.html")
+  
+  dat <- iris
+  
+  
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
+    define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") 
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+                       font_size = 12, orientation = "landscape",
+                       paper_size = "letter") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    page_by(Species, label = "Species: ") %>% 
+    add_content(tbl, blank_row = "none") %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    footnotes("My footnote 1", "My footnote 2")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 9)
+  
+  
+})

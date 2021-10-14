@@ -662,71 +662,67 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
   ret <- c()
   cnt <- 0
 
-  # 
+
   # ta <- "\\trql"
   # if (talgn == "right")
   #   ta <- "\\trqr"
   # else if (talgn %in% c("center", "centre"))
   #   ta <- "\\trqc"
-  # 
-  # if (!is.null(pgby)) { 
-  #   
-  #   if (!any(class(pgby) == "page_by"))
-  #     stop("pgby parameter value is not a page_by.")
-  #   
-  #   
-  #   w1 <- round(width * rs$twip_conversion)
-  #   
-  #   algn <- "\\ql"
-  #   if (pgby$align == "right")
-  #     algn <- "\\qr"
-  #   else if (pgby$align %in% c("center", "centre"))
-  #     algn <- "\\qc"
-  #   
-  #   trows <- 1
-  #   brow <- 1
-  #   if (pgby$blank_row %in% c("above", "both")) {
-  #     trows <- trows + 1
-  #     brow <- 2
-  #   }
-  #   if (pgby$blank_row %in% c("below", "both"))
-  #     trows <- trows + 1
-  #   
-  #   if (pgby$blank_row %in% c("above", "both")) {
-  #     
-  #     tb <- get_cell_borders(1, 1, trows, 1, pgby$borders)
-  #     
-  #     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
-  #                                    "\\cellx", w1, algn, 
-  #                                    "\\cell\\row\n")
-  #     cnt <- cnt + 1 
-  #   }
-  #   
-  #   tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
-  #   
-  #   ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
-  #                                  "\\cellx", w1, algn, " ",
-  #                                  pgby$label, value, "\\cell\\row\n")
-  #   
-  #   
-  #   cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
-  #                              rs$font, rs$font_size, rs$units)
-  #   
-  #   
-  #   if (pgby$blank_row %in% c("below", "both")) {
-  #     
-  #     tb <- get_cell_borders(trows, 1, trows, 1, pgby$borders)
-  #     
-  #     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
-  #                                    "\\cellx", w1, algn, 
-  #                                    "\\cell\\row\n")
-  #     cnt <- cnt + 1 
-  #   }
-  #   
-  #   if (any(pgby$borders %in% c("all", "outside", "bottom")))
-  #     border_flag <- TRUE
-  #   
-  # }
+
+  if (!is.null(pgby)) {
+
+    if (!any(class(pgby) == "page_by"))
+      stop("pgby parameter value is not a page_by.")
+
+    w <- paste0("width:", round(width, 3), units_html(rs$units), ";")
+
+    if (pgby$align %in% c("centre", "center"))
+      algn <- "text-align: center;"
+    else if (pgby$align == "right")
+      algn <- "text-align: right;"
+    else
+      algn <- "text-align: left;"
+
+    ret[length(ret) + 1] <- paste0("<table style=\"", algn, w, "\">\n")
+    
+    trows <- 1
+    brow <- 1
+    if (pgby$blank_row %in% c("above", "both")) {
+      trows <- trows + 1
+      brow <- 2
+    }
+    if (pgby$blank_row %in% c("below", "both"))
+      trows <- trows + 1
+
+    if (pgby$blank_row %in% c("above", "both")) {
+
+      # tb <- get_cell_borders(1, 1, trows, 1, pgby$borders)
+
+      ret[length(ret) + 1] <- paste0("<tr><td>&nbsp;</td></tr>\n")
+      cnt <- cnt + 1
+    }
+
+    tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
+
+    ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
+                                   pgby$label, value, "</td></tr>\n")
+    cnt <- cnt + 1
+
+    # cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
+    #                            rs$font, rs$font_size, rs$units)
+
+
+    if (pgby$blank_row %in% c("below", "both")) {
+
+      # tb <- get_cell_borders(trows, 1, trows, 1, pgby$borders)
+
+      ret[length(ret) + 1] <- paste0("<tr><td>&nbsp;</td></tr>\n")
+      cnt <- cnt + 1
+    }
+
+    ret[length(ret) + 1] <- "</table>"
+
+  }
   
   res <- list(html = paste0(ret, collapse = ""), 
               lines = cnt)
