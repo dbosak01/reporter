@@ -59,7 +59,7 @@ write_report_html <- function(rs) {
 #' @noRd
 remove_image_files <- function(htmlpath) {
   
-  f <- gsub(".html", "", basename(htmlpath))
+  f <- paste0(gsub(".html", "", basename(htmlpath)), "-")
   d <- dirname(htmlpath)
   im <- paste0(d, "/images")
   ret <- FALSE
@@ -431,6 +431,39 @@ update_page_numbers_html <- function(path, tpg) {
 
 # Setup Functions ---------------------------------------------------------
 
+# # A lot of these values are guesses.  Need to test.
+# # Row height and line height were defined independently in case
+# # they are different.  Right now, appear to be the same.
+# if (rs$font_size == 8) {
+#   rh <- 185 #round(.11 * 1440)
+#   lh <- 185 #round(.1 * 1440) 
+#   #pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
+#   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs16"
+#   gtr <- .1 
+#   cw <- .1
+#   cp <- 40
+#   sm <- "\\sl-180\\slmult0"
+# } else if (rs$font_size == 10) {
+#   rh <- 228 #round(.165 * 1440) # 225
+#   lh <- 228 #round(.165 * 1440)  
+#   #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
+#   pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
+#   gtr <- .1
+#   cw <- .11
+#   cp <- 40
+#   sm <- "\\sl-225\\slmult0"
+# } else if (rs$font_size == 12) {
+#   rh <- 275 #round(.2 * 1440)
+#   lh <- 275 #round(.1875 * 1440) #270
+#   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
+#   gtr <- .11
+#   cw <- .12
+#   cp <- 40
+#   sm <- "\\sl-275\\slmult0"
+# }
+# 
+# 
+
 
 #' @description Setup page for content
 #' @details  Calculates available space for content and prepares text lines
@@ -438,135 +471,102 @@ update_page_numbers_html <- function(path, tpg) {
 #' @noRd
 page_setup_html <- function(rs) {
   
-  debug <- FALSE
+  debug <- TRUE
+  
+  if (rs$font_size == 8) {
+    
+    rh <- 0.127451  
+    gtr <- .1
+    cw <- .1    # na
+    
+  } else if (rs$font_size == 9) {
+    
+    rh <- 0.14 # na
+    cw <- .11  # na
+    
+    
+  } else if (rs$font_size == 10) {
+    
+    rh <- 0.1585366  
+    gtr <- .1
+    cw <- .11   # na
+
+  } else if (rs$font_size == 11) {
+    
+    rh <- 0.17 # na
+    gtr <- .1
+    cw <- .11  # na
+    
+  } else if (rs$font_size == 12) {
+    
+    # inches 
+    rh <- 0.1911765  
+    gtr <- 0.11
+    cw <- .12  #na
+  }
+  
+  if (rs$units == "cm") {
+    rh <- ccm(rh)
+    cw <- ccm(cw)
+  }
+  
+  rs$row_height <- rh
+  rs$line_height <- rh
+  rs$char_width <- cw
   
   # Content size is the page size minus margins, in units of measure
   rs$content_size <- get_content_size(rs)
+  rs$line_size <- rs$content_size[["width"]]
   
-  rs$gutter_width <- 0.1
-  rs$line_size <- 10000
-  rs$body_line_count <- 10000
+  rs$border_height <- 15
+  rs$gutter_width <- gtr
+  if (rs$units == "cm")
+    rs$gutter_width <- ccm(rs$gutter_width)
   
-  rs$page_break_html <- "<div style=\"page-break-after: always;\"></div>"
-  
-  # # A lot of these values are guesses.  Need to test.
-  # # Row height and line height were defined independently in case
-  # # they are different.  Right now, appear to be the same.
-  # if (rs$font_size == 8) {
-  #   rh <- 185 #round(.11 * 1440)
-  #   lh <- 185 #round(.1 * 1440) 
-  #   #pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
-  #   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs16"
-  #   gtr <- .1 
-  #   cw <- .1
-  #   cp <- 40
-  #   sm <- "\\sl-180\\slmult0"
-  # } else if (rs$font_size == 10) {
-  #   rh <- 228 #round(.165 * 1440) # 225
-  #   lh <- 228 #round(.165 * 1440)  
-  #   #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
-  #   pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
-  #   gtr <- .1
-  #   cw <- .11
-  #   cp <- 40
-  #   sm <- "\\sl-225\\slmult0"
-  # } else if (rs$font_size == 12) {
-  #   rh <- 275 #round(.2 * 1440)
-  #   lh <- 275 #round(.1875 * 1440) #270
-  #   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
-  #   gtr <- .11
-  #   cw <- .12
-  #   cp <- 40
-  #   sm <- "\\sl-275\\slmult0"
-  # }
-  # 
-  # 
-  # # Get conversion factor to twips
-  # if (rs$units == "inches") {
-  #   conv <- 1440
-  # } else {
-  #   conv <- 566.9291
-  # }
-  # 
-  # rs$twip_conversion <- conv
-  # rs$row_height <- rh
-  # rs$line_height <- lh
-  # rs$page_break_rtf <- paste0(pb, sm)
-  # rs$char_width <- cw
-  # rs$line_size <- rs$content_size[["width"]]
-  # rs$cell_padding <- cp
-  # rs$spacing_multiplier <- sm
-  # rs$border_height <- 15
-  # 
-  # # Line spacing values determined by trial and error.
-  # # Needed for LibreOffice.  Appear to be ignored in Word.
-  # if (rs$font_size == 10) {
-  #   rs$font_rtf <-  "\\f0\\fs20"
-  # } else if (rs$font_size == 12) {
-  #   rs$font_rtf <-  "\\f0\\fs24"
-  # } else if (rs$font_size == 8) {
-  #   rs$font_rtf  <- "\\f0\\fs16"
-  # }
-  # 
-  # 
-  # if (rs$units == "cm")
-  #   rs$gutter_width <- ccm(gtr)
-  # else 
-  #   rs$gutter_width <- gtr
-  # 
-  # if (is.null(rs$user_line_count)) {
-  #   # There is one row above the page footer that is not printable.
-  #   # Therefore adjust by 1.
-  #   rs$line_count <- floor(rs$content_size[[1]] * conv / rh) - 1
-  # } else 
-  #   rs$line_count <- rs$user_line_count
-  # 
-  # if (debug) {
-  #   print(paste("Content Height:", rs$content_size[[1]]))
-  #   print(paste("Content Width:", rs$content_size[[2]]))
-  #   print(paste("Line Count:", rs$line_count))
-  #   print(paste("Line Height:", rs$line_height))
-  #   print(paste("Gutter Width:", rs$gutter_width))
-  #   print(paste("Char Width:", rs$char_width))
-  # }
+  rs$page_break_html <- paste0("<div style=\"page-break-before: always;",
+                               "height:", rs$margin_top, 
+                               units_html(rs$units), ";", "\"></div>")
+
+  if (is.null(rs$user_line_count)) {
+    rs$line_count <- round(rs$content_size[[1]] / rh) 
+  } else
+    rs$line_count <- rs$user_line_count
+
+  if (debug) {
+    print(paste("Font Size:", rs$font_size))
+    print(paste("Content Height:", rs$content_size[[1]]))
+    print(paste("Content Width:", rs$content_size[[2]]))
+    print(paste("Line Count:", rs$line_count))
+    print(paste("Line Height:", rs$line_height))
+    print(paste("Gutter Width:", rs$gutter_width))
+    print(paste("Char Width:", rs$char_width))
+  }
   # 
   # Get page template
   pt <- page_template_html(rs)
   rs$page_template <- pt
-  # 
-  # # Body size in twips
-  # # Small adjustment by one line height
-  # # This gets used to determine lines on a page.
-  # rs$body_size <- 
-  #   c(height = floor((rs$content_size[[1]] * conv) - pt$page_header$twips - pt$page_footer$twips - lh), 
-  #     width = floor(rs$content_size[[2]] * conv))
-  # 
-  # if (debug) {
-  #   print(paste("Body Height:", rs$body_size[[1]]))
-  #   print(paste("Body Width:", rs$body_size[[2]]))
-  # }
-  # 
-  # 
-  # # Get the page template row count
-  # # Include all the rows associated with the page template
-  # rs$page_template_header_count <- sum(pt$page_header$lines, pt$titles$lines, 
-  #                                      pt$title_hdr$lines, pt$page_by$lines)
-  # if (debug)
-  #   print(paste("Page Template Header Count:", rs$page_template_header_count))
-  # 
-  # rs$page_template_footer_count <- sum(pt$footnotes$lines, pt$page_footer$lines)
-  # if (debug)
-  #   print(paste("Page Template Footer Count:", rs$page_template_footer_count))
-  # 
-  # rs$page_template_row_count <- rs$page_template_header_count + 
-  #   rs$page_template_footer_count
-  # if (debug)
-  #   print(paste("Page Template Row Count:", rs$page_template_row_count))
-  # 
-  # # Body line count is the number of rows available for content on each page
-  # rs$body_line_count <- rs$line_count - rs$page_template_row_count
-  # if (debug)
-  #   print(paste0("Body Line Count: ", rs$body_line_count))
+
+
+  # Get the page template row count
+  # Include all the rows associated with the page template
+  rs$page_template_header_count <- sum(pt$page_header$lines, pt$titles$lines,
+                                       pt$title_hdr$lines, pt$page_by$lines)
+  if (debug)
+    print(paste("Page Template Header Count:", rs$page_template_header_count))
+
+  rs$page_template_footer_count <- sum(pt$footnotes$lines, pt$page_footer$lines)
+  if (debug)
+    print(paste("Page Template Footer Count:", rs$page_template_footer_count))
+
+  rs$page_template_row_count <- rs$page_template_header_count +
+    rs$page_template_footer_count
+  if (debug)
+    print(paste("Page Template Row Count:", rs$page_template_row_count))
+
+  # Body line count is the number of rows available for content on each page
+  rs$body_line_count <- rs$line_count - rs$page_template_row_count
+  if (debug)
+    print(paste0("Body Line Count: ", rs$body_line_count))
   
   return(rs)
 }

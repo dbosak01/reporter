@@ -1017,6 +1017,18 @@ cin <- function(x) {
   return(x / 2.54)
 }
 
+
+units_html <- function(u) {
+  
+ ret <- u  
+ if (ret == "inches")
+   ret <- "in"
+ 
+ 
+ return(ret)
+  
+}
+
 # RTF Functions -----------------------------------------------------------
 
 
