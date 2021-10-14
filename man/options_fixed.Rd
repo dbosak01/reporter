@@ -128,7 +128,8 @@ be set automatically, and cannot be changed.
 
 Some of the \code{options_fixed} function apply only to RTF and PDF.
 In particular, the \code{font_size} parameter applies only to RTF and PDF
-reports.  Valid font size options are 8, 10, and 12.
+reports.  Valid font size options are 8, 10, and 12.  The font size may
+also be set on the \code{\link{create_report}} function.
 }
 
 \examples{

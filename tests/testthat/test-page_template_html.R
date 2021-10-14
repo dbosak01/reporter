@@ -52,7 +52,7 @@ test_that("get_title_header_html function works as expected.", {
 
   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
     title_header("Hello", right = paste("Right here is something",
-                                        "really long that will wrap and wrap and wrap and wrap keep wrapping"))
+    "really long that will wrap and wrap and wrap and wrap keep wrapping"))
 
   rpt2 <- page_setup_html(rpt2)
 

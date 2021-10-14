@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-### Output to RTF and PDF
+### Output to RTF, PDF, and HTML
 
-The **reporter** package supports three types of output: TXT, RTF, and PDF. 
+The **reporter** package supports four types of output: TXT, RTF, PDF, and HTML. 
 The package produces TXT reports by default.  If you want to produce RTF
 or PDF output, simply change the output type.  Below is the summary table
 with stub example from above, the only change being that the `output_type`

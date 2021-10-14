@@ -27,7 +27,9 @@ and a choice of output formats. The package will
 initially focus on printable, file-based 
 output formats, as there are already numerous R packages that 
 provide tabular reporting in HTML. 
-The current version supports TXT, RTF, and PDF output types.   
+The current version supports TXT, RTF, PDF, and HTML output types. Note that, 
+unlike other packages, even the HTML output from the **reporter** package
+is paged by default.  
 
 The **reporter** package is distributed under a [Creative Commons non-commercial 
 license](https://creativecommons.org/licenses/by-nc/4.0).  It is available 

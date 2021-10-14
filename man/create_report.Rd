@@ -55,8 +55,8 @@ at this time.  The default value is "fixed".}
 
 \item{font_size}{The size of the font to use on the report. The \code{font_size}
 specified will be used for the entire report.  Valid values are 8, 10, 
-and 12.  The \code{font_size} parameter only applies to RTF and PDF output types.
-The default value is 10.}
+and 12.  The \code{font_size} parameter only applies to RTF, PDF, and HTML 
+output types. The default value is 10.}
 }
 \value{
 A new report_spec object.
@@ -96,8 +96,9 @@ The report family of functions are pipe-friendly.  After creating the
 report, you may pipe the object to any of the above functions to append
 additional options.
 
-Note that PDF output has some limitations not found in TXT and RTF output.
-See \link{NotesOnPDF} for additional information.
+Note that PDF output currently only supports a fixed-width style report.
+A variable-width report with a choice of fonts will be available in future
+versions of the \strong{reporter} package.
 }
 
 \examples{

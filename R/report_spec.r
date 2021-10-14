@@ -40,8 +40,9 @@
 #' report, you may pipe the object to any of the above functions to append
 #' additional options.
 #' 
-#' Note that PDF output has some limitations not found in TXT and RTF output.
-#' See \link{NotesOnPDF} for additional information.
+#' Note that PDF output currently only supports a fixed-width style report.
+#' A variable-width report with a choice of fonts will be available in future
+#' versions of the \strong{reporter} package.
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -75,8 +76,8 @@
 #' at this time.  The default value is "fixed".
 #' @param font_size The size of the font to use on the report. The \code{font_size}
 #' specified will be used for the entire report.  Valid values are 8, 10, 
-#' and 12.  The \code{font_size} parameter only applies to RTF and PDF output types.
-#' The default value is 10.
+#' and 12.  The \code{font_size} parameter only applies to RTF, PDF, and HTML 
+#' output types. The default value is 10.
 #' @return A new report_spec object.
 #' @family report
 #' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
@@ -361,7 +362,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' 
 #' Some of the \code{options_fixed} function apply only to RTF and PDF.
 #' In particular, the \code{font_size} parameter applies only to RTF and PDF
-#' reports.  Valid font size options are 8, 10, and 12.
+#' reports.  Valid font size options are 8, 10, and 12.  The font size may
+#' also be set on the \code{\link{create_report}} function.
 #' 
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing text reports.  
@@ -1820,8 +1822,8 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' whether there is a page break before or after.
 #' @details 
 #' The \code{add_content} function adds a piece of content to a report. For a 
-#' text report, valid objects are a table or text object.  For an RTF or PDF
-#' report, valid objects are a table, text, or plot object.  See 
+#' text report, valid objects are a table or text object.  For an RTF, PDF, or 
+#' HTML report, valid objects are a table, text, or plot object.  See 
 #' \code{\link{create_table}}, \code{\link{create_text}}, or 
 #' \code{\link{create_plot}} for further 
 #' information on how to create content objects.  
@@ -1942,7 +1944,8 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' the \code{output_type} on the \code{create_report} function.  This 
 #' parameter can be used to output the same report object to 
 #' multiple output types. Default value is NULL, meaning it will not override
-#' the \code{create_report} value.  Valid values are 'TXT', 'RTF', and 'PDF'.
+#' the \code{create_report} value.  Valid values are 'TXT', 'RTF', 'PDF' and 
+#' 'HTML'.
 #' @param preview Whether to write the entire report, or a report preview.
 #' A report preview is a subset of pages of the report.  The default value is 
 #' NULL, meaning the entire report will be written.  You may also pass 

@@ -6,7 +6,7 @@
 \title{reporter: A package for creating statistical reports}
 \description{
 The \strong{reporter} package creates statistical reports in TXT, 
-RTF, and PDF file formats.  Features include automatic page wrapping and 
+RTF, PDF, and HTML file formats.  Features include automatic page wrapping and 
 breaking for wide and long tables, spanning headers, titles, footnotes, 
 page headers, page footers, and page numbering.  The package allows mixing
 of multiple tables, text, and plots in a single report, or even on a single
@@ -42,7 +42,7 @@ The \strong{reporter} package contains the following key features:
   \item Integrates with the \strong{\link[fmtr]{fmtr}} package to format 
         numeric, date, and character data
   \item Plots from the popular \strong{\link[ggplot2]{ggplot2}} package can 
-        be added to RTF and PDF reports
+        be added to RTF, PDF, and HTML reports
   \item Allows appending multiple tables to a report, multiple tables to a page, 
         and intermingling of text, tables, and plots
   \item Supports in-report date/time stamps and "Page X of Y" page numbering
@@ -69,11 +69,13 @@ assumptions and limitations are as follows:
   \item The package assumes that displaying the data in the proper
   layout is more important than aesthetic considerations like colors,
   borders, fonts, striping, etc.  
-  \item The current version supports a monospace, fixed-width font only.
-  Variable width fonts will be supported in future versions.
-  \item RTF and PDF output are actually text reports with an RTF
-  or PDF wrapper.  Future versions will support native RTF and PDF file 
-  formats.
+  \item The current version supports both a monospace, fixed-width style 
+  report and a variable-width style report.  The monospace report is the 
+  default.  To create a variable width report, set the font parameter on
+  the \code{create_report} function to 'Arial', 'Courier', or 'Times'.
+  \item If a font is selected, it will be applied uniformly to the entire
+  reports.  The package has no capabilities to mix different fonts in the 
+  same report.
   \item The package assumes that, except for formatting and layout, 
   the incoming data is ready for 
   printing. The \strong{reporter} package has no capabilities to perform 
@@ -85,8 +87,9 @@ assumptions and limitations are as follows:
   has no capabilities for sorting.  Use the sorting functionality in 
   Base R or supplemental packages to sort the data prior to sending to
   \strong{reporter}.
-  \item Titles, footnotes, page headers, and page footers must fit in the 
-  available space. If they don't, the \strong{reporter} package will 
+  \item For monospace reports, titles, footnotes, page headers, and page 
+  footers must fit in the available space. 
+  If they don't, the \strong{reporter} package will 
   generate a warning.  In these situations, the recommended course of 
   action is to split the offending string into two or more strings that 
   fit within the available width.
@@ -102,8 +105,8 @@ assumptions and limitations are as follows:
   \item The max automatic column width
   is 5 inches.  Longer data values will be wrapped.
   \item The package support plots from \strong{ggplot2}. These plots
-  can be added to RTF and PDF output types.  The package does not support
-  Base R plots.
+  can be added to RTF, PDF, and HTML output types.  The package does not 
+  support Base R plots.
 }
 }
 
