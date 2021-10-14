@@ -313,6 +313,10 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
 #' @noRd
 get_page_size <- function(paper_size, units) {
 
+  # If no paper size specified, 
+  # make it essentially infinite.
+  ret <- c(1000000, 1000000)
+  
   if (units == "inches") {
     if (paper_size == "letter")
       ret <- c(8.5, 11)

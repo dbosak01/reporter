@@ -15,8 +15,8 @@ test_that("get_titles_html function works as expected.", {
   t <- get_titles_html(rpt$titles, 6, rpt)
   t
   expect_equal(t$html,
-               paste0("<table cellpadding =\"0\" cellspacing = \"0\" ",
-                      "align=\"center\" style=\"width:9in;text-align: center;\">", 
+               paste0("<table ",
+                      "style=\"width:9in;text-align: center;\">", 
                       "\n<tr><td>Hello</td></tr>\n",
                       "<tr><td>&nbsp;</td></tr>\n</table>"))
   expect_equal(t$lines, 2)
@@ -38,8 +38,8 @@ test_that("get_footnotes_html function works as expected.", {
   t <- get_footnotes_html(rpt$footnotes, 6, rpt)
   t
   expect_equal(t$html,
-               paste0("<table cellpadding =\"0\" cellspacing = \"0\" ",
-                      "align=\"center\" style=\"width:9in;text-align: left;\">", 
+               paste0("<table ",
+                      "style=\"width:9in;text-align: left;\">", 
                       "\n<tr><td>Goodbye</td></tr>\n",
                       "<tr><td>&nbsp;</td></tr>\n</table>"))
   expect_equal(t$lines, 2)

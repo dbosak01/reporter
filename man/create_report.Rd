@@ -24,7 +24,7 @@ the \code{\link{write_report}} function will add a file extension based
 on the \code{output_type} specified.}
 
 \item{output_type}{The report output type.  Default is "TXT".  Valid
-values are "TXT", "RTF", and "PDF".}
+values are "TXT", "RTF", "PDF", and "HTML".}
 
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}
@@ -37,7 +37,9 @@ Default value is "inches".}
 \item{paper_size}{The expected paper size on which the report may be 
 printed.  The \code{paper_size} will determine how much text can fit on
 one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
-"letter".}
+"letter".  For the HTML output type, a paper size of "none" is also valid. 
+That means the HTML will be generated in an unbounded manner as a typical
+web page.}
 
 \item{missing}{How to display missing values in the report.  Default is
 to replace them with an empty string, which removes them from the report.

@@ -50,13 +50,7 @@
 #' the \code{\link{write_report}} function will add a file extension based
 #' on the \code{output_type} specified.
 #' @param output_type The report output type.  Default is "TXT".  Valid
-#' values are "TXT", "RTF", and "PDF".
-# @param font_type The font type to use on the report. The default value 
-# 'fixed'.  A font type of 'fixed' will use a fixed-width,
-# monospace font such as Courier.  Currently, a font type of 'fixed' is the 
-# only option available.  Future versions will include variable-width fonts
-# such as Arial and Times New Roman.  To set options for font type 'fixed', 
-# used the \code{\link{options_fixed}} function.
+#' values are "TXT", "RTF", "PDF", and "HTML".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param units Specifies the units of measurement.  This setting will 
@@ -66,7 +60,9 @@
 #' @param paper_size The expected paper size on which the report may be 
 #' printed.  The \code{paper_size} will determine how much text can fit on
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
-#' "letter".
+#' "letter".  For the HTML output type, a paper size of "none" is also valid. 
+#' That means the HTML will be generated in an unbounded manner as a typical
+#' web page.
 #' @param missing How to display missing values in the report.  Default is
 #' to replace them with an empty string, which removes them from the report.
 #' To display missing values as is, set the missing parameter to NULL.  To
@@ -183,11 +179,11 @@ create_report <- function(file_path = "", output_type = "TXT",
   
   
   # Trap missing or invalid paper_size parameter.
-  if (!paper_size %in% c("letter", "legal", "A4", "RD4")) {
+  if (!paper_size %in% c("letter", "legal", "A4", "RD4", "none")) {
     
     stop(paste0("paper_size parameter on ",
                 "create_report() function is invalid: '", paper_size,
-                "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4'."))
+                "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4', 'none'."))
   }
   
   # Trap missing or invalid font parameter
@@ -2034,11 +2030,11 @@ write_report <- function(x, file_path = NULL,
   
   # Trap missing or invalid output_type parameter
   if (!is.null(output_type)) {
-    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF")) {
+    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
       
       stop(paste0("output_type parameter on create_report() ",
                   "function is invalid: '", output_type,
-                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
+                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML'."))
     }
     x$output_type <- toupper(output_type)
 
@@ -2048,8 +2044,13 @@ write_report <- function(x, file_path = NULL,
                        font_size = x$font_size, line_size = x$user_line_size, 
                        line_count = x$user_line_count,
                        uchar = x$uchar)
-  }
+  } 
   
+  if (tolower(x$paper_size) == "none" & toupper(x$output_type) != "HTML") {
+    stop("Paper size of 'none' is only valid on HTML reports.") 
+  }
+                                         
+                                        
 
   if (nchar(x$file_path) > 0 & length(getExtension(x$file_path)) == 0) {
       x$modified_path <- paste0(x$file_path, ".", tolower(x$output_type))

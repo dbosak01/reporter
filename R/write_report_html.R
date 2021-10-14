@@ -97,6 +97,7 @@ get_html_document <- function(rs) {
                                  "<html>\n", "<head>")
   
   ret[length(ret) + 1] <- "<style>"
+  ret[length(ret) + 1] <- "@media print{.noprint{display:none;}}"
   ret[length(ret) + 1] <- paste0("body {\nfont-family: ", fnt,
                                  ";\nfont-size: ", rs$font_size, "pt;\n", 
                                  "margin-top: ", rs$margin_top, u, ";\n",
@@ -471,7 +472,7 @@ update_page_numbers_html <- function(path, tpg) {
 #' @noRd
 page_setup_html <- function(rs) {
   
-  debug <- TRUE
+  debug <- FALSE
   
   if (rs$font_size == 8) {
     
@@ -523,7 +524,7 @@ page_setup_html <- function(rs) {
   if (rs$units == "cm")
     rs$gutter_width <- ccm(rs$gutter_width)
   
-  rs$page_break_html <- paste0("<div style=\"page-break-before: always;",
+  rs$page_break_html <- paste0("<hr class=\"noprint\"><div style=\"page-break-before: always;",
                                "height:", rs$margin_top, 
                                units_html(rs$units), ";", "\"></div>")
 
