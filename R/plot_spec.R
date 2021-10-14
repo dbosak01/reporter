@@ -738,8 +738,7 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   b <- get_cell_borders_html(1, 1, 1, 1, plt$borders)
   
   # Concat all header codes
-  hd <- paste0("<table cellpadding=\"0\" cellspacing=\"0\" ", 
-               talgn, " style =\"", w, "\">\n", 
+  hd <- paste0("<table style =\"", w, "\">\n", 
                "<tr><td style=\"", b, "\">\n")
   
   ft <- "</td></tr></table>\n"
@@ -767,8 +766,10 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   # Combine titles, blanks, body, and footnotes
   rws <- c(a, ttls$html, ttl_hdr$html, pgbys$html, img)
   
+  td <- paste0("<div ", talgn, ">")
+  
   # Combine everything
-  rws <- c(rws, ftnts$html)
+  rws <- c(td, rws, ftnts$html, "</div>")
   lns <- sum(lns, ftnts$lines)
   
   

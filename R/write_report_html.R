@@ -104,15 +104,17 @@ get_html_document <- function(rs) {
                                  "margin-left: ", rs$margin_left, u, ";\n",
                                  "margin-right: ", rs$margin_right, u, ";\n",
                                  "}")
-  ret[length(ret) + 1] <- paste0(".thdr {\nfont-weight: normal;\n", 
-                                  "border-bottom: thin solid;\n", 
-                                  "}\n")
-  ret[length(ret) + 1] <- paste0(".tdc {\ntext-align:center;\n", 
-                                 "}\n")
-  ret[length(ret) + 1] <- paste0(".tdl {\ntext-align:left;\n", 
-                                 "}\n")
-  ret[length(ret) + 1] <- paste0(".tdr {\ntext-align:right;\n", 
-                                 "}\n")
+  ret[length(ret) + 1] <- paste0(".thdr {font-weight: normal;", 
+                                  "border-bottom: thin solid;", 
+                                  "}")
+  ret[length(ret) + 1] <- paste0(".tdc {text-align:center;}")
+  ret[length(ret) + 1] <- paste0(".tdl {text-align:left;}")
+  ret[length(ret) + 1] <- paste0(".tdr {text-align:right;}")
+  ret[length(ret) + 1] <- paste0("table {",
+                                 "border-spacing: 0;",
+                                 "border-collapse: collapse;",
+                                 "}")
+  ret[length(ret) + 1] <- paste0("td {padding:0px 2px 0px 2px;}")
   ret[length(ret) + 1] <- "</style>"
   
 

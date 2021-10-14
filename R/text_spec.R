@@ -650,7 +650,7 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
   b <- get_cell_borders_html(1, 1, 1, 1, txt$borders)  
   
   # Prepare row header and footer
-  rwhd <- paste0("<table cellpadding=\"0\" cellspacing=\"0\" ", tgn, 
+  rwhd <- paste0("<table ", 
                  " style=\"", w, algn, "\">\n<tr><td style=\"", b, "\">")
   rwft <- paste0("</td></tr>\n</table>\n")
   
@@ -687,12 +687,13 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
     ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
                                     wrap_flag, content_blank_row, talgn)
     
+    td <- paste0("<div ", tgn, ">") 
     
     # Combine titles, blanks, body, and footnotes
-    rws <- c(a, ttls$html, ttl_hdr$html, 
+    rws <- c(td, a, ttls$html, ttl_hdr$html, 
              rwhd, s, rwft)
     
-    ret[[length(ret) + 1]] <- c(rws, ftnts$html)
+    ret[[length(ret) + 1]] <- c(rws, ftnts$html, "</div>")
     cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
     
   }

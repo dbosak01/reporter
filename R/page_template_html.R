@@ -52,7 +52,7 @@ get_page_header_html <- function(rs) {
   if (maxh > 0) {
 
 
-    ret <- paste0("<table cellpadding = \"0\" cellspacing = \"0\" ",
+    ret <- paste0("<table ",
                   "style=\"width:100%\">",
                   "<colgroup>\n<col style=\"width:50%\">\n",
                   "<col style=\"width:50%\">\n</colgroup>\n")
@@ -137,7 +137,7 @@ get_page_footer_html <- function(rs) {
 
   if (maxf > 0) {
 
-    ret <- paste0("<br>\n<table cellpadding=\"0\" cellspacing=\"0\" ",
+    ret <- paste0("<br>\n<table ",
                   "style=\"width:100%\">\n",
                   "<colgroup>\n<col style=\"width:33.3%\">\n",
                   "<col style=\"width:33.3%\">\n",
@@ -220,11 +220,11 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
   ret <- c()
   cnt <- 0
 
-  ta <- "align=\"left\" "
-  if (talgn == "right")
-    ta <- "align=\"right\" "
-  else if (talgn %in% c("center", "centre"))
-    ta <- "align=\"center\" "
+  # ta <- "align=\"left\" "
+  # if (talgn == "right")
+  #   ta <- "align=\"right\" "
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "align=\"center\" "
   
   u <- rs$units
   if (rs$units == "inches")
@@ -258,9 +258,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
       # pdf(NULL)
       # par(family = get_font_family(rs$font), ps = rs$font_size)
       
-      ret[length(ret) + 1] <- paste0("<table cellpadding =\"0\" ", 
-                                     "cellspacing = \"0\" ",
-                                     ta,
+      ret[length(ret) + 1] <- paste0("<table ",
                                      "style=\"width:", w, u, ";", 
                                      algn, 
                                      "\">\n")
@@ -360,11 +358,11 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
   # conv <- rs$twip_conversion
   # lh <- rs$row_height
 
-  ta <- "align=\"left\" "
-  if (talgn == "right")
-    ta <- "align=\"right\" "
-  else if (talgn %in% c("center", "centre"))
-    ta <- "align=\"center\" "
+  # ta <- "align=\"left\" "
+  # if (talgn == "right")
+  #   ta <- "align=\"right\" "
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "align=\"center\" "
 
   
   u <- rs$units
@@ -399,9 +397,8 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
 
       # pdf(NULL)
       # par(family = get_font_family(rs$font), ps = rs$font_size)
-      ret[length(ret) + 1] <- paste0("<table cellpadding =\"0\" ", 
-                                     "cellspacing = \"0\" ",
-                                     ta,
+      ret[length(ret) + 1] <- paste0("<table ",
+                                  #   ta,
                                      "style=\"width:", w, u, ";",
                                      algn,
                                      "\">\n")
@@ -499,11 +496,11 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
   ret <- c()
   cnt <- 0
   
-  ta <- "align=\"left\" "
-  if (talgn == "right")
-    ta <- "align=\"right\" "
-  else if (talgn %in% c("center", "centre"))
-    ta <- "align=\"center\" "
+  # ta <- "align=\"left\" "
+  # if (talgn == "right")
+  #   ta <- "align=\"right\" "
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "align=\"center\" "
   
   u <- rs$units
   if (rs$units == "inches")
@@ -530,9 +527,8 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
       # pdf(NULL)
       # par(family = get_font_family(rs$font), ps = rs$font_size)
       
-      ret[length(ret) + 1] <- paste0("<table cellpadding =\"0\" ", 
-                                     "cellspacing = \"0\" ",
-                                     ta,
+      ret[length(ret) + 1] <- paste0("<table ",
+                                   #  ta,
                                      "style=\"width:", w, u, ";", 
                                      "\">\n", 
                                      "<colgroup><col style=\"width:70%;\">\n",

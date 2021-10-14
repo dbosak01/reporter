@@ -76,10 +76,12 @@ get_image_html <- function(file_path, report_path, plt, units) {
   if (u == "inches")
     u <- "in"
   
+  ph <- round(plt$height * .99, 3)
+  pw <- round(plt$width * .99, 3)
   
   ret <- paste0("<img src=\"./images/", basename(pth), "\"", 
-                " style=\"height:", plt$height, u, ";",
-                " width:", plt$width, u, ";\">")
+                " style=\"height:", ph, u, ";",
+                " width:", pw, u, ";\">")
   
   
   return(ret)

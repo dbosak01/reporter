@@ -36,7 +36,7 @@ test_that("html1: Basic table works as expected.", {
     titles("Table 1.0", "My Nice Table", borders = c("outside"), 
            width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside", 
-              align = "left", width = "content") %>% 
+              align = "left", width = "page") %>% 
     define(wt, width = 1, label = "Weight", align = "center", 
            label_align = "right")
   
@@ -45,7 +45,7 @@ test_that("html1: Basic table works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
                 blank_row = "below") %>% 
-    add_content(tbl)  %>% 
+    add_content(tbl, align = "center")  %>% 
     page_footer("Left1", "Center1", "Right1")
   
   res <- write_report(rpt)
@@ -154,13 +154,13 @@ test_that("html3: Spanning headers work as expected.", {
 # Works but left align of content messes up
 test_that("html5: Basic text works as expected.", {
 
-  fp <- file.path(base_path, "html/test5.html")
+  fp <- file.path(base_path, "html/test5")
 
   txt <- create_text(cnt, width = 6, borders = "outside", align = "center") %>%
-    titles("Text 1.0", "My Nice Text", borders = "outside") %>%
+    titles("Text 1.0", "My Nice Text", borders = "outside", width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
 
-  rpt <- create_report(fp, output_type = "HTML", font = fnt,
+  rpt <- create_report(fp, output_type = "HTML", font = "fixed",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
@@ -169,7 +169,7 @@ test_that("html5: Basic text works as expected.", {
 
   res <- write_report(rpt)
 
-  expect_equal(file.exists(fp), TRUE)
+  expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 1)
 
 })
@@ -185,9 +185,9 @@ test_that("html6: Basic plot works as expected.", {
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
-  plt <- create_plot(p, height = 4, width = 8, borders = c("none")) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
-    footnotes("* Motor Trend, 1974", borders = "none")
+  plt <- create_plot(p, height = 4, width = 8, borders = c("outside")) %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "outside") %>%
+    footnotes("* Motor Trend, 1974", borders = "outside")
 
 
   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
@@ -204,4 +204,18 @@ test_that("html6: Basic plot works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
 
+})
+
+
+test_that("remove_image_files works as expected.", {
+  
+  pth <- file.path(base_path, "html/test6.html")
+  
+  
+  remove_image_files(pth)
+  
+  # Hard to test. Will just check for error.
+  # And use this test interactively.
+  expect_equal(TRUE, TRUE)
+  
 })

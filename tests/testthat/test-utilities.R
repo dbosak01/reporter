@@ -498,15 +498,3 @@ test_that("get_image_html works as expected.", {
 })
 
 
-test_that("remove_image_files works as expected.", {
-  
-  pth <- file.path(base_path, "html/test6.html")
-  
-  
-  remove_image_files(pth)
-  
-  # Hard to test. Will just check for error.
-  # And use this test interactively.
-  expect_equal(TRUE, TRUE)
-  
-})

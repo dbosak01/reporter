@@ -324,10 +324,17 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   else if (pi$table_align %in% c("center", "centre"))
     ta <- "align=\"center\" "
   
-  ts <- paste0("<table cellpadding =\"0\" cellspacing = \"0\" ", ta, ">")
+  u <- rs$units
+  if (u == "inches")
+    u <- "in"
   
-  ret <- list(html = c(a, ttls$html, pgby$html, ts, shdrs$html, 
-                      hdrs$html, rws$html, "</table>", ftnts$html),
+  ds <- paste0("<div ", ta, ">")
+  ts <- paste0("<table style=\"width:", 
+               round(sum(pi$col_width, 
+                         na.rm = TRUE), 3), u,";\">")
+  
+  ret <- list(html = c(ds, a, ttls$html, pgby$html, ts, shdrs$html, 
+                      hdrs$html, rws$html, "</table>", ftnts$html, "<div>"),
               lines = rc  + ftnts$lines)
   
   return(ret) 
