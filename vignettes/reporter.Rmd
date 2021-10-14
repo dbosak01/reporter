@@ -144,6 +144,6 @@ list of examples:
 * [Example 6: Page Wrap](reporter-wrap.html)
 * [Example 7: Page By](reporter-pageby.html)
 * [Example 8: Title Header](reporter-title_header.html)
-* [Example 9: RTF and PDF](reporter-rtf.html)
+* [Example 9: RTF, PDF, and HTML](reporter-rtf.html)
 * [Example 10: Figure](reporter-figure.html)
 
