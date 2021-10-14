@@ -531,7 +531,7 @@ get_table_header_html <- function(rs, ts, pi) {
   tbl <- ts$data
 
   
-  widths <- pi$col_width
+  widths <- pi$col_width[!is.na(pi$col_width)]
   lbls <- pi$label
   halgns <- pi$label_align
   talgn <- pi$table_align
@@ -597,12 +597,12 @@ get_table_header_html <- function(rs, ts, pi) {
   # pdf(NULL)
   # par(family = get_font_family(rs$font), ps = rs$font_size)
   
-  for(k in seq_along(lbls)) {
+  for(k in seq_along(widths)) {
     if (!is.control(nms[k])) {
       
       cols[1] <- paste0(cols[1], "<col style=\"width:", sz[k], ";\">\n")
       
-      b <- get_cell_borders_html(1, k, 2, ncol(tbl), brdrs)
+      b <- get_cell_borders_html(1, k, 2, length(widths), brdrs)
       
       # Split label strings if they exceed column width
       #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)

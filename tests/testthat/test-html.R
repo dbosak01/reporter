@@ -255,7 +255,7 @@ test_that("html7: Multi page table paper_size none works as expected.", {
 test_that("html8: Page by works as expected.", {
   
   
-  fp <- file.path(base_path, "html/test8.html")
+  fp <- file.path(base_path, "html/test8")
   
   dat <- iris
   
@@ -263,9 +263,10 @@ test_that("html8: Page by works as expected.", {
   tbl <- create_table(dat, borders = "all") %>%
     titles("Table 1.0", "My Nice Irises", "Another Title", 
            borders = "outside") %>%
-    page_by(Species, label = "Species: ", borders = "outside") %>% 
+    page_by(Species, label = "Species: ", borders = "outside", align = "center") %>% 
     define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre")  %>%
+    define(Species, visible = FALSE) %>% 
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
   
   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
@@ -278,7 +279,7 @@ test_that("html8: Page by works as expected.", {
   
   res <- write_report(rpt)
   
-  expect_equal(file.exists(fp), TRUE)
+  expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 9)
   
   

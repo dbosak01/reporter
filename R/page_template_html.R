@@ -696,13 +696,14 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
 
     if (pgby$blank_row %in% c("above", "both")) {
 
-      # tb <- get_cell_borders(1, 1, trows, 1, pgby$borders)
+      tb <- get_cell_borders_html(1, 1, trows, 1, pgby$borders)
 
-      ret[length(ret) + 1] <- paste0("<tr><td>&nbsp;</td></tr>\n")
+      ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, 
+                                     "\">&nbsp;</td></tr>\n")
       cnt <- cnt + 1
     }
 
-    tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
+    tb <- get_cell_borders_html(brow, 1 , trows, 1, pgby$borders)
 
     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
                                    pgby$label, value, "</td></tr>\n")
@@ -714,9 +715,10 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
 
     if (pgby$blank_row %in% c("below", "both")) {
 
-      # tb <- get_cell_borders(trows, 1, trows, 1, pgby$borders)
+      tb <- get_cell_borders_html(trows, 1, trows, 1, pgby$borders)
 
-      ret[length(ret) + 1] <- paste0("<tr><td>&nbsp;</td></tr>\n")
+      ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, 
+                                     "\">&nbsp;</td></tr>\n")
       cnt <- cnt + 1
     }
 
