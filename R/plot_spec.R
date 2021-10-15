@@ -748,7 +748,7 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   img <- paste0(hd, img, ft)
   
   # ** Do something with this **
-  imght <- round(plt$height / rs$line_height)
+  imght <- floor(plt$height / rs$line_height)
   
   # Add blank above content if requested
   a <- NULL

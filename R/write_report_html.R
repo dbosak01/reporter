@@ -97,11 +97,15 @@ get_html_document <- function(rs) {
                                  "<html>\n", "<head>")
   
   ret[length(ret) + 1] <- "<style>"
-  ret[length(ret) + 1] <- "@media print{.noprint{display:none;}}"
+  ret[length(ret) + 1] <- paste0("@media print{\n",
+                                 "@page {size:", rs$orientation, ";",
+                                  "margin:0;}\n",
+                                  ".noprint{display:none;}}")
   ret[length(ret) + 1] <- paste0("body {\nfont-family: ", fnt,
                                  ";\nfont-size: ", rs$font_size, "pt;\n", 
                                  "margin-top: ", rs$margin_top, u, ";\n",
-                                 "margin-bottom: ", rs$margin_bottom, u, ";\n",
+                                 "margin-bottom: ", 
+                                 round(rs$margin_bottom/2, 3), u, ";\n",
                                  "margin-left: ", rs$margin_left, u, ";\n",
                                  "margin-right: ", rs$margin_right, u, ";\n",
                                  "}")
@@ -169,6 +173,8 @@ paginate_content_html <- function(rs, ls) {
   table_widths <- list()
   
   hrf <- has_bottom_footnotes(rs)
+  if (hrf ==  FALSE)
+    hrf <- has_page_footer(rs)
   
   
   # Loop through content objects
@@ -267,8 +273,9 @@ paginate_content_html <- function(rs, ls) {
         boff <- 0
         if (any(class(obj) == "table_spec") &
             any(obj$borders %in% c("all", "inside"))) {
-  
-          boff <- round(last_page_lines * rs$border_height / rs$row_height)
+
+          #boff <- round(last_page_lines * rs$border_height / rs$row_height)
+          boff <- 1
         }
   
         blnks <- c()
@@ -333,6 +340,12 @@ write_content_html <- function(rs, hdr, body, pt) {
     else 
       last_object <- FALSE
     
+    ta <- "align=\"left\" "
+    if (cont$align == "right")
+      ta <- "align=\"right\" "
+    else if (cont$align %in% c("center", "centre"))
+      ta <- "align=\"center\" "
+    
     
     for (pg in cont$pages) {
       
@@ -352,8 +365,13 @@ write_content_html <- function(rs, hdr, body, pt) {
           writeLines(update_page(rs$page_template$page_header$html,  rs$pages), 
                      con = f, useBytes = TRUE)
         
+        # Write content div to keep page together
+        writeLines(paste0("<div ", ta, ">"), con = f, useBytes = TRUE)
+        
+        
         if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
-          writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f, useBytes = TRUE)
+          writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f, 
+                     useBytes = TRUE)
         
         if (!is.null(rs$titles) & !is.null(pt$titles$html))
           writeLines(pt$titles$html, con = f, useBytes = TRUE)
@@ -378,6 +396,8 @@ write_content_html <- function(rs, hdr, body, pt) {
           writeLines(update_page(pt$footnotes$html,  rs$pages), 
                      con = f, useBytes = TRUE)
         
+        # Content div
+        writeLines("</div>", con = f, useBytes = TRUE)
         
         if (!is.null(rs$page_template$page_footer) & 
             !is.null(rs$page_template$page_footer$html))
@@ -517,9 +537,12 @@ page_setup_html <- function(rs) {
     cw <- .12  #na
   }
   
+  rs$border_height <- 1/72
+  
   if (rs$units == "cm") {
     rh <- ccm(rh)
     cw <- ccm(cw)
+    rs$border_height <- ccm(rs$border_height)
   }
   
   rs$row_height <- rh
@@ -530,7 +553,7 @@ page_setup_html <- function(rs) {
   rs$content_size <- get_content_size(rs)
   rs$line_size <- rs$content_size[["width"]]
   
-  rs$border_height <- 15
+
   rs$gutter_width <- gtr
   if (rs$units == "cm")
     rs$gutter_width <- ccm(rs$gutter_width)

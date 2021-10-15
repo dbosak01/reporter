@@ -892,6 +892,25 @@ has_top_footnotes <- function(rs) {
   return(ret)
 }
 
+#' @noRd
+has_page_footer <- function(rs) {
+  
+  ret <- FALSE
+  
+  if (!is.null(rs$page_footer_left)) {
+    
+        ret <- TRUE
+  }
+  if (!is.null(rs$page_footer_right)) {
+    ret <- TRUE
+  }
+  if (!is.null(rs$page_footer_center)) {
+    ret <- TRUE
+  }
+  
+  return(ret)
+}
+
 get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   
   spns <- ts$col_spans

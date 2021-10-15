@@ -151,8 +151,8 @@ test_that("create_table_html works as expected.", {
   res
   
   # Doesn't seem right.  Come back to this.
-  expect_equal(length(res$html), 17)
-  expect_equal(res$lines, 16) 
+  expect_equal(length(res$html), 16)
+  expect_equal(res$lines, 17) 
   
 })
 

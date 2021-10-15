@@ -160,7 +160,7 @@ test_that("html5: Basic text works as expected.", {
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
 
   rpt <- create_report(fp, output_type = "HTML", font = "Courier",
-                       font_size = 12) %>%
+                       font_size = 12, paper_size = "letter") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt, align = "center") %>%
@@ -184,9 +184,9 @@ test_that("html6: Basic plot works as expected.", {
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
-  plt <- create_plot(p, height = 4, width = 8, borders = c("outside")) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "outside") %>%
-    footnotes("* Motor Trend, 1974", borders = "outside")
+  plt <- create_plot(p, height = 4, width = 8, borders = c("none")) %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+    footnotes("* Motor Trend, 1974", borders = "none")
 
 
   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
@@ -272,7 +272,7 @@ test_that("html8: Page by works as expected.", {
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
   
   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-                       font_size = 12, orientation = "landscape",
+                       font_size = 12, orientation = "portrait",
                        paper_size = "letter") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
@@ -282,7 +282,7 @@ test_that("html8: Page by works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(res$modified_path), TRUE)
-  expect_equal(res$pages, 9)
+  expect_equal(res$pages, 6)
   
   
 })
@@ -303,7 +303,7 @@ test_that("html9: Page by on report works as expected.", {
     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") 
   
   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-                       font_size = 12, orientation = "portrait",
+                       font_size = 12, orientation = "landscape",
                        paper_size = "letter") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
@@ -360,4 +360,469 @@ test_that("html10: Title Header and page header/footer wrapping work as expected
   
   
 })
+
+
+
+# User Tests --------------------------------------------------------------
+
+
+test_that("html-user1: demo table works.", {
+  
+  if (dev) {
+    library(tidyr)
+    library(dplyr)
+    
+    # Data Filepath
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "html/user1.html")
+    
+    
+    # Load Data
+    data_demo   <- file.path(dir_data, "dm.csv") %>%
+      read.csv() 
+    
+    
+    data_demo <- subset(data_demo, data_demo$ARM != "SCREEN FAILURE")
+    
+    
+    sex_decode <- c("M" = "Male",
+                    "F" = "Female")
+    
+    race_decode <- c("WHITE" = "White",
+                     "BLACK OR AFRICAN AMERICAN" = "Black or African American",
+                     "ASIAN" = "Asian or Pacific Islander",
+                     "NATIVE AMERICAN" = "Native American",
+                     "UNKNOWN" = "Unknown")
+    
+    arm_pop <- table(data_demo$ARM) 
+    
+    
+    demo_age <-
+      data_demo %>%
+      group_by(ARM) %>%
+      summarise(across(.cols = AGE,
+                       .fns = list(N      = ~ fmt_n(.),
+                                   Mean   = ~ fmt_mean_sd(.),
+                                   Median = ~ fmt_median(.),
+                                   `Q1 - Q3` = ~ fmt_quantile_range(.),
+                                   Range  = ~ fmt_range(.)
+                       ))) %>%
+      pivot_longer(-ARM,
+                   names_to  = c("var", "label"),
+                   names_sep = "_",
+                   values_to = "value") %>%
+      pivot_wider(names_from = ARM,
+                  values_from = "value")
+    
+    
+    
+    demo_sex <-
+      data_demo %>%
+      add_count(ARM, SEX,  name = "n_SEX") %>%
+      select(ARM, SEX, n_SEX) %>%
+      distinct() %>%
+      pivot_longer(cols = c(SEX),
+                   names_to  = "var",
+                   values_to = "label") %>%
+      pivot_wider(names_from  = ARM,
+                  values_from = n_SEX,
+                  values_fill = 0) %>%
+      mutate(label = factor(label, levels = names(sex_decode),
+                            labels = sex_decode),
+             `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+             `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+             `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+             `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"]))
+    
+    
+    
+    demo_race <-
+      data_demo %>%
+      add_count(ARM, RACE, name = "n_RACE") %>%
+      select(ARM, RACE, n_RACE) %>%
+      distinct() %>%
+      pivot_longer(cols = RACE,
+                   names_to  = "var",
+                   values_to = "label") %>%
+      pivot_wider(names_from  = ARM,
+                  values_from = n_RACE,
+                  values_fill = 0) %>%
+      mutate(label = factor(label, levels = names(race_decode),
+                            labels = race_decode),
+             `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+             `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+             `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+             `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"])) %>%
+      arrange(var, label)
+    
+    
+    demo <- bind_rows(demo_age, demo_sex, demo_race)
+    
+    
+    #View(demo)
+    
+    
+    # Stub decode
+    block_fmt <- c(AGE = "Age", SEX = "Sex", RACE = "Race")
+    
+    # Define table
+    tbl <- create_table(demo, first_row_blank = TRUE) %>%
+      column_defaults(from = "ARM A", to = "ARM D", width = 1.25) %>% 
+      define(var, blank_after = TRUE, dedupe = TRUE,
+             format = block_fmt, label = "") %>%
+      define(label, label = "") %>%
+      define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
+      define(`ARM B`, align = "center", label = "Drug 10mg", n = 38) %>%
+      define(`ARM C`, align = "center", label = "Drug 20mg", n = 38) %>%
+      define(`ARM D`, align = "center", label = "Competitor", n = 38)
+    
+    # Define Report
+    rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>% 
+      options_fixed(font_size = 10) %>% 
+      titles("Table 14.1/4",
+             "Demographics and Baseline to Characteristics",
+             "Specify Population Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%
+      add_content(tbl) %>% 
+      footnotes("Special symbols \U221e to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%   
+      footnotes("Special symbols µ Ω £ there to mess things up: ", "Page [pg] of [tpg]") %>% 
+      page_header("Left µ Ω £ ", "Right") %>% 
+      page_footer("Time µ Ω £ ", right = "Page [pg] of [tpg]")
+    
+    # Write out report
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+  
+})
+
+test_that("html-user2: demo table with stub works.", {
+  
+  
+  if (dev) {
+    
+    library(tidyr)
+    library(dplyr)
+    
+    
+    
+    # Data Filepath
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "html/user2.html")
+    
+    
+    # Load Data
+    data_demo   <- file.path(dir_data, "dm.csv") %>%
+      read.csv() 
+    
+    data_demo <- subset(data_demo, data_demo$ARM != "SCREEN FAILURE")
+    
+    
+    sex_decode <- c("M" = "Male",
+                    "F" = "Female")
+    
+    race_decode <- c("WHITE" = "White",
+                     "BLACK OR AFRICAN AMERICAN" = "Black or African American",
+                     "ASIAN" = "Asian or Pacific Islander",
+                     "NATIVE AMERICAN" = "Native American",
+                     "UNKNOWN" = "Unknown")
+    
+    arm_pop <- table(data_demo$ARM) 
+    
+    
+    demo_age <-
+      data_demo %>%
+      group_by(ARM) %>%
+      summarise(across(.cols = AGE,
+                       .fns = list(N      = ~ fmt_n(.),
+                                   Mean   = ~ fmt_mean_sd(.),
+                                   Median = ~ fmt_median(.),
+                                   `Q1 - Q3` = ~ fmt_quantile_range(.),
+                                   Range  = ~ fmt_range(.)
+                       ))) %>%
+      pivot_longer(-ARM,
+                   names_to  = c("var", "label"),
+                   names_sep = "_",
+                   values_to = "value") %>%
+      pivot_wider(names_from = ARM,
+                  values_from = "value")
+    
+    
+    
+    demo_sex <-
+      data_demo %>%
+      add_count(ARM, SEX,  name = "n_SEX") %>%
+      select(ARM, SEX, n_SEX) %>%
+      distinct() %>%
+      pivot_longer(cols = c(SEX),
+                   names_to  = "var",
+                   values_to = "label") %>%
+      pivot_wider(names_from  = ARM,
+                  values_from = n_SEX,
+                  values_fill = 0) %>%
+      mutate(label = factor(label, levels = names(sex_decode),
+                            labels = sex_decode),
+             `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+             `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+             `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+             `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"]))
+    
+    
+    
+    demo_race <-
+      data_demo %>%
+      add_count(ARM, RACE, name = "n_RACE") %>%
+      select(ARM, RACE, n_RACE) %>%
+      distinct() %>%
+      pivot_longer(cols = RACE,
+                   names_to  = "var",
+                   values_to = "label") %>%
+      pivot_wider(names_from  = ARM,
+                  values_from = n_RACE,
+                  values_fill = 0) %>%
+      mutate(label = factor(label, levels = names(race_decode),
+                            labels = race_decode),
+             `ARM A` = fmt_cnt_pct(`ARM A`, arm_pop["ARM A"]),
+             `ARM B` = fmt_cnt_pct(`ARM B`, arm_pop["ARM B"]),
+             `ARM C` = fmt_cnt_pct(`ARM C`, arm_pop["ARM C"]),
+             `ARM D` = fmt_cnt_pct(`ARM D`, arm_pop["ARM D"])) %>%
+      arrange(var, label)
+    
+    
+    demo <- bind_rows(demo_age, demo_sex, demo_race)
+    
+    
+    #View(demo)
+    
+    
+    # Stub decode
+    block_fmt <- c(AGE = "Age", SEX = "Sex", RACE2 = "Race")
+    
+    # Define table
+    tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
+      stub(c("var", "label"), width = 2.5) %>% 
+      column_defaults(width = 1) %>% 
+      define(var, blank_after = TRUE, 
+             format = block_fmt, label = "", label_row = TRUE) %>%
+      define(label, label = "", indent = .25) %>%
+      define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
+      define(`ARM B`, align = "center", label = "Drug 10mg", n = 38) %>%
+      define(`ARM C`, align = "center", label = "Drug 20mg", n = 38) %>%
+      define(`ARM D`, align = "center", label = "Competitor", n = 38) %>% 
+      titles("Table 14.1/4",
+             "Demographics and Baseline Characteristics",
+             "Specify Population", borders = "outside", blank_row = "both",
+             align = "right") %>%
+      footnotes("Here is a footnote", "Here is another footnote",
+                borders = "outside", blank_row = "both", align = "right")  
+    
+    # Define Report
+    rpt <- create_report(fp, output_type = "HTML", 
+                         font = "Arial", font_size = 10) %>%
+      add_content(tbl, align = "right") %>% 
+      page_header("Sponsor", "Drug") %>% 
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") #%>% 
+    #page_by(var = "var", label = "Variable: ")
+    
+    # Write out report
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+  } else
+    expect_equal(TRUE, TRUE)
+  
+})
+
+test_that("html-user3: listings works.", {
+  if (dev == TRUE) {
+    # Data Filepath
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "html/user3.html")
+    
+    # Removing to make last page exactly equal to available rows on page.
+    # In this case, any added blank rows should be skipped.
+    fil <- c("ABC-14-124",
+             "ABC-15-153",
+             "ABC-15-154",
+             "ABC-15-155",
+             "ABC-15-156",
+             "ABC-16-045",
+             "ABC-16-046",
+             "ABC-16-047",
+             "ABC-16-157",
+             "ABC-16-158",
+             "ABC-16-159", 
+             "ABC-16-160")
+    
+    # Load Data
+    data_demo   <- file.path(dir_data, "dm.csv") %>%
+      read.csv() 
+    
+    data_demo <- data_demo[!data_demo$USUBJID %in% fil, ]
+    
+    
+    # Test that any assigned formats are applied
+    attr(data_demo$SUBJID, "width") <- 1
+    attr(data_demo$SUBJID, "justify") <- "left"
+    attr(data_demo$SUBJID, "format") <- "S:%s"
+    #print(widths(data_demo))
+    names(data_demo)
+    # Define table
+    tbl <- create_table(data_demo) %>% 
+      define(USUBJID, id_var = TRUE) 
+    
+    
+    # Define Report
+    rpt <- create_report(fp, font = "Arial", font_size = 12, 
+                         orientation = "portrait") %>%
+      titles("Listing 1.0",
+             "Demographics Dataset") %>%
+      add_content(tbl, align = "left") %>% 
+      page_header("Sponsor", "Drug") %>% 
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>% 
+      footnotes("My footnotes")
+    
+    #Write out report
+    res <- write_report(rpt, output_type = "HTML")
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+    
+    # pdfpth <- file.path(base_path, "user/user3.pdf")
+    # write_report(rpt, pdfpth, output_type = "PDF")
+    # expect_equal(file.exists(pdfpth), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+  
+})
+
+
+test_that("html-user4: listing in cm and times works.", {
+  if (dev == TRUE) {
+    # Data Filepath
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "html/user4.html")
+    
+    # Removing to make last page exactly equal to available rows on page.
+    # In this case, any added blank rows should be skipped.
+    fil <- c("ABC-14-124",
+             "ABC-15-153",
+             "ABC-15-154",
+             "ABC-15-155",
+             "ABC-15-156",
+             "ABC-16-045",
+             "ABC-16-046",
+             "ABC-16-047",
+             "ABC-16-157",
+             "ABC-16-158",
+             "ABC-16-159", 
+             "ABC-16-160")
+    
+    # Load Data
+    data_demo   <- file.path(dir_data, "dm.csv") %>%
+      read.csv() 
+    
+    data_demo <- data_demo[!data_demo$USUBJID %in% fil, ]
+    
+    
+    # Test that any assigned formats are applied
+    attr(data_demo$SUBJID, "width") <- 2.54
+    attr(data_demo$SUBJID, "justify") <- "left"
+    attr(data_demo$SUBJID, "format") <- "S:%s"
+    #print(widths(data_demo))
+    
+    # Define table
+    tbl <- create_table(data_demo) %>% 
+      define(USUBJID, id_var = TRUE) 
+    
+    
+    # Define Report
+    rpt <- create_report(fp, font = "Times", font_size = 10, units = "cm") %>%
+      titles("Listing 1.0",
+             "Demographics Dataset") %>%
+      add_content(tbl, align = "left") %>% 
+      page_header("Sponsor", "Drug") %>% 
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>% 
+      footnotes("My footnote")
+    
+    #Write out report
+    res <- write_report(rpt, output_type = "HTML")
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+    
+    # pdfpth <- file.path(base_path, "user/user3.pdf")
+    # write_report(rpt, pdfpth, output_type = "PDF")
+    # expect_equal(file.exists(pdfpth), TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+  
+})
+
+test_that("html-user5: Portrait in 12pt Arial works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "html/user5.html")
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+        var     label        A             B          
+        "ampg"   "N"          "19"          "13"         
+        "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+        "ampg"   "Median"     "16.4"        "21.4"       
+        "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+        "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+        "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+        "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+        "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+    
+    # Create table
+    tbl <- create_table(df, first_row_blank = TRUE) %>% 
+      define(var, label = "Variable", blank_after = TRUE, dedupe = TRUE,
+             format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+      define(label, label = "") %>% 
+      define(A, label = "Group A", align = "center", n = 19) %>% 
+      define(B, label = "Group B", align = "center", n = 13)
+    
+    
+    # Create report and add content
+    rpt <- create_report(fp, orientation = "portrait", output_type = "HTML",
+                         font = "Arial", font_size = 12) %>% 
+      page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+      titles("Table 1.0", "MTCARS Summary Table") %>% 
+      add_content(tbl) %>% 
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer(left = Sys.time(), 
+                  center = "Confidential", 
+                  right = "Page [pg] of [tpg]")
+    
+    # Write out report
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+})
+
 

@@ -316,24 +316,24 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   #       bpt <- ""
   #   }
   # }
-  
-  ta <- "align=\"left\" "
-  if (pi$table_align == "right")
-    ta <- "align=\"right\" "
-  else if (pi$table_align %in% c("center", "centre"))
-    ta <- "align=\"center\" "
+  # 
+  # ta <- "align=\"left\" "
+  # if (pi$table_align == "right")
+  #   ta <- "align=\"right\" "
+  # else if (pi$table_align %in% c("center", "centre"))
+  #   ta <- "align=\"center\" "
   
   u <- rs$units
   if (u == "inches")
     u <- "in"
   
-  ds <- paste0("<div ", ta, ">")
+  # ds <- paste0("<div ", ta, ">")
   ts <- paste0("<table style=\"width:", 
                round(sum(pi$col_width, 
                          na.rm = TRUE), 3), u,";\">")
   
-  ret <- list(html = c(ds, a, ttls$html, pgby$html, ts, shdrs$html, 
-                      hdrs$html, rws$html, "</table>", ftnts$html, "<div>"),
+  ret <- list(html = c(a, ttls$html, pgby$html, ts, shdrs$html, 
+                      hdrs$html, rws$html, "</table>", ftnts$html),
               lines = rc  + ftnts$lines)
   
   return(ret) 
@@ -390,12 +390,13 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
   
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired page wraps
-  # boff <- 0
-  # if (any(class(spec) == "table_spec") &
-  #     any(spec$borders %in% c("all", "inside"))) {
-  #   
-  #   boff <- round(row_count * rs$border_height / rs$row_height)
-  # }
+  boff <- 0
+  if (any(class(spec) == "table_spec") &
+      any(spec$borders %in% c("all", "inside"))) {
+
+    #boff <- round(row_count * rs$border_height / rs$row_height)
+    boff <- 1
+  }
 
   ublnks <- c()
   lblnks <- c()
@@ -403,7 +404,7 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
   if (rs$paper_size != "none") {
     
     # Determine number of filler lines needed
-    len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen #- boff
+    len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen - boff
     
     if (vflag == "bottom" & len_diff > 0) {
   
@@ -412,7 +413,7 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
     } else {
   
       if ((wrap_flag & len_diff > 0)) {
-        if (vflag == "bottom")
+        if (vflag == "bottom" | has_page_footer(rs))
           lblnks <- c(rep("<br>", len_diff), b)
       } else {
         lblnks <- b
@@ -488,10 +489,10 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired page wraps
-  # if (any(ts$borders %in% c("all", "inside"))) {
-  #   #ret[["lower"]] <- ret[["lower"]] + (rs$row_height * 2)
-  #   cnt[["lower"]] <- cnt[["lower"]] + 2
-  # }
+  if (any(ts$borders %in% c("all", "inside"))) {
+    #ret[["lower"]] <- ret[["lower"]] + (rs$row_height * 2)
+    cnt[["lower"]] <- cnt[["lower"]] + 1
+  }
   
   if (content_blank_row %in% c("both", "below")) {
     cnt[["blank_lower"]] <- 1 
