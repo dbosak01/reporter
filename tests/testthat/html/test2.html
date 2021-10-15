@@ -2,6 +2,7 @@
 <html>
 <head>
 <style>
+@media print{.noprint{display:none;}}
 body {
 font-family: Arial;
 font-size: 12pt;
@@ -10,27 +11,16 @@ margin-bottom: 1in;
 margin-left: 1in;
 margin-right: 1in;
 }
-.thdr {
-font-weight: normal;
-border-bottom: thin solid;
-}
-
-.tdc {
-text-align:center;
-}
-
-.tdl {
-text-align:left;
-}
-
-.tdr {
-text-align:right;
-}
-
+.thdr {font-weight: normal;border-bottom: thin solid;}
+.tdc {text-align:center;}
+.tdl {text-align:left;}
+.tdr {text-align:right;}
+table {border-spacing: 0;border-collapse: collapse;}
+td {padding:0px 2px 0px 2px;}
 </style>
 </head>
 <body>
-<table cellpadding = "0" cellspacing = "0" style="width:100%"><colgroup>
+<table style="width:100%"><colgroup>
 <col style="width:50%">
 <col style="width:50%">
 </colgroup>
@@ -39,9 +29,10 @@ text-align:right;
 <tr><td style="text-align:left">&nbsp</td>
 <td style="text-align:right">Right2</td></tr>
 <tr><td style="text-align:left">&nbsp</td>
-<td style="text-align:right">Page [pg] of 1</td></tr>
+<td style="text-align:right">Page 1 of 1</td></tr>
 </table><br>
-<table cellpadding ="0" cellspacing = "0" align="center" style="width:5.179in;">
+<div align="center" >
+<table style="width:5.279in;">
 <colgroup><col style="width:70%;">
 <col style="width:30%;"></colgroup>
 <tr><td style="text-align:left;border-top:thin solid;border-left:thin solid;">&nbsp;</td><td style="text-align:right;border-top:thin solid;border-right:thin solid;">&nbsp;</td></tr>
@@ -50,19 +41,19 @@ text-align:right;
 <tr><td style="text-align:left;border-bottom:thin solid;border-left:thin solid;">&nbsp;</td><td style="text-align:right;border-bottom:thin solid;border-right:thin solid;">&nbsp;</td></tr>
 </table>
 
-<table cellpadding ="0" cellspacing = "0" align="center" >
+<table style="width:5.279in;">
 <colgroup>
-<col style="width:0.42in;">
+<col style="width:0.43in;">
 <col style="width:1in;">
-<col style="width:0.51in;">
-<col style="width:0.38in;">
-<col style="width:0.42in;">
-<col style="width:0.51in;">
-<col style="width:0.51in;">
-<col style="width:0.2625in;">
-<col style="width:0.3257125in;">
-<col style="width:0.4251625in;">
-<col style="width:0.4160625in;">
+<col style="width:0.52in;">
+<col style="width:0.39in;">
+<col style="width:0.43in;">
+<col style="width:0.52in;">
+<col style="width:0.52in;">
+<col style="width:0.2725in;">
+<col style="width:0.3357125in;">
+<col style="width:0.4351625in;">
+<col style="width:0.4260625in;">
 </colgroup>
 <thead>
 <tr>
@@ -98,13 +89,14 @@ text-align:right;
 <tr><td class="tdr" style="border-bottom:thin solid;border-left:thin solid;">10.4</td><td class="tdr" style="border-bottom:thin solid;">8</td><td class="tdr" style="border-bottom:thin solid;">472</td><td class="tdr" style="border-bottom:thin solid;">205</td><td class="tdr" style="border-bottom:thin solid;">2.93</td><td class="tdr" style="border-bottom:thin solid;">5.25</td><td class="tdr" style="border-bottom:thin solid;">17.98</td><td class="tdr" style="border-bottom:thin solid;">0</td><td class="tdr" style="border-bottom:thin solid;">0</td><td class="tdr" style="border-bottom:thin solid;">3</td><td class="tdr" style="border-bottom:thin solid;border-right:thin solid;">4</td></tr>
 </tbody>
 </table>
-<table cellpadding ="0" cellspacing = "0" align="center" style="width:5.179in;text-align: left;">
+<table style="width:5.279in;text-align: left;">
 <tr><td style="border-top:thin solid;border-left:thin solid;border-right:thin solid;">&nbsp;</td></tr>
 <tr><td style="border-left:thin solid;border-right:thin solid;">My footnote 1</td></tr>
 <tr><td style="border-bottom:thin solid;border-left:thin solid;border-right:thin solid;">My footnote 2</td></tr>
 </table>
+<div>
 <br>
-<table cellpadding="0" cellspacing="0" style="width:100%">
+<table style="width:100%">
 <colgroup>
 <col style="width:33.3%">
 <col style="width:33.3%">

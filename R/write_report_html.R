@@ -347,10 +347,11 @@ write_content_html <- function(rs, hdr, body, pt) {
         
         if (!is.null(rs$page_template$page_header) & 
             !is.null(rs$page_template$page_header$html))
-          writeLines(rs$page_template$page_header$html, con = f, useBytes = TRUE)
+          writeLines(update_page(rs$page_template$page_header$html,  rs$pages), 
+                     con = f, useBytes = TRUE)
         
         if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
-          writeLines(pt$title_hdr$html, con = f, useBytes = TRUE)
+          writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f, useBytes = TRUE)
         
         if (!is.null(rs$titles) & !is.null(pt$titles$html))
           writeLines(pt$titles$html, con = f, useBytes = TRUE)
@@ -372,12 +373,14 @@ write_content_html <- function(rs, hdr, body, pt) {
       if (page_open == FALSE) {
         
         if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
-          writeLines(pt$footnotes$html, con = f, useBytes = TRUE)
+          writeLines(update_page(pt$footnotes$html,  rs$pages), 
+                     con = f, useBytes = TRUE)
         
         
         if (!is.null(rs$page_template$page_footer) & 
             !is.null(rs$page_template$page_footer$html))
-          writeLines(rs$page_template$page_footer$html, con = f, useBytes = TRUE)
+          writeLines(update_page(rs$page_template$page_footer$html, rs$pages), 
+                     con = f, useBytes = TRUE)
         
         
         # Add form feed character for text page break
@@ -427,7 +430,13 @@ update_page_numbers_html <- function(path, tpg) {
   
 }
 
-
+update_page <- function(lns, pg) {
+  
+ ret <- gsub("[pg]", pg + 1, lns, fixed = TRUE) 
+ 
+ return(ret)
+  
+}
 
 
 # Setup Functions ---------------------------------------------------------
