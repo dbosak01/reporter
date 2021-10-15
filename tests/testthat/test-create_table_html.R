@@ -69,8 +69,7 @@ test_that("get_table_header_html works as expected.", {
   res  
   
   expect_equal(length(res$html), 1)
-  # Might need this eventually
-  #expect_equal(res$lines, 2)
+  expect_equal(res$lines, 2)
   
 })
 
@@ -192,10 +191,7 @@ test_that("get_spanning_header_html works as expected.", {
 
   expect_equal(length(res), 2)
   expect_equal(length(res$html), 2)
-  expect_equal(res$lines, 2) # for now
-
-  
-  expect_equal(TRUE, TRUE)
+  expect_equal(res$lines, 3) 
 })
 
 

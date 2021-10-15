@@ -7,19 +7,15 @@ test_that("get_titles_html function works as expected.", {
   
   rpt <- create_report("", output_type = "HTML", font = "Arial", 
                        font_size = 12) %>%
-    titles("Hello", blank_row = "below") %>%
+    titles("Hello", "here is \n something", blank_row = "below") %>%
     footnotes("Goodbye", blank_row = "below")
   
   rpt <- page_setup_html(rpt)
   
   t <- get_titles_html(rpt$titles, 6, rpt)
   t
-  expect_equal(t$html,
-               paste0("<table ",
-                      "style=\"width:9in;text-align: center;\">", 
-                      "\n<tr><td>Hello</td></tr>\n",
-                      "<tr><td>&nbsp;</td></tr>\n</table>"))
-  expect_equal(t$lines, 2)
+  expect_equal(length(t$html), 1)
+  expect_equal(t$lines, 4)
   
 })
 
@@ -59,8 +55,7 @@ test_that("get_title_header_html function works as expected.", {
   th <- get_title_header_html(rpt2$title_hdr, 6, rpt2)
   th
   expect_equal(nchar(th$html) > 1, TRUE)
-  expect_equal(th$lines, 2) # For now
-  #  expect_equal(th$twips, 1440)
+  expect_equal(th$lines, 4) 
 
 })
 
@@ -80,8 +75,8 @@ test_that("get_page_header_html works as expected.", {
   ph <- get_page_header_html(rpt3)
   ph
 
-  expect_equal(ph$lines, 1) # For now
-  #expect_equal(ph$twips, 864)
+  expect_equal(ph$lines, 3) 
+
 })
 
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@media print{.noprint{display:none;}}
+body {
+font-family: Arial;
+font-size: 10pt;
+margin-top: 1in;
+margin-bottom: 1in;
+margin-left: 1in;
+margin-right: 1in;
+}
+.thdr {font-weight: normal;border-bottom: thin solid;}
+.tdc {text-align:center;}
+.tdl {text-align:left;}
+.tdr {text-align:right;}
+table {border-spacing: 0;border-collapse: collapse;}
+td {padding:0px 2px 0px 2px;}
+</style>
+</head>
+<body>
+<table style="width:100%"><colgroup>
+<col style="width:50%">
+<col style="width:50%">
+</colgroup>
+<tr><td style="text-align:left">Left1</td>
+<td style="text-align:right">Right 1</td></tr>
+<tr><td style="text-align:left">Left2<br>wrap</td>
+<td style="text-align:right">&nbsp</td></tr>
+</table>
+<div align="center" >
+<table style="width:3.64in;">
+<colgroup><col style="width:70%;">
+<col style="width:30%;"></colgroup>
+<tr><td style="text-align:left;">Table 1.0</td><td style="text-align:right;">Right1</td></tr>
+<tr><td style="text-align:left;">My Nice Report with Borders</td><td style="text-align:right;">Right2</td></tr>
+<tr><td style="text-align:left;"></td><td style="text-align:right;">Right3 long<br>enough to wrap<br>around at least<br>once</td></tr>
+</table>
+
+<table style="width:3.64in;">
+<colgroup>
+<col style="width:0.898010416666667in;">
+<col style="width:0.521552083333333in;">
+<col style="width:0.85359375in;">
+<col style="width:0.785614583333333in;">
+<col style="width:0.581677083333333in;">
+</colgroup>
+<thead>
+<tr>
+<td class="thdr tdr">Sepal.Length</td>
+<td class="thdr tdr">Here is<br>a<br>rather<br>long<br>header<br>label</td>
+<td class="thdr tdr">Petal.Length</td>
+<td class="thdr tdr">Petal.Width</td>
+<td class="thdr tdr">Species</td>
+</tr>
+</thead>
+
+<tbody>
+<tr><td class="tdr">5.1</td><td class="tdr">3.5</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">4.9</td><td class="tdr">3</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">4.7</td><td class="tdr">3.2</td><td class="tdr">1.3</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">4.6</td><td class="tdr">3.1</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">5</td><td class="tdr">3.6</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">5.4</td><td class="tdr">3.9</td><td class="tdr">1.7</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">4.6</td><td class="tdr">3.4</td><td class="tdr">1.4</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">5</td><td class="tdr">3.4</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">4.4</td><td class="tdr">2.9</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
+<tr><td class="tdr">4.9</td><td class="tdr">3.1</td><td class="tdr">1.5</td><td class="tdr">0.1</td><td class="tdr">setosa</td></tr>
+</tbody>
+</table>
+<table style="width:3.64in;text-align: left;">
+<tr><td>&nbsp;</td></tr>
+<tr><td>My footnote 1</td></tr>
+<tr><td>My footnote 2 Center1 here is a whole bunch of stuff to<br>try and make it wrap like more down here note 2 Center1<br>here is a whole bunch of stuff.</td></tr>
+</table>
+<div>
+<br>
+<table style="width:100%">
+<colgroup>
+<col style="width:33.3%">
+<col style="width:33.3%">
+<col style="width:33.3%">
+</colgroup>
+<tr><td style="text-align:left">Left1</td><td style="text-align:center">Center1 here is a whole bunch of stuff to try<br>and make it wrap</td><td style="text-align:right">Right1<br>wrap<br> and wrap again</td></tr>
+</table>
+
+</body></html>

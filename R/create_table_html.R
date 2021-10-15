@@ -229,7 +229,6 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   hdrs <- list(lines = 0, twips = 0)
   
   if (ts$headerless == FALSE) {
-    #shdrs <- get_spanning_header_html(rs, ts, pi)   
     
     # Get table header also includes spanning header
     hdrs <- get_table_header_html(rs, ts, pi)  
@@ -442,7 +441,6 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
 #' @noRd
 get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   
-  #ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   
   # Width is normally the width of the table, not the page
@@ -455,8 +453,8 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   hdrs <- list(lines = 0, twips = 0)
   
   if (ts$headerless == FALSE) {
-    #shdrs <- get_spanning_header_html(rs, ts, pi)   
     
+    # Spanning headers now inside get_table_header_html
     hdrs <- get_table_header_html(rs, ts, pi)  
   }
   
@@ -473,13 +471,7 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   else if (!is.null(rs$page_by))
     pgb <- get_page_by_html(rs$page_by, wdth, NULL, rs, pi$table_align)
   
-  
-  #print(length(pgb))
-  
-  # print(paste("Table titles:", ttls))
-  
   # Add everything up
-  #ret[["upper"]] <- shdrs$twips + hdrs$twips + ttls$twips + pgb$twips
   cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
   
   if (content_blank_row %in% c("above", "both")) {
@@ -491,10 +483,8 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   rftnts <- get_footnotes_html(rs$footnotes, wdth, rs)
   
   if (has_top_footnotes(rs)) {
-    #ret[["lower"]] <- ftnts$twips + rftnts$twips
     cnt[["lower"]] <- ftnts$lines + rftnts$lines
   } else {
-    #ret[["lower"]] <- ftnts$twips
     cnt[["lower"]] <- ftnts$lines
   }
   
@@ -506,7 +496,6 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   # }
   
   if (content_blank_row %in% c("both", "below")) {
-    #ret[["blank_lower"]] <- rs$line_height
     cnt[["blank_lower"]] <- 1 
   }
   
@@ -552,12 +541,6 @@ get_table_header_html <- function(rs, ts, pi) {
     }
   }
   
-  # Table alignment
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
   
   if (length(ts$col_spans) == 0)
     brdrs <- ts$borders
@@ -578,24 +561,17 @@ get_table_header_html <- function(rs, ts, pi) {
   }
   
   # Table Header
-  #ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
   ret[1] <- "<tr>\n"
   cols[1] <- "<colgroup>\n"
   
-  # Loop for cell definitions
-  # for(j in seq_along(tbl)) {
-  #   if (!is.control(nms[j])) {
-  #     b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
-  #     ret[1] <- paste0(ret[1], "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
-  #   }
-  # }
+
   
   cnt <-  1 
   bd <- "border-bottom: thin solid;"
   
   # Loop for column names
-  # pdf(NULL)
-  # par(family = get_font_family(rs$font), ps = rs$font_size)
+  pdf(NULL)
+  par(family = get_font_family(rs$font), ps = rs$font_size)
   
   for(k in seq_along(widths)) {
     if (!is.control(nms[k])) {
@@ -605,25 +581,25 @@ get_table_header_html <- function(rs, ts, pi) {
       b <- get_cell_borders_html(1, k, 2, length(widths), brdrs)
       
       # Split label strings if they exceed column width
-      #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
-      #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
+      tmp <- split_string_html(lbls[k], widths[k], rs$units)
+
       if (b == "") {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
-                         lbls[k], "</td>\n")
+                         tmp$html, "</td>\n")
       } else {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\" ", 
                                  "style=\"", b, "\">", 
-                         lbls[k], "</td>\n")
+                         tmp$html, "</td>\n")
         
       }
       
       # Add in extra lines for labels that wrap
-      #xtr <- tmp$lines
-      # if (xtr > cnt)
-      #   cnt <- xtr
+      xtr <- tmp$lines
+      if (xtr > cnt)
+         cnt <- xtr
     }
   }
-  # dev.off()
+  dev.off()
   
   cols[1] <- paste0(cols[1], "</colgroup>\n")
   ret[1] <- paste0(ret[1], "</tr>\n")
@@ -666,15 +642,6 @@ get_spanning_header_html <- function(rs, ts, pi) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
-
-  #talgn <- pi$table_align
-  
-  # Table alignment
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
   
   # Get borders
   brdrs <- ts$borders
@@ -709,35 +676,21 @@ get_spanning_header_html <- function(rs, ts, pi) {
     r <- ""
     cnt[length(cnt) + 1] <- 1 
     
-    # Table Header - Table or rows in existing table
-    #r <-  paste0("<tr>", ta)
+    # Start row
     r <-  "<tr>\n"
     
-    # Label justification, width, and row concatenation
-    
-    # Loop for cell definitions
-    # for(j in seq_along(sz)) {
-    #   
-    #   # Get cell borders
-    #   b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
-    #   if (s$span[j] > 0 & s$underline[j])
-    #     r <- paste0(r, "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
-    #   else 
-    #     r <- paste0(r, "\\clvertalb", b, "\\cellx", sz[j])
-    # }
-    
     # Open device context
-    # pdf(NULL)
-    # par(family = get_font_family(rs$font), ps = rs$font_size)
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
     
     # Loop for labels
     for(k in seq_along(lbls)) {
       
       # Split label strings if they exceed column width
-      #tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+      tmp <- split_string_html(lbls[k], widths[k], rs$units)
       
       # Add colspans
-      vl <- lbls[k]
+      vl <- tmp$html
       bb <- "border-bottom:thin solid;"
       if (vl == "") {
         vl <- "&nbsp;"
@@ -751,13 +704,13 @@ get_spanning_header_html <- function(rs, ts, pi) {
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
-      xtr <- 1 # tmp$lines
+      xtr <- tmp$lines
       
       if (xtr > cnt[length(cnt)])
         cnt[length(cnt)] <- xtr
       
     }
-    #dev.off()
+    dev.off()
     
     
     r <- paste0(r, "</tr>\n")
@@ -801,24 +754,6 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
   
   
   
-  # Get cell widths
-  sz <- c()
-  # for (k in seq_along(wdths)) {
-  #   if (!is.control(nms[k])) {
-  #     if (k == 1)
-  #       sz[k] <- round(wdths[k] * conv)
-  #     else 
-  #       sz[k] <- round(wdths[k] * conv + sz[k - 1])
-  #   }
-  # }
-  
-  # Table alignment
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
-  
   # Cell alignment
   ca <- c()
   for (k in seq_along(algns)) {
@@ -844,14 +779,6 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
     else
       ret[i] <- "<tr>"
     
-    # Loop for cell definitions
-    # for(j in seq_len(ncol(t))) {
-    #   if (!is.control(nms[j])) {
-    #     b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs, flgs[i])
-    #     ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
-    #   }
-    # }
-    
     mxrw <- 1
     
     # Loop for cell values
@@ -870,9 +797,9 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
                            t[i, j], "</td>")
         
         # Count lines in cell 
-        # cl <- grep("\\line", t[i, j], fixed = TRUE)
-        # if (length(cl) >= mxrw)
-        #   mxrw <- length(cl) + 1
+        cl <- grep("<br>", t[i, j], fixed = TRUE)
+        if (length(cl) >= mxrw)
+          mxrw <- length(cl) + 1
       }
       
     }
@@ -887,9 +814,6 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
     
   }
   
-  
-  # ret[length(ret)] <- paste0(ret[length(ret)], "}\\pard",
-  #                            rs$font_rtf, rs$spacing_multiplier)
   
   
   res <- list(html = ret,

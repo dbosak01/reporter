@@ -425,15 +425,9 @@ split_cells <- function(x, col_widths) {
   return(dat)
 }
 
-
-#' @description Calling function is responsible for opening the 
-#' device context and assigning the font.  This function will use 
-#' strwidth to determine number of wraps of a string within a particular
-#' width.  Lines are returned as a single rtf string separated by an rtf
-#' line ending.  
 #' @noRd
-split_string_rtf <- function(strng, width, units) {
-  
+split_strings <- function(strng, width, units) {
+ 
   lnlngth <- 0
   ln <- c()
   lns <- c()
@@ -447,7 +441,7 @@ split_string_rtf <- function(strng, width, units) {
   if (!is.na(strng)) {
     
     splits <- unlist(stri_split_fixed(strng, "\n"))
-  
+    
     for (split in splits) {
       
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
@@ -471,7 +465,7 @@ split_string_rtf <- function(strng, width, units) {
           } else {
             # Assign current lines and counts
             lns[length(lns) + 1] <- paste(ln, collapse = " ")
-              
+            
             # Assign overflow to next line
             ln <- wrds[i]
             lnlngth <- lngths[i]
@@ -483,9 +477,9 @@ split_string_rtf <- function(strng, width, units) {
       
       # Deal with last line
       if (length(ln) > 0) {
-
+        
         lns[length(lns) + 1] <- paste(ln, collapse = " ")
-
+        
       }
       
       # Reset ln and lnlngth
@@ -494,18 +488,47 @@ split_string_rtf <- function(strng, width, units) {
       
     }
     
-
+    
   } else {
     
     lns <- ""
     
-  }
+  } 
+  
+  
+  return(lns)
+}
+
+#' @description Calling function is responsible for opening the 
+#' device context and assigning the font.  This function will use 
+#' strwidth to determine number of wraps of a string within a particular
+#' width.  Lines are returned as a single rtf string separated by an rtf
+#' line ending.  
+#' @noRd
+split_string_rtf <- function(strng, width, units) {
+  
+  
+  lns <- split_strings(strng, width, units)
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
   # Doing it here handles for the entire report, as every piece runs
   # through here.
   ret <- list(rtf = paste0(encodeRTF(lns), collapse = "\\line "),
+              lines = length(lns))
+  
+  return(ret)
+}
+
+#' @noRd
+split_string_html <- function(strng, width, units) {
+  
+  
+  lns <- split_strings(strng, width, units)
+  
+  # Try to find HTML encoding function.
+  # encodeHTML()
+  ret <- list(html = paste0(lns, collapse = "<br>"),
               lines = length(lns))
   
   return(ret)

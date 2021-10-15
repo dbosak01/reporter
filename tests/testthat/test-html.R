@@ -174,7 +174,7 @@ test_that("html5: Basic text works as expected.", {
 })
 
 
-
+# Note that image may be deleted in next test case
 test_that("html6: Basic plot works as expected.", {
 
 
@@ -208,15 +208,17 @@ test_that("html6: Basic plot works as expected.", {
 
 test_that("remove_image_files works as expected.", {
   
-  pth <- file.path(base_path, "html/test6.html")
-  
-  
-  remove_image_files(pth)
-  
-  # Hard to test. Will just check for error.
-  # And use this test interactively.
-  expect_equal(TRUE, TRUE)
-  
+  if (dev) {
+    pth <- file.path(base_path, "html/test6.html")
+    
+    
+    remove_image_files(pth)
+    
+    # Hard to test. Will just check for error.
+    # And use this test interactively.
+    expect_equal(TRUE, TRUE)
+  } else 
+    expect_equal(TRUE, TRUE)
 })
 
 
@@ -314,6 +316,47 @@ test_that("html9: Page by on report works as expected.", {
   
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 9)
+  
+  
+})
+
+test_that("html10: Title Header and page header/footer wrapping work as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test10.html")
+  
+  dat <- iris[1:10, ] 
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    title_header("Table 1.0", "My Nice Report with Borders",
+                 right = c("Right1", "Right2", 
+                           "Right3 long enough to wrap around at least once"),
+                 borders = "none",
+                 blank_row = "none") %>%
+    footnotes("My footnote 1", 
+        paste("My footnote 2 Center1 here is a whole bunch of stuff to try and make it wrap", 
+              "like more down here note 2 Center1 here is a whole bunch of stuff." ),
+              valign = "top",
+              borders = "none", 
+              blank_row = "above") %>% 
+    define(Sepal.Width, label = "Here is a rather long header label")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header(c("Left1", "Left2\nwrap"), "Right 1") %>% 
+    page_footer("Left1", 
+                "Center1 here is a whole bunch of stuff to try and make it wrap", 
+                "Right1\nwrap\n and wrap again")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
   
   
 })
