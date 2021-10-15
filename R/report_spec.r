@@ -1291,8 +1291,6 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     stop(paste("Borders parameter invalid.  Valid values are", 
       "'top', 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'."))
 
-  
-
   if (is.null(width)) {
     if (any(class(x) %in% c("report_spec"))) 
       width <- "page"
@@ -1301,7 +1299,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     
   } else {
     if (any(class(x) %in% c("report_spec"))) {
-      if (!width %in% c("content") & !is.numeric(width))
+      if (!width %in% c("page") & !is.numeric(width))
         stop("Width parameter invalid.  Valid values are 'page' or a number.")
     } else {
       if (!width %in% c("page", "content") & !is.numeric(width))

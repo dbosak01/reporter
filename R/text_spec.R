@@ -630,13 +630,6 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
   # Calculate text width in twips
   w <- paste0("width:", round(width, 3), u, ";")
   
-  # Get content alignment codes
-  if (talgn == "right") 
-    tgn <- "align=\"right\""
-  else if (talgn %in% c("center", "centre"))
-    tgn <- "align=\"center\""
-  else 
-    tgn <- "align=\"left\""
   
   # Get text alignment codes
   if (txt$align == "right") 
@@ -687,13 +680,12 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
     ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
                                     wrap_flag, content_blank_row, talgn)
     
-    td <- paste0("<div ", tgn, ">") 
     
     # Combine titles, blanks, body, and footnotes
-    rws <- c(td, a, ttls$html, ttl_hdr$html, 
+    rws <- c(a, ttls$html, ttl_hdr$html, 
              rwhd, s, rwft)
     
-    ret[[length(ret) + 1]] <- c(rws, ftnts$html, "</div>")
+    ret[[length(ret) + 1]] <- c(rws, ftnts$html)
     cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
     
   }

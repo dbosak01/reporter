@@ -543,7 +543,8 @@ split_string_html <- function(strng, width, units) {
 #' @import stringi
 #' @import grDevices
 #' @noRd
-split_cells_variable <- function(x, col_widths, font, font_size, units) {
+split_cells_variable <- function(x, col_widths, font, font_size, units, 
+                                 output_type) {
   
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
@@ -574,8 +575,16 @@ split_cells_variable <- function(x, col_widths, font, font_size, units) {
           
         } else {
           
-          res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
-          cell <- res$rtf
+          if (output_type == "HTML") {
+            res <- split_string_html(x[[i, nm]], col_widths[[nm]], units)
+            
+            cell <- res$html
+          
+          } else if (output_type == "RTF") {
+            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
+          
+            cell <- res$rtf
+          }
           nch <- res$lines
         }
         

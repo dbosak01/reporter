@@ -362,6 +362,59 @@ test_that("html10: Title Header and page header/footer wrapping work as expected
 })
 
 
+# Note that image may be deleted in next test case
+test_that("html11: Basic plot with titles on report works as expected.", {
+  
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "html/test11.html")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 4, width = 8, borders = c("none"))
+  
+  
+  rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+    footnotes("* Motor Trend, 1974", borders = "none")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+
+test_that("html12: Text with titles on report works as expected.", {
+  
+  fp <- file.path(base_path, "html/test12")
+  
+  txt <- create_text(cnt, width = 6, borders = "none", align = "center") 
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Courier",
+                       font_size = 12, paper_size = "letter") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1")%>%
+    titles("Text 1.0", "My Nice Text", borders = "none", width = "page") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(res$modified_path), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
 
 # User Tests --------------------------------------------------------------
 
@@ -751,7 +804,8 @@ test_that("html-user4: listing in cm and times works.", {
     
     
     # Define Report
-    rpt <- create_report(fp, font = "Times", font_size = 10, units = "cm") %>%
+    rpt <- create_report(fp, font = "Times", font_size = 10, 
+                         units = "cm", orientation = "landscape") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
       add_content(tbl, align = "left") %>% 
@@ -764,7 +818,7 @@ test_that("html-user4: listing in cm and times works.", {
     
     expect_equal(file.exists(fp), TRUE)
     
-    
+    #print(res$column_widths)
     
     # pdfpth <- file.path(base_path, "user/user3.pdf")
     # write_report(rpt, pdfpth, output_type = "PDF")

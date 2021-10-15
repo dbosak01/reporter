@@ -715,16 +715,7 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   
   # Get image RTF codes
   img <- get_image_html(plot_path, rs$modified_path, plt, rs$units)
-  
-  
-  # Assign table alignment codes
-  if (talign == "left") {
-    talgn <- "align=\"left\""
-  } else if (talign == "right") {
-    talgn <- "align=\"right\""
-  } else  {
-    talgn <- "align=\"center\""
-  }
+
   
   # algn <- "\\qc" 
   u <- rs$units
@@ -766,10 +757,9 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   # Combine titles, blanks, body, and footnotes
   rws <- c(a, ttls$html, ttl_hdr$html, pgbys$html, img)
   
-  td <- paste0("<div ", talgn, ">")
   
   # Combine everything
-  rws <- c(td, rws, ftnts$html, "</div>")
+  rws <- c(rws, ftnts$html)
   lns <- sum(lns, ftnts$lines)
   
   

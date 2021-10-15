@@ -406,7 +406,7 @@ page_setup_rtf <- function(rs) {
     lh <- 228 #round(.165 * 1440)  
     #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
     pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
-    gtr <- .1
+    gtr <- .11
     cw <- .11
     cp <- 40
     sm <- "\\sl-225\\slmult0"

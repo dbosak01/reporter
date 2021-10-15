@@ -507,7 +507,11 @@ page_setup_html <- function(rs) {
   
   if (rs$font_size == 8) {
     
-    rh <- 0.127451  
+    if (tolower(rs$font) == "times")
+      rh <- 0.1178  
+    else
+      rh <- 0.127451  
+        
     gtr <- .1
     cw <- .1    # na
     
@@ -519,8 +523,12 @@ page_setup_html <- function(rs) {
     
   } else if (rs$font_size == 10) {
     
-    rh <- 0.1585366  
-    gtr <- .1
+    if (tolower(rs$font) == "times")
+      rh <- 0.17  
+    else 
+      rh <- 0.1585366
+    
+    gtr <- .11
     cw <- .11   # na
 
   } else if (rs$font_size == 11) {
@@ -543,6 +551,7 @@ page_setup_html <- function(rs) {
     rh <- ccm(rh)
     cw <- ccm(cw)
     rs$border_height <- ccm(rs$border_height)
+    gtr <- ccm(gtr)
   }
   
   rs$row_height <- rh

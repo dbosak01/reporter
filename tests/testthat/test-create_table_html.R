@@ -242,7 +242,7 @@ test_that("get_page_footnotes_html works as expected.", {
                                  0, 25, TRUE, "below", "center")  
   
   res3
-  expect_equal(res3$lines, 19)
+  expect_equal(res3$lines, 16)
   
   tbl4 <- create_table(iris)  %>% 
     footnotes("Here is a footnote", valign = "top")

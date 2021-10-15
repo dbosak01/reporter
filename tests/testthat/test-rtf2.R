@@ -1884,6 +1884,8 @@ test_that("user4: listing in cm and times works.", {
     #Write out report
     res <- write_report(rpt, output_type = "RTF")
     
+    print(res$column_widths)
+    
     expect_equal(file.exists(fp), TRUE)
     
     

@@ -275,7 +275,7 @@ test_that("split_cells_variable works as expected.", {
   cw <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
   cw
   
-  res <- split_cells_variable(df, cw, "Arial", 12, "inches")
+  res <- split_cells_variable(df, cw, "Arial", 12, "inches", "RTF")
   res
   
   expect_equal(any(class(res) == "data.frame"), TRUE)
@@ -470,7 +470,7 @@ test_that("split_cells_variable() works as expected.", {
                     ..row = c(NA, NA, NA), stringsAsFactors = FALSE)
   
   res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1), 
-                              "Arial", 12, "inches")
+                              "Arial", 12, "inches", "RTF")
   res
   
   expect_equal(nrow(res), 3)
