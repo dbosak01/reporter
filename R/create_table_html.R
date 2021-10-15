@@ -386,9 +386,7 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
     b <- "<br>"
     blen <- 1
   }
-  # } else {
-  #   b <- paste0("\\fs1\\sl0\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
-  # }
+  
   
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired page wraps
@@ -398,36 +396,36 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
   #   
   #   boff <- round(row_count * rs$border_height / rs$row_height)
   # }
-  # 
-  # ublnks <- c()
-  # lblnks <- c()
-  # 
-  # # Determine number of filler lines needed
-  # len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen - boff
-  # 
-  # 
-  # if (vflag == "bottom" & len_diff > 0) {
-  #   
-  #   ublnks <- c(b, rep("<br>", len_diff))
-  #   
-  # } else {
-  #   
-  #   if ((wrap_flag & len_diff > 0)) {
-  #     if (vflag == "bottom")
-  #       lblnks <- c(rep("<br>", len_diff), b)
-  #   } else {
-  #     lblnks <- b
-  #   }
-  #   
-  #   
-  # }
+
+  ublnks <- c()
+  lblnks <- c()
+
+  if (rs$paper_size != "none") {
+    
+    # Determine number of filler lines needed
+    len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen #- boff
+    
+    if (vflag == "bottom" & len_diff > 0) {
   
-  # tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
-  # ret <- list(html = c(ublnks, ftnts$html, lblnks),
-  #             lines = tlns)
+      ublnks <- c(b, rep("<br>", len_diff))
   
-  ret <- list(html =  ftnts$html,
-              lines = ftnts$lines)
+    } else {
+  
+      if ((wrap_flag & len_diff > 0)) {
+        if (vflag == "bottom")
+          lblnks <- c(rep("<br>", len_diff), b)
+      } else {
+        lblnks <- b
+      }
+    }
+  }
+  
+  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
+  ret <- list(html = c(ublnks, ftnts$html, lblnks),
+              lines = tlns)
+  
+  # ret <- list(html =  ftnts$html,
+  #             lines = ftnts$lines)
   
   return(ret)
 }

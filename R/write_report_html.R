@@ -258,29 +258,31 @@ paginate_content_html <- function(rs, ls) {
     
     # If there is a page break or it's the last object in the
     # content list, add the blank lines if needed.
-    # if ((ls[[i]]$page_break | last_object) & hrf) {
-    #   
-    #   
-    #   # Add extra offsets if table has a lot of borders turned on
-    #   # to avoid undesired page wraps
-    #   boff <- 0
-    #   if (any(class(obj) == "table_spec") & 
-    #       any(obj$borders %in% c("all", "inside"))) {
-    #     
-    #     boff <- round(last_page_lines * rs$border_height / rs$row_height)
-    #   }
-    #   
-    #   blnks <- c()
-    #   bl <- rs$body_line_count - last_page_lines - boff
-    #   if (bl > 0)
-    #     blnks <- rep("<br>", bl)
-    #   
-    #   last_page <- append(last_page, blnks)
-    #   last_page_lines <- 0 
-    #   
-    # }
-    # 
-    # ls[[i]]$pages[[length(pgs)]] <- last_page
+    if (rs$paper_size != "none") {
+      if ((ls[[i]]$page_break | last_object) & hrf) {
+  
+  
+        # Add extra offsets if table has a lot of borders turned on
+        # to avoid undesired page wraps
+        boff <- 0
+        if (any(class(obj) == "table_spec") &
+            any(obj$borders %in% c("all", "inside"))) {
+  
+          boff <- round(last_page_lines * rs$border_height / rs$row_height)
+        }
+  
+        blnks <- c()
+        bl <- rs$body_line_count - last_page_lines - boff
+        if (bl > 0)
+          blnks <- rep("<br>", bl)
+  
+        last_page <- append(last_page, blnks)
+        last_page_lines <- 0
+  
+      }
+    }
+
+    ls[[i]]$pages[[length(pgs)]] <- last_page
     
   }
   

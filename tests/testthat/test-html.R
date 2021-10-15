@@ -303,7 +303,7 @@ test_that("html9: Page by on report works as expected.", {
     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") 
   
   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-                       font_size = 12, orientation = "landscape",
+                       font_size = 12, orientation = "portrait",
                        paper_size = "letter") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
@@ -360,3 +360,4 @@ test_that("html10: Title Header and page header/footer wrapping work as expected
   
   
 })
+
