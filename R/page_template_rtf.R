@@ -301,11 +301,24 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
         # Split title strings if they exceed width
         tmp <- split_string_rtf(ttls$titles[[i]], width, rs$units)
         
+        fz <- ""
+        fs <- ""
+        if (!is.null(ttls$font_size)) {
+          
+          fz <- paste0("\\fs", ttls$font_size * 2) 
+          fs <- paste0("\\fs", rs$font_size * 2)
+        }
+        
+        
+        tb <- tmp$rtf
+        if (ttls$bold)
+          tb <- paste0("\\b ", tmp$rtf, "\\b0")
+        
         # Concatenate title string
         if (al != "")
           ret <- append(ret, al)
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-                                  algn, " ", tmp$rtf, "\\cell\\row\n"))
+                                  algn, fz, " ", tb, fs, "\\cell\\row\n"))
         if (bl != "")
           ret <- append(ret, bl)
 

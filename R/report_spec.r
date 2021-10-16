@@ -1222,6 +1222,11 @@ title_header <- function(x, ..., right = "",
 #' In addition to these two convenience settings, you 
 #' may also specify a specific width in the current units of measure.  The
 #' units of measure is determined by the 'units' parameter on 
+#' @param bold A parameter to bold the titles.  Valid values are TRUE and FALSE.
+#' Default is FALSE.  This parameter only works for variable-width RTF and
+#' HTML output types.
+#' @param font_size The font size to use for the title block.  The font size
+#' of the report will be used by default.  Valid values are 8, 10, and 12.
 #' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
@@ -1271,7 +1276,8 @@ title_header <- function(x, ..., right = "",
 #' #     * In billions of dollars
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below", 
-                   borders = "none", width = NULL){
+                   borders = "none", width = NULL, bold = FALSE, 
+                   font_size = NULL){
 
   # Create title structure
   ttl <- structure(list(), class = c("title_spec", "list"))
@@ -1308,6 +1314,14 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     }
     
   }
+  
+  # Trap invalid font_size parameter
+  if (!is.null(font_size)) {
+    if (!font_size %in% c(8, 10, 12)) {
+      stop("font_size parameter invalid.  Valid values are 8, 10, and 12.") 
+    }
+  }
+  
       
   
   # Assign attributes
@@ -1316,6 +1330,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   ttl$borders <- borders
   ttl$align <- align
   ttl$width <- width
+  ttl$bold <- bold
+  ttl$font_size <- font_size
   
 
   x$titles[[length(x$titles) + 1]] <- ttl

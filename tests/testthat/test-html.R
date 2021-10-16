@@ -185,7 +185,8 @@ test_that("html6: Basic plot works as expected.", {
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
   plt <- create_plot(p, height = 4, width = 8, borders = c("none")) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
+           font_size = 12) %>%
     footnotes("* Motor Trend, 1974", borders = "none")
 
 
@@ -254,6 +255,7 @@ test_that("html7: Multi page table paper_size none works as expected.", {
 })
 
 # Good for testing
+# Borders throw off line counts.  Will have to live with it.
 test_that("html8: Page by works as expected.", {
   
   
@@ -415,6 +417,99 @@ test_that("html12: Text with titles on report works as expected.", {
   expect_equal(res$pages, 1)
   
 })
+
+
+# Works on all combinations on font and font size.  Needed adjustments to row height.
+test_that("html13: Table with break between sections works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test13.html")
+  
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 5))
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID", align = "left", width = 1) %>% 
+    define(name, label = "Subject Name", width = 1) %>% 
+    define(sex, label = "Sex") %>% 
+    define(age, label = "Age") %>% 
+    define(arm, label = "Arm", 
+           blank_after = FALSE, 
+           dedupe = TRUE, 
+           align = "right") #%>% 
+  # spanning_header(sex, arm, label = "Here is a spanning header")
+  
+  
+  rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    # options_fixed(line_count = 46) %>% 
+    titles("Table 1.0", "Analysis Data Subject Listing\n And more stuff", 
+           "Safety Population", align = "center", bold = TRUE) %>%
+    footnotes("Program Name: table1_0.R", 
+              "Here is a big long footnote that is going to wrap\n at least once") %>%
+    page_footer(left = "Time", center = "Confidential", 
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1) 
+  
+  
+  res <- write_report(rpt)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
+
+test_that("html14: Plot with page by on plot works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "html/test14.html")
+  
+  
+  dat <- mtcars[order(mtcars$cyl), ]
+  
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+  
+  
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+  
+  plt <- create_plot(p, height = 4, width = 8) %>% 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    page_by(cyl, "Cylinders: ") %>% 
+    footnotes("* Motor Trend, 1974") 
+  
+  rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt) %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+  
+  
+})
+
 
 # User Tests --------------------------------------------------------------
 
@@ -670,17 +765,19 @@ test_that("html-user2: demo table with stub works.", {
       define(`ARM B`, align = "center", label = "Drug 10mg", n = 38) %>%
       define(`ARM C`, align = "center", label = "Drug 20mg", n = 38) %>%
       define(`ARM D`, align = "center", label = "Competitor", n = 38) %>% 
-      titles("Table 14.1/4",
-             "Demographics and Baseline Characteristics",
-             "Specify Population", borders = "outside", blank_row = "both",
-             align = "right") %>%
+      titles("Table 14.1/4", bold = TRUE, blank_row = "above", 
+             align = "center", borders = c("top", "left", "right")) %>% 
+      titles( "Demographics and Baseline Characteristics",
+             "Specify Population", borders = c("left", "right", "bottom"), 
+             blank_row = "below",
+             align = "center") %>%
       footnotes("Here is a footnote", "Here is another footnote",
-                borders = "outside", blank_row = "both", align = "right")  
+                borders = "outside", blank_row = "both", align = "left")  
     
     # Define Report
     rpt <- create_report(fp, output_type = "HTML", 
                          font = "Arial", font_size = 10) %>%
-      add_content(tbl, align = "right") %>% 
+      add_content(tbl, align = "center") %>% 
       page_header("Sponsor", "Drug") %>% 
       page_footer(left = "Time", right = "Page [pg] of [tpg]") #%>% 
     #page_by(var = "var", label = "Variable: ")

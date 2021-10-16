@@ -298,17 +298,29 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
         # Split title strings if they exceed width
         tmp <- split_string_html(ttls$titles[[i]], width, rs$units)
         
+        if (ttls$bold)
+          tstr <- paste0("<b>", tmp$html, "</b>")
+        else 
+          tstr <- tmp$html
+        
+        fz <- ""
+        if (!is.null(ttls$font_size)){
+          
+          fz <- paste0("font-size:", ttls$font_size, "pt;") 
+        }
+        
+        
         # Concatenate title string
         if (al != "")
           ret <- append(ret, al)
         
-        if (b == "") {
-          ret <- append(ret, paste0("<tr><td>", tmp$html, 
+        if (b == "" & fz == "") {
+          ret <- append(ret, paste0("<tr><td>", tstr, 
                                     "</td></tr>\n"))
         } else {
           
-          ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
-                                    tmp$html, 
+          ret <- append(ret, paste0("<tr><td style=\"", b, fz, "\">", 
+                                    tstr, 
                                     "</td></tr>\n"))
         }
           

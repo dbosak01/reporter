@@ -10,7 +10,9 @@ titles(
   align = "center",
   blank_row = "below",
   borders = "none",
-  width = NULL
+  width = NULL,
+  bold = FALSE,
+  font_size = NULL
 )
 }
 \arguments{
@@ -41,7 +43,14 @@ content.  The value
 'page' means the titles will be aligned to the width of the page. 
 In addition to these two convenience settings, you 
 may also specify a specific width in the current units of measure.  The
-units of measure is determined by the 'units' parameter on 
+units of measure is determined by the 'units' parameter on}
+
+\item{bold}{A parameter to bold the titles.  Valid values are TRUE and FALSE.
+Default is FALSE.  This parameter only works for variable-width RTF and
+HTML output types.}
+
+\item{font_size}{The font size to use for the title block.  The font size
+of the report will be used by default.  Valid values are 8, 10, and 12.
 \code{\link{create_report}}.}
 }
 \value{

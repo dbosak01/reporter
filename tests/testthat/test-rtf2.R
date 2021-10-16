@@ -104,11 +104,11 @@ test_that("rtf2-1: One page text spec works as expected.", {
   fp <- file.path(base_path, "rtf2/test1.rtf")
 
   txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
-    titles("Text 1.0", "My Nice Text", borders = "outside") %>%
+    titles("Text 1.0", "My Nice Text", borders = "outside", font_size = 12) %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
 
   rpt <- create_report(fp, output_type = "RTF", font = fnt,
-                       font_size = fsz) %>%
+                       font_size = 10) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt, align = "right") %>%
@@ -244,7 +244,7 @@ test_that("rtf2-6: One page table works as expected.", {
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table", borders = "outside") %>%
+    titles("Table 1.0", "My Nice Table", borders = "outside", bold = TRUE) %>%
     add_content(create_table(dat, borders = "outside")) %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside") %>%
     page_footer("Left1", "Center1", "Right1")
@@ -893,7 +893,7 @@ test_that("rtf2-26: RTF Table with Plot on same page works as expected.", {
 })
 
 
-# Works but putting filler pars where it is not necessary
+
 test_that("rtf2-27: Plot with page by on plot works as expected.", {
   
   library(ggplot2)
