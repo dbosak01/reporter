@@ -14,7 +14,7 @@ test_that("get_titles_rtf function works as expected.", {
   t
   expect_equal(t$rtf,
         paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\cell\\row\n",
-        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc\\cell\\row\n"))
+        "\\trowd\\trgaph0\\trqc\\cellx12960\\qc\\sl-275\\slmult0\\cell\\row\n"))
   expect_equal(t$lines, 2)
   # expect_equal(t$twips, 576)
   

@@ -1235,10 +1235,12 @@ title_header <- function(x, ..., right = "",
 #' may also specify a specific width in the current units of measure.  The
 #' units of measure is determined by the 'units' parameter on 
 #' @param bold A parameter to bold the titles.  Valid values are TRUE and FALSE.
-#' Default is FALSE.  This parameter only works for variable-width RTF and
+#' Default is FALSE.  This parameter only applies to variable-width RTF and
 #' HTML output types.
 #' @param font_size The font size to use for the title block.  The font size
-#' of the report will be used by default.  Valid values are 8, 10, and 12.
+#' of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
+#' 13, and 14.  This parameter only applies to variable-width RTF and HTML
+#' output types.
 #' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
@@ -1329,8 +1331,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   
   # Trap invalid font_size parameter
   if (!is.null(font_size)) {
-    if (!font_size %in% c(8, 9, 10, 11, 12)) {
-      stop("font_size parameter invalid.  Valid values are 8, 9, 10, 11, and 12.") 
+    if (!font_size %in% c(8, 9, 10, 11, 12, 13, 14)) {
+      stop(paste0("font_size parameter invalid.  ", 
+                  "Valid values are 8, 9, 10, 11, 12, 13, and 14."))
     }
   }
   

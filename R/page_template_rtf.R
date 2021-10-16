@@ -225,7 +225,6 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
   else if (talgn %in% c("center", "centre"))
     ta <- "\\trqc"
 
-  
   if (length(ttllst) > 0) {
     
     for (ttls in ttllst) {
@@ -285,8 +284,10 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
                                    length(ttls$titles) + alcnt + blcnt, 
                                    1, ttls$borders)
             
+            sm <- get_spacing_multiplier(rs$font_size)
+            
             bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-                         algn, "\\cell\\row\n")
+                         algn, sm, "\\cell\\row\n")
             cnt <- cnt + 1
           }
           
@@ -305,7 +306,8 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
         fs <- ""
         if (!is.null(ttls$font_size)) {
           
-          fz <- paste0("\\fs", ttls$font_size * 2) 
+          fz <- paste0("\\fs", ttls$font_size * 2, 
+                       get_spacing_multiplier(ttls$font_size)) 
           fs <- paste0("\\fs", rs$font_size * 2)
         }
         

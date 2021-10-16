@@ -395,7 +395,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .1 
     cw <- .1
     cp <- 40
-    sm <- "\\sl-180\\slmult0"
+   # sm <- "\\sl-180\\slmult0"
   } else if (rs$font_size == 9) {
     rh <- 218 #round(.165 * 1440) # 225
     lh <- 218 #round(.165 * 1440)  
@@ -404,7 +404,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .11
     cw <- .11
     cp <- 40
-    sm <- "\\sl-220\\slmult0"
+    #sm <- "\\sl-200\\slmult0"
   } else if (rs$font_size == 10) {
     rh <- 228 #round(.165 * 1440) # 225
     lh <- 228 #round(.165 * 1440)  
@@ -413,7 +413,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .11
     cw <- .11
     cp <- 40
-    sm <- "\\sl-225\\slmult0"
+    #sm <- "\\sl-225\\slmult0"
   } else if (rs$font_size == 11) {
     rh <- 250 #round(.165 * 1440) # 225
     lh <- 250 #round(.165 * 1440)  
@@ -422,7 +422,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .11
     cw <- .12
     cp <- 40
-    sm <- "\\sl-225\\slmult0"
+    #sm <- "\\sl-250\\slmult0"
   } else if (rs$font_size == 12) {
     rh <- 275 #round(.2 * 1440)
     lh <- 275 #round(.1875 * 1440) #270
@@ -430,7 +430,7 @@ page_setup_rtf <- function(rs) {
     gtr <- .11
     cw <- .12
     cp <- 40
-    sm <- "\\sl-275\\slmult0"
+    #sm <- "\\sl-275\\slmult0"
   }
   
   
@@ -444,11 +444,11 @@ page_setup_rtf <- function(rs) {
   rs$twip_conversion <- conv
   rs$row_height <- rh
   rs$line_height <- lh
-  rs$page_break_rtf <- paste0(pb, sm)
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
   rs$cell_padding <- cp
-  rs$spacing_multiplier <- sm
+  rs$spacing_multiplier <- get_spacing_multiplier(rs$font_size)
+  rs$page_break_rtf <- paste0(pb, rs$spacing_multiplier)
   rs$border_height <- 15
   
   # Line spacing values determined by trial and error.
@@ -528,3 +528,26 @@ page_setup_rtf <- function(rs) {
   return(rs)
 }
 
+#' @noRd
+get_spacing_multiplier <- function(font_size) {
+  
+  if (font_size == 8) {
+    sm <- "\\sl-180\\slmult0" 
+  } else if (font_size == 9) {
+    sm <- "\\sl-200\\slmult0" 
+  } else if (font_size == 10) {
+    sm <- "\\sl-225\\slmult0"
+  } else if (font_size == 11) {
+    sm <- "\\sl-250\\slmult0" 
+  } else if (font_size == 12) {
+    sm <- "\\sl-275\\slmult0"
+  } else if (font_size == 13) {
+    sm <- "\\sl-300\\slmult0"
+  } else if (font_size == 14) {
+    sm <- "\\sl-325\\slmult0"
+  } else {
+    sm <- "\\sl-250\\slmult0" 
+  }
+  
+  return(sm)
+}
