@@ -516,7 +516,7 @@ test_that("rtf2-15: Valign on report footnotes works as expected.", {
     define(Species, page_break = TRUE)
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = fsz, orientation = "landscape") %>%
+                       font_size = 9, orientation = "portrait") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%

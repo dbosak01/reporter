@@ -98,13 +98,8 @@ get_rtf_document <- function(rs) {
   
   # Line spacing values determined by trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
-  if (rs$font_size == 10) {
-    ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs20")
-  } else if (rs$font_size == 12) {
-    ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs24")
-  } else if (rs$font_size == 8) {
-    ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, "\\fs16")
-  }
+  ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, rs$font_rtf)
+
 
   
   return(ret)
@@ -401,6 +396,15 @@ page_setup_rtf <- function(rs) {
     cw <- .1
     cp <- 40
     sm <- "\\sl-180\\slmult0"
+  } else if (rs$font_size == 9) {
+    rh <- 218 #round(.165 * 1440) # 225
+    lh <- 218 #round(.165 * 1440)  
+    #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
+    pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs18"
+    gtr <- .11
+    cw <- .11
+    cp <- 40
+    sm <- "\\sl-220\\slmult0"
   } else if (rs$font_size == 10) {
     rh <- 228 #round(.165 * 1440) # 225
     lh <- 228 #round(.165 * 1440)  
@@ -408,6 +412,15 @@ page_setup_rtf <- function(rs) {
     pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
     gtr <- .11
     cw <- .11
+    cp <- 40
+    sm <- "\\sl-225\\slmult0"
+  } else if (rs$font_size == 11) {
+    rh <- 250 #round(.165 * 1440) # 225
+    lh <- 250 #round(.165 * 1440)  
+    #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
+    pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs22"
+    gtr <- .11
+    cw <- .12
     cp <- 40
     sm <- "\\sl-225\\slmult0"
   } else if (rs$font_size == 12) {
@@ -444,6 +457,10 @@ page_setup_rtf <- function(rs) {
     rs$font_rtf <-  "\\f0\\fs20"
   } else if (rs$font_size == 12) {
     rs$font_rtf <-  "\\f0\\fs24"
+  } else if (rs$font_size == 11) {
+    rs$font_rtf <-  "\\f0\\fs22"
+  } else if (rs$font_size == 9) {
+    rs$font_rtf <-  "\\f0\\fs18"
   } else if (rs$font_size == 8) {
     rs$font_rtf  <- "\\f0\\fs16"
   }

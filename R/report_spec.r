@@ -198,8 +198,8 @@ create_report <- function(file_path = "", output_type = "TXT",
   
   # Trap invalid font_size parameter
   if (!is.null(font_size)) {
-    if (!font_size %in% c(8, 10, 12)) {
-      stop("font_size parameter invalid.  Valid values are 8, 10, and 12.") 
+    if (!font_size %in% c(8, 9, 10, 11, 12)) {
+      stop("font_size parameter invalid.  Valid values are 8, 9, 10, 11, and 12.") 
     }
   }
     
@@ -296,10 +296,14 @@ editor_settings <- read.table(header = TRUE, text = '
                     word           11.2      4.4       6     2.35      0      0
                     wordpad        10.8      4.2       6     2.35      0      0
                     pdf12            12     4.70       5    2.000  .1967     .5
+                    pdf11            12     4.70       5    2.000  .1967     .5
                     pdf10       14.2222     5.58    6.10      2.4  .1967     .5
+                    pdf9        14.2222     5.58    6.10      2.4  .1967     .5
                     pdf8           17.5     6.88    7.55     2.95  .1967     .5
                     rtf12            10   3.9473     5.3     2.05      0      0
+                    rtf11            10   3.9473     5.3     2.05      0      0
                     rtf10            12   4.7619    6.38      2.5      0      0
+                    rtf9             12   4.7619    6.38      2.5      0      0
                     rtf8             15      5.9    7.95     3.05      0      0
                                ') 
 
@@ -387,8 +391,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' should be set to zero.  Valid values are TRUE and FALSE. Default is
 #' FALSE.  This option is only valid for \code{output_type = 'TXT'}.
 #' @param font_size The size of the font in points.  Default is 10pt.  This
-#' option is only valid for output types RTF and PDF.  Valid values are 8, 10, 
-#' and 12.
+#' option is only valid for output types RTF and PDF.  Valid values are 8, 9, 10, 
+#' 11, and 12.
 #' @param line_size The number of characters that will fit on a line.  Normally,
 #' the \code{line_size} is calculated based on the page size, font size, and cpuom.
 #' You can override the calculated value by setting the \code{line_size}
@@ -584,8 +588,12 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       e <- editor_settings[editor_settings$editor == "pdf10", ]
     else if (font_size == 8)
       e <- editor_settings[editor_settings$editor == "pdf8", ]
+    else if (font_size == 9)
+      e <- editor_settings[editor_settings$editor == "pdf9", ]
+    else if (font_size == 11)
+      e <- editor_settings[editor_settings$editor == "pdf11", ]
     else 
-      stop("Invalid font_size setting.  Valid values are 8, 10 and 12")
+      stop("Invalid font_size setting.  Valid values are 8, 9, 10, 11, and 12")
     
     # Set cpuom and lpuom
     if (x$units == "inches") {
@@ -617,10 +625,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       e <- editor_settings[editor_settings$editor == "rtf12", ]
     else if (font_size == 10)
       e <- editor_settings[editor_settings$editor == "rtf10", ]
+    else if (font_size == 11)
+      e <- editor_settings[editor_settings$editor == "rtf11", ]
+    else if (font_size == 9)
+      e <- editor_settings[editor_settings$editor == "rtf9", ]
     else if (font_size == 8)
       e <- editor_settings[editor_settings$editor == "rtf8", ]
     else 
-      stop("Invalid font_size setting.  Valid values are 8, 10 and 12")
+      stop("Invalid font_size setting.  Valid values are 8, 9, 10, 11, and 12")
     
     # Set cpuom and lpuom
     if (x$units == "inches") {
@@ -1317,8 +1329,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   
   # Trap invalid font_size parameter
   if (!is.null(font_size)) {
-    if (!font_size %in% c(8, 10, 12)) {
-      stop("font_size parameter invalid.  Valid values are 8, 10, and 12.") 
+    if (!font_size %in% c(8, 9, 10, 11, 12)) {
+      stop("font_size parameter invalid.  Valid values are 8, 9, 10, 11, and 12.") 
     }
   }
   

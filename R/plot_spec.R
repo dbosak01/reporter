@@ -522,18 +522,6 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
   
   ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
   
-  # Restore sizing and alignment
-  # if (rs$font_size == 8) {
-  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
-  #                rs$spacing_multiplier)
-  # } else if (rs$font_size ==  12) {
-  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf,
-  #                rs$spacing_multiplier)
-  # } else {
-  #   ft <- paste0("\\cell\\row\n\\fs1\\sl0\\par\\pard\\ql", rs$font_rtf, 
-  #                rs$spacing_multiplier)
-  # }
-  
   
   
   # Concat RTF codes for image

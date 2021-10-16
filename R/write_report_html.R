@@ -517,9 +517,12 @@ page_setup_html <- function(rs) {
     
   } else if (rs$font_size == 9) {
     
-    rh <- 0.14 # na
+    if (tolower(rs$font) == "times")
+      rh <- 0.158
+    else 
+      rh <- 0.148 
     cw <- .11  # na
-    
+    gtr <- .1
     
   } else if (rs$font_size == 10) {
     
@@ -533,7 +536,10 @@ page_setup_html <- function(rs) {
 
   } else if (rs$font_size == 11) {
     
-    rh <- 0.17 # na
+    if (tolower(rs$font) == "times")
+      rh <- 0.18
+    else 
+      rh <- 0.168 # na
     gtr <- .1
     cw <- .11  # na
     

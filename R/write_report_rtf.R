@@ -118,6 +118,10 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
     hdr[length(hdr) + 1] <- "\\sl-275\\slmult0\\fs24"
   else if (rs$font_size == 8)
     hdr[length(hdr) + 1] <- "\\sl-180\\slmult0\\fs16"
+  else if (rs$font_size == 11)
+    hdr[length(hdr) + 1] <- "\\sl-250\\slmult0\\fs22"
+  else if (rs$font_size == 9)
+    hdr[length(hdr) + 1] <- "\\sl-200\\slmult0\\fs18"
   
   # Start with all lines
   body <- encodeRTF(ls)
@@ -162,6 +166,10 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
         ft <- "\\par\\sl-180\\ql"
       } else if (rs$font_size ==  12) {
         ft <- "\\par\\sl-275\\ql"
+      } else if (rs$font_size ==  11) {
+        ft <- "\\par\\sl-250\\ql"
+      } else if (rs$font_size ==  9) {
+        ft <- "\\par\\sl-200\\ql"
       } else {
         ft <- "\\par\\sl-225\\ql"
       }

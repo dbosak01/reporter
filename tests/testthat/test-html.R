@@ -237,9 +237,9 @@ test_that("html7: Multi page table paper_size none works as expected.", {
     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") %>%
     define(Species, blank_after = TRUE)
   
-  rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-                       font_size = 12, orientation = "landscape",
-                       paper_size = "none") %>%
+  rpt <- create_report(fp, output_type = "HTML", font = "Times",
+                       font_size = 9, orientation = "portrait",
+                       paper_size = "letter") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
     add_content(tbl, blank_row = "none") %>%
