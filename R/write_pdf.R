@@ -23,7 +23,7 @@ create_pdf <- function(filename = NULL,
                        info = TRUE) {
   
   # Check font size is valid
-  if (!fontsize %in% c(8, 10, 12))
+  if (!fontsize %in% c(8, 9, 10, 11, 12))
     stop(paste0("Fontsize ", fontsize, " not valid."))
   
   
