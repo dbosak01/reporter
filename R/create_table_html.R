@@ -789,10 +789,11 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
         
         # Construct html
         if (b == "")
-          ret[i] <- paste0(ret[i], "<td ", ca[j], ">", t[i, j], "</td>")
+          ret[i] <- paste0(ret[i], "<td ", ca[j], ">", 
+                           encodeHTML(t[i, j]), "</td>")
         else 
           ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
-                           t[i, j], "</td>")
+                           encodeHTML(t[i, j]), "</td>")
         
         # Count lines in cell 
         cl <- grep("<br>", t[i, j], fixed = TRUE)
@@ -820,5 +821,22 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
   return(res)
   
   
+}
+
+#' @description Have to check wrapping on a lot of files.  May have unintended 
+#' results.
+#' @noRd
+encodeHTML <- function(strng) {
+  
+  ret <- strng
+  
+  ret <- gsub("&", "&amp;", ret , fixed = TRUE)
+  ret <- gsub(">", "&gt;", ret , fixed = TRUE)
+  ret <- gsub("<", "&lt;", ret , fixed = TRUE)
+  ret <- gsub(" ", "&nbsp;", ret, fixed = TRUE)
+  if (ret == "")
+    ret <- "&nbsp;"
+  
+  return(ret)
 }
 

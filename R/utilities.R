@@ -901,6 +901,34 @@ has_top_footnotes <- function(rs) {
   return(ret)
 }
 
+#' @description  Translate border spec to a vector of border positions
+get_outer_borders <- function(brdr_spec) {
+  
+  ret <- c()
+  if (any(brdr_spec == "none")) {
+    ret <- c()
+  } else {
+    
+    if (any(brdr_spec == "outside") | any(brdr_spec == "all")) {
+      
+      ret <- append(ret, c("top", "bottom", "left", "right")) 
+    } else {
+    
+      if (any(brdr_spec == "top"))
+        ret <- append(ret, "top")
+      if (any(brdr_spec == "bottom"))
+        ret <- append(ret, "bottom")
+      if (any(brdr_spec == "left"))
+        ret <- append(ret, "left")
+      if (any(brdr_spec == "right"))
+        ret <- append(ret, "right")
+    }
+
+  } 
+  
+  return(ret)
+}
+
 #' @noRd
 has_page_footer <- function(rs) {
   

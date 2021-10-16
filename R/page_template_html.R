@@ -715,7 +715,8 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
 #' and this function will return the correct border codes.  System works 
 #' great.
 #' @noRd
-get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, flag = "") {
+get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, 
+                                  flag = "", exclude = NULL) {
   
   t <- ""
   b <- ""
@@ -783,6 +784,18 @@ get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, flag = "") {
       if (col != 1)
         l <- ""
     }
+  }
+  
+  
+  if (!is.null(exclude)) {
+    if (any(exclude == "top"))
+      t <- ""
+    if (any(exclude == "bottom"))
+      b <- ""
+    if (any(exclude == "left"))
+      l <- ""
+    if (any(exclude == "right"))
+      r <- ""
   }
   
   ret <- paste0(t, b, l, r)

@@ -498,3 +498,14 @@ test_that("get_image_html works as expected.", {
 })
 
 
+test_that("get_outer_borders works as expected.", {
+  
+ 
+  expect_equal(is.null(get_outer_borders("none")), TRUE) 
+  expect_equal(get_outer_borders("all"), c("top", "bottom", "left", "right")) 
+  expect_equal(get_outer_borders(c("top", "bottom")), c("top", "bottom")) 
+  expect_equal(get_outer_borders(c("outside", "inside")), 
+               c("top", "bottom", "left", "right")) 
+  
+})
+

@@ -126,6 +126,19 @@ test_that("get_pageby_html works as expected.", {
 
 })
 
+
+test_that("get_cell_borders_html works as expected.", {
+  
+  expect_equal(get_cell_borders_html(1, 1, 1, 1, c("all")),
+      paste0("border-top:thin solid;border-bottom:thin solid;",
+             "border-left:thin solid;border-right:thin solid;"))
+  
+  expect_equal(get_cell_borders_html(1, 1, 1, 1, c("all"), exclude = "bottom"),
+               paste0("border-top:thin solid;",
+                      "border-left:thin solid;border-right:thin solid;"))
+  
+})
+
 # 
 # test_that("rtf2-2: get_cell_borders works as expected.", {
 #   

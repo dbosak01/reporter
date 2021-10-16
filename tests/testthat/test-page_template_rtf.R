@@ -35,7 +35,6 @@ test_that("get_footnotes_rtf function works as expected.", {
       paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql\\cell\\row\n", 
              "\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n"))
   expect_equal(f$lines, 2)
-  # expect_equal(f$twips, 576)
   
 })
 
@@ -51,7 +50,6 @@ test_that("get_title_header_rtf function works as expected.", {
   th
   expect_equal(nchar(th$rtf) > 1, TRUE)
   expect_equal(th$lines, 4)
-  #  expect_equal(th$twips, 1440)
   
 })
 
@@ -72,7 +70,7 @@ test_that("get_page_header_rtf works as expected.", {
   ph
   
   expect_equal(ph$lines, 3)
-  #expect_equal(ph$twips, 864)
+
 })
 
 
@@ -92,7 +90,6 @@ test_that("get_page_footer_rtf works as expected.", {
   pf
   
   expect_equal(pf$lines, 1)
-  #expect_equal(pf$twips, 288)
   
   
 })
