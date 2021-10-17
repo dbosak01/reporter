@@ -546,6 +546,93 @@ test_that("html15: Title bold and font size works as expected.", {
 })
 
 
+test_that("html16: 9 pt font inches works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test16.html")
+  
+  rpt <- create_report(fp, output_type = "HTML", font_size = 9, 
+                       font = "Courier",
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+test_that("html17: 9 pt font cm works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test17.html")
+  
+  rpt <- create_report(fp, output_type = "HTML", font_size = 9, 
+                       font = "Courier",
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+test_that("html8: 11 pt font inches works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test18.html")
+  
+  rpt <- create_report(fp, output_type = "HTML", font_size = 11, 
+                       font = "Courier",
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+test_that("html19: 11 pt font cm works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test19.html")
+  
+  rpt <- create_report(fp, output_type = "HTML", font_size = 11, 
+                       font = "Courier",
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
 
 # User Tests --------------------------------------------------------------
 
