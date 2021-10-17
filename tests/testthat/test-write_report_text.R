@@ -87,6 +87,31 @@ test_that("write_report output_type parameter checks work as expected.", {
   
 })
 
+
+test_that("write_report paper size parameter check works as expected.", {
+  
+  fp <- file.path(base_path, "text/wreport.out")
+  
+  rpt2 <- create_report(fp, paper_size = "none") %>% 
+    page_header(left = c("Something1", "Something2"), right = "Nothing") %>% 
+    titles("Here is a test title.", "There is a title") %>% 
+    add_content(create_text("Hello")) %>% 
+    footnotes("Test footnote", "Test footnote 2") %>% 
+    page_footer(center = "confidential")
+  
+  expect_error(write_report(rpt2))
+  expect_error(write_report(rpt2, output_type = "RTF"))
+  
+  
+  expect_equal(file.exists(fp), FALSE)
+  
+  if (file.exists(fp))
+    file.remove(fp)
+  
+  
+})
+
+
 # test_that("write_page_numbers() works as expected.", {
 #   
 #   fp <- file.path(base_path, "text/text4.out")

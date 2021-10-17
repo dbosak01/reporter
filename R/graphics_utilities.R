@@ -51,6 +51,38 @@ get_image_bytes <- function(file_path) {
 
 }
 
-          
-          
-          
+#' @import stringi      
+#' @noRd
+get_image_html <- function(file_path, report_path, plt, units) {
+  
+
+  dr <- file.path(dirname(report_path), "images")
+  if (!file.exists(dr)) {
+    dir.create(dr) 
+  }
+  
+  fl <-  paste0( gsub(".html", "", basename(report_path), fixed = TRUE), "-", 
+                 stri_rand_strings(1, 4, pattern = "[A-Z0-9]"), ".jpg")
+    
+  pth <- file.path(dr, fl)
+
+  
+  res <- file.copy(file_path, pth)
+  if (all(res == TRUE)) {
+    file.remove(file_path) 
+  }
+  
+  u <- units
+  if (u == "inches")
+    u <- "in"
+  
+  ph <- round(plt$height * .99, 3)
+  pw <- round(plt$width * .99, 3)
+  
+  ret <- paste0("<img src=\"./images/", basename(pth), "\"", 
+                " style=\"height:", ph, u, ";",
+                " width:", pw, u, ";\">")
+  
+  
+  return(ret)
+}

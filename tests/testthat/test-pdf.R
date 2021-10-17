@@ -786,7 +786,7 @@ test_that("pdf26: Table Borders that spans multiple pages work as expected.", {
 })
 
 
-test_that("test27: Table Borders with ttls/fnts on table works as expected.", {
+test_that("pdf27: Table Borders with ttls/fnts on table works as expected.", {
   
   fp <- file.path(base_path, "pdf/test27.pdf")
   
@@ -809,7 +809,7 @@ test_that("test27: Table Borders with ttls/fnts on table works as expected.", {
   
 })
 
-test_that("test28: Table Borders with ttls/fnts on report works as expected.", {
+test_that("pdf28: Table Borders with ttls/fnts on report works as expected.", {
   
   fp <- file.path(base_path, "pdf/test28.pdf")
   
@@ -832,4 +832,87 @@ test_that("test28: Table Borders with ttls/fnts on report works as expected.", {
   
 })
 
+test_that("pdf29: 9 pt font inches works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test29.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font_size = 9, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+test_that("pdf30: 9 pt font cm works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test30.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font_size = 9, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+test_that("pdf31: 11 pt font inches works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test31.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font_size = 11, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+test_that("pdf32: 11 pt font cm works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf/test32.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font_size = 11, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
 

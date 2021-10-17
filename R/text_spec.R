@@ -382,11 +382,11 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
   hgt <- rs$body_line_count - t
 
   # Break text content into pages if necessary
-  tpgs <- split_text_rtf(txt$text, hgt, width, rs$font, 
+  tpgs <- split_text(txt$text, hgt, width, rs$font, 
                  rs$font_size, rs$units, lpg_rows)
   
   # Capture rtf pages and line counts
-  txtpgs <- tpgs$rtf
+  txtpgs <- tpgs$text
   lns <- tpgs$lines
   
   # Calculate text width in twips
@@ -494,7 +494,7 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
 #' @description lines is the number of lines per page or cell before breaking.
 #' Width is the width of the page or cell.
 #' @noRd
-split_text_rtf <- function(txt, lines, width, font, 
+split_text <- function(txt, lines, width, font, 
                            font_size, units, offset = 0) {
   
   pgs <- c()
@@ -562,9 +562,146 @@ split_text_rtf <- function(txt, lines, width, font,
     cnts[[length(cnts) + 1]] <- length(lns)
   }
   
-  res <- list(rtf = pgs, 
+  res <- list(text = pgs, 
               lines = cnts)
   
   return(res)
   
 }
+
+
+# Write HTML Functions -------------------------------------------------------
+
+
+#' @noRd
+create_text_pages_html <- function(rs, cntnt, lpg_rows, content_blank_row) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  txt <- cntnt$object
+  
+  # Default to content width
+  w <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(txt$width))
+    w <- txt$width
+  
+  res <- get_text_body_html(rs, txt, w, rs$body_line_count, 
+                           lpg_rows, content_blank_row, cntnt$align)
+  
+  
+  return(res)
+  
+  
+}
+
+#' Create list of vectors of strings for each page 
+#' @import stringi
+#' @noRd
+get_text_body_html <- function(rs, txt, width, line_count, lpg_rows, 
+                              content_blank_row, talgn) {
+  
+  
+  # Get content titles and footnotes
+  ttls <- get_titles_html(txt$titles, width, rs, talgn) 
+  ttl_hdr <- get_title_header_html(txt$title_hdr, width, rs, talgn)
+  
+  ftnts <- get_footnotes_html(txt$footnotes, width, rs, talgn, FALSE) 
+  
+  exclude_top <- NULL
+  if (ttls$border_flag | ttl_hdr$border_flag)
+    exclude_top <- "top"
+  
+  t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
+  hgt <- rs$body_line_count - t
+  
+  # Break text content into pages if necessary
+  tpgs <- split_text(txt$text, hgt, width, rs$font, 
+                         rs$font_size, rs$units, lpg_rows)
+  
+  # Capture rtf pages and line counts
+  txtpgs <- tpgs$text
+  lns <- tpgs$lines
+  
+  u <- rs$units
+  if (u == "inches")
+    u <- "in"
+  
+  # Calculate text width in twips
+  w <- paste0("width:", round(width, 3), u, ";")
+  
+  
+  # Get text alignment codes
+  if (txt$align == "right") 
+    algn <- "text-align:right;"
+  else if (txt$align %in% c("center", "centre"))
+    algn <- "text-align:center;"
+  else 
+    algn <- "text-align:left;"
+  
+  # Get cell border codes
+  b <- get_cell_borders_html(1, 1, 1, 1, txt$borders, exclude = exclude_top)  
+  
+  # Prepare row header and footer
+  rwhd <- paste0("<table ", 
+                 " style=\"", w, algn, "\">\n<tr><td style=\"", b, "\">")
+  rwft <- paste0("</td></tr>\n</table>\n")
+  
+  ret <- list()
+  cnt <- c()
+  
+  # Gather rtf and line counts for each page
+  for (i in seq_along(txtpgs)) {
+    
+    if (i == length(txtpgs))
+      wrap_flag <- FALSE
+    else 
+      wrap_flag <- TRUE
+    
+    pg <- txtpgs[[i]]
+    
+    # Put line ending on all but last line
+    if (length(pg) > 1) {
+      s <- paste0(pg[seq(1, length(pg) - 1)], "<br>\n")
+      s <- c(s, pg[length(pg)])
+    } else
+      s <- pg
+    
+    # Add blank above content if requested
+    a <- NULL
+    if (i == 1 & content_blank_row %in% c("both", "above"))
+      a <- "<br>\n"
+    
+    
+    # Sum up lines
+    cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
+    
+    # Get footnotes
+    if ("bottom" %in% get_outer_borders(txt$borders))
+      ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
+                                       wrap_flag, content_blank_row, talgn, TRUE)
+    else 
+      ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
+                                    wrap_flag, content_blank_row, talgn, FALSE)
+    
+    
+    # Combine titles, blanks, body, and footnotes
+    rws <- c(a, ttls$html, ttl_hdr$html, 
+             rwhd, s, rwft)
+    
+    ret[[length(ret) + 1]] <- c(rws, ftnts$html)
+    cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
+    
+  }
+  
+  res <- list(html = ret, lines = cnt)
+  
+  return(res)
+  
+}
+

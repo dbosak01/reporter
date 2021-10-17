@@ -1049,3 +1049,90 @@ test_that("rtf33: use_attributes parameter table works as expected.", {
   
 })
 
+
+
+test_that("rtf34: 9 pt font inches works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf/test34.rtf")
+  
+  rpt <- create_report(fp, output_type = "RTF", font_size = 9, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+test_that("rtf35: 9 pt font cm works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf/test35.rtf")
+  
+  rpt <- create_report(fp, output_type = "RTF", font_size = 9, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+test_that("pdf36: 11 pt font inches works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf/test36.rtf")
+  
+  rpt <- create_report(fp, output_type = "RTF", font_size = 11, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+test_that("pdf37: 11 pt font cm works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf/test37.rtf")
+  
+  rpt <- create_report(fp, output_type = "RTF", font_size = 11, 
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>% 
+    set_margins(top = 1, bottom = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
+})
+
+

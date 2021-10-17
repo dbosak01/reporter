@@ -31,7 +31,7 @@ test_that("text print() function works as expected.", {
 })
 
 
-test_that("split_text_rtf() works as expected.", {
+test_that("split_text() works as expected.", {
   
   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -42,16 +42,16 @@ test_that("split_text_rtf() works as expected.", {
                 "qui officia deserunt mollit anim id est laborum.")
   
   
-  res <- split_text_rtf(cnt, 4, 5, "Arial", 12, "inches")
+  res <- split_text(cnt, 4, 5, "Arial", 12, "inches")
   
   res
-  expect_equal(length(res$rtf), 2)
+  expect_equal(length(res$text), 2)
   
   
-  res <- split_text_rtf(cnt, 4, 3, "Arial", 12, "inches", 2)
+  res <- split_text(cnt, 4, 3, "Arial", 12, "inches", 2)
   
   res
-  expect_equal(length(res$rtf), 4)
+  expect_equal(length(res$text), 4)
   
   
   cnt2 <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",

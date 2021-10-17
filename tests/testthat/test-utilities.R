@@ -275,7 +275,7 @@ test_that("split_cells_variable works as expected.", {
   cw <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
   cw
   
-  res <- split_cells_variable(df, cw, "Arial", 12, "inches")
+  res <- split_cells_variable(df, cw, "Arial", 12, "inches", "RTF")
   res
   
   expect_equal(any(class(res) == "data.frame"), TRUE)
@@ -470,13 +470,42 @@ test_that("split_cells_variable() works as expected.", {
                     ..row = c(NA, NA, NA), stringsAsFactors = FALSE)
   
   res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1), 
-                              "Arial", 12, "inches")
+                              "Arial", 12, "inches", "RTF")
   res
   
   expect_equal(nrow(res), 3)
   expect_equal(ncol(res), 4)
   expect_equal(res$..row, c(3, 1, 4))
   
+  
+})
+
+
+test_that("get_image_html works as expected.", {
+  
+  
+  tmp <-  tempfile(fileext = ".jpg")
+  tmp2 <- tempfile(fileext = ".html")
+  
+  plt <- list(height = 4, width = 8)
+  
+  res <- get_image_html(tmp, tmp2, plt, "inches")
+  res
+  
+  expect_equal(length(res), 1)
+  expect_equal(substr(res, 1, 4), "<img")
+  
+})
+
+
+test_that("get_outer_borders works as expected.", {
+  
+ 
+  expect_equal(is.null(get_outer_borders("none")), TRUE) 
+  expect_equal(get_outer_borders("all"), c("top", "bottom", "left", "right")) 
+  expect_equal(get_outer_borders(c("top", "bottom")), c("top", "bottom")) 
+  expect_equal(get_outer_borders(c("outside", "inside")), 
+               c("top", "bottom", "left", "right")) 
   
 })
 

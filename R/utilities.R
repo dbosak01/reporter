@@ -313,6 +313,10 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
 #' @noRd
 get_page_size <- function(paper_size, units) {
 
+  # If no paper size specified, 
+  # make it essentially infinite.
+  ret <- c(1000000, 1000000)
+  
   if (units == "inches") {
     if (paper_size == "letter")
       ret <- c(8.5, 11)
@@ -421,15 +425,9 @@ split_cells <- function(x, col_widths) {
   return(dat)
 }
 
-
-#' @description Calling function is responsible for opening the 
-#' device context and assigning the font.  This function will use 
-#' strwidth to determine number of wraps of a string within a particular
-#' width.  Lines are returned as a single rtf string separated by an rtf
-#' line ending.  
 #' @noRd
-split_string_rtf <- function(strng, width, units) {
-  
+split_strings <- function(strng, width, units) {
+ 
   lnlngth <- 0
   ln <- c()
   lns <- c()
@@ -443,7 +441,7 @@ split_string_rtf <- function(strng, width, units) {
   if (!is.na(strng)) {
     
     splits <- unlist(stri_split_fixed(strng, "\n"))
-  
+    
     for (split in splits) {
       
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
@@ -467,7 +465,7 @@ split_string_rtf <- function(strng, width, units) {
           } else {
             # Assign current lines and counts
             lns[length(lns) + 1] <- paste(ln, collapse = " ")
-              
+            
             # Assign overflow to next line
             ln <- wrds[i]
             lnlngth <- lngths[i]
@@ -479,9 +477,9 @@ split_string_rtf <- function(strng, width, units) {
       
       # Deal with last line
       if (length(ln) > 0) {
-
+        
         lns[length(lns) + 1] <- paste(ln, collapse = " ")
-
+        
       }
       
       # Reset ln and lnlngth
@@ -490,18 +488,47 @@ split_string_rtf <- function(strng, width, units) {
       
     }
     
-
+    
   } else {
     
     lns <- ""
     
-  }
+  } 
+  
+  
+  return(lns)
+}
+
+#' @description Calling function is responsible for opening the 
+#' device context and assigning the font.  This function will use 
+#' strwidth to determine number of wraps of a string within a particular
+#' width.  Lines are returned as a single rtf string separated by an rtf
+#' line ending.  
+#' @noRd
+split_string_rtf <- function(strng, width, units) {
+  
+  
+  lns <- split_strings(strng, width, units)
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
   # Doing it here handles for the entire report, as every piece runs
   # through here.
   ret <- list(rtf = paste0(encodeRTF(lns), collapse = "\\line "),
+              lines = length(lns))
+  
+  return(ret)
+}
+
+#' @noRd
+split_string_html <- function(strng, width, units) {
+  
+  
+  lns <- split_strings(strng, width, units)
+  
+  # Try to find HTML encoding function.
+  # encodeHTML()
+  ret <- list(html = paste0(lns, collapse = "\n"),
               lines = length(lns))
   
   return(ret)
@@ -516,7 +543,8 @@ split_string_rtf <- function(strng, width, units) {
 #' @import stringi
 #' @import grDevices
 #' @noRd
-split_cells_variable <- function(x, col_widths, font, font_size, units) {
+split_cells_variable <- function(x, col_widths, font, font_size, units, 
+                                 output_type) {
   
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
@@ -547,8 +575,16 @@ split_cells_variable <- function(x, col_widths, font, font_size, units) {
           
         } else {
           
-          res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
-          cell <- res$rtf
+          if (output_type == "HTML") {
+            res <- split_string_html(x[[i, nm]], col_widths[[nm]], units)
+            
+            cell <- res$html
+          
+          } else if (output_type == "RTF") {
+            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
+          
+            cell <- res$rtf
+          }
           nch <- res$lines
         }
         
@@ -865,6 +901,54 @@ has_top_footnotes <- function(rs) {
   return(ret)
 }
 
+#' @description  Translate border spec to a vector of border positions
+#' @noRd
+get_outer_borders <- function(brdr_spec) {
+  
+  ret <- c()
+  if (any(brdr_spec == "none")) {
+    ret <- c()
+  } else {
+    
+    if (any(brdr_spec == "outside") | any(brdr_spec == "all")) {
+      
+      ret <- append(ret, c("top", "bottom", "left", "right")) 
+    } else {
+    
+      if (any(brdr_spec == "top"))
+        ret <- append(ret, "top")
+      if (any(brdr_spec == "bottom"))
+        ret <- append(ret, "bottom")
+      if (any(brdr_spec == "left"))
+        ret <- append(ret, "left")
+      if (any(brdr_spec == "right"))
+        ret <- append(ret, "right")
+    }
+
+  } 
+  
+  return(ret)
+}
+
+#' @noRd
+has_page_footer <- function(rs) {
+  
+  ret <- FALSE
+  
+  if (!is.null(rs$page_footer_left)) {
+    
+        ret <- TRUE
+  }
+  if (!is.null(rs$page_footer_right)) {
+    ret <- TRUE
+  }
+  if (!is.null(rs$page_footer_center)) {
+    ret <- TRUE
+  }
+  
+  return(ret)
+}
+
 get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   
   spns <- ts$col_spans
@@ -900,7 +984,7 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   
   # Create data structure to map spans to columns and columns widths by level
   # - Seed span_num with negative index numbers to identify unspanned columns
-  # - Also add one to each column width for the blank space between columns 
+  # - Also add gutter to each column width for the space between columns 
   d <- data.frame(colname = cols, colwidth = w + gutter, 
                   span_num = seq(from = -1, to = -length(cols), by = -1), 
                   stringsAsFactors = FALSE)
@@ -909,12 +993,13 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
   for (l in lvls) {
     
     t <- d  # Copy to temporary variable
-    
+    # print(t)
+    # print(slvl)
+    col_span <- c()
     # if column is in spanning column list, populate structure with index.
     # Otherwise, leave as negative value.
     for (i in 1:length(slvl[[l]])) {
       cl <- slvl[[l]][[i]]$span_cols
-      
       
       # Span specifications can be a vector of column names or numbers
       if (typeof(cl) == "character")
@@ -922,7 +1007,8 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
       else 
         t$span_num <- ifelse(t$colname %in% cols[cl], i, t$span_num)
       
-      
+      col_span[i] <- length(cl)
+
     }
     
     # Aggregate data structures to get span widths for each span
@@ -940,6 +1026,7 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
     s$n <- NA
     s$name <- ""
     s$underline <- TRUE
+    s$col_span <- 1
     
     # Populate data structure with labels, alignments, and n values from 
     # spanning column objects
@@ -954,6 +1041,10 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
         
       }
       s$name[counter] <- paste0("Span", counter)
+      if (index > 0) {
+        if (!is.na(col_span[index]))
+          s$col_span[counter] <- col_span[index]
+      }
       counter <- counter + 1
     }
     
@@ -1008,6 +1099,18 @@ ccm <- function(x) {
 cin <- function(x) {
   
   return(x / 2.54)
+}
+
+
+units_html <- function(u) {
+  
+ ret <- u  
+ if (ret == "inches")
+   ret <- "in"
+ 
+ 
+ return(ret)
+  
 }
 
 # RTF Functions -----------------------------------------------------------

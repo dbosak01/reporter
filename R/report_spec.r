@@ -40,8 +40,9 @@
 #' report, you may pipe the object to any of the above functions to append
 #' additional options.
 #' 
-#' Note that PDF output has some limitations not found in TXT and RTF output.
-#' See \link{NotesOnPDF} for additional information.
+#' Note that PDF output currently only supports a fixed-width style report.
+#' A variable-width report with a choice of fonts will be available in future
+#' versions of the \strong{reporter} package.
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -50,13 +51,7 @@
 #' the \code{\link{write_report}} function will add a file extension based
 #' on the \code{output_type} specified.
 #' @param output_type The report output type.  Default is "TXT".  Valid
-#' values are "TXT", "RTF", and "PDF".
-# @param font_type The font type to use on the report. The default value 
-# 'fixed'.  A font type of 'fixed' will use a fixed-width,
-# monospace font such as Courier.  Currently, a font type of 'fixed' is the 
-# only option available.  Future versions will include variable-width fonts
-# such as Arial and Times New Roman.  To set options for font type 'fixed', 
-# used the \code{\link{options_fixed}} function.
+#' values are "TXT", "RTF", "PDF", and "HTML".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param units Specifies the units of measurement.  This setting will 
@@ -66,7 +61,9 @@
 #' @param paper_size The expected paper size on which the report may be 
 #' printed.  The \code{paper_size} will determine how much text can fit on
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
-#' "letter".
+#' "letter".  For the HTML output type, a paper size of "none" is also valid. 
+#' That means the HTML will be generated in an unbounded manner as a typical
+#' web page.
 #' @param missing How to display missing values in the report.  Default is
 #' to replace them with an empty string, which removes them from the report.
 #' To display missing values as is, set the missing parameter to NULL.  To
@@ -79,8 +76,8 @@
 #' at this time.  The default value is "fixed".
 #' @param font_size The size of the font to use on the report. The \code{font_size}
 #' specified will be used for the entire report.  Valid values are 8, 10, 
-#' and 12.  The \code{font_size} parameter only applies to RTF and PDF output types.
-#' The default value is 10.
+#' and 12.  The \code{font_size} parameter only applies to RTF, PDF, and HTML 
+#' output types. The default value is 10.
 #' @return A new report_spec object.
 #' @family report
 #' @seealso \code{\link{create_table}}, \code{\link{create_text}}, and
@@ -148,11 +145,11 @@ create_report <- function(file_path = "", output_type = "TXT",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF")) {
+  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
+                "'\n\tValid values are: 'TXT', 'PDF', 'RTF', and 'HTML'."))
   } else {
     
     output_type <- toupper(output_type) 
@@ -183,11 +180,11 @@ create_report <- function(file_path = "", output_type = "TXT",
   
   
   # Trap missing or invalid paper_size parameter.
-  if (!paper_size %in% c("letter", "legal", "A4", "RD4")) {
+  if (!paper_size %in% c("letter", "legal", "A4", "RD4", "none")) {
     
     stop(paste0("paper_size parameter on ",
                 "create_report() function is invalid: '", paper_size,
-                "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4'."))
+                "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4', 'none'."))
   }
   
   # Trap missing or invalid font parameter
@@ -201,8 +198,8 @@ create_report <- function(file_path = "", output_type = "TXT",
   
   # Trap invalid font_size parameter
   if (!is.null(font_size)) {
-    if (!font_size %in% c(8, 10, 12)) {
-      stop("font_size parameter invalid.  Valid values are 8, 10, and 12.") 
+    if (!font_size %in% c(8, 9, 10, 11, 12)) {
+      stop("font_size parameter invalid.  Valid values are 8, 9, 10, 11, and 12.") 
     }
   }
     
@@ -299,10 +296,14 @@ editor_settings <- read.table(header = TRUE, text = '
                     word           11.2      4.4       6     2.35      0      0
                     wordpad        10.8      4.2       6     2.35      0      0
                     pdf12            12     4.70       5    2.000  .1967     .5
+                    pdf11            13     5.11     5.6     2.25  .1967     .5
                     pdf10       14.2222     5.58    6.10      2.4  .1967     .5
+                    pdf9           15.8     6.22     6.8     2.67  .1967     .5
                     pdf8           17.5     6.88    7.55     2.95  .1967     .5
                     rtf12            10   3.9473     5.3     2.05      0      0
+                    rtf11            11   4.3307     5.7    2.244      0      0
                     rtf10            12   4.7619    6.38      2.5      0      0
+                    rtf9           13.5   5.3149    7.12      2.8      0      0
                     rtf8             15      5.9    7.95     3.05      0      0
                                ') 
 
@@ -365,7 +366,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' 
 #' Some of the \code{options_fixed} function apply only to RTF and PDF.
 #' In particular, the \code{font_size} parameter applies only to RTF and PDF
-#' reports.  Valid font size options are 8, 10, and 12.
+#' reports.  Valid font size options are 8, 10, and 12.  The font size may
+#' also be set on the \code{\link{create_report}} function.
 #' 
 #' @param x The report spec.
 #' @param editor The expected text editor to use for printing text reports.  
@@ -389,8 +391,8 @@ editor_settings <- read.table(header = TRUE, text = '
 #' should be set to zero.  Valid values are TRUE and FALSE. Default is
 #' FALSE.  This option is only valid for \code{output_type = 'TXT'}.
 #' @param font_size The size of the font in points.  Default is 10pt.  This
-#' option is only valid for output types RTF and PDF.  Valid values are 8, 10, 
-#' and 12.
+#' option is only valid for output types RTF and PDF.  Valid values are 8, 9, 10, 
+#' 11, and 12.
 #' @param line_size The number of characters that will fit on a line.  Normally,
 #' the \code{line_size} is calculated based on the page size, font size, and cpuom.
 #' You can override the calculated value by setting the \code{line_size}
@@ -586,8 +588,12 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       e <- editor_settings[editor_settings$editor == "pdf10", ]
     else if (font_size == 8)
       e <- editor_settings[editor_settings$editor == "pdf8", ]
+    else if (font_size == 9)
+      e <- editor_settings[editor_settings$editor == "pdf9", ]
+    else if (font_size == 11)
+      e <- editor_settings[editor_settings$editor == "pdf11", ]
     else 
-      stop("Invalid font_size setting.  Valid values are 8, 10 and 12")
+      stop("Invalid font_size setting.  Valid values are 8, 9, 10, 11, and 12")
     
     # Set cpuom and lpuom
     if (x$units == "inches") {
@@ -619,10 +625,14 @@ options_fixed <- function(x, editor = NULL, cpuom = NULL, lpuom = NULL,
       e <- editor_settings[editor_settings$editor == "rtf12", ]
     else if (font_size == 10)
       e <- editor_settings[editor_settings$editor == "rtf10", ]
+    else if (font_size == 11)
+      e <- editor_settings[editor_settings$editor == "rtf11", ]
+    else if (font_size == 9)
+      e <- editor_settings[editor_settings$editor == "rtf9", ]
     else if (font_size == 8)
       e <- editor_settings[editor_settings$editor == "rtf8", ]
     else 
-      stop("Invalid font_size setting.  Valid values are 8, 10 and 12")
+      stop("Invalid font_size setting.  Valid values are 8, 9, 10, 11, and 12")
     
     # Set cpuom and lpuom
     if (x$units == "inches") {
@@ -1224,6 +1234,13 @@ title_header <- function(x, ..., right = "",
 #' In addition to these two convenience settings, you 
 #' may also specify a specific width in the current units of measure.  The
 #' units of measure is determined by the 'units' parameter on 
+#' @param bold A parameter to bold the titles.  Valid values are TRUE and FALSE.
+#' Default is FALSE.  This parameter only applies to variable-width RTF and
+#' HTML output types.
+#' @param font_size The font size to use for the title block.  The font size
+#' of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
+#' 13, and 14.  This parameter only applies to variable-width RTF and HTML
+#' output types.
 #' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
@@ -1273,7 +1290,8 @@ title_header <- function(x, ..., right = "",
 #' #     * In billions of dollars
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below", 
-                   borders = "none", width = NULL){
+                   borders = "none", width = NULL, bold = FALSE, 
+                   font_size = NULL){
 
   # Create title structure
   ttl <- structure(list(), class = c("title_spec", "list"))
@@ -1293,8 +1311,6 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     stop(paste("Borders parameter invalid.  Valid values are", 
       "'top', 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'."))
 
-  
-
   if (is.null(width)) {
     if (any(class(x) %in% c("report_spec"))) 
       width <- "page"
@@ -1303,7 +1319,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     
   } else {
     if (any(class(x) %in% c("report_spec"))) {
-      if (!width %in% c("content") & !is.numeric(width))
+      if (!width %in% c("page") & !is.numeric(width))
         stop("Width parameter invalid.  Valid values are 'page' or a number.")
     } else {
       if (!width %in% c("page", "content") & !is.numeric(width))
@@ -1312,6 +1328,15 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     }
     
   }
+  
+  # Trap invalid font_size parameter
+  if (!is.null(font_size)) {
+    if (!font_size %in% c(8, 9, 10, 11, 12, 13, 14)) {
+      stop(paste0("font_size parameter invalid.  ", 
+                  "Valid values are 8, 9, 10, 11, 12, 13, and 14."))
+    }
+  }
+  
       
   
   # Assign attributes
@@ -1320,6 +1345,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   ttl$borders <- borders
   ttl$align <- align
   ttl$width <- width
+  ttl$bold <- bold
+  ttl$font_size <- font_size
   
 
   x$titles[[length(x$titles) + 1]] <- ttl
@@ -1824,8 +1851,8 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' whether there is a page break before or after.
 #' @details 
 #' The \code{add_content} function adds a piece of content to a report. For a 
-#' text report, valid objects are a table or text object.  For an RTF or PDF
-#' report, valid objects are a table, text, or plot object.  See 
+#' text report, valid objects are a table or text object.  For an RTF, PDF, or 
+#' HTML report, valid objects are a table, text, or plot object.  See 
 #' \code{\link{create_table}}, \code{\link{create_text}}, or 
 #' \code{\link{create_plot}} for further 
 #' information on how to create content objects.  
@@ -1946,7 +1973,8 @@ add_content <- function(x, object, page_break=TRUE, align = "center",
 #' the \code{output_type} on the \code{create_report} function.  This 
 #' parameter can be used to output the same report object to 
 #' multiple output types. Default value is NULL, meaning it will not override
-#' the \code{create_report} value.  Valid values are 'TXT', 'RTF', and 'PDF'.
+#' the \code{create_report} value.  Valid values are 'TXT', 'RTF', 'PDF' and 
+#' 'HTML'.
 #' @param preview Whether to write the entire report, or a report preview.
 #' A report preview is a subset of pages of the report.  The default value is 
 #' NULL, meaning the entire report will be written.  You may also pass 
@@ -2034,11 +2062,11 @@ write_report <- function(x, file_path = NULL,
   
   # Trap missing or invalid output_type parameter
   if (!is.null(output_type)) {
-    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF")) {
+    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
       
       stop(paste0("output_type parameter on create_report() ",
                   "function is invalid: '", output_type,
-                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF'."))
+                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML'."))
     }
     x$output_type <- toupper(output_type)
 
@@ -2048,8 +2076,13 @@ write_report <- function(x, file_path = NULL,
                        font_size = x$font_size, line_size = x$user_line_size, 
                        line_count = x$user_line_count,
                        uchar = x$uchar)
-  }
+  } 
   
+  if (tolower(x$paper_size) == "none" & toupper(x$output_type) != "HTML") {
+    stop("Paper size of 'none' is only valid on HTML reports.") 
+  }
+                                         
+                                        
 
   if (nchar(x$file_path) > 0 & length(getExtension(x$file_path)) == 0) {
       x$modified_path <- paste0(x$file_path, ".", tolower(x$output_type))
@@ -2101,6 +2134,10 @@ write_report <- function(x, file_path = NULL,
     ret <- write_report_pdf(x)
 
 
+  } else if (x$output_type == "HTML") {
+  
+    ret <- write_report_html(x)
+    
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
   }

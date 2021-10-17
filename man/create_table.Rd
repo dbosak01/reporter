@@ -61,9 +61,10 @@ table displays the table data only. Default is FALSE, meaning the table
 will have a header.}
 
 \item{borders}{Whether and where to place a border. Valid values are 'top',
-'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
-Default is 'none'.  The 'left', 'right', 'outside', and 'inside' 
-border specifications only apply to RTF reports.}
+'bottom', 'left', 'right', 'all', 'none', 'outside', 'inside', and 'body'.  
+Default is 'none'.  The 'left', 'right', 'outside', 'inside', and 'body'
+border specifications only apply to RTF reports.  The 'body' border 
+specification mean put borders around only the body of the table.}
 }
 \description{
 The \code{create_table} function creates a table object to which 

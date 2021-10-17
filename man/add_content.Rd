@@ -38,8 +38,8 @@ whether there is a page break before or after.
 }
 \details{
 The \code{add_content} function adds a piece of content to a report. For a 
-text report, valid objects are a table or text object.  For an RTF or PDF
-report, valid objects are a table, text, or plot object.  See 
+text report, valid objects are a table or text object.  For an RTF, PDF, or 
+HTML report, valid objects are a table, text, or plot object.  See 
 \code{\link{create_table}}, \code{\link{create_text}}, or 
 \code{\link{create_plot}} for further 
 information on how to create content objects.  
