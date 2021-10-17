@@ -86,7 +86,7 @@ also be added to a table, text, or plot object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@ also be added to a table, text, or plot object." />
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
     </li>
     <li>
-      <a href="../articles/reporter-rtf.html">Example 9: RTF and PDF</a>
+      <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, and HTML</a>
     </li>
     <li>
       <a href="../articles/reporter-figure.html">Example 10: Figure</a>
@@ -187,7 +187,9 @@ also be added to a table, text, or plot object.</p>
   align <span class='op'>=</span> <span class='st'>"center"</span>,
   blank_row <span class='op'>=</span> <span class='st'>"below"</span>,
   borders <span class='op'>=</span> <span class='st'>"none"</span>,
-  width <span class='op'>=</span> <span class='cn'>NULL</span>
+  width <span class='op'>=</span> <span class='cn'>NULL</span>,
+  bold <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  font_size <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -232,7 +234,20 @@ content.  The value
 'page' means the titles will be aligned to the width of the page. 
 In addition to these two convenience settings, you 
 may also specify a specific width in the current units of measure.  The
-units of measure is determined by the 'units' parameter on 
+units of measure is determined by the 'units' parameter on</p></td>
+    </tr>
+    <tr>
+      <th>bold</th>
+      <td><p>A parameter to bold the titles.  Valid values are TRUE and FALSE.
+Default is FALSE.  This parameter only applies to variable-width RTF and
+HTML output types.</p></td>
+    </tr>
+    <tr>
+      <th>font_size</th>
+      <td><p>The font size to use for the title block.  The font size
+of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
+13, and 14.  This parameter only applies to variable-width RTF and HTML
+output types.
 <code><a href='create_report.html'>create_report</a></code>.</p></td>
     </tr>
     </table>

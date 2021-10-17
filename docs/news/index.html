@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
     </li>
     <li>
-      <a href="../articles/reporter-rtf.html">Example 9: RTF and PDF</a>
+      <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, and HTML</a>
     </li>
     <li>
       <a href="../articles/reporter-figure.html">Example 10: Figure</a>
@@ -167,6 +167,18 @@
       <small>Source: <a href='https://github.com/dbosak01/reporter/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="reporter-125" class="section level1">
+<h1 class="page-header" data-toc-text="1.2.5">
+<a href="#reporter-125" class="anchor"></a>reporter 1.2.5<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added ‘HTML’ output type to <code><a href="../reference/create_report.html">create_report()</a></code> and <code><a href="../reference/write_report.html">write_report()</a></code> functions. This was a major change that allows the user to output reports in HTML. By default, the HTML is in a ‘paged’ format, meaning it is suitable for printing. If you want unpaged HTML, set the <em>paper_size</em> parameter on <code><a href="../reference/create_report.html">create_report()</a></code> to ‘none’. This configuration will create a standard HTML web page, with all content dumped to a single page and no page breaks.</li>
+<li>Added <em>bold</em> and <em>font_size</em> parameters to the <code><a href="../reference/titles.html">titles()</a></code> function. This change allows the user to create titles that are bold and a larger font size than the page body.<br>
+</li>
+<li>Added 9pt and 11pt font to all output types that accept a font size.</li>
+<li>Added ‘body’ option to <em>borders</em> parameter on <code><a href="../reference/create_table.html">create_table()</a></code> function so the user can get borders only on the table body.</li>
+</ul>
+</div>
     <div id="reporter-120" class="section level1">
 <h1 class="page-header" data-toc-text="1.2.0">
 <a href="#reporter-120" class="anchor"></a>reporter 1.2.0<small> 2021-10-10 </small>

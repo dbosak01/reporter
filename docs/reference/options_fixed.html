@@ -83,7 +83,7 @@ with a fixed width font." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@ with a fixed width font." />
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
     </li>
     <li>
-      <a href="../articles/reporter-rtf.html">Example 9: RTF and PDF</a>
+      <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, and HTML</a>
     </li>
     <li>
       <a href="../articles/reporter-figure.html">Example 10: Figure</a>
@@ -233,8 +233,8 @@ FALSE.  This option is only valid for <code>output_type = 'TXT'</code>.</p></td>
     <tr>
       <th>font_size</th>
       <td><p>The size of the font in points.  Default is 10pt.  This
-option is only valid for output types RTF and PDF.  Valid values are 8, 10, 
-and 12.</p></td>
+option is only valid for output types RTF and PDF.  Valid values are 8, 9, 10, 
+11, and 12.</p></td>
     </tr>
     <tr>
       <th>line_size</th>
@@ -315,7 +315,8 @@ function do not apply.  For RTF and PDF reports, these parameters will
 be set automatically, and cannot be changed.</p>
 <p>Some of the <code>options_fixed</code> function apply only to RTF and PDF.
 In particular, the <code>font_size</code> parameter applies only to RTF and PDF
-reports.  Valid font size options are 8, 10, and 12.</p>
+reports.  Valid font size options are 8, 10, and 12.  The font size may
+also be set on the <code><a href='create_report.html'>create_report</a></code> function.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='create_report.html'>create_report</a></code> to create a report and set the unit

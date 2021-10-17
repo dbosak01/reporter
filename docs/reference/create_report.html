@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
       </span>
     </div>
 
@@ -132,7 +132,7 @@
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
     </li>
     <li>
-      <a href="../articles/reporter-rtf.html">Example 9: RTF and PDF</a>
+      <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, and HTML</a>
     </li>
     <li>
       <a href="../articles/reporter-figure.html">Example 10: Figure</a>
@@ -199,7 +199,7 @@ on the <code>output_type</code> specified.</p></td>
     <tr>
       <th>output_type</th>
       <td><p>The report output type.  Default is "TXT".  Valid
-values are "TXT", "RTF", and "PDF".</p></td>
+values are "TXT", "RTF", "PDF", and "HTML".</p></td>
     </tr>
     <tr>
       <th>orientation</th>
@@ -218,7 +218,9 @@ Default value is "inches".</p></td>
       <td><p>The expected paper size on which the report may be 
 printed.  The <code>paper_size</code> will determine how much text can fit on
 one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
-"letter".</p></td>
+"letter".  For the HTML output type, a paper size of "none" is also valid. 
+That means the HTML will be generated in an unbounded manner as a typical
+web page.</p></td>
     </tr>
     <tr>
       <th>missing</th>
@@ -240,8 +242,8 @@ at this time.  The default value is "fixed".</p></td>
       <th>font_size</th>
       <td><p>The size of the font to use on the report. The <code>font_size</code>
 specified will be used for the entire report.  Valid values are 8, 10, 
-and 12.  The <code>font_size</code> parameter only applies to RTF and PDF output types.
-The default value is 10.</p></td>
+and 12.  The <code>font_size</code> parameter only applies to RTF, PDF, and HTML 
+output types. The default value is 10.</p></td>
     </tr>
     </table>
 
@@ -279,8 +281,9 @@ initialized with <code>create_report</code>.</p><ul>
 <p>The report family of functions are pipe-friendly.  After creating the 
 report, you may pipe the object to any of the above functions to append
 additional options.</p>
-<p>Note that PDF output has some limitations not found in TXT and RTF output.
-See <a href='NotesOnPDF.html'>NotesOnPDF</a> for additional information.</p>
+<p>Note that PDF output currently only supports a fixed-width style report.
+A variable-width report with a choice of fonts will be available in future
+versions of the <strong>reporter</strong> package.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='create_table.html'>create_table</a></code>, <code><a href='create_text.html'>create_text</a></code>, and

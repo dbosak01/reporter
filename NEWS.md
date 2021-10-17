@@ -1,6 +1,17 @@
 # reporter 1.2.5
 
-# Added 'HTML' output type to `create_report()` and `write_report()` functions.
+* Added 'HTML' output type to `create_report()` and `write_report()` functions.
+This was a major change that allows the user to output reports in HTML. 
+By default, the HTML is in a 'paged' format, meaning it is suitable for printing.
+If you want unpaged HTML, set the _paper_size_ parameter on `create_report()`
+to 'none'.  This configuration will create a standard HTML web page, with all
+content dumped to a single page and no page breaks.
+* Added _bold_ and _font_size_ parameters to the `titles()` function. This change
+allows the user to create titles that are bold and a larger font size
+than the page body.  
+* Added 9pt and 11pt font to all output types that accept a font size.
+* Added 'body' option to _borders_ parameter on `create_table()` function
+so the user can get borders only on the table body.
 
 
 # reporter 1.2.0
