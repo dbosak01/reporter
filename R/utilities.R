@@ -528,7 +528,7 @@ split_string_html <- function(strng, width, units) {
   
   # Try to find HTML encoding function.
   # encodeHTML()
-  ret <- list(html = paste0(lns, collapse = "<br>"),
+  ret <- list(html = paste0(lns, collapse = "\n"),
               lines = length(lns))
   
   return(ret)
@@ -902,6 +902,7 @@ has_top_footnotes <- function(rs) {
 }
 
 #' @description  Translate border spec to a vector of border positions
+#' @noRd
 get_outer_borders <- function(brdr_spec) {
   
   ret <- c()

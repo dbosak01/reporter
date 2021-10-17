@@ -69,7 +69,7 @@ get_page_header_html <- function(rs) {
         # Split strings if they exceed width
         tmp <- split_string_html(hl[[i]], rs$content_size[["width"]]/2, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:left\">", tmp$html,
+        ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp$html),
                            "</td>\n")
         
         lcnt <- tmp$lines  
@@ -85,7 +85,7 @@ get_page_header_html <- function(rs) {
         tmp2 <- split_string_html(hr[[i]], rs$content_size[["width"]]/2, rs$units)
 
         
-        ret <- paste0(ret, "<td style=\"text-align:right\">", tmp2$html, 
+        ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp2$html), 
                            "</td></tr>\n")
         
         rcnt <- tmp2$lines 
@@ -150,7 +150,7 @@ get_page_footer_html <- function(rs) {
         # Split strings if they exceed width
         tmp1 <- split_string_html(fl[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:left\">", tmp1$html,
+        ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp1$html),
                            "</td>")
         lcnt <- tmp1$lines
       } else {
@@ -163,7 +163,7 @@ get_page_footer_html <- function(rs) {
         # Split strings if they exceed width
         tmp2 <- split_string_html(fc[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:center\">", tmp2$html,
+        ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp2$html),
                            "</td>")
         ccnt <- tmp2$lines
       } else {
@@ -175,7 +175,7 @@ get_page_footer_html <- function(rs) {
 
         tmp3 <- split_string_html(fr[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:right\">", tmp3$html,
+        ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp3$html),
                       "</td>")
         
         rcnt <- tmp3$lines
@@ -206,6 +206,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
   
   ret <- c()
   cnt <- 0
+  border_flag <- FALSE
 
   # ta <- "align=\"left\" "
   # if (talgn == "right")
@@ -299,9 +300,9 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
         tmp <- split_string_html(ttls$titles[[i]], width, rs$units)
         
         if (ttls$bold)
-          tstr <- paste0("<b>", tmp$html, "</b>")
+          tstr <- paste0("<b>", encodeHTML(tmp$html), "</b>")
         else 
-          tstr <- tmp$html
+          tstr <- encodeHTML(tmp$html)
         
         fz <- ""
         if (!is.null(ttls$font_size)){
@@ -328,27 +329,40 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
           ret <- append(ret, bl)
         
         cnt <- cnt + tmp$lines
+        
+        # A flag to indicate that this block has bottom borders.  
+        # Used to eliminate border duplication on subsequent blocks.
+        if ("bottom" %in% get_outer_borders(ttls$borders))
+          border_flag <- TRUE
       }
       
       ret[length(ret) + 1] <- "</table>"
       dev.off()
       
+
     }
     
   }
   
+
+  
   res <- list(html = paste0(ret, collapse = ""), 
-              lines = cnt)
+              lines = cnt,
+              border_flag = border_flag)
   
   return(res)
 }
 
 #' @import grDevices
 #' @noRd
-get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
+get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center", 
+                               ex_brdr = FALSE) {
   
   ret <- c()
   cnt <- 0
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
 
   u <- rs$units
   if (rs$units == "inches")
@@ -397,7 +411,7 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
             alcnt <- 1
           
             tb <- get_cell_borders_html(i, 1, length(ftnts$footnotes) + alcnt,
-                                   1, ftnts$borders)
+                                   1, ftnts$borders, exclude = exclude_top)
             
             if (tb == "")
               al <- "<tr><td>&nbsp;</td></tr>\n"
@@ -430,7 +444,7 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
 
         b <- get_cell_borders_html(i + alcnt, 1,
                               length(ftnts$footnotes) + alcnt + blcnt,
-                              1, ftnts$borders)
+                              1, ftnts$borders, exclude = exclude_top)
 
 
 
@@ -441,11 +455,11 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center") {
           ret <- append(ret, al)
 
         if (b == "")
-          ret <- append(ret, paste0("<tr><td>", tmp$html, 
+          ret <- append(ret, paste0("<tr><td>", encodeHTML(tmp$html), 
                                     "</td></tr>\n"))
         else {
           ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
-                                    tmp$html, 
+                                    encodeHTML(tmp$html), 
                                     "</td></tr>\n"))
         }
 
@@ -476,6 +490,7 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
   
   ret <- c()
   cnt <- 0
+  border_flag <- FALSE
   
   # ta <- "align=\"left\" "
   # if (talgn == "right")
@@ -590,9 +605,9 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
           ret <- append(ret, al)
         
         ret <- append(ret, paste0("<tr><td style=\"text-align:left;", b1, "\">",
-                                  ttl, 
+                                  encodeHTML(ttl), 
                                   "</td><td style=\"text-align:right;", b2, "\">", 
-                                  hdr, 
+                                  encodeHTML(hdr), 
                                   "</td></tr>\n"))
         
         if (bl != "")
@@ -602,17 +617,25 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
           cnt <- cnt + tcnt
         else
           cnt <- cnt + hcnt
+        
+        if ("bottom" %in% get_outer_borders(ttlhdr$borders))
+          border_flag <- TRUE
       }
 
       ret[length(ret) + 1] <- "</table>\n"
       dev.off()
+      
+
 
     }
 
   }
   
+
+  
   res <- list(html = paste0(ret, collapse = ""),
-              lines = cnt)
+              lines = cnt,
+              border_flag = border_flag)
   
   return(res)
 }
@@ -624,7 +647,7 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
 #' @param width The width to set the page by strings to
 #' @return A vector of strings
 #' @noRd
-get_page_by_html <- function(pgby, width, value, rs, talgn) {
+get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -637,13 +660,11 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
   ll <- width
   ret <- c()
   cnt <- 0
+  border_flag <- FALSE
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
 
-
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
 
   if (!is.null(pgby)) {
 
@@ -672,17 +693,19 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
 
     if (pgby$blank_row %in% c("above", "both")) {
 
-      tb <- get_cell_borders_html(1, 1, trows, 1, pgby$borders)
+      tb <- get_cell_borders_html(1, 1, trows, 1, pgby$borders, 
+                                  exclude = exclude_top)
 
       ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, 
                                      "\">&nbsp;</td></tr>\n")
       cnt <- cnt + 1
     }
 
-    tb <- get_cell_borders_html(brow, 1 , trows, 1, pgby$borders)
+    tb <- get_cell_borders_html(brow, 1 , trows, 1, pgby$borders, 
+                                exclude = exclude_top)
 
     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
-                                   pgby$label, value, "</td></tr>\n")
+                                   pgby$label, encodeHTML(value), "</td></tr>\n")
     cnt <- cnt + 1
 
     # cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
@@ -696,14 +719,21 @@ get_page_by_html <- function(pgby, width, value, rs, talgn) {
       ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, 
                                      "\">&nbsp;</td></tr>\n")
       cnt <- cnt + 1
+      
+
     }
 
     ret[length(ret) + 1] <- "</table>"
+    
+    if ("bottom" %in% get_outer_borders(pgby$borders))
+      border_flag <- TRUE
 
   }
   
+  
   res <- list(html = paste0(ret, collapse = ""), 
-              lines = cnt)
+              lines = cnt,
+              border_flag = border_flag)
   
   return(res)
 }
@@ -775,7 +805,7 @@ get_cell_borders_html <- function(row, col, nrow, ncol, brdrs,
   
   # Deal with flag
   # Flag is for special rows like blanks or labels
-  if (!is.na(flag)) {
+  if (!is.null(flag)) {
     if (flag %in% c("L", "B")) {
       
       if (col != ncol)

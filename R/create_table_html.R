@@ -228,16 +228,6 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
   
-  if (ts$headerless == FALSE) {
-    
-    # Get table header also includes spanning header
-    hdrs <- get_table_header_html(rs, ts, pi)  
-  }
-  
-  # rs, ts, widths,  algns, halgns, talgn
-  rws <- get_table_body_html(rs, pi$data, pi$col_width, 
-                            pi$col_align, pi$table_align, ts$borders)
-  
   # Default to content width
   ls <- rs$content_size[["width"]]
   
@@ -253,12 +243,26 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   if (!is.null(rs$page_by)) {
     pgby <- get_page_by_html(rs$page_by, rs$content_size[["width"]], 
-                            pi$page_by, rs, pi$table_align)
-  } else if(!is.null(ts$page_by))
-    pgby <- get_page_by_html(ts$page_by, ls, pi$page_by, rs, pi$table_align)
-  else 
+                            pi$page_by, rs, pi$table_align, ttls$border_flag)
+  } else if(!is.null(ts$page_by)) {
+    pgby <- get_page_by_html(ts$page_by, ls, pi$page_by, rs, 
+                             pi$table_align, ttls$border_flag)
+  } else 
     pgby <- c()
   
+  exbrdr <- ttls$border_flag
+  if (length(pgby) > 0)
+    exbrdr <- pgby$border_flag
+  
+  if (ts$headerless == FALSE) {
+    
+    # Get table header also includes spanning header
+    hdrs <- get_table_header_html(rs, ts, pi, exbrdr)  
+  }
+  
+  # rs, ts, widths,  algns, halgns, talgn
+  rws <- get_table_body_html(rs, pi$data, pi$col_width, 
+                             pi$col_align, pi$table_align, ts$borders, exbrdr)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -281,7 +285,8 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   # Get footnotes, passing in sum of all current lines
   ftnts <- get_page_footnotes_html(rs, ts, ls, lpg_rows, rc,
-                                  wrap_flag, content_blank_row,  pi$table_align)
+                                  wrap_flag, content_blank_row,  pi$table_align, 
+                                  rws$border_flag)
   
   # Deal with cell padding.  Don't count this in line count.
   # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
@@ -342,10 +347,12 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
 # Haven't quite decided what to do with this function in HTML
 # For now, just return the footnote and any blank lines above or below
 get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
-                                   wrap_flag, content_blank_row, talgn) {
+                                   wrap_flag, content_blank_row, talgn, 
+                                   ex_brdr = FALSE) {
   
   ftnts <- list(lines = 0, twips = 0, border_flag = FALSE)
   vflag <- "none"
+
   
   # Deal with valign parameter
   if (!is.null(spec$footnotes)) {
@@ -355,10 +362,10 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
         vflag <- "bottom"
         ftnts <- get_footnotes_html(spec$footnotes, 
                                    spec_width, rs, 
-                                   talgn) 
+                                   talgn, FALSE) 
       } else {
         vflag <- "top"
-        ftnts <- get_footnotes_html(spec$footnotes, spec_width, rs, talgn) 
+        ftnts <- get_footnotes_html(spec$footnotes, spec_width, rs, talgn, ex_brdr) 
       }
       
     }
@@ -370,7 +377,7 @@ get_page_footnotes_html <- function(rs, spec, spec_width, lpg_rows, row_count,
           vflag <- "top"
           ftnts <- get_footnotes_html(rs$footnotes, 
                                      spec_width, rs, 
-                                     talgn) 
+                                     talgn, ex_brdr) 
         } else {
           
           if (wrap_flag)
@@ -451,6 +458,7 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
   
+  
   if (ts$headerless == FALSE) {
     
     # Spanning headers now inside get_table_header_html
@@ -510,7 +518,7 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row) {
 #' of string vectors of label words sized according to the column 
 #' widths, then combine by line/row, and concatenate everything and justify.
 #' @noRd
-get_table_header_html <- function(rs, ts, pi) {
+get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   ret <- c()
   cols <- c()
@@ -523,6 +531,9 @@ get_table_header_html <- function(rs, ts, pi) {
   lbls <- pi$label
   halgns <- pi$label_align
   talgn <- pi$table_align
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
   
   
   #conv <- rs$twip_conversion
@@ -540,11 +551,17 @@ get_table_header_html <- function(rs, ts, pi) {
     }
   }
   
-  
-  if (length(ts$col_spans) == 0)
-    brdrs <- ts$borders
-  else
-    brdrs <- "none"
+
+  brdrs <- ts$borders
+  if (length(ts$col_spans) > 0) {
+    
+    if (any(ts$borders %in% c("outside")))
+      brdrs <- c("left", "right")
+      
+    if (any(ts$borders %in% "top"))
+      brdrs <- brdrs[!brdrs %in% "top"]
+    
+  }
   
   # Header Cell alignment
   ha <- c()
@@ -577,18 +594,19 @@ get_table_header_html <- function(rs, ts, pi) {
       
       cols[1] <- paste0(cols[1], "<col style=\"width:", sz[k], ";\">\n")
       
-      b <- get_cell_borders_html(1, k, 2, length(widths), brdrs)
+      b <- get_cell_borders_html(1, k, 2, length(widths), brdrs, 
+                                 exclude = exclude_top)
       
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
 
       if (b == "") {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
-                         tmp$html, "</td>\n")
+                         encodeHTML(tmp$html), "</td>\n")
       } else {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\" ", 
                                  "style=\"", b, "\">", 
-                         tmp$html, "</td>\n")
+                         encodeHTML(tmp$html), "</td>\n")
         
       }
       
@@ -604,7 +622,8 @@ get_table_header_html <- function(rs, ts, pi) {
   ret[1] <- paste0(ret[1], "</tr>\n")
   
   # Get spanning headers
-  sphdrs <- get_spanning_header_html(rs, ts, pi)
+  sphdrs <- get_spanning_header_html(rs, ts, pi,
+                                     ifelse(is.null(exclude_top), FALSE, TRUE))
   
   res <- list(html = paste0(cols, "<thead>\n", paste0(sphdrs$html, collapse=""), 
                             ret, "</thead>\n"),
@@ -621,7 +640,7 @@ get_table_header_html <- function(rs, ts, pi) {
 #' from there is the same.  
 #' @import stats
 #' @noRd
-get_spanning_header_html <- function(rs, ts, pi) {
+get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   spns <- ts$col_spans
   cols <- pi$keys
@@ -630,6 +649,9 @@ get_spanning_header_html <- function(rs, ts, pi) {
   w <- w[cols]
   gutter <- 0
   cnt <- c()
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
   
   # print("Cols:")
   # print(cols)
@@ -688,18 +710,54 @@ get_spanning_header_html <- function(rs, ts, pi) {
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
       
+      
+      b <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls) + 1, 
+                                 length(widths), brdrs, 
+                                 exclude = exclude_top)
+      
       # Add colspans
       vl <- tmp$html
-      bb <- "border-bottom:thin solid;"
-      if (vl == "") {
-        vl <- "&nbsp;"
-        bb <- ""
+      
+      # Special handling of borders for different situations.  
+      # I hate this, but can't see a way around it.
+      if (any(brdrs %in% c("all", "inside"))) {
+        sflg <- "B"
+        if (k > 1) {
+          if (cs[k - 1] > 1)
+            sflg <- ""
+        }
+        
+        if (vl == "") {
+          bb <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls), 
+                                                 length(widths), brdrs, 
+                                                 flag = sflg,
+                                                 exclude = exclude_top)
+        } else 
+          bb <- b
+      } else if (all(brdrs == "outside")) {
+        
+        if (vl == "")
+          bb <- b
+        else 
+          bb <- paste0(b, "border-bottom:thin solid")
+        
+      } else {
+        
+        if (vl == "") {
+          bb <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls), 
+                                                      length(widths), brdrs, 
+                                                      flag = "",
+                                                      exclude = c("bottom", exclude_top))
+        } else 
+          bb <- paste0(b, "border-bottom:thin solid")
         
       }
       
+      
+      
       r <- paste0(r, "<td colspan=\"", cs[k], 
                   "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
-                  vl, "</td>\n")
+                  encodeHTML(vl), "</td>\n")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
@@ -731,7 +789,7 @@ get_spanning_header_html <- function(rs, ts, pi) {
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
+get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr = FALSE) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -740,6 +798,11 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
   
   # Count lines per row
   rws <- c()
+  border_flag <- FALSE
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
+  
   
   nms <- names(widths)
   nms <- nms[!is.na(nms)]
@@ -751,6 +814,9 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
   } else 
     t <- tbl[ , nms]
   
+  brdrs <- tbrdrs
+  if (all(tbrdrs == "body"))
+      brdrs <- c("top", "bottom", "left", "right")
 
   # Cell alignment
   ca <- c()
@@ -785,7 +851,8 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
       
       if (!is.control(nms[j])) {
         
-        b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i])
+        b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
+                                   exclude = exclude_top)
         
         # Construct html
         if (b == "")
@@ -796,7 +863,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
                            encodeHTML(t[i, j]), "</td>")
         
         # Count lines in cell 
-        cl <- grep("<br>", t[i, j], fixed = TRUE)
+        cl <- grep("\n", t[i, j], fixed = TRUE)
         if (length(cl) >= mxrw)
           mxrw <- length(cl) + 1
       }
@@ -813,10 +880,12 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, brdrs) {
     
   }
   
-  
+  if ("bottom" %in% get_outer_borders(brdrs))
+    border_flag <- TRUE
   
   res <- list(html = ret,
-              lines = sum(rws))
+              lines = sum(rws), 
+              border_flag = border_flag)
   
   return(res)
   
@@ -833,6 +902,7 @@ encodeHTML <- function(strng) {
   ret <- gsub("&", "&amp;", ret , fixed = TRUE)
   ret <- gsub(">", "&gt;", ret , fixed = TRUE)
   ret <- gsub("<", "&lt;", ret , fixed = TRUE)
+  ret <- gsub("\n", "<br>", ret , fixed = TRUE)
   ret <- gsub(" ", "&nbsp;", ret, fixed = TRUE)
   if (ret == "")
     ret <- "&nbsp;"

@@ -610,7 +610,12 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
   # Get content titles and footnotes
   ttls <- get_titles_html(txt$titles, width, rs, talgn) 
   ttl_hdr <- get_title_header_html(txt$title_hdr, width, rs, talgn)
-  ftnts <- get_footnotes_html(txt$footnotes, width, rs, talgn) 
+  
+  ftnts <- get_footnotes_html(txt$footnotes, width, rs, talgn, FALSE) 
+  
+  exclude_top <- NULL
+  if (ttls$border_flag | ttl_hdr$border_flag)
+    exclude_top <- "top"
   
   t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
   hgt <- rs$body_line_count - t
@@ -640,7 +645,7 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
     algn <- "text-align:left;"
   
   # Get cell border codes
-  b <- get_cell_borders_html(1, 1, 1, 1, txt$borders)  
+  b <- get_cell_borders_html(1, 1, 1, 1, txt$borders, exclude = exclude_top)  
   
   # Prepare row header and footer
   rwhd <- paste0("<table ", 
@@ -677,8 +682,12 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
     cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
     
     # Get footnotes
-    ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
-                                    wrap_flag, content_blank_row, talgn)
+    if ("bottom" %in% get_outer_borders(txt$borders))
+      ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
+                                       wrap_flag, content_blank_row, talgn, TRUE)
+    else 
+      ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
+                                    wrap_flag, content_blank_row, talgn, FALSE)
     
     
     # Combine titles, blanks, body, and footnotes

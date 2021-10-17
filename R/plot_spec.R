@@ -699,7 +699,22 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   # Get titles and footnotes
   ttls <- get_titles_html(plt$titles, wth, rs, talign) 
   ttl_hdr <- get_title_header_html(plt$title_hdr, wth, rs, talign)
-  pgbys <- get_page_by_html(pgby, wth, pgval, rs, talign)
+  
+  exclude_top <- NULL
+  if (ttls$border_flag == TRUE | ttl_hdr$border_flag == TRUE) {
+    exclude_top <- "top"
+  
+    pgbys <- get_page_by_html(pgby, wth, pgval, rs, talign, TRUE)
+  } else {
+    
+    pgbys <- get_page_by_html(pgby, wth, pgval, rs, talign, FALSE)
+  }
+  
+  if (is.null(exclude_top)) {
+    if (pgbys$border_flag)
+      exclude_top <- "top"
+    
+  }
   
   # Get image RTF codes
   img <- get_image_html(plot_path, rs$modified_path, plt, rs$units)
@@ -714,7 +729,7 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   w <- paste0("width:", round(wth, 3), u, ";")
   
   # Get border codes
-  b <- get_cell_borders_html(1, 1, 1, 1, plt$borders)
+  b <- get_cell_borders_html(1, 1, 1, 1, plt$borders, exclude = exclude_top)
   
   # Concat all header codes
   hd <- paste0("<table style =\"", w, "\">\n", 
@@ -738,9 +753,14 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   # Get sum of all items to this point
   lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, imght)
   
+  if ("bottom" %in% get_outer_borders(plt$borders))
+    extp <- TRUE
+  else 
+    extp <- FALSE 
+  
   # Get footnotes, filler, and content blank line
   ftnts <- get_page_footnotes_html(rs, plt, wth, lpg_rows, lns,
-                                  wrap_flag, content_blank_row, talign)
+                                  wrap_flag, content_blank_row, talign, extp)
   
   # Combine titles, blanks, body, and footnotes
   rws <- c(a, ttls$html, ttl_hdr$html, pgbys$html, img)

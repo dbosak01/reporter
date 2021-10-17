@@ -107,9 +107,10 @@
 #' table displays the table data only. Default is FALSE, meaning the table
 #' will have a header. 
 #' @param borders Whether and where to place a border. Valid values are 'top',
-#' 'bottom', 'left', 'right', 'all', 'none', 'outside', and 'inside'.  
-#' Default is 'none'.  The 'left', 'right', 'outside', and 'inside' 
-#' border specifications only apply to RTF reports.
+#' 'bottom', 'left', 'right', 'all', 'none', 'outside', 'inside', and 'body'.  
+#' Default is 'none'.  The 'left', 'right', 'outside', 'inside', and 'body'
+#' border specifications only apply to RTF reports.  The 'body' border 
+#' specification mean put borders around only the body of the table.
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,
@@ -206,10 +207,10 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   }
   
   if (!all(borders %in% c("top", "bottom", "left", "right", 
-                          "all", "none", "outside", "inside")))
+                          "all", "none", "outside", "inside", "body")))
     stop(paste("Borders parameter invalid.  Valid values are", 
                "'top', 'bottom', 'left', 'right', 'all', ",
-               "'none', 'outside', or 'inside'."))
+               "'none', 'outside', 'inside', or 'body'."))
     
   
   ret <- structure(list(), class = c("table_spec", "list"))

@@ -36,7 +36,7 @@ test_that("html1: Basic table works as expected.", {
     titles("Table 1.0", "My Nice Table", borders = c("outside"), 
            width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside", 
-              align = "left", width = "page") %>% 
+              align = "left", width = "content") %>% 
     define(wt, width = 1, label = "Weight", align = "center", 
            label_align = "right")
   
@@ -99,8 +99,8 @@ test_that("html3: Spanning headers work as expected.", {
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span", 
                     n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table") %>%
-    footnotes("My footnote 1", "My footnote 2") 
+    titles("Table 1.0", "My Nice Table", borders = c("top", "bottom")) %>%
+    footnotes("My footnote 1", "My footnote 2", borders = c("bottom")) 
   
   rpt <- create_report(fp, output_type = "HTML", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
@@ -184,10 +184,10 @@ test_that("html6: Basic plot works as expected.", {
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
-  plt <- create_plot(p, height = 4, width = 8, borders = c("none")) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
+  plt <- create_plot(p, height = 4, width = 8, borders = c("all")) %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "outside",
            font_size = 12) %>%
-    footnotes("* Motor Trend, 1974", borders = "none")
+    footnotes("* Motor Trend, 1974", borders = "outside")
 
 
   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
@@ -209,7 +209,7 @@ test_that("html6: Basic plot works as expected.", {
 
 test_that("remove_image_files works as expected.", {
   
-  if (dev) {
+  if (dev & FALSE) {
     pth <- file.path(base_path, "html/test6.html")
     
     
@@ -255,7 +255,7 @@ test_that("html7: Multi page table paper_size none works as expected.", {
 })
 
 # Good for testing
-# Borders throw off line counts.  Will have to live with it.
+# Borders throw off line counts.  Made rudimentary adjustment.
 test_that("html8: Page by works as expected.", {
   
   
@@ -364,7 +364,6 @@ test_that("html10: Title Header and page header/footer wrapping work as expected
 })
 
 
-# Note that image may be deleted in next test case
 test_that("html11: Basic plot with titles on report works as expected.", {
   
   
@@ -484,14 +483,17 @@ test_that("html14: Plot with page by on plot works as expected.", {
   
   p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
   
+  brdrs <- "outside"
   
   #dats <- split(p$data, p$data$grp)
   #tbl <- create_table(dat[1:3, ])
   
-  plt <- create_plot(p, height = 4, width = 8) %>% 
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-    page_by(cyl, "Cylinders: ") %>% 
-    footnotes("* Motor Trend, 1974") 
+  plt <- create_plot(p, height = 4, width = 8, borders = brdrs) %>% 
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
+           borders = brdrs, 
+           blank_row = "none") %>%
+    page_by(cyl, "Cylinders: ", borders = brdrs) %>% 
+    footnotes("* Motor Trend, 1974", borders = brdrs) 
   
   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
@@ -805,7 +807,7 @@ test_that("html-user2: demo table with stub works.", {
              "Specify Population", borders = c("left", "right", "bottom"), 
              blank_row = "below",
              align = "center") %>%
-      footnotes("Here is a footnote", "Here is another footnote",
+      footnotes("Here is a footnote", "Here is another footnote", valign = "top",
                 borders = "outside", blank_row = "both", align = "left")  
     
     # Define Report
