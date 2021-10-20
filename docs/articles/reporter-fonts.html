@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Example 11: Figure • reporter</title>
+<title>Example 10: Fonts and Borders • reporter</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="Example 11: Figure">
+<script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="Example 10: Fonts and Borders">
 <meta property="og:description" content="reporter">
 <meta property="og:image" content="https://reporter.r-sassy.org/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -118,56 +118,67 @@
 
       
 
-      </header><script src="reporter-figure_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><script src="reporter-fonts_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Example 11: Figure</h1>
+      <h1 data-toc-skip>Example 10: Fonts and Borders</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-figure.Rmd"><code>vignettes/reporter-figure.Rmd</code></a></small>
-      <div class="hidden name"><code>reporter-figure.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-fonts.Rmd"><code>vignettes/reporter-fonts.Rmd</code></a></small>
+      <div class="hidden name"><code>reporter-fonts.Rmd</code></div>
 
     </div>
 
     
     
-<div id="create-a-report-with-a-figure" class="section level3">
+<div id="specify-fonts-and-borders" class="section level3">
 <h3 class="hasAnchor">
-<a href="#create-a-report-with-a-figure" class="anchor"></a>Create a Report with a Figure</h3>
-<p>RTF, PDF, and HTML also support plots produced with the ggplot2 package. Use the <code><a href="../reference/create_plot.html">create_plot()</a></code> function to create plot content for a report. The plot can be added to the report with the <code><a href="../reference/add_content.html">add_content()</a></code> function, just like tables and text.</p>
+<a href="#specify-fonts-and-borders" class="anchor"></a>Specify Fonts and Borders</h3>
+<p>By default, the <strong>reporter</strong> package will create fixed-width style reports in Courier font. The RTF and HTML output types support two additional fonts: Arial and Times New Roman. These output types also support the ability to turn on borders for your content. To demonstrate, the simple demographics table seen previously is reproduced below in Arial font with borders around the table, titles, and footnotes.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-  
+
 <span class="co"># Create temporary path</span>
-<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example10.pdf"</span><span class="op">)</span>
-  
-<span class="co"># Prepare data</span>
-<span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, <span class="op">]</span>
+<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example10.rtf"</span><span class="op">)</span>
 
-<span class="co"># Generate plot</span>
-<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">disp</span>, y<span class="op">=</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># Read in prepared data</span>
+<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"'</span><span class="op">)</span>
 
-<span class="co"># Define plot object</span>
-<span class="va">plt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_plot.html">create_plot</a></span><span class="op">(</span><span class="va">p</span>, height <span class="op">=</span> <span class="fl">4</span>, width <span class="op">=</span> <span class="fl">8</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Figure 1.0"</span>, <span class="st">"MTCARS Mileage By Displacement"</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span>
+<span class="co"># Create table</span>
+<span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">TRUE</span>, borders <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">var</span>, blank_after <span class="op">=</span> <span class="cn">TRUE</span>, label_row <span class="op">=</span> <span class="cn">TRUE</span>, 
+         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 1.0"</span>, <span class="st">"MTCARS Summary Table"</span>, borders <span class="op">=</span> <span class="st">"outside"</span>,
+         bold <span class="op">=</span> <span class="cn">TRUE</span>, font_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span>, borders <span class="op">=</span> <span class="st">"outside"</span><span class="op">)</span>
 
-<span class="co"># Add plot to report</span>
-<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"PDF"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<span class="co"># Create report and add content</span>
+<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"RTF"</span>, font <span class="op">=</span> <span class="st">"Arial"</span>, 
+                     font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/options_fixed.html">options_fixed</a></span><span class="op">(</span>font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span><span class="st">"Sponsor"</span>, <span class="st">"Study: cars"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">plt</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"Confidential"</span>, <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span>
 
 <span class="co"># Write out report</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span>
-
+<span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span>
 
 <span class="co"># View report</span>
 <span class="co"># file.show(tmp)</span></code></pre></div>
-<p><img src="../man/images/plot.png"></p>
+<p><img src="../man/images/fonts.png"></p>
+<p>Next: <a href="reporter-figure.html">Example 11: Figure</a></p>
 </div>
   </div>
 

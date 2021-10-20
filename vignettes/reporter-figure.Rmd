@@ -1,8 +1,8 @@
 ---
-title: "Example 10: Figure"
+title: "Example 11: Figure"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example 10: Figure}
+  %\VignetteIndexEntry{Example 11: Figure}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ### Create a Report with a Figure
 
-RTF and PDF also support plots produced with the ggplot2 package.  Use 
+RTF, PDF, and HTML also support plots produced with the ggplot2 package.  Use 
 the `create_plot()` function to create plot content for a report.  The 
 plot can be added to the report with the `add_content()` function, just
 like tables and text.
@@ -55,5 +55,4 @@ res <- write_report(rpt)
 # file.show(tmp)
 ```
 <img src="../man/images/plot.png"/>
-
 

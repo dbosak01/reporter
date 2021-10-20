@@ -1,8 +1,8 @@
 ---
-title: "Example 9: RTF, PDF, and HTML"
+title: "Example 10: Fonts and Borders"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example 9: RTF, PDF, and HTML}
+  %\VignetteIndexEntry{Example 10: Fonts and Borders}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,19 +14,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-### Output to RTF, PDF, and HTML
+### Specify Fonts and Borders
 
-The **reporter** package supports four types of output: TXT, RTF, PDF, and HTML. 
-The package produces TXT reports by default.  If you want to produce RTF, PDF, 
-or HTML output, simply change the output type.  Below is the summary table
-with stub example from above, the only change being that the `output_type`
-is now set to RTF.
+By default, the **reporter** package will create fixed-width style reports 
+in Courier font. The RTF and HTML output types support two additional fonts: Arial and 
+Times New Roman.  These output types also support the ability 
+to turn on borders for your content.  To demonstrate, the simple demographics 
+table seen previously is reproduced below in Arial font with borders 
+around the table, titles, and footnotes.
 
 ```{r eval=FALSE, echo=TRUE} 
 library(reporter)
 
 # Create temporary path
-tmp <- file.path(tempdir(), "example9.rtf")
+tmp <- file.path(tempdir(), "example10.rtf")
 
 # Read in prepared data
 df <- read.table(header = TRUE, text = '
@@ -41,26 +42,23 @@ df <- read.table(header = TRUE, text = '
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
 
 # Create table
-tbl <- create_table(df, first_row_blank = TRUE) %>% 
+tbl <- create_table(df, first_row_blank = TRUE, borders = "all") %>% 
   stub(c("var", "label")) %>% 
+  column_defaults(width = 1.25) %>% 
   define(var, blank_after = TRUE, label_row = TRUE, 
          format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
   define(label, indent = .25) %>% 
   define(A, label = "Group A", align = "center", n = 19) %>% 
-  define(B, label = "Group B", align = "center", n = 13)
-
+  define(B, label = "Group B", align = "center", n = 13)  %>% 
+  titles("Table 1.0", "MTCARS Summary Table", borders = "outside",
+         bold = TRUE, font_size = 14) %>% 
+  footnotes("* Motor Trend, 1974", borders = "outside")
 
 # Create report and add content
-rpt <- create_report(tmp, output_type = "RTF") %>% 
+rpt <- create_report(tmp, output_type = "RTF", font = "Arial", 
+                     font_size = 12) %>% 
   set_margins(top = 1, bottom = 1) %>%
-  options_fixed(font_size = 12) %>% 
-  page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
-  titles("Table 1.0", "MTCARS Summary Table") %>% 
-  add_content(tbl) %>% 
-  footnotes("* Motor Trend, 1974") %>%
-  page_footer(left = Sys.time(), 
-              center = "Confidential", 
-              right = "Page [pg] of [tpg]")
+  add_content(tbl)
 
 # Write out report
 write_report(rpt)
@@ -69,7 +67,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/rtf.png"/>
+<img src="../man/images/fonts.png"/>
 
 
-Next: [Example 10: Fonts and Borders](reporter-fonts.html)
+Next: [Example 11: Figure](reporter-figure.html)

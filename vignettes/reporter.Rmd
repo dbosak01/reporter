@@ -25,14 +25,13 @@ The package is intended to give R programmers flexible
 report layout capabilities 
 and a choice of output formats. The package will 
 initially focus on printable, file-based 
-output formats, as there are already numerous R packages that 
-provide tabular reporting in HTML. 
+output formats. 
 The current version supports TXT, RTF, PDF, and HTML output types. Note that, 
-unlike other packages, even the HTML output from the **reporter** package
-is paged by default.  
+unlike other packages, all outputs from the **reporter** package
+are paged by default.  
 
 The **reporter** package is distributed under a [Creative Commons non-commercial 
-license](https://creativecommons.org/licenses/by-nc/4.0).  It is available 
+license](https://creativecommons.org/licenses/by-nc/4.0).  It is freely available 
 for personal and organizational use, but cannot be used to create a commercial 
 product without permission of the license holder.
 
@@ -45,7 +44,7 @@ The **reporter** package contains the following key features:
 * Calculates default columns widths automatically
 * Includes automatic wrapping and splitting of wide and long tables
 * Integrates with the **fmtr** package to format numeric, date, and character data
-* Plots from the popular **ggplot2** package can be added to RTF and PDF reports
+* Plots from the popular **ggplot2** package can be added to RTF, PDF, and HTML reports
 * Allows appending multiple tables to a report, multiple tables to a page, 
 and intermingling of text, tables, and plots
 * Supports in-report date/time stamps and "Page X of Y" page numbering
@@ -120,10 +119,9 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 As you can see, using the **reporter** package, you can 
 create a useful report with just a few lines of code.  By default, 
 the package creates a text report.  But you can create reports in 
-RTF and PDF with just a single parameter change.  
+RTF, PDF, and HTML with just a single parameter change.  
 
-In addition
-to the functions shown above, there are additional functions to create
+Besides the functions shown above, there are additional functions to create
 page headers and footers, spanning headers, a report stub, a by-variable, 
 and more.  The package also allows you to add text and plots to a report.
 All of these capabilities are demonstrated in the examples below.
