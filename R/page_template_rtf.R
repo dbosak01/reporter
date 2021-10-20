@@ -693,7 +693,7 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
 # Utilities ---------------------------------------------------------------
 
 
-get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "") {
+get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "", exclude = NULL) {
   
   t <- ""
   b <- ""
@@ -753,6 +753,17 @@ get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "") {
       if (col != 1)
         l <- ""
     }
+  }
+  
+  if (!is.null(exclude)) {
+    if (any(exclude == "top"))
+      t <- ""
+    if (any(exclude == "bottom"))
+      b <- ""
+    if (any(exclude == "left"))
+      l <- ""
+    if (any(exclude == "right"))
+      r <- ""
   }
   
   ret <- paste0(t, b, l, r)

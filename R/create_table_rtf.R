@@ -306,7 +306,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # will infect row width of table.  On libre only.  So this is to protect
   # the table width.
   bpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(ts$borders %in% c("all", "top", "outside"))) {
+  if (any(ts$borders %in% c("all", "top", "outside", "body"))) {
     if (!is.null(ftnts)) {
       if (ftnts$border_flag)
         bpt <- ""
@@ -534,10 +534,21 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   else if (talgn %in% c("center", "centre"))
     ta <- "\\trqc"
 
-  if (length(ts$col_spans) == 0)
-    brdrs <- ts$borders
-  else
-    brdrs <- "none"
+  # if (length(ts$col_spans) == 0)
+  #   brdrs <- ts$borders
+  # else
+  #   brdrs <- "none"
+  
+  brdrs <- ts$borders
+  if (length(ts$col_spans) > 0) {
+    
+    if (any(ts$borders %in% c("outside")))
+      brdrs <- c("left", "right")
+    
+    if (any(ts$borders %in% "top"))
+      brdrs <- brdrs[!brdrs %in% "top"]
+    
+  }
   
   # Header Cell alignment
   ha <- c()
@@ -633,6 +644,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 
   # Get borders
   brdrs <- ts$borders
+  
   rh <- rs$row_height
   
   # Format labels for each level
@@ -647,6 +659,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
     names(algns) <- s$name
     lbls <- s$label
     names(lbls) <- s$name
+    cs <- s$col_span
     
     # Get cell widths
     sz <- c()
@@ -685,10 +698,48 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
       
       # Get cell borders
       b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
+      
+      # Add colspans
+      vl <- lbls[j]
+      
+      # Special handling of borders for different situations.  
+      # I hate this, but can't see a way around it.
+      if (any(brdrs %in% c("all", "inside"))) {
+        sflg <- "B"
+        if (j > 1) {
+          if (cs[j] > 1)
+            sflg <- ""
+        }
+        
+        if (vl == "") {
+          bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
+                                      length(sz), brdrs, 
+                                      flag = sflg)
+        } else 
+          bb <- b
+      } else if (all(brdrs == "outside")) {
+        
+        if (vl == "")
+          bb <- b
+        else 
+          bb <- paste0(b, "\\clbrdrb\\brdrs")
+        
+      } else {
+        
+        if (vl == "") {
+          bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
+                                      length(sz), brdrs, 
+                                      flag = "")
+        } else 
+          bb <- paste0(b, "\\clbrdrb\\brdrs")
+        
+      }
+      
+      
       if (s$span[j] > 0 & s$underline[j])
-        r <- paste0(r, "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
+        r <- paste0(r, "\\clvertalb", bb, "\\clbrdrb\\brdrs\\cellx", sz[j])
       else 
-        r <- paste0(r, "\\clvertalb", b, "\\cellx", sz[j])
+        r <- paste0(r, "\\clvertalb", bb, "\\cellx", sz[j])
     }
     
     # Open device context
@@ -734,7 +785,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
+get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -754,6 +805,9 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, brdrs) {
   } else 
     t <- tbl[ , nms]
 
+  brdrs <- tbrdrs
+  if (all(tbrdrs == "body"))
+    brdrs <- c("top", "bottom", "left", "right")
   
   # Get line height.  Don't want to leave editor default.
   rh <- rs$row_height

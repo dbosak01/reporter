@@ -12,6 +12,7 @@ than the page body.
 * Added 9pt and 11pt font to all output types that accept a font size.
 * Added 'body' option to _borders_ parameter on `create_table()` function
 so the user can get borders only on the table body.
+* Various bug fixes and documentation updates.
 
 
 # reporter 1.2.0

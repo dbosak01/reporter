@@ -93,14 +93,14 @@ test_that("html3: Spanning headers work as expected.", {
   
   dat <- mtcars[1:15, ]
   
-  tbl <- create_table(dat, borders = c("none")) %>%
+  tbl <- create_table(dat, borders = c("all")) %>%
     spanning_header(cyl, disp, "Span 1", label_align = "left") %>% 
     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span", 
                     n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table", borders = c("top", "bottom")) %>%
-    footnotes("My footnote 1", "My footnote 2", borders = c("bottom")) 
+    titles("Table 1.0", "My Nice Table", borders = c("outside")) %>%
+    footnotes("My footnote 1", "My footnote 2", borders = c("outside")) 
   
   rpt <- create_report(fp, output_type = "HTML", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%

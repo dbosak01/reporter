@@ -21,7 +21,7 @@ fsz <- 10
 dev <- FALSE
 
 
-# Basic Tests -------------------------------------------------------------
+# Basic Tests 1 - 10 ------------------------------------------------------
 
 
 test_that("rtf2-0a: Fixed report is correct.", {
@@ -376,6 +376,8 @@ test_that("rtf2-10: Preview works as expected.", {
   
 })
 
+# Basic Tests 11 - 20 ------------------------------------------------------
+
 # This is awesome. Shows cell wrapping, page break, and valign
 # Very good for testing.
 test_that("rtf2-11: Forced page wrap works as expected.", {
@@ -692,6 +694,8 @@ test_that("rtf2-20: Title Header borders work as expected.", {
   
   
 })
+
+# Basic Tests 21 - 30 ------------------------------------------------------
 
 # Works unless drat column is too narrow and spanning label wraps unexpectedly
 test_that("rtf2-21: Page wrap with spanning header works as expected.", {
@@ -1033,6 +1037,8 @@ test_that("rtf2-30: Simplest RTF Plot with valign bottom works as expected.", {
   
 })
 
+# Basic Tests 31 - 40 ------------------------------------------------------
+
 test_that("rtf2-31: Simplest RTF Text with valign top works as expected.", {
   
   
@@ -1372,6 +1378,8 @@ test_that("rtf2-40: One page table works as expected in courier.", {
   
 })
 
+# Basic Tests 41 - 50 ------------------------------------------------------
+
 # Good for testing borders and spacing are working correctly
 test_that("rtf2-41: Page by with borders works as expected.", {
   
@@ -1608,7 +1616,35 @@ test_that("rtf2-49: 11 pt font cm works as expected.", {
 
 })
 
+test_that("rtf2-50: Spanning headers borders work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test50.rtf")
+  
+  dat <- mtcars[1:15, ]
+  
+  tbl <- create_table(dat, borders = c("body")) %>%
+    spanning_header(cyl, disp, "Span 1", label_align = "left") %>% 
+    spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
+    spanning_header(qsec, vs, "Span 3", n = 10) %>%
+    spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>% 
+    titles("Table 1.0", "My Nice Table", borders = "outside") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside") 
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl)
 
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
 
 # User Tests --------------------------------------------------------------
 
