@@ -398,7 +398,7 @@ test_that("text15: Text borders work as expected.", {
 test_that("text16: Two page text spec with titles and footnotes.", {
   
   
-  fp <- file.path(base_path, "text/text16")
+  fp <- file.path(base_path, "text/text16.out")
   
   cnttxt <- paste(rep(cnt, 20), collapse = "")
   
@@ -414,9 +414,9 @@ test_that("text16: Two page text spec with titles and footnotes.", {
   
   res <- write_report(rpt)
   
-  expect_equal(file.exists(fp), TRUE)
+  expect_equal(file.exists(res$modified_path), TRUE)
   
-  lns <- readLines(fp)
+  lns <- readLines(res$modified_path)
   
   expect_equal(length(lns), res$pages * res$line_count)
   
