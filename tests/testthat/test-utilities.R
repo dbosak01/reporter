@@ -276,11 +276,11 @@ test_that("split_cells_variable works as expected.", {
   cw
   
   res <- split_cells_variable(df, cw, "Arial", 12, "inches", "RTF")
-  res
+  res$widths
   
-  expect_equal(any(class(res) == "data.frame"), TRUE)
-  expect_equal(res[1, "..row"], 2)  
-  expect_equal(res[3, "..row"], 3) 
+  expect_equal(any(class(res$data) == "data.frame"), TRUE)
+  expect_equal(res$data[1, "..row"], 2)  
+  expect_equal(res$data[3, "..row"], 3) 
   
 })
 
@@ -473,10 +473,13 @@ test_that("split_cells_variable() works as expected.", {
                               "Arial", 12, "inches", "RTF")
   res
   
-  expect_equal(nrow(res), 3)
-  expect_equal(ncol(res), 4)
-  expect_equal(res$..row, c(3, 1, 4))
-  
+  expect_equal(nrow(res$data), 3)
+  expect_equal(ncol(res$data), 4)
+  expect_equal(res$data$..row, c(3, 1, 4))
+  expect_equal(length(res), 2)
+  expect_equal(length(res$widths), 3)
+  expect_equal(length(res$widths[[3]]$col1), 4)
+  expect_equal(all(res$widths[[3]]$col1 < 1), TRUE)
   
 })
 
@@ -506,6 +509,23 @@ test_that("get_outer_borders works as expected.", {
   expect_equal(get_outer_borders(c("top", "bottom")), c("top", "bottom")) 
   expect_equal(get_outer_borders(c("outside", "inside")), 
                c("top", "bottom", "left", "right")) 
+  
+})
+
+test_that("split_strings() works as expected.", {
+  
+  pdf(NULL)
+  par(family = "sans", ps = 10)
+  
+  res <- split_strings("Here is a big long string that will not fit in one inch",
+                       1, "inches")
+  
+  dev.off()
+  
+  res
+  
+  expect_equal(length(res$text), 4)
+  expect_equal(length(res$widths), 4)
   
 })
 

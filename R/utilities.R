@@ -431,6 +431,7 @@ split_strings <- function(strng, width, units) {
   lnlngth <- 0
   ln <- c()
   lns <- c()
+  wdths <- c()
   
   un <- "inches"
   w <- width
@@ -460,11 +461,14 @@ split_strings <- function(strng, width, units) {
           if (length(ln) == 0) {
             
             lns[length(lns) + 1] <- wrds[i]
+            wdths[length(wdths) + 1] <- lnlngth
+            
             lnlngth <- 0
             
           } else {
             # Assign current lines and counts
             lns[length(lns) + 1] <- paste(ln, collapse = " ")
+            wdths[length(wdths) + 1] <- lnlngth - lngths[i]
             
             # Assign overflow to next line
             ln <- wrds[i]
@@ -479,6 +483,7 @@ split_strings <- function(strng, width, units) {
       if (length(ln) > 0) {
         
         lns[length(lns) + 1] <- paste(ln, collapse = " ")
+        wdths[length(wdths) + 1] <- lnlngth
         
       }
       
@@ -492,11 +497,14 @@ split_strings <- function(strng, width, units) {
   } else {
     
     lns <- ""
-    
+    wdths <- 0
   } 
   
   
-  return(lns)
+  ret <- list(text = lns, 
+              widths = wdths)
+  
+  return(ret)
 }
 
 #' @description Calling function is responsible for opening the 
@@ -508,14 +516,15 @@ split_strings <- function(strng, width, units) {
 split_string_rtf <- function(strng, width, units) {
   
   
-  lns <- split_strings(strng, width, units)
+  res <- split_strings(strng, width, units)
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
   # Doing it here handles for the entire report, as every piece runs
   # through here.
-  ret <- list(rtf = paste0(encodeRTF(lns), collapse = "\\line "),
-              lines = length(lns))
+  ret <- list(rtf = paste0(encodeRTF(res$text), collapse = "\\line "),
+              lines = length(res$text), 
+              widths = res$widths)
   
   return(ret)
 }
@@ -524,12 +533,13 @@ split_string_rtf <- function(strng, width, units) {
 split_string_html <- function(strng, width, units) {
   
   
-  lns <- split_strings(strng, width, units)
+  res <- split_strings(strng, width, units)
   
   # Try to find HTML encoding function.
   # encodeHTML()
-  ret <- list(html = paste0(lns, collapse = "\n"),
-              lines = length(lns))
+  ret <- list(html = paste0(res$text, collapse = "\n"),
+              lines = length(res$text),
+              widths = res$widths)
   
   return(ret)
 }
@@ -547,7 +557,9 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
                                  output_type) {
   
   dat <- NULL           # Resulting data frame
+  wdths <- list()       # Resulting list of widths
   row_values <- list()  # A list to hold cell values for one row 
+  row_widths <- list()  # A list to hold text widths for one row
   max_length <- 1       # The maximum number of splits of a cell in that row
   
   fnt <- "mono"
@@ -606,13 +618,16 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
       
       
       row_values[[length(row_values) + 1]] <- cell
+      row_widths[[length(row_widths) + 1]] <- res$widths
       # print(paste("Row:", row_values))
     }
     
     # print(names(x))
     names(row_values) <- names(x)
+    names(row_widths) <- names(x)
     
     row_values$..row <- max_length
+    wdths[[length(wdths) + 1]] <- row_widths
     
     if (is.null(dat)) {
       dat <- as.data.frame(row_values, stringsAsFactors = FALSE, 
@@ -625,7 +640,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
     
     max_length <- 1
     row_values <- list()
-    
+    row_widths <- list()
   }
   
   dev.off()
@@ -637,8 +652,10 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
   # else
   #   names(dat) <- c(names(x), "..row")
 
+  ret <- list(data = dat,
+              widths = wdths)
   
-  return(dat)
+  return(ret)
 }
 
 
