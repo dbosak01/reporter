@@ -398,7 +398,7 @@ test_that("text15: Text borders work as expected.", {
 test_that("text16: Two page text spec with titles and footnotes.", {
   
   
-  fp <- file.path(base_path, "text/text16.out")
+  fp <- file.path(base_path, "text/text16")
   
   cnttxt <- paste(rep(cnt, 20), collapse = "")
   
@@ -422,4 +422,5 @@ test_that("text16: Two page text spec with titles and footnotes.", {
   
   
 })
+
 

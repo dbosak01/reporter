@@ -505,6 +505,15 @@ page_setup_html <- function(rs) {
   
   debug <- FALSE
   
+  if (is.null(rs$font_size))
+    rs$font_size <- 10
+  
+  if (is.null(rs$font))
+    rs$font <- "Courier"
+  
+  if (rs$font == "fixed")
+    rs$font <- "Courier"
+  
   if (rs$font_size == 8) {
     
     if (tolower(rs$font) == "times")
