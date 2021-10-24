@@ -2117,24 +2117,25 @@ write_report <- function(x, file_path = NULL,
 
   ret <- ""
 
-  if (x$output_type == "TXT") {
+  if (toupper(x$output_type) == "TXT") {
     
     ret <- write_report_text(x)
     
-  } else if (x$output_type == "RTF") {
+  } else if (toupper(x$output_type) == "RTF") {
     
     if (tolower(x$font) == "fixed")
       ret <- write_report_rtf(x)
     else 
       ret <- write_report_rtf2(x)
   
-  } else if (x$output_type == "PDF") {
+  } else if (toupper(x$output_type) == "PDF") {
     
+    if (tolower(x$font) == "fixed")
+      ret <- write_report_pdf(x)
+    else 
+      ret <- write_report_pdf2(x)
 
-    ret <- write_report_pdf(x)
-
-
-  } else if (x$output_type == "HTML") {
+  } else if (toupper(x$output_type) == "HTML") {
   
     ret <- write_report_html(x)
     
