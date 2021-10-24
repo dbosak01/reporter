@@ -25,7 +25,15 @@ write_report_pdf2 <- function(rs) {
   rs <- page_setup_pdf(rs)
   
   # Document header is mostly independent of content
-  hdr <- get_pdf_document(rs) 
+  doc <- create_pdf(filename = pdf_path,
+                  margin_top = rs$margin_top,
+                  margin_left = rs$margin_left,
+                  fontsize = rs$font_size,
+                  page_height = rs$page_size[2],
+                  page_width = rs$page_size[1],
+                  orientation = rs$orientation,
+                  units = rs$units,
+                  info = TRUE)
   
   # Put content in a new variable
   ls <- rs$content
@@ -33,20 +41,21 @@ write_report_pdf2 <- function(rs) {
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
   # Page numbers need to be included
-  bdy <- paginate_content_pdf(rs, ls)
+  #bdy <- paginate_content_pdf(rs, ls)
   
   # Get column widths
-  rs$column_widths <- bdy[["widths"]]
+  #rs$column_widths <- bdy[["widths"]]
   
   # Deal with preview
-  if (!is.null(rs$preview)) {
-    if (rs$preview < length(bdy[[1]]$pages))
-      bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
-  }
+  # if (!is.null(rs$preview)) {
+  #   if (rs$preview < length(bdy[[1]]$pages))
+  #     bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
+  # }
   
   # Write content to file system
   # Later we can just return the stream
-  rs <- write_content_pdf(rs, hdr, bdy, rs$page_template)
+  #rs <- write_content_pdf(rs, hdr, bdy, rs$page_template)
+  write_pdf(doc)
   
   # Update page numbers for title headers
   #update_page_numbers_rtf(orig_path, rs$pages)
@@ -70,35 +79,25 @@ get_pdf_document <- function(rs) {
     fnt <- "Times New Roman"
   
   # Prepare header
-  ret[length(ret) + 1] <- paste0("{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 ", fnt , ";}}")
-  if (rs$orientation == "landscape") {
-    ret[length(ret) + 1] <- "\\landscape\\horzdoc"
-    ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
-                                   "\\paperh", round(rs$page_size[1] * conv))
-  } else {
-    ret[length(ret) + 1] <- "\\vertdoc"
-    ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
-                                   "\\paperh", round(rs$page_size[2] * conv))
-  }
+  r <- create_pdf(filename = pdf_path,
+                  margin_top = rs$margin_top,
+                  margin_left = rs$margin_left,
+                  fontsize = rs$font_size,
+                  page_height = rs$page_size[2],
+                  page_width = rs$page_size[1],
+                  orientation = rs$orientation,
+                  units = rs$units,
+                  info = TRUE)
   
-  ret[length(ret) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
-                                 "\\margr", round(rs$margin_right * conv),
-                                 "\\margt", round(rs$margin_top * conv),
-                                 "\\margb", round(rs$margin_bottom  * conv),
-                                 "\\headery", round(rs$margin_top  * conv),
-                                 "\\footery", round(rs$margin_bottom  * conv))
+  # ph <- get_page_header_pdf(rs)
+  # if (ph$pdf != "")
+  #   ret[length(ret) + 1] <- ph$pdf
+  # 
+  # pf <- get_page_footer_pdf(rs)
+  # if (pf$pdf != "")
+  #   ret[length(ret) + 1] <- pf$pdf
   
-  ph <- get_page_header_rtf(rs)
-  if (ph$rtf != "")
-    ret[length(ret) + 1] <- ph$rtf
-  
-  pf <- get_page_footer_rtf(rs)
-  if (pf$rtf != "")
-    ret[length(ret) + 1] <- pf$rtf
-  
-  # Line spacing values determined by trial and error.
-  # Needed for LibreOffice.  Appear to be ignored in Word.
-  ret[length(ret) + 1] <- paste0(rs$spacing_multiplier, rs$font_rtf)
+
   
   
   

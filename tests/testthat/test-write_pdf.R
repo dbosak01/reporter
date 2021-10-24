@@ -209,14 +209,14 @@ test_that("get_header works as expected.", {
                     font_name = "Arial",
                     page_ids = c(3))
   
-  expect_equal(length(hdr), 3)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 369)
+    expect_equal(length(hdrtxt), 492) #369)
   # else 
   #   expect_equal(length(hdrtxt), 370)
   
@@ -226,14 +226,14 @@ test_that("get_header works as expected.", {
                     page_height = 500,
                     page_width = 600)
   
-  expect_equal(length(hdr), 3)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 377)
+    expect_equal(length(hdrtxt), 494) #377)
   # else 
   #   expect_equal(length(hdrtxt), 378)
   
@@ -241,14 +241,14 @@ test_that("get_header works as expected.", {
   hdr <- get_header(page_count = 3,
                     page_ids = c(3, 4, 5))
   
-  expect_equal(length(hdr), 3)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 383)
+    expect_equal(length(hdrtxt), 500) #383)
   # else
   #   expect_equal(length(hdrtxt), 384)
   
@@ -523,7 +523,7 @@ test_that("get_pages works as expected.", {
   
   res
   
-  expect_equal(res$page_ids, c(4, 6, 8))
+  expect_equal(res$page_ids, c(5, 7, 9))
   expect_equal(length(res$objects), 7)
   
   
@@ -924,4 +924,31 @@ test_that("PDF with special chars works as expected.", {
 
   
 })
+
+
+test_that("basic write_pdf with positional text works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct15.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_text(c("Goodbye", "My friend"), font_size = 8, 
+                        xpos = 200, ypos = 150))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+
+  # expect_equal(r$filename, fp)
+  # expect_equal(r$fontname, "Courier")
+  # expect_equal(length(r$pages), 1)
+  # expect_equal(r$pages[[1]][[1]]$text, c("Hello", "There", "Here is some text"))
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+
 

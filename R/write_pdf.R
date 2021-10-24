@@ -100,7 +100,7 @@ add_info <- function(x,
 }
 
 #' @noRd
-page_text <- function(text #, font_name = NULL, font_size = NULL,
+page_text_back <- function(text #, font_name = NULL, font_size = NULL,
                       # align = "left",
                       # xpos = NULL, ypos = NULL
                       ) {
@@ -118,6 +118,27 @@ page_text <- function(text #, font_name = NULL, font_size = NULL,
   return(txt)
   
 }
+
+
+#' @noRd
+page_text <- function(text, font_name = NULL, font_size = NULL, 
+                      align = "left",
+                      xpos = NULL, ypos = NULL, bold = FALSE) {
+  
+  txt <- structure(list(), class = c("page_text", "page_content", "list"))
+  
+  txt$text <- text
+  txt$font_name <- font_name
+  txt$font_size <- font_size
+  txt$align <- align
+  txt$xpos <- xpos
+  txt$ypos <- ypos
+  txt$bold <- bold
+  
+  return(txt)
+  
+}
+
 
 #' Either pass align parameter and line_start, or pass specific xpos and ypos
 #' All measurements in units specified.  Processing function will convert
@@ -211,7 +232,7 @@ write_pdf <- function(rpt, filename = NULL) {
   
 
   bdy <- get_pages(rpt$pages, margin_left, margin_top, 
-                   page_height, page_width, rpt$fontsize)
+                   page_height, page_width, rpt$fontsize, fontname = rpt$fontname)
                 
   kids <- bdy$page_ids
   pgs <- bdy$objects
@@ -272,22 +293,74 @@ get_header <- function(page_count = 1,
   lst <- list()
   
   lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
-                                           Pages = ref(3)))
+                                           Pages = ref(4)))
 
-  # if (Sys.info()[["sysname"]] == "Windows") {
+  fn <- "Courier"
+  fb <- "Courier-Bold"
+  if (tolower(font_name) == "times") {
+    fn <- "Times-Roman"
+    fb <- "Times-Bold"
+  } else if (tolower(font_name) == "arial") {
+    fn <- "Helvetica"
+    fb <- "Helvetica-Bold"
+  }
+
   
-    lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
-                                             Subtype = "/Type1", 
-                                             BaseFont = paste0("/", font_name),
-                                             Encoding = "/WinAnsiEncoding"))
+  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
+                                           Subtype = "/Type1", 
+                                           BaseFont = paste0("/", fn),
+                                           Encoding = "/WinAnsiEncoding"))
   
-  # } else {
-  #   lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
-  #                                            Subtype = "/Type1", 
-  #                                            BaseFont = paste0("/", font_name),
-  #                                            Encoding = "/StandardEncoding"))
-  #   
-  # }
+  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Font", 
+                                           Subtype = "/Type1", 
+                                           BaseFont = paste0("/", fb),
+                                           Encoding = "/WinAnsiEncoding"))
+
+  
+  if (page_count > 10)
+    kds <- paste(page_ids, "0 R\n", collapse = " ")
+  else 
+    kds <- paste(page_ids, "0 R", collapse = " ")
+  
+  lst[[4]] <- pdf_object(4, pdf_dictionary(Type = "/Pages",
+                                           Kids = pdf_array(kds),
+                                           Count = page_count,                                                 
+                                           MediaBox = pdf_array(0, 0, 
+                                                        page_width, 
+                                                        page_height)))
+  
+  
+  return(lst)
+  
+}
+
+get_header_back <- function(page_count = 1, 
+                       font_name = "Courier", 
+                       page_height = 612, 
+                       page_width = 792, 
+                       page_ids = c()) {
+  
+  lst <- list()
+  
+  lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
+                                           Pages = ref(3)))
+  
+  fn <- "Courier"
+  fb <- "Courier-Bold"
+  if (tolower(font_name) == "times") {
+    fn <- "Times-Roman"
+    fb <- "Times-Bold"
+  } else if (tolower(font_name) == "arial") {
+    fn <- "Helvetica"
+    fb <- "Helvetica-Bold"
+  }
+  
+  
+  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
+                                           Subtype = "/Type1", 
+                                           BaseFont = paste0("/", fn),
+                                           Encoding = "/WinAnsiEncoding"))
+  
   
   if (page_count > 10)
     kds <- paste(page_ids, "0 R\n", collapse = " ")
@@ -298,8 +371,8 @@ get_header <- function(page_count = 1,
                                            Kids = pdf_array(kds),
                                            Count = page_count,                                                 
                                            MediaBox = pdf_array(0, 0, 
-                                                        page_width, 
-                                                        page_height)))
+                                                                page_width, 
+                                                                page_height)))
   
   
   return(lst)
@@ -320,7 +393,7 @@ get_header <- function(page_count = 1,
 #' pages.
 #' @noRd
 get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
-                      fontsize, units = "inches") {
+                      fontsize, units = "inches", fontname = "Courier") {
   
   # Vector for object IDs of pages only
   kids <- c()
@@ -329,7 +402,10 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   ret <- list()
   
   # Determined by trial and error
-  fontscale <- 87
+  if (tolower(fontname) == "courier")
+    fontscale <- 87
+  else 
+    fontscale <- 100
   
   # Get x starting position in points
   stx <- (margin_left * inchsize) - 5
@@ -344,7 +420,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   # Starting ID is 5 because of standard header objects.
   # This id variable will be incremented along the way 
   # as needed to get unique ids for the objects. 
-  id <- 4
+  id <- 5
   
   # Loop through added pages
   for (pg in pages) {
@@ -375,12 +451,17 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
     
       if ("page_text" %in% class(cnt)) {
         
-        # Under current logic, there should only be one of these
-        # In the future, will need to account for multiple pieces
-        # of text, and may define their own positions and font size.
-        # Right now everything is Courier from top left.
-        tmp <- get_byte_stream(cnt$text,
-                               stx, sty, lh, fontsize, fontscale)
+        if (is.null(cnt$xpos) | is.null(cnt$ypos)) {
+
+          tmp <- get_byte_stream(cnt$text,
+                                 stx, sty, lh, fontsize, fontscale)
+        } else {
+          
+          tmp <- get_byte_stream(cnt$text, stx + cnt$xpos, sty - cnt$ypos, 
+                                 lh, ifelse(is.null(cnt$font_size), 
+                                            fontsize, cnt$font_size),
+                                 fontscale, cnt$bold)
+        }
     
       
       } else if ("page_image" %in% class(cnt)) {
@@ -442,7 +523,130 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   
 }
 
-#' Calculation all measurement to points, so they can be sent to pdf.
+get_pages_back <- function(pages, margin_left, margin_top, page_height, page_width,
+                      fontsize, units = "inches") {
+  
+  # Vector for object IDs of pages only
+  kids <- c()
+  
+  # List for all objects
+  ret <- list()
+  
+  # Determined by trial and error
+  fontscale <- 87
+  
+  # Get x starting position in points
+  stx <- (margin_left * inchsize) - 5
+  
+  # Get y starting position in points
+  sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
+  
+  # Calculate reasonable line height
+  # Also trial and error
+  lh <- fontsize  + round(fontsize * .19, 2) 
+  
+  # Starting ID is 5 because of standard header objects.
+  # This id variable will be incremented along the way 
+  # as needed to get unique ids for the objects. 
+  id <- 4
+  
+  # Loop through added pages
+  for (pg in pages) {
+    
+    # Set current page id
+    page_id <- id
+    
+    # Add this page to the kids list
+    kids <- append(kids, page_id)
+    
+    # There will always be one content object per page
+    content_id <- id + 1
+    
+    # Increment id in preparation for next object that needs an id
+    id <- content_id + 1
+    
+    # May or may not be image ids
+    img_ids <- c()
+    
+    # Create content object
+    # Content will be appended as we go along
+    cnto <- pdf_text_stream(content_id, "")
+    
+    # Create a list of image streams for this page
+    imgs <- list()
+    
+    for (cnt in pg) {
+      
+      if ("page_text" %in% class(cnt)) {
+        
+        # Under current logic, there should only be one of these
+        # In the future, will need to account for multiple pieces
+        # of text, and may define their own positions and font size.
+        # Right now everything is Courier from top left.
+        tmp <- get_byte_stream(cnt$text,
+                               stx, sty, lh, fontsize, fontscale)
+        
+        
+      } else if ("page_image" %in% class(cnt)) {
+        
+        # Don't know how many there will be
+        img_ids <- append(img_ids, id)
+        
+        # Convert measurements to points
+        d <- calc_points(cnt, margin_left, margin_top, page_height, 
+                         page_width, cnt$units, lh)
+        
+        # print(paste("wth:", d$wth))
+        # print(paste("hgt:", d$hgt))
+        # print(paste("xpos:", d$xpos))
+        # print(paste("ypos:", d$ypos))
+        
+        
+        # Every image needs a "Do" command on the content page
+        tmp <- get_image_text(img_ref = id,
+                              width = d$wth,
+                              height = d$hgt,
+                              xpos = d$xpos,
+                              ypos = d$ypos)
+        
+        # Add stream to the list
+        imgs[[length(imgs) + 1]] <- pdf_image_stream(id, 
+                                                     height = d$phgt,
+                                                     width = d$pwth,
+                                                     get_image_stream(cnt$filename))
+        
+        # Increment id in preparation for next object
+        id <- id + 1
+        
+      }
+      
+      # Append or replace content as appropriate
+      if (all(cnto$contents == ""))
+        cnto$contents <- tmp
+      else 
+        cnto$contents <- append(cnto$contents, tmp)
+      
+      
+    }
+    
+    # Now can finally create all objects
+    ret[[length(ret) + 1]] <- pdf_page(page_id, content_id, img_ids)
+    ret[[length(ret) + 1]] <- cnto
+    if (length(imgs) > 0)
+      ret <- append(ret, imgs)
+    
+  }
+  
+  
+  res <- list()
+  res[["page_ids"]] <- kids
+  res[["objects"]] <- ret
+  
+  return(res)
+  
+}
+
+#' Convert all measurement to points, so they can be sent to pdf.
 #' @import jpeg
 #' @noRd
 calc_points <- function(cnt, margin_left, margin_top, 
@@ -595,7 +799,9 @@ render.pdf_text_stream <- function(x) {
   
 }
 
-# Need to fix up**
+#' @description This was hard to make work. Took a lot of research and trial
+#' and error.  PDF has a lot of different way to render an image, and most
+#' are very complicated.  This is the simplest one. Requires a JPEG.  
 #' @exportS3Method render pdf_image_stream
 render.pdf_image_stream <- function(x, view = FALSE) {
   
@@ -680,7 +886,11 @@ render.pdf_document <- function(x) {
   #cnts <- c("%PDF-1.7\n", "%âãÏÓ\n")
   
   cnts <- list()
+  # First line identifies this a a PDF file of a particular version.
   cnts[[1]] <- "%PDF-1.7\n"
+  
+  # Second line is comment of binary characters to identify the content as binary,
+  # so editors or operating systems won't mess with it.
   cnts[[2]] <- paste0("%", rawToChar(binchars), "\n")
   xrefs <- c()
   infoid <- NULL
@@ -882,12 +1092,13 @@ pdf_page <- function(id, content_id, graphic_ids = NULL) {
     }
     
     
-    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2)), 
+    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2),
+                                                F2 = ref(3)), 
                           ProcSet = procs,
                           XObject = xobj)
     
     parms <-  pdf_dictionary(Type = "/Page",
-                             Parent = ref(3),
+                             Parent = ref(4),
                              Contents = ref(content_id),
                              Resources = res)
                              
@@ -895,11 +1106,12 @@ pdf_page <- function(id, content_id, graphic_ids = NULL) {
     
     procs <- pdf_array("/PDF", "/Text")
     
-    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2)), 
+    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2),
+                                                F2 = ref(3)), 
                           ProcSet = procs)
     
     parms <-  pdf_dictionary(Type = "/Page",
-                             Parent = ref(3),
+                             Parent = ref(4),
                              Contents = ref(content_id),
                              Resources = res)
   }
@@ -946,7 +1158,12 @@ pdf_image_stream <- function(id, height, width, contents = NULL) {
   return(strm)
 }
 
-#' A function to create an info object
+#' A function to create an info object.  The info object contains the 
+#' author, etc.  of the document.  The create date in this is desirable
+#' for production files, but make development a pain because it guarantees
+#' that the PDF file will change every time a test case is run, and therefore
+#' it is hard to tell which files have actually changed.  The only way to 
+#' tell is to open them all up and look at them.
 #' @noRd
 pdf_info <- function(id, 
                      author = NULL, title = NULL,
@@ -1002,7 +1219,8 @@ chars <- function(lines) {
 }
 
 
-#' Return a reference 
+#' Return a reference.  Version numbers are all zero.  Not dealing with
+#' versions in these documents. 
 #' @noRd
 ref <- function(id) {
   
@@ -1012,8 +1230,14 @@ ref <- function(id) {
   
 }
 
+#' Utility function to create content for a text stream.  This will 
+#' take a vector of strings, and create pdf statements to display each one.
+#' Multiple lines are separated by the distance specified in lineheight.
+#' Would like to add compression to this function to reduce size of PDF file.
+#' This function largely replaces get_text_stream() because it supports more special 
+#' characters.
 get_byte_stream <- function(contents, startx, starty, 
-                            lineheight, fontsize, fontscale) {
+                            lineheight, fontsize, fontscale, bold = FALSE) {
   
   # Calculate y positions
   ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
@@ -1032,9 +1256,13 @@ get_byte_stream <- function(contents, startx, starty,
   
   }
   
+  bld <- "/F1 "
+  if (bold == TRUE)
+    bld <- "/F2 "
+  
 
   # Create report line
-  ret <- paste0("BT /F1 ", fontsize, 
+  ret <- paste0("BT ", bld , fontsize, 
                 " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td <", 
                 cnts, ">Tj ET")
   
@@ -1042,7 +1270,12 @@ get_byte_stream <- function(contents, startx, starty,
 }
 
 
-#' Utility function to create content for a text stream
+#' Utility function to create content for a text stream.  This will 
+#' take a vector of strings, and create pdf statements to display each one.
+#' Multiple lines are separated by the distance specified in lineheight.
+#' Would like to add compression to this function to reduce size of PDF file.
+#' This function largely replace by get_byte_stream() to support more special 
+#' characters.
 #' @noRd
 get_text_stream <- function(contents, startx, starty, 
                             lineheight, fontsize, fontscale) {
@@ -1063,7 +1296,8 @@ get_text_stream <- function(contents, startx, starty,
   
 }
 
-#' Utility function to create content for an image stream
+#' Utility function to create content for an image stream.
+#' Has to be a JPEG, as that is the only format that PDF supports natively.
 #' @noRd
 get_image_stream <- function(filename) {
   
@@ -1102,6 +1336,14 @@ get_image_text <- function(img_ref, height, width, xpos, ypos) {
   
 }
 
+#' @description This is a vectorized version of iconv(), which converts 
+#' encodings on a string.  The CP1252 is a Windows superset of Latin1
+#' which the PDF spec happens to support natively.  This is useful because
+#' we get more characters out of this than Latin1.  It is basically ANSI
+#' plus a few extra characters.  Also added logic to convert characters that
+#' fall outside this range to a question mark, which is better than the default
+#' empty box.
+#' @noRd
 viconv <- Vectorize(function(vstr) {
   
   
