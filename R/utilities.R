@@ -535,9 +535,21 @@ split_string_html <- function(strng, width, units) {
   
   res <- split_strings(strng, width, units)
   
-  # Try to find HTML encoding function.
-  # encodeHTML()
   ret <- list(html = paste0(res$text, collapse = "\n"),
+              lines = length(res$text),
+              widths = res$widths)
+  
+  return(ret)
+}
+
+
+#' @noRd
+split_string_text <- function(strng, width, units) {
+  
+  
+  res <- split_strings(strng, width, units)
+  
+  ret <- list(text = res$text,
               lines = length(res$text),
               widths = res$widths)
   
@@ -1192,4 +1204,38 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
 
 
 
+# PDF Functions -----------------------------------------------------------
+
+cpoints <- function(vals, units) {
+  
+  if (units == "inches")
+    ret <- vals * 72
+  else if (units == "cm")
+    ret <- vals * 2.54 * 72
+  
+  
+  return(ret)
+}
+
+get_points_left <- function(left_bound, right_bound, widths, units) {
+  
+  ret <- cpoints(rep(left_bound, length(widths)), units)
+  
+  return(ret)
+  
+} 
+
+get_points_right <- function(left_bound, right_bound, widths, units) {
+  
+  ret <- cpoints(right_bound - widths, units)
+  
+  return(ret)
+} 
+
+get_points_center <- function(left_bound, right_bound, widths, units) {
+  
+  ret <- cpoints(left_bound + ((right_bound - left_bound)/ 2) - (widths/ 2), units)
+  
+  return(ret)
+}  
 

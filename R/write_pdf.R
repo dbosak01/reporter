@@ -121,14 +121,13 @@ page_text_back <- function(text #, font_name = NULL, font_size = NULL,
 
 
 #' @noRd
-page_text <- function(text, font_name = NULL, font_size = NULL, 
+page_text <- function(text, font_size = NULL, 
                       align = "left",
                       xpos = NULL, ypos = NULL, bold = FALSE) {
   
   txt <- structure(list(), class = c("page_text", "page_content", "list"))
   
   txt$text <- text
-  txt$font_name <- font_name
   txt$font_size <- font_size
   txt$align <- align
   txt$xpos <- xpos

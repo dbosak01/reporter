@@ -529,3 +529,42 @@ test_that("split_strings() works as expected.", {
   
 })
 
+
+test_that("split_string_text() works as expected.", {
+  
+  pdf(NULL)
+  par(family = "sans", ps = 10)
+  
+  res <- split_string_text("Here is a big long string that will not fit in one inch",
+                       1, "inches")
+  
+  dev.off()
+  
+  res
+  
+  expect_equal(length(res$text), 4)
+  expect_equal(res$lines, 4)
+  expect_equal(length(res$widths), 4)
+  
+})
+
+test_that("get_points_* functions work as expected.", {
+  
+  w <- c(1, .8, .5)
+  
+  
+  res1 <- get_points_left(1, 4, w, "inches")
+  res1
+  
+  expect_equal(res1, c(72, 72, 72))
+  
+  res2 <- get_points_right(1, 2, w, "inches")
+  res2
+  
+  expect_equal(res2, c(72, 86.4, 108))
+  
+  res3 <- get_points_center(1, 2, w, "inches")
+  res3
+  
+  expect_equal(res3, c(72, 79.2, 90))
+})

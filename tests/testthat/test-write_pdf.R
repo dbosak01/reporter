@@ -938,11 +938,6 @@ test_that("basic write_pdf with positional text works as expected.", {
   r <- create_pdf(fp, fontname = "Arial") %>% 
     add_page(l)
 
-  # expect_equal(r$filename, fp)
-  # expect_equal(r$fontname, "Courier")
-  # expect_equal(length(r$pages), 1)
-  # expect_equal(r$pages[[1]][[1]]$text, c("Hello", "There", "Here is some text"))
-  
   
   write_pdf(r)
   
@@ -950,5 +945,22 @@ test_that("basic write_pdf with positional text works as expected.", {
   
 })
 
-
+test_that("basic write_pdf with positional text works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct15.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_text(c("Goodbye", "My friend"), font_size = 8, 
+                      xpos = 200, ypos = 150))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
 
