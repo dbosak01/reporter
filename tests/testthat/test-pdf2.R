@@ -1,45 +1,69 @@
-# 
-# context("PDF2 Tests")
-# 
-# base_path <- "c:/packages/reporter/tests/testthat"
-# data_dir <- base_path
-# 
-# base_path <- tempdir()
-# data_dir <- "."
-# 
-# cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
-#               "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-#               "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
-#               "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
-#               "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
-#               "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
-#               "qui officia deserunt mollit anim id est laborum.")
-# 
-# fnt <- "Arial"
-# fsz <- 10
-# 
-# dev <- FALSE
-# 
-# 
-# # Basic Tests 1 - 10 ------------------------------------------------------
-# 
-# 
-# test_that("pdf2-0a: Fixed report is correct.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test0apdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "fixed") %>%
-#     titles("Table 0.0", "Baseline Characteristics") %>%
-#     add_content(create_table(mtcars[1:10, ]))
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
+
+context("PDF2 Tests")
+
+base_path <- "c:/packages/reporter/tests/testthat"
+data_dir <- base_path
+
+base_path <- tempdir()
+data_dir <- "."
+
+cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+              "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+              "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ",
+              "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+              "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+              "qui officia deserunt mollit anim id est laborum.")
+
+fnt <- "Arial"
+fsz <- 10
+
+dev <- FALSE
+
+
+# Basic Tests 1 - 10 ------------------------------------------------------
+
+
+test_that("pdf2-0a: Report with page header is correct.", {
+
+
+  fp <- file.path(base_path, "pdf2/test0a.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial", 
+                       font_size = 12) %>%
+    set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
+    page_header(c("Left1", "Another left"), 
+                c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
+    titles("Table 0.0", "Baseline Characteristics", align = "right") %>%
+    add_content(create_text(cnt, width = 6))
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+test_that("pdf2-0b: Report with title header is correct.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test0b.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial", 
+                       font_size = 12) %>%
+    set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
+    title_header("Table 0.0", "Baseline Characteristics", right = "right") %>%
+    add_content(create_text(cnt, width = 6))
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
 # 
 # test_that("pdf2-0b: Fixed report with font_size is correct.", {
 #   

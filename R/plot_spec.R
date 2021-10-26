@@ -901,7 +901,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign)
   
   # Get image RTF codes
-  img <- get_image_pdf(plot_path, plt$width, plt$height, rs$units)
+  #img <- get_image_pdf(plot_path, plt$width, plt$height, rs$units)
   
   # Assign table alignment codes
   if (talign == "left") {

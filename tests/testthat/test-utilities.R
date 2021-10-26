@@ -537,6 +537,7 @@ test_that("split_string_text() works as expected.", {
   
   res <- split_string_text("Here is a big long string that will not fit in one inch",
                        1, "inches")
+
   
   dev.off()
   

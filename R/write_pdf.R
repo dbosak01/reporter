@@ -122,14 +122,12 @@ page_text_back <- function(text #, font_name = NULL, font_size = NULL,
 
 #' @noRd
 page_text <- function(text, font_size = NULL, 
-                      align = "left",
                       xpos = NULL, ypos = NULL, bold = FALSE) {
   
   txt <- structure(list(), class = c("page_text", "page_content", "list"))
   
   txt$text <- text
   txt$font_size <- font_size
-  txt$align <- align
   txt$xpos <- xpos
   txt$ypos <- ypos
   txt$bold <- bold
@@ -231,7 +229,10 @@ write_pdf <- function(rpt, filename = NULL) {
   
 
   bdy <- get_pages(rpt$pages, margin_left, margin_top, 
-                   page_height, page_width, rpt$fontsize, fontname = rpt$fontname)
+                   page_height, page_width, rpt$fontsize, 
+                   fontname = rpt$fontname)
+  
+  rpt$pages <- length(rpt$pages)
                 
   kids <- bdy$page_ids
   pgs <- bdy$objects
@@ -276,6 +277,8 @@ write_pdf <- function(rpt, filename = NULL) {
   
   close(f)
   
+  
+  return(rpt)
 }
 
 
@@ -798,9 +801,10 @@ render.pdf_text_stream <- function(x) {
   
 }
 
-#' @description This was hard to make work. Took a lot of research and trial
-#' and error.  PDF has a lot of different way to render an image, and most
-#' are very complicated.  This is the simplest one. Requires a JPEG.  
+
+# This was hard to make work. Took a lot of research and trial
+# and error.  PDF has a lot of different way to render an image, and most
+# are very complicated.  This is the simplest one. Requires a JPEG.  
 #' @exportS3Method render pdf_image_stream
 render.pdf_image_stream <- function(x, view = FALSE) {
   
@@ -1235,6 +1239,7 @@ ref <- function(id) {
 #' Would like to add compression to this function to reduce size of PDF file.
 #' This function largely replaces get_text_stream() because it supports more special 
 #' characters.
+#' @noRd
 get_byte_stream <- function(contents, startx, starty, 
                             lineheight, fontsize, fontscale, bold = FALSE) {
   

@@ -1,7 +1,66 @@
 context("Page Template PDF Tests")
 
+test_that("split_string_text and page_text produce proper results.", {
+  
+  cs <- c("Left")
+  
+  pdf(NULL)
+  par(family = "sans", ps = 10)
+  
+  
+  tmp <- split_string_text(cs, 6.5, "inches")
+  tmp
+  
+  ret <- page_text(tmp$text, 12, 
+                   xpos = get_points_left(1, 
+                   6.5,
+                   tmp$widths,
+                   units = "inches"),
+                   ypos = 72)
+  ret
+  
+  expect_equal(ret$text, "Left")
+  expect_equal(ret$xpos, 72)
+  expect_equal(ret$ypos, 72)
+  
+  cs <- c("Right")
+  
+  tmp <- split_string_text(cs, 6.5, "inches")
+  tmp
+  
+  ret <- page_text(tmp$text, 12, 
+                   xpos = get_points_right(1, 
+                                          6.5,
+                                          tmp$widths,
+                                          units = "inches"),
+                   ypos = 72)
+  ret
+  
+  expect_equal(ret$text, "Right")
+  expect_equal(round(ret$xpos), 441)
+  expect_equal(ret$ypos, 72)
+  
+  dev.off()
+  
+  
+})
 
-
+test_that("page_template_pdf is working as expected.", {
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header("Left", "Right") %>% 
+    titles("Hello", blank_row = "below") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  
+  expect_equal(rpt$page_template$page_header$lines, 1)
+  expect_equal(length(rpt$page_template$page_header$pdf), 2)
+  
+  
+})
+          
+        
 test_that("get_titles_pdf function works as expected.", {
   
   rpt <- create_report("", font = "Arial", font_size = 12) %>%
@@ -9,14 +68,10 @@ test_that("get_titles_pdf function works as expected.", {
     footnotes("Goodbye", blank_row = "below")
   
   rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
   
-  t <- get_titles_pdf(rpt$titles, 6, rpt)
-  t
-  expect_equal(t$rtf,
-               paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\qc Hello\\cell\\row\n",
-                      "\\trowd\\trgaph0\\trqc\\cellx12960\\qc\\sl-275\\slmult0\\cell\\row\n"))
-  expect_equal(t$lines, 2)
-  # expect_equal(t$twips, 576)
+  expect_equal(rpt$page_template$titles$lines, 2) 
+
   
 })
 
@@ -37,41 +92,59 @@ test_that("get_titles_pdf function works as expected.", {
 #   expect_equal(f$lines, 2)
 #   
 # })
-# 
-# test_that("get_title_header_pdf function works as expected.", {
-#   
-#   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
-#     title_header("Hello", right = paste("Right here is something",
-#                                         "really long that will wrap and wrap and wrap and wrap keep wrapping"))
-#   
-#   rpt2 <- page_setup_pdf(rpt2)
-#   
-#   th <- get_title_header_pdf(rpt2$title_hdr, 6, rpt2)
-#   th
-#   expect_equal(nchar(th$rtf) > 1, TRUE)
-#   expect_equal(th$lines, 4)
-#   
-# })
-# 
-# 
-# test_that("get_page_header_pdf works as expected.", {
-#   
-#   rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
-#     page_header(left= c("Hello"),
-#                 right = paste("Right here is something that might wrap.",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer")) %>%
-#     page_footer("Left", "Center", "Right here is something")
-#   
-#   rpt3 <- page_setup_pdf(rpt3)
-#   
-#   ph <- get_page_header_pdf(rpt3)
-#   ph
-#   
-#   expect_equal(ph$lines, 3)
-#   
-# })
+
+test_that("get_title_header_pdf function works as expected.", {
+
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = paste("Right here is something",
+                                        "really long that will wrap and wrap", 
+                                        "and wrap and wrap keep wrapping"))
+
+  rpt2 <- page_setup_pdf(rpt2)
+
+  th <-rpt2$page_template$title_hdr
+  th
+  expect_equal(length(th$pdf), 4)
+  expect_equal(th$lines, 4)
+
+})
+
+
+test_that("get_page_header_pdf works as expected.", {
+
+  rpt1 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header(left= c("Hello"), right = "there")
+
+  rpt1 <- page_setup_pdf(rpt1)
+
+  ph <- get_page_header_pdf(rpt1)
+  ph
+
+  expect_equal(ph$lines, 1)
+  
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header(left= c("Hello", "Goodbye"), right = "there") 
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  ph <- get_page_header_pdf(rpt2)
+  ph
+  
+  expect_equal(ph$lines, 2)
+  
+  
+  rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header(left= c("Hello\nthere", "Goodbye"), right = "Right") 
+  
+  rpt3 <- page_setup_pdf(rpt3)
+  
+  ph <- get_page_header_pdf(rpt3)
+  ph
+  
+  expect_equal(ph$lines, 3)
+
+})
 # 
 # 
 # test_that("get_page_footer_pdf works as expected.", {

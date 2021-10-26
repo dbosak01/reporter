@@ -1239,3 +1239,17 @@ get_points_center <- function(left_bound, right_bound, widths, units) {
   return(ret)
 }  
 
+get_points <- function(left_bound, right_bound, widths, units, align) {
+  
+  ret <- NULL
+  if (tolower(align) == "left")
+    ret <- get_points_left(left_bound, right_bound, widths, units)
+  else if (tolower(align) == "right")
+    ret <- get_points_right(left_bound, right_bound, widths, units)
+  else if (tolower(align) %in% c("center", "centre"))
+    ret <- get_points_center(left_bound, right_bound, widths, units)
+  
+  
+  return(ret)
+}
+

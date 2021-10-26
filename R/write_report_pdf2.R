@@ -16,24 +16,29 @@
 #' @noRd
 write_report_pdf2 <- function(rs) {
   
-  orig_path <- rs$modified_path
-  
-  if (file.exists(orig_path))
-    file.remove(orig_path)
+
+  if (file.exists(rs$modified_path))
+    file.remove(rs$modified_path)
   
   # Establish content and body sizes
   rs <- page_setup_pdf(rs)
   
   # Document header is mostly independent of content
-  doc <- create_pdf(filename = pdf_path,
+  doc <- create_pdf(filename = rs$modified_path,
                   margin_top = rs$margin_top,
                   margin_left = rs$margin_left,
+                  fontname = rs$font,
                   fontsize = rs$font_size,
                   page_height = rs$page_size[2],
                   page_width = rs$page_size[1],
                   orientation = rs$orientation,
                   units = rs$units,
                   info = TRUE)
+  # Temporary to see if it comes out
+  doc <- add_page(doc, rs$page_template$page_header$pdf,
+                       rs$page_template$title_hdr$pdf,
+                       rs$page_template$titles$pdf)
+
   
   # Put content in a new variable
   ls <- rs$content
@@ -55,7 +60,7 @@ write_report_pdf2 <- function(rs) {
   # Write content to file system
   # Later we can just return the stream
   #rs <- write_content_pdf(rs, hdr, bdy, rs$page_template)
-  write_pdf(doc)
+  rs <- write_pdf(doc)
   
   # Update page numbers for title headers
   #update_page_numbers_rtf(orig_path, rs$pages)
@@ -79,7 +84,7 @@ get_pdf_document <- function(rs) {
     fnt <- "Times New Roman"
   
   # Prepare header
-  r <- create_pdf(filename = pdf_path,
+  r <- create_pdf(filename = rs$modified_path,
                   margin_top = rs$margin_top,
                   margin_left = rs$margin_left,
                   fontsize = rs$font_size,
@@ -387,83 +392,85 @@ page_setup_pdf <- function(rs) {
   # Row height and line height were defined independently in case
   # they are different.  Right now, appear to be the same.
   if (rs$font_size == 8) {
-    rh <- 185 #round(.11 * 1440)
-    lh <- 185 #round(.1 * 1440) 
-    #pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
-    pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs16"
+    rh <- 185 / 20 #round(.11 * 1440)
+    lh <- 185 / 20 #round(.1 * 1440) 
     gtr <- .1 
     cw <- .1
     cp <- 40
-    # sm <- "\\sl-180\\slmult0"
+
   } else if (rs$font_size == 9) {
-    rh <- 218 #round(.165 * 1440) # 225
-    lh <- 218 #round(.165 * 1440)  
-    #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
-    pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs18"
+    rh <- 218 / 20 #round(.165 * 1440) # 225
+    lh <- 218 / 20 #round(.165 * 1440)  
     gtr <- .11
     cw <- .11
     cp <- 40
-    #sm <- "\\sl-200\\slmult0"
+
   } else if (rs$font_size == 10) {
-    rh <- 228 #round(.165 * 1440) # 225
-    lh <- 228 #round(.165 * 1440)  
-    #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
-    pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
+    rh <- 228 / 20 #round(.165 * 1440) # 225
+    lh <- 228 / 20 #round(.165 * 1440)  
     gtr <- .11
     cw <- .11
     cp <- 40
-    #sm <- "\\sl-225\\slmult0"
+
   } else if (rs$font_size == 11) {
-    rh <- 250 #round(.165 * 1440) # 225
-    lh <- 250 #round(.165 * 1440)  
-    #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
-    pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs22"
+    rh <- 250 / 20 #round(.165 * 1440) # 225
+    lh <- 250 / 20 #round(.165 * 1440)  
     gtr <- .11
     cw <- .12
     cp <- 40
-    #sm <- "\\sl-250\\slmult0"
+
   } else if (rs$font_size == 12) {
-    rh <- 275 #round(.2 * 1440)
-    lh <- 275 #round(.1875 * 1440) #270
-    pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
+    rh <- 275 / 20 #round(.2 * 1440)
+    lh <- 275 / 20 #round(.1875 * 1440) #270
     gtr <- .11
     cw <- .12
     cp <- 40
-    #sm <- "\\sl-275\\slmult0"
+
   }
   
   
-  # Get conversion factor to twips
+  
+  
+  # Get conversion factor to points
   if (rs$units == "inches") {
-    conv <- 1440
+    conv <- 72
   } else {
-    conv <- 566.9291
+    conv <- 1/2.54 * 72 
   }
   
-  rs$twip_conversion <- conv
+  rs$point_conversion <- conv
   rs$row_height <- rh
   rs$line_height <- lh
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
   rs$cell_padding <- cp
-  rs$spacing_multiplier <- get_spacing_multiplier(rs$font_size)
-  rs$page_break_rtf <- paste0(pb, rs$spacing_multiplier)
-  rs$border_height <- 15
+  # rs$spacing_multiplier <- get_spacing_multiplier(rs$font_size)
+  # rs$page_break_rtf <- paste0(pb, rs$spacing_multiplier)
+  rs$border_height <- .5
   
   # Line spacing values determined by trial and error.
   # Needed for LibreOffice.  Appear to be ignored in Word.
-  if (rs$font_size == 10) {
-    rs$font_rtf <-  "\\f0\\fs20"
-  } else if (rs$font_size == 12) {
-    rs$font_rtf <-  "\\f0\\fs24"
-  } else if (rs$font_size == 11) {
-    rs$font_rtf <-  "\\f0\\fs22"
-  } else if (rs$font_size == 9) {
-    rs$font_rtf <-  "\\f0\\fs18"
-  } else if (rs$font_size == 8) {
-    rs$font_rtf  <- "\\f0\\fs16"
-  }
+  # if (rs$font_size == 10) {
+  #   rs$font_rtf <-  "\\f0\\fs20"
+  # } else if (rs$font_size == 12) {
+  #   rs$font_rtf <-  "\\f0\\fs24"
+  # } else if (rs$font_size == 11) {
+  #   rs$font_rtf <-  "\\f0\\fs22"
+  # } else if (rs$font_size == 9) {
+  #   rs$font_rtf <-  "\\f0\\fs18"
+  # } else if (rs$font_size == 8) {
+  #   rs$font_rtf  <- "\\f0\\fs16"
+  # }
   
+  # Assume landscape
+  pg_h <- rs$page_size[1]
+  pg_w <- rs$page_size[2]
+  
+  # Change to portrait
+  if(rs$orientation == "portrait") {
+    pg_w <- rs$page_size[1]
+    pg_h <- rs$page_size[2]
+  }
   
   if (rs$units == "cm")
     rs$gutter_width <- ccm(gtr)
@@ -487,14 +494,14 @@ page_setup_pdf <- function(rs) {
   }
   
   # Get page template
-  pt <- page_template_rtf(rs)
+  pt <- page_template_pdf(rs)
   rs$page_template <- pt
   
   # Body size in twips
   # Small adjustment by one line height
   # This gets used to determine lines on a page.
   rs$body_size <- 
-    c(height = floor((rs$content_size[[1]] * conv) - pt$page_header$twips - pt$page_footer$twips - lh), 
+    c(height = floor((rs$content_size[[1]] * conv) - pt$page_header$points - pt$page_footer$points - lh), 
       width = floor(rs$content_size[[2]] * conv))
   
   if (debug) {
