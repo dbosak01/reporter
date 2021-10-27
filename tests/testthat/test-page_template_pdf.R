@@ -75,23 +75,23 @@ test_that("get_titles_pdf function works as expected.", {
   
 })
 
-# 
-# test_that("get_footnotes_pdf function works as expected.", {
-#   
-#   rpt <- create_report("", font = "Arial", font_size = 12) %>%
-#     titles("Hello") %>%
-#     footnotes("Goodbye")
-#   
-#   rpt <- page_setup_pdf(rpt)
-#   
-#   f <- get_footnotes_pdf(rpt$footnotes, 6, rpt)
-#   f
-#   expect_equal(f$rtf,
-#                paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql\\cell\\row\n", 
-#                       "\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n"))
-#   expect_equal(f$lines, 2)
-#   
-# })
+
+test_that("get_footnotes_pdf function works as expected.", {
+
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello") %>%
+    footnotes("Goodbye")
+
+  rpt <- page_setup_pdf(rpt)
+
+  f <- rpt$page_template$footnotes
+  f
+  # expect_equal(f$rtf,
+  #              paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql\\cell\\row\n",
+  #                     "\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n"))
+  expect_equal(f$lines, 2)
+
+})
 
 test_that("get_title_header_pdf function works as expected.", {
 
@@ -145,29 +145,24 @@ test_that("get_page_header_pdf works as expected.", {
   expect_equal(ph$lines, 3)
 
 })
-# 
-# 
-# test_that("get_page_footer_pdf works as expected.", {
-#   
-#   rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
-#     page_header(left= c("Hello"),
-#                 right = paste("Right here is something that might wrap.",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer")) %>%
-#     page_footer("Left", "Center", "Right here is something")
-#   
-#   rpt3 <- page_setup_pdf(rpt3)
-#   
-#   pf <- get_page_footer_pdf(rpt3)
-#   pf
-#   
-#   expect_equal(pf$lines, 1)
-#   
-#   
-# })
-# 
-# 
+
+
+test_that("get_page_footer_pdf works as expected.", {
+
+  rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_footer("Left", "Center", c("Right here", "is something"))
+
+  rpt3 <- page_setup_pdf(rpt3)
+
+  pf <- rpt3$page_template$page_footer
+  pf
+
+  expect_equal(pf$lines, 2)
+
+
+})
+
+
 # 
 # test_that("get_pageby_pdf works as expected.", {
 #   

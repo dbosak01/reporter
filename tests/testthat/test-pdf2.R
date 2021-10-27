@@ -34,8 +34,11 @@ test_that("pdf2-0a: Report with page header is correct.", {
     set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
     page_header(c("Left1", "Another left"), 
                 c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
-    titles("Table 0.0", "Baseline Characteristics", align = "right") %>%
-    add_content(create_text(cnt, width = 6))
+    titles("Table 0.0", "Baseline Characteristics", align = "center") %>%
+    add_content(create_text(cnt, width = 6)) %>% 
+    footnotes("My footnote1", "My footnote2") %>% 
+    page_footer(c("Left1", "Left2"), "Center", "Right")
+  
 
   res <- write_report(rpt)
 
@@ -54,7 +57,8 @@ test_that("pdf2-0b: Report with title header is correct.", {
                        font_size = 12) %>%
     set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
     title_header("Table 0.0", "Baseline Characteristics", right = "right") %>%
-    add_content(create_text(cnt, width = 6))
+    add_content(create_text(cnt, width = 6)) %>% 
+    page_footer(c("Left1", "Left2"), "Center", c("Right1", "Right2", "Right3"))
   
   res <- write_report(rpt)
   

@@ -37,7 +37,9 @@ write_report_pdf2 <- function(rs) {
   # Temporary to see if it comes out
   doc <- add_page(doc, rs$page_template$page_header$pdf,
                        rs$page_template$title_hdr$pdf,
-                       rs$page_template$titles$pdf)
+                       rs$page_template$titles$pdf, 
+                       rs$page_template$footnotes$pdf,
+                       rs$page_template$page_footer$pdf)
 
   
   # Put content in a new variable

@@ -17,20 +17,24 @@ page_template_pdf<- function(rs) {
                                        ystart = pt$page_header$points)
   pt$titles <- get_titles_pdf(rs$titles, rs$line_size, rs, 
                               ystart = pt$page_header$points)
+  
+  pt$page_footer <- get_page_footer_pdf(rs)
+  
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
     if (!is.null(rs$footnotes[[1]])) {
       if (rs$footnotes[[1]]$valign == "bottom")
-        pt$footnotes <- get_footnotes_pdf(rs$footnotes, rs$line_size, rs)
+        pt$footnotes <- get_footnotes_pdf(rs$footnotes, rs$line_size, rs, 
+                                          footer_lines = pt$page_footer$lines)
     }
     
   }
-  pt$page_footer <- get_page_footer_pdf(rs)
+
   
   pt$lines <- sum(pt$page_header$lines, pt$page_footer$lines,
                   pt$title_hdr$lines, pt$titles$lines, pt$footnotes$lines)
   
-  pt$point <- sum(pt$page_header$points, pt$page_footer$points,
+  pt$points <- sum(pt$page_header$points, pt$page_footer$points,
                   pt$title_hdr$points, pt$titles$points, pt$footnotes$points)
   
   # Page by not here.  Messes up line counts.
@@ -158,36 +162,25 @@ get_page_footer_pdf <- function(rs) {
     rb1 <- round(rb3 / 3)
     rb2 <- round(rb1 * 2)
     
-    lyline <- 0
-    cyline <- 0
-    ryline <- 0
+    tmp1 <- list()
+    tmp2 <- list()
+    tmp3 <- list()
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
+
+    # First get all wraps
     for (i in seq(1, maxf)) {
 
 
       if (length(fl) >= i) {
 
         # Split strings if they exceed width
-        tmp1 <- split_string_text(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp1[[length(tmp1) + 1]] <- split_string_text(fl[[i]], 
+                                    rs$content_size[["width"]]/3, rs$units)
         
-        
-        for (ln in seq_len(tmp1$lines)) {
-          
-          ret[[length(ret) + 1]] <- page_text(tmp1$text[ln], rs$font_size, 
-                                              xpos = get_points_left(0, 
-                                                                     rb1,
-                                                                     tmp1$widths[ln],
-                                                                     units = rs$units),
-                                              ypos = lyline)
-          lyline <- lyline + lh
-        }
-
-        #ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
-        
-        lcnt <- tmp1$lines
+        lcnt <- tmp1[[length(tmp1)]]$lines
         
       } else {
 
@@ -197,22 +190,10 @@ get_page_footer_pdf <- function(rs) {
       if (length(fc) >= i) {
 
         # Split strings if they exceed width
-        tmp2 <- split_string_text(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp2[[length(tmp2) + 1]] <- split_string_text(fc[[i]], 
+                                    rs$content_size[["width"]]/3, rs$units)
         
-        for (ln in seq_len(tmp2$lines)) {
-          
-          ret[[length(ret) + 1]] <- page_text(tmp2$text[ln], rs$font_size, 
-                                              xpos = get_points_center(rb1, 
-                                                                       rb2,
-                                                              tmp2$widths[ln],
-                                                              units = rs$units),
-                                              ypos = lyline)
-          cyline <- cyline + lh
-        }
-        
-
-        #ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
-        ccnt <- tmp2$lines
+        ccnt <- tmp2[[length(tmp2)]]$lines
       } else {
 
         ccnt <- 1
@@ -220,21 +201,10 @@ get_page_footer_pdf <- function(rs) {
 
       if (length(fr) >= i) {
 
-        tmp3 <- split_string_text(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp3[[length(tmp3) + 1]] <- split_string_text(fr[[i]], 
+                                 rs$content_size[["width"]]/3, rs$units)
         
-        for (ln in seq_len(tmp3$lines)) {
-          
-          ret[[length(ret) + 1]] <- page_text(tmp3$text[ln], rs$font_size, 
-                                              xpos = get_points_right(rb2, 
-                                                                       rb3,
-                                                                       tmp3$widths[ln],
-                                                                       units = rs$units),
-                                              ypos = ryline)
-          ryline <- ryline + lh
-        }
-
-        #ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
-        rcnt <- tmp3$lines
+        rcnt <- tmp3[[length(tmp3)]]$lines
       } else {
 
         rcnt <- 1
@@ -243,8 +213,65 @@ get_page_footer_pdf <- function(rs) {
       cnt <- cnt + max(lcnt, ccnt, rcnt)
 
     }
+    
     dev.off()
+    
+    # Have to determine wraps so we can calculate the height
+    # of the page footer before creating any pdf.
+    sy <- (rs$content_size[["height"]] * rs$point_conversion) - (cnt * lh )
+    
+    lyline <- sy
+    cyline <- sy
+    ryline <- sy
+    
+    # Then create pdf text
+    for (i in seq(1, length(tmp1))) {
+    
+        
+        
+      for (ln in seq_len(tmp1[[i]]$lines)) {
+        
+        ret[[length(ret) + 1]] <- page_text(tmp1[[i]]$text[ln], rs$font_size, 
+                                            xpos = get_points_left(0, 
+                                                          rb1,
+                                                          tmp1[[i]]$widths[ln],
+                                                          units = rs$units),
+                                            ypos = lyline)
+        lyline <- lyline + lh
+      }
 
+    }
+    
+    for (i in seq(1, length(tmp2))) {
+      
+        
+        for (ln in seq_len(tmp2[[i]]$lines)) {
+          
+          ret[[length(ret) + 1]] <- page_text(tmp2[[i]]$text[ln], rs$font_size, 
+                                              xpos = get_points_center(rb1, 
+                                                            rb2,
+                                                            tmp2[[i]]$widths[ln],
+                                                            units = rs$units),
+                                              ypos = cyline)
+          cyline <- cyline + lh
+        }
+    }
+      
+    for (i in seq(1, length(tmp3))) {
+        
+        
+      for (ln in seq_len(tmp3[[i]]$lines)) {
+        
+        ret[[length(ret) + 1]] <- page_text(tmp3[[i]]$text[ln], rs$font_size, 
+                                            xpos = get_points_right(rb2, 
+                                                                    rb3,
+                                                                    tmp3[[i]]$widths[ln],
+                                                                    units = rs$units),
+                                            ypos = ryline)
+        ryline <- ryline + lh
+      }
+        
+    }
   }
 
   res <- list(pdf = ret,
@@ -400,124 +427,136 @@ get_titles_pdf <- function(ttllst, content_width, rs,
 
 #' @import grDevices
 #' @noRd
-get_footnotes_pdf <- function(ftnlst, content_width, rs, talgn = "center") {
+get_footnotes_pdf <- function(ftnlst, content_width, rs, 
+                              talgn = "center", ystart = NULL, footer_lines = 0) {
   
   ret <- c()
   cnt <- 0
-  twps <- 0
+  pnts <- 0
   border_flag <- FALSE
   
-  conv <- rs$twip_conversion
+  #conv <- rs$twip_conversion
   lh <- rs$row_height
   
+
   # ta <- "\\trql"
   # if (talgn == "right")
   #   ta <- "\\trqr"
   # else if (talgn %in% c("center", "centre"))
   #   ta <- "\\trqc"
-  # 
-  # if (length(ftnlst) > 0) {
-  #   
-  #   for (ftnts in ftnlst) {
-  #     
-  #     if (ftnts$width == "page")
-  #       width <- rs$content_size[["width"]]
-  #     else if (ftnts$width == "content")
-  #       width <- content_width
-  #     else if (is.numeric(ftnts$width))
-  #       width <- ftnts$width
-  #     
-  #     w <- round(width * conv)
-  #     
-  #     
-  #     if (ftnts$align == "center")
-  #       algn <- "\\qc"
-  #     else if (ftnts$align == "right")
-  #       algn <- "\\qr"
-  #     else 
-  #       algn <- "\\ql"
-  #     
-  #     alcnt <- 0
-  #     blcnt <- 0
-  #     border_flag <- FALSE
-  #     
-  #     pdf(NULL)
-  #     par(family = get_font_family(rs$font), ps = rs$font_size)
-  #     
-  #     for (i in seq_along(ftnts$footnotes)) {
-  #       
-  #       
-  #       al <- ""
-  #       if (i == 1) {
-  #         if (any(ftnts$blank_row %in% c("above", "both"))) {
-  #           
-  #           alcnt <- 1
-  #           
-  #           tb <- get_cell_borders(i, 1, length(ftnts$footnotes) + alcnt, 
-  #                                  1, ftnts$borders)
-  #           
-  #           al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-  #                        algn, "\\cell\\row\n")
-  #           cnt <- cnt + 1 
-  #           
-  #         }
-  #       }
-  #       
-  #       bl <- ""
-  #       if (i == length(ftnts$footnotes)) {
-  #         if (any(ftnts$blank_row %in% c("below", "both"))) {
-  #           blcnt <- 1
-  #           
-  #           tb <- get_cell_borders(i + alcnt + blcnt, 1, 
-  #                                  length(ftnts$footnotes) + alcnt + blcnt, 
-  #                                  1, ftnts$borders)
-  #           
-  #           bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-  #                        algn, "\\cell\\row\n")
-  #           cnt <- cnt + 1
-  #         }
-  #         if (any(ftnts$borders %in% c("outside", "all", "top")))
-  #           border_flag <- TRUE
-  #       }
-  #       
-  #       b <- get_cell_borders(i + alcnt, 1, 
-  #                             length(ftnts$footnotes) + alcnt + blcnt, 
-  #                             1, ftnts$borders)
-  #       
-  #       
-  #       
-  #       # Split footnote strings if they exceed width
-  #       tmp <- split_string_rtf(ftnts$footnotes[[i]], width, rs$units)
-  #       
-  #       if (al != "")
-  #         ret <- append(ret, al)
-  #       
-  #       # Concat footnote row
-  #       ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-  #                                 algn, " ", get_page_numbers_rtf(tmp$rtf, FALSE), 
-  #                                 "\\cell\\row\n"))
-  #       if (bl != "")
-  #         ret <- append(ret, bl)
-  #       
-  #       cnt <- cnt + tmp$lines
-  #     }
-  #     dev.off()
-  #     
-  #     
-  #   }
-  #   
-  # }
-  # 
-  # 
-  # res <- list(rtf = paste0(ret, collapse = ""),
-  #             lines = cnt, 
-  #             twips = cnt * lh,
-  #             border_flag = border_flag)
-  
-  res <- list(pdf = "", 
-              lines = 0,
-              points = 0,
-              border_flag = FALSE)
+
+  if (length(ftnlst) > 0) {
+    
+    tmp <- list()
+
+    for (ftnts in ftnlst) {
+
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+
+      alcnt <- 0
+      blcnt <- 0
+      border_flag <- FALSE
+
+
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+
+      for (i in seq_along(ftnts$footnotes)) {
+
+
+        al <- ""
+        if (i == 1) {
+          if (any(ftnts$blank_row %in% c("above", "both"))) {
+
+            alcnt <- 1
+
+            # tb <- get_cell_borders(i, 1, length(ftnts$footnotes) + alcnt,
+            #                        1, ftnts$borders)
+
+            # al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
+            #              algn, "\\cell\\row\n")
+            cnt <- cnt + 1
+
+          }
+        }
+
+        bl <- ""
+        if (i == length(ftnts$footnotes)) {
+          if (any(ftnts$blank_row %in% c("below", "both"))) {
+            blcnt <- 1
+
+            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
+            #                        length(ftnts$footnotes) + alcnt + blcnt,
+            #                        1, ftnts$borders)
+
+            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
+            #              algn, "\\cell\\row\n")
+            cnt <- cnt + 1
+          }
+          
+          if (any(ftnts$borders %in% c("outside", "all", "top")))
+            border_flag <- TRUE
+          
+        }
+
+        # b <- get_cell_borders(i + alcnt, 1,
+        #                       length(ftnts$footnotes) + alcnt + blcnt,
+        #                       1, ftnts$borders)
+
+
+
+        # Split footnote strings if they exceed width
+        t <- split_string_text(ftnts$footnotes[[i]], width, rs$units)
+        
+        # Capture alignment for this footnote block
+        t$align <- ftnts$align
+
+        # Count number of lines
+        cnt <- cnt + t$lines
+        
+        # Assign strings to temp variable for now
+        tmp[[length(tmp) + 1]] <- t
+      }
+      
+      dev.off()
+
+      if (!is.null(ystart))
+        yline <- ystart
+      else {
+        
+        yline <- (rs$content_size[["height"]] * rs$point_conversion) - 
+                  ((cnt + footer_lines - alcnt) * lh )
+      }
+      
+      # Now get pdf text for each temp variable
+      for (i in seq(1, length(tmp))) {
+        for (ln in seq_len(tmp[[i]]$lines)) {
+          
+          ret[[length(ret) + 1]] <- page_text(tmp[[i]]$text[ln], rs$font_size, 
+                                              xpos = get_points(0, # fix this
+                                                          width,
+                                                          tmp[[i]]$widths[ln],
+                                                          units = rs$units,
+                                                          align = tmp[[i]]$align),
+                                              ypos = yline)
+          yline <- yline + lh
+        }
+        
+      }
+      
+    }
+    
+  }
+
+  res <- list(pdf = ret,
+              lines = cnt,
+              points = cnt * lh,
+              border_flag = border_flag)
   
   return(res)
 }
@@ -533,6 +572,8 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
   border_flag <- FALSE
 
   lh <- rs$row_height
+  lyline <- ystart
+  ryline <- ystart
 
   # ta <- "\\trql"
   # if (talgn == "right")
@@ -563,8 +604,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
 
-      lyline <- ystart
-      ryline <- ystart
+
       
       for(i in seq_len(mx)) {
 
