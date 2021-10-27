@@ -534,7 +534,7 @@ split_text <- function(txt, lines, width, font,
       # If cnt exceeds allowed lines per page, start a new page
       if (cnt <= lines - offset) {
         lns <- append(lns, paste(ln, collapse = " "))
-        wdth[length(wdth) + 1] <- lnlngth
+        wdth[length(wdth) + 1] <- lnlngth - lngths[i] 
         ln <- wrds[i]
         lnlngth <- lngths[i]
       } else {
@@ -544,7 +544,7 @@ split_text <- function(txt, lines, width, font,
         cnts[[length(cnts) + 1]] <- length(lns)
         #wdth[[length(wdth) + 1]] <- lnlngth
         wdths[[length(wdths) + 1]] <- wdth
-        wdth <- lnlngth
+        wdth <- lnlngth  - lngths[i] 
         
         # Assign overflow to next page
         lns <- paste(ln, collapse = " ")
@@ -628,7 +628,7 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
     exclude_top <- "top"
   
   t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
-  hgt <- rs$body_line_count - t
+  hgt <- line_count - t
   
   # Break text content into pages if necessary
   tpgs <- split_text(txt$text, hgt, width, rs$font, 
@@ -763,17 +763,19 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   
   # Nice that if titles are taller because of the font size,
   # this will account for it.
-  t <- ceiling(sum(ttls$points, ftnts$points, ttl_hdr$points)/lh)
+  p <- sum(ttls$points, ftnts$points, ttl_hdr$points)
+  t <- ceiling(p/lh)
 
-  hgt <- rs$body_line_count - t
+  hgt <- line_count - t
   
   # Break text content into pages if necessary
   tpgs <- split_text(txt$text, hgt, width, rs$font, 
                      rs$font_size, rs$units, lpg_rows)
   
-  # Capture rtf pages and line counts
+  # Capture pages, line counts, and widths
   txtpgs <- tpgs$text
   lns <- tpgs$lines
+  wdths <- tpgs$widths
   
   # Calculate text width in twips
   w <- round(width * rs$point_conversion)
@@ -806,12 +808,14 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   
   ret <- list()
   cnt <- c()
-  pnts <- c()
-  cnts <- t
-  rws <- list()
-  
+  pnt <- c()
+
   # Gather rtf and line counts for each page
   for (i in seq_along(txtpgs)) {
+    
+    cnts <- t
+    pnts <- p
+    rws <- list()
     
     if (i == length(txtpgs))
       wrap_flag <- FALSE
@@ -834,15 +838,17 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
       
     }
     
+    pw <- wdths[[i]]
+    
     # Deal with cell padding.  Don't count this in line count.
     # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
     
-    for (ln in seq_len(pg)) {
+    for (ln in seq_along(pg)) {
       
       rws[[length(rws) + 1]] <- page_text(pg[ln], rs$font_size, 
                                           xpos = get_points(0, # fix this
                                                             width,
-                                                            tmp$widths[ln],  # Need this
+                                                            pw[ln],  # Need this
                                                             units = rs$units,
                                                             align = txt$align),
                                           ypos = yline)
@@ -850,6 +856,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
       cnts <- cnts + 1
     }
 
+    pnts <- pnts + (cnts * lh)
     
     # Get footnotes
     # ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, cnts,
@@ -882,30 +889,24 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     if (ttls$lines > 0) {
       for (i in seq_along(ttls$lines))
         rws[[length(rws) + 1]] <- ttls$pdf[[i]]
-      cnts <- cnts + ttls$lines
-      pnts <- pnts + ttls$points
     }
     if (ttl_hdr$lines > 0) {
       for (i in seq_along(ttl_hdr$lines))
         rws[[length(rws) + 1]] <- ttl_hdr$pdf[[i]]
-      cnts <- cnts + ttl_hdr$lines
-      pnts <- pnts + ttl_hdr$points
     }
     if (ftnts$lines > 0) {
       for (i in seq_along(ftnts$lines))
         rws[[length(rws) + 1]] <- ftnts$pdf[[i]]
-      cnts <- cnts + ftnts$lines
-      pnts <- pnts + ftnts$points
     }
     
     ret[[length(ret) + 1]] <- rws
-    cnt[[length(ret) + 1]]  <- cnts
-    pnts[[length(ret) + 1]]  <- pnts
+    cnt[length(cnt) + 1]  <- cnts
+    pnt[length(pnt) + 1]  <- pnts
   }
   
   res <- list(pdf = ret, 
               lines = cnt,
-              points = pnts)
+              points = pnt)
   
   return(res)
   

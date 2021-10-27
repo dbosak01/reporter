@@ -70,3 +70,36 @@ test_that("split_text() works as expected.", {
   # 
   # res
 })
+
+
+test_that("get_text_body_pdf() works as expected.", {
+  
+  cnt2 <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
+                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris ",
+                 "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in ", 
+                 "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+                 "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
+                 "qui officia deserunt mollit anim id est laborum.")
+  
+  txt <- create_text(cnt2)
+  
+  rpt <- create_report("", "PDF", font = "Arial", font_size = 12)
+  
+  rpt <- page_setup_pdf(rpt)
+  
+  res <- get_text_body_pdf(rpt, txt, 6, 20, 0, FALSE, "center", 25) 
+  res
+  
+  expect_equal(length(res$lines), 1)
+  expect_equal(res$lines[1], 6)
+  
+  
+  res <- get_text_body_pdf(rpt, txt, 6, 3, 0, FALSE, "center", 25) 
+  res
+  
+  expect_equal(length(res$lines), 2)
+  expect_equal(res$lines[1], 3)
+  expect_equal(res$lines[2], 3)
+  
+})
