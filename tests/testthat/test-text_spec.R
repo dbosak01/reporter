@@ -46,7 +46,9 @@ test_that("split_text() works as expected.", {
   
   res
   expect_equal(length(res$text), 2)
-  
+  expect_equal(length(res$widths), 2)
+  expect_equal(length(res$widths[[1]]), 4)
+  expect_equal(length(res$widths[[2]]), 3)
   
   res <- split_text(cnt, 4, 3, "Arial", 12, "inches", 2)
   
