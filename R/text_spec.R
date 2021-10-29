@@ -786,15 +786,17 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   # Calculate text width in twips
   w <- round(width * rs$point_conversion)
   
-
-  
   # Get content alignment codes
-  # if (talgn == "right") 
-  #   tgn <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   tgn <- "\\trqc"
-  # else 
-  #   tgn <- "\\trql"
+  if (talgn == "right") {
+    lb <- rs$content_size[["width"]] - width
+    rb <- rs$content_size[["width"]]
+  } else if (talgn %in% c("center", "centre")) {
+    lb <- (rs$content_size[["width"]] - width) / 2
+    rb <- width + lb
+  } else {
+    lb <- 0
+    rb <- width
+  }
   
   # Get text alignment codes
   # if (txt$align == "right") 
@@ -807,10 +809,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   # Get cell border codes
   # b <- get_cell_borders_pdf(1, 1, 1, 1, txt$borders)  
   
-  # Prepare row header and footer
-  # rwhd <- paste0("\\trowd\\trgaph0", tgn, b, "\\cellx", w, algn, " ")
-  # rwft <- paste0("\\cell\\row")
-  
+
   ret <- list()
   cnt <- c()
   pnt <- c()
@@ -854,9 +853,9 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     for (ln in seq_along(pg)) {
       
       rws[[length(rws) + 1]] <- page_text(pg[ln], rs$font_size, 
-                                          xpos = get_points(0, # fix this
-                                                            width,
-                                                            pw[ln],  # Need this
+                                          xpos = get_points(lb, 
+                                                            rb,
+                                                            pw[ln],  
                                                             units = rs$units,
                                                             align = txt$align),
                                           ypos = yline)

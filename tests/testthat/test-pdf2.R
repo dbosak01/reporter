@@ -114,7 +114,7 @@ test_that("pdf2-1a: Simple report with titles on report is correct.", {
                 c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
     titles("Table 0.0", "Baseline Characteristics", align = "center",
            blank_row = "below", bold = TRUE) %>%
-    add_content(create_text(cnt)) %>% 
+    add_content(create_text(cnt, width = 6, align = "right"), align = "right") %>% 
     footnotes("My footnote1", "My footnote2", valign = "top", blank_row = "none",
               width = "page", align = "left") %>% 
     page_footer(c("Left1", "Left2"), "Center", "Right")
