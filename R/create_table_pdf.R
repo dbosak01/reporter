@@ -325,11 +325,13 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   return(ret) 
 }
 
-get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, row_count,
+get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, ystart,
                                    wrap_flag, content_blank_row, talgn) {
   
   ftnts <- list(lines = 0, twips = 0, border_flag = FALSE)
   vflag <- "none"
+  
+  fl <- rs$page_template$footer$lines
   
   # Deal with valign parameter
   if (!is.null(spec$footnotes)) {
@@ -337,12 +339,13 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, row_count,
       if (spec$footnotes[[length(spec$footnotes)]]$valign == "bottom") {
         
         vflag <- "bottom"
-        ftnts <- get_footnotes_rtf(spec$footnotes, 
+        ftnts <- get_footnotes_pdf(spec$footnotes, 
                                    spec_width, rs, 
-                                   talgn) 
+                                   talgn, footer_lines = fl) 
       } else {
         vflag <- "top"
-        ftnts <- get_footnotes_rtf(spec$footnotes, spec_width, rs, talgn) 
+        ftnts <- get_footnotes_pdf(spec$footnotes, spec_width, rs, talgn,
+                                   ystart = ystart) 
       }
       
     }
@@ -352,9 +355,9 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, row_count,
       if (!is.null(rs$footnotes[[1]]$valign)) {
         if (rs$footnotes[[1]]$valign == "top") {
           vflag <- "top"
-          ftnts <- get_footnotes_rtf(rs$footnotes, 
+          ftnts <- get_footnotes_pdf(rs$footnotes, 
                                      spec_width, rs, 
-                                     talgn) 
+                                     talgn, ystart = ystart) 
         } else {
           
           if (wrap_flag)
@@ -364,10 +367,9 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, row_count,
     }
   }
   
-  b <- NULL
+
   blen <- 0
   if (content_blank_row %in% c("below", "both")) {
-    b <- "\\par"
     blen <- 1
   }
   # } else {
@@ -376,40 +378,17 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, row_count,
   
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired page wraps
-  boff <- 0
-  if (any(class(spec) == "table_spec") &
-      any(spec$borders %in% c("all", "inside"))) {
-    
-    boff <- round(row_count * rs$border_height / rs$row_height)
-  }
+  # boff <- 0
+  # if (any(class(spec) == "table_spec") &
+  #     any(spec$borders %in% c("all", "inside"))) {
+  #   
+  #   boff <- round(row_count * rs$border_height / rs$row_height)
+  # }
   
-  ublnks <- c()
-  lblnks <- c()
-  
-  # Determine number of filler lines needed
-  len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen - boff
-  
-  
-  if (vflag == "bottom" & len_diff > 0) {
-    
-    ublnks <- c(b, rep("\\par", len_diff))
-    
-  } else {
-    
-    if ((wrap_flag & len_diff > 0)) {
-      if (vflag == "bottom")
-        lblnks <- c(rep("\\par", len_diff), b)
-    } else {
-      lblnks <- b
-    }
-    
-    
-  }
-  
-  tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
-  ret <- list(rtf = c(ublnks, ftnts$rtf, lblnks),
+  tlns <- ftnts$lines + blen
+  ret <- list(pdf = ftnts$pdf,
               lines = tlns,
-              twips = tlns * rs$twip_conversion,
+              points = tlns * rs$line_height,
               border_flag = ftnts$border_flag)
   
   return(ret)

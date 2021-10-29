@@ -34,21 +34,13 @@ write_report_pdf2 <- function(rs) {
                   orientation = rs$orientation,
                   units = rs$units,
                   info = TRUE)
-  # Temporary to see if it comes out
-  doc <- add_page(doc, rs$page_template$page_header$pdf,
-                       rs$page_template$title_hdr$pdf,
-                       rs$page_template$titles$pdf, 
-                       rs$page_template$footnotes$pdf,
-                       rs$page_template$page_footer$pdf)
 
-  
-  # Put content in a new variable
-  ls <- rs$content
+
   
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
   # Page numbers need to be included
-  #bdy <- paginate_content_pdf(rs, ls)
+  doc <- paginate_content_pdf(rs, doc)
   
   # Get column widths
   #rs$column_widths <- bdy[["widths"]]
@@ -115,12 +107,21 @@ get_pdf_document <- function(rs) {
 
 
 #' @noRd
-paginate_content_pdf <- function(rs, ls) {
+paginate_content_pdf <- function(rs, doc) {
   
+  # Put content in a new variable
+  ls <- rs$content
   ret <- c()
   last_object <- FALSE
   last_page_lines <- 0
   table_widths <- list()
+  
+  # Get report titles and footnotes
+  rttls <- rs$page_template$titles
+  rttl_hdr <- rs$page_template$title_hdr
+  rftnts <- rs$page_template$footnotes
+  rheader <- rs$page_template$page_header
+  rfooter <- rs$page_template$page_footer
   
   hrf <- has_bottom_footnotes(rs)
   
@@ -128,7 +129,7 @@ paginate_content_pdf <- function(rs, ls) {
   # Loop through content objects
   for (i in seq_along(ls)) {
     
-    pgs <- list()  # list of vectors with page rtf lines
+    pgs <- list()  # list of vectors with page pdf lines
     lns <- c()
     
     # Set last object flag
@@ -154,42 +155,48 @@ paginate_content_pdf <- function(rs, ls) {
     # Break each content type into a list of pages
     if (any(class(obj) == "table_spec")) {
       
-      res <- create_table_pages_pdf(rs, cntnt, last_page_lines)
-      
-      # Collect multiple pages and line counts
-      for (j in seq_len(length(res$page_list))) {
-        pgs[[length(pgs) + 1]] <- res$page_list[[j]]$rtf
-        lns[[length(lns) + 1]] <- res$page_list[[j]]$lines
-      }
-      
-      # Retrieve table widths.  These are useful for debugging.
-      # Assigned to returning report object.
-      table_widths[[length(table_widths) + 1]] <- res$widths
+      # res <- create_table_pages_pdf(rs, cntnt, last_page_lines)
+      # 
+      # # Collect multiple pages and line counts
+      # for (j in seq_len(length(res$page_list))) {
+      #   pgs[[length(pgs) + 1]] <- res$page_list[[j]]$pdf
+      #   lns[[length(lns) + 1]] <- res$page_list[[j]]$lines
+      # }
+      # 
+      # # Retrieve table widths.  These are useful for debugging.
+      # # Assigned to returning report object.
+      # table_widths[[length(table_widths) + 1]] <- res$widths
       
     } else if (any(class(obj) == "text_spec")) {
       
       res <- create_text_pages_pdf(rs, cntnt, last_page_lines, cbr)
-      for (j in seq_len(length(res$rtf))) {
-        pgs[[length(pgs) + 1]] <- res$rtf[[j]]
-        lns[[length(lns) + 1]] <- res$lines[[j]]
+      for (j in seq_len(length(res$pdf))) {
         
+        doc <- add_page(doc, res$pdf[[j]], rttls$pdf, rttl_hdr$pdf, 
+                        rftnts$pdf, rheader$pdf, rfooter$pdf) 
       }
+      
+      # for (j in seq_len(length(res$pdf))) {
+      #   pgs[[length(pgs) + 1]] <- res$pdf[[j]]
+      #   lns[[length(lns) + 1]] <- res$lines[[j]]
+      #   
+      # }
       
     } else if (any(class(obj) == "plot_spec")) {
       
       # Plots not started rtf2 conversion
-      res <- create_plot_pages_pdf(rs, cntnt, last_page_lines, tempdir())
-      for (j in seq_len(length(res$rtf))) {
-        pgs[[length(pgs) + 1]] <- res$rtf[[j]]
-        lns[[length(lns) + 1]] <- res$lines[[j]]
-        
-      }
+      # res <- create_plot_pages_pdf(rs, cntnt, last_page_lines, tempdir())
+      # for (j in seq_len(length(res$pdf))) {
+      #   pgs[[length(pgs) + 1]] <- res$pdf[[j]]
+      #   lns[[length(lns) + 1]] <- res$lines[[j]]
+      #   
+      # }
     }   
     
     # Store pages and lines with content objects
     # The content settings will be used when writing content
-    ls[[i]]$pages <- pgs
-    ls[[i]]$lines <- lns
+    # ls[[i]]$pages <- pgs
+    # ls[[i]]$lines <- lns
     
     # This section of code is appending blank lines to get
     # footnotes at the bottom of the page.  The complication
@@ -201,49 +208,49 @@ paginate_content_pdf <- function(rs, ls) {
     # functions.
     
     # Capture last page
-    last_page <- pgs[[length(pgs)]]
-    
-    # Capture number of lines on the last page
-    last_page_lines <- lns[[length(lns)]] + last_page_lines
+    # last_page <- pgs[[length(pgs)]]
+    # 
+    # # Capture number of lines on the last page
+    # last_page_lines <- lns[[length(lns)]] + last_page_lines
     
     # print(last_page_lines)
+    # 
+    # if (length(pgs) > 1)
+    #   last_page_lines <- lns[[length(lns)]]
+    # 
+    # # If there is a page break or it's the last object in the
+    # # content list, add the blank lines if needed.
+    # if ((ls[[i]]$page_break | last_object) & hrf) {
+    #   
+    #   
+    #   # Add extra offsets if table has a lot of borders turned on
+    #   # to avoid undesired page wraps
+    #   boff <- 0
+    #   if (any(class(obj) == "table_spec") & 
+    #       any(obj$borders %in% c("all", "inside"))) {
+    #     
+    #     boff <- round(last_page_lines * rs$border_height / rs$row_height)
+    #   }
+    #   
+    #   blnks <- c()
+    #   bl <- rs$body_line_count - last_page_lines - boff
+    #   if (bl > 0)
+    #     blnks <- rep("\\par", bl)
+    #   
+    #   last_page <- append(last_page, blnks)
+    #   last_page_lines <- 0 
+    #   
+    # }
     
-    if (length(pgs) > 1)
-      last_page_lines <- lns[[length(lns)]]
-    
-    # If there is a page break or it's the last object in the
-    # content list, add the blank lines if needed.
-    if ((ls[[i]]$page_break | last_object) & hrf) {
-      
-      
-      # Add extra offsets if table has a lot of borders turned on
-      # to avoid undesired page wraps
-      boff <- 0
-      if (any(class(obj) == "table_spec") & 
-          any(obj$borders %in% c("all", "inside"))) {
-        
-        boff <- round(last_page_lines * rs$border_height / rs$row_height)
-      }
-      
-      blnks <- c()
-      bl <- rs$body_line_count - last_page_lines - boff
-      if (bl > 0)
-        blnks <- rep("\\par", bl)
-      
-      last_page <- append(last_page, blnks)
-      last_page_lines <- 0 
-      
-    }
-    
-    ls[[i]]$pages[[length(pgs)]] <- last_page
+    # ls[[i]]$pages[[length(pgs)]] <- last_page
     
   }
   
   
   # Can return something else if needed here
-  ret <- list(widths = table_widths, pages = ls)
+  # ret <- list(widths = table_widths, pages = ls)
   
-  return(ret)
+  return(doc)
   
 }
 

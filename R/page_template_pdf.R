@@ -19,6 +19,7 @@ page_template_pdf<- function(rs) {
                               ystart = pt$page_header$points)
   
   pt$page_footer <- get_page_footer_pdf(rs)
+
   
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
@@ -27,9 +28,7 @@ page_template_pdf<- function(rs) {
         pt$footnotes <- get_footnotes_pdf(rs$footnotes, rs$line_size, rs, 
                                           footer_lines = pt$page_footer$lines)
     }
-    
   }
-
   
   pt$lines <- sum(pt$page_header$lines, pt$page_footer$lines,
                   pt$title_hdr$lines, pt$titles$lines, pt$footnotes$lines)
@@ -317,46 +316,32 @@ get_titles_pdf <- function(ttllst, content_width, rs,
       #   algn <- "\\ql"
 
       border_flag <- FALSE
-      alcnt <- 0
-      blcnt <- 0
+      
+      fs <- rs$font_size
+      if (!is.null(ttls$font_size))
+        fs <- ttls$font_size
 
       # Open device context
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      par(family = get_font_family(rs$font), ps = fs)
 
       for (i in seq_along(ttls$titles)) {
 
 
-
-        al <- ""
-
         if (i == 1) {
           if (any(ttls$blank_row %in% c("above", "both"))) {
 
-            alcnt <- 1
 
-            # tb <- get_cell_borders(i, 1, length(ttls$titles) + alcnt, 1, ttls$borders)
-            # 
-            # al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, "\\cell\\row\n")
+            yline <- yline + lh
             cnt <- cnt + 1
 
           }
         }
-        # 
-        # bl <- ""
+
         if (i == length(ttls$titles)) {
           if (any(ttls$blank_row %in% c("below", "both"))) {
             blcnt <- 1
 
-            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
-            #                        length(ttls$titles) + alcnt + blcnt,
-            #                        1, ttls$borders)
-            # 
-            # sm <- get_spacing_multiplier(rs$font_size)
-            # 
-            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, sm, "\\cell\\row\n")
             cnt <- cnt + 1
           }
 
@@ -380,15 +365,11 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         #   fs <- paste0("\\fs", rs$font_size * 2)
         # }
 
-
-        # tb <- tmp$rtf
-        # if (ttls$bold)
-        #   tb <- paste0("\\b ", tmp$rtf, "\\b0")
-
         
         for (ln in seq_len(tmp$lines)) {
           
-          ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+          ret[[length(ret) + 1]] <- page_text(tmp$text[ln], fs, 
+                                              bold = ttls$bold,
                                               xpos = get_points(0, # fix this
                                                                 width,
                                                                 tmp$widths[ln],
@@ -408,6 +389,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         #   ret <- append(ret, bl)
 
         cnt <- cnt + tmp$lines
+
       }
       dev.off()
 
@@ -444,6 +426,12 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
   #   ta <- "\\trqr"
   # else if (talgn %in% c("center", "centre"))
   #   ta <- "\\trqc"
+  
+  if (!is.null(ystart))
+    yline <- ystart
+  else 
+    yline <- 0
+
 
   if (length(ftnlst) > 0) {
     
@@ -474,6 +462,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
           if (any(ftnts$blank_row %in% c("above", "both"))) {
 
             alcnt <- 1
+            
+            yline <- yline + lh
 
             # tb <- get_cell_borders(i, 1, length(ftnts$footnotes) + alcnt,
             #                        1, ftnts$borders)
@@ -525,12 +515,10 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
       
       dev.off()
 
-      if (!is.null(ystart))
-        yline <- ystart
-      else {
+      if (is.null(ystart)) {
         
         yline <- (rs$content_size[["height"]] * rs$point_conversion) - 
-                  ((cnt + footer_lines - alcnt) * lh )
+          ((cnt + footer_lines - alcnt) * lh )
       }
       
       # Now get pdf text for each temp variable

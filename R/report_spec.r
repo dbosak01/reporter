@@ -1478,8 +1478,9 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     stop("footnotes function is limited to a maximum of 25 footnotes.")
   }
   
-  if (!align %in% c("left", "right"))
-    stop(paste("Align parameter invalid. Valid values are 'left' and 'right'"))
+  if (!align %in% c("left", "right", "center", "centre"))
+    stop(paste("Align parameter invalid. Valid values are 'left', 'right',",
+               "'center', and 'centre'"))
   
   if (!is.null(valign)) {
     if (!valign %in% c("top", "bottom"))
@@ -1506,7 +1507,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     }
   } else {
     if (any(class(x) %in% c("report_spec"))) {
-      if (!width %in% c("content") & !is.numeric(width))
+      if (!width %in% c("page") & !is.numeric(width))
         stop("Width parameter invalid.  Valid values are 'page' or a number.")
     } else {
       if (!width %in% c("page", "content") & !is.numeric(width))

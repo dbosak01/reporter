@@ -82,7 +82,8 @@ test_that("get_text_body_pdf() works as expected.", {
                  "pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ",
                  "qui officia deserunt mollit anim id est laborum.")
   
-  txt <- create_text(cnt2)
+  txt <- create_text(cnt2) %>% 
+    titles("Here is a title")
   
   rpt <- create_report("", "PDF", font = "Arial", font_size = 12)
   
@@ -92,14 +93,14 @@ test_that("get_text_body_pdf() works as expected.", {
   res
   
   expect_equal(length(res$lines), 1)
-  expect_equal(res$lines[1], 6)
+  expect_equal(res$lines[1], 8)
   
   
-  res <- get_text_body_pdf(rpt, txt, 6, 3, 0, FALSE, "center", 25) 
+  res <- get_text_body_pdf(rpt, txt, 6, 5, 0, FALSE, "center", 25) 
   res
   
   expect_equal(length(res$lines), 2)
-  expect_equal(res$lines[1], 3)
-  expect_equal(res$lines[2], 3)
+  expect_equal(res$lines[1], 5)
+  expect_equal(res$lines[2], 5)
   
 })

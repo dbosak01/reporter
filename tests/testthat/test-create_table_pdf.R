@@ -194,7 +194,6 @@ test_that("get_spanning_header_pdf works as expected.", {
 })
 
 
-
 test_that("get_page_footnotes_pdf works as expected.", {
   
   
@@ -205,12 +204,12 @@ test_that("get_page_footnotes_pdf works as expected.", {
     add_content(tbl1) %>% 
     footnotes("Here is a footnote", valign = "top")
   
-  rpt1 <- page_setup_rtf(rpt1)
+  rpt1 <- page_setup_pdf(rpt1)
   
-  res1 <- get_page_footnotes_rtf(rpt1, tbl1, 6,
+  res1 <- get_page_footnotes_pdf(rpt1, tbl1, 6,
                                  0, 25, TRUE, "below", "center")
-  
-  expect_equal(res1$lines, 2)
+  res1
+  expect_equal(res1$lines, 3)
   
   tbl2 <- create_table(iris)
   
@@ -219,27 +218,28 @@ test_that("get_page_footnotes_pdf works as expected.", {
     add_content(tbl1) %>% 
     footnotes("Here is a footnote", valign = "bottom")
   
-  rpt2 <- page_setup_rtf(rpt2)
+  rpt2 <- page_setup_pdf(rpt2)
   
-  res2 <- get_page_footnotes_rtf(rpt2, tbl2, 6,
-                                 0, 25, TRUE, "below", "center")  
-  
-  expect_equal(res2$lines, 17)
+  res2 <- get_page_footnotes_pdf(rpt2, tbl2, 6,
+                                 0, 25, TRUE, "none", "center")  
+  res2
+  expect_equal(res2$lines, 0)
   
   
   tbl3 <- create_table(iris)  %>% 
-    footnotes("Here is a footnote", valign = "bottom")
+    footnotes("Here is a footnote", valign = "bottom", blank_row = "none")
   
   rpt3 <- create_report("", font = "Times") %>%
     titles("IRIS Data Frame") %>%
     add_content(tbl1)
   
-  rpt3 <- page_setup_rtf(rpt3)
+  rpt3 <- page_setup_pdf(rpt3)
+
   
-  res3 <- get_page_footnotes_rtf(rpt3, tbl3, 6,
-                                 0, 25, TRUE, "below", "center")  
-  
-  expect_equal(res3$lines, 19)
+  res3 <- get_page_footnotes_pdf(rpt3, tbl3, 6,
+                                 0, 25, TRUE, "none", "center")  
+  res3  
+  expect_equal(res3$lines, 1)
   
   tbl4 <- create_table(iris)  %>% 
     footnotes("Here is a footnote", valign = "top")
@@ -248,12 +248,13 @@ test_that("get_page_footnotes_pdf works as expected.", {
     titles("IRIS Data Frame") %>%
     add_content(tbl1)
   
-  rpt4 <- page_setup_rtf(rpt4)
+  rpt4 <- page_setup_pdf(rpt4)
   
-  res4 <- get_page_footnotes_rtf(rpt4, tbl4, 26,
+  res4 <- get_page_footnotes_pdf(rpt4, tbl4, 26,
                                  0, 25, TRUE, "below", "center")  
+  res4
   
-  expect_equal(res4$lines, 2)
+  expect_equal(res4$lines, 3)
   
 })
 

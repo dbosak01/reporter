@@ -737,8 +737,13 @@ create_text_pages_pdf <- function(rs, cntnt, lpg_rows, content_blank_row) {
   if (!is.null(txt$width))
     w <- txt$width
   
+  ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
+            rs$page_template$page_header$points)
+
+  
   res <- get_text_body_pdf(rs, txt, w, rs$body_line_count, 
-                           lpg_rows, content_blank_row, cntnt$align)
+                           lpg_rows, content_blank_row, 
+                           cntnt$align, ystart = ys)
   
   
   return(res)
@@ -754,11 +759,12 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   
   lh <- rs$line_height
   
+  
   # Get content titles and footnotes
   ttls <- get_titles_pdf(txt$titles, width, rs, talgn, 
-                         ystart = rs$page_template$page_header$points) 
+                         ystart = ystart) 
   ttl_hdr <- get_title_header_pdf(txt$title_hdr, width, rs, talgn, 
-                                  ystart = rs$page_template$page_header$points)
+                                  ystart = ystart)
   ftnts <- get_footnotes_pdf(txt$footnotes, width, rs, talgn) 
   
   # Nice that if titles are taller because of the font size,
@@ -780,8 +786,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   # Calculate text width in twips
   w <- round(width * rs$point_conversion)
   
-  # Get starting y coordinate
-  yline <- sum(ystart, ttls$points, ttl_hdr$points)
+
   
   # Get content alignment codes
   # if (talgn == "right") 
@@ -812,6 +817,9 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
   # Gather rtf and line counts for each page
   for (i in seq_along(txtpgs)) {
+    
+    # Get starting y coordinate
+    yline <- sum(ystart, ttls$points, ttl_hdr$points)
     
     cnts <- t
     pnts <- p
@@ -858,9 +866,11 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
     pnts <- pnts + (cnts * lh)
     
+
+    
     # Get footnotes
-    # ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, cnts,
-    #                                 wrap_flag, content_blank_row, talgn)
+    ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, yline,
+                                    wrap_flag, content_blank_row, talgn)
     
     # On LibreOffice, have to protect the table from the title width or
     # the table row will inherit the title row width. Terrible problem.
@@ -885,19 +895,33 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     #   }
     # }
     
-    # Combine titles, blanks, body, and footnotes
+    # Add remaining page content.
+    # This needs to be done now so everything is on the page
+    # Different than all other output types.
     if (ttls$lines > 0) {
-      for (i in seq_along(ttls$lines))
-        rws[[length(rws) + 1]] <- ttls$pdf[[i]]
+        rws<- append(rws, ttls$pdf)
     }
     if (ttl_hdr$lines > 0) {
-      for (i in seq_along(ttl_hdr$lines))
-        rws[[length(rws) + 1]] <- ttl_hdr$pdf[[i]]
+        rws <- append(rws, ttl_hdr$pdf)
     }
     if (ftnts$lines > 0) {
-      for (i in seq_along(ftnts$lines))
-        rws[[length(rws) + 1]] <- ftnts$pdf[[i]]
+        rws <- append(rws, ftnts$pdf)
     }
+    # if (rttls$lines > 0) {
+    #     rws <- append(rws, rttls$pdf)
+    # }
+    # if (rttl_hdr$lines > 0) {
+    #     rws <- append(rws, rttl_hdr$pdf)
+    # }
+    # if (rftnts$lines > 0) {
+    #     rws <- append(rws, rftnts$pdf)
+    # }
+    # if (rheader$lines > 0) {
+    #     rws <- append(rws, rheader$pdf)
+    # }
+    # if (rfooter$lines > 0) {
+    #     rws <- append(rws, rfooter$pdf)
+    # }
     
     ret[[length(ret) + 1]] <- rws
     cnt[length(cnt) + 1]  <- cnts

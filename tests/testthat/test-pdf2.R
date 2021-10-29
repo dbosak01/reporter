@@ -24,21 +24,34 @@ dev <- FALSE
 # Basic Tests 1 - 10 ------------------------------------------------------
 
 
-test_that("pdf2-0a: Report with page header is correct.", {
 
-
-  fp <- file.path(base_path, "pdf2/test0a.pdf")
-
-  rpt <- create_report(fp, output_type = "PDF", font = "Arial", 
-                       font_size = 12) %>%
-    set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
-    page_header(c("Left1", "Another left"), 
-                c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
-    titles("Table 0.0", "Baseline Characteristics", align = "center") %>%
-    add_content(create_text(cnt, width = 6)) %>% 
-    footnotes("My footnote1", "My footnote2") %>% 
-    page_footer(c("Left1", "Left2"), "Center", "Right")
+test_that("pdf2-0a: Fixed report is correct.", {
   
+  
+  fp <- file.path(base_path, "pdf2/test0a.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "fixed") %>%
+    titles("Table 0.0", "Baseline Characteristics") %>%
+    add_content(create_table(mtcars[1:10, ]))
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+
+test_that("pdf2-0b: Fixed report with font_size is correct.", {
+
+
+  fp <- file.path(base_path, "pdf2/test0b.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "fixed",
+                       font_size = 12) %>%
+    titles("Table 0.0", "Baseline Characteristics") %>%
+    add_content(create_table(mtcars[1:10, ]))
 
   res <- write_report(rpt)
 
@@ -48,10 +61,77 @@ test_that("pdf2-0a: Report with page header is correct.", {
 
 })
 
-test_that("pdf2-0b: Report with title header is correct.", {
+test_that("pdf2-0c: Fixed report with font_size options is correct.", {
+
+
+  fp <- file.path(base_path, "pdf2/test0c.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "fixed") %>%
+    options_fixed(font_size = 12) %>%
+    titles("Table 0.0", "Baseline Characteristics") %>%
+    add_content(create_table(mtcars[1:10, ]))
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+test_that("pdf2-0d: Fixed report with conflicting font size is correct.", {
+
+
+  fp <- file.path(base_path, "pdf2/test0d.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "fixed",
+                       font_size = 8) %>%
+    options_fixed(font_size = 12) %>%
+    titles("Table 0.0", "Baseline Characteristics") %>%
+    add_content(create_table(mtcars[1:10, ]))
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+
+
+
+
+test_that("pdf2-1a: Simple report with titles on report is correct.", {
   
   
-  fp <- file.path(base_path, "pdf2/test0b.pdf")
+  fp <- file.path(base_path, "pdf2/test1a.pdf")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial", 
+                       font_size = 12) %>%
+    set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
+    page_header(c("Left1", "Another left"), 
+                c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
+    titles("Table 0.0", "Baseline Characteristics", align = "center",
+           blank_row = "below", bold = TRUE) %>%
+    add_content(create_text(cnt)) %>% 
+    footnotes("My footnote1", "My footnote2", valign = "top", blank_row = "none",
+              width = "page", align = "left") %>% 
+    page_footer(c("Left1", "Left2"), "Center", "Right")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("pdf2-1b: Report with title header is correct.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test1b.pdf")
   
   rpt <- create_report(fp, output_type = "PDF", font = "Arial", 
                        font_size = 12) %>%
@@ -68,198 +148,166 @@ test_that("pdf2-0b: Report with title header is correct.", {
   
 })
 
-# 
-# test_that("pdf2-0b: Fixed report with font_size is correct.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test0b.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "fixed",
-#                        font_size = 12) %>%
-#     titles("Table 0.0", "Baseline Characteristics") %>%
-#     add_content(create_table(mtcars[1:10, ]))
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# test_that("pdf2-0c: Fixed report with font_size options is correct.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test0c.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "fixed") %>%
-#     options_fixed(font_size = 12) %>%
-#     titles("Table 0.0", "Baseline Characteristics") %>%
-#     add_content(create_table(mtcars[1:10, ]))
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# test_that("pdf2-0d: Fixed report with conflicting font size is correct.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test0d.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "fixed",
-#                        font_size = 8) %>%
-#     options_fixed(font_size = 12) %>%
-#     titles("Table 0.0", "Baseline Characteristics") %>%
-#     add_content(create_table(mtcars[1:10, ]))
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# 
-# 
-# test_that("pdf2-1: One page text spec works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test1.pdf")
-#   
-#   txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
-#     titles("Text 1.0", "My Nice Text", borders = "outside", font_size = 12) %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "outside")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 10) %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", "Right") %>%
-#     add_content(txt, align = "right") %>%
-#     page_footer("Left1", "Center1", "Right1") 
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# 
-# 
-# test_that("pdf2-2: Two page text spec works as expected in 12pt font.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test2.pdf")
-#   
-#   cnttxt <- paste(rep(cnt, 12), collapse = "")
-#   
-#   txt <- create_text(cnttxt) %>%
-#     titles("Text 1.0", "My Nice Text") 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 12) %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", "Right") %>%
-#     add_content(txt) %>%
-#     page_footer("Left1", "Center1", "Right1") %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-3: Three page text spec increased margins works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test3.pdf")
-#   
-#   cnttxt <- paste(rep(cnt, 15), collapse = "")
-#   
-#   txt <- create_text(cnttxt) %>%
-#     titles("Text 1.0", "My Nice Text") %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz) %>%
-#     set_margins(top = 2, bottom = 2) %>%
-#     page_header("Left", c("Right1", "Right2")) %>%
-#     add_content(txt) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 3)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-4: Two page text spec works as expected in 10pt font.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test4.pdf")
-#   
-#   cnttxt <- paste(rep(cnt, 12), collapse = "")
-#   
-#   txt <- create_text(cnttxt) 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 10) %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", "Right") %>%
-#     add_content(txt) %>%
-#     page_footer("Left1", "Center1", "Right1") %>%
-#     titles("Text 1.0", "My Nice Text") %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-5: Two page text spec works as expected in 8pt font.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test5.pdf")
-#   
-#   cnttxt <- paste(rep(cnt, 20), collapse = "")
-#   
-#   txt <- create_text(cnttxt) 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 8) %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", "Right") %>%
-#     add_content(txt) %>%
-#     page_footer("Left1", "Center1", "Right1") %>%
-#     titles("Text 1.0", "My Nice Text") %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   
-#   
-# })
-# 
-# 
+# Need to fix footnotes on content
+test_that("pdf2-1c: Report with titles on content is correct.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test1c.pdf")
+  
+  txt <- create_text(cnt, width = 6) %>% 
+    titles("Table 0.0", "Baseline Characteristics", align = "center") %>%
+    footnotes("My footnote1", "My footnote2") 
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial", 
+                       font_size = 12) %>%
+    set_margins(top = 1, left = 1, right = 1, bottom = 1) %>% 
+    page_header(c("Left1", "Another left"), 
+                c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
+    add_content(txt) %>% 
+    page_footer(c("Left1", "Left2"), "Center", "Right")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+# Borders not working yet
+test_that("pdf2-1d: One page text spec with borders works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test1d.pdf")
+  
+  txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
+    titles("Text 1.0", "My Nice Text", borders = "outside", font_size = 12) %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 10) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt, align = "right") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+test_that("pdf2-2: Two page text spec works as expected in 12pt font.", {
+
+
+  fp <- file.path(base_path, "pdf2/test2.pdf")
+
+  cnttxt <- paste(rep(cnt, 12), collapse = "")
+
+  txt <- create_text(cnttxt) %>%
+    titles("Text 1.0", "My Nice Text")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 12) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+
+
+})
+
+
+test_that("pdf2-3: Three page text spec increased margins works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test3.pdf")
+
+  cnttxt <- paste(rep(cnt, 15), collapse = "")
+
+  txt <- create_text(cnttxt) %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz) %>%
+    set_margins(top = 2, bottom = 2) %>%
+    page_header("Left", c("Right1", "Right2")) %>%
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+
+
+})
+
+
+test_that("pdf2-4: Two page text spec works as expected in 10pt font.", {
+
+
+  fp <- file.path(base_path, "pdf2/test4.pdf")
+
+  cnttxt <- paste(rep(cnt, 12), collapse = "")
+
+  txt <- create_text(cnttxt)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 10) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    titles("Text 1.0", "My Nice Text") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+
+
+})
+
+
+test_that("pdf2-5: Two page text spec works as expected in 8pt font.", {
+
+
+  fp <- file.path(base_path, "pdf2/test5.pdf")
+
+  cnttxt <- paste(rep(cnt, 20), collapse = "")
+
+  txt <- create_text(cnttxt)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 8) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(txt) %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    titles("Text 1.0", "My Nice Text", bold = TRUE) %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+
+
+})
+
+
 # test_that("pdf2-6: One page table works as expected.", {
 #   
 #   
