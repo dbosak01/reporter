@@ -566,9 +566,19 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         width <- content_width
       else if (is.numeric(ttlhdr$width))
         width <- ttlhdr$width
-
-      rb1 <- width
-      rb2 <- width * .7 
+      
+      # Get content alignment codes
+      if (talgn == "right") {
+        lb <- rs$content_size[["width"]] - width
+        rb1 <- rs$content_size[["width"]]
+      } else if (talgn %in% c("center", "centre")) {
+        lb <- (rs$content_size[["width"]] - width) / 2
+        rb1 <- width + lb
+      } else {
+        lb <- 0
+        rb1 <- width
+      }
+      rb2 <- rb1 * .7
 
       mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
 
@@ -578,12 +588,8 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
 
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
-
-
       
       for(i in seq_len(mx)) {
-
-
 
         al <- ""
         if (i == 1) {
@@ -591,35 +597,13 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
 
             alcnt <- 1
 
-            # tb <- get_cell_borders(i, 1, mx + alcnt,
-            #                        1, ttlhdr$borders)
-            # 
-            # al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1,
-            #              "\\ql\\cell\\row\n")
+            lyline <- lyline + lh
+            ryline <- ryline + lh
+
             cnt <- cnt + 1
 
           }
         }
-
-        bl <- ""
-        if (i == mx) {
-          if (any(ttlhdr$blank_row %in% c("below", "both"))) {
-            blcnt <- 1
-
-            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
-            #                        mx + alcnt + blcnt,
-            #                        1, ttlhdr$borders)
-            # 
-            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w1,
-            #              "\\ql\\cell\\row\n")
-            cnt <- cnt + 1
-          }
-
-          if (any(ttlhdr$borders %in% c("all", "outside", "bottom")))
-            border_flag <- TRUE
-        }
-
-
 
         if (length(ttlhdr$titles) >= i) {
           # Split strings if they exceed width
@@ -628,7 +612,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
           for (ln in seq_len(tmp1$lines)) {
             
             ret[[length(ret) + 1]] <- page_text(tmp1$text[ln], rs$font_size, 
-                                                xpos = get_points(0, # fix this
+                                                xpos = get_points(lb, 
                                                                   rb2,
                                                                   tmp1$widths[ln],
                                                                   units = rs$units,
@@ -651,7 +635,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
           for (ln in seq_len(tmp2$lines)) {
             
             ret[[length(ret) + 1]] <- page_text(tmp2$text[ln], rs$font_size, 
-                                                xpos = get_points(rb2, # fix this
+                                                xpos = get_points(rb2, 
                                                                   rb1,
                                                                   tmp2$widths[ln],
                                                                   units = rs$units,
@@ -666,10 +650,24 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
 
           hcnt <- 1
         }
+        
+        bl <- ""
+        if (i == mx) {
+          if (any(ttlhdr$blank_row %in% c("below", "both"))) {
+            blcnt <- 1
+            
+            lyline <- lyline + lh
+            ryline <- ryline + lh
+            
+            cnt <- cnt + 1
+          }
+          
+          if (any(ttlhdr$borders %in% c("all", "outside", "bottom")))
+            border_flag <- TRUE
+        }
 
         # b1 <- get_cell_borders(i + alcnt, 1, mx + alcnt + blcnt, 2, ttlhdr$borders)
         # b2 <- get_cell_borders(i + alcnt, 2, mx+ alcnt + blcnt, 2, ttlhdr$borders)
-
 
         # if (al != "")
         #   ret <- append(ret, al)

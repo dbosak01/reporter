@@ -263,16 +263,18 @@ test_that("pdf2-4: Two page text spec works as expected in 10pt font.", {
 
   cnttxt <- paste(rep(cnt, 12), collapse = "")
 
-  txt <- create_text(cnttxt)
+  txt <- create_text(cnttxt, width = 6) %>% 
+    title_header("Text 1.0", right = "My Nice Text", blank_row = "both") %>%
+    title_header("Text 2.0", right = "My Nice Text2", blank_row = "both") %>%
+    footnotes("My footnote 1", "My footnote 2")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = 10) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt) %>%
-    page_footer("Left1", "Center1", "Right1") %>%
-    titles("Text 1.0", "My Nice Text") %>%
-    footnotes("My footnote 1", "My footnote 2")
+    page_footer("Left1", "Center1", "Right1") 
+
 
   res <- write_report(rpt)
 
