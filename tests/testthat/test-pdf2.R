@@ -114,7 +114,7 @@ test_that("pdf2-1a: Simple report with titles on report is correct.", {
                 c("Right1", "Right2", "Another right"),  blank_row = "below") %>% 
     titles("Table 0.0", "Baseline Characteristics", align = "center",
            blank_row = "below", bold = TRUE) %>%
-    add_content(create_text(cnt, width = 6, align = "right"), align = "right") %>% 
+    add_content(create_text(cnt, width = 6, align = "left"), align = "center") %>% 
     footnotes("My footnote1", "My footnote2", valign = "top", blank_row = "none",
               width = "page", align = "left") %>% 
     page_footer(c("Left1", "Left2"), "Center", "Right")
@@ -234,9 +234,11 @@ test_that("pdf2-3: Three page text spec increased margins works as expected.", {
 
   cnttxt <- paste(rep(cnt, 15), collapse = "")
 
-  txt <- create_text(cnttxt) %>%
-    titles("Text 1.0", "My Nice Text") %>%
-    footnotes("My footnote 1", "My footnote 2")
+  txt <- create_text(cnttxt, width = 6) %>%
+    titles("Text 1.0", "My Nice Text", align = "left") %>%
+    titles("Text 1.0", "My Nice Text", align = "right") %>%
+    footnotes("My footnote 1", "My footnote 2", align = "left") %>% 
+    footnotes("My footnote 3", "My footnote 4", align = "right")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz) %>%
@@ -248,7 +250,7 @@ test_that("pdf2-3: Three page text spec increased margins works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 3)
+  expect_equal(res$pages, 6)
 
 
 })

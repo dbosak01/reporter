@@ -291,14 +291,11 @@ get_titles_pdf <- function(ttllst, content_width, rs,
   
   lh <- rs$row_height
   border_flag <- FALSE
-  
   yline <- ystart
-
 
   if (length(ttllst) > 0) {
 
     for (ttls in ttllst) {
-
 
       if (ttls$width == "page")
         width <- rs$content_size[["width"]]
@@ -307,13 +304,17 @@ get_titles_pdf <- function(ttllst, content_width, rs,
       else if (is.numeric(ttls$width))
         width <- ttls$width
 
-
-      # if (ttls$align == "center")
-      #   algn <- "\\qc"
-      # else if (ttls$align == "right")
-      #   algn <- "\\qr"
-      # else
-      #   algn <- "\\ql"
+      # Get content alignment codes
+      if (talgn == "right") {
+        lb <- rs$content_size[["width"]] - width
+        rb <- rs$content_size[["width"]]
+      } else if (talgn %in% c("center", "centre")) {
+        lb <- (rs$content_size[["width"]] - width) / 2
+        rb <- width + lb
+      } else {
+        lb <- 0
+        rb <- width
+      }
 
       border_flag <- FALSE
       
@@ -331,23 +332,13 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         if (i == 1) {
           if (any(ttls$blank_row %in% c("above", "both"))) {
 
-
             yline <- yline + lh
             cnt <- cnt + 1
 
           }
         }
 
-        if (i == length(ttls$titles)) {
-          if (any(ttls$blank_row %in% c("below", "both"))) {
-            blcnt <- 1
 
-            cnt <- cnt + 1
-          }
-
-          if (any(ttls$borders %in% c("outside", "all", "bottom")))
-            border_flag <- TRUE
-        }
         # 
         # b <- get_cell_borders(i + alcnt, 1,
         #                       length(ttls$titles) + alcnt + blcnt,
@@ -356,22 +347,13 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         # Split title strings if they exceed width
         tmp <- split_string_text(ttls$titles[[i]], width, rs$units)
 
-        # fz <- ""
-        # fs <- ""
-        # if (!is.null(ttls$font_size)) {
-        # 
-        #   fz <- paste0("\\fs", ttls$font_size * 2,
-        #                get_spacing_multiplier(ttls$font_size))
-        #   fs <- paste0("\\fs", rs$font_size * 2)
-        # }
-
         
         for (ln in seq_len(tmp$lines)) {
           
           ret[[length(ret) + 1]] <- page_text(tmp$text[ln], fs, 
                                               bold = ttls$bold,
-                                              xpos = get_points(0, # fix this
-                                                                width,
+                                              xpos = get_points(lb, 
+                                                                rb,
                                                                 tmp$widths[ln],
                                                                 units = rs$units,
                                                                 align = ttls$align),
@@ -380,13 +362,17 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         }
         
         
-        # # Concatenate title string
-        # if (al != "")
-        #   ret <- append(ret, al)
-        # ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w,
-        #                           algn, fz, " ", tb, fs, "\\cell\\row\n"))
-        # if (bl != "")
-        #   ret <- append(ret, bl)
+        if (i == length(ttls$titles)) {
+          if (any(ttls$blank_row %in% c("below", "both"))) {
+            #blcnt <- 1
+            yline <- yline + lh
+            cnt <- cnt + 1
+          }
+          
+          # if (any(ttls$borders %in% c("outside", "all", "bottom")))
+          #   border_flag <- TRUE
+        }
+        
 
         cnt <- cnt + tmp$lines
 
@@ -435,9 +421,9 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
 
   if (length(ftnlst) > 0) {
     
-    tmp <- list()
-
     for (ftnts in ftnlst) {
+      
+      tmp <- list()
 
       if (ftnts$width == "page")
         width <- rs$content_size[["width"]]
@@ -445,6 +431,18 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
         width <- content_width
       else if (is.numeric(ftnts$width))
         width <- ftnts$width
+      
+      # Get content alignment codes
+      if (talgn == "right") {
+        lb <- rs$content_size[["width"]] - width
+        rb <- rs$content_size[["width"]]
+      } else if (talgn %in% c("center", "centre")) {
+        lb <- (rs$content_size[["width"]] - width) / 2
+        rb <- width + lb
+      } else {
+        lb <- 0
+        rb <- width
+      }
 
       alcnt <- 0
       blcnt <- 0
@@ -465,11 +463,6 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
             
             yline <- yline + lh
 
-            # tb <- get_cell_borders(i, 1, length(ftnts$footnotes) + alcnt,
-            #                        1, ftnts$borders)
-
-            # al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, "\\cell\\row\n")
             cnt <- cnt + 1
 
           }
@@ -480,12 +473,6 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
           if (any(ftnts$blank_row %in% c("below", "both"))) {
             blcnt <- 1
 
-            # tb <- get_cell_borders(i + alcnt + blcnt, 1,
-            #                        length(ftnts$footnotes) + alcnt + blcnt,
-            #                        1, ftnts$borders)
-
-            # bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w,
-            #              algn, "\\cell\\row\n")
             cnt <- cnt + 1
           }
           
@@ -526,8 +513,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
         for (ln in seq_len(tmp[[i]]$lines)) {
           
           ret[[length(ret) + 1]] <- page_text(tmp[[i]]$text[ln], rs$font_size, 
-                                              xpos = get_points(0, # fix this
-                                                          width,
+                                              xpos = get_points(lb, 
+                                                          rb,
                                                           tmp[[i]]$widths[ln],
                                                           units = rs$units,
                                                           align = tmp[[i]]$align),

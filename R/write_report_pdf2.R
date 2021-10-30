@@ -397,47 +397,39 @@ page_setup_pdf <- function(rs) {
   # Content size is the page size minus margins, in units of measure
   rs$content_size <- get_content_size(rs)
   
-  # A lot of these values are guesses.  Need to test.
-  # Row height and line height were defined independently in case
-  # they are different.  Right now, appear to be the same.
+
   if (rs$font_size == 8) {
-    rh <- 185 / 20 #round(.11 * 1440)
-    lh <- 185 / 20 #round(.1 * 1440) 
+
     gtr <- .1 
     cw <- .1
-    cp <- 40
 
   } else if (rs$font_size == 9) {
-    rh <- 218 / 20 #round(.165 * 1440) # 225
-    lh <- 218 / 20 #round(.165 * 1440)  
+
     gtr <- .11
     cw <- .11
-    cp <- 40
 
   } else if (rs$font_size == 10) {
-    rh <- 228 / 20 #round(.165 * 1440) # 225
-    lh <- 228 / 20 #round(.165 * 1440)  
+   
     gtr <- .11
     cw <- .11
-    cp <- 40
 
   } else if (rs$font_size == 11) {
-    rh <- 250 / 20 #round(.165 * 1440) # 225
-    lh <- 250 / 20 #round(.165 * 1440)  
+  
     gtr <- .11
     cw <- .12
-    cp <- 40
 
   } else if (rs$font_size == 12) {
-    rh <- 275 / 20 #round(.2 * 1440)
-    lh <- 275 / 20 #round(.1875 * 1440) #270
+
     gtr <- .11
     cw <- .12
-    cp <- 40
 
   }
   
+  # Line height is for text
+  lh <- get_line_height_pdf(rs$font_size)
   
+  # Row height is for tables.  Right now both the same.
+  rh <- lh
   
   
   # Get conversion factor to points
@@ -452,24 +444,9 @@ page_setup_pdf <- function(rs) {
   rs$line_height <- lh
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
-  rs$cell_padding <- cp
-  # rs$spacing_multiplier <- get_spacing_multiplier(rs$font_size)
-  # rs$page_break_rtf <- paste0(pb, rs$spacing_multiplier)
+  rs$cell_padding <- 1
   rs$border_height <- .5
   
-  # Line spacing values determined by trial and error.
-  # Needed for LibreOffice.  Appear to be ignored in Word.
-  # if (rs$font_size == 10) {
-  #   rs$font_rtf <-  "\\f0\\fs20"
-  # } else if (rs$font_size == 12) {
-  #   rs$font_rtf <-  "\\f0\\fs24"
-  # } else if (rs$font_size == 11) {
-  #   rs$font_rtf <-  "\\f0\\fs22"
-  # } else if (rs$font_size == 9) {
-  #   rs$font_rtf <-  "\\f0\\fs18"
-  # } else if (rs$font_size == 8) {
-  #   rs$font_rtf  <- "\\f0\\fs16"
-  # }
   
   # Assume landscape
   pg_h <- rs$page_size[1]
@@ -487,9 +464,7 @@ page_setup_pdf <- function(rs) {
     rs$gutter_width <- gtr
   
   if (is.null(rs$user_line_count)) {
-    # There is one row above the page footer that is not printable.
-    # Therefore adjust by 1.
-    rs$line_count <- floor(rs$content_size[[1]] * conv / rh) - 1
+    rs$line_count <- floor(rs$content_size[[1]] * conv / rh) 
   } else 
     rs$line_count <- rs$user_line_count
   
@@ -510,7 +485,7 @@ page_setup_pdf <- function(rs) {
   # Small adjustment by one line height
   # This gets used to determine lines on a page.
   rs$body_size <- 
-    c(height = floor((rs$content_size[[1]] * conv) - pt$page_header$points - pt$page_footer$points - lh), 
+    c(height = floor((rs$content_size[[1]] * conv) - pt$page_header$points - pt$page_footer$points), 
       width = floor(rs$content_size[[2]] * conv))
   
   if (debug) {
@@ -543,26 +518,28 @@ page_setup_pdf <- function(rs) {
   return(rs)
 }
 
+# Row heights determined by trial and error on RTF and converted to points
+# for PDF (divide by 20).
 #' @noRd
-get_spacing_multiplier_pdf <- function(font_size) {
-  
+get_line_height_pdf <- function(font_size) {
+
   if (font_size == 8) {
-    sm <- "\\sl-180\\slmult0" 
+    sm <- 185 / 20
   } else if (font_size == 9) {
-    sm <- "\\sl-200\\slmult0" 
+    sm <- 218 / 20
   } else if (font_size == 10) {
-    sm <- "\\sl-225\\slmult0"
+    sm <- 228 / 20
   } else if (font_size == 11) {
-    sm <- "\\sl-250\\slmult0" 
+    sm <- 250 / 20
   } else if (font_size == 12) {
-    sm <- "\\sl-275\\slmult0"
+    sm <- 275 / 20
   } else if (font_size == 13) {
-    sm <- "\\sl-300\\slmult0"
+    sm <- 300 / 20
   } else if (font_size == 14) {
-    sm <- "\\sl-325\\slmult0"
+    sm <- 325 /20
   } else {
-    sm <- "\\sl-250\\slmult0" 
+    sm <- 250 / 20
   }
-  
+
   return(sm)
 }
