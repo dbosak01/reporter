@@ -331,7 +331,7 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, ystart,
   ftnts <- list(lines = 0, twips = 0, border_flag = FALSE)
   vflag <- "none"
   
-  fl <- rs$page_template$footer$lines
+  fl <- rs$page_template$page_footer$lines
   
   # Deal with valign parameter
   if (!is.null(spec$footnotes)) {

@@ -191,6 +191,13 @@ paginate_content_pdf <- function(rs, doc) {
       #   lns[[length(lns) + 1]] <- res$lines[[j]]
       #   
       # }
+      
+      res <- create_plot_pages_pdf(rs, cntnt, last_page_lines, tempdir())
+      for (j in seq_len(length(res$pdf))) {
+        
+        doc <- add_page(doc, res$pdf[[j]], rttls$pdf, rttl_hdr$pdf, 
+                        rftnts$pdf, rheader$pdf, rfooter$pdf) 
+      }
     }   
     
     # Store pages and lines with content objects

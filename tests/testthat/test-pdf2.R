@@ -264,9 +264,11 @@ test_that("pdf2-4: Two page text spec works as expected in 10pt font.", {
   cnttxt <- paste(rep(cnt, 12), collapse = "")
 
   txt <- create_text(cnttxt, width = 6) %>% 
-    title_header("Text 1.0", right = "My Nice Text", blank_row = "both") %>%
-    title_header("Text 2.0", right = "My Nice Text2", blank_row = "both") %>%
-    footnotes("My footnote 1", "My footnote 2")
+    title_header("Text 1.0", right = "My Nice Text", blank_row = "above",
+                 width = "page") %>%
+    title_header("Text 2.0", right = "My Nice Text2", blank_row = "below", 
+                 width = "page") %>%
+    footnotes("My footnote 1", "My footnote 2", width = "page")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = 10) %>%
@@ -910,40 +912,42 @@ test_that("pdf2-5: Two page text spec works as expected in 8pt font.", {
 #   
 #   
 # })
-# 
-# # Works!
-# test_that("pdf2-25: Simplest RTF Plot works as expected.", {
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "pdf2/test25.pdf")
-#   
-#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-#   
-#   plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>% 
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
-#     footnotes("* Motor Trend, 1974", borders = "none") 
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size =fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(plt, align = "right") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-26: RTF Table with Plot on same page works as expected.", {
+
+
+test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf2/test25.pdf")
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
+           borders = "none", blank_row = "both") %>%
+    footnotes("* Motor Trend, 1974", borders = "none", blank_row = "both", 
+              valign = "top", width = "page", align = "center")
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size =fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+
+# test_that("pdf2-26: Table with Plot on same page works as expected.", {
 #   
 #   library(ggplot2)
 #   

@@ -833,6 +833,7 @@ create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
   cntr <- 1
   pgs <- list()
   cnts <- c()
+  pnts <- c()
   
   for (dat in dat_lst) {
     
@@ -862,29 +863,35 @@ create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
       ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
                       dpi = 300, units = u)
     }
+    ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
+              rs$page_template$page_header$points)
     
-    # Get rtf page bodies
+    # Get pdf page bodies
     res <- get_plot_body_pdf(plt, tmp_nm, cntnt$align, rs,
                              lpg_rows, cntnt$blank_row, pgby, pgval, 
-                             cntr < length(dat_lst))
+                             cntr < length(dat_lst), ystart = ys)
     
-    pgs[[length(pgs) + 1]] <- res$rtf
-    cnts[[length(cnts) + 1]] <- res$lines
-    
+    pgs[[length(pgs) + 1]] <- res$pdf
+    cnts[length(cnts) + 1] <- res$lines
+    pnts[length(pnts) + 1] <- res$lines * rs$line_height
     cntr <- cntr + 1
     
   }
   
-  ret <- list(rtf = pgs,
-              lines = cnts)
+  ret <- list(pdf = pgs,
+              lines = cnts, 
+              points = pnts)
   
   return(ret)
 }
 
-#' Create list of vectors of strings for each page 
+#' Create list of page_text or page_image objects for a single page 
 #' @noRd
 get_plot_body_pdf <- function(plt, plot_path, talign, rs,
-                              lpg_rows, content_blank_row, pgby, pgval, wrap_flag) {
+                              lpg_rows, content_blank_row, pgby, pgval, 
+                              wrap_flag, ystart = 0) {
+  
+  lh <- rs$line_height
   
   # Default to content width
   wth <- rs$content_size[["width"]] 
@@ -896,91 +903,105 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   
   
   # Get titles and footnotes
-  ttls <- get_titles_pdf(plt$titles, wth, rs, talign) 
-  ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
-  pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign)
+  ttls <- get_titles_pdf(plt$titles, wth, rs, talign, ystart = ystart) 
+  ttl_hdr <- get_title_header_pdf(plt$title_hdr, wth, rs, 
+                                  talign, ystart = ystart)
+  pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign, 
+                           ystart = sum(ystart, ttls$points, ttl_hdr$points))
   
-  # Get image RTF codes
+  # Get image PDF codes
   #img <- get_image_pdf(plot_path, plt$width, plt$height, rs$units)
   
   # Assign table alignment codes
-  if (talign == "left") {
-    talgn <- "\\trql" 
-  } else if (talign == "right") {
-    talgn <- "\\trqr"
-  } else  {
-    talgn <- "\\trqc"
-  }
+  # if (talign == "left") {
+  #   talgn <- "\\trql" 
+  # } else if (talign == "right") {
+  #   talgn <- "\\trqr"
+  # } else  {
+  #   talgn <- "\\trqc"
+  # }
   
-  algn <- "\\qc" 
+  if (talign == "right") {
+    lb <- rs$content_size[["width"]] - wth
+    rb <- rs$content_size[["width"]]
+  } else if (talign %in% c("center", "centre")) {
+    lb <- (rs$content_size[["width"]] - wth) / 2
+    rb <- wth + lb
+  } else {
+    lb <- 0
+    rb <- wth
+  }
+  # 
+  # algn <- "\\qc" 
   
   # Convert width to twips
-  w <- round(wth * rs$twip_conversion)
+  # w <- round(wth * rs$point_conversion)
   
   # Get border codes
-  b <- get_cell_borders_pdf(1, 1, 1, 1, plt$borders)
+  # b <- get_cell_borders_pdf(1, 1, 1, 1, plt$borders)
   
   # Concat all header codes
-  hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
+  # hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
+  # 
+  # ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
   
-  ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
+  yline <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
+  lnstrt <- ceiling(yline / rs$line_height)
   
-  
-  
-  # Concat RTF codes for image
-  img <- paste0(hd, img, ft)
-  imght <- round((plt$height * rs$twip_conversion) / rs$line_height)
+  # Concat PDF codes for image
+  # img <- paste0(hd, img, ft)
+  imght <- round((plt$height * rs$point_conversion) / lh)
   
   # Add blank above content if requested
   a <- NULL
-  if (content_blank_row %in% c("both", "above"))
-    a <- "\\par"
+  # if (content_blank_row %in% c("both", "above"))
+  #   a <- "\\par"
   
+  # Fix up
+  # imgs[[length(imgs) + 1]] <- page_image(img$filename,
+  #                                        height = img$height,
+  #                                        width = img$width,
+  #                                        align = img$align,
+  #                                        line_start = img$line_start)
+  rws <- list()
+  rws[[length(rws) + 1]] <- page_image(plot_path,
+                             height = plt$height,
+                             width = plt$width,
+                             align = talign,
+                             line_start = lnstrt)
   
+  # Combine titles, blanks, body, and footnotes
+  #rws <-  list() #     c(a, ttls$pdf, ttl_hdr$pdf, pgbys$pdf, tpt, img, bpt)
   
-  
-  # Get sum of all items to this point
-  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, imght)
+  yline <- ceiling(yline + (plt$height * rs$point_conversion)) 
   
   # Get footnotes, filler, and content blank line
-  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, lns,
+  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, yline,
                                   wrap_flag, content_blank_row, talign)
   
   
-  # On LibreOffice, have to protect the table from the title width or
-  # the table row will inherit the title row width. Terrible problem.
-  tpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(plt$borders %in% c("all", "top", "outside"))) {
-    if (ttls$border_flag | rs$page_template$titles$border_flag |  
-        rs$page_template$title_hdr$border_flag)
-      tpt <- ""
+  # Add remaining page content.
+  # This needs to be done now so everything is on the page
+  # Different than all other output types.
+  if (ttls$lines > 0) {
+    rws<- append(rws, ttls$pdf)
+  }
+  if (ttl_hdr$lines > 0) {
+    rws <- append(rws, ttl_hdr$pdf)
+  }
+  if (ftnts$lines > 0) {
+    rws <- append(rws, ftnts$pdf)
   }
   
-  # Prevent infection of widths on LibreOffice.
-  bpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(plt$borders %in% c("all", "top", "outside"))) {
-    if (!is.null(ftnts)) {
-      if (ftnts$border_flag)
-        bpt <- ""
-    }
-    
-    if (!is.null(rs$page_template$footnotes)) {
-      if (rs$page_template$footnotes$border_flag)
-        bpt <- ""
-    }
-  }
-  
-  # Combine titles, blanks, body, and footnotes
-  rws <- c(a, ttls$rtf, ttl_hdr$rtf, pgbys$rtf, tpt, img, bpt)
-  
-  # Combine everything
-  rws <- c(rws, ftnts$rtf)
-  lns <- sum(lns, ftnts$lines)
-  
+
+  # Get sum of all items to this point
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, 
+             imght, ftnts$lines)
   
   # Page list
-  ret <- list(rtf = rws,
-              lines = lns)  
+  ret <- list(pdf = rws,
+              lines = lns,
+              points = lns * lh)  
   
   
   return(ret)

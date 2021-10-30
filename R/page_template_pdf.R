@@ -707,7 +707,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
 #' @param width The width to set the page by strings to
 #' @return A vector of strings
 #' @noRd
-get_page_by_pdf <- function(pgby, width, value, rs, talgn) {
+get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 

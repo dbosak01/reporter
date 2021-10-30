@@ -489,8 +489,6 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
 }
 
 
-
-
 #' @description lines is the number of lines per page or cell before breaking.
 #' Width is the width of the page or cell.
 #' @noRd
@@ -783,7 +781,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   lns <- tpgs$lines
   wdths <- tpgs$widths
   
-  # Calculate text width in twips
+  # Calculate text width in points
   w <- round(width * rs$point_conversion)
   
   # Get content alignment codes
@@ -798,13 +796,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     rb <- width
   }
   
-  # Get text alignment codes
-  # if (txt$align == "right") 
-  #   algn <- "\\qr"
-  # else if (txt$align %in% c("center", "centre"))
-  #   algn <- "\\qc"
-  # else 
-  #   algn <- "\\ql"
   
   # Get cell border codes
   # b <- get_cell_borders_pdf(1, 1, 1, 1, txt$borders)  
@@ -831,12 +822,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     
     pg <- txtpgs[[i]]
     
-    # Put line ending on all but last line
-    # if (length(pg) > 1) {
-    #   s <- paste0(pg[seq(1, length(pg) - 1)], "\\line ")
-    #   s <- c(s, pg[length(pg)])
-    # } else
-    #   s <- pg
     
     # Add blank above content if requested
     if (i == 1 & content_blank_row %in% c("both", "above")) {
@@ -847,8 +832,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     
     pw <- wdths[[i]]
     
-    # Deal with cell padding.  Don't count this in line count.
-    # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding)
     
     for (ln in seq_along(pg)) {
       
@@ -871,28 +854,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, yline,
                                     wrap_flag, content_blank_row, talgn)
     
-    # On LibreOffice, have to protect the table from the title width or
-    # the table row will inherit the title row width. Terrible problem.
-    # tpt <- "{\\pard\\fs1\\sl0\\par}"
-    # if (any(txt$borders %in% c("all", "top", "outside"))) {
-    #   if (ttls$border_flag | rs$page_template$titles$border_flag |  
-    #       rs$page_template$title_hdr$border_flag)
-    #     tpt <- ""
-    # }
-    # 
-    # # Prevent infection of widths on LibreOffice.
-    # bpt <- "{\\pard\\fs1\\sl0\\par}"
-    # if (any(txt$borders %in% c("all", "top", "outside"))) {
-    #   if (!is.null(ftnts)) {
-    #     if (ftnts$border_flag)
-    #       bpt <- ""
-    #   }
-    #   
-    #   if (!is.null(rs$page_template$footnotes)) {
-    #     if (rs$page_template$footnotes$border_flag)
-    #       bpt <- ""
-    #   }
-    # }
+
     
     # Add remaining page content.
     # This needs to be done now so everything is on the page
@@ -906,21 +868,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     if (ftnts$lines > 0) {
         rws <- append(rws, ftnts$pdf)
     }
-    # if (rttls$lines > 0) {
-    #     rws <- append(rws, rttls$pdf)
-    # }
-    # if (rttl_hdr$lines > 0) {
-    #     rws <- append(rws, rttl_hdr$pdf)
-    # }
-    # if (rftnts$lines > 0) {
-    #     rws <- append(rws, rftnts$pdf)
-    # }
-    # if (rheader$lines > 0) {
-    #     rws <- append(rws, rheader$pdf)
-    # }
-    # if (rfooter$lines > 0) {
-    #     rws <- append(rws, rfooter$pdf)
-    # }
+
     
     ret[[length(ret) + 1]] <- rws
     cnt[length(cnt) + 1]  <- cnts
@@ -936,17 +884,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 }
 
 
-# for (ln in seq_len(tmp$lines)) {
-#   
-#   ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
-#                                       xpos = get_points(0, # fix this
-#                                                         width,
-#                                                         tmp$widths[ln],
-#                                                         units = rs$units,
-#                                                         align = ttls$align),
-#                                       ypos = yline)
-#   yline <- yline + lh
-# }
 
 
 
