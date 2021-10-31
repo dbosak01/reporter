@@ -148,6 +148,8 @@ get_page_footer_pdf <- function(rs) {
   cnt <- 0
   pnts <- 0
   
+  conv <- rs$point_conversion
+  
   fl <- rs$page_footer_left
   fc <- rs$page_footer_center
   fr <- rs$page_footer_right
@@ -235,7 +237,9 @@ get_page_footer_pdf <- function(rs) {
                                                           rb1,
                                                           tmp1[[i]]$widths[ln],
                                                           units = rs$units),
-                                            ypos = lyline)
+                                            ypos = lyline, 
+                                            align = "left",
+                                            alignx = 0)
         lyline <- lyline + lh
       }
 
@@ -251,7 +255,9 @@ get_page_footer_pdf <- function(rs) {
                                                             rb2,
                                                             tmp2[[i]]$widths[ln],
                                                             units = rs$units),
-                                              ypos = cyline)
+                                              ypos = cyline, 
+                                              align = "center",
+                                              alignx = rb1 / rb2)
           cyline <- cyline + lh
         }
     }
@@ -266,7 +272,9 @@ get_page_footer_pdf <- function(rs) {
                                                                     rb3,
                                                                     tmp3[[i]]$widths[ln],
                                                                     units = rs$units),
-                                            ypos = ryline)
+                                            ypos = ryline, 
+                                            align = "right",
+                                            alignx = rb3)
         ryline <- ryline + lh
       }
         
@@ -884,14 +892,4 @@ get_cell_borders_pdf <- function(row, col, nrow, ncol, brdrs, flag = "", exclude
   
 }
 
-get_page_numbers_pdf <- function(val, tpg = TRUE) {
-  
-  ret <- val
-  
-  ret <- gsub("[pg]", "\\chpgn ", ret, fixed = TRUE)
-  
-  if (tpg)
-    ret <- gsub("[tpg]", "{\\field{\\*\\fldinst  NUMPAGES }}", ret, fixed = TRUE)
-  
-  return(ret)
-}
+

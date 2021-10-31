@@ -33,6 +33,7 @@ write_report_pdf2 <- function(rs) {
                   page_width = rs$page_size[1],
                   orientation = rs$orientation,
                   units = rs$units,
+                  conversion = rs$point_conversion,
                   info = TRUE)
 
 

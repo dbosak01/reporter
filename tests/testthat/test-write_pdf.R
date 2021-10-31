@@ -964,3 +964,27 @@ test_that("basic write_pdf with positional text works as expected.", {
   
 })
 
+test_that("page_text detects page number tokens correctly", {
+  
+  res1 <- page_text("here is some text")
+  res1
+  
+  expect_equal(res1$has_page_numbers, FALSE)
+  
+  res2 <- page_text("here is some [pg] text")
+  res2
+  
+  expect_equal(res2$has_page_numbers, TRUE)
+  
+  
+  res3 <- page_text("here is some [tpg] text")
+  
+  expect_equal(res3$has_page_numbers, TRUE)
+  
+  
+  res4 <- page_text("here is some [PG] text")
+  
+  expect_equal(res4$has_page_numbers, FALSE)
+  
+})
+

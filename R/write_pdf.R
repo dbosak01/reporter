@@ -20,6 +20,7 @@ create_pdf <- function(filename = NULL,
                        margin_left = 1, 
                        orientation = "landscape",
                        units = "inches",
+                       conversion = 72,
                        info = TRUE) {
   
   # Check font size is valid
@@ -43,6 +44,7 @@ create_pdf <- function(filename = NULL,
   rpt$keywords <- ""
   rpt$orientation <- orientation
   rpt$units <- units
+  rpt$conversion <- conversion
   rpt$pages <- list()
     
   
@@ -122,7 +124,8 @@ page_text_back <- function(text #, font_name = NULL, font_size = NULL,
 
 #' @noRd
 page_text <- function(text, font_size = NULL, 
-                      xpos = NULL, ypos = NULL, bold = FALSE) {
+                      xpos = NULL, ypos = NULL, bold = FALSE,
+                      align = NULL, alignx = NULL, has_page_numbers = NULL) {
   
   txt <- structure(list(), class = c("page_text", "page_content", "list"))
   
@@ -131,6 +134,15 @@ page_text <- function(text, font_size = NULL,
   txt$xpos <- xpos
   txt$ypos <- ypos
   txt$bold <- bold
+  txt$align <- align
+  txt$alignx <- alignx  # In units of measure
+  
+  res1 <- grepl("[pg]", text, fixed = TRUE)
+  res2 <- grepl("[tpg]", text, fixed = TRUE)
+  
+  txt$has_page_numbers <- FALSE
+  if (any(res1 == TRUE) | any(res2 == TRUE))
+    txt$has_page_numbers <- TRUE
   
   return(txt)
   
@@ -230,7 +242,7 @@ write_pdf <- function(rpt, filename = NULL) {
 
   bdy <- get_pages(rpt$pages, margin_left, margin_top, 
                    page_height, page_width, rpt$fontsize, 
-                   fontname = rpt$fontname)
+                   fontname = rpt$fontname, conversion = rpt$conversion)
   
   rpt$pages <- length(rpt$pages)
                 
@@ -395,7 +407,8 @@ get_header_back <- function(page_count = 1,
 #' pages.
 #' @noRd
 get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
-                      fontsize, units = "inches", fontname = "Courier") {
+                      fontsize, units = "inches", fontname = "Courier", 
+                      conversion = 72) {
   
   # Vector for object IDs of pages only
   kids <- c()
@@ -424,8 +437,13 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   # as needed to get unique ids for the objects. 
   id <- 5
   
+  pgnum <- 0
+  tpg <- length(pages)
+  
   # Loop through added pages
   for (pg in pages) {
+    
+    pgnum <- pgnum + 1
     
     # Set current page id
     page_id <- id
@@ -453,16 +471,51 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
     
       if ("page_text" %in% class(cnt)) {
         
+        # If fixed width PDF, will not have x/y positions
         if (is.null(cnt$xpos) | is.null(cnt$ypos)) {
 
           tmp <- get_byte_stream(cnt$text,
                                  stx, sty, lh, fontsize, fontscale)
         } else {
           
-          tmp <- get_byte_stream(cnt$text, stx + cnt$xpos, sty - cnt$ypos, 
-                                 lh, ifelse(is.null(cnt$font_size), 
-                                            fontsize, cnt$font_size),
-                                 fontscale, cnt$bold)
+          # For PDF2 with page number flag set
+          if (cnt$has_page_numbers & FALSE) {
+            
+            # Need to adjust x position if there are page numbers,
+            # because when the page number tokens are replaced, 
+            # the string width has changed and can throw off the alignment.
+            # Not working perfectly, but better.
+            txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg)
+            w <- get_text_width(txt, cnt$font, 
+                                ifelse(is.null(cnt$font_size), 
+                                                      fontsize, cnt$font_size), 
+                                units)
+            if (cnt$align == "left")
+              nx <- cnt$alignx * conversion
+            else if (cnt$align == "right")
+              nx <- (cnt$alignx - w) * conversion
+            else
+              nx <- (cnt$alignx - (w / 2)) * conversion
+            
+            # For PDF2
+            tmp <- get_byte_stream(txt, 
+                                   stx + nx, sty - cnt$ypos, 
+                                   lh, ifelse(is.null(cnt$font_size), 
+                                              fontsize, cnt$font_size),
+                                   fontscale, cnt$bold)
+            
+          } else {
+            
+            # For other PDF2
+            tmp <- get_byte_stream(cnt$text, 
+                                   stx + cnt$xpos, sty - cnt$ypos, 
+                                   lh, ifelse(is.null(cnt$font_size), 
+                                              fontsize, cnt$font_size),
+                                   fontscale, cnt$bold)
+            
+          }
+          
+
         }
     
       
@@ -523,6 +576,17 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   
   return(res)
   
+}
+
+get_page_numbers_pdf <- function(txt, pg, tpg) {
+  
+  ret <- txt
+  
+  ret <- gsub("[pg]", pg, ret, fixed = TRUE)
+  
+  ret <- gsub("[tpg]", tpg, ret, fixed = TRUE)
+  
+  return(ret)
 }
 
 get_pages_back <- function(pages, margin_left, margin_top, page_height, page_width,

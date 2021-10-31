@@ -243,7 +243,7 @@ test_that("pdf2-3: Three page text spec increased margins works as expected.", {
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz) %>%
     set_margins(top = 2, bottom = 2) %>%
-    page_header("Left", c("Right1", "Right2")) %>%
+    page_header("Left", c("Right1", "Page [pg] of [tpg]")) %>%
     add_content(txt) %>%
     page_footer("Left1", "Center1", "Right1")
 
@@ -301,7 +301,7 @@ test_that("pdf2-5: Two page text spec works as expected in 8pt font.", {
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(txt) %>%
-    page_footer("Left1", "Center1", "Right1") %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
     titles("Text 1.0", "My Nice Text", bold = TRUE) %>%
     footnotes("My footnote 1", "My footnote 2")
 
@@ -1058,124 +1058,124 @@ test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
 #   
 #   
 # })
-# 
-# test_that("pdf2-29: Simplest RTF Plot with valign top works as expected.", {
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "pdf2/test29.pdf")
-#   
-#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-#   
-#   plt <- create_plot(p, height = 4, width = 8)
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(plt, align = "center") %>%
-#     footnotes("* Motor Trend, 1974", valign = "top") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# 
-# 
-# test_that("pdf2-30: Simplest RTF Plot with valign bottom works as expected.", {
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "pdf2/test30.pdf")
-#   
-#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-#   
-#   plt <- create_plot(p, height = 4, width = 8) %>%
-#     footnotes("* Motor Trend, 1974", valign = "bottom")
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(plt, align = "center") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
+
+test_that("pdf2-29: Simplest Plot with valign top works as expected.", {
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf2/test29.pdf")
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  plt <- create_plot(p, height = 4, width = 8)
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974", valign = "top") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+
+
+test_that("pdf2-30: Simplest RTF Plot with valign bottom works as expected.", {
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf2/test30.pdf")
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  plt <- create_plot(p, height = 4, width = 8) %>%
+    footnotes("* Motor Trend, 1974", valign = "bottom")
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
 # # Basic Tests 31 - 40 ------------------------------------------------------
-# 
-# test_that("pdf2-31: Simplest RTF Text with valign top works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test31.pdf")
-#   
-#   txt <- create_text(cnt, width = 6, borders = "outside")
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Text 1.0", "MTCARS Miles per Cylinder Text", borders = "outside") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(txt, align = "center") %>%
-#     footnotes("* Motor Trend, 1974", valign = "top", borders = "outside") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# test_that("pdf2-32: Simplest RTF Text with valign bottom works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test32.pdf")
-#   
-#   txt <- create_text(cnt, width = 6) %>%
-#     footnotes("* Motor Trend, 1974", valign = "bottom")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(txt, align = "center") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
+
+test_that("pdf2-31: Simplest RTF Text with valign top works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test31.pdf")
+
+  txt <- create_text(cnt, width = 6, borders = "outside")
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Text 1.0", "MTCARS Miles per Cylinder Text", borders = "outside") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center") %>%
+    footnotes("* Motor Trend, 1974", valign = "top", borders = "outside") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+test_that("pdf2-32: Simplest Text with valign bottom works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test32.pdf")
+
+  txt <- create_text(cnt, width = 6) %>%
+    footnotes("* Motor Trend, 1974", valign = "bottom")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
 # test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
 #   
 #   
