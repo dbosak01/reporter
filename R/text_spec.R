@@ -797,15 +797,13 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   }
   
   
-  # Get cell border codes
-  # b <- get_cell_borders_pdf(1, 1, 1, 1, txt$borders)  
-  
+
 
   ret <- list()
   cnt <- c()
   pnt <- c()
 
-  # Gather rtf and line counts for each page
+  # Gather pdf and line counts for each page
   for (i in seq_along(txtpgs)) {
     
     # Get starting y coordinate
@@ -848,7 +846,9 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
     pnts <- pnts + (cnts * lh)
     
-
+    # Get cell border codes
+    b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
+    
     
     # Get footnotes
     ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, yline,
@@ -857,8 +857,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
     
     # Add remaining page content.
-    # This needs to be done now so everything is on the page
-    # Different than all other output types.
     if (ttls$lines > 0) {
         rws<- append(rws, ttls$pdf)
     }

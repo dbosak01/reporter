@@ -81,7 +81,9 @@ get_page_header_pdf <- function(rs) {
                                                        rb,
                                                        tmp$widths[ln],
                                                        units = rs$units),
-                                            ypos = lyline)
+                                            ypos = lyline, 
+                                align = "left", 
+                                alignx = 0)
           lyline <- lyline + lh
         }
 
@@ -103,7 +105,9 @@ get_page_header_pdf <- function(rs) {
                                       rb, 
                                       tmp2$widths[ln], 
                                       rs$units),
-                                      ypos = ryline)
+                                      ypos = ryline, 
+              align = "right", 
+              alignx = rb)
           ryline <- ryline + lh
         }
         
@@ -811,7 +815,8 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
 # Utilities ---------------------------------------------------------------
 
 
-get_cell_borders_pdf <- function(row, col, nrow, ncol, brdrs, flag = "", exclude = NULL) {
+get_cell_borders_pdf <- function(startx, starty, col_widths, row_heights, brdrs, 
+                                 flag = "", exclude = NULL) {
   
   t <- ""
   b <- ""
@@ -892,4 +897,13 @@ get_cell_borders_pdf <- function(row, col, nrow, ncol, brdrs, flag = "", exclude
   
 }
 
-
+get_page_numbers_pdf <- function(txt, pg, tpg) {
+  
+  ret <- txt
+  
+  ret <- gsub("[pg]", pg, ret, fixed = TRUE)
+  
+  ret <- gsub("[tpg]", tpg, ret, fixed = TRUE)
+  
+  return(ret)
+}

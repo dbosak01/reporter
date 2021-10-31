@@ -101,26 +101,6 @@ add_info <- function(x,
   
 }
 
-#' @noRd
-page_text_back <- function(text #, font_name = NULL, font_size = NULL,
-                      # align = "left",
-                      # xpos = NULL, ypos = NULL
-                      ) {
-  
-  txt <- structure(list(), class = c("page_text", "page_content", "list"))
-  
-  txt$text <- text
-  # txt$font_name <- font_name
-  # txt$font_size <- font_size
-  # txt$align <- align
-  # txt$xpos <- xpos
-  # txt$ypos 
-  
-  
-  return(txt)
-  
-}
-
 
 #' @noRd
 page_text <- function(text, font_size = NULL, 
@@ -147,6 +127,8 @@ page_text <- function(text, font_size = NULL,
   return(txt)
   
 }
+
+
 
 
 #' Either pass align parameter and line_start, or pass specific xpos and ypos
@@ -184,6 +166,45 @@ page_image <- function(filename, height, width,
   
   return(img)
   
+}
+
+page_line <- function(startx, starty, endx, endy) {
+  
+  ln <- structure(list(), class = c("page_line", "page_content", "list"))
+  
+  
+  ln$startx <- startx
+  ln$starty <- starty
+  ln$endx <- endx
+  ln$endy <- endy
+  
+  return(ln)
+}
+
+page_hline <- function(startx, starty, pwidth) {
+  
+  ln <- structure(list(), class = c("page_line", "page_content", "list"))
+  
+  
+  ln$startx <- startx
+  ln$starty <- starty
+  ln$endx <- startx + pwidth
+  ln$endy <- starty
+  
+  return(ln)
+}
+
+page_vline <- function(startx, starty, pheight) {
+  
+  ln <- structure(list(), class = c("page_line", "page_content", "list"))
+  
+  
+  ln$startx <- startx
+  ln$starty <- starty
+  ln$endx <- startx
+  ln$endy <- starty + pheight
+  
+  return(ln)
 }
 
 
@@ -348,50 +369,6 @@ get_header <- function(page_count = 1,
   
 }
 
-get_header_back <- function(page_count = 1, 
-                       font_name = "Courier", 
-                       page_height = 612, 
-                       page_width = 792, 
-                       page_ids = c()) {
-  
-  lst <- list()
-  
-  lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
-                                           Pages = ref(3)))
-  
-  fn <- "Courier"
-  fb <- "Courier-Bold"
-  if (tolower(font_name) == "times") {
-    fn <- "Times-Roman"
-    fb <- "Times-Bold"
-  } else if (tolower(font_name) == "arial") {
-    fn <- "Helvetica"
-    fb <- "Helvetica-Bold"
-  }
-  
-  
-  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
-                                           Subtype = "/Type1", 
-                                           BaseFont = paste0("/", fn),
-                                           Encoding = "/WinAnsiEncoding"))
-  
-  
-  if (page_count > 10)
-    kds <- paste(page_ids, "0 R\n", collapse = " ")
-  else 
-    kds <- paste(page_ids, "0 R", collapse = " ")
-  
-  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Pages",
-                                           Kids = pdf_array(kds),
-                                           Count = page_count,                                                 
-                                           MediaBox = pdf_array(0, 0, 
-                                                                page_width, 
-                                                                page_height)))
-  
-  
-  return(lst)
-  
-}
 
 #' Purpose of this function is to create the appropriate pdf objects
 #' based on the pages added to the report.  Each page can have 1 or more 
@@ -479,7 +456,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         } else {
           
           # For PDF2 with page number flag set
-          if (cnt$has_page_numbers & FALSE) {
+          if (cnt$has_page_numbers & !is.null(cnt$align)) {
             
             # Need to adjust x position if there are page numbers,
             # because when the page number tokens are replaced, 
@@ -550,6 +527,13 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         # Increment id in preparation for next object
         id <- id + 1
         
+      } else if ("page_line" %in% class(cnt)) {
+        
+        tmp <- get_line_segment(startx = stx + cnt$startx,
+                                starty = sty - cnt$starty,
+                                endx = stx + cnt$endx,
+                                endy = sty - cnt$endy)
+        
       }
       
       # Append or replace content as appropriate
@@ -578,16 +562,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   
 }
 
-get_page_numbers_pdf <- function(txt, pg, tpg) {
-  
-  ret <- txt
-  
-  ret <- gsub("[pg]", pg, ret, fixed = TRUE)
-  
-  ret <- gsub("[tpg]", tpg, ret, fixed = TRUE)
-  
-  return(ret)
-}
+
 
 get_pages_back <- function(pages, margin_left, margin_top, page_height, page_width,
                       fontsize, units = "inches") {
@@ -1398,6 +1373,19 @@ get_image_text <- function(img_ref, height, width, xpos, ypos) {
   ret[2] <- paste(width, 0, 0, height, xpos, ypos, "cm")
   ret[3] <- paste0("/X", img_ref, " Do")
   ret[4] <- "Q"
+  
+  
+  return(ret)
+  
+}
+
+
+#' Utility function to create pdf codes for a line segment.
+#' @noRd
+get_line_segment <- function(startx, starty, endx, endy) {
+  
+  
+  ret <- paste(startx, starty, "m", endx, endy, "l S")
   
   
   return(ret)
