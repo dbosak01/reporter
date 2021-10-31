@@ -208,6 +208,38 @@ page_vline <- function(startx, starty, pheight) {
 }
 
 
+page_box <- function(startx, starty, pheight, pwidth, except = "") {
+  
+  
+  bx <- structure(list(), class = c("page_box", "page_content", "list"))
+  
+  bx$startx <- startx
+  bx$starty <- starty
+  bx$pheight <- pheight
+  bx$pwidth <- pwidth
+  bx$except <- except
+  
+  return(bx)
+  
+}
+
+page_grid <- function(startx, starty, rows, cols, pheights, pwidths) {
+  
+  
+  grd <- structure(list(), class = c("page_grid", "page_content", "list"))
+  
+  grd$startx <- startx
+  grd$starty <- starty
+  grd$nrow <- nrow
+  grd$rows <- rows
+  grd$cols <- cols
+  grd$pheights <- pheights
+  grd$pwidths <- pwidths
+  
+  return(grd)
+  
+}
+
 # Write PDF ---------------------------------------------------------------
 
 #' A function to write out a PDF file
@@ -533,6 +565,23 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                 starty = sty - cnt$starty,
                                 endx = stx + cnt$endx,
                                 endy = sty - cnt$endy)
+        
+      } else if ("page_box" %in% class(cnt)) {
+        
+        tmp <- get_box(startx = stx + cnt$startx,
+                       starty = sty - cnt$starty, 
+                       pheight = cnt$pheight,
+                       pwidth = cnt$pwidth, 
+                       except = cnt$except)
+        
+      } else if ("page_grid" %in% class(cnt)) {
+        
+        tmp <- get_grid(startx = stx + cnt$startx,
+                        starty = sty - cnt$starty, 
+                        rows = cnt$rows,
+                        cols = cnt$cols,
+                        pheights = cnt$pheight,
+                        pwidths = cnt$pwidth)
         
       }
       
@@ -1387,6 +1436,67 @@ get_line_segment <- function(startx, starty, endx, endy) {
   
   ret <- paste(startx, starty, "m", endx, endy, "l S")
   
+  
+  return(ret)
+  
+}
+
+#' Utility function to create pdf codes for a box.
+#' @noRd
+get_box <- function(startx, starty, pheight, pwidth, except = "") {
+  
+  ret <- c()
+  
+  if (except != "top")
+    ret[length(ret) + 1] <- paste(startx, starty, "m", 
+                                  startx + pwidth, starty, "l S")
+  if (except != "left")
+    ret[length(ret) + 1] <- paste(startx, starty, "m", startx, starty - pheight, "l S")
+  if (except != "bottom")
+    ret[length(ret) + 1] <- paste(startx, starty - pheight, "m", startx + pwidth, 
+                  starty - pheight, "l S")
+  if (except != "right")
+    ret[length(ret) + 1] <- paste(startx + pwidth, starty, "m", startx + pwidth, 
+                  starty - pheight, "l S")
+  
+  return(ret)
+  
+}
+
+#' Utility function to create pdf codes for a grid.
+#' @noRd
+get_grid <- function(startx, starty, rows, cols, pheights, pwidths) {
+  
+  ret <- c()
+  
+  wdths <- rep(pwidths, cols/length(pwidths)) 
+  hgths <- rep(pheights, rows/length(pheights))
+  twidth <- sum(wdths)
+  theight <- sum(hgths)
+
+  # Start top and left lines  
+  ret[1] <- paste(startx, starty, "m", startx + twidth, starty, "l S")
+  ret[2] <- paste(startx, starty, "m", startx, starty - theight, "l S")
+
+  
+  # Create remaining rows
+  yline <- starty
+  for (rw in hgths) {
+    yline <- yline - rw
+    ret[length(ret) + 1] <- paste(startx, yline, "m", 
+                                  startx + twidth, yline, "l S")
+  
+  }
+  
+  # Create remaining columns
+  xcol <- startx
+  for (cl in wdths) {
+    
+    xcol <- xcol + cl
+    ret[length(ret) + 1] <- paste(xcol, starty, "m", 
+                                  xcol, starty - theight, "l S")
+    
+  }
   
   return(ret)
   

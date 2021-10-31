@@ -989,7 +989,7 @@ test_that("page_text detects page number tokens correctly", {
 })
 
 
-test_that("basic write_pdf with positional text works as expected.", {
+test_that("basic write_pdf with page lines works as expected.", {
   
   fp <- file.path(base_path, "pdf/direct16.pdf")
   
@@ -1003,6 +1003,41 @@ test_that("basic write_pdf with positional text works as expected.", {
             page_hline(300, 105, 100), 
             page_hline(300, 205, 100),
             page_vline(400, 105, 100))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("basic write_pdf with page box works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct17.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_box(90, 85, 20, 50, "right"))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("basic write_pdf with page grid works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct18.pdf")
+  
+  l <- list(page_grid(90, 85, 5, 4, 20, c(50, 70, 50, 70)),
+            page_grid(90, 250, 4, 3, 25, 25))
   
   r <- create_pdf(fp, fontname = "Arial") %>% 
     add_page(l)
