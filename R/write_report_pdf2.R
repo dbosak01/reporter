@@ -44,18 +44,19 @@ write_report_pdf2 <- function(rs) {
   doc <- paginate_content_pdf(rs, doc)
   
   # Get column widths
-  #rs$column_widths <- bdy[["widths"]]
+  rs$column_widths <- doc[["widths"]]
   
   # Deal with preview
-  # if (!is.null(rs$preview)) {
-  #   if (rs$preview < length(bdy[[1]]$pages))
-  #     bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
-  # }
+  if (!is.null(rs$preview)) {
+    if (rs$preview < length(doc$pages))
+      doc$pages <- doc$pages[seq(1, rs$preview)]
+  }
   
   # Write content to file system
   # Later we can just return the stream
   #rs <- write_content_pdf(rs, hdr, bdy, rs$page_template)
-  rs <- write_pdf(doc)
+  doc <- write_pdf(doc)
+  rs$pages <- doc$pages
   
   # Update page numbers for title headers
   #update_page_numbers_rtf(orig_path, rs$pages)
@@ -171,9 +172,9 @@ paginate_content_pdf <- function(rs, doc) {
       #   lns[[length(lns) + 1]] <- res$page_list[[j]]$lines
       # }
       # 
-      # # Retrieve table widths.  These are useful for debugging.
-      # # Assigned to returning report object.
-      # table_widths[[length(table_widths) + 1]] <- res$widths
+      # Retrieve table widths.  These are useful for debugging.
+      # Assigned to returning report object.
+      table_widths[[length(table_widths) + 1]] <- res$widths
       
     } else if (any(class(obj) == "text_spec")) {
       
@@ -261,6 +262,7 @@ paginate_content_pdf <- function(rs, doc) {
     
   }
   
+  doc$widths <- table_widths
   
   # Can return something else if needed here
   # ret <- list(widths = table_widths, pages = ls)

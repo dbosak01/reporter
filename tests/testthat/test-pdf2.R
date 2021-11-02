@@ -340,157 +340,157 @@ test_that("pdf2-6: One page table works as expected.", {
 })
 
 
-# test_that("pdf2-7: Multi page table works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test7.pdf")
-#   
-#   dat <- iris
-#   
-#   
-#   tbl <- create_table(dat, borders = "none") %>% 
-#     titles("Table 1.0", "My Nice Irises", "Another Title") %>% 
-#     define(Sepal.Length, label = "Sepal Length", width = 1, align = "center") %>% 
-#     define(Sepal.Width, label = "Sepal Width", width = 1, align = "centre") %>% 
-#     define(Species, blank_after = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 12, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1")) %>%
-#     add_content(tbl, blank_row = "none") %>%
-#     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
-#     footnotes("My footnote 1", "My footnote 2") 
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 7)
-#   
-#   
-# })
-# 
-# 
-# 
-# test_that("pdf2-8: Portrait table works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test8.pdf")
-#   
-#   dat <- mtcars[1:15, ] 
-#   
-#   tbl <- create_table(dat) 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 10, orientation = "portrait") %>%
-#     # set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     footnotes("My footnote 1", "My footnote 2") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 11)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-9: Wide table works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test9.pdf")
-#   
-#   dat <- mtcars[1:15, ] 
-#   
-#   tbl <- create_table(dat) %>% 
-#     column_defaults(width = 1)
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "portrait") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "top") %>% # Works!
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-10: Preview works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test10.pdf")
-#   
-#   dat <- iris
-#   
-#   tbl <- create_table(dat, borders = "none") %>% 
-#     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
-#     footnotes("My footnote 1", "My footnote 2") 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
-#                        font_size = 12, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1")) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt, preview = 2)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   
-#   
-# })
-# 
-# # Basic Tests 11 - 20 ------------------------------------------------------
-# 
-# # This is awesome. Shows cell wrapping, page break, and valign
-# # Very good for testing.
-# test_that("pdf2-11: Forced page wrap works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test11.pdf")
-#   
-#   dat <- data.frame(labels = rownames(mtcars), mtcars)
-#   
-#   tbl <- create_table(dat, borders = "all") %>% 
-#     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>% 
-#     define(labels, id_var = TRUE) %>% 
-#     define(wt, page_wrap = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 12, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1")) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Page [pg] of [tpg]")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 4)
-#   
-#   
-# })
-# 
-# 
+test_that("pdf2-7: Multi page table works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test7.pdf")
+
+  dat <- iris
+
+
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    define(Sepal.Length, label = "Sepal Length", width = 1, align = "center") %>%
+    define(Sepal.Width, label = "Sepal Width", width = 1, align = "centre") %>%
+    define(Species, blank_after = TRUE)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl, blank_row = "none") %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 7)
+
+
+})
+
+
+
+test_that("pdf2-8: Portrait table works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test8.pdf")
+
+  dat <- mtcars[1:15, ]
+
+  tbl <- create_table(dat)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 10, orientation = "portrait") %>%
+    # set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 11)
+  expect_equal(res$pages, 1)
+
+
+})
+
+
+test_that("pdf2-9: Wide table works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test9.pdf")
+
+  dat <- mtcars[1:15, ]
+
+  tbl <- create_table(dat) %>%
+    column_defaults(width = 1)
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "portrait") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top") %>% # Works!
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+
+
+})
+
+
+test_that("pdf2-10: Preview works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test10.pdf")
+
+  dat <- iris
+
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt, preview = 2)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+
+
+})
+
+# Basic Tests 11 - 20 ------------------------------------------------------
+
+# This is awesome. Shows cell wrapping, page break, and valign
+# Very good for testing.
+test_that("pdf2-11: Forced page wrap works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test11.pdf")
+
+  dat <- data.frame(labels = rownames(mtcars), mtcars)
+
+  tbl <- create_table(dat, borders = "all") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>%
+    define(labels, id_var = TRUE) %>%
+    define(wt, page_wrap = TRUE)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
+
+
+})
+
+
 # test_that("pdf2-12: Table Borders work as expected.", {
 #   
 #   
@@ -554,163 +554,164 @@ test_that("pdf2-6: One page table works as expected.", {
 #   expect_equal(res$pages, 1)
 #   
 # })
-# 
-# 
-# test_that("pdf2-14: Labels and show_cols work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test14.pdf")
-#   
-#   dat <- mtcars[1:15, ] 
-#   
-#   attr(dat$mpg, "label") <- "Miles Per Gallon"
-#   attr(dat$cyl, "label") <- "Cylinders"
-#   
-#   tbl <- create_table(dat, show_cols = c("mpg", "hp", "cyl", "disp", "drat")) %>% 
-#     define(mpg, width = 1.25) %>% 
-#     define(disp, label = "Displacement")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     footnotes("My footnote 1", "My footnote 2") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
-# 
-# 
-# test_that("pdf2-15: Valign on report footnotes works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test15.pdf")
-#   
-#   dat <- iris[1:100, ] 
-#   
-#   tbl <- create_table(dat) %>% 
-#     define(Species, page_break = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
-#                        font_size = 9, orientation = "portrait") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "top") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 4)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   class(dat$Species)
-# })
-# 
-# # Works
-# test_that("pdf2-16: Valign on table footnotes works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test16.pdf")
-#   
-#   dat <- iris[1:100, ] 
-#   
-#   tbl <- create_table(dat) %>% 
-#     footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>% 
-#     define(Species, page_break = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
-#                        font_size = 10, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 4)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# test_that("pdf2-17: Title header on table works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test17.pdf")
-#   
-#   dat <- iris[1:25, ] 
-#   
-#   tbl <- create_table(dat, width = 9) %>% 
-#     title_header("Table 1.0", "My Nice Table", 
-#                  right = c("Right1", 
-#                            "Right2", "Page [pg] of [tpg]")) %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
-#                        font_size = 10, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-18: Title header on report works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test18.pdf")
-#   
-#   dat <- iris[1:50, ] 
-#   
-#   tbl <- create_table(dat) 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>% 
-#     title_header("Table 1.0", "My Nice Table", right = c("Page [pg] of [tpg]", 
-#                                                          "Right2", "Right3")) %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "bottom")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# 
+
+
+test_that("pdf2-14: Labels and show_cols work as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test14.pdf")
+
+  dat <- mtcars[1:15, ]
+
+  attr(dat$mpg, "label") <- "Miles Per Gallon"
+  attr(dat$cyl, "label") <- "Cylinders"
+
+  tbl <- create_table(dat, show_cols = c("mpg", "hp", "cyl", "disp", "drat")) %>%
+    define(mpg, width = 1.25) %>%
+    define(disp, label = "Displacement")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
+
+
+test_that("pdf2-15: Valign on report footnotes works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test15.pdf")
+
+  dat <- iris[1:100, ]
+
+  tbl <- create_table(dat) %>%
+    define(Species, page_break = TRUE)
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
+                       font_size = 9, orientation = "portrait") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+  class(dat$Species)
+})
+
+# Works
+test_that("pdf2-16: Valign on table footnotes works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test16.pdf")
+
+  dat <- iris[1:100, ]
+
+  tbl <- create_table(dat) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom") %>%
+    define(Species, page_break = TRUE)
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+# Page numbering not working
+test_that("pdf2-17: Title header on table works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test17.pdf")
+
+  dat <- iris[1:25, ]
+
+  tbl <- create_table(dat, width = 9) %>%
+    title_header("Table 1.0", "My Nice Table",
+                 right = c("Right1",
+                           "Right2", "Page [pg] of [tpg]")) %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+
+test_that("pdf2-18: Title header on report works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test18.pdf")
+
+  dat <- iris[1:50, ]
+
+  tbl <- create_table(dat)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    title_header("Table 1.0", "My Nice Table", right = c("Page [pg] of [tpg]",
+                                                         "Right2", "Right3")) %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+
 # test_that("pdf2-19: Title and Footnote borders work as expected.", {
 #   
 #   
@@ -1344,124 +1345,126 @@ test_that("pdf2-32: Simplest Text with valign bottom works as expected.", {
 #   
 # })
 # 
-# 
-# test_that("pdf2-37: Title and Footnote widths work as expected on report", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test37.pdf")
-#   
-#   dat <- iris[1:20, ] 
-#   
-#   tbl <- create_table(dat, borders = "all") 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1") %>% 
-#     titles("Table 1.0", "My Nice Report with Widths",
-#            borders = c("top", "bottom", "left", "right"),
-#            width = 7) %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "top",
-#               borders = c("top", "bottom", "left", "right"), 
-#               width = 7)
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-38: Title and Footnote specific widths work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test38.pdf")
-#   
-#   dat <- iris[1:20, ] 
-#   
-#   tbl <- create_table(dat, borders = "all") %>% 
-#     titles("Table 1.0", "My Nice Report with Borders",
-#            borders = c("top", "bottom", "left", "right"),
-#            width = 7) %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "top",
-#               borders = c("top", "bottom", "left", "right"), 
-#               width = 7)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1") 
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# test_that("pdf2-39: One page table works as expected in centimeters and times.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test39.pdf")
-#   
-#   dat <- mtcars[1:15, ]
-#   attr(dat[[2]], "label") <- "Cylin."
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Times",
-#                        font_size = fsz, orientation = "landscape", 
-#                        units = "cm") %>%
-#     set_margins(top = 3, bottom = 3) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(create_table(dat)) %>%
-#     footnotes("My footnote 1", "My footnote 2") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# test_that("pdf2-40: One page table works as expected in courier.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test40.pdf")
-#   
-#   dat <- mtcars[1:15, ]
-#   attr(dat[[2]], "label") <- "Cylin."
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Courier",
-#                        font_size = fsz, orientation = "landscape", 
-#                        units = "cm") %>%
-#     set_margins(top = 3, bottom = 3) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(create_table(dat)) %>%
-#     footnotes("My footnote 1", "My footnote 2") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
+
+test_that("pdf2-37: Title and Footnote widths work as expected on report", {
+
+
+  fp <- file.path(base_path, "pdf2/test37.pdf")
+
+  dat <- iris[1:20, ]
+
+  tbl <- create_table(dat, borders = "all")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    titles("Table 1.0", "My Nice Report with Widths",
+           borders = c("top", "bottom", "left", "right"),
+           width = 7, align = "left") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"),
+              width = 7)
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+
+test_that("pdf2-38: Title and Footnote specific widths work as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test38.pdf")
+
+  dat <- iris[1:20, ]
+
+  tbl <- create_table(dat, borders = "all") %>%
+    titles("Table 1.0", "My Nice Report with Borders",
+           borders = c("top", "bottom", "left", "right"),
+           width = 7, align = "left") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"),
+              width = 7)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+# This went completely haywire.  Probably the cm.
+test_that("pdf2-39: One page table works as expected in centimeters and times.", {
+
+
+  fp <- file.path(base_path, "pdf2/test39.pdf")
+
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Times",
+                       font_size = fsz, orientation = "landscape",
+                       units = "cm") %>%
+    set_margins(top = 3, bottom = 3) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(create_table(dat)) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+# Also haywire because of the cm.  Inches works.
+test_that("pdf2-40: One page table works as expected in courier.", {
+
+
+  fp <- file.path(base_path, "pdf2/test40.pdf")
+
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier",
+                       font_size = fsz, orientation = "landscape",
+                       units = "cm") %>%
+    set_margins(top = 3, bottom = 3) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(create_table(dat)) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
 # # Basic Tests 41 - 50 ------------------------------------------------------
 # 
 # # Good for testing borders and spacing are working correctly
@@ -1525,181 +1528,185 @@ test_that("pdf2-32: Simplest Text with valign bottom works as expected.", {
 #   
 #   
 # })
-# 
-# 
-# 
-# test_that("pdf2-43: use_attributes parameter table works as expected.", {
-#   
-#   
-#   fp1 <- file.path(base_path, "pdf2/test43a.pdf")
-#   fp2 <- file.path(base_path, "pdf2/test43b.pdf")
-#   fp3 <- file.path(base_path, "pdf2/test43c.pdf")
-#   
-#   
-#   dat <- mtcars[1:10, ]
-#   attr(dat$mpg, "label") <- "Miles per gallon"
-#   attr(dat$cyl, "format") <- "%.1f"
-#   attr(dat$hp, "width") <- 2
-#   fattr(dat$vs) <- list(width = 2, justify = "center")
-#   
-#   tbl <- create_table(dat) 
-#   
-#   # Test default 
-#   rpt <- create_report(fp1, output_type = "PDF", font = fnt) %>% 
-#     add_content(tbl)
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp1), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   # Test none
-#   tbl <- create_table(dat, use_attributes = "none") 
-#   
-#   rpt <- create_report(fp2, output_type = "PDF", font = fnt) %>% 
-#     add_content(tbl)
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp2), TRUE)
-#   
-#   
-#   # Test some
-#   tbl <- create_table(dat, use_attributes = c("format", "width")) 
-#   
-#   rpt <- create_report(fp3, output_type = "PDF", font = fnt) %>% 
-#     add_content(tbl)
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp3), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
-# 
-# test_that("pdf2-45: Title bold and font size works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test45.pdf")
-#   
-#   dat <- mtcars[1:15, ]
-#   attr(dat[[2]], "label") <- "Cylin."
-#   attr(dat[[2]], "width") <- 1
-#   attr(dat[[2]], "justify") <- "center"
-#   
-#   tbl <- create_table(dat, borders = "outside") %>%
-#     titles("Table 1.0", "My Nice Table", borders = c("none"), 
-#            width = "content", font_size = 14, bold = TRUE) %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "none", 
-#               align = "left", width = "content") %>% 
-#     define(wt, width = 1, label = "Weight", align = "center", 
-#            label_align = "right")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
-#                        font_size = 9, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
-#                 blank_row = "below") %>% 
-#     add_content(tbl, align = "center")  %>% 
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
-# 
-# 
-# 
-# test_that("pdf2-46: 9 pt font inches works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test46.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font_size = 9, 
-#                        font = "Courier",
-#                        orientation = "portrait") %>%
-#     page_header("left", "right") %>%
-#     titles("IRIS Data Frame") %>%
-#     add_content(create_table(iris)) %>%
-#     page_footer("left", "center", "Page [pg] of [tpg]") %>% 
-#     set_margins(top = 1, bottom = 1)
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   
-# })
-# 
-# test_that("pdf2-47: 9 pt font cm works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test47.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font_size = 9, 
-#                        font = "Courier",
-#                        orientation = "portrait") %>%
-#     page_header("left", "right") %>%
-#     titles("IRIS Data Frame") %>%
-#     add_content(create_table(iris)) %>%
-#     page_footer("left", "center", "Page [pg] of [tpg]") %>% 
-#     set_margins(top = 1, bottom = 1)
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   
-# })
-# 
-# test_that("pdf2-48: 11 pt font inches works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test48.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font_size = 11, 
-#                        font = "Courier",
-#                        orientation = "portrait") %>%
-#     page_header("left", "right") %>%
-#     titles("IRIS Data Frame") %>%
-#     add_content(create_table(iris)) %>%
-#     page_footer("left", "center", "Page [pg] of [tpg]") %>% 
-#     set_margins(top = 1, bottom = 1)
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   
-# })
-# 
-# test_that("pdf2-49: 11 pt font cm works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test49.pdf")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font_size = 11, 
-#                        font = "Courier",
-#                        orientation = "portrait") %>%
-#     page_header("left", "right") %>%
-#     titles("IRIS Data Frame") %>%
-#     add_content(create_table(iris)) %>%
-#     page_footer("left", "center", "Page [pg] of [tpg]") %>% 
-#     set_margins(top = 1, bottom = 1)
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   
-# })
-# 
+
+
+# Works
+test_that("pdf2-43: use_attributes parameter table works as expected.", {
+
+
+  fp1 <- file.path(base_path, "pdf2/test43a.pdf")
+  fp2 <- file.path(base_path, "pdf2/test43b.pdf")
+  fp3 <- file.path(base_path, "pdf2/test43c.pdf")
+
+
+  dat <- mtcars[1:10, ]
+  attr(dat$mpg, "label") <- "Miles per gallon"
+  attr(dat$cyl, "format") <- "%.1f"
+  attr(dat$hp, "width") <- 2
+  fattr(dat$vs) <- list(width = 2, justify = "center")
+
+  tbl <- create_table(dat)
+
+  # Test default
+  rpt <- create_report(fp1, output_type = "PDF", font = fnt) %>%
+    add_content(tbl)
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp1), TRUE)
+  expect_equal(res$pages, 1)
+
+  # Test none
+  tbl <- create_table(dat, use_attributes = "none")
+
+  rpt <- create_report(fp2, output_type = "PDF", font = fnt) %>%
+    add_content(tbl)
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp2), TRUE)
+
+
+  # Test some
+  tbl <- create_table(dat, use_attributes = c("format", "width"))
+
+  rpt <- create_report(fp3, output_type = "PDF", font = fnt) %>%
+    add_content(tbl)
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp3), TRUE)
+  expect_equal(res$pages, 1)
+
+})
+
+# Works
+test_that("pdf2-45: Title bold and font size works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test45.pdf")
+
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+  attr(dat[[2]], "width") <- 1
+  attr(dat[[2]], "justify") <- "center"
+
+  tbl <- create_table(dat, borders = "outside") %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"),
+           width = "content", font_size = 14, bold = TRUE) %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none",
+              align = "left", width = "content") %>%
+    define(wt, width = 1, label = "Weight", align = "center",
+           label_align = "right")
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
+                       font_size = 9, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"),
+                blank_row = "below") %>%
+    add_content(tbl, align = "center")  %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
+
+
+
+test_that("pdf2-46: 9 pt font inches works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test46.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font_size = 9,
+                       font = "Courier",
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>%
+    set_margins(top = 1, bottom = 1)
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+})
+
+# Hosed
+test_that("pdf2-47: 9 pt font cm works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test47.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font_size = 9,
+                       font = "Courier",
+                       orientation = "portrait", 
+                       units = "cm") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>%
+    set_margins(top = 1, bottom = 1)
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+})
+
+test_that("pdf2-48: 11 pt font inches works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test48.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font_size = 11,
+                       font = "Courier",
+                       orientation = "portrait") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>%
+    set_margins(top = 1, bottom = 1)
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+})
+
+test_that("pdf2-49: 11 pt font cm works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test49.pdf")
+
+  rpt <- create_report(fp, output_type = "PDF", font_size = 11,
+                       font = "Courier",
+                       orientation = "portrait", 
+                       units = "cm") %>%
+    page_header("left", "right") %>%
+    titles("IRIS Data Frame") %>%
+    add_content(create_table(iris)) %>%
+    page_footer("left", "center", "Page [pg] of [tpg]") %>%
+    set_margins(top = 1, bottom = 1)
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+})
+
 # test_that("pdf2-50: Spanning headers borders work as expected.", {
 #   
 #   
