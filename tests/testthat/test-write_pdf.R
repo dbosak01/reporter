@@ -1020,7 +1020,7 @@ test_that("basic write_pdf with page box works as expected.", {
   
   l <- list(page_text("Hello", font_size = 14, 
                       xpos = 100, ypos = 100, bold = TRUE),
-            page_box(90, 85, 20, 50, "right"))
+            page_box(90, 85, 20, 50, ""))
   
   r <- create_pdf(fp, fontname = "Arial") %>% 
     add_page(l)

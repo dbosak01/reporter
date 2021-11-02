@@ -8,14 +8,14 @@ test_that("get_table_body_pdf works as expected.", {
   
   tbl <- create_table(dat) 
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
   
-  rpt <- page_setup_rtf(rpt)
+  rpt <- page_setup_pdf(rpt)
   
   wdth <- rep(1, 5)
   names(wdth) <- names(dat)
@@ -23,12 +23,21 @@ test_that("get_table_body_pdf works as expected.", {
   algns <- rep("center", 5)
   names(algns) <- names(dat)
   
+  spwidths <- list()
+  for (i in 1:10) {
   
-  res <- get_table_body_rtf(rpt, dat, wdth, algns,  "center", "none")
+    spwidths[[i]] <- rep(.75, 5)
+    names(spwidths[[i]]) <- names(algns)
+    
+  }
+  
+  
+  res <- get_table_body_pdf(rpt, dat, wdth, algns,  
+                            "center", "none", 0, spwidths)
   
   res  
   
-  expect_equal(length(res$rtf), 10)
+  expect_equal(length(res$pdf), 50)
   expect_equal(res$lines, 10)
   
 })
@@ -41,14 +50,14 @@ test_that("get_table_header_pdf works as expected.", {
   
   tbl <- create_table(dat) 
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
   
-  rpt <- page_setup_rtf(rpt)
+  rpt <- page_setup_pdf(rpt)
   
   wdth <- rep(1, 5)
   names(wdth) <- names(dat)
@@ -62,11 +71,11 @@ test_that("get_table_header_pdf works as expected.", {
   nms[2] <- "Wrap One Two"
   
   
-  res <- get_table_header_rtf(rpt, tbl, wdth, nms, algns, "center")
+  res <- get_table_header_pdf(rpt, tbl, wdth, nms, algns, "center")
   
   res  
   
-  expect_equal(length(res$rtf), 1)
+  expect_equal(length(res$pdf), 7)
   expect_equal(res$lines, 2)
   
 })
@@ -81,14 +90,14 @@ test_that("get_content_offsets_pdf works as expected.", {
     titles("Table 1.0", "My Nice Table") %>% 
     footnotes("Here is a footnote")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
   
-  rpt <- page_setup_rtf(rpt)
+  rpt <- page_setup_pdf(rpt)
   
   wdth <- rep(1, 5)
   names(wdth) <- names(dat)
@@ -103,7 +112,7 @@ test_that("get_content_offsets_pdf works as expected.", {
   pi <- list(keys = names(dat), col_width = wdth, label = nms,
              label_align = algns, table_align = "center")
   
-  res <- get_content_offsets_rtf(rpt, tbl, pi, "both")
+  res <- get_content_offsets_pdf(rpt, tbl, pi, "both")
   res
   
   expect_equal(res$lines[["upper"]], 4)
@@ -123,14 +132,14 @@ test_that("create_table_pdf works as expected.", {
     titles("Table 1.0", "My Nice Table") %>% 
     footnotes("Here is a footnote")
   
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+  rpt <- create_report(fp, output_type = "PDF", font = "Arial",
                        font_size = 12) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
   
-  rpt <- page_setup_rtf(rpt)
+  rpt <- page_setup_pdf(rpt)
   
   wdth <- rep(1, 5)
   names(wdth) <- names(dat)
@@ -140,58 +149,66 @@ test_that("create_table_pdf works as expected.", {
   
   nms <- names(dat)
   names(nms) <- nms
-  nms[1] <- "Miles/Gallon"
+ # nms[1] <- "Miles/Gallon"
   
-  pi <- list(keys = names(dat), col_width = wdth, label = nms,
+  spwidths <- list()
+  for (i in 1:10) {
+    
+    spwidths[[i]] <- rep(.75, 5)
+    names(spwidths[[i]]) <- names(algns)
+    
+  }
+  
+  pi <- list(keys = names(dat), col_width = wdth, label = nms, col_align = algns,
              label_align = algns, table_align = "center", data = dat)
   
-  res <- create_table_rtf(rpt, tbl, pi, "below", FALSE, 0)
+  res <- create_table_pdf(rpt, tbl, pi, "below", FALSE, 0, spwidths = spwidths)
   res
   
   # Doesn't seem right.  Come back to this.
-  expect_equal(length(res$rtf), 20)
+  expect_equal(length(res$pdf), 58)
   expect_equal(res$lines, 17) 
   
 })
 
-test_that("get_spanning_header_pdf works as expected.", {
-  
-  
-  fp <- ""
-  
-  dat <- mtcars[1:15, ]
-  
-  tbl <- create_table(dat, borders = "none") %>%
-    spanning_header(mpg, disp, "Span 1", n = 10) %>%
-    spanning_header(hp, wt, "Span 2") %>%
-    spanning_header(qsec, vs, "Span 3") %>%
-    spanning_header(drat, gear, "Super span", level = 2)
-  
-  
-  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
-                       font_size = 10, orientation = "landscape") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table") %>%
-    add_content(tbl) %>%
-    footnotes("My footnote 1", "My footnote 2") %>%
-    page_footer("Left1", "Center1", "Right1")
-  
-  rpt <- page_setup_rtf(rpt)
-  
-  cols <- rep(.6, ncol(dat))
-  names(cols) <- names(dat)
-  
-  pi <- list(keys = names(dat), col_width = cols, table_align = "center")
-  
-  res <- get_spanning_header_rtf(rpt, tbl, pi)
-  res
-  
-  expect_equal(length(res), 3)
-  expect_equal(length(res$rtf), 2)
-  expect_equal(res$lines, 3)
-  
-})
+# test_that("get_spanning_header_pdf works as expected.", {
+#   
+#   
+#   fp <- ""
+#   
+#   dat <- mtcars[1:15, ]
+#   
+#   tbl <- create_table(dat, borders = "none") %>%
+#     spanning_header(mpg, disp, "Span 1", n = 10) %>%
+#     spanning_header(hp, wt, "Span 2") %>%
+#     spanning_header(qsec, vs, "Span 3") %>%
+#     spanning_header(drat, gear, "Super span", level = 2)
+#   
+#   
+#   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
+#                        font_size = 10, orientation = "landscape") %>%
+#     set_margins(top = 1, bottom = 1) %>%
+#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+#     titles("Table 1.0", "My Nice Table") %>%
+#     add_content(tbl) %>%
+#     footnotes("My footnote 1", "My footnote 2") %>%
+#     page_footer("Left1", "Center1", "Right1")
+#   
+#   rpt <- page_setup_rtf(rpt)
+#   
+#   cols <- rep(.6, ncol(dat))
+#   names(cols) <- names(dat)
+#   
+#   pi <- list(keys = names(dat), col_width = cols, table_align = "center")
+#   
+#   res <- get_spanning_header_pdf(rpt, tbl, pi)
+#   res
+#   
+#   expect_equal(length(res), 3)
+#   expect_equal(length(res$pdf), 2)
+#   expect_equal(res$lines, 3)
+#   
+# })
 
 
 test_that("get_page_footnotes_pdf works as expected.", {

@@ -138,8 +138,11 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
-  fdat <- split_cells_variable(fdat, widths_uom, rs$font, 
-                               rs$font_size, rs$units, rs$output_type)$data 
+  sp <- split_cells_variable(fdat, widths_uom, rs$font, 
+                               rs$font_size, rs$units, rs$output_type) 
+  fdat <- sp$data
+  wdat <- sp$widths
+  
   # print("split_cells")
   # print(fdat)
   
@@ -159,9 +162,9 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   
   
   # Offsets are needed to calculate splits and page breaks
-  content_offset <- get_content_offsets_rtf(rs, ts, tmp_pi, content_blank_row)
+  content_offset <- get_content_offsets_pdf(rs, ts, tmp_pi, content_blank_row)
   
-  
+  # Need to do something with widths
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
                             lpg_rows, content_offset$lines, ts, TRUE)  
@@ -178,9 +181,16 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   counter <- 0
   wrap_flag <- FALSE
   blnk_ind <- "none"
+  spstart <- 1
+  spend <- 1
   
   pg_lst <- list()
   for(s in splits) {
+    
+    # Subset text widths by current split rows
+    spend <- spstart + nrow(s) - 1
+    spwidths <- wdat[seq(spstart, spend)]
+    
     for(pg in wraps) {
       counter <- counter + 1
       
@@ -206,10 +216,12 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
                       col_width = widths_uom[pg], col_align = aligns[pg],
                       font_name = font_name, label_align = label_aligns[pg],
                       pgby, cntnt$align)
-      pg_lst[[length(pg_lst) + 1]] <- create_table_rtf(rs, ts, pi, 
+      pg_lst[[length(pg_lst) + 1]] <- create_table_pdf(rs, ts, pi, 
                                                        blnk_ind, wrap_flag,
-                                                       lpg_rows)
+                                                       lpg_rows, spwidths)
     }
+    
+    spstart <- spend + 1
   }
   
   ret <- list(widths = widths_uom, page_list = pg_lst)
@@ -223,50 +235,71 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
 
 #' @noRd
 create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag, 
-                             lpg_rows) {
+                             lpg_rows, spwidths) {
   rh <- rs$row_height
-  shdrs <- list(lines = 0, twips = 0)
-  hdrs <- list(lines = 0, twips = 0)
-  
-  if (ts$headerless == FALSE) {
-    shdrs <- get_spanning_header_rtf(rs, ts, pi)   
-    
-    hdrs <- get_table_header_rtf(rs, ts, pi$col_width, 
-                                 pi$label, pi$label_align, pi$table_align)  
-  }
-  
-  # rs, ts, widths,  algns, halgns, talgn
-  rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
-                            pi$col_align, pi$table_align, ts$borders)
+  ys <- lpg_rows * rh
+  conv <- rs$point_conversion
   
   # Default to content width
   ls <- rs$content_size[["width"]]
+  
+  ys <- sum(ys, rs$page_template$page_header$points, 
+            rs$page_template$titles$points, rs$page_template$title_hdr$points)
   
   # Get table width
   if (!is.null(pi$col_width))
     ls <- sum(pi$col_width, na.rm = TRUE)
   
-  if (!is.null(ts$title_hdr))
-    ttls <- get_title_header_rtf(ts$title_hdr, ls, rs, pi$table_align)
-  else
-    ttls <- get_titles_rtf(ts$titles, ls, rs, pi$table_align) 
+  if (content_blank_row %in% c("above", "both"))
+    ys <- ys + rh
   
+  if (!is.null(ts$title_hdr))
+    ttls <- get_title_header_pdf(ts$title_hdr, ls, rs, pi$table_align, 
+                                 ystart = ys)
+  else
+    ttls <- get_titles_pdf(ts$titles, ls, rs, pi$table_align, ystart = ys) 
+  
+  ys <-  ys + ttls$points 
   
   if (!is.null(rs$page_by)) {
-    pgby <- get_page_by_rtf(rs$page_by, rs$content_size[["width"]], 
-                            pi$page_by, rs, pi$table_align)
+    pgby <- get_page_by_pdf(rs$page_by, rs$content_size[["width"]], 
+                            pi$page_by, rs, pi$table_align, ystart = ys)
   } else if(!is.null(ts$page_by))
-    pgby <- get_page_by_rtf(ts$page_by, ls, pi$page_by, rs, pi$table_align)
+    pgby <- get_page_by_pdf(ts$page_by, ls, pi$page_by, rs, pi$table_align, 
+                            ystart = ys)
   else 
     pgby <- c()
   
+  if (length(pgby) > 0)
+    ys <- ys + pgby$points
   
-  a <- NULL
-  if (content_blank_row %in% c("above", "both"))
-    a <- paste0("\\par", a)
+  shdrs <- list(lines = 0, points = 0)
+  hdrs <- list(lines = 0, points = 0)
+  
+  if (ts$headerless == FALSE) {
+    #shdrs <- get_spanning_header_pdf(rs, ts, pi, ystart = ys)
+    
+    ys <- ys + shdrs$points
+    
+    hdrs <- get_table_header_pdf(rs, ts, pi$col_width, 
+                                 pi$label, pi$label_align, 
+                                 pi$table_align, ystart = ys)
+    
+    ys <- ys + hdrs$points
+  }
   
   
-  blnks <- c()
+  # rs, ts, widths,  algns, halgns, talgn
+  bdy <- get_table_body_pdf(rs, pi$data, pi$col_width, 
+                            pi$col_align, pi$table_align, ts$borders,
+                            ystart = ys,
+                            spwidths)
+  ys <- ys + bdy$points
+
+
+  
+  
+  # blnks <- c()
   
   # Get row count by summing ..row variable
   # if ("..row" %in% names(pi$data)) {
@@ -275,52 +308,53 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   #   rcnt <- nrow(pi$data) 
   # }
   
-  # Determine sum of all lines
-  rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
-            hdrs$lines, rws$lines,
-            length(a))
   
   # Get footnotes, passing in sum of all current lines
-  ftnts <- get_page_footnotes_rtf(rs, ts, ls, lpg_rows, rc,
+  ftnts <- get_page_footnotes_pdf(rs, ts, ls, lpg_rows, ys,
                                   wrap_flag, content_blank_row,  pi$table_align)
   
   # Deal with cell padding.  Don't count this in line count.
-  cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
+  # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
   
-  # On LibreOffice, have to protect the table from the title width or
-  # the table row will inherit the title row width. Terrible problem.
-  tpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(ts$borders %in% c("all", "top", "outside"))) {
-    if (ttls$border_flag | rs$page_template$titles$border_flag |  
-        rs$page_template$title_hdr$border_flag)
-      tpt <- ""
-    
-    if (length(pgby) > 0) {
-      if (pgby$border_flag)
-        tpt <- ""
-    }
-  }
+  # # On LibreOffice, have to protect the table from the title width or
+  # # the table row will inherit the title row width. Terrible problem.
+  # tpt <- "{\\pard\\fs1\\sl0\\par}"
+  # if (any(ts$borders %in% c("all", "top", "outside"))) {
+  #   if (ttls$border_flag | rs$page_template$titles$border_flag |  
+  #       rs$page_template$title_hdr$border_flag)
+  #     tpt <- ""
+  #   
+  #   if (length(pgby) > 0) {
+  #     if (pgby$border_flag)
+  #       tpt <- ""
+  #   }
+  # }
+  # 
+  # # Same thing as above with titles.  If footnote block is contiguous
+  # # with table and footnotes are wider than table, row width of footnotes
+  # # will infect row width of table.  On libre only.  So this is to protect
+  # # the table width.
+  # bpt <- "{\\pard\\fs1\\sl0\\par}"
+  # if (any(ts$borders %in% c("all", "top", "outside", "body"))) {
+  #   if (!is.null(ftnts)) {
+  #     if (ftnts$border_flag)
+  #       bpt <- ""
+  #   }
+  #   
+  #   if (!is.null(rs$page_template$footnotes)) {
+  #     if (rs$page_template$footnotes$border_flag)
+  #       bpt <- ""
+  #   }
+  # }
   
-  # Same thing as above with titles.  If footnote block is contiguous
-  # with table and footnotes are wider than table, row width of footnotes
-  # will infect row width of table.  On libre only.  So this is to protect
-  # the table width.
-  bpt <- "{\\pard\\fs1\\sl0\\par}"
-  if (any(ts$borders %in% c("all", "top", "outside", "body"))) {
-    if (!is.null(ftnts)) {
-      if (ftnts$border_flag)
-        bpt <- ""
-    }
-    
-    if (!is.null(rs$page_template$footnotes)) {
-      if (rs$page_template$footnotes$border_flag)
-        bpt <- ""
-    }
-  }
+  # Determine sum of all lines
+  rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
+            hdrs$lines, bdy$lines, ftnts$lines)
   
-  ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, tpt, cp, shdrs$rtf, 
-                      hdrs$rtf, rws$rtf, bpt, cp, ftnts$rtf),
-              lines = rc  + ftnts$lines)
+  ret <- list(pdf = c(ttls$pdf, pgby$pdf, shdrs$pdf, 
+                      hdrs$pdf, bdy$pdf, ftnts$pdf),
+              lines = rc,
+              points = rc * rh)
   
   return(ret) 
 }
@@ -412,29 +446,29 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
     wdth <- sum(pi$col_width)
   
   # Default to zero
-  shdrs <- list(lines = 0, twips = 0)
-  hdrs <- list(lines = 0, twips = 0)
+  shdrs <- list(lines = 0, points = 0)
+  hdrs <- list(lines = 0, points = 0)
   
   if (ts$headerless == FALSE) {
-    shdrs <- get_spanning_header_rtf(rs, ts, pi)   
+    shdrs <- get_spanning_header_pdf(rs, ts, pi)   
     
-    hdrs <- get_table_header_rtf(rs, ts, pi$col_width, 
+    hdrs <- get_table_header_pdf(rs, ts, pi$col_width, 
                                  pi$label, pi$label_align, 
                                  pi$table_align)  
   }
   
   # Get title headers or titles
   if (is.null(ts$title_hdr))
-    ttls <- get_titles_rtf(ts$titles, wdth, rs) 
+    ttls <- get_titles_pdf(ts$titles, wdth, rs) 
   else 
-    ttls <- get_title_header_rtf(ts$title_hdr, wdth, rs)
+    ttls <- get_title_header_pdf(ts$title_hdr, wdth, rs)
   
   # Get page by if it exists
-  pgb <- list(lines = 0, twips = 0)
+  pgb <- list(lines = 0, points = 0)
   if (!is.null(ts$page_by))
-    pgb <- get_page_by_rtf(ts$page_by, wdth, NULL, rs, pi$table_align)
+    pgb <- get_page_by_pdf(ts$page_by, wdth, NULL, rs, pi$table_align)
   else if (!is.null(rs$page_by))
-    pgb <- get_page_by_rtf(rs$page_by, wdth, NULL, rs, pi$table_align)
+    pgb <- get_page_by_pdf(rs$page_by, wdth, NULL, rs, pi$table_align)
   
   
   #print(length(pgb))
@@ -442,7 +476,7 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
   # print(paste("Table titles:", ttls))
   
   # Add everything up
-  ret[["upper"]] <- shdrs$twips + hdrs$twips + ttls$twips + pgb$twips
+  ret[["upper"]] <- shdrs$points + hdrs$points + ttls$points + pgb$points
   cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
   
   if (content_blank_row %in% c("above", "both")) {
@@ -450,14 +484,14 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
     cnt[["blank_upper"]] <- 1 
   }
   
-  ftnts <- get_footnotes_rtf(ts$footnotes, wdth, rs) 
-  rftnts <- get_footnotes_rtf(rs$footnotes, wdth, rs)
+  ftnts <- get_footnotes_pdf(ts$footnotes, wdth, rs) 
+  rftnts <- get_footnotes_pdf(rs$footnotes, wdth, rs)
   
   if (has_top_footnotes(rs)) {
-    ret[["lower"]] <- ftnts$twips + rftnts$twips
+    ret[["lower"]] <- ftnts$points + rftnts$points
     cnt[["lower"]] <- ftnts$lines + rftnts$lines
   } else {
-    ret[["lower"]] <- ftnts$twips
+    ret[["lower"]] <- ftnts$points
     cnt[["lower"]] <- ftnts$lines
   }
   
@@ -474,7 +508,7 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
   }
   
   res <- list(lines = cnt,
-              twips = ret)
+              points = ret)
   
   return(res)
   
@@ -486,99 +520,142 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
 #' of string vectors of label words sized according to the column 
 #' widths, then combine by line/row, and concatenate everything and justify.
 #' @noRd
-get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn) {
+get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn, 
+                                 ystart = 0) {
   
   ret <- c()
   cnt <- 0
   rh <- rs$row_height
   tbl <- ts$data
-  conv <- rs$twip_conversion
-  nms <- names(lbls)
-  
+  conv <- rs$point_conversion
+  nms <- names(lbls)[is.controlv(names(lbls)) == FALSE]
+  unts <- rs$units
+  wdths <- widths[nms]
+
   # Get cell widths
-  sz <- c()
-  for (k in seq_along(widths)) {
-    if (!is.control(nms[k])) {
-      if (k == 1)
-        sz[k] <- round(widths[k] * conv)
-      else 
-        sz[k] <- round(widths[k] * conv + sz[k - 1])
-    }
-  }
+  # sz <- c()
+  # for (k in seq_along(widths)) {
+  #   if (!is.control(nms[k])) {
+  #     if (k == 1)
+  #       sz[k] <- widths[k] 
+  #     else 
+  #       sz[k] <- round(widths[k] + sz[k - 1])
+  #   }
+  # }
   
   # Table alignment
-  ta <- "\\trql"
-  if (talgn == "right")
-    ta <- "\\trqr"
-  else if (talgn %in% c("center", "centre"))
-    ta <- "\\trqc"
+  # ta <- "\\trql"
+  # if (talgn == "right")
+  #   ta <- "\\trqr"
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "\\trqc"
   
   # if (length(ts$col_spans) == 0)
   #   brdrs <- ts$borders
   # else
   #   brdrs <- "none"
   
-  brdrs <- ts$borders
-  if (length(ts$col_spans) > 0) {
-    
-    if (any(ts$borders %in% c("outside")))
-      brdrs <- c("left", "right")
-    
-    if (any(ts$borders %in% "top"))
-      brdrs <- brdrs[!brdrs %in% "top"]
-    
-  }
+  # brdrs <- ts$borders
+  # if (length(ts$col_spans) > 0) {
+  #   
+  #   if (any(ts$borders %in% c("outside")))
+  #     brdrs <- c("left", "right")
+  #   
+  #   if (any(ts$borders %in% "top"))
+  #     brdrs <- brdrs[!brdrs %in% "top"]
+  #   
+  # }
   
   # Header Cell alignment
-  ha <- c()
-  for (k in seq_along(halgns)) {
-    if (!is.control(nms[k])) {
-      if (halgns[k] == "left")
-        ha[k] <- "\\ql"
-      else if (halgns[k] == "right")
-        ha[k] <- "\\qr"
-      else if (halgns[k] %in% c("center", "centre"))
-        ha[k] <- "\\qc"
-    }
-  }
+  # ha <- c()
+  # for (k in seq_along(halgns)) {
+  #   if (!is.control(nms[k])) {
+  #     if (halgns[k] == "left")
+  #       ha[k] <- "\\ql"
+  #     else if (halgns[k] == "right")
+  #       ha[k] <- "\\qr"
+  #     else if (halgns[k] %in% c("center", "centre"))
+  #       ha[k] <- "\\qc"
+  #   }
+  # }
   
   # Table Header
-  ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
+  # ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
   
   # Loop for cell definitions
-  for(j in seq_along(tbl)) {
-    if (!is.control(nms[j])) {
-      b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
-      ret[1] <- paste0(ret[1], "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
-    }
+  # for(j in seq_along(tbl)) {
+  #   if (!is.control(nms[j])) {
+  #     b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
+  #     ret[1] <- paste0(ret[1], "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
+  #   }
+  # }
+  
+  # Sum up widths 
+  width <- sum(wdths, na.rm = TRUE)
+  
+  # Get content alignment codes
+  if (talgn == "right") {
+    tlb <- rs$content_size[["width"]] - width
+    trb <- rs$content_size[["width"]]
+  } else if (talgn %in% c("center", "centre")) {
+    tlb <- (rs$content_size[["width"]] - width) / 2
+    trb <- width + tlb
+  } else {
+    tlb <- 0
+    trb <- width
   }
   
   cnt <-  1 
+
   
   # Loop for column names
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = rs$font_size)
   
-  for(k in seq_along(lbls)) {
-    if (!is.control(nms[k])) {
-      
-      # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
-      ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
-      
-      # Add in extra lines for labels that wrap
-      xtr <- tmp$lines
-      if (xtr > cnt)
-        cnt <- xtr
+
+  for(k in seq_along(nms)) {
+    
+    yline <- ystart
+    
+    # Split label strings if they exceed column width
+    tmp <- split_string_text(lbls[k], wdths[k], rs$units)
+  
+    #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
+    
+    if (k == 1) {
+      lb <- tlb
+      rb <- lb + wdths[k]
+    } else {
+      lb <- rb
+      rb <- lb + wdths[k]
     }
+      
+    for (ln in seq_len(tmp$lines)) {
+      
+      ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+                                          bold = FALSE,
+                                          xpos = get_points(lb, 
+                                                            rb,
+                                                            tmp$widths[ln],
+                                                            units = unts,
+                                                            align = halgns[k]),
+                                          ypos = yline)
+      yline <- yline + rh
+    }
+    
+    # Add in extra lines for labels that wrap
+    xtr <- tmp$lines
+    if (xtr > cnt)
+      cnt <- xtr
+    
   }
   dev.off()
   
-  ret[1] <- paste(ret[1], "\\row")
+  #ret[1] <- paste(ret[1], "\\row")
   
-  res <- list(rtf = ret,
+  res <- list(pdf = ret,
               lines = cnt,
-              twips = cnt * rh)
+              points = cnt * rh)
   
   return(res)
   
@@ -591,7 +668,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn) {
 #' from there is the same.  
 #' @import stats
 #' @noRd
-get_spanning_header_pdf <- function(rs, ts, pi) {
+get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   
   spns <- ts$col_spans
   cols <- pi$keys
@@ -755,16 +832,17 @@ get_spanning_header_pdf <- function(rs, ts, pi) {
   
   res <- list(rtf = ret, 
               lines = sum(cnt), 
-              twips = sum(cnt) * rh)
+              points = sum(cnt) * rh)
   
   return(res)
 }
 
-#' @description This function counts lines per row independantly because
+#' @description This function counts lines per row independently because
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs) {
+get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
+                               ystart = 0, spwidths = list()) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -773,11 +851,14 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs) {
   
   # Count lines per row
   rws <- c()
+  cnt <- 0
   
   nms <- names(widths)
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
   wdths <- widths[nms]
+  
+  # Deal with one column situation
   if (length(nms) == 1) {
     t <- as.data.frame(tbl[[nms]])
     names(t) <- nms
@@ -790,93 +871,147 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs) {
   
   # Get line height.  Don't want to leave editor default.
   rh <- rs$row_height
-  conv <- rs$twip_conversion
-  
+  conv <- rs$point_conversion
+  unts <- rs$units
   
   # Get cell widths
-  sz <- c()
-  for (k in seq_along(wdths)) {
-    if (!is.control(nms[k])) {
-      if (k == 1)
-        sz[k] <- round(wdths[k] * conv)
-      else 
-        sz[k] <- round(wdths[k] * conv + sz[k - 1])
-    }
-  }
+  # sz <- c()
+  # for (k in seq_along(wdths)) {
+  #   if (!is.control(nms[k])) {
+  #     if (k == 1)
+  #       sz[k] <- round(wdths[k] * conv)
+  #     else 
+  #       sz[k] <- round(wdths[k] * conv + sz[k - 1])
+  #   }
+  # }
   
   # Table alignment
-  ta <- "\\trql"
-  if (talgn == "right")
-    ta <- "\\trqr"
-  else if (talgn %in% c("center", "centre"))
-    ta <- "\\trqc"
+  # ta <- "\\trql"
+  # if (talgn == "right")
+  #   ta <- "\\trqr"
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "\\trqc"
   
   # Cell alignment
-  ca <- c()
-  for (k in seq_along(algns)) {
-    if (!is.control(nms[k])) {
-      if (algns[k] == "left")
-        ca[k] <- "\\ql"
-      else if (algns[k] == "right")
-        ca[k] <- "\\qr"
-      else if (algns[k] %in% c("center", "centre"))
-        ca[k] <- "\\qc"
-    }
+  # ca <- c()
+  # for (k in seq_along(algns)) {
+  #   if (!is.control(nms[k])) {
+  #     if (algns[k] == "left")
+  #       ca[k] <- "\\ql"
+  #     else if (algns[k] == "right")
+  #       ca[k] <- "\\qr"
+  #     else if (algns[k] %in% c("center", "centre"))
+  #       ca[k] <- "\\qc"
+  #   }
+  # }
+  
+  # Sum up widths 
+  width <- sum(wdths, na.rm = TRUE)
+  
+  # Get content alignment codes
+  if (talgn == "right") {
+    tlb <- rs$content_size[["width"]] - width
+    trb <- rs$content_size[["width"]]
+  } else if (talgn %in% c("center", "centre")) {
+    tlb <- (rs$content_size[["width"]] - width) / 2
+    trb <- width + tlb
+  } else {
+    tlb <- 0
+    trb <- width
   }
+  
+  rline <- ystart
   
   ret <- c()
   
-  # Table Body
+  fs <- rs$font_size
+  
+  pdf(NULL)
+  par(family = get_font_family(rs$font), ps = fs)
+  
+  # Loop for rows
   for(i in seq_len(nrow(t))) {
     
+    yline <- rline
+    mxrw <- yline
+    cnt <- cnt + 1
     
-    if (i ==  1)
-      ret[i] <- paste0("{\\trowd\\trgaph0\\trrh", rh, ta)
-    else 
-      ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
+    # if (i ==  1)
+    #   ret[i] <- paste0("{\\trowd\\trgaph0\\trrh", rh, ta)
+    # else 
+    #   ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
     
     
-    # Loop for cell definitions
-    for(j in seq_len(ncol(t))) {
-      if (!is.control(nms[j])) {
-        b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs, flgs[i])
-        ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
+    # # Loop for cell definitions
+    # for(j in seq_len(ncol(t))) {
+    #   if (!is.control(nms[j])) {
+    #     b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs, flgs[i])
+    #     ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
+    #   }
+    # }
+  
+    
+    # Loop for columns 
+    for(j in nms) {
+      
+      # Seems like this should be done already
+      # Need to get widths from split_cells
+      #tmp <- split_string_text(ttls$titles[[i]], width, rs$units)
+      if (class(tbl[i, j]) != "character")
+        vl <- as.character(tbl[i, j])
+      else 
+        vl <- tbl[i, j]
+      
+      tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+        
+      # Construct rtf
+      # ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
+      
+      # Count lines in cell 
+      #cl <- grep("\\line", t[i, j], fixed = TRUE)
+      
+      if (j == nms[1]) {
+        lb <- tlb
+        rb <- lb + wdths[j]
+      } else {
+        lb <- rb
+        rb <- lb + wdths[j]
       }
+      
+      # Loop for cell wraps
+      for (ln in seq_len(length(tmp))) {
+        
+        ret[[length(ret) + 1]] <- page_text(tmp[ln], fs, 
+                                            bold = FALSE,
+                                            xpos = get_points(lb, 
+                                                              rb,
+                                                              spwidths[[i]][[j]][ln],
+                                                              units = unts,
+                                                              align = algns[j]),
+                                            ypos = yline)
+        yline <- yline + rh
+      }
+      
+      if (yline > mxrw)
+        mxrw <- yline
+      
+      yline <- rline
+    
+      
     }
     
-    mxrw <- 1
-    
-    # Loop for cell values
-    for(j in seq_len(ncol(t))) {
-      
-      
-      if (!is.control(nms[j])) {
-        
-        # Construct rtf
-        ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
-        
-        # Count lines in cell 
-        cl <- grep("\\line", t[i, j], fixed = TRUE)
-        if (length(cl) >= mxrw)
-          mxrw <- length(cl) + 1
-      }
-      
-    }
-    
-    rws[i] <- mxrw
-    
-    ret[i] <- paste0(ret[i], "\\row")
-    
-    
+    rline <- mxrw
+  
+  
   }
   
+  dev.off()
   
-  ret[length(ret)] <- paste0(ret[length(ret)], "}\\pard",
-                             rs$font_rtf, rs$spacing_multiplier)
+  rws <- rline
   
-  
-  res <- list(rtf = ret,
-              lines = sum(rws))
+  res <- list(pdf = ret,
+              lines = cnt ,
+              points = cnt * rh)
   
   return(res)
   

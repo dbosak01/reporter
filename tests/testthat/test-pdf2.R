@@ -314,32 +314,32 @@ test_that("pdf2-5: Two page text spec works as expected in 8pt font.", {
 })
 
 
-# test_that("pdf2-6: One page table works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test6.pdf")
-#   
-#   dat <- mtcars[1:15, ]
-#   attr(dat[[2]], "label") <- "Cylin."
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table", borders = "outside", bold = TRUE) %>%
-#     add_content(create_table(dat, borders = "outside")) %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "outside") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
-# 
+test_that("pdf2-6: One page table works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test6.pdf")
+
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table", borders = "outside", bold = TRUE) %>%
+    add_content(create_table(dat, borders = "outside")) %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
+
 # test_that("pdf2-7: Multi page table works as expected.", {
 #   
 #   

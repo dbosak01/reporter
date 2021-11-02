@@ -847,7 +847,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     pnts <- pnts + (cnts * lh)
     
     # Get cell border codes
-    b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
+    #b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
     
     
     # Get footnotes

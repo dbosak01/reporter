@@ -608,6 +608,12 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
           
             cell <- res$rtf
+          } else if (output_type == "PDF") {
+            
+            res <- split_string_text(x[[i, nm]], col_widths[[nm]], units)
+            
+            cell <- paste0(res$text, collapse = "\n")
+            
           }
           nch <- res$lines
         }
@@ -1213,6 +1219,7 @@ cpoints <- function(vals, units) {
   else if (units == "cm")
     ret <- vals * 2.54 * 72
   
+  names(ret) <- NULL
   
   return(ret)
 }
@@ -1220,6 +1227,8 @@ cpoints <- function(vals, units) {
 get_points_left <- function(left_bound, right_bound, widths, units) {
   
   ret <- cpoints(rep(left_bound, length(widths)), units)
+  
+  names(ret) <- NULL
   
   return(ret)
   
@@ -1229,12 +1238,16 @@ get_points_right <- function(left_bound, right_bound, widths, units) {
   
   ret <- cpoints(right_bound - widths, units)
   
+  names(ret) <- NULL
+  
   return(ret)
 } 
 
 get_points_center <- function(left_bound, right_bound, widths, units) {
   
   ret <- cpoints(left_bound + ((right_bound - left_bound)/ 2) - (widths/ 2), units)
+  
+  names(ret) <- NULL
   
   return(ret)
 }  

@@ -156,7 +156,14 @@ paginate_content_pdf <- function(rs, doc) {
     # Break each content type into a list of pages
     if (any(class(obj) == "table_spec")) {
       
-      # res <- create_table_pages_pdf(rs, cntnt, last_page_lines)
+      res <- create_table_pages_pdf(rs, cntnt, last_page_lines)
+      
+      for (j in seq_len(length(res$page_list))) {
+        
+        doc <- add_page(doc, res$page_list[[j]]$pdf, 
+                        rttls$pdf, rttl_hdr$pdf, 
+                        rftnts$pdf, rheader$pdf, rfooter$pdf) 
+      }
       # 
       # # Collect multiple pages and line counts
       # for (j in seq_len(length(res$page_list))) {
