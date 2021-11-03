@@ -75,8 +75,8 @@ test_that("get_table_header_pdf works as expected.", {
   
   res  
   
-  expect_equal(length(res$pdf), 7)
-  expect_equal(res$lines, 2)
+  expect_equal(length(res$pdf), 8)
+  expect_equal(res$lines, 2.5)
   
 })
 
@@ -115,7 +115,7 @@ test_that("get_content_offsets_pdf works as expected.", {
   res <- get_content_offsets_pdf(rpt, tbl, pi, "both")
   res
   
-  expect_equal(res$lines[["upper"]], 4)
+  expect_equal(res$lines[["upper"]], 4.5)
   expect_equal(res$lines[["lower"]], 2)
   expect_equal(res$lines[["blank_upper"]], 1)
   expect_equal(res$lines[["blank_lower"]], 1)
@@ -166,8 +166,8 @@ test_that("create_table_pdf works as expected.", {
   res
   
   # Doesn't seem right.  Come back to this.
-  expect_equal(length(res$pdf), 58)
-  expect_equal(res$lines, 17) 
+  expect_equal(length(res$pdf), 59)
+  expect_equal(res$lines, 17.5) 
   
 })
 

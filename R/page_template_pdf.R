@@ -729,87 +729,76 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
     
   }
   
-  # if (is.null(value))
-  #   value <- ""
-  # 
-  # ll <- width
-  # ret <- c()
-  # cnt <- 0
-  # border_flag <- FALSE
-  # 
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
-  # 
-  # if (!is.null(pgby)) { 
-  #   
-  #   if (!any(class(pgby) == "page_by"))
-  #     stop("pgby parameter value is not a page_by.")
-  #   
-  #   
-  #   w1 <- round(width * rs$twip_conversion)
-  #   
-  #   algn <- "\\ql"
-  #   if (pgby$align == "right")
-  #     algn <- "\\qr"
-  #   else if (pgby$align %in% c("center", "centre"))
-  #     algn <- "\\qc"
-  #   
-  #   trows <- 1
-  #   brow <- 1
-  #   if (pgby$blank_row %in% c("above", "both")) {
-  #     trows <- trows + 1
-  #     brow <- 2
-  #   }
-  #   if (pgby$blank_row %in% c("below", "both"))
-  #     trows <- trows + 1
-  #   
-  #   if (pgby$blank_row %in% c("above", "both")) {
-  #     
-  #     tb <- get_cell_borders(1, 1, trows, 1, pgby$borders)
-  #     
-  #     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
-  #                                    "\\cellx", w1, algn, 
-  #                                    "\\cell\\row\n")
-  #     cnt <- cnt + 1 
-  #   }
-  #   
-  #   tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
-  #   
-  #   ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
-  #                                  "\\cellx", w1, algn, " ",
-  #                                  pgby$label, value, "\\cell\\row\n")
-  #   
-  #   
-  #   cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
-  #                              rs$font, rs$font_size, rs$units)
-  #   
-  #   
-  #   if (pgby$blank_row %in% c("below", "both")) {
-  #     
-  #     tb <- get_cell_borders(trows, 1, trows, 1, pgby$borders)
-  #     
-  #     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
-  #                                    "\\cellx", w1, algn, 
-  #                                    "\\cell\\row\n")
-  #     cnt <- cnt + 1 
-  #   }
-  #   
-  #   if (any(pgby$borders %in% c("all", "outside", "bottom")))
-  #     border_flag <- TRUE
-  #   
-  # }
-  # 
-  # res <- list(rtf = paste0(ret, collapse = ""), 
-  #             lines = cnt, 
-  #             twips = cnt * rs$line_height,
-  #             border_flag = border_flag)
+  if (is.null(value))
+    value <- ""
+
+  ret <- c()
+  cnt <- 0
+  border_flag <- FALSE
+  lh <- rs$line_height
+
+  if (!is.null(pgby)) {
+
+    if (!any(class(pgby) == "page_by"))
+      stop("pgby parameter value is not a page_by.")
+    
+    # Get content alignment codes
+    if (talgn == "right") {
+      lb <- rs$content_size[["width"]] - width
+      rb <- rs$content_size[["width"]]
+    } else if (talgn %in% c("center", "centre")) {
+      lb <- (rs$content_size[["width"]] - width) / 2
+      rb <- width + lb
+    } else {
+      lb <- 0
+      rb <- width
+    }
   
-  res <- list(pdf = "", 
-              lines = 0,
-              points = 0,
+    yline <- ystart
+    
+    # Open device context
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
+
+
+    if (pgby$blank_row %in% c("above", "both")) {
+
+      yline <- yline + lh
+      cnt <- cnt + 1
+    }
+
+    # tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
+
+    vl <- paste0( pgby$label, ": ", value)
+
+    tmp <- split_string_text(vl, width, rs$units)
+    
+    
+    for (ln in seq_len(tmp$lines)) {
+      
+      ret[[length(ret) + 1]] <- page_text(vl, rs$font_size, 
+                                          bold = FALSE,
+                                          xpos = get_points(lb, 
+                                                            rb,
+                                                            tmp$widths[ln],
+                                                            units = rs$units,
+                                                            align = pgby$align),
+                                          ypos = yline)
+      yline <- yline + lh
+      cnt <- cnt + 1
+    }
+    
+    if (pgby$blank_row %in% c("below", "both")) {
+      yline <- yline + lh
+      cnt <- cnt + 1
+      
+    }
+  }
+
+  
+  res <- list(pdf = ret, 
+              lines = cnt,
+              points = cnt * lh,
               border_flag = FALSE)
   
   return(res)

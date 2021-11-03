@@ -157,7 +157,7 @@ test_that("get_page_footer_pdf works as expected.", {
   pf <- rpt3$page_template$page_footer
   pf
 
-  expect_equal(pf$lines, 2)
+  expect_equal(pf$lines, 3)
 
 
 })

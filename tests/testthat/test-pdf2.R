@@ -366,7 +366,7 @@ test_that("pdf2-7: Multi page table works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 7)
+  expect_equal(res$pages, 8)
 
 
 })
@@ -822,38 +822,39 @@ test_that("pdf2-18: Title header on report works as expected.", {
 #   
 #   expect_equal(res$pages, 3)
 # })
-# 
-# # This is a good one for testing height calculations.  Looks good for now.
-# test_that("pdf2-22: Page by works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test22.pdf")
-#   
-#   dat <- iris
-#   
-#   tbl <- create_table(dat, borders = "none") %>% 
-#     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
-#     page_by(Species, label = "Species: ", align = "right", borders = "none")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_header("Left", "Right") %>% 
-#     page_footer("Left1", "Center1", "Right1") %>% 
-#     footnotes("My footnote 1", "My footnote 2", borders = "none")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 6)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
+
+# This is a good one for testing height calculations.  Looks good for now.
+test_that("pdf2-22: Page by works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test22.pdf")
+
+  dat <- iris
+
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Species, label = "Species: ", align = "center", borders = "none", 
+            blank_row = "below")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
 # # Works!  
 # test_that("pdf2-23: Two contents on one page works as expected.", {
 #   
@@ -1610,7 +1611,9 @@ test_that("pdf2-45: Title bold and font size works as expected.", {
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"),
                 blank_row = "below") %>%
     add_content(tbl, align = "center")  %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", 
+                paste("Right1 here is one that is really, ", 
+                "really long that I hope will wrap around"))
 
   res <- write_report(rpt)
 
@@ -1643,7 +1646,7 @@ test_that("pdf2-46: 9 pt font inches works as expected.", {
 
 })
 
-# Hosed
+# Working but misaligned.
 test_that("pdf2-47: 9 pt font cm works as expected.", {
 
 
