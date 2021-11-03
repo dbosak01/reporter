@@ -323,13 +323,14 @@ test_that("pdf2-6: One page table works as expected.", {
   attr(dat[[2]], "label") <- "Cylin."
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-                       font_size = fsz, orientation = "landscape") %>%
+                       font_size = fsz, orientation = "landscape", 
+                       units = "inches") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table", borders = "outside", bold = TRUE) %>%
     add_content(create_table(dat, borders = "outside")) %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside") %>%
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Right1", blank_row = "above")
 
   res <- write_report(rpt)
 
@@ -382,7 +383,7 @@ test_that("pdf2-8: Portrait table works as expected.", {
   tbl <- create_table(dat)
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-                       font_size = 10, orientation = "portrait") %>%
+                       font_size = 8, orientation = "portrait") %>%
     # set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     titles("Table 1.0", "My Nice Table") %>%
@@ -1124,7 +1125,7 @@ test_that("pdf2-30: Simplest RTF Plot with valign bottom works as expected.", {
 
 # # Basic Tests 31 - 40 ------------------------------------------------------
 
-test_that("pdf2-31: Simplest RTF Text with valign top works as expected.", {
+test_that("pdf2-31: Simplest PDF with valign top works as expected.", {
 
 
   fp <- file.path(base_path, "pdf2/test31.pdf")
@@ -1177,53 +1178,54 @@ test_that("pdf2-32: Simplest Text with valign bottom works as expected.", {
 
 })
 
-# test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test33.pdf")
-#   
-#   
-#   # Setup
-#   arm <- c(rep("A", 5), rep("B", 5))
-#   subjid <- 100:109
-#   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
-#             "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma", 
-#             "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
-#             "Smith, Shaileigh")
-#   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
-#   age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
-#   
-#   
-#   # Create data frame
-#   df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
-#   
-#   
-#   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-#     define(subjid, label = "Subject ID for a patient", n = 10, align = "left", 
-#            width = 1) %>%
-#     define(name, label = "Subject Name", width = 1) %>%
-#     define(sex, label = "Sex", n = 10, align = "center") %>%
-#     define(age, label = "Age", n = 10) %>%
-#     define(arm, label = "Arm",
-#            blank_after = TRUE,
-#            dedupe = TRUE)
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, 
-#                        font_size = fsz) %>%
-#     titles("Table 1.0", align = "center") %>%
-#     
-#     add_content(tbl1)
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   
-#   
-# })
-# 
+# Works except label headers need to move down
+test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test33.pdf")
+
+
+  # Setup
+  arm <- c(rep("A", 5), rep("B", 5))
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+
+
+  # Create data frame
+  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+
+
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+           width = 1) %>%
+    define(name, label = "Subject Name", width = 1) %>%
+    define(sex, label = "Sex", n = 10, align = "center") %>%
+    define(age, label = "Age", n = 10) %>%
+    define(arm, label = "Arm",
+           blank_after = TRUE,
+           dedupe = TRUE)
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier",
+                       font_size = fsz) %>%
+    titles("Table 1.0", align = "center") %>%
+
+    add_content(tbl1)
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+
+
+})
+
 # # Works on all combinations on font and font size.  Needed adjustments to row height.
 # test_that("pdf2-34: Table with break between sections works as expected.", {
 #   
@@ -1411,7 +1413,7 @@ test_that("pdf2-38: Title and Footnote specific widths work as expected.", {
 
 })
 
-# This went completely haywire.  Probably the cm.
+# Works
 test_that("pdf2-39: One page table works as expected in centimeters and times.", {
 
 
@@ -1438,7 +1440,7 @@ test_that("pdf2-39: One page table works as expected in centimeters and times.",
 
 })
 
-# Also haywire because of the cm.  Inches works.
+# Title not aligned properly
 test_that("pdf2-40: One page table works as expected in courier.", {
 
 
@@ -1452,7 +1454,7 @@ test_that("pdf2-40: One page table works as expected in courier.", {
                        units = "cm") %>%
     set_margins(top = 3, bottom = 3) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table") %>%
+    titles("Table 1.0", "My Nice Table", align = "center") %>%
     add_content(create_table(dat)) %>%
     footnotes("My footnote 1", "My footnote 2") %>%
     page_footer("Left1", "Center1", "Right1")
@@ -1592,7 +1594,10 @@ test_that("pdf2-45: Title bold and font size works as expected.", {
   attr(dat[[2]], "justify") <- "center"
 
   tbl <- create_table(dat, borders = "outside") %>%
-    titles("Table 1.0", "My Nice Table", borders = c("none"),
+    titles("Table 1.0", 
+           paste("My Nice Table that will go on and on and eventually will",
+                 "wrap around I hope so maybe I can test this feature of the ",
+                 "application"), borders = c("none"),
            width = "content", font_size = 14, bold = TRUE) %>%
     footnotes("My footnote 1", "My footnote 2", borders = "none",
               align = "left", width = "content") %>%
@@ -1684,6 +1689,7 @@ test_that("pdf2-48: 11 pt font inches works as expected.", {
 
 })
 
+# Not
 test_that("pdf2-49: 11 pt font cm works as expected.", {
 
 
@@ -1695,13 +1701,15 @@ test_that("pdf2-49: 11 pt font cm works as expected.", {
                        units = "cm") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
-    add_content(create_table(iris)) %>%
+    add_content(create_table(iris), align = "left") %>%
     page_footer("left", "center", "Page [pg] of [tpg]") %>%
     set_margins(top = 1, bottom = 1)
 
 
   res <- write_report(rpt)
 
+  res$column_widths
+  
   expect_equal(file.exists(fp), TRUE)
 
 

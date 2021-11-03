@@ -1215,9 +1215,9 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
 cpoints <- function(vals, units) {
   
   if (units == "inches")
-    ret <- vals * 72
+    ret <- round(vals * 72, 3)
   else if (units == "cm")
-    ret <- vals * 2.54 * 72
+    ret <- round((vals / 2.54) * 72, 3)
   
   names(ret) <- NULL
   

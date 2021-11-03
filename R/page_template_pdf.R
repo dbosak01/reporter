@@ -284,6 +284,9 @@ get_page_footer_pdf <- function(rs) {
         
     }
   }
+  
+  if (any(rs$page_footer_blank_row == "above"))
+    cnt <- cnt + 1
 
   res <- list(pdf = ret,
               lines = cnt,

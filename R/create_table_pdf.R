@@ -612,13 +612,24 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = rs$font_size)
   
+  
+  tmplst <- list()
+  mxlns <- 0
+  for(k in seq_along(nms)) {
+    
+    tmplst[[k]] <- split_string_text(lbls[k], wdths[k], rs$units)
+    
+    if (tmplst[[k]]$lines > mxlns)
+      mxlns <- tmplst[[k]]$lines
+  }
+  
 
   for(k in seq_along(nms)) {
     
-    yline <- ystart
-    
     # Split label strings if they exceed column width
-    tmp <- split_string_text(lbls[k], wdths[k], rs$units)
+    tmp <- tmplst[[k]]
+    
+    yline <- ystart + (rh * (mxlns - tmp$lines))
   
     #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
     
@@ -649,7 +660,15 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
       cnt <- xtr
     
   }
+  
   dev.off()
+  
+  yline <- ystart + (cnt * rh) - (rh * .75) + 1
+  
+  ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                       yline, 
+                                       (trb - tlb) * conv)
+  cnt <- cnt + .5
   
   #ret[1] <- paste(ret[1], "\\row")
   
