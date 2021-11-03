@@ -532,8 +532,8 @@ test_that("pdf2-13: Spanning headers work as expected.", {
   dat <- mtcars[1:15, ]
 
   tbl <- create_table(dat, borders = c("top", "bottom")) %>%
-    spanning_header(cyl, disp, "Span 1", n = 10, label_align = "left") %>%
-    spanning_header(hp, wt, "Span 2", n = 11, underline = FALSE) %>%
+    spanning_header(cyl, disp, "Span 1 and go an go", n = 10, label_align = "left") %>%
+    spanning_header(hp, wt, "Span 2", n = 11, underline = TRUE) %>%
     spanning_header(qsec, vs, "Span 3") %>%
     spanning_header(drat, gear, "Super Duper\n Big Ol' Span", n = 25, level = 2)
 

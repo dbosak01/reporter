@@ -839,14 +839,27 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   #  }
     
    mxyl <- 0
+   mxlns <- 0
    lnadj <- 0
+   tmps <- list()
+   
+   # Get max lines for this spanning level
+   for (k in seq_along(lbls)) {
+     
+     # Split label strings if they exceed column width
+     tmps[[k]] <- split_string_text(lbls[k], widths[k], rs$units) 
+     
+     if (tmps[[k]]$lines > mxlns)
+       mxlns <- tmps[[k]]$lines
+   }
     
     # Loop for labels
    for(k in seq_along(lbls)) {
 
-     yline <- lline
+     yline <- lline 
      
-     # Do something with this
+     # Get left and right bounds for this span
+     # Will accumulate as it goes across 
      if (k == 1) {
        lb <- tlb
        rb <- lb + widths[k]
@@ -857,12 +870,15 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
      
      if (lbls[k] != "") {
       
-        # Split label strings if they exceed column width
-        tmp <- split_string_text(lbls[k], widths[k], rs$units)
-        
+        tmp <- tmps[[k]]
         
         for (ln in seq_len(tmp$lines)) {
           
+          # Adjust yline to push down labels
+          if (ln == 1)
+            yline <- yline + ((mxlns - tmp$lines) * rh)
+          
+          # Get pdf text for label
           ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
                                               bold = FALSE,
                                               xpos = get_points(lb, 
@@ -876,7 +892,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
             mxyl <- yline
         }
         
-
+        # Get underline for label if requested
         if (s$span[k] > 0 & s$underline[k]) {
           
           lnadj <- .5
@@ -889,10 +905,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
 
         }
         
-        # Concat label
-        #r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
-        # print(lbls[k])
-        # print(widths[k])
+
         # Add in extra lines for labels that wrap
         xtr <- tmp$lines + lnadj
         if (xtr > cnt[length(cnt)])
@@ -904,14 +917,9 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
 
     lline <- mxyl + (rh * lnadj)
     
-    # r <- paste0(r, "\\row")
-    # 
-    # ln[[length(ln) + 1]] <- r
     
   }
   dev.off()
-  
-  #ret <- unlist(ln)
   
   res <- list(pdf = ret, 
               lines = sum(cnt), 
