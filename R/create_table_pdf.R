@@ -531,6 +531,8 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   nms <- names(lbls)[is.controlv(names(lbls)) == FALSE]
   unts <- rs$units
   wdths <- widths[nms]
+  
+
 
   # Get cell widths
   # sz <- c()
@@ -604,10 +606,9 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     tlb <- 0
     trb <- width
   }
-  
-  cnt <-  1 
 
-  
+  cnt <-  1
+ 
   # Loop for column names
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -629,7 +630,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     # Split label strings if they exceed column width
     tmp <- tmplst[[k]]
     
-    yline <- ystart + (rh * (mxlns - tmp$lines))
+    yline <- ystart + (rh * (mxlns - tmp$lines)) 
   
     #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
     
@@ -670,7 +671,9 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
                                        (trb - tlb) * conv)
   cnt <- cnt + .5
   
-  #ret[1] <- paste(ret[1], "\\row")
+  if (ts$first_row_blank == TRUE) {
+    cnt <- cnt + 1
+  }
   
   res <- list(pdf = ret,
               lines = cnt,

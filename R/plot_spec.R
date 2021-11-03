@@ -912,15 +912,6 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   # Get image PDF codes
   #img <- get_image_pdf(plot_path, plt$width, plt$height, rs$units)
   
-  # Assign table alignment codes
-  # if (talign == "left") {
-  #   talgn <- "\\trql" 
-  # } else if (talign == "right") {
-  #   talgn <- "\\trqr"
-  # } else  {
-  #   talgn <- "\\trqc"
-  # }
-  
   if (talign == "right") {
     lb <- rs$content_size[["width"]] - wth
     rb <- rs$content_size[["width"]]
@@ -988,6 +979,9 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   }
   if (ttl_hdr$lines > 0) {
     rws <- append(rws, ttl_hdr$pdf)
+  }
+  if (pgbys$lines > 0) {
+    rws <- append(rws, pgbys$pdf)
   }
   if (ftnts$lines > 0) {
     rws <- append(rws, ftnts$pdf)

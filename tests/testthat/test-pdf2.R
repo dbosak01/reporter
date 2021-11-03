@@ -780,48 +780,6 @@ test_that("pdf2-18: Title header on report works as expected.", {
 # })
 # 
 # # Basic Tests 21 - 30 ------------------------------------------------------
-# 
-# # Works unless drat column is too narrow and spanning label wraps unexpectedly
-# test_that("pdf2-21: Page wrap with spanning header works as expected.", {
-#   
-#   fp <- file.path(base_path, "pdf2/test21.pdf")
-#   
-#   
-#   df <- data.frame(vehicle = rownames(mtcars), mtcars, stringsAsFactors = FALSE)
-#   rownames(df) = NULL
-#   
-#   tbl <- create_table(df) %>% 
-#     spanning_header(2, 5,
-#                     label = "Span 1", label_align = "center", n = 10) %>%
-#     spanning_header(6, 8,
-#                     label = "Span 2", label_align = "center", n = 10) %>%
-#     spanning_header(9, 12,
-#                     label = "Span 3", label_align = "center", n = 10) %>%
-#     spanning_header(6, 12, label = "Super Span",
-#                     label_align = "center",
-#                     level = 2) %>%
-#     define(vehicle, label = "Vehicle", id_var = TRUE) %>% 
-#     define(mpg, format = "%.1f") %>% 
-#     define(drat, width = 1) %>% 
-#     define(wt, page_wrap = TRUE) %>% 
-#     define(vs, page_wrap = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", 
-#                        orientation = "portrait", font = fnt) %>%
-#     add_content(tbl) %>% 
-#     titles("Table 1.0", "MTCARS Subset Test") %>% 
-#     footnotes("My footnote") %>% 
-#     page_header("Left") %>% 
-#     page_footer("Left", right = "Right")
-#   
-#   #print(rpt)
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   expect_equal(res$pages, 3)
-# })
 
 # This is a good one for testing height calculations.  Looks good for now.
 test_that("pdf2-22: Page by works as expected.", {
@@ -982,85 +940,85 @@ test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
 #   
 #   
 # })
-# 
-# 
-# 
-# test_that("pdf2-27: Plot with page by on plot works as expected.", {
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "pdf2/test27.pdf")
-#   
-#   
-#   dat <- mtcars[order(mtcars$cyl), ]
-#   
-#   p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-#   
-#   
-#   #dats <- split(p$data, p$data$grp)
-#   #tbl <- create_table(dat[1:3, ])
-#   
-#   plt <- create_plot(p, height = 4, width = 8) %>% 
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-#     page_by(cyl, "Cylinders: ") %>% 
-#     footnotes("* Motor Trend, 1974") 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(plt) %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 3)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-28: Plot with page by on report works as expected.", {
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "pdf2/test28.pdf")
-#   
-#   
-#   dat <- mtcars[order(mtcars$cyl), ]
-#   
-#   p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-#   
-#   
-#   #dats <- split(p$data, p$data$grp)
-#   #tbl <- create_table(dat[1:3, ])
-#   
-#   plt <- create_plot(p, height = 4, width = 8)
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
-#            blank_row = "none", borders = "none") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_by(cyl, "Cylinders: ") %>% 
-#     add_content(plt) %>%
-#     footnotes("* Motor Trend, 1974", borders = "none") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 3)
-#   
-#   
-# })
+
+
+# Works
+test_that("pdf2-27: Plot with page by on plot works as expected.", {
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf2/test27.pdf")
+
+
+  dat <- mtcars[order(mtcars$cyl), ]
+
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+
+
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+
+  plt <- create_plot(p, height = 4, width = 8) %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+    page_by(cyl, "Cylinders: ", blank_row = "below") %>%
+    footnotes("* Motor Trend, 1974")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt) %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+
+
+})
+ 
+# Also works
+test_that("pdf2-28: Plot with page by on report works as expected.", {
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf2/test28.pdf")
+
+
+  dat <- mtcars[order(mtcars$cyl), ]
+
+  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+
+
+  #dats <- split(p$data, p$data$grp)
+  #tbl <- create_table(dat[1:3, ])
+
+  plt <- create_plot(p, height = 4, width = 8)
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot",
+           blank_row = "none", borders = "none") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_by(cyl, "Cylinders: ") %>%
+    add_content(plt) %>%
+    footnotes("* Motor Trend, 1974", borders = "none") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+
+
+})
 
 test_that("pdf2-29: Simplest Plot with valign top works as expected.", {
 
@@ -1227,59 +1185,59 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
 
 })
 
-# # Works on all combinations on font and font size.  Needed adjustments to row height.
-# test_that("pdf2-34: Table with break between sections works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test34.pdf")
-#   
-#   
-#   # Setup
-#   subjid <- 100:109
-#   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
-#             "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
-#             "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
-#             "Smith, Shaileigh")
-#   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
-#   age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
-#   arm <- c(rep("A", 5), rep("B", 5))
-#   
-#   # Create data frame
-#   df <- data.frame(subjid, name, sex, age, arm)
-#   
-#   
-#   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-#     define(subjid, label = "Subject ID", align = "left", width = 1) %>% 
-#     define(name, label = "Subject Name", width = 1) %>% 
-#     define(sex, label = "Sex") %>% 
-#     define(age, label = "Age") %>% 
-#     define(arm, label = "Arm", 
-#            blank_after = FALSE, 
-#            dedupe = TRUE, 
-#            align = "right") #%>% 
-#   # spanning_header(sex, arm, label = "Here is a spanning header")
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
-#     # options_fixed(line_count = 46) %>% 
-#     titles("Table 1.0", "Analysis Data Subject Listing\n And more stuff", 
-#            "Safety Population", align = "center") %>%
-#     footnotes("Program Name: table1_0.R", 
-#               "Here is a big long footnote that is going to wrap\n at least once") %>%
-#     page_footer(left = "Time", center = "Confidential", 
-#                 right = "Page [pg] of [tpg]") %>%
-#     add_content(tbl1) 
-#   
-#   
-#   res <- write_report(rpt)
-#   res
-#   expect_equal(file.exists(fp), TRUE)
-#   
-#   
-# })
-# 
-# 
+# Not working: Both first row blank and section break not working
+test_that("pdf2-34: Table with break between sections works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test34.pdf")
+
+
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma",
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 5))
+
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm)
+
+
+  tbl1 <- create_table(df, first_row_blank = FALSE) %>%
+    define(subjid, label = "Subject ID", align = "left", width = 1) %>%
+    define(name, label = "Subject Name", width = 1) %>%
+    define(sex, label = "Sex") %>%
+    define(age, label = "Age") %>%
+    define(arm, label = "Arm",
+           blank_after = FALSE,
+           dedupe = TRUE,
+           align = "right") #%>%
+  # spanning_header(sex, arm, label = "Here is a spanning header")
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    # options_fixed(line_count = 46) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing\n And more stuff",
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R",
+              "Here is a big long footnote that is going to wrap\n at least once") %>%
+    page_footer(left = "Time", center = "Confidential",
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1)
+
+
+  res <- write_report(rpt)
+  res
+  expect_equal(file.exists(fp), TRUE)
+
+
+})
+
+
 # test_that("pdf2-35: Title Header and page header/footer wrapping work as expected.", {
 #   
 #   
