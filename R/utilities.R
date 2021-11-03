@@ -589,6 +589,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
     for (nm in names(x)) {
       
       nch <- 1
+      res <- list(widths = 0)
       
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
@@ -636,7 +637,10 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
       
       
       row_values[[length(row_values) + 1]] <- cell
-      row_widths[[length(row_widths) + 1]] <- res$widths
+      if (is.null(res$widths)) 
+        row_widths[[length(row_widths) + 1]] <- 0
+      else
+        row_widths[[length(row_widths) + 1]] <- res$widths
       # print(paste("Row:", row_values))
     }
     
