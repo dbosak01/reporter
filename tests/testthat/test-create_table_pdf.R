@@ -204,8 +204,8 @@ test_that("get_spanning_header_pdf works as expected.", {
   res <- get_spanning_header_pdf(rpt, tbl, pi)
   res
 
-  expect_equal(length(res$pdf), 4)
-  expect_equal(res$lines, 2)
+  expect_equal(length(res$pdf), 8)
+  expect_equal(res$lines, 3)
 
 })
 

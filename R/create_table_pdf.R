@@ -694,6 +694,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   w <- pi$col_width 
   w <- w[cols]
   gutter <- 0
+  gap <- 3
   cnt <- c()
   rh <- rs$row_height
   
@@ -838,10 +839,11 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   #  }
     
    mxyl <- 0
+   lnadj <- 0
     
     # Loop for labels
    for(k in seq_along(lbls)) {
-     
+
      yline <- lline
      
      # Do something with this
@@ -874,20 +876,25 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
             mxyl <- yline
         }
         
-        # yline <- mxyl + (rh * .75) + 1
-        # 
-        # ret[[length(ret) + 1]] <- page_hline((lb * conv) + gutter, 
-        #                                      yline, 
-        #                                      ((rb - lb) * conv) - (gutter * 2))
-        #cnt <- cnt + .5
-        
+
+        if (s$span[k] > 0 & s$underline[k]) {
+          
+          lnadj <- .5
+          
+          yline <- mxyl + lnadj - (rh * .75) + 1 
+  
+          ret[[length(ret) + 1]] <- page_hline((lb * conv) + gap,
+                                               yline,
+                                               ((rb - lb) * conv) - (gap * 2))
+
+        }
         
         # Concat label
         #r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
         # print(lbls[k])
         # print(widths[k])
         # Add in extra lines for labels that wrap
-        xtr <- tmp$lines #+ .5
+        xtr <- tmp$lines + lnadj
         if (xtr > cnt[length(cnt)])
           cnt[length(cnt)] <- xtr
       
@@ -895,7 +902,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
       
    }
 
-    lline <- mxyl #+ (rh * .5)
+    lline <- mxyl + (rh * lnadj)
     
     # r <- paste0(r, "\\row")
     # 
