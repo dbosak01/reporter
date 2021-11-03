@@ -277,7 +277,7 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   hdrs <- list(lines = 0, points = 0)
   
   if (ts$headerless == FALSE) {
-    #shdrs <- get_spanning_header_pdf(rs, ts, pi, ystart = ys)
+    shdrs <- get_spanning_header_pdf(rs, ts, pi, ystart = ys)
     
     ys <- ys + shdrs$points
     
@@ -680,8 +680,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
 }
 
-# Need to fix this
-#' @description Return a vector of pdf strings for the table spanning headers
+#' @description Return a vector of pdf codes for the table spanning headers
 #' @details Basic idea of this function is to figure out which columns 
 #' the header spans, add widths, then call get_table_header.  Everything
 #' from there is the same.  
@@ -696,6 +695,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   w <- w[cols]
   gutter <- 0
   cnt <- c()
+  rh <- rs$row_height
   
   # print("Cols:")
   # print(cols)
@@ -707,20 +707,40 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
-  conv <- rs$twip_conversion
+  conv <- rs$point_conversion
   talgn <- pi$table_align
   
   # Table alignment
-  ta <- "\\trql"
-  if (talgn == "right")
-    ta <- "\\trqr"
-  else if (talgn %in% c("center", "centre"))
-    ta <- "\\trqc"
+  # ta <- "\\trql"
+  # if (talgn == "right")
+  #   ta <- "\\trqr"
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "\\trqc"
   
   # Get borders
   brdrs <- ts$borders
   
   rh <- rs$row_height
+  
+  width <- sum(w)
+  
+  if (talgn == "right") {
+    tlb <- rs$content_size[["width"]] - width
+    trb <- rs$content_size[["width"]]
+  } else if (talgn %in% c("center", "centre")) {
+    tlb <- (rs$content_size[["width"]] - width) / 2
+    trb <- width + tlb
+  } else {
+    tlb <- 0
+    trb <- width
+  }
+  
+  ret <- list()
+  lline <- ystart
+  
+  # Open device context
+  pdf(NULL)
+  par(family = get_font_family(rs$font), ps = rs$font_size)
   
   # Format labels for each level
   ln <- c()
@@ -737,119 +757,156 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
     cs <- s$col_span
     
     # Get cell widths
-    sz <- c()
-    for (k in seq_along(widths)) {
-      
-      if (k == 1)
-        sz[k] <- round(widths[k] * conv)
-      else
-        sz[k] <- round(widths[k] * conv + sz[k - 1])
-      
-    }
+    # sz <- c()
+    # for (k in seq_along(widths)) {
+    #   
+    #   if (k == 1)
+    #     sz[k] <- round(widths[k] * conv)
+    #   else
+    #     sz[k] <- round(widths[k] * conv + sz[k - 1])
+    #   
+    # }
     
     # Header Cell alignment
-    ha <- c()
-    for (k in seq_along(algns)) {
-      
-      if (algns[k] == "right")
-        ha[k] <- "\\qr"
-      else if (algns[k] %in% c("center", "centre"))
-        ha[k] <- "\\qc"
-      else
-        ha[k] <- "\\ql"
-      
-    }
+    # ha <- c()
+    # for (k in seq_along(algns)) {
+    #   
+    #   if (algns[k] == "right")
+    #     ha[k] <- "\\qr"
+    #   else if (algns[k] %in% c("center", "centre"))
+    #     ha[k] <- "\\qc"
+    #   else
+    #     ha[k] <- "\\ql"
+    #   
+    # }
     
     r <- ""
     cnt[length(cnt) + 1] <- 1 
     
     # Table Header
-    r <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
+    # r <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
     
     # Label justification, width, and row concatenation
     
     # Loop for cell definitions
-    for(j in seq_along(sz)) {
+ #   for(j in seq_along(widths)) {
       
       # Get cell borders
-      b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
+      # b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
       
       # Add colspans
-      vl <- lbls[j]
+  #    vl <- lbls[j]
       
       # Special handling of borders for different situations.  
       # I hate this, but can't see a way around it.
-      if (any(brdrs %in% c("all", "inside"))) {
-        sflg <- "B"
-        if (j > 1) {
-          if (cs[j] > 1)
-            sflg <- ""
-        }
-        
-        if (vl == "") {
-          bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
-                                 length(sz), brdrs, 
-                                 flag = sflg)
-        } else 
-          bb <- b
-      } else if (all(brdrs == "outside")) {
-        
-        if (vl == "")
-          bb <- b
-        else 
-          bb <- paste0(b, "\\clbrdrb\\brdrs")
-        
-      } else {
-        
-        if (vl == "") {
-          bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
-                                 length(sz), brdrs, 
-                                 flag = "")
-        } else 
-          bb <- paste0(b, "\\clbrdrb\\brdrs")
-        
-      }
+      # if (any(brdrs %in% c("all", "inside"))) {
+      #   sflg <- "B"
+      #   if (j > 1) {
+      #     if (cs[j] > 1)
+      #       sflg <- ""
+      #   }
+      #   
+      #   if (vl == "") {
+      #     bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
+      #                            length(sz), brdrs, 
+      #                            flag = sflg)
+      #   } else 
+      #     bb <- b
+      # } else if (all(brdrs == "outside")) {
+      #   
+      #   if (vl == "")
+      #     bb <- b
+      #   else 
+      #     bb <- paste0(b, "\\clbrdrb\\brdrs")
+      #   
+      # } else {
+      #   
+      #   if (vl == "") {
+      #     bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
+      #                            length(sz), brdrs, 
+      #                            flag = "")
+      #   } else 
+      #     bb <- paste0(b, "\\clbrdrb\\brdrs")
+      #   
+      # }
       
-      
-      if (s$span[j] > 0 & s$underline[j])
-        r <- paste0(r, "\\clvertalb", bb, "\\clbrdrb\\brdrs\\cellx", sz[j])
-      else 
-        r <- paste0(r, "\\clvertalb", bb, "\\cellx", sz[j])
-    }
+      # Don't forget about underline parameter
+      # if (s$span[j] > 0 & s$underline[j])
+      #   r <- paste0(r, "\\clvertalb", bb, "\\clbrdrb\\brdrs\\cellx", sz[j])
+      # else 
+      #   r <- paste0(r, "\\clvertalb", bb, "\\cellx", sz[j])
+  #  }
     
-    # Open device context
-    pdf(NULL)
-    par(family = get_font_family(rs$font), ps = rs$font_size)
+   mxyl <- 0
     
     # Loop for labels
-    for(k in seq_along(lbls)) {
+   for(k in seq_along(lbls)) {
+     
+     yline <- lline
+     
+     # Do something with this
+     if (k == 1) {
+       lb <- tlb
+       rb <- lb + widths[k]
+     } else {
+       lb <- rb
+       rb <- lb + widths[k]
+     }
+     
+     if (lbls[k] != "") {
       
-      # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+        # Split label strings if they exceed column width
+        tmp <- split_string_text(lbls[k], widths[k], rs$units)
+        
+        
+        for (ln in seq_len(tmp$lines)) {
+          
+          ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+                                              bold = FALSE,
+                                              xpos = get_points(lb, 
+                                                                rb,
+                                                                tmp$widths[ln],
+                                                                units = rs$units,
+                                                                align = algns[k]),
+                                              ypos = yline)
+          yline <- yline + rh
+          if (yline > mxyl)
+            mxyl <- yline
+        }
+        
+        # yline <- mxyl + (rh * .75) + 1
+        # 
+        # ret[[length(ret) + 1]] <- page_hline((lb * conv) + gutter, 
+        #                                      yline, 
+        #                                      ((rb - lb) * conv) - (gutter * 2))
+        #cnt <- cnt + .5
+        
+        
+        # Concat label
+        #r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
+        # print(lbls[k])
+        # print(widths[k])
+        # Add in extra lines for labels that wrap
+        xtr <- tmp$lines #+ .5
+        if (xtr > cnt[length(cnt)])
+          cnt[length(cnt)] <- xtr
       
-      # Concat label
-      r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
-      # print(lbls[k])
-      # print(widths[k])
-      # Add in extra lines for labels that wrap
-      xtr <- tmp$lines
-      if (xtr > cnt[length(cnt)])
-        cnt[length(cnt)] <- xtr
+     }
       
-    }
-    dev.off()
+   }
+
+    lline <- mxyl #+ (rh * .5)
     
-    
-    r <- paste0(r, "\\row")
-    
-    ln[[length(ln) + 1]] <- r
+    # r <- paste0(r, "\\row")
+    # 
+    # ln[[length(ln) + 1]] <- r
     
   }
+  dev.off()
   
+  #ret <- unlist(ln)
   
-  ret <- unlist(ln)
-  
-  res <- list(rtf = ret, 
+  res <- list(pdf = ret, 
               lines = sum(cnt), 
               points = sum(cnt) * rh)
   

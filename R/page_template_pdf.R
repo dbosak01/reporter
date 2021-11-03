@@ -418,15 +418,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
   pnts <- 0
   border_flag <- FALSE
   
-  #conv <- rs$twip_conversion
   lh <- rs$row_height
-  
-
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
   
   if (!is.null(ystart))
     yline <- ystart
@@ -565,12 +557,6 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
   lyline <- ystart
   ryline <- ystart
 
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
-
   if (length(thdrlst) > 0) {
 
     for (ttlhdr in thdrlst) {
@@ -684,15 +670,6 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         # b1 <- get_cell_borders(i + alcnt, 1, mx + alcnt + blcnt, 2, ttlhdr$borders)
         # b2 <- get_cell_borders(i + alcnt, 2, mx+ alcnt + blcnt, 2, ttlhdr$borders)
 
-        # if (al != "")
-        #   ret <- append(ret, al)
-
-        # ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b1, "\\cellx", w2,
-        #                           b2, "\\cellx", w1,
-        #                           "\\ql ", ttl, "\\cell\\qr ",
-        #                           hdr, "\\cell\\row\n"))
-        # if (bl != "")
-        #   ret <- append(ret, bl)
 
         if (tcnt > hcnt)
           cnt <- cnt + tcnt
@@ -776,7 +753,7 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
     
     for (ln in seq_len(tmp$lines)) {
       
-      ret[[length(ret) + 1]] <- page_text(vl, rs$font_size, 
+      ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
                                           bold = FALSE,
                                           xpos = get_points(lb, 
                                                             rb,

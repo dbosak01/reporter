@@ -86,9 +86,7 @@ test_that("get_footnotes_pdf function works as expected.", {
 
   f <- rpt$page_template$footnotes
   f
-  # expect_equal(f$rtf,
-  #              paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql\\cell\\row\n",
-  #                     "\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n"))
+
   expect_equal(f$lines, 2)
 
 })
@@ -163,30 +161,28 @@ test_that("get_page_footer_pdf works as expected.", {
 })
 
 
-# 
-# test_that("get_pageby_pdf works as expected.", {
-#   
-#   tbl <- create_table(mtcars) %>% 
-#     page_by(cyl, "Cylinders:")
-#   
-#   rpt <- create_report("", font = "Arial", font_size = 12) %>%
-#     titles("Hello") %>%
-#     footnotes("Goodbye") %>% 
-#     add_content(tbl)
-#   
-#   rpt <- page_setup_pdf(rpt)
-#   
-#   rpt$line_height
-#   
-#   res <- get_page_by_pdf(tbl$page_by, 6, "fork", rpt, "left")
-#   res  
-#   
-#   expect_equal(res$lines, 2)
-#   expect_equal(res$rtf, 
-#                paste0("\\trowd\\trgaph0\\trql\\cellx8640\\ql Cylinders:fork\\cell\\row\n", 
-#                       "\\trowd\\trgaph0\\trql\\cellx8640\\ql\\cell\\row\n"))
-#   
-# })
+
+test_that("get_pageby_pdf works as expected.", {
+
+  tbl <- create_table(mtcars) %>%
+    page_by(cyl, "Cylinders:")
+
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello") %>%
+    footnotes("Goodbye") %>%
+    add_content(tbl)
+
+  rpt <- page_setup_pdf(rpt)
+
+  rpt$line_height
+
+  res <- get_page_by_pdf(tbl$page_by, 6, "fork", rpt, "left")
+  res
+
+  expect_equal(res$lines, 2)
+  expect_equal(length(res$pdf), 1)
+
+})
 
 
 test_that("rtf2-2: get_cell_borders_pdf works as expected.", {
@@ -225,30 +221,30 @@ test_that("rtf2-2: get_cell_borders_pdf works as expected.", {
 })
 
 
-# test_that("page_template_pdf works as expected.", {
-#   
-#   
-#   tbl <- create_table(mtcars) %>% 
-#     page_by(cyl, "Cylinders:")
-#   
-#   rpt <- create_report("", font = "Arial", font_size = 12) %>%
-#     page_header("left", "right") %>% 
-#     titles("Hello") %>%
-#     footnotes("Goodbye") %>% 
-#     add_content(tbl) %>% 
-#     page_footer("left", right = "right")
-#   
-#   
-#   rpt <- page_setup_pdf(rpt)
-#   
-#   
-#   
-#   res <- page_template_pdf(rpt)
-#   
-#   res
-#   expect_equal(res$lines, 6)
-#   expect_equal(res$titles$lines, 2)
-#   
-#   
-# })
+test_that("page_template_pdf works as expected.", {
+
+
+  tbl <- create_table(mtcars) %>%
+    page_by(cyl, "Cylinders:")
+
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header("left", "right") %>%
+    titles("Hello") %>%
+    footnotes("Goodbye") %>%
+    add_content(tbl) %>%
+    page_footer("left", right = "right")
+
+
+  rpt <- page_setup_pdf(rpt)
+
+
+
+  res <- page_template_pdf(rpt)
+
+  res
+  expect_equal(res$lines, 7)
+  expect_equal(res$titles$lines, 2)
+
+
+})
 
