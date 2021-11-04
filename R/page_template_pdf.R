@@ -261,7 +261,7 @@ get_page_footer_pdf <- function(rs) {
                                                             units = rs$units),
                                               ypos = cyline, 
                                               align = "center",
-                                              alignx = rb1 / rb2)
+                                              alignx = rb1 + ((rb2 - rb1)/2))
           cyline <- cyline + lh
         }
     }
@@ -618,7 +618,9 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
                                                                   tmp1$widths[ln],
                                                                   units = rs$units,
                                                                   align = "left"),
-                                                ypos = lyline)
+                                                ypos = lyline, 
+                                                align = "left",
+                                                alignx = 0)
             lyline <- lyline + lh
           }
           
@@ -641,7 +643,9 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
                                                                   tmp2$widths[ln],
                                                                   units = rs$units,
                                                                   align = "right"),
-                                                ypos = ryline)
+                                                ypos = ryline, 
+                                                align = "right",
+                                                alignx = rb1)
             ryline <- ryline + lh
           }
           

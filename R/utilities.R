@@ -1186,7 +1186,8 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
 #' @description Estimate number of wraps based on text, width, and a font.
 #' @import graphics
 #' @noRd
-get_text_width <- function(txt, font, font_size = 10, units = "inches") {
+get_text_width <- function(txt, font, font_size = 10, units = "inches", 
+                           multiplier = .975) {
   
   
   f <- "mono"
@@ -1201,7 +1202,7 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
   #R.devices::devEval("nulldev", {
     pdf(NULL)
     par(family = f, ps = font_size)
-    ret <- suppressWarnings(strwidth(txt, units = un)) * .975 
+    ret <- suppressWarnings(strwidth(txt, units = un)) * multiplier 
     dev.off()
   #})
   

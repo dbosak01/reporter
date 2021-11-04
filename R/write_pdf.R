@@ -498,13 +498,14 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
             w <- get_text_width(txt, cnt$font, 
                                 ifelse(is.null(cnt$font_size), 
                                                       fontsize, cnt$font_size), 
-                                units)
+                                units,
+                                multiplier = 1.03) # to match split_strings
             if (cnt$align == "left")
               nx <- cnt$alignx * conversion
             else if (cnt$align == "right")
-              nx <- (cnt$alignx - w) * conversion
+              nx <- ((cnt$alignx - w) * conversion) + 13  # No idea why
             else
-              nx <- (cnt$alignx - (w / 2)) * conversion
+              nx <- (cnt$alignx - (w / 2)) * conversion + 13
             
             # For PDF2
             tmp <- get_byte_stream(txt, 

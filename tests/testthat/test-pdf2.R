@@ -148,7 +148,6 @@ test_that("pdf2-1b: Report with title header is correct.", {
   
 })
 
-# Need to fix footnotes on content
 test_that("pdf2-1c: Report with titles on content is correct.", {
   
   
@@ -360,7 +359,7 @@ test_that("pdf2-7: Multi page table works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
     add_content(tbl, blank_row = "none") %>%
-    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    page_footer("Page [pg] of [tpg]", "Page [pg] of [tpg]", "Page [pg] of [tpg]") %>%
     footnotes("My footnote 1", "My footnote 2")
 
   res <- write_report(rpt)
@@ -651,7 +650,7 @@ test_that("pdf2-16: Valign on table footnotes works as expected.", {
 
 })
 
-# Page numbering not working
+
 test_that("pdf2-17: Title header on table works as expected.", {
 
 
@@ -841,8 +840,10 @@ test_that("pdf2-22: Page by works as expected.", {
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
-    page_header("Left", "Right") %>%
-    page_footer("Left1", "Center1", "Right1") %>%
+    page_header("Page [pg] of [tpg]", "Page [pg] of [tpg]") %>%
+    page_footer("Page [pg] of [tpg]", 
+                "Page [pg] of [tpg]", 
+                "Page [pg] of [tpg]") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "none")
 
   res <- write_report(rpt)
@@ -2171,7 +2172,7 @@ test_that("user5: Portrait in 12pt Arial works as expected.", {
 
     dir_data <- file.path(data_dir, "data")
 
-    fp <- file.path(base_path, "pdf2/user5pdf")
+    fp <- file.path(base_path, "pdf2/user5.pdf")
 
     # Read in prepared data
     df <- read.table(header = TRUE, text = '
