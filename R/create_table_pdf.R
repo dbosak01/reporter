@@ -937,9 +937,13 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     brdrs <- c("top", "bottom", "left", "right")
   
   # Get line height.  Don't want to leave editor default.
-  rh <- rs$row_height
+  if (any(brdrs %in% c("all", "inside")))
+    rh <- rs$row_height + rs$border_spacing
+  else 
+    rh <- rs$row_height
   conv <- rs$point_conversion
   unts <- rs$units
+  bs <- rs$border_spacing
   
   
   # Sum up widths 
@@ -973,8 +977,6 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     mxrw <- yline
     cnt <- cnt + 1
   
-  
-    
     # Loop for columns 
     for(j in nms) {
       
@@ -1022,13 +1024,42 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         mxrw <- yline
       
       yline <- rline
+      
+      # Applies inside vertical borders
+      if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)]) {
+        
+        ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, rh)
+        
+      }
 
+    }
+    
+    # Applies inside horizontal borders
+    if (any(brdrs %in% c("all", "inside")) & i < nrow(t)) {
+    
+      ret[[length(ret) + 1]] <- page_hline(tlb * conv, rline + bs, 
+                                           (trb - tlb) * conv)
+    
     }
     
     rline <- mxrw
   
-  
   }
+  
+  if (any(brdrs %in% c("all", "left", "outside"))) {
+    
+    ret[[length(ret) + 1]] <- page_vline(tlb * conv, ystart - rh + bs, rline - ystart )
+  }
+  if (any(brdrs %in% c("all", "right", "outside"))) {
+    
+    ret[[length(ret) + 1]] <- page_vline(trb * conv, ystart - rh + bs, rline - ystart)
+  }
+  if (any(brdrs %in% c("all", "bottom", "outside"))) {
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, (rline + bs) - rh, 
+                                         (trb - tlb) * conv)
+  }
+
   
   dev.off()
   

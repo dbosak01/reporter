@@ -548,7 +548,6 @@ split_text <- function(txt, lines, width, font,
         ln <- wrds[i]
         lnlngth <- lngths[i]
 
-        
         # After first page, set this to zero.
         offset <- 0
         cnt <- 1

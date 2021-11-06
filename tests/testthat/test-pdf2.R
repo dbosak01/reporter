@@ -491,36 +491,38 @@ test_that("pdf2-11: Forced page wrap works as expected.", {
 })
 
 
-# test_that("pdf2-12: Table Borders work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test12.pdf")
-#   
-#   dat <- mtcars[1:15, ] 
-#   
-#   tbl <- create_table(dat, borders = c("left", "right", "bottom", "top")) %>% 
-#     define(mpg, label = "Miles Per Gallon")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-#     titles("Table 1.0", "My Nice Table") %>%
-#     add_content(tbl) %>%
-#     footnotes("My footnote 1", "My footnote 2") %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 11)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
+test_that("pdf2-12: Table Borders work as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test12.pdf")
+
+  dat <- mtcars[1:15, ]
+
+  #  c("left", "right", "bottom", "top")
+  
+  tbl <- create_table(dat, borders = "all") %>%
+    define(mpg, label = "Miles Per Gallon")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 11)
+  expect_equal(res$pages, 1)
+
+
+})
 
 # Nice.
 test_that("pdf2-13: Spanning headers work as expected.", {

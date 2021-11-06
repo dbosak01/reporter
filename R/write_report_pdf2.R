@@ -522,7 +522,7 @@ page_setup_pdf <- function(rs) {
   rs$line_size <- rs$content_size[["width"]]
   rs$cell_padding <- 1
   rs$border_height <- .5
-  
+  rs$border_spacing <- 2
   
   # Assume landscape
   pg_h <- rs$page_size[1]
