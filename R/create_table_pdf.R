@@ -941,36 +941,6 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   conv <- rs$point_conversion
   unts <- rs$units
   
-  # Get cell widths
-  # sz <- c()
-  # for (k in seq_along(wdths)) {
-  #   if (!is.control(nms[k])) {
-  #     if (k == 1)
-  #       sz[k] <- round(wdths[k] * conv)
-  #     else 
-  #       sz[k] <- round(wdths[k] * conv + sz[k - 1])
-  #   }
-  # }
-  
-  # Table alignment
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
-  
-  # Cell alignment
-  # ca <- c()
-  # for (k in seq_along(algns)) {
-  #   if (!is.control(nms[k])) {
-  #     if (algns[k] == "left")
-  #       ca[k] <- "\\ql"
-  #     else if (algns[k] == "right")
-  #       ca[k] <- "\\qr"
-  #     else if (algns[k] %in% c("center", "centre"))
-  #       ca[k] <- "\\qc"
-  #   }
-  # }
   
   # Sum up widths 
   width <- sum(wdths, na.rm = TRUE)
@@ -1002,20 +972,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     yline <- rline
     mxrw <- yline
     cnt <- cnt + 1
-    
-    # if (i ==  1)
-    #   ret[i] <- paste0("{\\trowd\\trgaph0\\trrh", rh, ta)
-    # else 
-    #   ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
-    
-    
-    # # Loop for cell definitions
-    # for(j in seq_len(ncol(t))) {
-    #   if (!is.control(nms[j])) {
-    #     b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs, flgs[i])
-    #     ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
-    #   }
-    # }
+  
   
     
     # Loop for columns 
@@ -1023,7 +980,6 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       # Seems like this should be done already
       # Need to get widths from split_cells
-      #tmp <- split_string_text(ttls$titles[[i]], width, rs$units)
       if (class(tbl[i, j]) != "character")
         vl <- as.character(tbl[i, j])
       else 
@@ -1031,11 +987,6 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
         
-      # Construct rtf
-      # ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
-      
-      # Count lines in cell 
-      #cl <- grep("\\line", t[i, j], fixed = TRUE)
       
       if (j == nms[1]) {
         lb <- tlb
@@ -1045,18 +996,26 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         rb <- lb + wdths[j]
       }
       
-      # Loop for cell wraps
-      for (ln in seq_len(length(tmp))) {
-        
-        ret[[length(ret) + 1]] <- page_text(tmp[ln], fs, 
-                                            bold = FALSE,
-                                            xpos = get_points(lb, 
-                                                              rb,
-                                                              spwidths[[i]][[j]][ln],
-                                                              units = unts,
-                                                              align = algns[j]),
-                                            ypos = yline)
+      # If value is empty or blank
+      if (length(tmp) == 0) {
         yline <- yline + rh
+      } else if (length(trimws(tmp)) == 0) {
+        yline <- yline + rh
+      } else {
+      
+        # Loop for cell wraps
+        for (ln in seq_len(length(tmp))) {
+          
+          ret[[length(ret) + 1]] <- page_text(tmp[ln], fs, 
+                                              bold = FALSE,
+                                              xpos = get_points(lb, 
+                                                                rb,
+                                                                spwidths[[i]][[j]][ln],
+                                                                units = unts,
+                                                                align = algns[j]),
+                                              ypos = yline)
+          yline <- yline + rh
+        }
       }
       
       if (yline > mxrw)

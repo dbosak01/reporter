@@ -145,7 +145,7 @@ paginate_content_pdf <- function(rs, doc) {
     obj <- cntnt$object
     
     # Remove blank row if last content object
-    cbr <- obj$blank_row
+    cbr <- cntnt$blank_row
     if (last_object) {
       if (all(cbr == "below")) 
         cbr <- "none"

@@ -885,38 +885,38 @@ test_that("pdf2-23: Two contents on one page works as expected.", {
 
 })
 
-# # Working.
-# test_that("pdf2-24: Two tables one headerless works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test24.pdf")
-#   
-#   dat <- mtcars
-#   dat2 <- mtcars[16:20, ]
-#   
-#   tbl <- create_table(dat) %>% 
-#     titles("Table 1.0", "My Nice Table") %>% 
-#     column_defaults(width = .5)
-#   
-#   tbl2 <- create_table(dat2, headerless = TRUE) %>% 
-#     column_defaults(width = .5)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-#     add_content(tbl, page_break = FALSE, blank_row = "none") %>%
-#     add_content(tbl2, align = "center") %>% 
-#     page_footer("Left1", "Center1", "Right1") %>% 
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 2)
-#   
-#   
-# })
+# Working.
+test_that("pdf2-24: Two tables one headerless works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test24.pdf")
+
+  dat <- mtcars
+  dat2 <- mtcars[16:20, ]
+
+  tbl <- create_table(dat) %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    column_defaults(width = .5)
+
+  tbl2 <- create_table(dat2, headerless = TRUE) %>%
+    column_defaults(width = .5)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    add_content(tbl, page_break = FALSE, blank_row = "none") %>%
+    add_content(tbl2, align = "center") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+
+
+})
 
 
 test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
@@ -1184,7 +1184,7 @@ test_that("pdf2-32: Simplest Text with valign bottom works as expected.", {
 
 })
 
-# Works except label headers need to move down
+# Works
 test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
 
 
@@ -1232,7 +1232,7 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
 
 })
 
-# Not working: Both first row blank and section break not working
+# Working
 test_that("pdf2-34: Table with break between sections works as expected.", {
 
 
@@ -1253,13 +1253,14 @@ test_that("pdf2-34: Table with break between sections works as expected.", {
   df <- data.frame(subjid, name, sex, age, arm)
 
 
-  tbl1 <- create_table(df, first_row_blank = FALSE) %>%
-    define(subjid, label = "Subject ID", align = "left", width = 1) %>%
+  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    define(subjid, label = "Subject ID", align = "center", 
+           label_align = "center", width = 1) %>%
     define(name, label = "Subject Name", width = 1) %>%
     define(sex, label = "Sex") %>%
     define(age, label = "Age") %>%
     define(arm, label = "Arm",
-           blank_after = FALSE,
+           blank_after = TRUE,
            dedupe = TRUE,
            align = "right") #%>%
   # spanning_header(sex, arm, label = "Here is a spanning header")
@@ -1767,22 +1768,23 @@ test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expec
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 3.5, width = 7) %>% 
-    titles("My plot title")
-  tbl <- create_table(mtcars[1:22, ]) %>% 
-    titles("My table Title") %>% 
-    footnotes("Table Footnote")
+    titles("My plot title", blank_row = "none")
+  tbl <- create_table(mtcars[1:21, ]) %>% 
+    titles("My table Title", blank_row = "none") %>% 
+    footnotes("Table Footnote", blank_row = "none")
   txt <- create_text(cnt, align = "center", width = 6) %>% 
-    titles("My Text Title") %>% 
-    footnotes("Text Footnotes")
+    titles("My Text Title", blank_row = "none") %>% 
+    footnotes("Text Footnotes", blank_row = "none")
   
   
   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "below") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, page_break = FALSE, blank_row = "none") %>%
-    add_content(tbl, page_break = FALSE) %>%
-    add_content(txt) %>% 
+    add_content(tbl, page_break = FALSE, blank_row = "none") %>%
+    add_content(txt, blank_row = "both", page_break = FALSE) %>% 
+    add_content(txt, blank_row = "above") %>% 
     footnotes("* Motor Trend, 1974") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   

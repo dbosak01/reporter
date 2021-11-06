@@ -768,8 +768,12 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
   hgt <- line_count - t
   
+  # If last page already filled up, start a new page
   if (ceiling(lpg_rows) >= floor(hgt))
     lpg_rows <- 0
+  
+  if (content_blank_row %in% c("above", "all"))
+    lpg_rows <- lpg_rows + 1
   
   # Break text content into pages if necessary
   tpgs <- split_text(txt$text, hgt, width, rs$font, 
@@ -805,10 +809,27 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   # Gather pdf and line counts for each page
   for (i in seq_along(txtpgs)) {
     
+    cnts <- t
+    pnts <- p
+    rws <- list()
+    
+    if (i == length(txtpgs))
+      wrap_flag <- FALSE
+    else 
+      wrap_flag <- TRUE
+    
+    pg <- txtpgs[[i]]
+    pw <- wdths[[i]]
+    
     if (lpg_rows > 0 & i == 1) {
       
       # Get starting y coordinate
       yline <- sum(ystart, (lpg_rows * lh))
+      
+      if (content_blank_row %in% c("above", "both")) {
+        yline <- yline + lh
+        cnts <- cnts + 1 
+      }
       
       fp_ttls <- get_titles_pdf(txt$titles, width, rs, talgn, 
                              ystart = yline) 
@@ -829,27 +850,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     
     }
     
-    cnts <- t
-    pnts <- p
-    rws <- list()
-    
-    if (i == length(txtpgs))
-      wrap_flag <- FALSE
-    else 
-      wrap_flag <- TRUE
-    
-    pg <- txtpgs[[i]]
-    
-    
-    # Add blank above content if requested
-    if (i == 1 & content_blank_row %in% c("both", "above")) {
-      cnts <- cnts + 1
-      yline <- yline + lh
-      
-    }
-    
-    pw <- wdths[[i]]
-    
     
     for (ln in seq_along(pg)) {
       
@@ -863,18 +863,22 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
       yline <- yline + lh
       cnts <- cnts + 1
     }
-
-    pnts <- pnts + (cnts * lh)
-    
-    # Get cell border codes
-    #b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
-    
     
     # Get footnotes
     ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, yline,
                                     wrap_flag, content_blank_row, talgn)
     
+    # Add blank above content if requested
+    if (i ==length(txtpgs) & content_blank_row %in% c("both", "below")) {
+      cnts <- cnts + 1
+      yline <- yline + lh
 
+    }
+
+    pnts <- pnts + (cnts * lh)
+    
+    # Get cell border codes
+    #b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
     
     # Add remaining page content.
     if (fp_ttls$lines > 0) {
