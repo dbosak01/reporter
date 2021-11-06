@@ -37,7 +37,7 @@ test_that("split_string_text and page_text produce proper results.", {
   ret
   
   expect_equal(ret$text, "Right")
-  expect_equal(round(ret$xpos), 441)
+  expect_equal(round(ret$xpos), 442)
   expect_equal(ret$ypos, 72)
   
   dev.off()

@@ -518,7 +518,7 @@ split_text <- function(txt, lines, width, font,
   
   
   lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
-               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+     get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
   
   # Loop through words and add up lines
   for (i in seq_along(wrds)) {
@@ -540,7 +540,6 @@ split_text <- function(txt, lines, width, font,
         # Assign current lines and counts
         pgs[[length(pgs) + 1]] <- lns
         cnts[[length(cnts) + 1]] <- length(lns)
-        #wdth[[length(wdth) + 1]] <- lnlngth
         wdths[[length(wdths) + 1]] <- wdth
         wdth <- lnlngth  - lngths[i] 
         
@@ -554,10 +553,7 @@ split_text <- function(txt, lines, width, font,
         offset <- 0
         cnt <- 1
       }
-      
     }
-    
-    
   }
   
   if (length(lns) > 0 | length(ln) > 0) {
@@ -772,6 +768,9 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
   hgt <- line_count - t
   
+  if (ceiling(lpg_rows) >= floor(hgt))
+    lpg_rows <- 0
+  
   # Break text content into pages if necessary
   tpgs <- split_text(txt$text, hgt, width, rs$font, 
                      rs$font_size, rs$units, lpg_rows)
@@ -796,8 +795,8 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     rb <- width
   }
   
-  
-
+  fp_ttls <- list(pdf = NULL, lines = 0)
+  fp_ttl_hdr <- list(pdf = NULL, lines = 0)
 
   ret <- list()
   cnt <- c()
@@ -806,8 +805,29 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   # Gather pdf and line counts for each page
   for (i in seq_along(txtpgs)) {
     
-    # Get starting y coordinate
-    yline <- sum(ystart, ttls$points, ttl_hdr$points)
+    if (lpg_rows > 0 & i == 1) {
+      
+      # Get starting y coordinate
+      yline <- sum(ystart, (lpg_rows * lh))
+      
+      fp_ttls <- get_titles_pdf(txt$titles, width, rs, talgn, 
+                             ystart = yline) 
+      fp_ttl_hdr <- get_title_header_pdf(txt$title_hdr, width, rs, talgn, 
+                                      ystart = yline)
+      
+
+      yline <- sum(yline, fp_ttls$points, fp_ttl_hdr$points)
+      
+      
+    } else {
+      
+      fp_ttls <- list(lines = 0)
+      fp_ttl_hdr <- list(lines = 0)
+    
+      # Get starting y coordinate
+      yline <- sum(ystart, ttls$points, ttl_hdr$points)
+    
+    }
     
     cnts <- t
     pnts <- p
@@ -857,16 +877,25 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
     
     # Add remaining page content.
-    if (ttls$lines > 0) {
+    if (fp_ttls$lines > 0) {
+      rws<- append(rws, fp_ttls$pdf)
+    } else {
+      if (ttls$lines > 0) {
         rws<- append(rws, ttls$pdf)
+      } 
     }
-    if (ttl_hdr$lines > 0) {
+    if (fp_ttl_hdr$lines > 0) {
+      rws <- append(rws, fp_ttl_hdr$pdf)
+    } else {
+      if (ttl_hdr$lines > 0) {
         rws <- append(rws, ttl_hdr$pdf)
+      }
     }
+
+
     if (ftnts$lines > 0) {
         rws <- append(rws, ftnts$pdf)
     }
-
     
     ret[[length(ret) + 1]] <- rws
     cnt[length(cnt) + 1]  <- cnts

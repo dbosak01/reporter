@@ -161,9 +161,28 @@ paginate_content_pdf <- function(rs, doc) {
       
       for (j in seq_len(length(res$page_list))) {
         
-        doc <- add_page(doc, res$page_list[[j]]$pdf, 
-                        rttls$pdf, rttl_hdr$pdf, 
-                        rftnts$pdf, rheader$pdf, rfooter$pdf) 
+        if (j == 1 & last_page_lines > 0 & 
+            (ceiling(last_page_lines + res$page_list[[j]]$lines) <= rs$body_line_count)) {
+          
+          doc$pages[[length(doc$pages)]] <- append(doc$pages[[length(doc$pages)]],
+                                                   res$page_list[[j]]$pdf)
+          
+          
+        } else {
+        
+          doc <- add_page(doc, res$page_list[[j]]$pdf, 
+                          rttls$pdf, rttl_hdr$pdf, 
+                          rftnts$pdf, rheader$pdf, rfooter$pdf)
+        
+
+        }
+        
+        if (j == length(res$page_list)) {
+          
+          last_page_lines <- last_page_lines + res$page_list[[j]]$lines
+        } else {
+          last_page_lines <- 0 
+        }
       }
       # 
       # # Collect multiple pages and line counts
@@ -181,8 +200,26 @@ paginate_content_pdf <- function(rs, doc) {
       res <- create_text_pages_pdf(rs, cntnt, last_page_lines, cbr)
       for (j in seq_len(length(res$pdf))) {
         
-        doc <- add_page(doc, res$pdf[[j]], rttls$pdf, rttl_hdr$pdf, 
-                        rftnts$pdf, rheader$pdf, rfooter$pdf) 
+        if (j == 1 & last_page_lines > 0 & 
+            (ceiling(last_page_lines + res$lines[[j]]) <= rs$body_line_count)) {
+          
+          doc$pages[[length(doc$pages)]] <- append(doc$pages[[length(doc$pages)]],
+                                                   res$pdf[[j]])
+        
+          
+        } else {
+          
+          doc <- add_page(doc, res$pdf[[j]], rttls$pdf, rttl_hdr$pdf, 
+                          rftnts$pdf, rheader$pdf, rfooter$pdf) 
+        
+        }
+        
+        if (j == length(res$pdf)) {
+          
+          last_page_lines <- last_page_lines + res$lines[[j]]
+        } else {
+          last_page_lines <- 0 
+        }
       }
       
       # for (j in seq_len(length(res$pdf))) {
@@ -204,10 +241,32 @@ paginate_content_pdf <- function(rs, doc) {
       res <- create_plot_pages_pdf(rs, cntnt, last_page_lines, tempdir())
       for (j in seq_len(length(res$pdf))) {
         
-        doc <- add_page(doc, res$pdf[[j]], rttls$pdf, rttl_hdr$pdf, 
-                        rftnts$pdf, rheader$pdf, rfooter$pdf) 
+        if (j == 1 & last_page_lines > 0 & 
+            (ceiling(last_page_lines + res$lines[[j]]) <= rs$body_line_count)) {
+          
+          doc$pages[[length(doc$pages)]] <- append(doc$pages[[length(doc$pages)]],
+                                                   res$pdf[[j]])
+          
+          
+          
+        } else {
+        
+          doc <- add_page(doc, res$pdf[[j]], rttls$pdf, rttl_hdr$pdf, 
+                          rftnts$pdf, rheader$pdf, rfooter$pdf) 
+        
+        }
+        
+        if (j == length(res$pdf)) {
+          
+          last_page_lines <- last_page_lines + res$lines[[j]]
+        } else {
+          last_page_lines <- 0 
+        }
       }
-    }   
+    }
+    
+    if (cntnt$page_break == TRUE | last_page_lines >= rs$body_line_count)
+      last_page_lines <- 0
     
     # Store pages and lines with content objects
     # The content settings will be used when writing content

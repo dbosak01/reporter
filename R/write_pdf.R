@@ -294,7 +294,7 @@ write_pdf <- function(rpt, filename = NULL) {
   
 
   bdy <- get_pages(rpt$pages, margin_left, margin_top, 
-                   page_height, page_width, rpt$fontsize, 
+                   page_height, page_width, rpt$fontsize, units = rpt$units,
                    fontname = rpt$fontname, conversion = rpt$conversion)
   
   rpt$pages <- length(rpt$pages)
@@ -431,8 +431,16 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   else 
     fontscale <- 100
   
+  # Hate this.  Don't know why it is needed.  Width estimates should be the same.
+  pg_adj <- 0
+  if (tolower(fontname) == "arial" | tolower(fontname) == "times") {
+    pg_adj <- -1
+  } else if (tolower(fontname) == "courier" & units == "inches") {
+    pg_adj <- 1 
+  }
+  
   # Get x starting position in points
-  stx <- (margin_left * inchsize) - 5
+  stx <- (margin_left * inchsize) - 5  # This was for fixed width
   
   # Get y starting position in points
   sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
@@ -495,7 +503,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
             # the string width has changed and can throw off the alignment.
             # Not working perfectly, but better.
             txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg)
-            w <- get_text_width(txt, cnt$font, 
+            w <- get_text_width(txt, fontname, 
                                 ifelse(is.null(cnt$font_size), 
                                                       fontsize, cnt$font_size), 
                                 units,
@@ -503,9 +511,9 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
             if (cnt$align == "left")
               nx <- cnt$alignx * conversion
             else if (cnt$align == "right")
-              nx <- ((cnt$alignx - w) * conversion) + 13  # No idea why
+              nx <- ((cnt$alignx - w) * conversion) + pg_adj  # No idea why pg_adj is needed
             else
-              nx <- (cnt$alignx - (w / 2)) * conversion + 13
+              nx <- (cnt$alignx - (w / 2)) * conversion + pg_adj
             
             # For PDF2
             tmp <- get_byte_stream(txt, 

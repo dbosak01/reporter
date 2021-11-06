@@ -426,7 +426,7 @@ split_cells <- function(x, col_widths) {
 }
 
 #' @noRd
-split_strings <- function(strng, width, units) {
+split_strings <- function(strng, width, units, multiplier = 1.03) {
  
   lnlngth <- 0
   ln <- c()
@@ -448,7 +448,7 @@ split_strings <- function(strng, width, units) {
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
       
       lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
-                   suppressWarnings(strwidth(" ", units = un))) * 1.03 
+                   suppressWarnings(strwidth(" ", units = un))) * multiplier
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {
@@ -461,14 +461,20 @@ split_strings <- function(strng, width, units) {
           if (length(ln) == 0) {
             
             lns[length(lns) + 1] <- wrds[i]
-            wdths[length(wdths) + 1] <- lnlngth
+            if (units == "cm")
+              wdths[length(wdths) + 1] <- ccm(lnlngth)
+            else
+              wdths[length(wdths) + 1] <- lnlngth
             
             lnlngth <- 0
             
           } else {
             # Assign current lines and counts
             lns[length(lns) + 1] <- paste(ln, collapse = " ")
-            wdths[length(wdths) + 1] <- lnlngth - lngths[i]
+            if (units == "cm")
+              wdths[length(wdths) + 1] <- ccm(lnlngth - lngths[i])
+            else
+              wdths[length(wdths) + 1] <- lnlngth - lngths[i]
             
             # Assign overflow to next line
             ln <- wrds[i]
@@ -483,7 +489,10 @@ split_strings <- function(strng, width, units) {
       if (length(ln) > 0) {
         
         lns[length(lns) + 1] <- paste(ln, collapse = " ")
-        wdths[length(wdths) + 1] <- lnlngth
+        if (units == "cm")
+          wdths[length(wdths) + 1] <- ccm(lnlngth)
+        else
+          wdths[length(wdths) + 1] <- lnlngth
         
       }
       
@@ -547,7 +556,7 @@ split_string_html <- function(strng, width, units) {
 split_string_text <- function(strng, width, units) {
   
   
-  res <- split_strings(strng, width, units)
+  res <- split_strings(strng, width, units, multiplier = 1)
   
   ret <- list(text = res$text,
               lines = length(res$text),

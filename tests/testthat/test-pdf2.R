@@ -857,34 +857,34 @@ test_that("pdf2-22: Page by works as expected.", {
 
 })
 
-# # Works!  
-# test_that("pdf2-23: Two contents on one page works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test23.pdf")
-#   
-#   dat <- mtcars[1:15, ]
-#   
-#   tbl <- create_table(dat) %>% 
-#     titles("Table 1.0", "My Nice Table") %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-#     add_content(tbl, page_break = FALSE, blank_row = "below") %>%
-#     add_content(create_text(cnt, width = 5), align = "center") %>% 
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
-# 
+
+test_that("pdf2-23: Two contents on one page works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test23.pdf")
+
+  dat <- mtcars[1:15, ]
+
+  tbl <- create_table(dat) %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+    add_content(tbl, page_break = FALSE, blank_row = "below") %>%
+    add_content(create_text(cnt, width = 5), align = "center") %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
+
 # # Working.
 # test_that("pdf2-24: Two tables one headerless works as expected.", {
 #   
@@ -952,38 +952,41 @@ test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
 })
 
 
-# test_that("pdf2-26: Table with Plot on same page works as expected.", {
-#   
-#   library(ggplot2)
-#   
-#   fp <- file.path(base_path, "pdf2/test26.pdf")
-#   
-#   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-#   
-#   plt <- create_plot(p, height = 4, width = 8)
-#   tbl <- create_table(mtcars[1:3, ])
-#   
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-#     page_header("Client", "Study: XYZ") %>%
-#     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     
-#     add_content(plt, page_break = FALSE, blank_row = "none") %>%
-#     add_content(tbl) %>%
-#     footnotes("* Motor Trend, 1974") %>%
-#     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-#   
-#   
-#   res <- write_report(rpt)
-#   
-#   #print(res)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-#   
-# })
+test_that("pdf2-26: Plot, Table and Text on same page works as expected.", {
+
+  library(ggplot2)
+
+  fp <- file.path(base_path, "pdf2/test26.pdf")
+
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+
+  plt <- create_plot(p, height = 3.5, width = 7) %>% 
+    titles("My plot title")
+  tbl <- create_table(mtcars[1:3, ]) %>% 
+    titles("My table Title")
+  txt <- create_text("Here is some text", align = "center")
+
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "below") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, page_break = FALSE, blank_row = "none") %>%
+    add_content(tbl, page_break = FALSE) %>%
+    add_content(txt) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+
+
+  res <- write_report(rpt)
+
+  #print(res)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+
+})
 
 
 # Works
@@ -1444,7 +1447,7 @@ test_that("pdf2-39: One page table works as expected in centimeters and times.",
 })
 
 # Title not aligned properly
-test_that("pdf2-40: One page table works as expected in courier.", {
+test_that("pdf2-40: One page table works as expected in courier and cm.", {
 
 
   fp <- file.path(base_path, "pdf2/test40.pdf")
@@ -1648,7 +1651,7 @@ test_that("pdf2-46: 9 pt font inches works as expected.", {
 
 })
 
-# Working but misaligned.
+# Working 
 test_that("pdf2-47: 9 pt font cm works as expected.", {
 
 
@@ -1660,7 +1663,7 @@ test_that("pdf2-47: 9 pt font cm works as expected.", {
                        units = "cm") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
-    add_content(create_table(iris)) %>%
+    add_content(create_table(iris), align = "left") %>%
     page_footer("left", "center", "Page [pg] of [tpg]") %>%
     set_margins(top = 1, bottom = 1)
 
@@ -1706,7 +1709,7 @@ test_that("pdf2-49: 11 pt font cm works as expected.", {
                        units = "cm") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
-    add_content(create_table(iris), align = "left") %>%
+    add_content(create_table(iris), align = "center") %>%
     page_footer("left", "center", "Page [pg] of [tpg]") %>%
     set_margins(top = 1, bottom = 1)
 
@@ -1750,6 +1753,49 @@ test_that("pdf2-49: 11 pt font cm works as expected.", {
 #   
 # })
 # 
+
+
+# Basic Tests 51 > --------------------------------------------------------
+
+# Very good report for testing multiple content wraps
+test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "pdf2/test51.pdf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  plt <- create_plot(p, height = 3.5, width = 7) %>% 
+    titles("My plot title")
+  tbl <- create_table(mtcars[1:22, ]) %>% 
+    titles("My table Title") %>% 
+    footnotes("Table Footnote")
+  txt <- create_text(cnt, align = "center", width = 6) %>% 
+    titles("My Text Title") %>% 
+    footnotes("Text Footnotes")
+  
+  
+  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "below") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, page_break = FALSE, blank_row = "none") %>%
+    add_content(tbl, page_break = FALSE) %>%
+    add_content(txt) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 3)
+  
+  
+})
 # # User Tests --------------------------------------------------------------
 
 # Lots of special characters not working

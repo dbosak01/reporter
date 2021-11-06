@@ -834,8 +834,12 @@ create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
   pgs <- list()
   cnts <- c()
   pnts <- c()
+  row_offset <- lpg_rows
   
   for (dat in dat_lst) {
+    
+    if (cntr > 1)
+      row_offset <- 0
     
     tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
@@ -864,11 +868,11 @@ create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
                       dpi = 300, units = u)
     }
     ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
-              rs$page_template$page_header$points)
+              rs$page_template$page_header$points, (row_offset * rs$line_height))
     
     # Get pdf page bodies
-    res <- get_plot_body_pdf(plt, tmp_nm, cntnt$align, rs,
-                             lpg_rows, cntnt$blank_row, pgby, pgval, 
+    res <- get_plot_body_pdf(plt, tmp_nm, cntnt$align, rs, row_offset,
+                             cntnt$blank_row, pgby, pgval, 
                              cntr < length(dat_lst), ystart = ys)
     
     pgs[[length(pgs) + 1]] <- res$pdf

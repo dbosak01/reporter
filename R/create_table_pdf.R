@@ -183,6 +183,7 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   blnk_ind <- "none"
   spstart <- 1
   spend <- 1
+  fp_offset <- lpg_rows
   
   pg_lst <- list()
   for(s in splits) {
@@ -218,7 +219,9 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
                       pgby, cntnt$align)
       pg_lst[[length(pg_lst) + 1]] <- create_table_pdf(rs, ts, pi, 
                                                        blnk_ind, wrap_flag,
-                                                       lpg_rows, spwidths)
+                                                       fp_offset, spwidths)
+      
+      fp_offset <- 0
     }
     
     spstart <- spend + 1
@@ -545,12 +548,6 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   #   }
   # }
   
-  # Table alignment
-  # ta <- "\\trql"
-  # if (talgn == "right")
-  #   ta <- "\\trqr"
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "\\trqc"
   
   # if (length(ts$col_spans) == 0)
   #   brdrs <- ts$borders
@@ -567,30 +564,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   #     brdrs <- brdrs[!brdrs %in% "top"]
   #   
   # }
-  
-  # Header Cell alignment
-  # ha <- c()
-  # for (k in seq_along(halgns)) {
-  #   if (!is.control(nms[k])) {
-  #     if (halgns[k] == "left")
-  #       ha[k] <- "\\ql"
-  #     else if (halgns[k] == "right")
-  #       ha[k] <- "\\qr"
-  #     else if (halgns[k] %in% c("center", "centre"))
-  #       ha[k] <- "\\qc"
-  #   }
-  # }
-  
-  # Table Header
-  # ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
-  
-  # Loop for cell definitions
-  # for(j in seq_along(tbl)) {
-  #   if (!is.control(nms[j])) {
-  #     b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
-  #     ret[1] <- paste0(ret[1], "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
-  #   }
-  # }
+
   
   # Sum up widths 
   width <- sum(wdths, na.rm = TRUE)
@@ -632,7 +606,6 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
     yline <- ystart + (rh * (mxlns - tmp$lines)) 
   
-    #ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
     
     if (k == 1) {
       lb <- tlb
@@ -1090,8 +1063,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         mxrw <- yline
       
       yline <- rline
-    
-      
+
     }
     
     rline <- mxrw
