@@ -1768,13 +1768,13 @@ test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expec
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
   plt <- create_plot(p, height = 3.5, width = 7) %>% 
-    titles("My plot title", blank_row = "none")
-  tbl <- create_table(mtcars[1:21, ]) %>% 
-    titles("My table Title", blank_row = "none") %>% 
-    footnotes("Table Footnote", blank_row = "none")
+    titles("My plot title", blank_row = "above")
+  tbl <- create_table(mtcars[1:17, ]) %>% 
+    titles("My table Title", blank_row = "above") %>% 
+    footnotes("Table Footnote", blank_row = "above")
   txt <- create_text(cnt, align = "center", width = 6) %>% 
     titles("My Text Title", blank_row = "none") %>% 
-    footnotes("Text Footnotes", blank_row = "none")
+    footnotes("Text Footnotes", blank_row = "above")
   
   
   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
@@ -1783,8 +1783,8 @@ test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expec
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, page_break = FALSE, blank_row = "none") %>%
     add_content(tbl, page_break = FALSE, blank_row = "none") %>%
-    add_content(txt, blank_row = "both", page_break = FALSE) %>% 
-    add_content(txt, blank_row = "above") %>% 
+    add_content(txt, blank_row = "below", page_break = FALSE) %>% 
+    add_content(txt, blank_row = "none") %>% 
     footnotes("* Motor Trend, 1974") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
   

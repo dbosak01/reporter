@@ -557,9 +557,19 @@ split_text <- function(txt, lines, width, font,
   }
   
   if (length(lns) > 0 | length(ln) > 0) {
-    lns <- append(lns, paste(ln, collapse = " "))
-    wdth[length(wdth) + 1] <- lnlngth
-    
+    cnt <- cnt + 1
+    if (cnt <= lines - offset) {
+      lns <- append(lns, paste(ln, collapse = " "))
+      wdth[length(wdth) + 1] <- lnlngth
+      
+    } else {
+      pgs[[length(pgs) + 1]] <- lns
+      cnts[[length(cnts) + 1]] <- length(lns)
+      wdths[[length(wdths) + 1]] <- wdth
+      
+      lns <-  paste(ln, collapse = " ")
+      wdth[length(wdth) + 1] <- lnlngth
+    }
     pgs[[length(pgs) + 1]] <- lns
     cnts[[length(cnts) + 1]] <- length(lns)
     wdths[[length(wdths) + 1]] <- wdth
