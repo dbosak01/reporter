@@ -898,6 +898,8 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
   cnt <- 0
   border_flag <- FALSE
   lh <- rs$line_height
+  conv <- rs$point_conversion
+  bs <- rs$border_spacing
 
   if (!is.null(pgby)) {
 
@@ -935,6 +937,7 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
 
     tmp <- split_string_text(vl, width, rs$units)
     
+    dev.off()
     
     for (ln in seq_len(tmp$lines)) {
       
@@ -950,11 +953,48 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0) {
       cnt <- cnt + 1
     }
     
+
+    
     if (pgby$blank_row %in% c("below", "both")) {
       yline <- yline + lh
       cnt <- cnt + 1
       
     }
+    
+    if (any(pgby$borders %in% c("all", "outside", "top"))) {
+      
+      ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                           ystart - lh + bs, 
+                                           (rb - lb) * conv) 
+      
+    }
+    
+    if (any(pgby$borders %in% c("all", "outside", "bottom"))) {
+      
+      ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                           ystart - lh  + (cnt * lh) + (1.5 * bs), 
+                                           (rb - lb) * conv) 
+      
+    }
+    
+    if (any(pgby$borders %in% c("all", "outside", "left"))) {
+      
+      
+      ret[[length(ret) + 1]] <- page_vline(lb * conv, 
+                                           ystart - lh + bs, 
+                                           (cnt * lh) +  (bs/2)) # Don't know why 
+      
+    }
+    
+    if (any(pgby$borders %in% c("all", "outside", "right"))) {
+      
+      
+      ret[[length(ret) + 1]] <- page_vline(rb * conv, 
+                                           ystart - lh + bs, 
+                                           (cnt * lh) +  (bs/2)) 
+      
+    }
+
   }
 
   

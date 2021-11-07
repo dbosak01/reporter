@@ -1479,68 +1479,68 @@ test_that("pdf2-40: One page table works as expected in courier and cm.", {
 })
 
 # # Basic Tests 41 - 50 ------------------------------------------------------
-# 
-# # Good for testing borders and spacing are working correctly
-# test_that("pdf2-41: Page by with borders works as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test41.pdf")
-#   
-#   dat <- iris
-#   
-#   brdrs <- "outside"
-#   
-#   tbl <- create_table(dat, borders = "all") %>% 
-#     titles("Table 1.0", "My Nice Report with a Page By", borders = brdrs) %>%
-#     page_by(Species, label = "Species: ", align = "left", borders = brdrs,
-#             blank_row = "below") %>% 
-#     footnotes("My footnote 1", "My footnote 2", borders = brdrs)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 6)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# # Test for borders and page wraps
-# test_that("pdf2-42: Long table with borders and footnotes on report.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test42.pdf")
-#   
-#   dat <- data.frame(labels = rownames(mtcars), mtcars)
-#   
-#   tbl <- create_table(dat, borders = "all") %>% 
-#     define(labels, id_var = TRUE) %>% 
-#     define(wt, page_wrap = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = 12, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1")) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>% 
-#     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "bottom") 
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 4)
-#   
-#   
-# })
+
+# Good for testing borders and spacing are working correctly  ***
+test_that("pdf2-41: Page by with borders works as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test41.pdf")
+
+  dat <- iris
+
+  brdrs <- "none"
+
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Report with a Page By", borders = brdrs) %>%
+    page_by(Species, label = "Species: ", align = "left", borders = "outside",
+            blank_row = "below") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = brdrs)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+# Test for borders and page wraps
+test_that("pdf2-42: Long table with borders and footnotes on report.", {
+
+
+  fp <- file.path(base_path, "pdf2/test42.pdf")
+
+  dat <- data.frame(labels = rownames(mtcars), mtcars)
+
+  tbl <- create_table(dat, borders = "all") %>%
+    define(labels, id_var = TRUE) %>%
+    define(wt, page_wrap = TRUE)
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "bottom")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 4)
+
+
+})
 
 
 # Works
