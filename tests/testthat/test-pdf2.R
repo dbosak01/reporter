@@ -1740,7 +1740,7 @@ test_that("pdf2-50: Spanning headers borders work as expected.", {
     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table", borders = "none") %>%
+    titles("Table 1.0", "My Nice Table", borders = "outside") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
@@ -1942,8 +1942,7 @@ test_that("pdf2-user1: demo table works.", {
 
 })
 
-# Borders won't work yet
-# Plus error in split_cells_variable
+# Borders and spacing need some tweaking
 test_that("pdf2-user2: demo table with stub works.", {
 
 

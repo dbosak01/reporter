@@ -618,7 +618,13 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   dev.off()
   
-
+  if (ts$first_row_blank == TRUE) {
+    cnt <- cnt + 1
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                         yline + bs + 1, 
+                                         (trb - tlb) * conv)
+  }
   
   if (any(brdrs %in% c("all", "outside", "top"))) {
     
@@ -633,7 +639,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
     ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
                                          tbs, 
-                                         (rh * mxlns)) 
+                                         (rh * cnt)) 
     
   }
   
@@ -642,7 +648,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
     ret[[length(ret) + 1]] <- page_vline(trb * conv, 
                                          tbs, 
-                                         (rh * mxlns)) 
+                                         (rh * cnt)) 
     
   }
   
@@ -659,9 +665,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
                                        yline + .5, 
                                        (trb - tlb) * conv)
   
-  if (ts$first_row_blank == TRUE) {
-    cnt <- cnt + 1
-  }
+
   
   badj <- 1
   if (any(brdrs %in% c("all", "inside"))) 
@@ -976,6 +980,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
   wdths <- widths[nms]
+  blnks <- tbl$..blank
   
   # Deal with one column situation
   if (length(nms) == 1) {
@@ -1078,7 +1083,8 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       yline <- rline
       
       # Applies inside vertical borders
-      if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)]) {
+      if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] 
+          & !blnks[i] %in% c("B", "L")) {
         
         ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, rh)
         
