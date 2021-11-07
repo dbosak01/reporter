@@ -608,7 +608,7 @@ get_line_height_pdf <- function(font_size) {
   } else if (font_size == 11) {
     sm <- 250 / 20
   } else if (font_size == 12) {
-    sm <- 275 / 20
+    sm <- 275 / 20  #275
   } else if (font_size == 13) {
     sm <- 300 / 20
   } else if (font_size == 14) {

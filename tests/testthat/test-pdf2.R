@@ -500,16 +500,17 @@ test_that("pdf2-12: Table Borders work as expected.", {
 
   #  c("left", "right", "bottom", "top")
   
-  tbl <- create_table(dat, borders = "all") %>%
-    define(mpg, label = "Miles Per Gallon")
+  tbl <- create_table(dat, borders = c("all")) %>%
+    define(mpg, label = "Miles Per Gallon") %>% 
+    titles("Table 1.0", "My Nice Table", 
+           borders = "all", blank_row = "both", width = "content") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "all")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-                       font_size = fsz, orientation = "landscape") %>%
+                       font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table") %>%
     add_content(tbl) %>%
-    footnotes("My footnote 1", "My footnote 2") %>%
     page_footer("Left1", "Center1", "Right1")
 
   res <- write_report(rpt)

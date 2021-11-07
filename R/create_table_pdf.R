@@ -528,43 +528,14 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   ret <- c()
   cnt <- 0
-  rh <- rs$row_height
+  rh <- rs$row_height 
+  bs <- rs$border_spacing
   tbl <- ts$data
   conv <- rs$point_conversion
   nms <- names(lbls)[is.controlv(names(lbls)) == FALSE]
   unts <- rs$units
   wdths <- widths[nms]
-  
-
-
-  # Get cell widths
-  # sz <- c()
-  # for (k in seq_along(widths)) {
-  #   if (!is.control(nms[k])) {
-  #     if (k == 1)
-  #       sz[k] <- widths[k] 
-  #     else 
-  #       sz[k] <- round(widths[k] + sz[k - 1])
-  #   }
-  # }
-  
-  
-  # if (length(ts$col_spans) == 0)
-  #   brdrs <- ts$borders
-  # else
-  #   brdrs <- "none"
-  
-  # brdrs <- ts$borders
-  # if (length(ts$col_spans) > 0) {
-  #   
-  #   if (any(ts$borders %in% c("outside")))
-  #     brdrs <- c("left", "right")
-  #   
-  #   if (any(ts$borders %in% "top"))
-  #     brdrs <- brdrs[!brdrs %in% "top"]
-  #   
-  # }
-
+  brdrs <- ts$borders
   
   # Sum up widths 
   width <- sum(wdths, na.rm = TRUE)
@@ -637,20 +608,58 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   dev.off()
   
-  yline <- ystart + (cnt * rh) - (rh * .75) + 1
+  tbs <- ystart - rh + bs + 1
   
+  if (any(brdrs %in% c("all", "outside", "top"))) {
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                         tbs, 
+                                         (trb - tlb) * conv) 
+    
+  }
+  
+  if (any(brdrs %in% c("all", "outside", "left"))) {
+    
+    
+    ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
+                                         tbs, 
+                                         (rh * mxlns)) 
+    
+  }
+  
+  if (any(brdrs %in% c("all", "outside", "right"))) {
+    
+    
+    ret[[length(ret) + 1]] <- page_vline(trb * conv, 
+                                         tbs, 
+                                         (rh * mxlns)) 
+    
+  }
+  
+  
+  yline <- ystart + (rh * mxlns) - rh + bs + (bs/2) 
+  
+  # Bottom header border alway present
   ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
                                        yline, 
                                        (trb - tlb) * conv)
-  cnt <- cnt + .5
+  
+  # Double up bottom border to make it a little thicker
+  ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                       yline + .5, 
+                                       (trb - tlb) * conv)
   
   if (ts$first_row_blank == TRUE) {
     cnt <- cnt + 1
   }
   
+  badj <- 1
+  if (any(brdrs %in% c("all", "inside"))) 
+    badj <- 1.5
+    
   res <- list(pdf = ret,
-              lines = cnt,
-              points = cnt * rh)
+              lines = cnt + ((badj * bs)/conv),
+              points = (cnt * rh) + (badj * bs))
   
   return(res)
   
