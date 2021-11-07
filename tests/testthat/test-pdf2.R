@@ -1488,12 +1488,12 @@ test_that("pdf2-41: Page by with borders works as expected.", {
 
   dat <- iris
 
-  brdrs <- "none"
+  brdrs <- "all"
 
-  tbl <- create_table(dat, borders = "none") %>%
+  tbl <- create_table(dat, borders = "all") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = brdrs) %>%
-    page_by(Species, label = "Species: ", align = "left", borders = "outside",
-            blank_row = "below") %>%
+    page_by(Species, label = "Species: ", align = "left", borders = brdrs,
+            blank_row = "both") %>%
     footnotes("My footnote 1", "My footnote 2", borders = brdrs)
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
@@ -1728,36 +1728,36 @@ test_that("pdf2-49: 11 pt font cm works as expected.", {
 
 })
 
-# test_that("pdf2-50: Spanning headers borders work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test50.pdf")
-#   
-#   dat <- mtcars[1:15, ]
-#   
-#   tbl <- create_table(dat, borders = c("body")) %>%
-#     spanning_header(cyl, disp, "Span 1", label_align = "left") %>% 
-#     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
-#     spanning_header(qsec, vs, "Span 3", n = 10) %>%
-#     spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>% 
-#     titles("Table 1.0", "My Nice Table", borders = "outside") %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "outside") 
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl)
-#   
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
-# 
+test_that("pdf2-50: Spanning headers borders work as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test50.pdf")
+
+  dat <- mtcars[1:15, ]
+
+  tbl <- create_table(dat, borders = c("all")) %>%
+    spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
+    spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
+    spanning_header(qsec, vs, "Span 3", n = 10) %>%
+    spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>%
+    titles("Table 1.0", "My Nice Table", borders = "none") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl)
+
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
+
 
 
 # Basic Tests 51 > --------------------------------------------------------

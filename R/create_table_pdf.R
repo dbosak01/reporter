@@ -692,6 +692,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   gap <- 3
   cnt <- c()
   rh <- rs$row_height
+  bs <- rs$border_spacing
   
   # print("Cols:")
   # print(cols)
@@ -752,37 +753,10 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
     names(lbls) <- s$name
     cs <- s$col_span
     
-    # Get cell widths
-    # sz <- c()
-    # for (k in seq_along(widths)) {
-    #   
-    #   if (k == 1)
-    #     sz[k] <- round(widths[k] * conv)
-    #   else
-    #     sz[k] <- round(widths[k] * conv + sz[k - 1])
-    #   
-    # }
-    
-    # Header Cell alignment
-    # ha <- c()
-    # for (k in seq_along(algns)) {
-    #   
-    #   if (algns[k] == "right")
-    #     ha[k] <- "\\qr"
-    #   else if (algns[k] %in% c("center", "centre"))
-    #     ha[k] <- "\\qc"
-    #   else
-    #     ha[k] <- "\\ql"
-    #   
-    # }
     
     r <- ""
     cnt[length(cnt) + 1] <- 1 
-    
-    # Table Header
-    # r <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
-    
-    # Label justification, width, and row concatenation
+  
     
     # Loop for cell definitions
  #   for(j in seq_along(widths)) {
@@ -887,17 +861,31 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
             mxyl <- yline
         }
         
-        # Get underline for label if requested
-        if (s$span[k] > 0 & s$underline[k]) {
+        if (any(brdrs %in% c("all", "inside"))) { 
           
-          lnadj <- .5
-          
-          yline <- mxyl + lnadj - (rh * .75) + 1 
-  
-          ret[[length(ret) + 1]] <- page_hline((lb * conv) + gap,
-                                               yline,
-                                               ((rb - lb) * conv) - (gap * 2))
 
+          ret[[length(ret) + 1]] <- page_vline(lb * conv,
+                                               lline - rh + bs,
+                                               (mxlns * rh) +  .25)
+          
+          ret[[length(ret) + 1]] <- page_vline(rb * conv,
+                                               lline - rh + bs,
+                                               (mxlns * rh) +  .25)
+          
+          
+        } else {
+          # Get underline for label if requested
+          if (s$span[k] > 0 & s$underline[k]) {
+            
+            lnadj <- .5
+            
+            yline <- mxyl + lnadj - (rh * .75) + 1 
+    
+            ret[[length(ret) + 1]] <- page_hline((lb * conv) + gap,
+                                                 yline,
+                                                 ((rb - lb) * conv) - (gap * 2))
+  
+          }
         }
         
 
@@ -909,6 +897,14 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
      }
       
    }
+   
+   if (any(brdrs %in% c("all", "inside"))) {
+     
+     ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                          lline - rh  + bs, 
+                                          (trb - tlb) * conv) 
+     
+   }
 
     lline <- mxyl + (rh * lnadj)
     
@@ -916,9 +912,46 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   }
   dev.off()
   
+  
+  cnts <- sum(cnt)
+  
+  if (any(brdrs %in% c("all", "outside", "top"))) {
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                         ystart - rh + bs, 
+                                         (trb - tlb) * conv) 
+    
+  }
+  
+  if (any(brdrs %in% c("all"))) {
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                         ystart - rh  + (cnts * rh) + (1.5 * bs), 
+                                         (trb - tlb) * conv) 
+    
+  }
+  
+  if (any(brdrs %in% c("all", "outside", "left"))) {
+    
+    
+    ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
+                                         ystart - rh + bs, 
+                                         (cnts * rh) +  (bs/2)) # Don't know why 
+    
+  }
+  
+  if (any(brdrs %in% c("all", "outside", "right"))) {
+    
+    
+    ret[[length(ret) + 1]] <- page_vline(trb * conv, 
+                                         ystart - rh + bs, 
+                                         (cnts * rh) +  (bs/2)) 
+    
+  }
+  
   res <- list(pdf = ret, 
-              lines = sum(cnt), 
-              points = sum(cnt) * rh)
+              lines = cnts, 
+              points = cnts * rh)
   
   return(res)
 }
