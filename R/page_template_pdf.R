@@ -666,10 +666,11 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
   
   ret <- c()
   cnt <- 0
-  twps <- 0
   border_flag <- FALSE
 
   lh <- rs$row_height
+  conv <- rs$point_conversion
+  bs <- rs$border_spacing
   lyline <- ystart
   ryline <- ystart
 
@@ -713,6 +714,13 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
           if (any(ttlhdr$blank_row %in% c("above", "both"))) {
 
             alcnt <- 1
+            
+            if (any(ttlhdr$borders %in% c("all", "inside"))) {
+              
+              ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                                   ystart + bs, 
+                                                   (rb1 - lb) * conv) 
+            }
 
             lyline <- lyline + lh
             ryline <- ryline + lh
@@ -725,6 +733,8 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         if (length(ttlhdr$titles) >= i) {
           # Split strings if they exceed width
           tmp1 <- split_string_text(ttlhdr$titles[[i]], width * .7, rs$units)
+          
+        
           
           for (ln in seq_len(tmp1$lines)) {
             
@@ -777,6 +787,13 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
           if (any(ttlhdr$blank_row %in% c("below", "both"))) {
             blcnt <- 1
             
+            if (any(ttlhdr$borders %in% c("all", "inside"))) {
+              
+              ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                                   (ystart + (i * lh)) + bs, 
+                                                   (rb1 - lb) * conv) 
+            }
+            
             lyline <- lyline + lh
             ryline <- ryline + lh
             
@@ -787,8 +804,13 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
             border_flag <- TRUE
         }
 
-        # b1 <- get_cell_borders(i + alcnt, 1, mx + alcnt + blcnt, 2, ttlhdr$borders)
-        # b2 <- get_cell_borders(i + alcnt, 2, mx+ alcnt + blcnt, 2, ttlhdr$borders)
+
+        if (any(ttlhdr$borders %in% c("all", "inside")) & i > 1) {
+          
+          ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                               (ystart + (i * lh)) - lh + bs, 
+                                               (rb1 - lb) * conv) 
+        }
 
 
         if (tcnt > hcnt)
@@ -799,6 +821,49 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
 
       dev.off()
 
+      if (any(ttlhdr$borders %in% c("all", "outside", "top"))) {
+        
+        ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                             ystart - lh, 
+                                             (rb1 - lb) * conv) 
+        
+      }
+      
+      if (any(ttlhdr$borders %in% c("all", "outside", "bottom"))) {
+        
+        ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                             ystart - lh  + (cnt * lh) + bs, 
+                                             (rb1 - lb) * conv) 
+        
+      }
+      
+      if (any(ttlhdr$borders %in% c("all", "outside", "left"))) {
+        
+        
+        ret[[length(ret) + 1]] <- page_vline(lb * conv, 
+                                             ystart - lh, 
+                                             (cnt * lh) + bs) 
+        
+      }
+      
+      if (any(ttlhdr$borders %in% c("all", "outside", "right"))) {
+        
+        
+        ret[[length(ret) + 1]] <- page_vline(rb1 * conv, 
+                                             ystart - lh, 
+                                             (cnt * lh) + bs) 
+        
+      }
+      
+      if (any(ttlhdr$borders %in% c("all", "inside"))) {
+        
+        
+        ret[[length(ret) + 1]] <- page_vline(rb1 * .82  * conv, # Don't know why
+                                             ystart - lh, 
+                                             (cnt * lh) + bs) 
+        
+      }
+      
     }
 
   }

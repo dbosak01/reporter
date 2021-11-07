@@ -569,6 +569,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
       mxlns <- tmplst[[k]]$lines
   }
   
+  tbs <- ystart - rh + bs + 1
 
   for(k in seq_along(nms)) {
     
@@ -599,6 +600,15 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
       yline <- yline + rh
     }
     
+    if (any(brdrs %in% c("all", "inside"))) {
+      
+      
+      ret[[length(ret) + 1]] <- page_vline(rb * conv, 
+                                           tbs, 
+                                           (rh * mxlns)) 
+      
+    }
+    
     # Add in extra lines for labels that wrap
     xtr <- tmp$lines
     if (xtr > cnt)
@@ -608,7 +618,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   dev.off()
   
-  tbs <- ystart - rh + bs + 1
+
   
   if (any(brdrs %in% c("all", "outside", "top"))) {
     

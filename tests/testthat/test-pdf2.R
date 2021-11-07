@@ -715,72 +715,73 @@ test_that("pdf2-18: Title header on report works as expected.", {
 })
 
 
-# test_that("pdf2-19: Title and Footnote borders work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test19.pdf")
-#   
-#   dat <- iris[1:20, ] 
-#   
-#   tbl <- create_table(dat, borders = "all") %>% 
-#     titles("Table 1.0", "My Nice Report with Borders",
-#            borders = c("top", "bottom", "left", "right"),
-#            blank_row = "both") %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "top",
-#               borders = c("top", "bottom", "left", "right"), 
-#               blank_row = "both")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
-# 
-# test_that("pdf2-20: Title Header borders work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "pdf2/test20.pdf")
-#   
-#   dat <- iris[1:25, ] 
-#   
-#   tbl <- create_table(dat, borders = "all") %>% 
-#     title_header("Table 1.0", "My Nice Report with Borders",
-#                  right = c("Right1", "Right2", "Right3"),
-#                  borders = c("outside"),
-#                  blank_row = "both") %>%
-#     footnotes("My footnote 1", "My footnote 2", valign = "top",
-#               borders = c("top", "bottom", "left", "right"), 
-#               blank_row = "both")
-#   
-#   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-#                        font_size = fsz, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     add_content(tbl) %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   res
-#   res$column_widths
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   expect_equal(length(res$column_widths[[1]]), 5)
-#   
-#   
-# })
-# 
+test_that("pdf2-19: Title and Footnote borders work as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test19.pdf")
+
+  dat <- iris[1:20, ]
+
+  tbl <- create_table(dat, borders = "all") %>%
+    titles("Table 1.0", "My Nice Report with Borders",
+           borders = c("top", "bottom", "left", "right"),
+           blank_row = "both") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"),
+              blank_row = "both")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
+
+test_that("pdf2-20: Title Header borders work as expected.", {
+
+
+  fp <- file.path(base_path, "pdf2/test20.pdf")
+
+  dat <- iris[1:25, ]
+
+  tbl <- create_table(dat, borders = "all") %>%
+    title_header("Table 1.0", 
+                 "My Nice Report with Borders that keep going and going",
+                 right = c("R i g h t 1 a b c d e f", "Right2", "Right3"),
+                 borders = c("all"),
+                 blank_row = "both") %>%
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
+              borders = c("top", "bottom", "left", "right"),
+              blank_row = "both")
+
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+  res
+  res$column_widths
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  expect_equal(length(res$column_widths[[1]]), 5)
+
+
+})
+
 # # Basic Tests 21 - 30 ------------------------------------------------------
 
 
