@@ -2053,14 +2053,14 @@ test_that("pdf2-user2: demo table with stub works.", {
       define(var, blank_after = TRUE,
              format = block_fmt, label = "", label_row = TRUE) %>%
       define(label, label = "", indent = .25) %>%
-      define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
+      define(`ARM A`, align = "left", label = "Placebo", n = 36) %>%
       define(`ARM B`, align = "center", label = "Drug 10mg", n = 38) %>%
-      define(`ARM C`, align = "center", label = "Drug 20mg", n = 38) %>%
+      define(`ARM C`, align = "right", label = "Drug 20mg", n = 38) %>%
       define(`ARM D`, align = "center", label = "Competitor", n = 38) %>%
       titles("Table 14.1/4",
              "Demographics and Baseline Characteristics",
-             "Specify Population", borders = "outside", blank_row = "both",
-             align = "right") %>%
+             "Specify Population", borders = c("top", "bottom", "inside"), blank_row = "below",
+             align = "center", font_size = 14, bold = TRUE) %>%
       footnotes("Here is a footnote", "Here is another footnote",
                 borders = "outside", blank_row = "both", align = "right")
 

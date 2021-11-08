@@ -1240,7 +1240,8 @@ cpoints <- function(vals, units) {
 
 get_points_left <- function(left_bound, right_bound, widths, units) {
   
-  ret <- cpoints(rep(left_bound, length(widths)), units)
+  # Three points added to the left function to prevent text from touching borders
+  ret <- cpoints(rep(left_bound, length(widths)), units) + 3
   
   names(ret) <- NULL
   
@@ -1259,7 +1260,9 @@ get_points_right <- function(left_bound, right_bound, widths, units) {
 
 get_points_center <- function(left_bound, right_bound, widths, units) {
   
-  ret <- cpoints(left_bound + ((right_bound - left_bound)/ 2) - (widths/ 2), units)
+  # One point added to the center function to prevent text from touching borders
+  # and center the text more accurately.
+  ret <- cpoints(left_bound + ((right_bound - left_bound)/ 2) - (widths/ 2), units) + 1
   
   names(ret) <- NULL
   

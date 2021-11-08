@@ -530,6 +530,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   cnt <- 0
   rh <- rs$row_height 
   bs <- rs$border_spacing
+  bh <- rs$border_height
   tbl <- ts$data
   conv <- rs$point_conversion
   nms <- names(lbls)[is.controlv(names(lbls)) == FALSE]
@@ -569,7 +570,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
       mxlns <- tmplst[[k]]$lines
   }
   
-  tbs <- ystart - rh + bs + 1
+  tbs <- ystart - rh
 
   for(k in seq_along(nms)) {
     
@@ -605,7 +606,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
       
       ret[[length(ret) + 1]] <- page_vline(rb * conv, 
                                            tbs, 
-                                           (rh * mxlns)) 
+                                           (rh * mxlns) + bs) 
       
     }
     
@@ -622,10 +623,11 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     cnt <- cnt + 1
     
     ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                         yline + bs + 1, 
+                                         yline + bs, 
                                          (trb - tlb) * conv)
   }
   
+  # Top border
   if (any(brdrs %in% c("all", "outside", "top"))) {
     
     ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
@@ -634,26 +636,28 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
   }
   
+  # Left border
   if (any(brdrs %in% c("all", "outside", "left"))) {
     
     
     ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
                                          tbs, 
-                                         (rh * cnt)) 
+                                         (rh * cnt) + bs) 
     
   }
   
+  # Right border
   if (any(brdrs %in% c("all", "outside", "right"))) {
     
     
     ret[[length(ret) + 1]] <- page_vline(trb * conv, 
                                          tbs, 
-                                         (rh * cnt)) 
+                                         (rh * cnt) + bs) 
     
   }
   
   
-  yline <- ystart + (rh * mxlns) - rh + bs + (bs/2) 
+  yline <- ystart + (rh * mxlns) - rh + bs 
   
   # Bottom header border alway present
   ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
@@ -661,19 +665,23 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
                                        (trb - tlb) * conv)
   
   # Double up bottom border to make it a little thicker
-  ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                       yline + .5, 
+  ret[[length(ret) + 1]] <- page_hline(tlb * conv,
+                                       yline + .5,
                                        (trb - tlb) * conv)
   
 
   
-  badj <- 1
-  if (any(brdrs %in% c("all", "inside"))) 
-    badj <- 1.5
+  badj <- 0
+  if (any(brdrs %in% c("all", "inside")))
+    badj <- 1
     
+  # res <- list(pdf = ret,
+  #             lines = cnt + ((badj * bs)/conv),
+  #             points = (cnt * rh) + (badj * bs))
+  
   res <- list(pdf = ret,
-              lines = cnt + ((badj * bs)/conv),
-              points = (cnt * rh) + (badj * bs))
+              lines = cnt,
+              points = (cnt * rh) + badj)
   
   return(res)
   
@@ -916,41 +924,44 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   }
   dev.off()
   
-  
   cnts <- sum(cnt)
   
-  if (any(brdrs %in% c("all", "outside", "top"))) {
+  if (length(lvls) > 0) {
+
     
-    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                         ystart - rh + bs, 
-                                         (trb - tlb) * conv) 
+    if (any(brdrs %in% c("all", "outside", "top"))) {
+      
+      ret[[length(ret) + 1]] <- page_hline(tlb * conv,
+                                           ystart - rh + bs,
+                                           (trb - tlb) * conv)
+      
+    }
     
-  }
-  
-  if (any(brdrs %in% c("all"))) {
+    if (any(brdrs %in% c("all"))) {
+      
+      ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                           ystart - rh  + (cnts * rh) + (1.5 * bs), 
+                                           (trb - tlb) * conv) 
+      
+    }
     
-    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                         ystart - rh  + (cnts * rh) + (1.5 * bs), 
-                                         (trb - tlb) * conv) 
+    if (any(brdrs %in% c("all", "outside", "left"))) {
+      
+      
+      ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
+                                           ystart - rh + bs, 
+                                           (cnts * rh) +  (bs/2)) # Don't know why 
+      
+    }
     
-  }
-  
-  if (any(brdrs %in% c("all", "outside", "left"))) {
-    
-    
-    ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
-                                         ystart - rh + bs, 
-                                         (cnts * rh) +  (bs/2)) # Don't know why 
-    
-  }
-  
-  if (any(brdrs %in% c("all", "outside", "right"))) {
-    
-    
-    ret[[length(ret) + 1]] <- page_vline(trb * conv, 
-                                         ystart - rh + bs, 
-                                         (cnts * rh) +  (bs/2)) 
-    
+    if (any(brdrs %in% c("all", "outside", "right"))) {
+      
+      
+      ret[[length(ret) + 1]] <- page_vline(trb * conv, 
+                                           ystart - rh + bs, 
+                                           (cnts * rh) +  (bs/2)) 
+      
+    }
   }
   
   res <- list(pdf = ret, 
@@ -989,18 +1000,22 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   } else 
     t <- tbl[ , nms]
   
-  brdrs <- tbrdrs
-  if (all(tbrdrs == "body"))
-    brdrs <- c("top", "bottom", "left", "right")
-  
-  # Get line height.  Don't want to leave editor default.
-  if (any(brdrs %in% c("all", "inside")))
-    rh <- rs$row_height + rs$border_spacing
-  else 
-    rh <- rs$row_height
   conv <- rs$point_conversion
   unts <- rs$units
   bs <- rs$border_spacing
+  bh <- rs$border_height
+  cp <- rs$cell_padding
+  
+  brdrs <- tbrdrs
+  if (all(tbrdrs == "body"))
+    brdrs <- c("top", "bottom", "left", "right")
+
+  
+  # Get line height.  Don't want to leave editor default.
+  if (any(brdrs %in% c("all", "inside")))
+    rh <- rs$row_height + bh
+  else 
+    rh <- rs$row_height
   
   
   # Sum up widths 

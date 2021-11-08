@@ -520,9 +520,9 @@ page_setup_pdf <- function(rs) {
   rs$line_height <- lh
   rs$char_width <- cw
   rs$line_size <- rs$content_size[["width"]]
-  rs$cell_padding <- 1
-  rs$border_height <- .5
-  rs$border_spacing <- 2
+  rs$cell_padding <- 2
+  rs$border_height <- 2   # How much to add to the line height if there is a border
+  rs$border_spacing <- 3  # Amount to offset the border from the bottom of the line
   
   # Assume landscape
   pg_h <- rs$page_size[1]
