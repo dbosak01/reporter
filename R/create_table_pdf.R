@@ -659,15 +659,15 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   yline <- ystart + (rh * mxlns) - rh + bs 
   
-  # Bottom header border alway present
+  # Bottom header border always present
   ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
                                        yline, 
                                        (trb - tlb) * conv)
   
-  # Double up bottom border to make it a little thicker
-  ret[[length(ret) + 1]] <- page_hline(tlb * conv,
-                                       yline + .5,
-                                       (trb - tlb) * conv)
+  # # Double up bottom border to make it a little thicker
+  # ret[[length(ret) + 1]] <- page_hline(tlb * conv,
+  #                                      yline + .5,
+  #                                      (trb - tlb) * conv)
   
 
   
@@ -705,6 +705,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   cnt <- c()
   rh <- rs$row_height
   bs <- rs$border_spacing
+  bh <- rs$border_height
   
   # print("Cols:")
   # print(cols)
@@ -730,6 +731,8 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   brdrs <- ts$borders
   
   rh <- rs$row_height
+  if (any(brdrs %in% c("all", "inside")))
+    rh <-  rh + bh
   
   width <- sum(w)
   
@@ -867,7 +870,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
                                                                 tmp$widths[ln],
                                                                 units = rs$units,
                                                                 align = algns[k]),
-                                              ypos = yline)
+                                              ypos = yline - 2)
           yline <- yline + rh
           if (yline > mxyl)
             mxyl <- yline
@@ -877,12 +880,12 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
           
 
           ret[[length(ret) + 1]] <- page_vline(lb * conv,
-                                               lline - rh + bs,
-                                               (mxlns * rh) +  .25)
+                                               lline - rh,
+                                               (mxlns * rh) +  .5)
           
           ret[[length(ret) + 1]] <- page_vline(rb * conv,
-                                               lline - rh + bs,
-                                               (mxlns * rh) +  .25)
+                                               lline - rh,
+                                               (mxlns * rh) +  .5)
           
           
         } else {
@@ -913,7 +916,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
    if (any(brdrs %in% c("all", "inside"))) {
      
      ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                          lline - rh  + bs, 
+                                          lline - rh, 
                                           (trb - tlb) * conv) 
      
    }
@@ -932,25 +935,25 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
     if (any(brdrs %in% c("all", "outside", "top"))) {
       
       ret[[length(ret) + 1]] <- page_hline(tlb * conv,
-                                           ystart - rh + bs,
+                                           ystart - rh,
                                            (trb - tlb) * conv)
       
     }
     
-    if (any(brdrs %in% c("all"))) {
-      
-      ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                           ystart - rh  + (cnts * rh) + (1.5 * bs), 
-                                           (trb - tlb) * conv) 
-      
-    }
+    # if (any(brdrs %in% c("all"))) {
+    #   
+    #   ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+    #                                        ystart - rh  + (cnts * rh) + (1.5 * bs), 
+    #                                        (trb - tlb) * conv) 
+    #   
+    # }
     
     if (any(brdrs %in% c("all", "outside", "left"))) {
       
       
       ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
-                                           ystart - rh + bs, 
-                                           (cnts * rh) +  (bs/2)) # Don't know why 
+                                           ystart - rh , 
+                                           (cnts * rh)) # Don't know why 
       
     }
     
@@ -958,15 +961,15 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
       
       
       ret[[length(ret) + 1]] <- page_vline(trb * conv, 
-                                           ystart - rh + bs, 
-                                           (cnts * rh) +  (bs/2)) 
+                                           ystart - rh, 
+                                           (cnts * rh)) 
       
     }
   }
   
   res <- list(pdf = ret, 
               lines = cnts, 
-              points = cnts * rh)
+              points = (cnts * rh) - 1)
   
   return(res)
 }
@@ -1140,7 +1143,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   res <- list(pdf = ret,
               lines = cnt ,
-              points = cnt * rh)
+              points = cnt * rh - 2.5)
   
   return(res)
   

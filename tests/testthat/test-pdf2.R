@@ -2050,6 +2050,7 @@ test_that("pdf2-user2: demo table with stub works.", {
     tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
       stub(c("var", "label"), width = 2.5) %>%
       column_defaults(width = 1) %>%
+      spanning_header(`ARM B`, `ARM D`, "Treatments", n = 10) %>% 
       define(var, blank_after = TRUE,
              format = block_fmt, label = "", label_row = TRUE) %>%
       define(label, label = "", indent = .25) %>%
@@ -2059,7 +2060,7 @@ test_that("pdf2-user2: demo table with stub works.", {
       define(`ARM D`, align = "center", label = "Competitor", n = 38) %>%
       titles("Table 14.1/4",
              "Demographics and Baseline Characteristics",
-             "Specify Population", borders = c("top", "bottom", "inside"), blank_row = "below",
+             "Specify Population", borders = c("all"), blank_row = "both",
              align = "center", font_size = 14, bold = TRUE) %>%
       footnotes("Here is a footnote", "Here is another footnote",
                 borders = "outside", blank_row = "both", align = "right")

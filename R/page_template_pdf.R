@@ -485,7 +485,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
 
   }
 
-  pnts <- (cnt * lh) + start_offset 
+  pnts <- (cnt * lh) + start_offset - .5
   cnts <- ceiling(pnts / rs$row_height)
   
   res <- list(pdf = ret, 
@@ -562,11 +562,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
 
             alcnt <- 1
 
-            
             yline <- yline + lh
             
-
-
             cnt <- cnt + 1
 
           }
