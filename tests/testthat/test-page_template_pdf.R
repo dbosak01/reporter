@@ -20,7 +20,7 @@ test_that("split_string_text and page_text produce proper results.", {
   ret
   
   expect_equal(ret$text, "Left")
-  expect_equal(ret$xpos, 72)
+  expect_equal(ret$xpos, 75)
   expect_equal(ret$ypos, 72)
   
   cs <- c("Right")

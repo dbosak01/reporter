@@ -365,7 +365,7 @@ test_that("pdf2-7: Multi page table works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 8)
+  expect_equal(res$pages, 7)
 
 
 })
@@ -490,13 +490,13 @@ test_that("pdf2-11: Forced page wrap works as expected.", {
 
 })
 
-
+# Fix borders
 test_that("pdf2-12: Table Borders work as expected.", {
 
 
   fp <- file.path(base_path, "pdf2/test12.pdf")
 
-  dat <- mtcars[1:15, ]
+  dat <- mtcars[1:14, ]
 
   #  c("left", "right", "bottom", "top")
   
@@ -923,6 +923,8 @@ test_that("pdf2-24: Two tables one headerless works as expected.", {
 })
 
 
+# OK except plot not centered in borders.
+# And footnotes have double line above.
 test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
 
   library(ggplot2)
@@ -934,8 +936,8 @@ test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
   plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
            borders = "all", blank_row = "below") %>%
-    footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none", 
-              valign = "top", width = "page", align = "center")
+    footnotes("* Motor Trend, 1974", borders = "all", blank_row = "above", 
+              valign = "top", width = "content", align = "center")
 
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size =fsz) %>%
@@ -1798,7 +1800,7 @@ test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expec
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 3)
+  expect_equal(res$pages, 2)
   
   
 })

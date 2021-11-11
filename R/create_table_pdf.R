@@ -680,8 +680,8 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   #             points = (cnt * rh) + (badj * bs))
   
   res <- list(pdf = ret,
-              lines = cnt,
-              points = (cnt * rh) + badj)
+              lines = cnt + (bs / rh),
+              points = (cnt * rh) + badj + bs)
   
   return(res)
   
@@ -953,7 +953,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
       
       ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
                                            ystart - rh , 
-                                           (cnts * rh)) # Don't know why 
+                                           (cnts * rh)) 
       
     }
     
@@ -969,7 +969,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
   
   res <- list(pdf = ret, 
               lines = cnts, 
-              points = (cnts * rh) - 1)
+              points = (cnts * rh)) # - 1)
   
   return(res)
 }
@@ -994,7 +994,11 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
   wdths <- widths[nms]
-  blnks <- tbl$..blank
+  
+  if (!"..blank" %in% names(tbl)) 
+    blnks <- rep("", nrow(tbl))
+  else 
+    blnks <- tbl$..blank
   
   # Deal with one column situation
   if (length(nms) == 1) {

@@ -512,6 +512,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
   border_flag <- FALSE
   
   olh <- rs$row_height
+  lh <- olh
   conv <- rs$point_conversion
   bs <- rs$border_spacing
   

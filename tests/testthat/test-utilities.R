@@ -557,7 +557,7 @@ test_that("get_points_* functions work as expected.", {
   res1 <- get_points_left(1, 4, w, "inches")
   res1
   
-  expect_equal(res1, c(72, 72, 72))
+  expect_equal(res1, c(75, 75, 75))
   
   res2 <- get_points_right(1, 2, w, "inches")
   res2
@@ -567,5 +567,5 @@ test_that("get_points_* functions work as expected.", {
   res3 <- get_points_center(1, 2, w, "inches")
   res3
   
-  expect_equal(res3, c(72, 79.2, 90))
+  expect_equal(res3, c(73, 80.2, 91))
 })
