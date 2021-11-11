@@ -365,7 +365,7 @@ test_that("pdf2-7: Multi page table works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 7)
+  expect_equal(res$pages, 8)
 
 
 })
@@ -503,7 +503,7 @@ test_that("pdf2-12: Table Borders work as expected.", {
   tbl <- create_table(dat, borders = c("all")) %>%
     define(mpg, label = "Miles Per Gallon") %>% 
     titles("Table 1.0", "My Nice Table", 
-           borders = "all", blank_row = "both", width = "content") %>% 
+           borders = "all", blank_row = "above", width = "content") %>% 
     footnotes("My footnote 1", "My footnote 2", borders = "all")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
@@ -520,7 +520,7 @@ test_that("pdf2-12: Table Borders work as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   expect_equal(length(res$column_widths[[1]]), 11)
-  expect_equal(res$pages, 1)
+
 
 
 })
@@ -760,7 +760,7 @@ test_that("pdf2-20: Title Header borders work as expected.", {
                  "My Nice Report with Borders that keep going and going",
                  right = c("R i g h t 1 a b c d e f", "Right2", "Right3"),
                  borders = c("all"),
-                 blank_row = "both") %>%
+                 blank_row = "above") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"),
               blank_row = "both")
@@ -1800,7 +1800,7 @@ test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expec
   #print(res)
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 2)
+  expect_equal(res$pages, 3)
   
   
 })

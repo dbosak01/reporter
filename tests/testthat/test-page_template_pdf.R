@@ -71,7 +71,141 @@ test_that("get_titles_pdf function works as expected.", {
   rpt$page_template$titles
   
   expect_equal(rpt$page_template$titles$lines, 2) 
+  expect_equal(rpt$page_template$titles$points, rpt$row_height * 2)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "below") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$lines, 3) 
+  expect_equal(rpt$page_template$titles$points, rpt$row_height * 3)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "both") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$lines, 4) 
+  expect_equal(rpt$page_template$titles$points, rpt$row_height * 4)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "above") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$lines, 3) 
+  expect_equal(rpt$page_template$titles$points, rpt$row_height * 3)
 
+  
+})
+
+test_that("get_titles_pdf function works as expected with borders.", {
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", blank_row = "below", borders = "all", font_size = 14) %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  rh <- get_line_height_pdf(14) + rpt$border_height
+  
+  expect_equal(rpt$page_template$titles$points, rh * 2)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "below", font_size = 14, 
+           borders = "all") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+
+  expect_equal(rpt$page_template$titles$points, rh * 3)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "both", font_size = 14, 
+           borders = "all") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$points, rh * 4)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "above", font_size = 14, 
+           borders = "all") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$points, rh * 3)
+  
+  
+})
+
+
+test_that("get_titles_pdf function works as expected with font_size.", {
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", blank_row = "below", font_size = 14) %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  rh <- get_line_height_pdf(14)
+  
+  expect_equal(rpt$page_template$titles$lines, 
+               rpt$page_template$titles$points / rpt$row_height) 
+  expect_equal(rpt$page_template$titles$points, rh * 2)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "below", font_size = 14) %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+
+  expect_equal(rpt$page_template$titles$points, rh * 3)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "both", font_size = 14) %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$points, rh * 4)
+  
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("Hello", "Goodbye", blank_row = "above", font_size = 14) %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_pdf(rpt)
+  rpt$page_template$titles
+  
+  expect_equal(rpt$page_template$titles$points, rh * 3)
+  
   
 })
 
@@ -94,6 +228,40 @@ test_that("get_footnotes_pdf function works as expected.", {
 test_that("get_title_header_pdf function works as expected.", {
 
   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", "Goodbye", right = paste("Right "))
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  th <-rpt2$page_template$title_hdr
+  th
+
+  expect_equal(th$lines, 3)
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = c("Right1", "Right2"))
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  th <-rpt2$page_template$title_hdr
+  th
+
+  expect_equal(th$lines, 3)
+  
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = c("Right1", "Right2"), blank_row = "both")
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  th <-rpt2$page_template$title_hdr
+  th
+  
+  rh <- get_line_height_pdf(12)
+  
+  expect_equal(th$lines, 4)
+  expect_equal(th$points, rh * 4)
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
     title_header("Hello", right = paste("Right here is something",
                                         "really long that will wrap and wrap", 
                                         "and wrap and wrap keep wrapping"))
@@ -105,6 +273,63 @@ test_that("get_title_header_pdf function works as expected.", {
   expect_equal(length(th$pdf), 4)
   expect_equal(th$lines, 4)
 
+})
+
+test_that("get_title_header_pdf function works as expected with borders.", {
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", "Goodbye", right = paste("Right "), borders = "all")
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  rh <- get_line_height_pdf(12) + rpt2$border_height
+  
+  th <-rpt2$page_template$title_hdr
+  th
+  
+  expect_equal(th$lines, 3)
+  expect_equal(th$points, rh * 3)
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = c("Right1", "Right2"), borders = "all")
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  th <-rpt2$page_template$title_hdr
+  th
+  
+  expect_equal(th$lines, 3)
+  expect_equal(th$points, rh * 3)
+  
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = c("Right1", "Right2"), borders = "all", 
+                 blank_row = "both")
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  th <-rpt2$page_template$title_hdr
+  th
+  
+
+  
+  expect_equal(th$lines, 4)
+  expect_equal(th$points, rh * 4)
+  
+  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+    title_header("Hello", right = paste("Right here is something",
+                                        "really long that will wrap and wrap", 
+                                        "and wrap and wrap keep wrapping"), 
+                 borders = "all")
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  th <-rpt2$page_template$title_hdr
+  th
+  expect_equal(length(th$pdf), 12)
+  expect_equal(th$lines, 4)
+  expect_equal(th$points, rh * 4)
+  
 })
 
 

@@ -669,19 +669,10 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   #                                      yline + .5,
   #                                      (trb - tlb) * conv)
   
-
-  
-  badj <- 0
-  if (any(brdrs %in% c("all", "inside")))
-    badj <- 1
-    
-  # res <- list(pdf = ret,
-  #             lines = cnt + ((badj * bs)/conv),
-  #             points = (cnt * rh) + (badj * bs))
   
   res <- list(pdf = ret,
               lines = cnt + (bs / rh),
-              points = (cnt * rh) + badj + bs)
+              points = (cnt * rh) + bs)
   
   return(res)
   
