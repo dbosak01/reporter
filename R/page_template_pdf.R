@@ -307,6 +307,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
   conv <- rs$point_conversion
   bs <- rs$border_spacing
   border_flag <- FALSE
+  lh <- rs$line_height
 
   start_offset <- 0
   yline <- ystart 
@@ -380,7 +381,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
             
             yline <- yline + lh
             cnt <- cnt + 1
-
+            pnts <- pnts + lh
           }
         }
 
@@ -407,6 +408,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
                                                                 align = ttls$align),
                                               ypos = yline - 1)
           yline <- yline + lh
+          pnts <- pnts + lh
         }
         
         
@@ -424,6 +426,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
             
             yline <- yline + lh
             cnt <- cnt + 1
+            pnts <- pnts + lh
           }
           
           if (any(ttls$borders %in% c("outside", "all", "bottom")))
@@ -485,8 +488,10 @@ get_titles_pdf <- function(ttllst, content_width, rs,
 
   }
 
-  pnts <- (cnt * lh) + start_offset - .5
-  cnts <- ceiling(pnts / rs$row_height)
+   pnts <- (cnt * lh) + start_offset - .5
+  
+  pnts <- pnts + start_offset + .5
+  cnts <- pnts / rs$row_height
   
   res <- list(pdf = ret, 
               lines = cnts,

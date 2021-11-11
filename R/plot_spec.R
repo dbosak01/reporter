@@ -894,8 +894,10 @@ create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
 get_plot_body_pdf <- function(plt, plot_path, talign, rs,
                               lpg_rows, content_blank_row, pgby, pgval, 
                               wrap_flag, ystart = 0) {
-  
+  cnt <- 0
   lh <- rs$line_height
+  conv <- rs$point_conversion
+  bh <- rs$border_height
   
   # Default to content width
   wth <- rs$content_size[["width"]] 
@@ -905,6 +907,12 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
     wth <- plt$width
   
   
+  # Add blank above content if requested
+  aln <- 0
+  if (content_blank_row %in% c("both", "above")) {
+    aln <- 1
+    ystart <- ystart + lh
+  }
   
   # Get titles and footnotes
   ttls <- get_titles_pdf(plt$titles, wth, rs, talign, ystart = ystart) 
@@ -930,7 +938,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   # algn <- "\\qc" 
   
   # Convert width to twips
-  # w <- round(wth * rs$point_conversion)
+  w <- round(wth * rs$point_conversion)
   
   # Get border codes
   # b <- get_cell_borders_pdf(1, 1, 1, 1, plt$borders)
@@ -940,40 +948,73 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   # 
   # ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
   
-  yline <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
-  lnstrt <- ceiling(yline / rs$line_height)
+  ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
+  lnstrt <- ceiling(ypos / rs$line_height)
   
   # Concat PDF codes for image
   # img <- paste0(hd, img, ft)
   imght <- round((plt$height * rs$point_conversion) / lh)
   
-  # Add blank above content if requested
-  a <- NULL
-  # if (content_blank_row %in% c("both", "above"))
-  #   a <- "\\par"
-  
-  # Fix up
-  # imgs[[length(imgs) + 1]] <- page_image(img$filename,
-  #                                        height = img$height,
-  #                                        width = img$width,
-  #                                        align = img$align,
-  #                                        line_start = img$line_start)
+
   rws <- list()
   rws[[length(rws) + 1]] <- page_image(plot_path,
                              height = plt$height,
                              width = plt$width,
                              align = talign,
-                             line_start = lnstrt)
+                             line_start = lnstrt + aln)
+
   
-  # Combine titles, blanks, body, and footnotes
-  #rws <-  list() #     c(a, ttls$pdf, ttl_hdr$pdf, pgbys$pdf, tpt, img, bpt)
+  yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
   
-  yline <- ceiling(yline + (plt$height * rs$point_conversion)) 
+  # Top border
+  if (any(plt$borders %in% c("all", "outside", "top"))) {
+    
+    rws[[length(rws) + 1]] <- page_hline(lb * conv, 
+                                         ypos - lh + bh, 
+                                         (rb - lb) * conv) 
+    
+  }
+  
+  # Bottom border
+  if (any(plt$borders %in% c("all", "outside", "bottom"))) {
+    
+    rws[[length(rws) + 1]] <- page_hline(lb * conv, 
+                                         yline - lh + bh, 
+                                         (rb - lb) * conv) 
+    
+  }
+  
+  # Left border
+  if (any(plt$borders %in% c("all", "outside", "left"))) {
+    
+    
+    rws[[length(rws) + 1]] <- page_vline(lb * conv, 
+                                         ypos - lh + bh, 
+                                         yline - ypos) 
+    
+  }
+  
+  # Right border
+  if (any(plt$borders %in% c("all", "outside", "right"))) {
+    
+    
+    rws[[length(rws) + 1]] <- page_vline(rb * conv, 
+                                         ypos - lh + bh, 
+                                         yline - ypos) 
+    
+  }
+  
+  
+
   
   # Get footnotes, filler, and content blank line
   ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, yline,
                                   wrap_flag, content_blank_row, talign)
   
+  bln <- 0
+  if (content_blank_row %in% c("both", "below")) {
+    bln <-  1
+  }
   
   # Add remaining page content.
   # This needs to be done now so everything is on the page
@@ -993,8 +1034,8 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   
 
   # Get sum of all items to this point
-  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, 
-             imght, ftnts$lines)
+  lns <- sum(aln, ttls$lines, ttl_hdr$lines, pgbys$lines, 
+             imght, ftnts$lines, bln)
   
   # Page list
   ret <- list(pdf = rws,
