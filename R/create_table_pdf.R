@@ -570,15 +570,22 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
       mxlns <- tmplst[[k]]$lines
   }
   
-  tbs <- ystart - rh
+  if (any(brdrs %in% c("all", "outside", "top")))
+    tbs <- ystart + bs
+  else 
+    tbs <- ystart 
 
   for(k in seq_along(nms)) {
     
     # Split label strings if they exceed column width
     tmp <- tmplst[[k]]
     
+
     yline <- ystart + (rh * (mxlns - tmp$lines)) 
-  
+    if (any(brdrs %in% c("all", "outside", "top"))) 
+      yline <- yline + bs
+    
+    print(yline)
     
     if (k == 1) {
       lb <- tlb

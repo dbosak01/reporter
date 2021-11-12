@@ -491,6 +491,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
   # pnts <- (cnt * lh) + start_offset - .5
   
   #pnts <- pnts + start_offset
+  print(pnts)
   cnts <- pnts / rs$row_height
   
   res <- list(pdf = ret, 

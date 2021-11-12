@@ -722,10 +722,10 @@ test_that("pdf2-19: Title and Footnote borders work as expected.", {
 
   dat <- iris[1:20, ]
 
-  tbl <- create_table(dat, borders = "all") %>%
+  tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Report with Borders",
-           borders = c("top", "bottom", "left", "right"),
-           blank_row = "both") %>%
+           borders = "bottom", #c("top", "bottom", "left", "right"),
+           blank_row = "none") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"),
               blank_row = "both")
@@ -747,7 +747,7 @@ test_that("pdf2-19: Title and Footnote borders work as expected.", {
 
 })
 
-
+# Best to try different combinations of blank rows.
 test_that("pdf2-20: Title Header borders work as expected.", {
 
 
@@ -763,7 +763,7 @@ test_that("pdf2-20: Title Header borders work as expected.", {
                  blank_row = "above") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"),
-              blank_row = "both")
+              blank_row = "above")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
