@@ -1,4 +1,4 @@
-# reporter 1.2.5
+# reporter 1.2.6
 
 * Added 'HTML' output type to `create_report()` and `write_report()` functions.
 This was a major change that allows the user to output reports in HTML. 
