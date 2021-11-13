@@ -85,7 +85,7 @@ may be specified with the appropriate parameter." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.6</span>
       </span>
     </div>
 
@@ -138,7 +138,10 @@ may be specified with the appropriate parameter." />
       <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, and HTML</a>
     </li>
     <li>
-      <a href="../articles/reporter-figure.html">Example 10: Figure</a>
+      <a href="../articles/reporter-fonts.html">Example 10: Fonts and Borders</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-figure.html">Example 11: Figure</a>
     </li>
   </ul>
 </li>
@@ -260,10 +263,10 @@ within the available space.</p>
                   stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># Create the report object</span>
-<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='page_header.html'>page_header</a></span><span class='op'>(</span><span class='st'>"Client: Motor Trend"</span>, <span class='st'>"Study: Cars"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"MTCARS Sample Report"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'><a href='page_header.html'>page_header</a></span><span class='op'>(</span><span class='st'>"Client: Motor Trend"</span>, <span class='st'>"Study: Cars"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"MTCARS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
   <span class='fu'>page_footer</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span>, right <span class='op'>=</span> <span class='st'>"Page [pg] of [tpg]"</span><span class='op'>)</span>
 
 <span class='co'># Write the report to the file system</span>
