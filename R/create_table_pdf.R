@@ -585,7 +585,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     if (any(brdrs %in% c("all", "outside", "top"))) 
       yline <- yline + bs
     
-    print(yline)
+    #print(yline)
     
     if (k == 1) {
       lb <- tlb
