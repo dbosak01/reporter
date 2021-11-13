@@ -426,11 +426,12 @@ split_cells <- function(x, col_widths) {
 }
 
 #' @noRd
-split_strings <- function(strng, width, units) {
+split_strings <- function(strng, width, units, multiplier = 1.03) {
  
   lnlngth <- 0
   ln <- c()
   lns <- c()
+  wdths <- c()
   
   un <- "inches"
   w <- width
@@ -447,7 +448,7 @@ split_strings <- function(strng, width, units) {
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
       
       lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
-                   suppressWarnings(strwidth(" ", units = un))) * 1.03 
+                   suppressWarnings(strwidth(" ", units = un))) * multiplier
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {
@@ -460,11 +461,20 @@ split_strings <- function(strng, width, units) {
           if (length(ln) == 0) {
             
             lns[length(lns) + 1] <- wrds[i]
+            if (units == "cm")
+              wdths[length(wdths) + 1] <- ccm(lnlngth)
+            else
+              wdths[length(wdths) + 1] <- lnlngth
+            
             lnlngth <- 0
             
           } else {
             # Assign current lines and counts
             lns[length(lns) + 1] <- paste(ln, collapse = " ")
+            if (units == "cm")
+              wdths[length(wdths) + 1] <- ccm(lnlngth - lngths[i])
+            else
+              wdths[length(wdths) + 1] <- lnlngth - lngths[i]
             
             # Assign overflow to next line
             ln <- wrds[i]
@@ -479,6 +489,10 @@ split_strings <- function(strng, width, units) {
       if (length(ln) > 0) {
         
         lns[length(lns) + 1] <- paste(ln, collapse = " ")
+        if (units == "cm")
+          wdths[length(wdths) + 1] <- ccm(lnlngth)
+        else
+          wdths[length(wdths) + 1] <- lnlngth
         
       }
       
@@ -492,11 +506,14 @@ split_strings <- function(strng, width, units) {
   } else {
     
     lns <- ""
-    
+    wdths <- 0
   } 
   
   
-  return(lns)
+  ret <- list(text = lns, 
+              widths = wdths)
+  
+  return(ret)
 }
 
 #' @description Calling function is responsible for opening the 
@@ -508,14 +525,15 @@ split_strings <- function(strng, width, units) {
 split_string_rtf <- function(strng, width, units) {
   
   
-  lns <- split_strings(strng, width, units)
+  res <- split_strings(strng, width, units)
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
   # Doing it here handles for the entire report, as every piece runs
   # through here.
-  ret <- list(rtf = paste0(encodeRTF(lns), collapse = "\\line "),
-              lines = length(lns))
+  ret <- list(rtf = paste0(encodeRTF(res$text), collapse = "\\line "),
+              lines = length(res$text), 
+              widths = res$widths)
   
   return(ret)
 }
@@ -524,12 +542,25 @@ split_string_rtf <- function(strng, width, units) {
 split_string_html <- function(strng, width, units) {
   
   
-  lns <- split_strings(strng, width, units)
+  res <- split_strings(strng, width, units)
   
-  # Try to find HTML encoding function.
-  # encodeHTML()
-  ret <- list(html = paste0(lns, collapse = "\n"),
-              lines = length(lns))
+  ret <- list(html = paste0(res$text, collapse = "\n"),
+              lines = length(res$text),
+              widths = res$widths)
+  
+  return(ret)
+}
+
+
+#' @noRd
+split_string_text <- function(strng, width, units) {
+  
+  
+  res <- split_strings(strng, width, units, multiplier = 1)
+  
+  ret <- list(text = res$text,
+              lines = length(res$text),
+              widths = res$widths)
   
   return(ret)
 }
@@ -547,7 +578,9 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
                                  output_type) {
   
   dat <- NULL           # Resulting data frame
+  wdths <- list()       # Resulting list of widths
   row_values <- list()  # A list to hold cell values for one row 
+  row_widths <- list()  # A list to hold text widths for one row
   max_length <- 1       # The maximum number of splits of a cell in that row
   
   fnt <- "mono"
@@ -565,6 +598,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
     for (nm in names(x)) {
       
       nch <- 1
+      res <- list(widths = 0)
       
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
@@ -584,6 +618,12 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
           
             cell <- res$rtf
+          } else if (output_type == "PDF") {
+            
+            res <- split_string_text(x[[i, nm]], col_widths[[nm]], units)
+            
+            cell <- paste0(res$text, collapse = "\n")
+            
           }
           nch <- res$lines
         }
@@ -606,13 +646,19 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
       
       
       row_values[[length(row_values) + 1]] <- cell
+      if (is.null(res$widths)) 
+        row_widths[[length(row_widths) + 1]] <- 0
+      else
+        row_widths[[length(row_widths) + 1]] <- res$widths
       # print(paste("Row:", row_values))
     }
     
     # print(names(x))
     names(row_values) <- names(x)
+    names(row_widths) <- names(x)
     
     row_values$..row <- max_length
+    wdths[[length(wdths) + 1]] <- row_widths
     
     if (is.null(dat)) {
       dat <- as.data.frame(row_values, stringsAsFactors = FALSE, 
@@ -625,7 +671,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
     
     max_length <- 1
     row_values <- list()
-    
+    row_widths <- list()
   }
   
   dev.off()
@@ -637,8 +683,10 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
   # else
   #   names(dat) <- c(names(x), "..row")
 
+  ret <- list(data = dat,
+              widths = wdths)
   
-  return(dat)
+  return(ret)
 }
 
 
@@ -1147,7 +1195,8 @@ get_lines_rtf <- function(txt, width, font, font_size = 10, units = "inches") {
 #' @description Estimate number of wraps based on text, width, and a font.
 #' @import graphics
 #' @noRd
-get_text_width <- function(txt, font, font_size = 10, units = "inches") {
+get_text_width <- function(txt, font, font_size = 10, units = "inches", 
+                           multiplier = .975) {
   
   
   f <- "mono"
@@ -1162,7 +1211,7 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
   #R.devices::devEval("nulldev", {
     pdf(NULL)
     par(family = f, ps = font_size)
-    ret <- suppressWarnings(strwidth(txt, units = un)) * .975 
+    ret <- suppressWarnings(strwidth(txt, units = un)) * multiplier 
     dev.off()
   #})
   
@@ -1175,4 +1224,62 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches") {
 
 
 
+# PDF Functions -----------------------------------------------------------
+
+cpoints <- function(vals, units) {
+  
+  if (units == "inches")
+    ret <- round(vals * 72, 3)
+  else if (units == "cm")
+    ret <- round((vals / 2.54) * 72, 3)
+  
+  names(ret) <- NULL
+  
+  return(ret)
+}
+
+get_points_left <- function(left_bound, right_bound, widths, units) {
+  
+  # Three points added to the left function to prevent text from touching borders
+  ret <- cpoints(rep(left_bound, length(widths)), units) + 3
+  
+  names(ret) <- NULL
+  
+  return(ret)
+  
+} 
+
+get_points_right <- function(left_bound, right_bound, widths, units) {
+  
+  ret <- cpoints(right_bound - widths, units)
+  
+  names(ret) <- NULL
+  
+  return(ret)
+} 
+
+get_points_center <- function(left_bound, right_bound, widths, units) {
+  
+  # One point added to the center function to prevent text from touching borders
+  # and center the text more accurately.
+  ret <- cpoints(left_bound + ((right_bound - left_bound)/ 2) - (widths/ 2), units) + 1
+  
+  names(ret) <- NULL
+  
+  return(ret)
+}  
+
+get_points <- function(left_bound, right_bound, widths, units, align) {
+  
+  ret <- NULL
+  if (tolower(align) == "left")
+    ret <- get_points_left(left_bound, right_bound, widths, units)
+  else if (tolower(align) == "right")
+    ret <- get_points_right(left_bound, right_bound, widths, units)
+  else if (tolower(align) %in% c("center", "centre"))
+    ret <- get_points_center(left_bound, right_bound, widths, units)
+  
+  
+  return(ret)
+}
 

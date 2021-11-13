@@ -489,8 +489,6 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
 }
 
 
-
-
 #' @description lines is the number of lines per page or cell before breaking.
 #' Width is the width of the page or cell.
 #' @noRd
@@ -503,6 +501,8 @@ split_text <- function(txt, lines, width, font,
   cnt <- 0
   lns <- c()
   cnts <- c()
+  wdths <- c()
+  wdth <- c()
   
   # Split text into words
   wrds <- strsplit(txt, " ", fixed = TRUE)[[1]]
@@ -518,7 +518,7 @@ split_text <- function(txt, lines, width, font,
   
   
   lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
-               get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+     get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
   
   # Loop through words and add up lines
   for (i in seq_along(wrds)) {
@@ -532,6 +532,7 @@ split_text <- function(txt, lines, width, font,
       # If cnt exceeds allowed lines per page, start a new page
       if (cnt <= lines - offset) {
         lns <- append(lns, paste(ln, collapse = " "))
+        wdth[length(wdth) + 1] <- lnlngth - lngths[i] 
         ln <- wrds[i]
         lnlngth <- lngths[i]
       } else {
@@ -539,31 +540,43 @@ split_text <- function(txt, lines, width, font,
         # Assign current lines and counts
         pgs[[length(pgs) + 1]] <- lns
         cnts[[length(cnts) + 1]] <- length(lns)
+        wdths[[length(wdths) + 1]] <- wdth
+        wdth <- lnlngth  - lngths[i] 
         
         # Assign overflow to next page
         lns <- paste(ln, collapse = " ")
         ln <- wrds[i]
         lnlngth <- lngths[i]
-        
+
         # After first page, set this to zero.
         offset <- 0
         cnt <- 1
       }
-      
     }
-    
-    
   }
   
   if (length(lns) > 0 | length(ln) > 0) {
-    lns <- append(lns, paste(ln, collapse = " "))
-    
+    cnt <- cnt + 1
+    if (cnt <= lines - offset) {
+      lns <- append(lns, paste(ln, collapse = " "))
+      wdth[length(wdth) + 1] <- lnlngth
+      
+    } else {
+      pgs[[length(pgs) + 1]] <- lns
+      cnts[[length(cnts) + 1]] <- length(lns)
+      wdths[[length(wdths) + 1]] <- wdth
+      
+      lns <-  paste(ln, collapse = " ")
+      wdth[length(wdth) + 1] <- lnlngth
+    }
     pgs[[length(pgs) + 1]] <- lns
     cnts[[length(cnts) + 1]] <- length(lns)
+    wdths[[length(wdths) + 1]] <- wdth
   }
   
   res <- list(text = pgs, 
-              lines = cnts)
+              lines = cnts,
+              widths = wdths)
   
   return(res)
   
@@ -618,7 +631,7 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
     exclude_top <- "top"
   
   t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
-  hgt <- rs$body_line_count - t
+  hgt <- line_count - t
   
   # Break text content into pages if necessary
   tpgs <- split_text(txt$text, hgt, width, rs$font, 
@@ -704,4 +717,256 @@ get_text_body_html <- function(rs, txt, width, line_count, lpg_rows,
   return(res)
   
 }
+
+
+# Write PDF Functions -------------------------------------------------------
+
+
+#' @noRd
+create_text_pages_pdf <- function(rs, cntnt, lpg_rows, content_blank_row) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  txt <- cntnt$object
+  
+  # Default to content width
+  w <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(txt$width))
+    w <- txt$width
+  
+  ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
+            rs$page_template$page_header$points)
+
+  
+  res <- get_text_body_pdf(rs, txt, w, rs$body_line_count, 
+                           lpg_rows, content_blank_row, 
+                           cntnt$align, ystart = ys)
+  
+  
+  return(res)
+  
+  
+}
+
+#' Create list of vectors of strings for each page 
+#' @import stringi
+#' @noRd
+get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows, 
+                              content_blank_row, talgn, ystart = 0) {
+  
+  lh <- rs$line_height
+  bh <- rs$border_height
+  conv <- rs$point_conversion
+  
+  # Get content titles and footnotes
+  ttls <- get_titles_pdf(txt$titles, width, rs, talgn, 
+                         ystart = ystart) 
+  ttl_hdr <- get_title_header_pdf(txt$title_hdr, width, rs, talgn, 
+                                  ystart = ystart)
+  ftnts <- get_footnotes_pdf(txt$footnotes, width, rs, talgn) 
+  
+  # Nice that if titles are taller because of the font size,
+  # this will account for it.
+  p <- sum(ttls$points, ftnts$points, ttl_hdr$points)
+  t <- ceiling(p/lh)
+
+  hgt <- line_count - t
+  
+  # If last page already filled up, start a new page
+  if (ceiling(lpg_rows) >= floor(hgt))
+    lpg_rows <- 0
+  
+  if (content_blank_row %in% c("above", "all"))
+    lpg_rows <- lpg_rows + 1
+  
+  # Break text content into pages if necessary
+  tpgs <- split_text(txt$text, hgt, width, rs$font, 
+                     rs$font_size, rs$units, lpg_rows)
+  
+  # Capture pages, line counts, and widths
+  txtpgs <- tpgs$text
+  lns <- tpgs$lines
+  wdths <- tpgs$widths
+  
+  # Calculate text width in points
+  w <- round(width * rs$point_conversion)
+  
+  # Get content alignment codes
+  if (talgn == "right") {
+    lb <- rs$content_size[["width"]] - width
+    rb <- rs$content_size[["width"]]
+  } else if (talgn %in% c("center", "centre")) {
+    lb <- (rs$content_size[["width"]] - width) / 2
+    rb <- width + lb
+  } else {
+    lb <- 0
+    rb <- width
+  }
+  
+  fp_ttls <- list(pdf = NULL, lines = 0)
+  fp_ttl_hdr <- list(pdf = NULL, lines = 0)
+
+  ret <- list()
+  cnt <- c()
+  pnt <- c()
+
+  # Gather pdf and line counts for each page
+  for (i in seq_along(txtpgs)) {
+    
+    cnts <- t
+    pnts <- p
+    rws <- list()
+    
+    if (i == length(txtpgs))
+      wrap_flag <- FALSE
+    else 
+      wrap_flag <- TRUE
+    
+    pg <- txtpgs[[i]]
+    pw <- wdths[[i]]
+    
+    if (lpg_rows > 0 & i == 1) {
+      
+      # Get starting y coordinate
+      yline <- sum(ystart, (lpg_rows * lh))
+      
+      if (content_blank_row %in% c("above", "both")) {
+        yline <- yline + lh
+        cnts <- cnts + 1 
+      }
+      
+      fp_ttls <- get_titles_pdf(txt$titles, width, rs, talgn, 
+                             ystart = yline) 
+      fp_ttl_hdr <- get_title_header_pdf(txt$title_hdr, width, rs, talgn, 
+                                      ystart = yline)
+      
+
+      yline <- sum(yline, fp_ttls$points, fp_ttl_hdr$points)
+      
+      
+    } else {
+      
+      fp_ttls <- list(lines = 0)
+      fp_ttl_hdr <- list(lines = 0)
+    
+      # Get starting y coordinate
+      yline <- sum(ystart, ttls$points, ttl_hdr$points)
+    
+    }
+    
+    ypos <- yline
+    
+    for (ln in seq_along(pg)) {
+      
+      rws[[length(rws) + 1]] <- page_text(pg[ln], rs$font_size, 
+                                          xpos = get_points(lb, 
+                                                            rb,
+                                                            pw[ln],  
+                                                            units = rs$units,
+                                                            align = txt$align),
+                                          ypos = yline)
+      yline <- yline + lh
+      cnts <- cnts + 1
+    }
+    
+    #yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
+    
+    # Top border
+    if (any(txt$borders %in% c("all", "outside", "top"))) {
+      
+      rws[[length(rws) + 1]] <- page_hline(lb * conv, 
+                                           ypos - lh , 
+                                           (rb - lb) * conv) 
+      
+    }
+    
+    # Bottom border
+    if (any(txt$borders %in% c("all", "outside", "bottom"))) {
+      
+      rws[[length(rws) + 1]] <- page_hline(lb * conv, 
+                                           yline - lh , 
+                                           (rb - lb) * conv) 
+      
+    }
+    
+    # Left border
+    if (any(txt$borders %in% c("all", "outside", "left"))) {
+      
+      
+      rws[[length(rws) + 1]] <- page_vline(lb * conv, 
+                                           ypos - lh , 
+                                           yline - ypos) 
+      
+    }
+    
+    # Right border
+    if (any(txt$borders %in% c("all", "outside", "right"))) {
+      
+      
+      rws[[length(rws) + 1]] <- page_vline(rb * conv, 
+                                           ypos - lh , 
+                                           yline - ypos) 
+      
+    }
+    
+    # Get footnotes
+    ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, yline,
+                                    wrap_flag, content_blank_row, talgn)
+    
+    # Add blank above content if requested
+    if (i ==length(txtpgs) & content_blank_row %in% c("both", "below")) {
+      cnts <- cnts + 1
+      yline <- yline + lh
+
+    }
+
+    pnts <- pnts + (cnts * lh)
+    
+    # Get cell border codes
+    #b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
+    
+    # Add remaining page content.
+    if (fp_ttls$lines > 0) {
+      rws<- append(rws, fp_ttls$pdf)
+    } else {
+      if (ttls$lines > 0) {
+        rws<- append(rws, ttls$pdf)
+      } 
+    }
+    if (fp_ttl_hdr$lines > 0) {
+      rws <- append(rws, fp_ttl_hdr$pdf)
+    } else {
+      if (ttl_hdr$lines > 0) {
+        rws <- append(rws, ttl_hdr$pdf)
+      }
+    }
+
+
+    if (ftnts$lines > 0) {
+        rws <- append(rws, ftnts$pdf)
+    }
+    
+    ret[[length(ret) + 1]] <- rws
+    cnt[length(cnt) + 1]  <- cnts
+    pnt[length(pnt) + 1]  <- pnts
+  }
+  
+  res <- list(pdf = ret, 
+              lines = cnt,
+              points = pnt)
+  
+  return(res)
+  
+}
+
+
+
+
+
 

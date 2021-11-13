@@ -209,14 +209,14 @@ test_that("get_header works as expected.", {
                     font_name = "Arial",
                     page_ids = c(3))
   
-  expect_equal(length(hdr), 3)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 369)
+    expect_equal(length(hdrtxt), 492) #369)
   # else 
   #   expect_equal(length(hdrtxt), 370)
   
@@ -226,14 +226,14 @@ test_that("get_header works as expected.", {
                     page_height = 500,
                     page_width = 600)
   
-  expect_equal(length(hdr), 3)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 377)
+    expect_equal(length(hdrtxt), 494) #377)
   # else 
   #   expect_equal(length(hdrtxt), 378)
   
@@ -241,14 +241,14 @@ test_that("get_header works as expected.", {
   hdr <- get_header(page_count = 3,
                     page_ids = c(3, 4, 5))
   
-  expect_equal(length(hdr), 3)
+  expect_equal(length(hdr), 4)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 383)
+    expect_equal(length(hdrtxt), 500) #383)
   # else
   #   expect_equal(length(hdrtxt), 384)
   
@@ -523,7 +523,7 @@ test_that("get_pages works as expected.", {
   
   res
   
-  expect_equal(res$page_ids, c(4, 6, 8))
+  expect_equal(res$page_ids, c(5, 7, 9))
   expect_equal(length(res$objects), 7)
   
   
@@ -922,6 +922,130 @@ test_that("PDF with special chars works as expected.", {
   # cat(str4)
   
 
+  
+})
+
+
+test_that("basic write_pdf with positional text works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct15.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_text(c("Goodbye", "My friend"), font_size = 8, 
+                        xpos = 200, ypos = 150))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("basic write_pdf with positional text works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct15.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_text(c("Goodbye", "My friend"), font_size = 8, 
+                      xpos = 200, ypos = 150))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("page_text detects page number tokens correctly", {
+  
+  res1 <- page_text("here is some text")
+  res1
+  
+  expect_equal(res1$has_page_numbers, FALSE)
+  
+  res2 <- page_text("here is some [pg] text")
+  res2
+  
+  expect_equal(res2$has_page_numbers, TRUE)
+  
+  
+  res3 <- page_text("here is some [tpg] text")
+  
+  expect_equal(res3$has_page_numbers, TRUE)
+  
+  
+  res4 <- page_text("here is some [PG] text")
+  
+  expect_equal(res4$has_page_numbers, FALSE)
+  
+})
+
+
+test_that("basic write_pdf with page lines works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct16.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_line(100, 105, 200, 105), 
+            page_text("Goodbye", font_size = 14, 
+                      xpos = 100, ypos = 120, bold = TRUE),
+            page_hline(100, 120, 100),
+            page_vline(300, 105, 100), 
+            page_hline(300, 105, 100), 
+            page_hline(300, 205, 100),
+            page_vline(400, 105, 100))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("basic write_pdf with page box works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct17.pdf")
+  
+  l <- list(page_text("Hello", font_size = 14, 
+                      xpos = 100, ypos = 100, bold = TRUE),
+            page_box(90, 85, 20, 50, ""))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
+  
+})
+
+test_that("basic write_pdf with page grid works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/direct18.pdf")
+  
+  l <- list(page_grid(90, 85, 5, 4, 20, c(50, 70, 50, 70)),
+            page_grid(90, 250, 4, 3, 25, 25))
+  
+  r <- create_pdf(fp, fontname = "Arial") %>% 
+    add_page(l)
+  
+  
+  write_pdf(r)
+  
+  expect_equal(file.exists(fp), TRUE)  
   
 })
 

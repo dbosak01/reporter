@@ -1557,7 +1557,8 @@ test_that("rtf2-47: 9 pt font cm works as expected.", {
   
   rpt <- create_report(fp, output_type = "RTF", font_size = 9, 
                        font = "Courier",
-                       orientation = "portrait") %>%
+                       orientation = "portrait",
+                       units = "cm") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) %>%
@@ -1601,7 +1602,8 @@ test_that("rtf2-49: 11 pt font cm works as expected.", {
   
   rpt <- create_report(fp, output_type = "RTF", font_size = 11, 
                        font = "Courier",
-                       orientation = "portrait") %>%
+                       orientation = "portrait", 
+                       units = "cm") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) %>%

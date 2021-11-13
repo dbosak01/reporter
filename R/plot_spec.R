@@ -780,3 +780,270 @@ get_plot_body_html <- function(plt, plot_path, talign, rs,
   
 }
 
+
+
+
+# Write PDF Functions -----------------------------------------------------
+
+
+#' @description A function to output strings for plot content
+#' @details Basic logic is to write the plot as a png file to a temporary
+#' location, then put a token in the text that references the temp location.
+#' Later code will pick up the image and insert it into the report.  Blank
+#' lines are generated to fill up the page based on a calculation using
+#' the plot height and width.
+#' @param rs The Report Spec
+#' @param cntnt The text content to output
+#' @param lpg_rows Last page rows.
+#' @noRd
+create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  # Get plot spec 
+  plt <- cntnt$object
+  
+  
+  # Get data in case we need it for page by
+  raw <- plt$plot$data
+  
+  # Determine if there is a page by
+  pgby <- NULL
+  if (!is.null(rs$page_by))
+    pgby <- rs$page_by
+  if (!is.null(plt$page_by))
+    pgby <- plt$page_by
+  
+  if (!is.null(pgby)) {
+    if (!pgby$var %in% names(raw))
+      stop("Page by variable not found in plot data.")
+    
+    dat_lst <- split(raw, raw[[pgby$var]])
+  } else {
+    dat_lst <- list(raw) 
+  }
+  
+  u <- ifelse(rs$units == "inches", "in", rs$units)
+  p <- plt$plot
+  ret <- list()
+  cntr <- 1
+  pgs <- list()
+  cnts <- c()
+  pnts <- c()
+  row_offset <- lpg_rows
+  
+  for (dat in dat_lst) {
+    
+    if (cntr > 1)
+      row_offset <- 0
+    
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+    
+    p$data <- dat
+    
+    pgval <- NULL
+    if (!is.null(pgby)) {
+      # print(pgby$var)
+      # print(dat)
+      pgval <- dat[1, c(pgby$var)]
+    }
+    
+    # Save plot to temp file
+    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+      
+      # Deal with survival plots
+      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                      width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u )
+      
+      
+    } else {
+      
+      # Any other type of plots
+      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                      dpi = 300, units = u)
+    }
+    ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
+              rs$page_template$page_header$points, (row_offset * rs$line_height))
+    
+    # Get pdf page bodies
+    res <- get_plot_body_pdf(plt, tmp_nm, cntnt$align, rs, row_offset,
+                             cntnt$blank_row, pgby, pgval, 
+                             cntr < length(dat_lst), ystart = ys)
+    
+    pgs[[length(pgs) + 1]] <- res$pdf
+    cnts[length(cnts) + 1] <- res$lines
+    pnts[length(pnts) + 1] <- res$lines * rs$line_height
+    cntr <- cntr + 1
+    
+  }
+  
+  ret <- list(pdf = pgs,
+              lines = cnts, 
+              points = pnts)
+  
+  return(ret)
+}
+
+#' Create list of page_text or page_image objects for a single page 
+#' @noRd
+get_plot_body_pdf <- function(plt, plot_path, talign, rs,
+                              lpg_rows, content_blank_row, pgby, pgval, 
+                              wrap_flag, ystart = 0) {
+  cnt <- 0
+  lh <- rs$line_height
+  conv <- rs$point_conversion
+  bh <- rs$border_height
+  
+  # Default to content width
+  wth <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(plt$width))
+    wth <- plt$width
+  
+  
+  # Add blank above content if requested
+  aln <- 0
+  if (content_blank_row %in% c("both", "above")) {
+    aln <- 1
+    ystart <- ystart + lh
+  }
+  
+  # Get titles and footnotes
+  ttls <- get_titles_pdf(plt$titles, wth, rs, talign, ystart = ystart) 
+  ttl_hdr <- get_title_header_pdf(plt$title_hdr, wth, rs, 
+                                  talign, ystart = ystart)
+  pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign, 
+                           ystart = sum(ystart, ttls$points, ttl_hdr$points))
+  
+  # Get image PDF codes
+  #img <- get_image_pdf(plot_path, plt$width, plt$height, rs$units)
+  
+  if (talign == "right") {
+    lb <- rs$content_size[["width"]] - wth
+    rb <- rs$content_size[["width"]]
+  } else if (talign %in% c("center", "centre")) {
+    lb <- (rs$content_size[["width"]] - wth) / 2
+    rb <- wth + lb
+  } else {
+    lb <- 0
+    rb <- wth
+  }
+  # 
+  # algn <- "\\qc" 
+  
+  # Convert width to twips
+  w <- round(wth * rs$point_conversion)
+  
+  # Get border codes
+  # b <- get_cell_borders_pdf(1, 1, 1, 1, plt$borders)
+  
+  # Concat all header codes
+  # hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
+  # 
+  # ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
+  
+  ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
+  lnstrt <- ceiling(ypos / rs$line_height)
+  
+  # Concat PDF codes for image
+  # img <- paste0(hd, img, ft)
+  imght <- round((plt$height * rs$point_conversion) / lh)
+  
+
+  rws <- list()
+  rws[[length(rws) + 1]] <- page_image(plot_path,
+                             height = plt$height,
+                             width = plt$width,
+                             align = talign,
+                             line_start = lnstrt + aln)
+
+  
+  yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
+  
+  # Top border
+  if (any(plt$borders %in% c("all", "outside", "top"))) {
+    
+    rws[[length(rws) + 1]] <- page_hline(lb * conv, 
+                                         ypos - lh + bh, 
+                                         (rb - lb) * conv) 
+    
+  }
+  
+  # Bottom border
+  if (any(plt$borders %in% c("all", "outside", "bottom"))) {
+    
+    rws[[length(rws) + 1]] <- page_hline(lb * conv, 
+                                         yline - lh + bh, 
+                                         (rb - lb) * conv) 
+    
+  }
+  
+  # Left border
+  if (any(plt$borders %in% c("all", "outside", "left"))) {
+    
+    
+    rws[[length(rws) + 1]] <- page_vline(lb * conv, 
+                                         ypos - lh + bh, 
+                                         yline - ypos) 
+    
+  }
+  
+  # Right border
+  if (any(plt$borders %in% c("all", "outside", "right"))) {
+    
+    
+    rws[[length(rws) + 1]] <- page_vline(rb * conv, 
+                                         ypos - lh + bh, 
+                                         yline - ypos) 
+    
+  }
+  
+  
+
+  
+  # Get footnotes, filler, and content blank line
+  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, yline,
+                                  wrap_flag, content_blank_row, talign)
+  
+  bln <- 0
+  if (content_blank_row %in% c("both", "below")) {
+    bln <-  1
+  }
+  
+  # Add remaining page content.
+  # This needs to be done now so everything is on the page
+  # Different than all other output types.
+  if (ttls$lines > 0) {
+    rws<- append(rws, ttls$pdf)
+  }
+  if (ttl_hdr$lines > 0) {
+    rws <- append(rws, ttl_hdr$pdf)
+  }
+  if (pgbys$lines > 0) {
+    rws <- append(rws, pgbys$pdf)
+  }
+  if (ftnts$lines > 0) {
+    rws <- append(rws, ftnts$pdf)
+  }
+  
+
+  # Get sum of all items to this point
+  lns <- sum(aln, ttls$lines, ttl_hdr$lines, pgbys$lines, 
+             imght, ftnts$lines, bln)
+  
+  # Page list
+  ret <- list(pdf = rws,
+              lines = lns,
+              points = lns * lh)  
+  
+  
+  return(ret)
+  
+}
+

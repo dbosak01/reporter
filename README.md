@@ -69,10 +69,6 @@ If you need help, the first place
 to turn to is the [reporter](https://reporter.r-sassy.org) web site. The web site
 has full documentation on all **reporter** functions.
 
-If you need additional help, please consult 
-[stackoverflow.com](https://stackoverflow.com).  The stackoverflow 
-community will be very willing to answer your questions.  
-
 If you want to look at the code for the **reporter** package, visit the
 github page [here](https://github.com/dbosak01/reporter).
 
