@@ -69,7 +69,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 # 
 #                                      Group A      Group B
 #                                       (N=19)       (N=13)
-#                  ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#                  -------------------------------------------
 # 
 #                  Miles Per Gallon
 #                     N                   19           13

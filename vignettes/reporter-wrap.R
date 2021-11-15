@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 #  
 #  # Prepare data
 #  dat <- mtcars[1:10, ]
-#  dat <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
+#  dat <- data.frame(vehicle = rownames(dat), dat)
 #  
 #  # Define table
 #  tbl <- create_table(dat, show_cols = 1:8) %>%
@@ -43,7 +43,7 @@ knitr::opts_chunk$set(
 #  #
 #  #                                         Miles per
 #  # Vehicle                                    Gallon Cylinders Displacement
-#  # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#  # ------------------------------------------------------------------------
 #  # Mazda RX4                                      21       6.0          160
 #  # Mazda RX4 Wag                                  21       6.0          160
 #  # Datsun 710                                   22.8       4.0          108
@@ -62,7 +62,7 @@ knitr::opts_chunk$set(
 #  #                       MTCARS Data Listing with Page Wrap
 #  #
 #  # Vehicle                              Horsepower Weight  Quarter Mile Time
-#  # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#  # -------------------------------------------------------------------------
 #  # Mazda RX4                                   110   2.62              16.46
 #  # Mazda RX4 Wag                               110  2.875              17.02
 #  # Datsun 710                                   93   2.32              18.61

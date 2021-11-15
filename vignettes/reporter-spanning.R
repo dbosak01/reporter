@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 #  
 #  # Prepare Data
 #  dat <- mtcars[1:10, ]
-#  df <- data.frame(vehicle = rownames(dat), dat, stringsAsFactors = FALSE)
+#  df <- data.frame(vehicle = rownames(dat), dat)
 #  
 #  # Define Table with spanning headers
 #  tbl <- create_table(df) %>%
@@ -41,12 +41,12 @@ knitr::opts_chunk$set(
 #  #                       MTCARS Spanning Headers
 #  #
 #  #                                              Super Span
-#  #                                   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#  #                                   --------------------------------
 #  #                        Span 1            Span 2          Span 3
 #  #                        (N=10)            (N=10)          (N=10)
-#  #                    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
+#  #                    -------------- ------------------- ------------
 #  # Vehicle              mpg cyl   hp  drat     wt   qsec vs gear carb
-#  # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#  # ------------------------------------------------------------------
 #  # Mazda RX4           21.0   6  110   3.9   2.62  16.46  0    4    4
 #  # Mazda RX4 Wag       21.0   6  110   3.9  2.875  17.02  0    4    4
 #  # Datsun 710          22.8   4   93  3.85   2.32  18.61  1    4    1
