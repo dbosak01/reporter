@@ -1,0 +1,299 @@
+---
+title: "Frequently Asked Questions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{FAQ}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
+
+```
+
+Below are some frequently asked questions about the **reporter** package. Click
+on the links below to navigate to the full question and answer content.
+
+## Index{#top}
+
+* [What file formats does reporter support?](#types)
+* [What fonts does reporter support?](#fonts)
+* [What styling options are available in the reporter package?](#styles)
+* [Is there a way to control page orientation?](#orientation)
+* [Is there a way to control the units of measure?](#units)
+* [Can I perform statistics with reporter?](#statistics)
+* [Can I perform grouping with reporter?](#grouping)
+* [Does reporter have a way to sort the report data?](#sort)
+* [Does reporter have a way to filter the report data?](#filter)
+* [Do I have to include all the columns in my data on the final report?](#visible)
+* [Is there a way to order the columns on my report?](#order)
+* [Is there a way to format a variable?](#format)
+* [Is there a way to control page breaks?](#breaks)
+* [Is there a way to control page wraps?](#wraps)
+* [Is there a way to set the width of a table?](#width)
+
+
+## Content
+
+### What file formats does reporter support? {#types}
+
+**Q:** I can see from the examples that the **reporter** package can create
+text reports.  Can it create any other types of reports?  PDF?  DOCX?
+
+
+**A:** The **reporter** package currently supports TXT, RTF, PDF and HTML output
+types.  DOCX and possibly PowerPoint will be added in 2022.
+
+[top](#top) 
+
+******
+
+
+### What fonts does reporter support? {#fonts}
+
+**Q:** I see a lot of Courier font in the examples.  Does **reporter** support
+any other fonts?
+
+**A:** The supported fonts depend on the output type selected.  Obviously for
+TXT reports, no fonts are supported.  For PDF reports, currently only
+Courier is supported.  But Arial and Times will be supported in PDF in 2022.
+The RTF and HTML output types support Courier, Arial, and Times New Roman.
+
+[top](#top)
+
+******
+
+### What styling options are available in the reporter package? {#styles}
+
+**Q:** The examples show little in the way of styling: fonts, colors, bolding, 
+etc.  What options are there for adding styles to the report?
+
+**A:** The current development effort is focused on layout and output types.
+Thus far in the development cycle, styling has been deprioritized. 
+However, some limited styling of 
+titles is available.  The `titles()` function has parameters to bold the title
+block, and set the font size independently of the main report.  More styling
+options will become available in 2022.
+
+[top](#top) 
+
+******
+
+### Is there a way to control the page orientation? {#orientation}
+
+**Q:** All of the examples I saw show a landscape page orientation.  Is there
+a way to have a portrait page orientation?
+
+**A:** Yes.  The `orientation` parameter on the `create_report()` function
+accepts both "landscape" and "portrait" values.
+
+[top](#top) 
+
+******
+### Is there a way to control the units of measure? {#units}
+
+**Q:** All of the examples I saw show column widths specified in inches. 
+Is there a way to specify them in metric?  What about by percentage?
+
+**A:** The `units` parameter on the `create_report()` function allows you
+to control the units of measure.  Valid values are "inches" and "cm" for 
+centimeters.  The parameter accepts no other value.  The issue of setting
+column widths by percentage has been raised, and is under consideration as
+a future enhancement.
+
+Note that this parameter sets the units of measure for every measurement 
+on the report, not just column widths.  The units for margins, table width, 
+plot width, etc. will all be understood to be in the units specified on the 
+`units` parameter.  In other words, the whole report will be in either inches
+or centimeters. You cannot mix measurement systems on a report.
+
+[top](#top) 
+
+******
+
+### Can I perform statistics with reporter? {#statistics}
+
+**Q:** With SAS® proc report, I can add statistics to my report.  Does the
+**reporter** package have any statistical capabilities?
+
+**A:** No.  The focus of the reporter package is on creating a printable
+report in multiple output types.  There are many R packages to generate
+statistics.  If you want statistics in your report, run your desired statistical
+functions, and add the result to the input data.
+
+[top](#top)
+
+******
+
+### Can I perform grouping with reporter? {#grouping}
+
+**Q:** With SAS® proc report, I can group my data in the reporting procedure.
+Does the **reporter** package have grouping capabilities?
+
+**A:** No.  There are already several ways to group data in R.  It is best
+to group data with one of the existing functions before sending into the 
+**reporter** package.  Note that group rows can be emphasized on the
+report using the `dedupe`, `blank_after`, and `label_row` parameters on 
+the `define()` function. 
+See [example 2](reporter-table.html) and [example 3](reporter-stub.html) 
+from the vignettes for a demonstration 
+on how to use these parameters.
+
+[top](#top) 
+
+******
+
+
+### Does reporter have a way to sort the report data? {#sort}
+
+**Q:** I have some data to report on, but it is not sorted the way I want 
+for reporting. Does **reporter** have any way to sort the data?
+
+**A:** No.  There are many ways to sort data in R. It is therefore 
+recommended to sort the data before sending it into the **reporter** package.
+
+Generally speaking, the input data should be fully prepared for reporting.
+The **reporter** package will take your input data pretty much as-is and 
+create a report in the desired output file format.  Any data manipulation
+should be done prior to reporting.
+
+[top](#top)
+
+******
+
+### Does reporter have a way to filter the report data? {#filter}
+
+**Q:** I have some data to report on, but it is not filtered the way I want.
+Does **reporter** have any way to filter the data?
+
+
+**A:** No. There are many ways to filter data in R. It is therefore 
+recommended to filter the data before sending it into the **reporter** package.
+
+[top](#top) 
+
+******
+
+
+### Do I have to include all the columns in my data on the final report? {#visible}
+
+**Q:** I have some data to report on, but it has more columns than I want to
+show in the report. Does **reporter** have any way to remove some columns
+from the report?
+
+**A:** Yes.  There are two ways to remove a column from the report.  The first
+is to use the `show_cols` parameter on the `create_table()` function.  This 
+parameter accepts a vector of column names to include on the table.  
+
+The second way is to use the `visible` parameter on the `define()` function.
+Setting this parameter to FALSE will hide that variable on the report.
+
+[top](#top)
+
+******
+
+### Is there a way to order the columns on my report? {#order}
+
+**Q:** The variables in my data are not ordered exactly as I want them
+to appear on the report.  Is there a way to control column order?
+
+**A:** Generally it is better to prepare your input data so that everything
+is ordered the way you want prior to reporting. But there is a way
+to order the columns if they are not in the desired order.  You can use
+the `show_cols` parameter on the `create_table()` function to do this.
+Simply pass a vector of column names to the `show_cols` parameter, and put
+the column names in the order you want them to appear on the report.  
+
+Note that if you are using `define()` functions, the order of these functions 
+have no affect on the order of columns on the report. 
+
+[top](#top)
+
+******
+
+### Is there a way to format a variable? {#format}
+
+**Q:** I have variable in my input data that is not formatted.  I want to apply 
+a format to it; say, round to 1 decimal place and add a percent sign.  Is there
+a way to format a variable?
+
+**A:** Yes. You can use the `format` parameter on the `define()` 
+function to identify a format for a variable. The format passed to this 
+parameter should be a valid format for the 
+[`fapply()`](https://fmtr.r-sassy.org/reference/fapply.html) function from the 
+[**fmtr**](https://fmtr.r-sassy.org) package. 
+See the [`fapply()`](https://fmtr.r-sassy.org/reference/fapply.html)
+documentation for additional information.
+
+[top](#top)
+
+******
+
+### Is there a way to control page breaks? {#breaks}
+
+**Q:** Overall, the **reporter** package does a good job of determining
+when to break to the next page.  However, sometimes I want to control exactly
+when the page break occurs.  Is there a way to do that?
+
+**A:** Yes. You can add a variable to your input data that has the desired
+page number for each row.  Then use the `page_break` parameter on the `define()` 
+function to identify that variable as a page break variable.  The package
+will then use that variable to break pages, instead of the automatic 
+paging variable.
+
+You can also set the number of lines on a page using the `line_count`
+parameter on the `options_fixed()` function.  When this parameter is set,
+it will use the number of lines specified to determine when to break a page, 
+instead of using the automatically calculated value. 
+
+[top](#top)
+
+******
+
+### Is there a way to control page wraps? {#wraps}
+
+**Q:** Overall, the **reporter** package does a good job of determining
+when to wrap a page when it is too wide.  However, sometimes I want to 
+control exactly when the page wrap occurs.  Is there a way to do that?
+
+**A:** Yes. You can use the `page_wrap` parameter on the `define()` 
+function to identify a variable to wrap on. See [example 6](reporter-wrap.html) 
+in the documentation for an illustration of how to wrap pages.
+
+[top](#top)
+
+******
+
+### Is there a way to set the width of a table? {#width}
+
+**Q:** I see there are several ways to set column widths.  However, I just 
+want to set the width of the entire table, and have **reporter** figure out
+the column widths proportionally.  Is there a way to do that?
+
+**A:** Yes. You can use the `width` parameter on the `create_table()` 
+function to set a width for the entire table. The width should be specified
+in the units identified on the `units` parameter on the `create_report()`
+function.  See the `create_table()` function documentation for more information
+on the `width` parameter.
+
+[top](#top)
+
+******
+
+
+<!-- ### Question 1? {#q1} -->
+
+<!-- **Q:** I have a question? -->
+
+<!-- **A:** Answer here. -->
+
+<!-- [top](#top) -->
+
+<!-- ****** -->
+

@@ -24,7 +24,7 @@ test_that("get_table_body_rtf works as expected.", {
   names(algns) <- names(dat)
   
   
-  res <- get_table_body_rtf(rpt, dat, wdth, algns,  "center", "none")
+  res <- get_table_body_rtf(rpt, dat, wdth, algns,  "center", "none", FALSE)
 
   res  
   

@@ -94,10 +94,28 @@
     <li>
       <a href="../articles/reporter-figure.html">Example 11: Figure</a>
     </li>
+    <li>
+      <a href="../articles/reporter-example1.html">Complete Example 1</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example2.html">Complete Example 2</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example3.html">Complete Example 3</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example4.html">Complete Example 4</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example5.html">Complete Example 5</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href=".././articles/reporter-faq.html">FAQ</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -146,20 +164,20 @@
 <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>vehicle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span>
 
 <span class="co"># Define Table with spanning headers</span>
-<span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 1.0"</span>, <span class="st">"MTCARS Spanning Headers"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"mpg"</span>, to <span class="op">=</span> <span class="st">"hp"</span>, label <span class="op">=</span> <span class="st">"Span 1"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"drat"</span>, to <span class="op">=</span> <span class="st">"qsec"</span>, label <span class="op">=</span> <span class="st">"Span 2"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"vs"</span>, to <span class="op">=</span> <span class="st">"carb"</span>, label <span class="op">=</span> <span class="st">"Span 3"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 1.0"</span>, <span class="st">"MTCARS Spanning Headers"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"mpg"</span>, to <span class="op">=</span> <span class="st">"hp"</span>, label <span class="op">=</span> <span class="st">"Span 1"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"drat"</span>, to <span class="op">=</span> <span class="st">"qsec"</span>, label <span class="op">=</span> <span class="st">"Span 2"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"vs"</span>, to <span class="op">=</span> <span class="st">"carb"</span>, label <span class="op">=</span> <span class="st">"Span 3"</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/spanning_header.html">spanning_header</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"drat"</span>, to <span class="op">=</span> <span class="st">"carb"</span>, 
-                  label <span class="op">=</span> <span class="st">"Super Span"</span>, level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">vehicle</span>, label <span class="op">=</span> <span class="st">"Vehicle"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">mpg</span>, format <span class="op">=</span> <span class="st">"%.1f"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">disp</span>, visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+                  label <span class="op">=</span> <span class="st">"Super Span"</span>, level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">vehicle</span>, label <span class="op">=</span> <span class="st">"Vehicle"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">mpg</span>, format <span class="op">=</span> <span class="st">"%.1f"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">disp</span>, visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">am</span>, visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> 
 
 <span class="co"># Create Report and add table </span>
-<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span>, align <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span> 
 
 <span class="co"># Write the report</span>

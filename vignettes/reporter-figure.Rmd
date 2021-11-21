@@ -56,3 +56,5 @@ res <- write_report(rpt)
 ```
 <img src="../man/images/plot.png"/>
 
+
+Next: [Complete Example 1](reporter-example1.html)

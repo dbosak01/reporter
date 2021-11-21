@@ -94,10 +94,28 @@
     <li>
       <a href="../articles/reporter-figure.html">Example 11: Figure</a>
     </li>
+    <li>
+      <a href="../articles/reporter-example1.html">Complete Example 1</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example2.html">Complete Example 2</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example3.html">Complete Example 3</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example4.html">Complete Example 4</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example5.html">Complete Example 5</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href=".././articles/reporter-faq.html">FAQ</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -142,11 +160,11 @@
 <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example1.txt"</span><span class="op">)</span>
 
 <span class="co"># Create the report</span>
-<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span>left <span class="op">=</span> <span class="st">"Client: Motor Trend"</span>, right <span class="op">=</span> <span class="st">"Study: Cars"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 1.0"</span>, <span class="st">"MTCARS Data Listing"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span>left <span class="op">=</span> <span class="st">"Client: Motor Trend"</span>, right <span class="op">=</span> <span class="st">"Study: Cars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 1.0"</span>, <span class="st">"MTCARS Data Listing"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span>left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, 
               center <span class="op">=</span> <span class="st">"Confidential"</span>, 
               right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span>

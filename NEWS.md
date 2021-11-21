@@ -4,6 +4,7 @@
 * Allowed border properties to apply to PDF output type. This
 change required a significant rewrite of the PDF creation functions to account
 for border heights and widths.
+* Added FAQ and Complete Examples.
 
 # reporter 1.2.6
 

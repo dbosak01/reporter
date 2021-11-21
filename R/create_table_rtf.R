@@ -237,7 +237,8 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
-                            pi$col_align, pi$table_align, ts$borders)
+                            pi$col_align, pi$table_align, ts$borders, 
+                            ts$first_row_blank)
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -597,6 +598,21 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   
   ret[1] <- paste(ret[1], "\\row")
   
+  if (ts$first_row_blank == TRUE) {
+    
+    if (any(brdrs == "body"))
+      b <- get_cell_borders(1, 1, 3, 1, c("left", "right"))
+    else
+      b <- get_cell_borders(1, 1, 3, 1, brdrs)
+    
+    w <- round(sum(widths, na.rm = TRUE) * conv)
+    
+    ret[1] <- paste0(ret[1], "\n\\trowd\\trgaph0", ta, 
+                     "\\trrh", rh, b, "\\cellx", w,
+                     "\\ql\\cell\\row")
+   cnt <- cnt + 1
+  }
+  
   res <- list(rtf = ret,
               lines = cnt,
               twips = cnt * rh)
@@ -785,7 +801,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs) {
+get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -860,7 +876,11 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs) {
     # Loop for cell definitions
     for(j in seq_len(ncol(t))) {
       if (!is.control(nms[j])) {
-        b <- get_cell_borders(i, j, nrow(t), ncol(t), brdrs, flgs[i])
+        radj <- 0
+        if (frb == TRUE) 
+          radj <- 1
+        
+        b <- get_cell_borders(i + radj, j, nrow(t) + radj, ncol(t), brdrs, flgs[i])
         ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
       }
     }

@@ -15,6 +15,11 @@ articles:
   - reporter-rtf
   - reporter-fonts
   - reporter-figure
+  - reporter-example1
+  - reporter-example2
+  - reporter-example3
+  - reporter-example4
+  - reporter-example5
 
 reference:
 - title: Report Functions
@@ -63,5 +68,8 @@ reference:
 navbar:
   type: inverse
   structure:
-    right: [home, intro, articles, reference, news, github]
-
+    right: [home, intro, articles, reference, faq, news, github]
+  components:
+    faq:
+      text: FAQ
+      href: ./articles/reporter-faq.html

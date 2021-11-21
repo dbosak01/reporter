@@ -94,10 +94,28 @@
     <li>
       <a href="../articles/reporter-figure.html">Example 11: Figure</a>
     </li>
+    <li>
+      <a href="../articles/reporter-example1.html">Complete Example 1</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example2.html">Complete Example 2</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example3.html">Complete Example 3</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example4.html">Complete Example 4</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-example5.html">Complete Example 5</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href=".././articles/reporter-faq.html">FAQ</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -146,21 +164,21 @@
 <span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>vehicle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span>
 
 <span class="co"># Define table</span>
-<span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">dat</span>, show_cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">vehicle</span>, label <span class="op">=</span> <span class="st">"Vehicle"</span>, width <span class="op">=</span> <span class="fl">3</span>, id_var <span class="op">=</span> <span class="cn">TRUE</span>, align <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">mpg</span>, label <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">cyl</span>, label <span class="op">=</span> <span class="st">"Cylinders"</span>, format <span class="op">=</span> <span class="st">"%.1f"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">disp</span>, label <span class="op">=</span> <span class="st">"Displacement"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">hp</span>, label <span class="op">=</span> <span class="st">"Horsepower"</span>, page_wrap <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">drat</span>, visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">wt</span>, label <span class="op">=</span> <span class="st">"Weight"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">dat</span>, show_cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">vehicle</span>, label <span class="op">=</span> <span class="st">"Vehicle"</span>, width <span class="op">=</span> <span class="fl">3</span>, id_var <span class="op">=</span> <span class="cn">TRUE</span>, align <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">mpg</span>, label <span class="op">=</span> <span class="st">"Miles per Gallon"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">cyl</span>, label <span class="op">=</span> <span class="st">"Cylinders"</span>, format <span class="op">=</span> <span class="st">"%.1f"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">disp</span>, label <span class="op">=</span> <span class="st">"Displacement"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">hp</span>, label <span class="op">=</span> <span class="st">"Horsepower"</span>, page_wrap <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">drat</span>, visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">wt</span>, label <span class="op">=</span> <span class="st">"Weight"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">qsec</span>, label <span class="op">=</span> <span class="st">"Quarter Mile Time"</span>, width <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> 
 
   
 <span class="co"># Create the report</span>
-<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 2.0"</span>, <span class="st">"MTCARS Data Listing with Page Wrap"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span>, align <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 2.0"</span>, <span class="st">"MTCARS Data Listing with Page Wrap"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span>, align <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span>right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span>
 
 <span class="co"># Write the report</span>
