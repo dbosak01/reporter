@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 
 ```
+## Program
 
 Below is another complete example showing how the **reporter** package
 interacts with **tidyverse** and **sassy** functions to create an Adverse
@@ -235,6 +236,8 @@ writeLines(readLines(lf, encoding = "UTF-8"))
 # file.show(res$file_path)
 
 ```
+
+## Log
 
 The above program produces the following log:
 ```
@@ -627,6 +630,8 @@ Log Elapsed Time: 0 00:00:01
 =========================================================================
 
 ```
+
+## Output
 
 Here are the first 4 pages of the report produced by the sample program above:
 

@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 
 ```
+## Program
 
 Below is another complete example showing how the **reporter** package
 can be used to create figures.  The example also shows how multiple 
@@ -150,6 +151,8 @@ writeLines(readLines(lf, encoding = "UTF-8"))
 
 
 ```
+
+## Log
 
 Here is the log from the above program:
 ```
@@ -289,6 +292,9 @@ Log End Time: 2021-11-20 23:06:57
 Log Elapsed Time: 0 00:00:07
 =========================================================================
 ```
+
+## Output
+
 And here is the output:
 
 <img src="../man/images/example4a.png"/>

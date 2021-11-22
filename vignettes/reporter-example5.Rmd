@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 
 ```
+## Program
 
 Below is another complete example showing how the **reporter** package
 interacts with **tidyverse** and **sassy** functions to create a survival
@@ -419,6 +420,8 @@ writeLines(readLines(lf, encoding = "UTF-8"))
 # file.show(res$file_path)
 
 ```
+
+# Log
 
 The above program produces the following log:
 ```
@@ -1084,6 +1087,8 @@ Log End Time: 2021-11-21 15:30:39
 Log Elapsed Time: 0 00:00:02
 =========================================================================
 ```
+
+# Output
 
 Here is the report produced by the sample program above:
 

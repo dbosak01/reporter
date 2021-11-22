@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 
 ```
+## Program
 
 The previous examples in the **reporter** documentation were intentionally
 simplified to focus on the workings of a particular function.  It is helpful,
@@ -90,6 +91,8 @@ writeLines(readLines(lf, encoding = "UTF-8"))
 
 ```
 
+## Log
+
 The above program produces the following log:
 ```
 =========================================================================
@@ -156,6 +159,8 @@ Log End Time: 2021-11-21 09:36:42
 Log Elapsed Time: 0 00:00:10
 =========================================================================
 ```
+
+## Output
 
 Here is the listing produced by the sample program above:
 
