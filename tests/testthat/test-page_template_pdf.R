@@ -118,9 +118,9 @@ test_that("get_titles_pdf function works as expected with borders.", {
   rpt <- page_setup_pdf(rpt)
   rpt$page_template$titles
   
-  rh <- get_line_height_pdf(14) + rpt$border_height
+  rh <- get_line_height_pdf(14) + rpt$border_height 
   
-  expect_equal(rpt$page_template$titles$points, rh * 2)
+  expect_equal(rpt$page_template$titles$points, (rh * 2) + rpt$border_spacing)
   
   
   rpt <- create_report("", font = "Arial", font_size = 12) %>%
@@ -132,7 +132,7 @@ test_that("get_titles_pdf function works as expected with borders.", {
   rpt$page_template$titles
   
 
-  expect_equal(rpt$page_template$titles$points, rh * 3)
+  expect_equal(rpt$page_template$titles$points, (rh * 3) + rpt$border_spacing)
   
   
   rpt <- create_report("", font = "Arial", font_size = 12) %>%
@@ -143,7 +143,7 @@ test_that("get_titles_pdf function works as expected with borders.", {
   rpt <- page_setup_pdf(rpt)
   rpt$page_template$titles
   
-  expect_equal(rpt$page_template$titles$points, rh * 4)
+  expect_equal(rpt$page_template$titles$points, (rh * 4) + rpt$border_spacing)
   
   
   rpt <- create_report("", font = "Arial", font_size = 12) %>%
@@ -154,7 +154,7 @@ test_that("get_titles_pdf function works as expected with borders.", {
   rpt <- page_setup_pdf(rpt)
   rpt$page_template$titles
   
-  expect_equal(rpt$page_template$titles$points, rh * 3)
+  expect_equal(rpt$page_template$titles$points, (rh * 3) + rpt$border_spacing)
   
   
 })

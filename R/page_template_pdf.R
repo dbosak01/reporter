@@ -304,7 +304,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
   cnt <- 0
   pnts <- 0
   #print(ystart)
-  print("get titles")
+  #print("get titles")
   
   conv <- rs$point_conversion
   bs <- rs$border_spacing
@@ -402,7 +402,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         
         for (ln in seq_len(tmp$lines)) {
           
-          print(yline) 
+          # print(yline) 
           ret[[length(ret) + 1]] <- page_text(tmp$text[ln], fs, 
                                               bold = ttls$bold,
                                               xpos = get_points(lb, 
@@ -452,8 +452,8 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         badj <- bh
       }
       
-      print("ypos")
-      print(ypos)
+      # print("ypos")
+      # print(ypos)
       
       # Top border
       if (any(ttls$borders %in% c("all", "outside", "top"))) {
@@ -522,7 +522,8 @@ get_titles_pdf <- function(ttllst, content_width, rs,
 #' @import grDevices
 #' @noRd
 get_footnotes_pdf <- function(ftnlst, content_width, rs, 
-                              talgn = "center", ystart = NULL, footer_lines = 0) {
+                              talgn = "center", ystart = NULL, footer_lines = 0,
+                              brdr_flag = FALSE) {
   
   ret <- c()
   cnt <- 0
@@ -1074,7 +1075,7 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0,
   res <- list(pdf = ret, 
               lines = cnt,
               points = cnt * lh,
-              border_flag = FALSE)
+              border_flag = border_flag)
   
   return(res)
 }

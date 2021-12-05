@@ -396,7 +396,8 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, ystart,
       } else {
         vflag <- "top"
         ftnts <- get_footnotes_pdf(spec$footnotes, spec_width, rs, talgn,
-                                   ystart = ystart) 
+                                   ystart = ystart,
+                                   brdr_flag = brdr_flag) 
       }
       
     }
@@ -408,7 +409,8 @@ get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, ystart,
           vflag <- "top"
           ftnts <- get_footnotes_pdf(rs$footnotes, 
                                      spec_width, rs, 
-                                     talgn, ystart = ystart) 
+                                     talgn, ystart = ystart,
+                                     brdr_flag = brdr_flag) 
         } else {
           
           if (wrap_flag)
@@ -552,8 +554,8 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   wdths <- widths[nms]
   brdrs <- ts$borders
   pnts <- 0
-  print("ystart header")
-  print(ystart)
+  # print("ystart header")
+  # print(ystart)
   
   # Sum up widths 
   width <- sum(wdths, na.rm = TRUE)
@@ -704,8 +706,8 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     }
   }
   
-  print("yline")
-  print(yline)
+  # print("yline")
+  # print(yline)
   
   # Bottom header border always present
   ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
@@ -721,7 +723,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   
   res <- list(pdf = ret,
-              lines = cnt,
+              lines = pnts / rh,
               points = pnts )
   
   return(res)
@@ -747,6 +749,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   rh <- rs$row_height
   bs <- rs$border_spacing
   bh <- rs$border_height
+  border_flag <-  FALSE
   
   # print("Cols:")
   # print(cols)
@@ -1010,7 +1013,8 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   
   res <- list(pdf = ret, 
               lines = cnts, 
-              points = (cnts * rh)) # - 1)
+              points = (cnts * rh),
+              border_flag = border_flag)
   
   return(res)
 }
@@ -1189,7 +1193,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   res <- list(pdf = ret,
               lines = cnt ,
-              points = cnt * rh - 2.5)
+              points = cnt * rh)
   
   return(res)
   

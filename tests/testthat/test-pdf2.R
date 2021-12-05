@@ -722,15 +722,17 @@ test_that("pdf2-19: Title and Footnote borders work as expected.", {
 
   dat <- iris[1:20, ]
 
-  tbl <- create_table(dat, borders = c("all"), first_row_blank = FALSE) %>%
+  tbl <- create_table(dat, borders = c("none"), first_row_blank = FALSE) %>%
     titles("Tableg 1.0", "My Nice Report with Borders", 
            "A third titleg what happens when it wraps around I want to know what happens will it work",
-           borders = "all", #c("top", "bottom"), #c("top", "bottom", "left", "right"),
+           borders = "none", #c("top", "bottom"), #c("top", "bottom", "left", "right"),
            blank_row = "none", align = "right", font_size = 10) %>%
     #titles("Just to mess it up", borders = "outside", blank_row = "both") %>% 
-    footnotes("My footnote 1", "My footnote 2", valign = "top",
+    footnotes("My footnote 1", "My footnote 2", 
+              "A third footnoteg what happens when it wraps around I want to know what happens will it work",
+              valign = "top", align = "right",
               borders = "none", #c("top", "bottom", "left", "right"),
-              blank_row = "both")
+              blank_row = "none")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
@@ -1512,7 +1514,7 @@ test_that("pdf2-41: Page by with borders works as expected.", {
   res$column_widths
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 6)
+  expect_equal(res$pages, 7)
   expect_equal(length(res$column_widths[[1]]), 5)
 
 

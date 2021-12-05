@@ -76,7 +76,7 @@ test_that("get_table_header_pdf works as expected.", {
   res  
   
   expect_equal(length(res$pdf), 8)
-  expect_equal(round(res$lines, 2), 2.22)
+  expect_equal(round(res$lines, 2), 2.15)
   
 })
 
@@ -116,7 +116,7 @@ test_that("get_content_offsets_pdf works as expected.", {
   res
   
   # Includes 3 extra points for header underline
-  expect_equal(round(res$lines[["upper"]], 6), 4.218182)  
+  expect_equal(round(res$lines[["upper"]], 6), 4.145455)  
   expect_equal(res$lines[["lower"]], 2)
   expect_equal(res$lines[["blank_upper"]], 1)
   expect_equal(res$lines[["blank_lower"]], 1)
@@ -168,7 +168,7 @@ test_that("create_table_pdf works as expected.", {
   
   # Doesn't seem right.  Come back to this.
   expect_equal(length(res$pdf), 59)
-  expect_equal(round(res$lines, 1), 17.2) 
+  expect_equal(round(res$lines, 1), 17.1) 
   
 })
 
