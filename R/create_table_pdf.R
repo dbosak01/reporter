@@ -242,6 +242,7 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   rh <- rs$row_height
   ys <- lpg_rows * rh
   conv <- rs$point_conversion
+  bf <- FALSE
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -263,30 +264,40 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
     ttls <- get_titles_pdf(ts$titles, ls, rs, pi$table_align, ystart = ys) 
   
   ys <-  ys + ttls$points 
+  if (ttls$lines > 0)
+    bf <- ttls$border_flag
   
   if (!is.null(rs$page_by)) {
     pgby <- get_page_by_pdf(rs$page_by, rs$content_size[["width"]], 
-                            pi$page_by, rs, pi$table_align, ystart = ys)
+                            pi$page_by, rs, pi$table_align, ystart = ys,
+                            brdr_flag = bf)
   } else if(!is.null(ts$page_by))
     pgby <- get_page_by_pdf(ts$page_by, ls, pi$page_by, rs, pi$table_align, 
-                            ystart = ys)
+                            ystart = ys, brdr_flag = bf)
   else 
     pgby <- c()
   
-  if (length(pgby) > 0)
+  if (length(pgby) > 0) {
     ys <- ys + pgby$points
+    bf <- pgby$border_flag 
+  }
   
   shdrs <- list(lines = 0, points = 0)
   hdrs <- list(lines = 0, points = 0)
   
   if (ts$headerless == FALSE) {
-    shdrs <- get_spanning_header_pdf(rs, ts, pi, ystart = ys)
+    shdrs <- get_spanning_header_pdf(rs, ts, pi, ystart = ys,
+                                     brdr_flag = bf)
     
     ys <- ys + shdrs$points
     
+    if (shdrs$lines > 0)
+      bf <- shdrs$border_flag
+    
     hdrs <- get_table_header_pdf(rs, ts, pi$col_width, 
                                  pi$label, pi$label_align, 
-                                 pi$table_align, ystart = ys)
+                                 pi$table_align, ystart = ys,
+                                 brdr_flag = bf)
     
     ys <- ys + hdrs$points
   }
@@ -300,7 +311,8 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   ys <- ys + bdy$points
 
 
-  
+  if (bdy$lines > 0)
+    bf <- bdy$border_flag
   
   # blnks <- c()
   
@@ -314,7 +326,8 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   # Get footnotes, passing in sum of all current lines
   ftnts <- get_page_footnotes_pdf(rs, ts, ls, lpg_rows, ys,
-                                  wrap_flag, content_blank_row,  pi$table_align)
+                                  wrap_flag, content_blank_row,  pi$table_align,
+                                  brdr_flag = bf)
   
   # Deal with cell padding.  Don't count this in line count.
   # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
@@ -363,7 +376,8 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
 }
 
 get_page_footnotes_pdf <- function(rs, spec, spec_width, lpg_rows, ystart,
-                                   wrap_flag, content_blank_row, talgn) {
+                                   wrap_flag, content_blank_row, talgn,
+                                   brdr_flag = FALSE) {
   
   ftnts <- list(lines = 0, twips = 0, border_flag = FALSE)
   vflag <- "none"
@@ -524,7 +538,7 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
 #' widths, then combine by line/row, and concatenate everything and justify.
 #' @noRd
 get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn, 
-                                 ystart = 0) {
+                                 ystart = 0, brdr_flag = FALSE) {
   
   ret <- c()
   cnt <- 0
@@ -537,6 +551,9 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   unts <- rs$units
   wdths <- widths[nms]
   brdrs <- ts$borders
+  pnts <- 0
+  print("ystart header")
+  print(ystart)
   
   # Sum up widths 
   width <- sum(wdths, na.rm = TRUE)
@@ -568,12 +585,18 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
     if (tmplst[[k]]$lines > mxlns)
       mxlns <- tmplst[[k]]$lines
+    
+    pnts <- mxlns * rh
   }
   
-  if (any(brdrs %in% c("all", "outside", "top")))
-    tbs <- ystart + bs
-  else 
-    tbs <- ystart 
+  if (any(brdrs %in% c("all", "outside", "top"))) {
+    # tbs <- ystart + bs - rh + 1
+    # pnts <- pnts + bs + 1
+    tbs <- ystart - rh + 1
+    pnts <- pnts + 1
+  } else {
+    tbs <- ystart - rh
+  }
 
   for(k in seq_along(nms)) {
     
@@ -582,8 +605,10 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
 
     yline <- ystart + (rh * (mxlns - tmp$lines)) 
-    if (any(brdrs %in% c("all", "outside", "top"))) 
-      yline <- yline + bs
+    if (any(brdrs %in% c("all", "outside", "top")) | brdr_flag) {
+     # yline <- yline + bs
+     # pnts <- pnts + bs 
+    }
     
     #print(yline)
     
@@ -625,13 +650,10 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   }
   
   dev.off()
-  
+
   if (ts$first_row_blank == TRUE) {
     cnt <- cnt + 1
-    
-    ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
-                                         yline + bs, 
-                                         (trb - tlb) * conv)
+    pnts <- pnts + rh
   }
   
   # Top border
@@ -663,13 +685,34 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
   }
   
+
+  yline <- tbs + (rh * mxlns) + bs 
+  if (!any(brdrs %in% c("all", "outside", "top")) & brdr_flag) {
+    # yline <- yline + bs
+    # pnts <- pnts + bs
+  }
   
-  yline <- ystart + (rh * mxlns) - rh + bs 
+  
+  # First row blank
+  if (ts$first_row_blank == TRUE) {
+    if (any(brdrs %in% c("all", "inside")) ) {
+      
+      ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
+                                           yline + rh, 
+                                           (trb - tlb) * conv)
+      
+    }
+  }
+  
+  print("yline")
+  print(yline)
   
   # Bottom header border always present
   ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
                                        yline, 
                                        (trb - tlb) * conv)
+  
+  pnts <- pnts + bh
   
   # # Double up bottom border to make it a little thicker
   # ret[[length(ret) + 1]] <- page_hline(tlb * conv,
@@ -678,8 +721,8 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   
   
   res <- list(pdf = ret,
-              lines = cnt + (bs / rh),
-              points = (cnt * rh) + bs)
+              lines = cnt,
+              points = pnts )
   
   return(res)
   
@@ -691,7 +734,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
 #' from there is the same.  
 #' @import stats
 #' @noRd
-get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
+get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   
   spns <- ts$col_spans
   cols <- pi$keys
@@ -977,7 +1020,8 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                               ystart = 0, spwidths = list()) {
+                               ystart = 0, spwidths = list(), 
+                               brdr_flag = FALSE) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank

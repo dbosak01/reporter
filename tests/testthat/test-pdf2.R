@@ -722,18 +722,21 @@ test_that("pdf2-19: Title and Footnote borders work as expected.", {
 
   dat <- iris[1:20, ]
 
-  tbl <- create_table(dat, borders = "none") %>%
-    titles("Table 1.0", "My Nice Report with Borders",
-           borders = "bottom", #c("top", "bottom", "left", "right"),
-           blank_row = "none") %>%
+  tbl <- create_table(dat, borders = c("all"), first_row_blank = FALSE) %>%
+    titles("Tableg 1.0", "My Nice Report with Borders", 
+           "A third titleg what happens when it wraps around I want to know what happens will it work",
+           borders = "all", #c("top", "bottom"), #c("top", "bottom", "left", "right"),
+           blank_row = "none", align = "right", font_size = 10) %>%
+    #titles("Just to mess it up", borders = "outside", blank_row = "both") %>% 
     footnotes("My footnote 1", "My footnote 2", valign = "top",
-              borders = c("top", "bottom", "left", "right"),
+              borders = "none", #c("top", "bottom", "left", "right"),
               blank_row = "both")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
+    page_header("Left", "Right", blank_row = "none") %>% 
     set_margins(top = 1, bottom = 1) %>%
-    add_content(tbl) %>%
+    add_content(tbl, align = "right") %>%
     page_footer("Left1", "Center1", "Right1")
 
   res <- write_report(rpt)
