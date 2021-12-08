@@ -583,6 +583,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
 
       for (i in seq_along(ftnts$footnotes)) {
 
+        # If all borders on, change line height to account for extra points 
+        # needed for border
         if (any(ftnts$borders %in% c("all", "inside")))
           lh <- olh + bs
         else

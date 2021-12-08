@@ -781,7 +781,7 @@ test_that("pdf2-20: Title Header borders work as expected.", {
   res$column_widths
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  expect_equal(res$pages, 2)
   expect_equal(length(res$column_widths[[1]]), 5)
 
 
@@ -1497,12 +1497,12 @@ test_that("pdf2-41: Page by with borders works as expected.", {
 
   brdrs <- "none"
 
-  tbl <- create_table(dat, borders = "all") %>% # c("top", "bottom"), first_row_blank = FALSE) %>%
+  tbl <- create_table(dat, borders = "outside") %>% # c("top", "bottom"), first_row_blank = FALSE) %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "all", #c("top", "bottom"), 
            blank_row = "none", align = "left", font_size = 10) %>%
     page_by(Species, label = "Species ", align = "left", borders = "all", # c("top", "bottom"),
             blank_row = "none") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = c("all"), 
+    footnotes("My footnote 1", "My footnote 2", borders = c("outside"), 
               blank_row = "none")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
