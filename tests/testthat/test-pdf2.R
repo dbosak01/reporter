@@ -1495,13 +1495,15 @@ test_that("pdf2-41: Page by with borders works as expected.", {
 
   dat <- iris
 
-  brdrs <- "all"
+  brdrs <- "none"
 
-  tbl <- create_table(dat, borders = "all") %>%
-    titles("Table 1.0", "My Nice Report with a Page By", borders = brdrs) %>%
-    page_by(Species, label = "Species: ", align = "left", borders = brdrs,
-            blank_row = "both") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = brdrs)
+  tbl <- create_table(dat, borders = "all") %>% # c("top", "bottom"), first_row_blank = FALSE) %>%
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "all", #c("top", "bottom"), 
+           blank_row = "none", align = "left", font_size = 10) %>%
+    page_by(Species, label = "Species ", align = "left", borders = "all", # c("top", "bottom"),
+            blank_row = "none") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = c("all"), 
+              blank_row = "none")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
@@ -1514,7 +1516,7 @@ test_that("pdf2-41: Page by with borders works as expected.", {
   res$column_widths
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 7)
+  expect_equal(res$pages, 6)
   expect_equal(length(res$column_widths[[1]]), 5)
 
 

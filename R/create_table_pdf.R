@@ -515,10 +515,12 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
   }
   
   # Add extra offsets if table has a lot of borders turned on
-  # to avoid undesired page wraps
+  # to avoid undesired overlay
+  # Not perfect but good enough
   if (any(ts$borders %in% c("all", "inside"))) {
-    ret[["lower"]] <- ret[["lower"]] + (rs$row_height * 2)
-    cnt[["lower"]] <- cnt[["lower"]] + 2
+    epnts <- floor(rs$body_line_count - cnt[["lower"]] - cnt[["upper"]]) * rs$border_height 
+    ret[["lower"]] <- ret[["lower"]] + epnts - rs$line_height
+    cnt[["lower"]] <- cnt[["lower"]] + floor(epnts / rs$row_height) - 1
   }
   
   if (content_blank_row %in% c("both", "below")) {
@@ -592,12 +594,16 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   }
   
   if (any(brdrs %in% c("all", "outside", "top"))) {
-    # tbs <- ystart + bs - rh + 1
-    # pnts <- pnts + bs + 1
-    tbs <- ystart - rh + 1
-    pnts <- pnts + 1
+    if (!brdr_flag) {
+      tbs <- ystart + bs - rh 
+      pnts <- pnts + bs + 1
+    } else {
+      tbs <- ystart - rh + 1
+      pnts <- pnts + 3
+    }
   } else {
     tbs <- ystart - rh
+    pnts <- pnts + bh
   }
 
   for(k in seq_along(nms)) {
@@ -607,9 +613,9 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
 
     yline <- ystart + (rh * (mxlns - tmp$lines)) 
-    if (any(brdrs %in% c("all", "outside", "top")) | brdr_flag) {
-     # yline <- yline + bs
-     # pnts <- pnts + bs 
+    if (any(brdrs %in% c("all", "outside", "top")) & !brdr_flag) {
+      yline <- yline + bh
+
     }
     
     #print(yline)
@@ -714,12 +720,6 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
                                        yline, 
                                        (trb - tlb) * conv)
   
-  pnts <- pnts + bh
-  
-  # # Double up bottom border to make it a little thicker
-  # ret[[length(ret) + 1]] <- page_hline(tlb * conv,
-  #                                      yline + .5,
-  #                                      (trb - tlb) * conv)
   
   
   res <- list(pdf = ret,
@@ -1027,6 +1027,8 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
                                ystart = 0, spwidths = list(), 
                                brdr_flag = FALSE) {
   
+  border_flag <- FALSE
+  
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
   else 
@@ -1086,7 +1088,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     trb <- width
   }
   
-  rline <- ystart
+  rline <- ystart 
   
   ret <- c()
   
@@ -1184,6 +1186,8 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     
     ret[[length(ret) + 1]] <- page_hline(tlb * conv, (rline + bs) - rh, 
                                          (trb - tlb) * conv)
+    
+    border_flag <- TRUE
   }
 
   
@@ -1192,8 +1196,9 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   rws <- rline
   
   res <- list(pdf = ret,
-              lines = cnt ,
-              points = cnt * rh)
+              lines = (cnt * rh) / rs$row_height,
+              points = cnt * rh,
+              border_flag = border_flag)
   
   return(res)
   
