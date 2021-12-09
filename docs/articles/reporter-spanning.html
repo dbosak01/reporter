@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.7</span>
       </span>
     </div>
 
@@ -161,7 +161,7 @@
 
 <span class="co"># Prepare Data</span>
 <span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span>
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>vehicle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span>
+<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>vehicle <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span>
 
 <span class="co"># Define Table with spanning headers</span>
 <span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 

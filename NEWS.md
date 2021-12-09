@@ -1,6 +1,7 @@
 # reporter 1.2.7
 
 * Added Arial, Times, and Courier fonts to PDF output type.  
+* Fixed bug on RTF preventing _first_row_blank_ parameter from working properly.
 * Added FAQ and Complete Examples.
 
 # reporter 1.2.6
