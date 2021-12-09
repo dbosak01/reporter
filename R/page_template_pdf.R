@@ -683,7 +683,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
       }
       
       if (brdr_flag)
-        ypos <- ystart - olh  + 1
+        ypos <- ystart - olh  
       else 
         ypos <- ystart + bh - olh + bs 
       

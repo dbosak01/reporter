@@ -1497,16 +1497,16 @@ test_that("pdf2-41: Page by with borders works as expected.", {
 
   brdrs <- "none"
 
-  tbl <- create_table(dat, borders = "outside") %>% # c("top", "bottom"), first_row_blank = FALSE) %>%
-    titles("Table 1.0", "My Nice Report with a Page By", borders = "all", #c("top", "bottom"), 
-           blank_row = "none", align = "left", font_size = 10) %>%
-    page_by(Species, label = "Species ", align = "left", borders = "all", # c("top", "bottom"),
+  tbl <- create_table(dat, borders = "all") %>% # c("top", "bottom"), first_row_blank = FALSE) %>%
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none", #c("top", "bottom"), 
+           blank_row = "none", align = "left", font_size = 12) %>%
+    page_by(Species, label = "Species ", align = "left", borders = "none", # c("top", "bottom"),
             blank_row = "none") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = c("outside"), 
+    footnotes("My footnote 1", "My footnote 2", borders = c("all"), 
               blank_row = "none")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
-                       font_size = fsz, orientation = "landscape") %>%
+                       font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")

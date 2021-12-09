@@ -1174,20 +1174,33 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   }
   
+
+  ypos <- ystart - rs$row_height + bh
+  
+  
+  ylen <- cnt * rh
+  
+  
   if (any(brdrs %in% c("all", "left", "outside"))) {
     
-    ret[[length(ret) + 1]] <- page_vline(tlb * conv, ystart - rh + bs, rline - ystart )
+    ret[[length(ret) + 1]] <- page_vline(tlb * conv, ypos, ylen)
   }
   if (any(brdrs %in% c("all", "right", "outside"))) {
     
-    ret[[length(ret) + 1]] <- page_vline(trb * conv, ystart - rh + bs, rline - ystart)
+    ret[[length(ret) + 1]] <- page_vline(trb * conv, ypos, ylen)
   }
+  
+  pnts <- cnt * rh
+  
   if (any(brdrs %in% c("all", "bottom", "outside"))) {
     
-    ret[[length(ret) + 1]] <- page_hline(tlb * conv, (rline + bs) - rh, 
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, ypos + ylen, 
                                          (trb - tlb) * conv)
     
     border_flag <- TRUE
+    pnts <- pnts + bh
+    
   }
 
   
@@ -1196,8 +1209,8 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   rws <- rline
   
   res <- list(pdf = ret,
-              lines = (cnt * rh) / rs$row_height,
-              points = cnt * rh,
+              lines = pnts / rs$row_height,
+              points = pnts ,
               border_flag = border_flag)
   
   return(res)
