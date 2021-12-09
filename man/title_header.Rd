@@ -29,7 +29,7 @@ title header.  Pass the header strings as a vector of strings.}
 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'.  
 Default is 'none'.   The 
 'left', 'right', 'outside', and 'inside' border specifications only 
-apply to RTF reports.}
+apply to RTF and HTML reports.}
 
 \item{width}{The width of the title header.  If the title header is attached
 to the report, valid values are 'page' or a numeric width, and the default

@@ -33,7 +33,7 @@ the page by.  Default value is 'none'.  Valid values are 'above', 'below',
 
 \item{borders}{Whether and where to place a border. Valid values are 'top',
 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
-The 'left' and 'right' border specifications only apply to RTF reports.}
+The 'left' and 'right' border specifications only apply to RTF and HTML reports.}
 }
 \description{
 The \code{page_by} function adds a page by variable to a report, table,

@@ -554,7 +554,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   nms <- names(lbls)[is.controlv(names(lbls)) == FALSE]
   unts <- rs$units
   wdths <- widths[nms]
-  brdrs <- ts$borders
+  brdrs <- strip_borders(ts$borders)
   pnts <- 0
   # print("ystart header")
   # print(ystart)
@@ -772,7 +772,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   #   ta <- "\\trqc"
   
   # Get borders
-  brdrs <- ts$borders
+  brdrs <- strip_borders(ts$borders)
   
   rh <- rs$row_height
   if (any(brdrs %in% c("all", "inside")))
@@ -1061,7 +1061,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   bh <- rs$border_height
   cp <- rs$cell_padding
   
-  brdrs <- tbrdrs
+  brdrs <- strip_borders(tbrdrs)
   if (all(tbrdrs == "body"))
     brdrs <- c("top", "bottom", "left", "right")
 

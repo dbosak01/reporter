@@ -30,7 +30,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 #  sep("Prepare Data")
 #  
 #  # Get path to sample data
-#  pkg <- system.file("extdata", package = "libr")
+#  pkg <- system.file("extdata", package = "reporter")
 #  
 #  # Define data library
 #  libname(sdtm, pkg, "csv")
@@ -158,7 +158,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 #    define(`ARM C`,  label = "Treatment Group 3", n = arm_pop["ARM C"]) %>%
 #    define(`ARM D`,  label = "Treatment Group 4", n = arm_pop["ARM D"]) %>%
 #      titles("Table 1.0", "Analysis of Demographic Characteristics",
-#           "Safety Population", borders = "outside") %>%
+#           "Safety Population", borders = "outside", bold = TRUE) %>%
 #    footnotes("Program: DM_Table.R",
 #              "NOTE: Denominator based on number of non-missing responses.",
 #              borders = "outside")

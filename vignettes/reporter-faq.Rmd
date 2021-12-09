@@ -61,9 +61,8 @@ types.  DOCX and possibly PowerPoint will be added in 2022.
 any other fonts?
 
 **A:** The supported fonts depend on the output type selected.  Obviously for
-TXT reports, no fonts are supported.  For PDF reports, currently only
-Courier is supported.  But Arial and Times will be supported in PDF in 2022.
-The RTF and HTML output types support Courier, Arial, and Times New Roman.
+TXT reports, no fonts are supported.  
+The RTF, PDF, and HTML output types support Courier, Arial, and Times New Roman.
 
 [top](#top)
 

@@ -109,8 +109,8 @@
 #' @param borders Whether and where to place a border. Valid values are 'top',
 #' 'bottom', 'left', 'right', 'all', 'none', 'outside', 'inside', and 'body'.  
 #' Default is 'none'.  The 'left', 'right', 'outside', 'inside', and 'body'
-#' border specifications only apply to RTF reports.  The 'body' border 
-#' specification mean put borders around only the body of the table.
+#' border specifications only apply to RTF and HTML reports.  The 'body' border 
+#' specification means put borders around only the body of the table.
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,

@@ -722,16 +722,16 @@ test_that("pdf2-19: Title and Footnote borders work as expected.", {
 
   dat <- iris[1:20, ]
 
-  tbl <- create_table(dat, borders = c("none"), first_row_blank = FALSE) %>%
+  tbl <- create_table(dat, borders = c("all"), first_row_blank = FALSE) %>%
     titles("Tableg 1.0", "My Nice Report with Borders", 
            "A third titleg what happens when it wraps around I want to know what happens will it work",
-           borders = "none", #c("top", "bottom"), #c("top", "bottom", "left", "right"),
+           borders = "all", #c("top", "bottom"), #c("top", "bottom", "left", "right"),
            blank_row = "none", align = "right", font_size = 10) %>%
     #titles("Just to mess it up", borders = "outside", blank_row = "both") %>% 
     footnotes("My footnote 1", "My footnote 2", 
               "A third footnoteg what happens when it wraps around I want to know what happens will it work",
               valign = "top", align = "right",
-              borders = "none", #c("top", "bottom", "left", "right"),
+              borders = "all", #c("top", "bottom", "left", "right"),
               blank_row = "none")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
@@ -842,7 +842,7 @@ test_that("pdf2-22: Page by works as expected.", {
 
   tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
-    page_by(Species, label = "Species: ", align = "center", borders = "none", 
+    page_by(Species, label = "Species", align = "center", borders = "none", 
             blank_row = "below")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
@@ -1217,7 +1217,7 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
   df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
 
 
-  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+  tbl1 <- create_table(df, first_row_blank = TRUE, borders = "all") %>%
     define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
            width = 1) %>%
     define(name, label = "Subject Name", width = 1) %>%
@@ -1497,10 +1497,10 @@ test_that("pdf2-41: Page by with borders works as expected.", {
 
   brdrs <- "none"
 
-  tbl <- create_table(dat, borders = "all") %>% # c("top", "bottom"), first_row_blank = FALSE) %>%
-    titles("Table 1.0", "My Nice Report with a Page By", borders = "none", #c("top", "bottom"), 
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "all", #c("top", "bottom"), 
            blank_row = "none", align = "left", font_size = 12) %>%
-    page_by(Species, label = "Species ", align = "left", borders = "none", # c("top", "bottom"),
+    page_by(Species, label = "Species ", align = "left", borders = "all", # c("top", "bottom"),
             blank_row = "none") %>%
     footnotes("My footnote 1", "My footnote 2", borders = c("all"), 
               blank_row = "none")
@@ -1711,7 +1711,7 @@ test_that("pdf2-48: 11 pt font inches works as expected.", {
 
 })
 
-# Not
+
 test_that("pdf2-49: 11 pt font cm works as expected.", {
 
 

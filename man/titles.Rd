@@ -31,7 +31,7 @@ a table, text, or plot specification.}
 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'.  
 Default is "none".  
 The 'left', 'right', 'outside', and 'inside' border specifications 
-only apply to RTF reports.}
+only apply to RTF and HTML reports.}
 
 \item{width}{The width of the titles block.  If the titles are attached
 to the report, valid values are 'page' or a numeric width, and the default
@@ -46,12 +46,12 @@ may also specify a specific width in the current units of measure.  The
 units of measure is determined by the 'units' parameter on}
 
 \item{bold}{A parameter to bold the titles.  Valid values are TRUE and FALSE.
-Default is FALSE.  This parameter only applies to variable-width RTF and
-HTML output types.}
+Default is FALSE.  This parameter only applies to variable-width RTF, HTML, 
+and PDF output types.}
 
 \item{font_size}{The font size to use for the title block.  The font size
 of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
-13, and 14.  This parameter only applies to variable-width RTF and HTML
+13, and 14.  This parameter only applies to variable-width RTF, HTML, and PDF
 output types.
 \code{\link{create_report}}.}
 }
