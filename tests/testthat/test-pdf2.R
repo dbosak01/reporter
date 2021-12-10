@@ -1840,7 +1840,7 @@ test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expec
     
     expect_equal(file.exists(fp), TRUE)
     expect_equal(res$pages, 3)
-  
+   
   
   } else {
     expect_equal(TRUE, TRUE) 
