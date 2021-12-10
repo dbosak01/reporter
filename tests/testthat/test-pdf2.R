@@ -933,32 +933,37 @@ test_that("pdf2-24: Two tables one headerless works as expected.", {
 # And footnotes have double line above.
 test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
 
-  library(ggplot2)
-
-  fp <- file.path(base_path, "pdf2/test25.pdf")
-
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-
-  plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
-           borders = "all", blank_row = "below") %>%
-    footnotes("* Motor Trend, 1974", borders = "all", blank_row = "above", 
-              valign = "top", width = "content", align = "center")
-
-
-  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size =fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "center") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
-  res <- write_report(rpt)
-
-  #print(res)
-
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  if (dev) {
+    library(ggplot2)
+  
+    fp <- file.path(base_path, "pdf2/test25.pdf")
+  
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+    plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
+             borders = "all", blank_row = "below") %>%
+      footnotes("* Motor Trend, 1974", borders = "all", blank_row = "above", 
+                valign = "top", width = "content", align = "center")
+  
+  
+    rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+    res <- write_report(rpt)
+  
+    #print(res)
+  
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+  
+  } else {
+    expect_equal(TRUE, TRUE) 
+  }
 
 
 })
@@ -966,37 +971,42 @@ test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
 
 test_that("pdf2-26: Plot, Table and Text on same page works as expected.", {
 
-  library(ggplot2)
+  if (dev) {
+    library(ggplot2)
+  
+    fp <- file.path(base_path, "pdf2/test26.pdf")
+  
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+    plt <- create_plot(p, height = 3.5, width = 7) %>% 
+      titles("My plot title")
+    tbl <- create_table(mtcars[1:3, ]) %>% 
+      titles("My table Title")
+    txt <- create_text("Here is some text", align = "center")
+  
+  
+    rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "below") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, page_break = FALSE, blank_row = "none") %>%
+      add_content(tbl, page_break = FALSE) %>%
+      add_content(txt) %>% 
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+    res <- write_report(rpt)
+  
+    #print(res)
+  
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
 
-  fp <- file.path(base_path, "pdf2/test26.pdf")
-
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-
-  plt <- create_plot(p, height = 3.5, width = 7) %>% 
-    titles("My plot title")
-  tbl <- create_table(mtcars[1:3, ]) %>% 
-    titles("My table Title")
-  txt <- create_text("Here is some text", align = "center")
-
-
-  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "below") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, page_break = FALSE, blank_row = "none") %>%
-    add_content(tbl, page_break = FALSE) %>%
-    add_content(txt) %>% 
-    footnotes("* Motor Trend, 1974") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
-  res <- write_report(rpt)
-
-  #print(res)
-
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
-
+  
+  } else {
+    expect_equal(TRUE, TRUE) 
+  }
 
 })
 
@@ -1004,107 +1014,126 @@ test_that("pdf2-26: Plot, Table and Text on same page works as expected.", {
 # Works
 test_that("pdf2-27: Plot with page by on plot works as expected.", {
 
-  library(ggplot2)
-
-  fp <- file.path(base_path, "pdf2/test27.pdf")
-
-
-  dat <- mtcars[order(mtcars$cyl), ]
-
-  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-
-
-  #dats <- split(p$data, p$data$grp)
-  #tbl <- create_table(dat[1:3, ])
-
-  plt <- create_plot(p, height = 4, width = 8) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-    page_by(cyl, "Cylinders: ", blank_row = "below") %>%
-    footnotes("* Motor Trend, 1974")
-
-  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt) %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
-  res <- write_report(rpt)
-
-  #print(res)
-
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 3)
-
+  
+  if (dev) {
+    library(ggplot2)
+  
+    fp <- file.path(base_path, "pdf2/test27.pdf")
+  
+  
+    dat <- mtcars[order(mtcars$cyl), ]
+  
+    p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+  
+  
+    #dats <- split(p$data, p$data$grp)
+    #tbl <- create_table(dat[1:3, ])
+  
+    plt <- create_plot(p, height = 4, width = 8) %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+      page_by(cyl, "Cylinders: ", blank_row = "below") %>%
+      footnotes("* Motor Trend, 1974")
+  
+    rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt) %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+    res <- write_report(rpt)
+  
+    #print(res)
+  
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 3)
+  
+  } else {
+    expect_equal(TRUE, TRUE) 
+  }
 
 })
  
 # Also works
 test_that("pdf2-28: Plot with page by on report works as expected.", {
 
-  library(ggplot2)
+  
+  if (dev) {
+    library(ggplot2)
+  
+    fp <- file.path(base_path, "pdf2/test28.pdf")
+  
+  
+    dat <- mtcars[order(mtcars$cyl), ]
+  
+    p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
+  
+  
+    #dats <- split(p$data, p$data$grp)
+    #tbl <- create_table(dat[1:3, ])
+  
+    plt <- create_plot(p, height = 4, width = 8)
+  
+  
+    rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot",
+             blank_row = "none", borders = "none") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_by(cyl, "Cylinders: ") %>%
+      add_content(plt) %>%
+      footnotes("* Motor Trend, 1974", borders = "none") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+    res <- write_report(rpt)
+  
+    #print(res)
+  
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 3)
 
-  fp <- file.path(base_path, "pdf2/test28.pdf")
-
-
-  dat <- mtcars[order(mtcars$cyl), ]
-
-  p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
-
-
-  #dats <- split(p$data, p$data$grp)
-  #tbl <- create_table(dat[1:3, ])
-
-  plt <- create_plot(p, height = 4, width = 8)
-
-
-  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot",
-           blank_row = "none", borders = "none") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    page_by(cyl, "Cylinders: ") %>%
-    add_content(plt) %>%
-    footnotes("* Motor Trend, 1974", borders = "none") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
-  res <- write_report(rpt)
-
-  #print(res)
-
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 3)
-
-
+  
+  } else {
+    expect_equal(TRUE, TRUE) 
+  }
+  
+  
 })
 
 test_that("pdf2-29: Simplest Plot with valign top works as expected.", {
 
-  library(ggplot2)
-
-  fp <- file.path(base_path, "pdf2/test29.pdf")
-
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-
-  plt <- create_plot(p, height = 4, width = 8)
-
-
-  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "center") %>%
-    footnotes("* Motor Trend, 1974", valign = "top") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-
-
-  res <- write_report(rpt)
-
-  #print(res)
-
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  
+  if (dev) {
+    library(ggplot2)
+  
+    fp <- file.path(base_path, "pdf2/test29.pdf")
+  
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+    plt <- create_plot(p, height = 4, width = 8)
+  
+  
+    rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      footnotes("* Motor Trend, 1974", valign = "top") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+    res <- write_report(rpt)
+  
+    #print(res)
+  
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+  
+  
+  } else {
+    expect_equal(TRUE, TRUE) 
+  }
 
 
 })
@@ -1776,40 +1805,46 @@ test_that("pdf2-50: Spanning headers borders work as expected.", {
 # Very good report for testing multiple content wraps
 test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expected.", {
   
-  library(ggplot2)
+  if (dev) {
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "pdf2/test51.pdf")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt <- create_plot(p, height = 3.5, width = 7) %>% 
+      titles("My plot title", blank_row = "above")
+    tbl <- create_table(mtcars[1:17, ]) %>% 
+      titles("My table Title", blank_row = "above") %>% 
+      footnotes("Table Footnote", blank_row = "above")
+    txt <- create_text(cnt, align = "center", width = 6) %>% 
+      titles("My Text Title", blank_row = "none") %>% 
+      footnotes("Text Footnotes", blank_row = "above")
+    
+    
+    rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, page_break = FALSE, blank_row = "none") %>%
+      add_content(tbl, page_break = FALSE, blank_row = "none") %>%
+      add_content(txt, blank_row = "below", page_break = FALSE) %>% 
+      add_content(txt, blank_row = "none") %>% 
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 3)
   
-  fp <- file.path(base_path, "pdf2/test51.pdf")
   
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
-  plt <- create_plot(p, height = 3.5, width = 7) %>% 
-    titles("My plot title", blank_row = "above")
-  tbl <- create_table(mtcars[1:17, ]) %>% 
-    titles("My table Title", blank_row = "above") %>% 
-    footnotes("Table Footnote", blank_row = "above")
-  txt <- create_text(cnt, align = "center", width = 6) %>% 
-    titles("My Text Title", blank_row = "none") %>% 
-    footnotes("Text Footnotes", blank_row = "above")
-  
-  
-  rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, page_break = FALSE, blank_row = "none") %>%
-    add_content(tbl, page_break = FALSE, blank_row = "none") %>%
-    add_content(txt, blank_row = "below", page_break = FALSE) %>% 
-    add_content(txt, blank_row = "none") %>% 
-    footnotes("* Motor Trend, 1974") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-  
-  
-  res <- write_report(rpt)
-  
-  #print(res)
-  
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 3)
+  } else {
+    expect_equal(TRUE, TRUE) 
+  }
   
   
 })

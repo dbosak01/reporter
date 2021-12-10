@@ -977,30 +977,36 @@ test_that("rtf2-28: Plot with page by on report works as expected.", {
 
 test_that("rtf2-29: Simplest RTF Plot with valign top works as expected.", {
   
-  library(ggplot2)
+  if (dev) {
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "rtf2/test29.rtf")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt <- create_plot(p, height = 4, width = 8)
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      footnotes("* Motor Trend, 1974", valign = "top") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
   
-  fp <- file.path(base_path, "rtf2/test29.rtf")
-  
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
-  plt <- create_plot(p, height = 4, width = 8)
-  
-  
-  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "center") %>%
-    footnotes("* Motor Trend, 1974", valign = "top") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-  
-  
-  res <- write_report(rpt)
-  
-  #print(res)
-  
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  } else {
+    
+   expect_equal(TRUE, TRUE) 
+  }
   
   
 })
@@ -1009,30 +1015,36 @@ test_that("rtf2-29: Simplest RTF Plot with valign top works as expected.", {
 
 test_that("rtf2-30: Simplest RTF Plot with valign bottom works as expected.", {
   
-  library(ggplot2)
+  if (dev) {
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "rtf2/test30.rtf")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt <- create_plot(p, height = 4, width = 8) %>%
+      footnotes("* Motor Trend, 1974", valign = "bottom")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
   
-  fp <- file.path(base_path, "rtf2/test30.rtf")
-  
-  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
-  plt <- create_plot(p, height = 4, width = 8) %>%
-    footnotes("* Motor Trend, 1974", valign = "bottom")
-  
-  
-  rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "center") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-  
-  
-  res <- write_report(rpt)
-  
-  #print(res)
-  
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  } else {
+    
+    expect_equal(TRUE, TRUE) 
+  }
   
   
 })

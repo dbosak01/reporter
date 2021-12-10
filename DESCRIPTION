@@ -1,7 +1,7 @@
 Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
-Version: 1.2.7
+Version: 1.2.8
 Authors@R: c( 
     person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
     person("Kevin", "Kramer", role = "ctb"),
