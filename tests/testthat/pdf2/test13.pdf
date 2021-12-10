@@ -10,7 +10,7 @@ endobj
 endobj
 5 0 obj<</Type /Page /Parent 4 0 R /Contents 6 0 R /Resources <</Font <</F1 2 0 R /F2 3 0 R>> /ProcSet [/PDF /Text]>>>>
 endobj
-6 0 obj<</Length 10229>>
+6 0 obj<</Length 10189>>
 stream
 BT /F1 10 Tf 100 Tz 400.86 457.2 Td <5375706572204475706572>Tj ET
 BT /F1 10 Tf 100 Tz 400.025 445.8 Td <20426967204f6c27205370616e>Tj ET
@@ -38,7 +38,6 @@ BT /F1 10 Tf 100 Tz 447.284 364 Td <7673>Tj ET
 BT /F1 10 Tf 100 Tz 464.857 364 Td <616d>Tj ET
 BT /F1 10 Tf 100 Tz 486.167 364 Td <67656172>Tj ET
 BT /F1 10 Tf 100 Tz 513.61 364 Td <63617262>Tj ET
-246.159625 374.4 m 535.840375 374.4 l S
 246.159625 360 m 535.840375 360 l S
 BT /F1 10 Tf 100 Tz 259.62 349.6 Td <3231>Tj ET
 BT /F1 10 Tf 100 Tz 285.014 349.6 Td <36>Tj ET
@@ -205,7 +204,7 @@ BT /F1 10 Tf 100 Tz 451.724 190 Td <30>Tj ET
 BT /F1 10 Tf 100 Tz 473.187 190 Td <30>Tj ET
 BT /F1 10 Tf 100 Tz 500.617 190 Td <33>Tj ET
 BT /F1 10 Tf 100 Tz 527.5 190 Td <34>Tj ET
-246.159625 187 m 535.840375 187 l S
+246.159625 186 m 535.840375 186 l S
 BT /F1 10 Tf 100 Tz 370.465 489.4 Td <5461626c6520312e30>Tj ET
 BT /F1 10 Tf 100 Tz 359.36 478 Td <4d79204e696365205461626c65>Tj ET
 BT /F1 10 Tf 100 Tz 70 112.6 Td <4d7920666f6f746e6f74652031>Tj ET
@@ -219,8 +218,8 @@ BT /F1 10 Tf 100 Tz 372.825 78.4 Td <43656e74657231>Tj ET
 BT /F1 10 Tf 100 Tz 683.32 78.4 Td <526967687431>Tj ET
 endstream
 endobj
-7 0 obj<</Producer (reporter v1.2.6) /Author (dbosa) /Title () /Subject () /Creator (R version 4.1.2 (2021-11-01)) /Keywords ()
- /CreationDate (D:20211205105345-05'00') /ModDate (D:20211205105345-05'00')>>
+7 0 obj<</Producer (reporter v1.2.7) /Author (dbosa) /Title () /Subject () /Creator (R version 4.1.2 (2021-11-01)) /Keywords ()
+ /CreationDate (D:20211209191541-05'00') /ModDate (D:20211209191541-05'00')>>
 endobj
 xref
 0 8
@@ -231,8 +230,8 @@ xref
 0000000254 00000 n 
 0000000332 00000 n 
 0000000459 00000 n 
-0000010737 00000 n 
+0000010697 00000 n 
 trailer <</Size 8 /Root 1 0 R /Info 7 0 R>>
 startxref
-10950
+10910
 %%EOF

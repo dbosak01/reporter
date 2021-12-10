@@ -965,9 +965,10 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
 
   
   yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
+  brdrs <- strip_borders(plt$borders)
   
   # Top border
-  if (any(plt$borders %in% c("all", "outside", "top"))) {
+  if (any(brdrs %in% c("all", "outside", "top"))) {
     
     rws[[length(rws) + 1]] <- page_hline(lb * conv, 
                                          ypos - lh + bh, 
@@ -976,7 +977,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   }
   
   # Bottom border
-  if (any(plt$borders %in% c("all", "outside", "bottom"))) {
+  if (any(brdrs %in% c("all", "outside", "bottom"))) {
     
     rws[[length(rws) + 1]] <- page_hline(lb * conv, 
                                          yline - lh + bh, 
@@ -985,7 +986,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   }
   
   # Left border
-  if (any(plt$borders %in% c("all", "outside", "left"))) {
+  if (any(brdrs %in% c("all", "outside", "left"))) {
     
     
     rws[[length(rws) + 1]] <- page_vline(lb * conv, 
@@ -995,7 +996,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   }
   
   # Right border
-  if (any(plt$borders %in% c("all", "outside", "right"))) {
+  if (any(brdrs %in% c("all", "outside", "right"))) {
     
     
     rws[[length(rws) + 1]] <- page_vline(rb * conv, 

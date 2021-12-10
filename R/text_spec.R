@@ -762,6 +762,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
   
   lh <- rs$line_height
   bh <- rs$border_height
+  bs <- rs$border_spacing
   conv <- rs$point_conversion
   
   # Get content titles and footnotes
@@ -876,9 +877,10 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     }
     
     #yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
+    brdrs <- strip_borders(txt$borders)
     
     # Top border
-    if (any(txt$borders %in% c("all", "outside", "top"))) {
+    if (any(brdrs %in% c("all", "outside", "top"))) {
       
       rws[[length(rws) + 1]] <- page_hline(lb * conv, 
                                            ypos - lh , 
@@ -887,16 +889,16 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     }
     
     # Bottom border
-    if (any(txt$borders %in% c("all", "outside", "bottom"))) {
+    if (any(brdrs %in% c("all", "outside", "bottom"))) {
       
       rws[[length(rws) + 1]] <- page_hline(lb * conv, 
-                                           yline - lh , 
+                                           yline - lh + bs, 
                                            (rb - lb) * conv) 
       
     }
     
     # Left border
-    if (any(txt$borders %in% c("all", "outside", "left"))) {
+    if (any(brdrs %in% c("all", "outside", "left"))) {
       
       
       rws[[length(rws) + 1]] <- page_vline(lb * conv, 
@@ -906,7 +908,7 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     }
     
     # Right border
-    if (any(txt$borders %in% c("all", "outside", "right"))) {
+    if (any(brdrs %in% c("all", "outside", "right"))) {
       
       
       rws[[length(rws) + 1]] <- page_vline(rb * conv, 

@@ -38,7 +38,7 @@ test_that("get_table_body_pdf works as expected.", {
   res  
   
   expect_equal(length(res$pdf), 50)
-  expect_equal(res$lines, 10)
+  expect_equal(round(res$lines, 1), 10.3)
   
 })
 
@@ -168,7 +168,7 @@ test_that("create_table_pdf works as expected.", {
   
   # Doesn't seem right.  Come back to this.
   expect_equal(length(res$pdf), 59)
-  expect_equal(round(res$lines, 1), 17.1) 
+  expect_equal(round(res$lines, 1), 17.4) 
   
 })
 

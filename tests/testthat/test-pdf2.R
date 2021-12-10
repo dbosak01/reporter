@@ -410,7 +410,7 @@ test_that("pdf2-9: Wide table works as expected.", {
 
   dat <- mtcars[1:15, ]
 
-  tbl <- create_table(dat) %>%
+  tbl <- create_table(dat, first_row_blank = TRUE) %>%
     column_defaults(width = 1)
 
 
@@ -773,6 +773,7 @@ test_that("pdf2-20: Title Header borders work as expected.", {
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
+    options_fixed(line_size = 40) %>% 
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
 
@@ -781,7 +782,7 @@ test_that("pdf2-20: Title Header borders work as expected.", {
   res$column_widths
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 2)
+  expect_equal(res$pages, 1)
   expect_equal(length(res$column_widths[[1]]), 5)
 
 
@@ -1225,7 +1226,8 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
     define(age, label = "Age", n = 10) %>%
     define(arm, label = "Arm",
            blank_after = TRUE,
-           dedupe = TRUE)
+           dedupe = TRUE) %>% 
+    footnotes("Here", borders = "all") 
 
 
   rpt <- create_report(fp, output_type = "PDF", font = "Courier",

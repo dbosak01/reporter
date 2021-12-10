@@ -291,13 +291,16 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
     
     ys <- ys + shdrs$points
     
-    if (shdrs$lines > 0)
+    hs <- FALSE
+    if (shdrs$lines > 0) {
       bf <- shdrs$border_flag
+      hs <- TRUE
+    }
     
     hdrs <- get_table_header_pdf(rs, ts, pi$col_width, 
                                  pi$label, pi$label_align, 
                                  pi$table_align, ystart = ys,
-                                 brdr_flag = bf)
+                                 brdr_flag = bf, has_spans = hs)
     
     ys <- ys + hdrs$points
   }
@@ -517,7 +520,8 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired overlay
   # Not perfect but good enough
-  if (any(ts$borders %in% c("all", "inside"))) {
+  brdrs <- strip_borders(ts$borders )
+  if (any(brdrs %in% c("all", "inside"))) {
     epnts <- floor(rs$body_line_count - cnt[["lower"]] - cnt[["upper"]]) * rs$border_height 
     ret[["lower"]] <- ret[["lower"]] + epnts - rs$line_height
     cnt[["lower"]] <- cnt[["lower"]] + floor(epnts / rs$row_height) - 1
@@ -542,7 +546,8 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row) {
 #' widths, then combine by line/row, and concatenate everything and justify.
 #' @noRd
 get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn, 
-                                 ystart = 0, brdr_flag = FALSE) {
+                                 ystart = 0, brdr_flag = FALSE, 
+                                 has_spans = FALSE) {
   
   ret <- c()
   cnt <- 0
@@ -594,7 +599,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   }
   
   if (any(brdrs %in% c("all", "outside", "top"))) {
-    if (!brdr_flag) {
+    if (!brdr_flag & !has_spans) {
       tbs <- ystart + bs - rh 
       pnts <- pnts + bs + 1
     } else {
@@ -613,7 +618,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     
 
     yline <- ystart + (rh * (mxlns - tmp$lines)) 
-    if (any(brdrs %in% c("all", "outside", "top")) & !brdr_flag) {
+    if (any(brdrs %in% c("all", "outside", "top")) & !brdr_flag & !has_spans) {
       yline <- yline + bh
 
     }
@@ -665,7 +670,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   }
   
   # Top border
-  if (any(brdrs %in% c("all", "outside", "top"))) {
+  if (any(brdrs %in% c("all", "outside", "top")) & !has_spans) {
     
     ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
                                          tbs, 
@@ -1178,8 +1183,8 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   ypos <- ystart - rs$row_height + bh
   
   
-  ylen <- cnt * rh
-  
+  #ylen <- cnt * rh
+  ylen <- rline - rh + bs + 1
   
   if (any(brdrs %in% c("all", "left", "outside"))) {
     
@@ -1190,16 +1195,20 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     ret[[length(ret) + 1]] <- page_vline(trb * conv, ypos, ylen)
   }
   
-  pnts <- cnt * rh
+  # pnts <- cnt * rh
+  pnts <- ylen - ystart + rh 
   
   if (any(brdrs %in% c("all", "bottom", "outside"))) {
     
     
-    ret[[length(ret) + 1]] <- page_hline(tlb * conv, ypos + ylen, 
+    # ret[[length(ret) + 1]] <- page_hline(tlb * conv, ypos + ylen, 
+    #                                      (trb - tlb) * conv)
+    
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, ylen, 
                                          (trb - tlb) * conv)
     
     border_flag <- TRUE
-    pnts <- pnts + bh
+   # pnts <- pnts + bh
     
   }
 
