@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
 ### Specify Fonts and Borders
 
 By default, the **reporter** package will create fixed-width style reports 
-in Courier font. The RTF and HTML output types support two additional fonts: Arial and 
+in Courier font. The RTF, HTML, and PDF output types support 
+two additional fonts: Arial and 
 Times New Roman.  These output types also support the ability 
 to turn on borders for your content.  To demonstrate, the simple demographics 
 table seen previously is reproduced below in Arial font with borders 

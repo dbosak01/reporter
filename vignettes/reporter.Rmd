@@ -143,5 +143,10 @@ list of examples:
 * [Example 7: Page By](reporter-pageby.html)
 * [Example 8: Title Header](reporter-title_header.html)
 * [Example 9: RTF, PDF, and HTML](reporter-rtf.html)
-* [Example 10: Figure](reporter-figure.html)
+* [Complete Example 1: Listing](reporter-example1.html)
+* [Complete Example 2: Demographics](reporter-example2.html)
+* [Complete Example 3: Adverse Events](reporter-example3.html)
+* [Complete Example 4: Figure](reporter-example4.html)
+* [Complete Example 5: Survival Analysis](reporter-example5.html)
+
 
