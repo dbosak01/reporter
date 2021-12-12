@@ -1140,7 +1140,7 @@ test_that("pdf2-29: Simplest Plot with valign top works as expected.", {
 
 
 
-test_that("pdf2-30: Simplest RTF Plot with valign bottom works as expected.", {
+test_that("pdf2-30: Simplest PDF Plot with valign bottom works as expected.", {
 
   library(ggplot2)
 
@@ -1177,15 +1177,18 @@ test_that("pdf2-31: Simplest PDF with valign top works as expected.", {
 
   fp <- file.path(base_path, "pdf2/test31.pdf")
 
-  txt <- create_text(cnt, width = 6, borders = "outside")
+  txt <- create_text(cnt, width = 6, borders = "none") %>%
+    titles("Text 1.0", "MTCARS Miles per Cylinder Text", 
+           borders = "none", blank_row = "none") %>%
+    footnotes("* Motor Trend, 1974", valign = "top", borders = "none",
+              blank_row = "none")
 
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
-    titles("Text 1.0", "MTCARS Miles per Cylinder Text", borders = "outside") %>%
+
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
-    footnotes("* Motor Trend, 1974", valign = "top", borders = "outside") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
 
 
@@ -2186,10 +2189,6 @@ test_that("user3: listings works.", {
     expect_equal(file.exists(fp), TRUE)
 
 
-
-    # pdfpth <- file.path(base_path, "user/user3.pdf")
-    # write_report(rpt, pdfpth, output_type = "PDF")
-    # expect_equal(file.exists(pdfpth), TRUE)
   } else
     expect_equal(TRUE, TRUE)
 
@@ -2254,10 +2253,6 @@ test_that("user4: listing in cm and times works.", {
     expect_equal(file.exists(fp), TRUE)
 
 
-
-    # pdfpth <- file.path(base_path, "user/user3.pdf")
-    # write_report(rpt, pdfpth, output_type = "PDF")
-    # expect_equal(file.exists(pdfpth), TRUE)
   } else
     expect_equal(TRUE, TRUE)
 

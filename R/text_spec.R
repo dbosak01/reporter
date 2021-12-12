@@ -861,7 +861,11 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     
     }
     
-    ypos <- yline
+    
+    if (ttls$border_flag | ttl_hdr$border_flag)
+      ypos <- yline - lh + 1
+    else 
+      ypos <- yline - lh + bs
     
     for (ln in seq_along(pg)) {
       
@@ -876,6 +880,8 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
       cnts <- cnts + 1
     }
     
+    yend <- yline - lh + bs
+    
     #yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
     brdrs <- strip_borders(txt$borders)
     
@@ -883,17 +889,19 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
     if (any(brdrs %in% c("all", "outside", "top"))) {
       
       rws[[length(rws) + 1]] <- page_hline(lb * conv, 
-                                           ypos - lh , 
+                                           ypos, 
                                            (rb - lb) * conv) 
       
     }
     
+    border_flag <- FALSE
     # Bottom border
     if (any(brdrs %in% c("all", "outside", "bottom"))) {
       
       rws[[length(rws) + 1]] <- page_hline(lb * conv, 
-                                           yline - lh + bs, 
+                                           yend , 
                                            (rb - lb) * conv) 
+      border_flag <- TRUE
       
     }
     
@@ -902,8 +910,8 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
       
       
       rws[[length(rws) + 1]] <- page_vline(lb * conv, 
-                                           ypos - lh , 
-                                           yline - ypos) 
+                                           ypos, 
+                                           yend - ypos) 
       
     }
     
@@ -912,14 +920,24 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
       
       
       rws[[length(rws) + 1]] <- page_vline(rb * conv, 
-                                           ypos - lh , 
-                                           yline - ypos) 
+                                           ypos, 
+                                           yend - ypos) 
       
     }
     
+    # rs, spec, spec_width, lpg_rows, ystart,
+    # wrap_flag, content_blank_row, talgn,
+    # brdr_flag = FALSE
+    
+    if (border_flag)
+      ys <- yline + bs
+    else 
+      ys <- yline + 1
+    
     # Get footnotes
-    ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, yline,
-                                    wrap_flag, content_blank_row, talgn)
+    ftnts <- get_page_footnotes_pdf(rs, txt, width, lpg_rows, ys,
+                                    wrap_flag, content_blank_row, talgn,
+                                    brdr_flag = border_flag)
     
     # Add blank above content if requested
     if (i ==length(txtpgs) & content_blank_row %in% c("both", "below")) {
@@ -930,8 +948,6 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
     pnts <- pnts + (cnts * lh)
     
-    # Get cell border codes
-    #b <- get_cell_borders_pdf(lb, rb, tb, bb, txt$borders)  
     
     # Add remaining page content.
     if (fp_ttls$lines > 0) {

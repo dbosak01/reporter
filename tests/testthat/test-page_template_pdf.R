@@ -411,40 +411,6 @@ test_that("get_pageby_pdf works as expected.", {
 })
 
 
-test_that("rtf2-2: get_cell_borders_pdf works as expected.", {
-
-
-  expect_equal(get_cell_borders_pdf(1, 1, 4, 4, c("all")),
-               "")
-
-  expect_equal(get_cell_borders(4, 1, 4, 4, c("all")),
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs\\clbrdrr\\brdrs")
-
-  expect_equal(get_cell_borders(1, 1, 4, 4, c("outside")),
-               "\\clbrdrt\\brdrs\\clbrdrl\\brdrs")
-
-  expect_equal(get_cell_borders(4, 1, 4, 4, c("outside")),
-               "\\clbrdrb\\brdrs\\clbrdrl\\brdrs")
-
-  expect_equal(get_cell_borders(2, 2, 4, 4, c("outside")),
-               "")
-
-  expect_equal(get_cell_borders(2, 4, 4, 4, c("right")),
-               "\\clbrdrr\\brdrs")
-
-  expect_equal(get_cell_borders(2, 4, 4, 4, c("inside")),
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs")
-
-  expect_equal(get_cell_borders(2, 4, 4, 4, "all", "B"),
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrr\\brdrs")
-
-  expect_equal(get_cell_borders(2, 3, 4, 4, "all", "B"),
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs")
-
-  expect_equal(get_cell_borders(2, 1, 4, 4, "all", "B"),
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs")
-
-})
 
 
 test_that("page_template_pdf works as expected.", {

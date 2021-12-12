@@ -939,20 +939,12 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   
   # Convert width to twips
   w <- round(wth * rs$point_conversion)
-  
-  # Get border codes
-  # b <- get_cell_borders_pdf(1, 1, 1, 1, plt$borders)
-  
-  # Concat all header codes
-  # hd <- paste0("\\sl0\\trowd\\trgaph0", talgn, b, "\\cellx", w, algn, " \n")
-  # 
-  # ft <- paste0("\\cell\\row\n\\ql", rs$font_rtf, rs$spacing_multiplier)
-  
+
+
   ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
   lnstrt <- ceiling(ypos / rs$line_height)
   
-  # Concat PDF codes for image
-  # img <- paste0(hd, img, ft)
+
   imght <- round((plt$height * rs$point_conversion) / lh)
   
 
