@@ -782,7 +782,7 @@ test_that("pdf2-20: Title Header borders work as expected.", {
   res$column_widths
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  expect_equal(res$pages, 2)
   expect_equal(length(res$column_widths[[1]]), 5)
 
 
@@ -1351,7 +1351,7 @@ test_that("pdf2-35: Title Header and page header/footer wrapping work as expecte
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(tbl, align = "right") %>%
+    add_content(tbl, align = "left") %>%
     page_header(c("Left1", "Left2\nwrap"), "Right 1") %>%
     page_footer("Left1",
                 "Center1 here is a whole bunch of stuff to try and make it wrap",
@@ -1550,7 +1550,7 @@ test_that("pdf2-41: Page by with borders works as expected.", {
   res$column_widths
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 6)
+  expect_equal(res$pages, 7)
   expect_equal(length(res$column_widths[[1]]), 5)
 
 

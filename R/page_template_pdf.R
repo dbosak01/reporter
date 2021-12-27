@@ -749,16 +749,17 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
   conv <- rs$point_conversion
   bs <- rs$border_spacing
   bh <- rs$border_height
-  lyline <- ystart
-  ryline <- ystart
-  startoffset <- NULL
+  startpos <- ystart
   tcnt <- 0
   hcnt <- 0
   pnts <- 0
+  counter <- 0
 
   if (length(thdrlst) > 0) {
 
     for (ttlhdr in thdrlst) {
+      
+      counter <- counter + 1
 
       if (ttlhdr$width == "page")
         width <- rs$content_size[["width"]]
@@ -781,6 +782,20 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
       rb2 <- rb1 * .7
       splitx <- (lb + ((rb1 - lb) * .7))  * conv
       brdrs <- strip_borders(ttlhdr$borders)
+      
+      if (counter == 1) {
+        if (any(brdrs %in% c("all", "top", "outside"))) {
+          
+          startpos <- ystart + bs
+          
+        } else {
+          
+          startpos <- ystart
+          
+        }
+        lyline <- startpos
+        ryline <- startpos
+      }
       
       if (any(brdrs %in% c("all", "inside"))) {
         lh <- rs$line_height + bh
@@ -884,12 +899,6 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
           hcnt <- hcnt + 0
         }
         
-
-
-
-
-
-
       }
       
       if (tcnt > hcnt)

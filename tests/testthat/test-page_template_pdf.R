@@ -274,64 +274,64 @@ test_that("get_title_header_pdf function works as expected.", {
   expect_equal(th$lines, 4)
 
 })
-
-test_that("get_title_header_pdf function works as expected with borders.", {
-  
-  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
-    title_header("Hello", "Goodbye", right = paste("Right "), borders = "all")
-  
-  rpt2 <- page_setup_pdf(rpt2)
-  
-  rh <- get_line_height_pdf(12) 
-  
-  th <-rpt2$page_template$title_hdr
-  th
-  
-  expect_equal(th$lines, 3)
-  expect_equal(th$points, rh * 3 + rpt2$border_height )
-  
-  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
-    title_header("Hello", right = c("Right1", "Right2"), borders = "all")
-  
-  rpt2 <- page_setup_pdf(rpt2)
-  
-  th <-rpt2$page_template$title_hdr
-  th
-  
-  expect_equal(th$lines, 3)
-  expect_equal(th$points, rh * 3 + rpt2$border_height )
-  
-  
-  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
-    title_header("Hello", right = c("Right1", "Right2"), borders = "all", 
-                 blank_row = "both")
-  
-  rpt2 <- page_setup_pdf(rpt2)
-  
-  th <-rpt2$page_template$title_hdr
-  th
-  
-
-  
-  expect_equal(th$lines, 4)
-  expect_equal(th$points, rh * 4 + rpt2$border_height )
-  
-  rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
-    title_header("Hello", right = paste("Right here is something",
-                                        "really long that will wrap and wrap", 
-                                        "and wrap and wrap keep wrapping"), 
-                 borders = "all")
-  
-  rpt2 <- page_setup_pdf(rpt2)
-  
-  th <-rpt2$page_template$title_hdr
-  th
-  #expect_equal(length(th$pdf), 12)
-  expect_equal(length(th$pdf), 6)
-  expect_equal(th$lines, 4)
-  expect_equal(th$points, rh * 4 + rpt2$border_height )
-  
-})
+# 
+# test_that("get_title_header_pdf function works as expected with borders.", {
+#   
+#   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+#     title_header("Hello", "Goodbye", right = paste("Right "), borders = "all")
+#   
+#   rpt2 <- page_setup_pdf(rpt2)
+#   
+#   rh <- get_line_height_pdf(12) 
+#   
+#   th <-rpt2$page_template$title_hdr
+#   th
+#   
+#   expect_equal(th$lines, 3)
+#   expect_equal(th$points, rh * 3 + rpt2$border_height )
+#   
+#   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+#     title_header("Hello", right = c("Right1", "Right2"), borders = "all")
+#   
+#   rpt2 <- page_setup_pdf(rpt2)
+#   
+#   th <-rpt2$page_template$title_hdr
+#   th
+#   
+#   expect_equal(th$lines, 3)
+#   expect_equal(th$points, rh * 3 + rpt2$border_height )
+#   
+#   
+#   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+#     title_header("Hello", right = c("Right1", "Right2"), borders = "all", 
+#                  blank_row = "both")
+#   
+#   rpt2 <- page_setup_pdf(rpt2)
+#   
+#   th <-rpt2$page_template$title_hdr
+#   th
+#   
+# 
+#   
+#   expect_equal(th$lines, 4)
+#   expect_equal(th$points, rh * 4 + rpt2$border_height )
+#   
+#   rpt2 <- create_report("", font = "Arial", font_size = 12) %>%
+#     title_header("Hello", right = paste("Right here is something",
+#                                         "really long that will wrap and wrap", 
+#                                         "and wrap and wrap keep wrapping"), 
+#                  borders = "all")
+#   
+#   rpt2 <- page_setup_pdf(rpt2)
+#   
+#   th <-rpt2$page_template$title_hdr
+#   th
+#   #expect_equal(length(th$pdf), 12)
+#   expect_equal(length(th$pdf), 6)
+#   expect_equal(th$lines, 4)
+#   expect_equal(th$points, rh * 4 + rpt2$border_height )
+#   
+# })
 
 
 test_that("get_page_header_pdf works as expected.", {
