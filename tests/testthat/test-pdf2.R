@@ -1342,11 +1342,11 @@ test_that("pdf2-35: Title Header and page header/footer wrapping work as expecte
     title_header("Table 1.0", "My Nice Report with Borders that will go on and on",
                  right = c("Right1", "Right2",
                            "Right3 long enough to wrap around at least once"),
-                 borders = "all",
+                 borders = "none",
                  blank_row = "none") %>%
-    footnotes("My footnote 1", "My footnote 2", valign = "bottom",
+    footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = "none",
-              blank_row = "above")
+              blank_row = "none")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
