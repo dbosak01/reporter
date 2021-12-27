@@ -1093,7 +1093,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     trb <- width
   }
   
-  rline <- ystart 
+  rline <- ystart + 1
   
   ret <- c()
   
@@ -1157,20 +1157,36 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       yline <- rline
       
+    }
+    
+
+    # Loop for columns 
+    for(j in nms) {
+      
       # Applies inside vertical borders
       if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] 
           & !blnks[i] %in% c("B", "L")) {
         
-        ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, rh)
+        if (j == nms[1]) {
+          lb <- tlb
+          rb <- lb + wdths[j]
+        } else {
+          lb <- rb
+          rb <- lb + wdths[j]
+        }
+        
+        ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, mxrw - rline)
         
       }
-
+      
     }
+
+    
     
     # Applies inside horizontal borders
     if (any(brdrs %in% c("all", "inside")) & i < nrow(t)) {
     
-      ret[[length(ret) + 1]] <- page_hline(tlb * conv, rline + bs, 
+      ret[[length(ret) + 1]] <- page_hline(tlb * conv, mxrw -rh + bs, 
                                            (trb - tlb) * conv)
     
     }
@@ -1180,7 +1196,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   }
   
 
-  ypos <- ystart - rs$row_height + bh
+  ypos <- ystart - rs$row_height + bh - 1
   
   
   #ylen <- cnt * rh
@@ -1188,11 +1204,11 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   if (any(brdrs %in% c("all", "left", "outside"))) {
     
-    ret[[length(ret) + 1]] <- page_vline(tlb * conv, ypos, ylen)
+    ret[[length(ret) + 1]] <- page_vline(tlb * conv, ypos, ylen - ypos)
   }
   if (any(brdrs %in% c("all", "right", "outside"))) {
     
-    ret[[length(ret) + 1]] <- page_vline(trb * conv, ypos, ylen)
+    ret[[length(ret) + 1]] <- page_vline(trb * conv, ypos, ylen - ypos)
   }
   
   # pnts <- cnt * rh
@@ -1208,6 +1224,10 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
                                          (trb - tlb) * conv)
     
     border_flag <- TRUE
+    if (any(brdrs %in% c("all"))) {
+      
+      pnts <- pnts - bh 
+    }
    # pnts <- pnts + bh
     
   }

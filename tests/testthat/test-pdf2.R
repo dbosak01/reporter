@@ -503,8 +503,8 @@ test_that("pdf2-12: Table Borders work as expected.", {
   tbl <- create_table(dat, borders = c("all")) %>%
     define(mpg, label = "Miles Per Gallon") %>% 
     titles("Table 1.0", "My Nice Table", 
-           borders = "all", blank_row = "above", width = "content") %>% 
-    footnotes("My footnote 1", "My footnote 2", borders = "all")
+           borders = "outside", blank_row = "above", width = "content") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = 12, orientation = "landscape") %>%
@@ -1247,10 +1247,10 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
 
 
   # Create data frame
-  df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+  df1 <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
 
 
-  tbl1 <- create_table(df, first_row_blank = TRUE, borders = "all") %>%
+  tbl1 <- create_table(df1, first_row_blank = FALSE, borders = "all") %>%
     define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
            width = 1) %>%
     define(name, label = "Subject Name", width = 1) %>%
@@ -1264,7 +1264,7 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
 
   rpt <- create_report(fp, output_type = "PDF", font = "Courier",
                        font_size = fsz) %>%
-    titles("Table 1.0", align = "center") %>%
+    titles("Table 1.0", align = "center", borders = "all") %>%
 
     add_content(tbl1)
 
@@ -1295,15 +1295,15 @@ test_that("pdf2-34: Table with break between sections works as expected.", {
   arm <- c(rep("A", 5), rep("B", 5))
 
   # Create data frame
-  df <- data.frame(subjid, name, sex, age, arm)
+  df1 <- data.frame(subjid, name, sex, age, arm)
 
 
-  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
-    define(subjid, label = "Subject ID", align = "center", 
-           label_align = "center", width = 1) %>%
-    define(name, label = "Subject Name", width = 1) %>%
-    define(sex, label = "Sex") %>%
-    define(age, label = "Age") %>%
+  tbl1 <- create_table(df1, first_row_blank = TRUE, borders = "all") %>%
+    define(subjid, label = "Subject ID", align = "right", 
+           label_align = "right", width = 1) %>%
+    define(name, label = "Subject Name", width = 1, align = "right") %>%
+    define(sex, label = "Sex", align = "right") %>%
+    define(age, label = "Age", align = "right") %>%
     define(arm, label = "Arm",
            blank_after = TRUE,
            dedupe = TRUE,
@@ -1338,11 +1338,11 @@ test_that("pdf2-35: Title Header and page header/footer wrapping work as expecte
 
   dat <- iris[1:10, ]
 
-  tbl <- create_table(dat, borders = "none") %>%
-    title_header("Table 1.0", "My Nice Report with Borders",
+  tbl <- create_table(dat, borders = "all") %>%
+    title_header("Table 1.0", "My Nice Report with Borders that will go on and on",
                  right = c("Right1", "Right2",
                            "Right3 long enough to wrap around at least once"),
-                 borders = "none",
+                 borders = "all",
                  blank_row = "none") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "bottom",
               borders = "none",
@@ -1351,7 +1351,7 @@ test_that("pdf2-35: Title Header and page header/footer wrapping work as expecte
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(tbl) %>%
+    add_content(tbl, align = "right") %>%
     page_header(c("Left1", "Left2\nwrap"), "Right 1") %>%
     page_footer("Left1",
                 "Center1 here is a whole bunch of stuff to try and make it wrap",

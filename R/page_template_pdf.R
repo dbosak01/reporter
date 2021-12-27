@@ -751,6 +751,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
   bh <- rs$border_height
   lyline <- ystart
   ryline <- ystart
+  startoffset <- NULL
   tcnt <- 0
   hcnt <- 0
   pnts <- 0
@@ -778,7 +779,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         rb1 <- width
       }
       rb2 <- rb1 * .7
-      splitx <- rb1 * .82  * conv
+      splitx <- (lb + ((rb1 - lb) * .7))  * conv
       brdrs <- strip_borders(ttlhdr$borders)
       
       if (any(brdrs %in% c("all", "inside"))) {
@@ -925,6 +926,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
       else
         pnts <- cnt * lh
 
+      # Top border
       if (any(brdrs %in% c("all", "outside", "top"))) {
         
         ret[[length(ret) + 1]] <- page_hline(lb * conv, 
@@ -933,6 +935,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         
       }
       
+      #  Bottom border
       if (any(brdrs %in% c("all", "outside", "bottom"))) {
         
         ret[[length(ret) + 1]] <- page_hline(lb * conv, 
@@ -941,6 +944,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         
       }
       
+      # Left border
       if (any(brdrs %in% c("all", "outside", "left"))) {
         
         
@@ -950,6 +954,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         
       }
       
+      # Right border
       if (any(brdrs %in% c("all", "outside", "right"))) {
         
         
@@ -967,7 +972,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
         
         ret[[length(ret) + 1]] <- page_vline(splitx, # Don't know why
                                              ystart - lh + (alcnt * lh) + (alcnt * bs), 
-                                             ((cnt - alcnt - blcnt) * lh) + (bldiff * bs)) 
+                                             ((cnt - alcnt - blcnt) * lh) + (bldiff * bs) + bs) 
         
       }
       
@@ -1164,18 +1169,18 @@ strip_borders <- function(bspec) {
   
  ret <- bspec
  
- if ("all" %in% ret)
-   ret <- append(ret[ret != "all"], c("top", "bottom"))
- if ("inside" %in% ret)
-   ret <- ret[ret != "inside"]
- if ("outside" %in% ret)
-   ret <- append(ret[ret != "outside"], c("top", "bottom"))
- if ("body" %in% ret)
-   ret <- append(ret[ret != "body"], c("top", "bottom"))
- if ("left" %in% ret)
-   ret <- ret[ret != "left"]
- if ("right" %in% ret)
-   ret <- ret[ret != "right"]
+ # if ("all" %in% ret)
+ #   ret <- append(ret[ret != "all"], c("top", "bottom"))
+ # if ("inside" %in% ret)
+ #   ret <- ret[ret != "inside"]
+ # if ("outside" %in% ret)
+ #   ret <- append(ret[ret != "outside"], c("top", "bottom"))
+ # if ("body" %in% ret)
+ #   ret <- append(ret[ret != "body"], c("top", "bottom"))
+ # if ("left" %in% ret)
+ #   ret <- ret[ret != "left"]
+ # if ("right" %in% ret)
+ #   ret <- ret[ret != "right"]
   
  return(ret)
 }
