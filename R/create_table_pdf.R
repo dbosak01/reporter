@@ -1175,7 +1175,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           rb <- lb + wdths[j]
         }
         
-        ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, mxrw - rline)
+        ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, mxrw - rline + 1)
         
       }
       

@@ -918,8 +918,16 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   ttls <- get_titles_pdf(plt$titles, wth, rs, talign, ystart = ystart) 
   ttl_hdr <- get_title_header_pdf(plt$title_hdr, wth, rs, 
                                   talign, ystart = ystart)
-  pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign, 
-                           ystart = sum(ystart, ttls$points, ttl_hdr$points))
+  
+  if (ttls$border_flag | ttl_hdr$border_flag) {
+    pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign, 
+                           ystart = sum(ystart, ttls$points, ttl_hdr$points) - 2)
+  
+  } else {
+    
+    pgbys <- get_page_by_pdf(pgby, wth, pgval, rs, talign, 
+                             ystart = sum(ystart, ttls$points, ttl_hdr$points))
+  }
   
   # Get image PDF codes
   #img <- get_image_pdf(plot_path, plt$width, plt$height, rs$units)
@@ -940,8 +948,11 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   # Convert width to twips
   w <- round(wth * rs$point_conversion)
 
-
-  ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
+  if (ttls$border_flag | ttl_hdr$border_flag)
+    ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points)- 2
+  else 
+    ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
+  
   lnstrt <- ceiling(ypos / rs$line_height)
   
 
@@ -959,11 +970,13 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   yline <- ceiling(ypos + (plt$height * rs$point_conversion)) 
   brdrs <- strip_borders(plt$borders)
   
+  ylpos <- ypos - lh + bh - 1
+  
   # Top border
   if (any(brdrs %in% c("all", "outside", "top"))) {
     
     rws[[length(rws) + 1]] <- page_hline(lb * conv, 
-                                         ypos - lh + bh, 
+                                         ylpos, 
                                          (rb - lb) * conv) 
     
   }
@@ -972,7 +985,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   if (any(brdrs %in% c("all", "outside", "bottom"))) {
     
     rws[[length(rws) + 1]] <- page_hline(lb * conv, 
-                                         yline - lh + bh, 
+                                         ylpos, 
                                          (rb - lb) * conv) 
     
   }
@@ -982,7 +995,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
     
     
     rws[[length(rws) + 1]] <- page_vline(lb * conv, 
-                                         ypos - lh + bh, 
+                                         ylpos, 
                                          yline - ypos) 
     
   }
@@ -992,7 +1005,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
     
     
     rws[[length(rws) + 1]] <- page_vline(rb * conv, 
-                                         ypos - lh + bh, 
+                                         ylpos, 
                                          yline - ypos) 
     
   }
@@ -1001,7 +1014,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
 
   
   # Get footnotes, filler, and content blank line
-  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, yline,
+  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, yline - bh - 1,
                                   wrap_flag, content_blank_row, talign)
   
   bln <- 0
@@ -1033,7 +1046,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   # Page list
   ret <- list(pdf = rws,
               lines = lns,
-              points = lns * lh)  
+              points =  ylpos - ystart)  
   
   
   return(ret)

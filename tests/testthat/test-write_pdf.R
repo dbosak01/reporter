@@ -386,7 +386,7 @@ test_that("get_image_text works as expected.", {
   
   
   expect_equal(res[1], "q")
-  expect_equal(res[2], "400 0 0 200 100 150 cm")
+  expect_equal(res[2], "400 0 0 200 95 150 cm")
   expect_equal(res[3], "/X23 Do")
   expect_equal(res[4], "Q")
   

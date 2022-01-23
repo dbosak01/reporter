@@ -1428,7 +1428,7 @@ get_image_text <- function(img_ref, height, width, xpos, ypos) {
   ret <- c()
   
   ret[1] <- "q"
-  ret[2] <- paste(width, 0, 0, height, xpos, ypos, "cm")
+  ret[2] <- paste(width, 0, 0, height, (xpos - 5), ypos, "cm")
   ret[3] <- paste0("/X", img_ref, " Do")
   ret[4] <- "Q"
   
