@@ -600,8 +600,8 @@ BT /F1 9 Tf 100 Tz 266.743 77.9 Td <43656e74657231>Tj ET
 BT /F1 9 Tf 100 Tz 506.488 77.9 Td <526967687431>Tj ET
 endstream
 endobj
-13 0 obj<</Producer (reporter v1.2.8) /Author (User) /Title () /Subject () /Creator (R version 4.0.3 (2020-10-10)) /Keywords ()
- /CreationDate (D:20211227141055-05'00') /ModDate (D:20211227141055-05'00')>>
+13 0 obj<</Producer (reporter v1.2.8) /Author (dbosa) /Title () /Subject () /Creator (R version 4.1.2 (2021-11-01)) /Keywords ()
+ /CreationDate (D:20220123184716-05'00') /ModDate (D:20220123184716-05'00')>>
 endobj
 xref
 0 14
@@ -621,5 +621,5 @@ xref
 0000030749 00000 n 
 trailer <</Size 14 /Root 1 0 R /Info 13 0 R>>
 startxref
-30962
+30963
 %%EOF

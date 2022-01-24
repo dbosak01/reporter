@@ -326,9 +326,10 @@ test_that("pdf2-6: One page table works as expected.", {
                        units = "inches") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table", borders = "outside", bold = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = "top", bold = TRUE) %>%
     add_content(create_table(dat, borders = "outside")) %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "outside") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = c("top", "bottom"), 
+              blank_row = "above", valign = "bottom") %>%
     page_footer("Left1", "Center1", "Right1", blank_row = "above")
 
   res <- write_report(rpt)
@@ -1537,7 +1538,7 @@ test_that("pdf2-41: Page by with borders works as expected.", {
   tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "all", #c("top", "bottom"), 
            blank_row = "none", align = "left", font_size = 12) %>%
-    page_by(Species, label = "Species ", align = "left", borders = "all", # c("top", "bottom"),
+    page_by(Species, label = "Species: ", align = "left", borders = "all", # c("top", "bottom"),
             blank_row = "none") %>%
     footnotes("My footnote 1", "My footnote 2", borders = c("all"), 
               blank_row = "none")

@@ -19,12 +19,16 @@ page_template_pdf<- function(rs) {
                               ystart = pt$page_header$points)
   
   pt$page_footer <- get_page_footer_pdf(rs)
+  
+
 
   
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
     if (!is.null(rs$footnotes[[1]])) {
       if (rs$footnotes[[1]]$valign == "bottom")
+
+  
         pt$footnotes <- get_footnotes_pdf(rs$footnotes, rs$line_size, rs, 
                                           footer_lines = pt$page_footer$lines)
     }
@@ -685,10 +689,19 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
         
       }
       
-      if (brdr_flag)
-        ypos <- ystart - olh  
-      else 
-        ypos <- ystart + bh - olh + bs 
+      
+      if (is.null(ystart)) {
+        
+        ypos <- (rs$content_size[["height"]] * rs$point_conversion) - 
+          ((cnt + footer_lines - alcnt) * lh ) - (alcnt * lh) - lh 
+      } else {
+      
+      
+        if (brdr_flag)
+          ypos <- ystart - olh  
+        else 
+          ypos <- ystart + bh - olh + bs 
+      }
       
       badj <- 0
       if (!any(brdrs %in% c("all", "inside")))
