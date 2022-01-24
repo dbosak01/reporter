@@ -948,8 +948,8 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   # Convert width to twips
   w <- round(wth * rs$point_conversion)
 
-  if (ttls$border_flag | ttl_hdr$border_flag)
-    ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points)- 2
+  if ((ttls$border_flag | ttl_hdr$border_flag) & pgbys$points > 0)
+    ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) - 2
   else 
     ypos <- sum(ystart, ttls$points, ttl_hdr$points, pgbys$points) 
   

@@ -670,7 +670,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
   }
   
   # Top border
-  if (any(brdrs %in% c("all", "outside", "top")) & !has_spans) {
+  if ((any(brdrs == "all")) | (any(brdrs %in% c("outside", "top")) & !has_spans)) {
     
     ret[[length(ret) + 1]] <- page_hline(tlb * conv, 
                                          tbs, 
@@ -797,7 +797,12 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   }
   
   ret <- list()
+  
   lline <- ystart
+  if (brdr_flag) {
+    lline <- ystart + bs
+  } 
+  
   
   # Open device context
   pdf(NULL)
@@ -822,54 +827,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
     cnt[length(cnt) + 1] <- 1 
   
     
-    # Loop for cell definitions
- #   for(j in seq_along(widths)) {
-      
-      # Get cell borders
-      # b <- get_cell_borders(length(wlvl) - l + 1, j, 10, nrow(s), brdrs)
-      
-      # Add colspans
-  #    vl <- lbls[j]
-      
-      # Special handling of borders for different situations.  
-      # I hate this, but can't see a way around it.
-      # if (any(brdrs %in% c("all", "inside"))) {
-      #   sflg <- "B"
-      #   if (j > 1) {
-      #     if (cs[j] > 1)
-      #       sflg <- ""
-      #   }
-      #   
-      #   if (vl == "") {
-      #     bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
-      #                            length(sz), brdrs, 
-      #                            flag = sflg)
-      #   } else 
-      #     bb <- b
-      # } else if (all(brdrs == "outside")) {
-      #   
-      #   if (vl == "")
-      #     bb <- b
-      #   else 
-      #     bb <- paste0(b, "\\clbrdrb\\brdrs")
-      #   
-      # } else {
-      #   
-      #   if (vl == "") {
-      #     bb <- get_cell_borders(length(lvls) - l + 1, j, length(lvls), 
-      #                            length(sz), brdrs, 
-      #                            flag = "")
-      #   } else 
-      #     bb <- paste0(b, "\\clbrdrb\\brdrs")
-      #   
-      # }
-      
-      # Don't forget about underline parameter
-      # if (s$span[j] > 0 & s$underline[j])
-      #   r <- paste0(r, "\\clvertalb", bb, "\\clbrdrb\\brdrs\\cellx", sz[j])
-      # else 
-      #   r <- paste0(r, "\\clvertalb", bb, "\\cellx", sz[j])
-  #  }
+
     
    mxyl <- 0
    mxlns <- 0
@@ -911,6 +869,10 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
           if (ln == 1)
             yline <- yline + ((mxlns - tmp$lines) * rh)
           
+          adj <- 0
+          if (any(brdrs %in% c("all", "inside")))
+              adj <- 4
+          
           # Get pdf text for label
           ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
                                               bold = FALSE,
@@ -919,7 +881,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
                                                                 tmp$widths[ln],
                                                                 units = rs$units,
                                                                 align = algns[k]),
-                                              ypos = yline - 2)
+                                              ypos = yline - adj)
           yline <- yline + rh
           if (yline > mxyl)
             mxyl <- yline
@@ -981,10 +943,12 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   if (length(lvls) > 0) {
 
     
+    ypos <- ystart - rh + bs 
+    
     if (any(brdrs %in% c("all", "outside", "top"))) {
       
       ret[[length(ret) + 1]] <- page_hline(tlb * conv,
-                                           ystart - rh,
+                                           ypos,
                                            (trb - tlb) * conv)
       
     }
@@ -1001,7 +965,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
       
       
       ret[[length(ret) + 1]] <- page_vline(tlb * conv, 
-                                           ystart - rh , 
+                                           ypos, 
                                            (cnts * rh)) 
       
     }
@@ -1010,7 +974,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
       
       
       ret[[length(ret) + 1]] <- page_vline(trb * conv, 
-                                           ystart - rh, 
+                                           ypos, 
                                            (cnts * rh)) 
       
     }
@@ -1175,7 +1139,15 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           rb <- lb + wdths[j]
         }
         
-        ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, mxrw - rline + 1)
+        if (i == nrow(t)) {
+          ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+                                               mxrw - rline + 1)
+        
+        } else {
+          ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+                                               mxrw - rline )
+          
+        }
         
       }
       

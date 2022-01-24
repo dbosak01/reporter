@@ -945,7 +945,7 @@ test_that("pdf2-25: Simplest PDF2 Plot works as expected.", {
   
     plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
       titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
-             borders = "outside", blank_row = "below", font_size = 12, bold = TRUE) %>%
+             borders = "outside", blank_row = "none") %>% #, font_size = 12, bold = TRUE) %>%
       footnotes("* Motor Trend, 1974", borders = "outside", blank_row = "above", 
                 valign = "top", width = "content", align = "center")
   
