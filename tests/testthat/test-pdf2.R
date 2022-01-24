@@ -1263,13 +1263,12 @@ test_that("pdf2-33: Table with long cell and label values wraps as expected.", {
     define(arm, label = "Arm",
            blank_after = TRUE,
            dedupe = TRUE) %>% 
+    titles("Table 1.0", align = "center", borders = "all") %>%
     footnotes("Here", borders = "all") 
 
 
   rpt <- create_report(fp, output_type = "PDF", font = "Courier",
                        font_size = fsz) %>%
-    titles("Table 1.0", align = "center", borders = "all") %>%
-
     add_content(tbl1)
 
 
