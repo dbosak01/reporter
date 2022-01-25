@@ -25,7 +25,7 @@
 #' \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 #' details.
 #' 
-#' As of \strong{reporter} version 1.3, the \code{create_plot} function 
+#' As of \strong{reporter} version 1.2.9, the \code{create_plot} function 
 #' also accepts a path to a JPEG stored on the file system instead of a 
 #' plot object.  This
 #' functionality was added to allow the user to create figures from other

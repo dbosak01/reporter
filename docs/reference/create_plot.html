@@ -52,7 +52,7 @@
 <meta property="og:description" content="Function to create a plot specification that can be 
 added as content to a report. The create_plot function can 
 be used to include charts, graphs, and figures on a statistical report.  
-The function only supports plot objects returned by 
+The function supports plot objects returned by 
 ggplot or ggsurvplot.  
 It does not support the Base R 
 plot function." />
@@ -200,7 +200,7 @@ plot function." />
     <p>Function to create a plot specification that can be 
 added as content to a report. The <code>create_plot</code> function can 
 be used to include charts, graphs, and figures on a statistical report.  
-The function only supports plot objects returned by 
+The function supports plot objects returned by 
 <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></code> or <code><a href='https://rdrr.io/pkg/survminer/man/ggsurvplot.html'>ggsurvplot</a></code>.  
 It does not support the Base R 
 <code>plot</code> function.</p>
@@ -215,7 +215,9 @@ It does not support the Base R
       <th>x</th>
       <td><p>The plot to create.  Specifically, this parameter should be 
 set to an object returned from a call to <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></code>
-or <code><a href='https://rdrr.io/pkg/survminer/man/ggsurvplot.html'>ggsurvplot</a></code>.</p></td>
+or <code><a href='https://rdrr.io/pkg/survminer/man/ggsurvplot.html'>ggsurvplot</a></code>.  This parameter also accepts 
+a path to a JPEG file.  If a path is specified, the image will be appended
+to the report at the point the content object is added.</p></td>
     </tr>
     <tr>
       <th>height</th>
@@ -250,6 +252,12 @@ variable, and re-run for each subset.</p>
 <p>The plot specification also accepts titles and footnotes.  See the 
 <code><a href='titles.html'>titles</a></code> and <code><a href='footnotes.html'>footnotes</a></code> functions for further 
 details.</p>
+<p>As of <strong>reporter</strong> version 1.2.9, the <code>create_plot</code> function 
+also accepts a path to a JPEG stored on the file system instead of a 
+plot object.  This
+functionality was added to allow the user to create figures from other
+plotting packages.  If you pass an image path, the image will be inserted
+into the report at the location specified.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='titles.html'>titles</a></code> to add a title block to the plot,  

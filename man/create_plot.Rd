@@ -9,7 +9,9 @@ create_plot(x, height, width, borders = "none")
 \arguments{
 \item{x}{The plot to create.  Specifically, this parameter should be 
 set to an object returned from a call to \code{\link[ggplot2]{ggplot}}
-or \code{\link[survminer]{ggsurvplot}}.}
+or \code{\link[survminer]{ggsurvplot}}.  This parameter also accepts 
+a path to a JPEG file.  If a path is specified, the image will be appended
+to the report at the point the content object is added.}
 
 \item{height}{The height of the plot in the specified units of measure.}
 
@@ -27,7 +29,7 @@ The plot specification.
 Function to create a plot specification that can be 
 added as content to a report. The \code{create_plot} function can 
 be used to include charts, graphs, and figures on a statistical report.  
-The function only supports plot objects returned by 
+The function supports plot objects returned by 
 \code{\link[ggplot2]{ggplot}} or \code{\link[survminer]{ggsurvplot}}.  
 It does not support the Base R 
 \code{plot} function.
@@ -46,6 +48,13 @@ variable, and re-run for each subset.
 The plot specification also accepts titles and footnotes.  See the 
 \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 details.
+
+As of \strong{reporter} version 1.2.9, the \code{create_plot} function 
+also accepts a path to a JPEG stored on the file system instead of a 
+plot object.  This
+functionality was added to allow the user to create figures from other
+plotting packages.  If you pass an image path, the image will be inserted
+into the report at the location specified.
 }
 \examples{
 library(reporter)
