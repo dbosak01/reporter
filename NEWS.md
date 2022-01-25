@@ -1,4 +1,4 @@
-# reporter 1.3.0
+# reporter 1.2.9
 
 * Added all border options to PDF.
 * Allowed `create_plot()` to accept a JPG image path so that the user can embed
