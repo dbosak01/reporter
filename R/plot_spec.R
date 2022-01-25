@@ -71,8 +71,8 @@
 create_plot <- function(x, height, width, borders = "none") {
   
   
-  if (!any(class(x) %in% c("gg", "ggplot", "ggcoxzph", "ggsurv")))
-    stop("plot object must be of type 'ggplot' or 'ggsurv'.")
+  if (!any(class(x) %in% c("gg", "ggplot", "ggcoxzph", "ggsurv", "character")))
+    stop("plot object must be of type 'ggplot', 'ggsurv', or a JPG file path.")
   
   
   if (!all(borders %in% c("top", "bottom", "left", "right", 
@@ -198,76 +198,99 @@ create_plot_pages_text <- function(rs, cntnt, lpg_rows, tmp_dir) {
   # Get plot spec 
   plt <- cntnt$object
   
-  
-  # Get data in case we need it for page by
-  raw <- plt$plot$data
-  
-  # Determine if there is a page by
-  pgby <- NULL
-  if (!is.null(rs$page_by))
-    pgby <- rs$page_by
-  if (!is.null(plt$page_by))
-    pgby <- plt$page_by
-  
-  if (!is.null(pgby)) {
-    if (!pgby$var %in% names(raw))
-      stop("Page by variable not found in plot data.")
-    
-    dat_lst <- split(raw, raw[[pgby$var]])
-  } else {
-    dat_lst <- list(raw) 
-  }
-  
-  u <- ifelse(rs$units == "inches", "in", rs$units)
   p <- plt$plot
-  ret <- list()
-  cntr <- 1
   
-  for (dat in dat_lst) {
   
+  if (any(class(p) %in% c("character"))) {
+    
     tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
-    p$data <- dat
+    file.copy(p, tmp_nm, overwrite = TRUE)
     
-    pgval <- NULL
-    if (!is.null(pgby)) {
-      # print(pgby$var)
-      # print(dat)
-      pgval <- dat[1, c(pgby$var)]
-    }
-    
-    # Save plot to temp file
-    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
-
-      # Deal with survival plots
-      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
-                      width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u )
-      
-      
-    } else {
-
-      # Any other type of plots
-      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
-             dpi = 300, units = u)
-    }
-    
-    # Get rtf page bodies
-    # Can return multiple pages if it breaks across pages
-    # Not sure what that means for a plot, but that is the logic
+    ret <- list()
     pgs <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
-                         lpg_rows, cntnt$blank_row, pgby, pgval, 
-                         cntr < length(dat_lst))
+                         lpg_rows, cntnt$blank_row, NULL, NULL, 
+                         FALSE)
     
-    # Within a content creation function, assumed that it will take 
-    # care of filling out blanks for each page.  Only the last page
-    # can have empty rows.
     for (pg in pgs) {
-
+      
       ret <- c(ret, list(pg))
     }
+  
     
-    cntr <- cntr + 1
+  } else {
+  
+    # Get data in case we need it for page by
+    raw <- p$data
+    
+    # Determine if there is a page by
+    pgby <- NULL
+    if (!is.null(rs$page_by))
+      pgby <- rs$page_by
+    if (!is.null(plt$page_by))
+      pgby <- plt$page_by
+    
+    if (!is.null(pgby)) {
+      if (!pgby$var %in% names(raw))
+        stop("Page by variable not found in plot data.")
+      
+      dat_lst <- split(raw, raw[[pgby$var]])
+    } else {
+      dat_lst <- list(raw) 
+    }
+    
+    u <- ifelse(rs$units == "inches", "in", rs$units)
+  
+    ret <- list()
+    cntr <- 1
+    
+    for (dat in dat_lst) {
+    
+      tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+      
+      p$data <- dat
+      
+      pgval <- NULL
+      if (!is.null(pgby)) {
+        # print(pgby$var)
+        # print(dat)
+        pgval <- dat[1, c(pgby$var)]
+      }
+      
+      # Save plot to temp file
+      if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+  
+        # Deal with survival plots
+        ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                        width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u )
+        
+        
+      } else {
+  
+        # Any other type of plots
+        ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+               dpi = 300, units = u)
+      }
+      
+      # Get rtf page bodies
+      # Can return multiple pages if it breaks across pages
+      # Not sure what that means for a plot, but that is the logic
+      pgs <- get_plot_body(plt, tmp_nm, cntnt$align, rs,
+                           lpg_rows, cntnt$blank_row, pgby, pgval, 
+                           cntr < length(dat_lst))
+      
+      # Within a content creation function, assumed that it will take 
+      # care of filling out blanks for each page.  Only the last page
+      # can have empty rows.
+      for (pg in pgs) {
+  
+        ret <- c(ret, list(pg))
+      }
+      
+      cntr <- cntr + 1
+    
+    }
   
   }
   
@@ -401,75 +424,107 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
   if (!"report_content" %in% class(cntnt))
     stop("Report Content expected for parameter cntnt")
   
+  pgs <- list()
+  cnts <- c()
+  
   # Get plot spec 
   plt <- cntnt$object
   
   
-  # Get data in case we need it for page by
-  raw <- plt$plot$data
-  
-  # Determine if there is a page by
-  pgby <- NULL
-  if (!is.null(rs$page_by))
-    pgby <- rs$page_by
-  if (!is.null(plt$page_by))
-    pgby <- plt$page_by
-  
-  if (!is.null(pgby)) {
-    if (!pgby$var %in% names(raw))
-      stop("Page by variable not found in plot data.")
-    
-    dat_lst <- split(raw, raw[[pgby$var]])
-  } else {
-    dat_lst <- list(raw) 
-  }
-  
-  u <- ifelse(rs$units == "inches", "in", rs$units)
   p <- plt$plot
-  ret <- list()
-  cntr <- 1
-  pgs <- list()
-  cnts <- c()
   
-  for (dat in dat_lst) {
+  
+  if (any(class(p) %in% c("character"))) {
     
     tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
-    p$data <- dat
-    
-    pgval <- NULL
-    if (!is.null(pgby)) {
-      # print(pgby$var)
-      # print(dat)
-      pgval <- dat[1, c(pgby$var)]
-    }
-    
-    # Save plot to temp file
-    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
-      
-      # Deal with survival plots
-      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
-                      width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u )
-      
-      
-    } else {
-      
-      # Any other type of plots
-      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u)
-    }
+    file.copy(p, tmp_nm, overwrite = TRUE)
     
     # Get rtf page bodies
     res <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
-                         lpg_rows, cntnt$blank_row, pgby, pgval, 
-                         cntr < length(dat_lst))
+                             lpg_rows, cntnt$blank_row, NULL, NULL, 
+                             FALSE)
     
     pgs[[length(pgs) + 1]] <- res$rtf
     cnts[[length(cnts) + 1]] <- res$lines
+  
     
-    cntr <- cntr + 1
     
+  } else {
+    
+    
+    # Get data in case we need it for page by
+    raw <- plt$plot$data
+    
+    # Determine if there is a page by
+    pgby <- NULL
+    if (!is.null(rs$page_by))
+      pgby <- rs$page_by
+    if (!is.null(plt$page_by))
+      pgby <- plt$page_by
+    
+    if (!is.null(pgby)) {
+      if (!pgby$var %in% names(raw))
+        stop("Page by variable not found in plot data.")
+      
+      dat_lst <- split(raw, raw[[pgby$var]])
+    } else {
+      dat_lst <- list(raw) 
+    }
+    
+    u <- ifelse(rs$units == "inches", "in", rs$units)
+    p <- plt$plot
+    ret <- list()
+    cntr <- 1
+
+    
+    for (dat in dat_lst) {
+      
+      tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+      
+      p$data <- dat
+      
+      pgval <- NULL
+      if (!is.null(pgby)) {
+        # print(pgby$var)
+        # print(dat)
+        pgval <- dat[1, c(pgby$var)]
+      }
+      
+      # Save plot to temp file
+      if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+        
+        # Deal with survival plots
+        ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                        width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u )
+        
+        
+      } else if (any(class(p) %in% c("character"))) {
+        
+        
+        file.copy(p, tmp_nm, overwrite = TRUE)
+        
+        
+      } else {
+        
+        # Any other type of plots
+        ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u)
+      }
+      
+      # Get rtf page bodies
+      res <- get_plot_body_rtf(plt, tmp_nm, cntnt$align, rs,
+                           lpg_rows, cntnt$blank_row, pgby, pgval, 
+                           cntr < length(dat_lst))
+      
+      pgs[[length(pgs) + 1]] <- res$rtf
+      cnts[[length(cnts) + 1]] <- res$lines
+      
+      cntr <- cntr + 1
+      
+    }
+  
   }
   
   ret <- list(rtf = pgs,
@@ -606,75 +661,98 @@ create_plot_pages_html <- function(rs, cntnt, lpg_rows, tmp_dir) {
   if (!"report_content" %in% class(cntnt))
     stop("Report Content expected for parameter cntnt")
   
-  # Get plot spec 
-  plt <- cntnt$object
-  
-  
-  # Get data in case we need it for page by
-  raw <- plt$plot$data
-  
-  # Determine if there is a page by
-  pgby <- NULL
-  if (!is.null(rs$page_by))
-    pgby <- rs$page_by
-  if (!is.null(plt$page_by))
-    pgby <- plt$page_by
-  
-  if (!is.null(pgby)) {
-    if (!pgby$var %in% names(raw))
-      stop("Page by variable not found in plot data.")
-    
-    dat_lst <- split(raw, raw[[pgby$var]])
-  } else {
-    dat_lst <- list(raw) 
-  }
-  
-  u <- ifelse(rs$units == "inches", "in", rs$units)
-  p <- plt$plot
-  ret <- list()
-  cntr <- 1
   pgs <- list()
   cnts <- c()
   
-  for (dat in dat_lst) {
+  # Get plot spec 
+  plt <- cntnt$object
+  
+  p <- plt$plot
+  
+  
+  if (any(class(p) %in% c("character"))) {
     
     tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
-    p$data <- dat
-    
-    pgval <- NULL
-    if (!is.null(pgby)) {
-      # print(pgby$var)
-      # print(dat)
-      pgval <- dat[1, c(pgby$var)]
-    }
-    
-    # Save plot to temp file
-    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
-      
-      # Deal with survival plots
-      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
-                      width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u )
-      
-      
-    } else {
-      
-      # Any other type of plots
-      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u)
-    }
-    
+    file.copy(p, tmp_nm, overwrite = TRUE)
+
     # Get rtf page bodies
     res <- get_plot_body_html(plt, tmp_nm, cntnt$align, rs,
-                             lpg_rows, cntnt$blank_row, pgby, pgval, 
-                             cntr < length(dat_lst))
+                              lpg_rows, cntnt$blank_row, NULL, NULL, 
+                              FALSE)
     
     pgs[[length(pgs) + 1]] <- res$html
     cnts[[length(cnts) + 1]] <- res$lines
     
-    cntr <- cntr + 1
     
+  } else {
+    
+
+    # Get data in case we need it for page by
+    raw <- plt$plot$data
+    
+    # Determine if there is a page by
+    pgby <- NULL
+    if (!is.null(rs$page_by))
+      pgby <- rs$page_by
+    if (!is.null(plt$page_by))
+      pgby <- plt$page_by
+    
+    if (!is.null(pgby)) {
+      if (!pgby$var %in% names(raw))
+        stop("Page by variable not found in plot data.")
+      
+      dat_lst <- split(raw, raw[[pgby$var]])
+    } else {
+      dat_lst <- list(raw) 
+    }
+    
+    u <- ifelse(rs$units == "inches", "in", rs$units)
+    p <- plt$plot
+    ret <- list()
+    cntr <- 1
+
+    
+    for (dat in dat_lst) {
+      
+      tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+      
+      p$data <- dat
+      
+      pgval <- NULL
+      if (!is.null(pgby)) {
+        # print(pgby$var)
+        # print(dat)
+        pgval <- dat[1, c(pgby$var)]
+      }
+      
+      # Save plot to temp file
+      if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+        
+        # Deal with survival plots
+        ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                        width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u )
+        
+        
+      } else {
+        
+        # Any other type of plots
+        ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u)
+      }
+      
+      # Get rtf page bodies
+      res <- get_plot_body_html(plt, tmp_nm, cntnt$align, rs,
+                               lpg_rows, cntnt$blank_row, pgby, pgval, 
+                               cntr < length(dat_lst))
+      
+      pgs[[length(pgs) + 1]] <- res$html
+      cnts[[length(cnts) + 1]] <- res$lines
+      
+      cntr <- cntr + 1
+      
+    }
   }
   
   ret <- list(html = pgs,
@@ -804,82 +882,106 @@ create_plot_pages_pdf <- function(rs, cntnt, lpg_rows, tmp_dir) {
   if (!"report_content" %in% class(cntnt))
     stop("Report Content expected for parameter cntnt")
   
-  # Get plot spec 
-  plt <- cntnt$object
-  
-  
-  # Get data in case we need it for page by
-  raw <- plt$plot$data
-  
-  # Determine if there is a page by
-  pgby <- NULL
-  if (!is.null(rs$page_by))
-    pgby <- rs$page_by
-  if (!is.null(plt$page_by))
-    pgby <- plt$page_by
-  
-  if (!is.null(pgby)) {
-    if (!pgby$var %in% names(raw))
-      stop("Page by variable not found in plot data.")
-    
-    dat_lst <- split(raw, raw[[pgby$var]])
-  } else {
-    dat_lst <- list(raw) 
-  }
-  
-  u <- ifelse(rs$units == "inches", "in", rs$units)
-  p <- plt$plot
-  ret <- list()
-  cntr <- 1
   pgs <- list()
   cnts <- c()
   pnts <- c()
-  row_offset <- lpg_rows
   
-  for (dat in dat_lst) {
-    
-    if (cntr > 1)
-      row_offset <- 0
+  # Get plot spec 
+  plt <- cntnt$object
+  p <- plt$plot
+  
+  if (any(class(p) %in% c("character"))) {
     
     tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
     
-    p$data <- dat
+    file.copy(p, tmp_nm, overwrite = TRUE)
     
-    pgval <- NULL
-    if (!is.null(pgby)) {
-      # print(pgby$var)
-      # print(dat)
-      pgval <- dat[1, c(pgby$var)]
-    }
-    
-    # Save plot to temp file
-    if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
-      
-      # Deal with survival plots
-      ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
-                      width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u )
-      
-      
-    } else {
-      
-      # Any other type of plots
-      ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
-                      dpi = 300, units = u)
-    }
     ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
-              rs$page_template$page_header$points, (row_offset * rs$line_height))
+              rs$page_template$page_header$points, (lpg_rows * rs$line_height))
     
     # Get pdf page bodies
     res <- get_plot_body_pdf(plt, tmp_nm, cntnt$align, rs, row_offset,
-                             cntnt$blank_row, pgby, pgval, 
-                             cntr < length(dat_lst), ystart = ys)
+                             cntnt$blank_row, NULL, NULL, 
+                             FALSE, ystart = ys)
     
     pgs[[length(pgs) + 1]] <- res$pdf
     cnts[length(cnts) + 1] <- res$lines
     pnts[length(pnts) + 1] <- res$lines * rs$line_height
-    cntr <- cntr + 1
     
+    
+  } else {
+  
+    # Get data in case we need it for page by
+    raw <- plt$plot$data
+    
+    # Determine if there is a page by
+    pgby <- NULL
+    if (!is.null(rs$page_by))
+      pgby <- rs$page_by
+    if (!is.null(plt$page_by))
+      pgby <- plt$page_by
+    
+    if (!is.null(pgby)) {
+      if (!pgby$var %in% names(raw))
+        stop("Page by variable not found in plot data.")
+      
+      dat_lst <- split(raw, raw[[pgby$var]])
+    } else {
+      dat_lst <- list(raw) 
+    }
+    
+    u <- ifelse(rs$units == "inches", "in", rs$units)
+    p <- plt$plot
+    ret <- list()
+    cntr <- 1
+
+    row_offset <- lpg_rows
+    
+    for (dat in dat_lst) {
+      
+      if (cntr > 1)
+        row_offset <- 0
+      
+      tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+      
+      p$data <- dat
+      
+      pgval <- NULL
+      if (!is.null(pgby)) {
+        # print(pgby$var)
+        # print(dat)
+        pgval <- dat[1, c(pgby$var)]
+      }
+      
+      # Save plot to temp file
+      if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+        
+        # Deal with survival plots
+        ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                        width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u )
+        
+        
+      } else {
+        
+        # Any other type of plots
+        ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u)
+      }
+      ys <- sum(rs$page_template$titles$points, rs$page_template$title_hdr$points,
+                rs$page_template$page_header$points, (row_offset * rs$line_height))
+      
+      # Get pdf page bodies
+      res <- get_plot_body_pdf(plt, tmp_nm, cntnt$align, rs, row_offset,
+                               cntnt$blank_row, pgby, pgval, 
+                               cntr < length(dat_lst), ystart = ys)
+      
+      pgs[[length(pgs) + 1]] <- res$pdf
+      cnts[length(cnts) + 1] <- res$lines
+      pnts[length(pnts) + 1] <- res$lines * rs$line_height
+      cntr <- cntr + 1
+      
+  }
   }
   
   ret <- list(pdf = pgs,

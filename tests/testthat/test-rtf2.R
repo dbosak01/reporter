@@ -1660,6 +1660,43 @@ test_that("rtf2-50: Spanning headers borders work as expected.", {
   
 })
 
+
+test_that("rtf2-51: RTF Image file works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf2/test51.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  pltpath <- file.path(base_path, "rtf2/test51.jpg")
+  ggsave(pltpath, width = 8, height = 4, 
+         units = "in",
+         dpi = 300)
+  
+  plt <- create_plot(pltpath, height = 4, width = 8)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial") %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
+
+
 # User Tests --------------------------------------------------------------
 
 test_that("rtf2-user1: demo table works.", {

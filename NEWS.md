@@ -1,7 +1,8 @@
 # reporter 1.3.0
 
 * Added all border options to PDF.
-* Add `create_image()` function to add image content.
+* Allowed `create_plot()` to accept a JPG image path so that the user can embed
+plot images exported from other charting packages besides ggplot.
 
 # reporter 1.2.8
 

@@ -1093,7 +1093,7 @@ test_that("rtf35: 9 pt font cm works as expected.", {
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
 
-test_that("pdf36: 11 pt font inches works as expected.", {
+test_that("rtf36: 11 pt font inches works as expected.", {
   
   
   fp <- file.path(base_path, "rtf/test36.rtf")
@@ -1114,7 +1114,7 @@ test_that("pdf36: 11 pt font inches works as expected.", {
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
 
-test_that("pdf37: 11 pt font cm works as expected.", {
+test_that("rtf37: 11 pt font cm works as expected.", {
   
   
   fp <- file.path(base_path, "rtf/test37.rtf")
@@ -1135,4 +1135,37 @@ test_that("pdf37: 11 pt font cm works as expected.", {
   #write_registration_file(file.path(base_path,"./rtf/reg.txt"))
 })
 
-
+test_that("rtf38: RTF Image file works as expected.", {
+  
+  library(ggplot2)
+  
+  fp <- file.path(base_path, "rtf/test38.rtf")
+  
+  p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+  
+  pltpath <- file.path(base_path, "rtf/test38.jpg")
+  ggsave(pltpath, width = 8, height = 4, 
+         units = "in",
+         dpi = 300)
+  
+  plt <- create_plot(pltpath, height = 4, width = 8)
+  
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    page_header("Client", "Study: XYZ") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(plt, align = "center") %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+  
+  
+  res <- write_report(rpt)
+  
+  #print(res)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+  
+})
