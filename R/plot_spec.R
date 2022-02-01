@@ -1164,3 +1164,224 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   
 }
 
+
+
+# Write DOCX Functions -----------------------------------------------------
+
+
+#' @description A function to output strings for plot content
+#' @details Basic logic is to write the plot as a png file to a temporary
+#' location, then put a token in the text that references the temp location.
+#' Later code will pick up the image and insert it into the report.  Blank
+#' lines are generated to fill up the page based on a calculation using
+#' the plot height and width.
+#' @param rs The Report Spec
+#' @param cntnt The text content to output
+#' @param lpg_rows Last page rows.
+#' @noRd
+create_plot_pages_docx<- function(rs, cntnt, lpg_rows, tmp_dir) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  pgs <- list()
+  cnts <- c()
+  
+  # Get plot spec 
+  plt <- cntnt$object
+  
+  p <- plt$plot
+  
+  
+  if (any(class(p) %in% c("character"))) {
+    
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+    
+    file.copy(p, tmp_nm, overwrite = TRUE)
+    
+    # Get rtf page bodies
+    res <- get_plot_body_html(plt, tmp_nm, cntnt$align, rs,
+                              lpg_rows, cntnt$blank_row, NULL, NULL, 
+                              FALSE)
+    
+    pgs[[length(pgs) + 1]] <- res$html
+    cnts[[length(cnts) + 1]] <- res$lines
+    
+    
+  } else {
+    
+    
+    # Get data in case we need it for page by
+    raw <- plt$plot$data
+    
+    # Determine if there is a page by
+    pgby <- NULL
+    if (!is.null(rs$page_by))
+      pgby <- rs$page_by
+    if (!is.null(plt$page_by))
+      pgby <- plt$page_by
+    
+    if (!is.null(pgby)) {
+      if (!pgby$var %in% names(raw))
+        stop("Page by variable not found in plot data.")
+      
+      dat_lst <- split(raw, raw[[pgby$var]])
+    } else {
+      dat_lst <- list(raw) 
+    }
+    
+    u <- ifelse(rs$units == "inches", "in", rs$units)
+    p <- plt$plot
+    ret <- list()
+    cntr <- 1
+    
+    
+    for (dat in dat_lst) {
+      
+      tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+      
+      p$data <- dat
+      
+      pgval <- NULL
+      if (!is.null(pgby)) {
+        # print(pgby$var)
+        # print(dat)
+        pgval <- dat[1, c(pgby$var)]
+      }
+      
+      # Save plot to temp file
+      if (any(class(p) %in% c("ggcoxzph", "ggsurv"))) {
+        
+        # Deal with survival plots
+        ggplot2::ggsave(tmp_nm, gridExtra::arrangeGrob(grobs = p), 
+                        width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u )
+        
+        
+      } else {
+        
+        # Any other type of plots
+        ggplot2::ggsave(tmp_nm, p, width =  plt$width, height = plt$height, 
+                        dpi = 300, units = u)
+      }
+      
+      # Get rtf page bodies
+      res <- get_plot_body_html(plt, tmp_nm, cntnt$align, rs,
+                                lpg_rows, cntnt$blank_row, pgby, pgval, 
+                                cntr < length(dat_lst))
+      
+      pgs[[length(pgs) + 1]] <- res$html
+      cnts[[length(cnts) + 1]] <- res$lines
+      
+      cntr <- cntr + 1
+      
+    }
+  }
+  
+  ret <- list(html = pgs,
+              lines = cnts)
+  
+  return(ret)
+}
+
+#' Create list of vectors of strings for each page 
+#' @noRd
+get_plot_body_docx <- function(plt, plot_path, talign, rs,
+                               lpg_rows, content_blank_row, pgby, pgval, wrap_flag) {
+  
+  # Default to content width
+  wth <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(plt$width))
+    wth <- plt$width
+  
+  
+  # Get titles and footnotes
+  ttls <- get_titles_html(plt$titles, wth, rs, talign) 
+  ttl_hdr <- get_title_header_html(plt$title_hdr, wth, rs, talign)
+  
+  exclude_top <- NULL
+  if (ttls$border_flag == TRUE | ttl_hdr$border_flag == TRUE) {
+    exclude_top <- "top"
+    
+    pgbys <- get_page_by_html(pgby, wth, pgval, rs, talign, TRUE)
+  } else {
+    
+    pgbys <- get_page_by_html(pgby, wth, pgval, rs, talign, FALSE)
+  }
+  
+  if (is.null(exclude_top)) {
+    if (pgbys$border_flag)
+      exclude_top <- "top"
+    
+  }
+  
+  # Get image RTF codes
+  img <- get_image_html(plot_path, rs$modified_path, plt, rs$units)
+  
+  
+  # algn <- "\\qc" 
+  u <- rs$units
+  if (u == "inches")
+    u <- "in"
+  
+  # Convert width to twips
+  w <- paste0("width:", round(wth, 3), u, ";")
+  
+  # Get border codes
+  b <- get_cell_borders_html(1, 1, 1, 1, plt$borders, exclude = exclude_top)
+  
+  # Concat all header codes
+  hd <- paste0("<table style =\"", w, "\">\n", 
+               "<tr><td style=\"", b, "\">\n")
+  
+  ft <- "</td></tr></table>\n"
+  
+  
+  # Concat RTF codes for image
+  img <- paste0(hd, img, ft)
+  
+  # ** Do something with this **
+  imght <- floor(plt$height / rs$line_height)
+  
+  # Add blank above content if requested
+  a <- NULL
+  if (content_blank_row %in% c("both", "above"))
+    a <- "<br>"
+  
+  
+  # Get sum of all items to this point
+  lns <- sum(length(a), ttls$lines, ttl_hdr$lines, pgbys$lines, imght)
+  
+  if ("bottom" %in% get_outer_borders(plt$borders))
+    extp <- TRUE
+  else 
+    extp <- FALSE 
+  
+  # Get footnotes, filler, and content blank line
+  ftnts <- get_page_footnotes_html(rs, plt, wth, lpg_rows, lns,
+                                   wrap_flag, content_blank_row, talign, extp)
+  
+  # Combine titles, blanks, body, and footnotes
+  rws <- c(a, ttls$html, ttl_hdr$html, pgbys$html, img)
+  
+  
+  # Combine everything
+  rws <- c(rws, ftnts$html)
+  lns <- sum(lns, ftnts$lines)
+  
+  
+  # Page list
+  ret <- list(html = rws,
+              lines = lns)  
+  
+  
+  return(ret)
+  
+}
+
+
