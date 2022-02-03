@@ -1,8 +1,8 @@
 ---
-title: "Example 9: RTF, PDF, and HTML"
+title: "Example 9: RTF, PDF, HTML, and DOCX"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example 9: RTF, PDF, and HTML}
+  %\VignetteIndexEntry{Example 9: RTF, PDF, HTML, and DOCX}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,11 +14,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-### Output to RTF, PDF, and HTML
+### Output to RTF, PDF, HTML, and DOCX
 
-The **reporter** package supports four types of output: TXT, RTF, PDF, and HTML. 
+The **reporter** package supports four types of output: TXT, RTF, PDF, HTML, 
+and DOCX. 
 The package produces TXT reports by default.  If you want to produce RTF, PDF, 
-or HTML output, simply change the output type.  Below is the summary table
+HTML, or DOCX output, simply change the output type.  Below is the summary table
 with stub example from above, the only change being that the `output_type`
 is now set to RTF.
 

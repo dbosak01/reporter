@@ -26,6 +26,7 @@ test_that("html1: Basic table works as expected.", {
   
   
   fp <- file.path(base_path, "html/test1.html")
+ # print(fp)
   
   dat <- mtcars[1:15, ]
   attr(dat[[2]], "label") <- "Cylin."

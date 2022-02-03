@@ -1,3 +1,7 @@
+# reporter 1.3.0
+
+* Added DOCX output type.
+
 # reporter 1.2.9
 
 * Added all border options to PDF.

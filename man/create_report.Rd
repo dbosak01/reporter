@@ -24,7 +24,7 @@ the \code{\link{write_report}} function will add a file extension based
 on the \code{output_type} specified.}
 
 \item{output_type}{The report output type.  Default is "TXT".  Valid
-values are "TXT", "RTF", "PDF", and "HTML".}
+values are "TXT", "RTF", "PDF", "HTML", and "DOCX".}
 
 \item{orientation}{The page orientation of the desired report.  Valid values
 are "landscape" or "portrait".  The default page orientation is "landscape".}

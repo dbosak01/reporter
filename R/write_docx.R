@@ -1,1543 +1,1342 @@
 
 # Globals -----------------------------------------------------------------
 
-pointsize <- 1/72
-inchsize <- 72
-in2cm <- 2.54
-binchars <- charToRaw("\xe2\xe3\xcf\xd3")
+# pointsize <- 1/72
+# inchsize <- 72
+# in2cm <- 2.54
 
 
 
-# Create PDF --------------------------------------------------------------
+# Write DOCX --------------------------------------------------------------
 
+#' @import zip
+#' @import withr
 #' @noRd
-create_pdf <- function(filename = NULL, 
-                       page_height = 11,
-                       page_width = 8.5,
-                       fontname = "Courier", 
-                       fontsize = 10,
-                       margin_top = 1,
-                       margin_left = 1, 
-                       orientation = "landscape",
-                       units = "inches",
-                       conversion = 72,
-                       info = TRUE) {
+write_docx <- function(src, pth) {
+
+  # print(src)
+  # print(file.exists(src))
+  # print(pth)
+  # Sys.sleep(1)
   
-  # Check font size is valid
-  if (!fontsize %in% c(8, 9, 10, 11, 12))
-    stop(paste0("Fontsize ", fontsize, " not valid."))
-  
-  
-  rpt <- structure(list(), class = c("pdf_report", "list"))
-  
-  rpt$filename <- filename
-  rpt$page_height <- page_height
-  rpt$page_width <- page_width
-  rpt$fontname <- fontname
-  rpt$fontsize <- fontsize
-  rpt$margin_top <- margin_top
-  rpt$margin_left <- margin_left
-  rpt$info <- info
-  rpt$author <- Sys.info()[["user"]]
-  rpt$title <- ""
-  rpt$subject <- ""
-  rpt$keywords <- ""
-  rpt$orientation <- orientation
-  rpt$units <- units
-  rpt$conversion <- conversion
-  rpt$pages <- list()
+  if (file.exists(src)) {
+    
+    
+    if (file.exists(pth))
+      file.remove(pth)
+    
+    if (!file.exists(dirname(pth)))
+      dir.create(dirname(pth))
+    
+    
+    fls <- list.files(src, recursive = TRUE, all.files = TRUE)
+    
+    # 
+    # tmp <- getwd()
+    # print(tmp)
+    withr::with_dir(src,
+   # setwd(src)
+    zip::zip(pth, fls, mode = "mirror"))
+    # setwd(src)
+    # utils::zip(pth, fls)
+    
+  #  setwd(tmp)
     
   
-  return(rpt)
-}
-
-
-#' @param x The pdf_report object to add a page to.
-#' @param ... The page_text or page_image content to add.
-#' @noRd
-add_page <- function(x, ...) {
-  
-  
-  pg <- structure(list(), class = c("pdf_page", "list"))
-  
-  inc <- list(...)
-  
-  for (itm in inc) {
-    
-    if (all(class(itm) == "list")) {
-      
-      for (sub in itm) {
-        pg[[length(pg) + 1]] <- sub 
-        
-      }
-      
-      
-    } else 
-      pg[[length(pg) + 1]] <- itm
-  }
-
-  
-  
-  x$pages[[length(x$pages) + 1]] <- pg
-  
-  return(x)
-  
-}
-
-
-add_info <- function(x,
-                     author = "",
-                     title = "",
-                     subject = "",
-                     keywords = "") {
-  
-  x$info <- TRUE
-  x$author <- author
-  x$title <- title
-  x$subject <- subject
-  x$keywords <- keywords
-  
-  return(x)
-  
-}
-
-
-#' @noRd
-page_text <- function(text, font_size = NULL, 
-                      xpos = NULL, ypos = NULL, bold = FALSE,
-                      align = NULL, alignx = NULL, has_page_numbers = NULL) {
-  
-  txt <- structure(list(), class = c("page_text", "page_content", "list"))
-  
-  txt$text <- text
-  txt$font_size <- font_size
-  txt$xpos <- xpos
-  txt$ypos <- ypos
-  txt$bold <- bold
-  txt$align <- align
-  txt$alignx <- alignx  # In units of measure
-  
-  res1 <- grepl("[pg]", text, fixed = TRUE)
-  res2 <- grepl("[tpg]", text, fixed = TRUE)
-  
-  txt$has_page_numbers <- FALSE
-  if (any(res1 == TRUE) | any(res2 == TRUE))
-    txt$has_page_numbers <- TRUE
-  
-  return(txt)
-  
-}
-
-
-
-
-#' Either pass align parameter and line_start, or pass specific xpos and ypos
-#' All measurements in units specified.  Processing function will convert
-#' appropriately.
-#' @noRd
-page_image <- function(filename, height, width,  
-                       align = "center", line_start = NULL,
-                       xpos = NULL, ypos = NULL, units = "inches",
-                       dpi = 300) {
-  
-  img <- structure(list(), class = c("page_image", "page_content", "list"))
-  
-  if (!is.null(xpos) & !is.null(ypos)) {
-    
-    img$xpos <- xpos
-    img$ypos <- ypos
-
-  } else if (!is.null(align) * !is.null(line_start)) {
-    
-    img$align <- align 
-    img$line_start <- line_start
     
   } else {
     
-    stop("Must set either align parameter or xpos.") 
+   print("Nothing") 
   }
   
-  img$filename <- filename
-  img$height <- height
-  img$width <- width
-  img$units <- units
-  img$dpi <- dpi
-
-  
-  return(img)
-  
-}
-
-page_line <- function(startx, starty, endx, endy) {
-  
-  ln <- structure(list(), class = c("page_line", "page_content", "list"))
-  
-  
-  ln$startx <- startx
-  ln$starty <- starty
-  ln$endx <- endx
-  ln$endy <- endy
-  
-  return(ln)
-}
-
-page_hline <- function(startx, starty, pwidth) {
-  
-  ln <- structure(list(), class = c("page_line", "page_content", "list"))
-  
-  
-  ln$startx <- startx
-  ln$starty <- starty
-  ln$endx <- startx + pwidth
-  ln$endy <- starty
-  
-  return(ln)
-}
-
-page_vline <- function(startx, starty, pheight) {
-  
-  ln <- structure(list(), class = c("page_line", "page_content", "list"))
-  
-  
-  ln$startx <- startx
-  ln$starty <- starty
-  ln$endx <- startx
-  ln$endy <- starty + pheight
-  
-  return(ln)
 }
 
 
-page_box <- function(startx, starty, pheight, pwidth, except = "") {
-  
-  
-  bx <- structure(list(), class = c("page_box", "page_content", "list"))
-  
-  bx$startx <- startx
-  bx$starty <- starty
-  bx$pheight <- pheight
-  bx$pwidth <- pwidth
-  bx$except <- except
-  
-  return(bx)
-  
-}
 
-page_grid <- function(startx, starty, rows, cols, pheights, pwidths) {
-  
-  
-  grd <- structure(list(), class = c("page_grid", "page_content", "list"))
-  
-  grd$startx <- startx
-  grd$starty <- starty
-  grd$nrow <- nrow
-  grd$rows <- rows
-  grd$cols <- cols
-  grd$pheights <- pheights
-  grd$pwidths <- pwidths
-  
-  return(grd)
-  
-}
+# Create DOCX --------------------------------------------------------------
 
-# Write PDF ---------------------------------------------------------------
-
-#' A function to write out a PDF file
-#' @param rpt The pdf_report object to write.
-#' @param filename An optional file name.  If no filename is supplied,
-#' it will use the filename from the report object. 
 #' @noRd
-write_pdf <- function(rpt, filename = NULL) {
+create_new_docx <- function() {
   
+  tdd <- file.path(tempdir(), stri_rand_strings(1, length = 6))
+  
+  dir.create(tdd)
+  dir.create(file.path(tdd, "_rels"))
+  dir.create(file.path(tdd, "docProps"))
+  dir.create(file.path(tdd, "word"))
+  dir.create(file.path(tdd, "word/_rels"))
+  
+  create_content_types(tdd)
+  create_web_settings(tdd)
+  create_font_table(tdd)
+  create_styles(tdd)
+  create_app(tdd)
+  create_core(tdd)
+  create_endnotes(tdd)
+  create_footnotes(tdd)
+  create_document_rels(tdd)
+  create_rels(tdd)
+  
+  # Temporary
+  create_document(tdd) 
+  create_header(tdd)
+  create_footer(tdd)
 
-  if (is.null(filename)) {
-    if (is.null(rpt$filename))
-      stop("Filename cannot be NULL.")
-    
-    filename <- rpt$filename
-    
-  }
   
-  if (rpt$orientation == "landscape") {
-    tmp <- rpt$page_height
-    page_height <- rpt$page_width
-    page_width <- tmp
-    
-  } else {
-    
-    page_height <- rpt$page_height
-    page_width <- rpt$page_width
-  }
   
-  if (rpt$units == "cm") {
-    
-   page_height <- round(page_height / in2cm, 2)
-   page_width <- round(page_width / in2cm, 2)
-   margin_top <- round(rpt$margin_top / in2cm, 2)
-   margin_left <- round(rpt$margin_left / in2cm, 2)
-  } else {
-    
-   margin_top <- rpt$margin_top
-   margin_left <- rpt$margin_left
-  }
-    
-  
-  # Remove existing file if needed
-  if (file.exists(filename))
-    file.remove(filename)
-  
-  bp <- dirname(filename)
-  
-  # Check that base path exists
-  if (!file.exists(bp))
-    stop(paste0("Base path '", bp, "' does not exist."))
-  
+  return(tdd)
+}
 
-  bdy <- get_pages(rpt$pages, margin_left, margin_top, 
-                   page_height, page_width, rpt$fontsize, units = rpt$units,
-                   fontname = rpt$fontname, conversion = rpt$conversion)
+#' @noRd
+create_content_types <- function(pth) {
   
-  rpt$pages <- length(rpt$pages)
-                
-  kids <- bdy$page_ids
-  pgs <- bdy$objects
+  
+cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types
+	xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+	<Default Extension="rels" 
+	ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+	<Default Extension="xml" 
+	ContentType="application/xml"/>
+	<Override PartName="/word/document.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+	<Override PartName="/word/styles.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+	<Override PartName="/word/settings.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+	<Override PartName="/word/webSettings.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/>
+	<Override PartName="/word/footnotes.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/>
+	<Override PartName="/word/endnotes.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"/>
+	<Override PartName="/word/header1.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/>
+	<Override PartName="/word/footer1.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>
+	<Override PartName="/word/fontTable.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
+	<Override PartName="/docProps/core.xml" 
+	ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
+	<Override PartName="/docProps/app.xml" 
+	ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
+</Types>'
 
 
-  # Get header objects
-  hd <- get_header(font_name = rpt$fontname,
-                   page_height = (page_height * inchsize),
-                   page_width = (page_width * inchsize),
-                   page_count = length(kids), 
-                   page_ids = kids)
-  
+  nm <- file.path(pth, "[Content_Types].xml")
 
-  # Add info if desired
-  if (rpt$info) {
-    
-    idno <- length(hd) + length(pgs) + 1
-    
-    inf <- pdf_info(idno, author = rpt$author,
-                    title = rpt$title, 
-                    subject = rpt$subject,
-                    keywords = rpt$keywords)
-    
-    doc <- pdf_document(hd, pgs, inf)
-    
-  } else {
+  f <- file(nm, open="w", encoding = "native.enc")
 
-    doc <- pdf_document(hd, pgs)
-  }
-  
-  # Render document
-  rdoc <- render.pdf_document(doc)
-  
-  # Write document to file system
-  # Encoding is important.  Has to be UTF-8.
-  # This is the only way to do it on Windows.
-  f <- file(filename, open="wb", encoding = "native.enc")
-  
-  
-  writeBin(rdoc, con = f, useBytes = TRUE)
-  
+  writeLines(cnt, f,  useBytes = TRUE) 
   
   close(f)
   
   
-  return(rpt)
 }
 
 
-
-#' A function to create a list of objects for the PDF header.
-#' This includes the catalog, font, and pages.
-#' @noRd
-get_header <- function(page_count = 1, 
-                       font_name = "Courier", 
-                       page_height = 612, 
-                       page_width = 792, 
-                       page_ids = c()) {
-  
-  lst <- list()
-  
-  lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
-                                           Pages = ref(4)))
-
-  fn <- "Courier"
-  fb <- "Courier-Bold"
-  if (tolower(font_name) == "times") {
-    fn <- "Times-Roman"
-    fb <- "Times-Bold"
-  } else if (tolower(font_name) == "arial") {
-    fn <- "Helvetica"
-    fb <- "Helvetica-Bold"
-  }
-
-  
-  lst[[2]] <- pdf_object(2, pdf_dictionary(Type = "/Font", 
-                                           Subtype = "/Type1", 
-                                           BaseFont = paste0("/", fn),
-                                           Encoding = "/WinAnsiEncoding"))
-  
-  lst[[3]] <- pdf_object(3, pdf_dictionary(Type = "/Font", 
-                                           Subtype = "/Type1", 
-                                           BaseFont = paste0("/", fb),
-                                           Encoding = "/WinAnsiEncoding"))
-
-  
-  if (page_count > 10)
-    kds <- paste(page_ids, "0 R\n", collapse = " ")
-  else 
-    kds <- paste(page_ids, "0 R", collapse = " ")
-  
-  lst[[4]] <- pdf_object(4, pdf_dictionary(Type = "/Pages",
-                                           Kids = pdf_array(kds),
-                                           Count = page_count,                                                 
-                                           MediaBox = pdf_array(0, 0, 
-                                                        page_width, 
-                                                        page_height)))
+create_web_settings <- function(pth) {
   
   
-  return(lst)
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n',
+'<w:webSettings ',
+'xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" ',
+'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ',
+'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" ',
+'xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" ',
+'xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" ',
+'xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" ',
+'xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" ',
+'xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" ',
+'xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" ',
+'xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" ', 
+'mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh">',
+'<w:optimizeForBrowser/>',
+'<w:allowPNG/>',
+'</w:webSettings>')
+  
+  
+  nm <- file.path(pth, "word/webSettings.xml")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+  
   
 }
 
-
-#' Purpose of this function is to create the appropriate pdf objects
-#' based on the pages added to the report.  Each page can have 1 or more 
-#' pieces of content.  For instance, a page can have text and 2 images.
-#' Object to pages is not 1 to 1.  There are at least two objects for a single
-#' page: one for the page, and one for the page content.  If there is an image
-#' on the page, there is another object to hold the image stream.  Note
-#' that the image has to be referenced in both the page object and the 
-#' the content object.  That is why the function creates the page and image
-#' objects last: you can't really complete these objects until you examine
-#' all the page contents.
-#' @return A two part list, with a list of objects and a vector of ids for the 
-#' pages.
-#' @noRd
-get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
-                      fontsize, units = "inches", fontname = "Courier", 
-                      conversion = 72) {
+create_font_table <- function(pth) {
   
-  # Vector for object IDs of pages only
-  kids <- c()
-  
-  # List for all objects
-  ret <- list()
-  
-  # Determined by trial and error
-  if (tolower(fontname) == "courier")
-    fontscale <- 87
-  else 
-    fontscale <- 100
-  
-  # Hate this.  Don't know why it is needed.  Width estimates should be the same.
-  pg_adj <- 0
-  if (tolower(fontname) == "arial" | tolower(fontname) == "times") {
-    pg_adj <- -1
-  } else if (tolower(fontname) == "courier" & units == "inches") {
-    pg_adj <- 1 
-  }
-  
-  # Get x starting position in points
-  stx <- (margin_left * inchsize) - 5  # This was for fixed width
-  
-  # Get y starting position in points
-  sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
-  
-  # Calculate reasonable line height
-  # Also trial and error
-  lh <- fontsize  + round(fontsize * .19, 2) 
-  
-  # Starting ID is 5 because of standard header objects.
-  # This id variable will be incremented along the way 
-  # as needed to get unique ids for the objects. 
-  id <- 5
-  
-  pgnum <- 0
-  tpg <- length(pages)
-  
-  # Loop through added pages
-  for (pg in pages) {
-    
-    pgnum <- pgnum + 1
-    
-    # Set current page id
-    page_id <- id
-    
-    # Add this page to the kids list
-    kids <- append(kids, page_id)
-    
-    # There will always be one content object per page
-    content_id <- id + 1
-    
-    # Increment id in preparation for next object that needs an id
-    id <- content_id + 1
-    
-    # May or may not be image ids
-    img_ids <- c()
-    
-    # Create content object
-    # Content will be appended as we go along
-    cnto <- pdf_text_stream(content_id, "")
-    
-    # Create a list of image streams for this page
-    imgs <- list()
-    
-    for (cnt in pg) {
-    
-      if ("page_text" %in% class(cnt)) {
-        
-        # If fixed width PDF, will not have x/y positions
-        if (is.null(cnt$xpos) | is.null(cnt$ypos)) {
-
-          tmp <- get_byte_stream(cnt$text,
-                                 stx, sty, lh, fontsize, fontscale)
-        } else {
-          
-          # For PDF2 with page number flag set
-          if (cnt$has_page_numbers & !is.null(cnt$align)) {
-            
-            # Need to adjust x position if there are page numbers,
-            # because when the page number tokens are replaced, 
-            # the string width has changed and can throw off the alignment.
-            # Not working perfectly, but better.
-            txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg)
-            w <- get_text_width(txt, fontname, 
-                                ifelse(is.null(cnt$font_size), 
-                                                      fontsize, cnt$font_size), 
-                                units,
-                                multiplier = 1.03) # to match split_strings
-            if (cnt$align == "left")
-              nx <- cnt$alignx * conversion
-            else if (cnt$align == "right")
-              nx <- ((cnt$alignx - w) * conversion) + pg_adj  # No idea why pg_adj is needed
-            else
-              nx <- (cnt$alignx - (w / 2)) * conversion + pg_adj
-            
-            # For PDF2
-            tmp <- get_byte_stream(txt, 
-                                   stx + nx, sty - cnt$ypos, 
-                                   lh, ifelse(is.null(cnt$font_size), 
-                                              fontsize, cnt$font_size),
-                                   fontscale, cnt$bold)
-            
-          } else {
-            
-            # For other PDF2
-            tmp <- get_byte_stream(cnt$text, 
-                                   stx + cnt$xpos, sty - cnt$ypos, 
-                                   lh, ifelse(is.null(cnt$font_size), 
-                                              fontsize, cnt$font_size),
-                                   fontscale, cnt$bold)
-            
-          }
-          
-
-        }
-    
-      
-      } else if ("page_image" %in% class(cnt)) {
-        
-        # Don't know how many there will be
-        img_ids <- append(img_ids, id)
-        
-        # Convert measurements to points
-        d <- calc_points(cnt, margin_left, margin_top, page_height, 
-                             page_width, cnt$units, lh)
-        
-        # print(paste("wth:", d$wth))
-        # print(paste("hgt:", d$hgt))
-        # print(paste("xpos:", d$xpos))
-        # print(paste("ypos:", d$ypos))
-
-
-        # Every image needs a "Do" command on the content page
-        tmp <- get_image_text(img_ref = id,
-                              width = d$wth,
-                              height = d$hgt,
-                              xpos = d$xpos,
-                              ypos = d$ypos)
-        
-        # Add stream to the list
-        imgs[[length(imgs) + 1]] <- pdf_image_stream(id, 
-                                                     height = d$phgt,
-                                                     width = d$pwth,
-                                       get_image_stream(cnt$filename))
-          
-        # Increment id in preparation for next object
-        id <- id + 1
-        
-      } else if ("page_line" %in% class(cnt)) {
-        
-        tmp <- get_line_segment(startx = stx + cnt$startx,
-                                starty = sty - cnt$starty,
-                                endx = stx + cnt$endx,
-                                endy = sty - cnt$endy)
-        
-      } else if ("page_box" %in% class(cnt)) {
-        
-        tmp <- get_box(startx = stx + cnt$startx,
-                       starty = sty - cnt$starty, 
-                       pheight = cnt$pheight,
-                       pwidth = cnt$pwidth, 
-                       except = cnt$except)
-        
-      } else if ("page_grid" %in% class(cnt)) {
-        
-        tmp <- get_grid(startx = stx + cnt$startx,
-                        starty = sty - cnt$starty, 
-                        rows = cnt$rows,
-                        cols = cnt$cols,
-                        pheights = cnt$pheight,
-                        pwidths = cnt$pwidth)
-        
-      }
-      
-      # Append or replace content as appropriate
-      if (all(cnto$contents == ""))
-        cnto$contents <- tmp
-      else 
-        cnto$contents <- append(cnto$contents, tmp)
-    
-    
-    }
-    
-    # Now can finally create all objects
-    ret[[length(ret) + 1]] <- pdf_page(page_id, content_id, img_ids)
-    ret[[length(ret) + 1]] <- cnto
-    if (length(imgs) > 0)
-      ret <- append(ret, imgs)
-    
-  }
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<w:fonts
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh">
+	<w:font w:name="Times New Roman">
+		<w:panose1 w:val="02020603050405020304"/>
+		<w:charset w:val="00"/>
+		<w:family w:val="roman"/>
+		<w:pitch w:val="variable"/>
+		<w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009" 
+		w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+	</w:font>
+	<w:font w:name="Arial">
+		<w:panose1 w:val="020B0604020202020204"/>
+		<w:charset w:val="00"/>
+		<w:family w:val="swiss"/>
+		<w:pitch w:val="variable"/>
+		<w:sig w:usb0="E0002EFF" w:usb1="C000785B" w:usb2="00000009" 
+		w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+	</w:font>
+	<w:font w:name="Courier New">
+		<w:panose1 w:val="02070309020205020404"/>
+		<w:charset w:val="00"/>
+		<w:family w:val="modern"/>
+		<w:pitch w:val="fixed"/>
+		<w:sig w:usb0="E0002EFF" w:usb1="C0007843" w:usb2="00000009" 
+		w:usb3="00000000" w:csb0="000001FF" w:csb1="00000000"/>
+	</w:font>
+</w:fonts>')
   
   
-  res <- list()
-  res[["page_ids"]] <- kids
-  res[["objects"]] <- ret
+  nm <- file.path(pth, "word/fontTable.xml")
   
-  return(res)
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
   
 }
 
-
-
-get_pages_back <- function(pages, margin_left, margin_top, page_height, page_width,
-                      fontsize, units = "inches") {
-  
-  # Vector for object IDs of pages only
-  kids <- c()
-  
-  # List for all objects
-  ret <- list()
-  
-  # Determined by trial and error
-  fontscale <- 87
-  
-  # Get x starting position in points
-  stx <- (margin_left * inchsize) - 5
-  
-  # Get y starting position in points
-  sty <- ((page_height * inchsize) -  (margin_top * inchsize)) - 5
-  
-  # Calculate reasonable line height
-  # Also trial and error
-  lh <- fontsize  + round(fontsize * .19, 2) 
-  
-  # Starting ID is 5 because of standard header objects.
-  # This id variable will be incremented along the way 
-  # as needed to get unique ids for the objects. 
-  id <- 4
-  
-  # Loop through added pages
-  for (pg in pages) {
-    
-    # Set current page id
-    page_id <- id
-    
-    # Add this page to the kids list
-    kids <- append(kids, page_id)
-    
-    # There will always be one content object per page
-    content_id <- id + 1
-    
-    # Increment id in preparation for next object that needs an id
-    id <- content_id + 1
-    
-    # May or may not be image ids
-    img_ids <- c()
-    
-    # Create content object
-    # Content will be appended as we go along
-    cnto <- pdf_text_stream(content_id, "")
-    
-    # Create a list of image streams for this page
-    imgs <- list()
-    
-    for (cnt in pg) {
-      
-      if ("page_text" %in% class(cnt)) {
-        
-        # Under current logic, there should only be one of these
-        # In the future, will need to account for multiple pieces
-        # of text, and may define their own positions and font size.
-        # Right now everything is Courier from top left.
-        tmp <- get_byte_stream(cnt$text,
-                               stx, sty, lh, fontsize, fontscale)
-        
-        
-      } else if ("page_image" %in% class(cnt)) {
-        
-        # Don't know how many there will be
-        img_ids <- append(img_ids, id)
-        
-        # Convert measurements to points
-        d <- calc_points(cnt, margin_left, margin_top, page_height, 
-                         page_width, cnt$units, lh)
-        
-        # print(paste("wth:", d$wth))
-        # print(paste("hgt:", d$hgt))
-        # print(paste("xpos:", d$xpos))
-        # print(paste("ypos:", d$ypos))
-        
-        
-        # Every image needs a "Do" command on the content page
-        tmp <- get_image_text(img_ref = id,
-                              width = d$wth,
-                              height = d$hgt,
-                              xpos = d$xpos,
-                              ypos = d$ypos)
-        
-        # Add stream to the list
-        imgs[[length(imgs) + 1]] <- pdf_image_stream(id, 
-                                                     height = d$phgt,
-                                                     width = d$pwth,
-                                                     get_image_stream(cnt$filename))
-        
-        # Increment id in preparation for next object
-        id <- id + 1
-        
-      }
-      
-      # Append or replace content as appropriate
-      if (all(cnto$contents == ""))
-        cnto$contents <- tmp
-      else 
-        cnto$contents <- append(cnto$contents, tmp)
-      
-      
-    }
-    
-    # Now can finally create all objects
-    ret[[length(ret) + 1]] <- pdf_page(page_id, content_id, img_ids)
-    ret[[length(ret) + 1]] <- cnto
-    if (length(imgs) > 0)
-      ret <- append(ret, imgs)
-    
-  }
-  
-  
-  res <- list()
-  res[["page_ids"]] <- kids
-  res[["objects"]] <- ret
-  
-  return(res)
-  
-}
-
-#' Convert all measurement to points, so they can be sent to pdf.
-#' @import jpeg
-#' @noRd
-calc_points <- function(cnt, margin_left, margin_top, 
-                        page_height, page_width, 
-                        units, row_height) {
-  
-  pw <- page_width
-  ph <- page_height
-  ml <- margin_left
-  mt <- margin_top
-  
-  if (units == "inches") {
-    cw <- cnt$width
-    ch <- cnt$height
-    xp <- cnt$xpos 
-    yp <- cnt$ypos
-
-  } else if (units == "cm") {
-    
-    cw <- cnt$width / in2cm
-    ch <- cnt$height / in2cm
-    xp <- round(cnt$xpos / in2cm, 2)
-    yp <- round(cnt$ypos/ in2cm, 2)
-    
-  } else 
-    stop("Specified units not supported.")
-  
-  ret <- list()
-  
-  
-  img <- readJPEG(cnt$filename)
-  d <- dim(img)
-  
-  ret$pwth <- d[2]
-  ret$phgt <- d[1]
-  ret$wth <- round(cw  * inchsize, 2)
-  ret$hgt <- round(ch * inchsize, 2)
-  
-  if (!is.null(cnt$align)) {
-    if (cnt$align == "left")
-      ret$xpos <- ml * inchsize
-    else if (cnt$align == "right")
-      ret$xpos <- (pw * inchsize) - ret$wth - (ml * inchsize)
-    else 
-      ret$xpos <- ((pw * inchsize)/2) - (ret$wth / 2)
-    
-    ret$ypos <- (ph * inchsize) - ret$hgt - 
-      (row_height * (cnt$line_start - 1)) - (mt * inchsize)
-    
-  } else {
-    ret$xpos <- xp * inchsize
-    ret$ypos <- (ph * inchsize) - ret$hgt - (yp * inchsize) 
-  }
-  
-  return(ret)
-  
-}
-
-# Render Functions ---------------------------------------------------------
-
-
-
-#' Generic render function
-#' @noRd
-render <- function(x) {
-  
-  UseMethod("render", x)
-  
-}
-
-#' @exportS3Method render default
-render.default <- function(x) {
-  
-  
-  return(as.character(x))
-  
-}
-
-
-#' @exportS3Method render pdf_array
-render.pdf_array <- function(x) {
-  
-  
-  ret <- paste0("[", paste(x, collapse = " "), "]") 
-  
-  
-  return(ret)
-  
-}
-
-
-#' @exportS3Method render pdf_object
-render.pdf_object <- function(x) {
-  
-  ret <- paste0(x$id, " ", x$version, " obj")
-  
-  if (!is.null(x$parameters)) {
-    ret <- paste0(ret, render(x$parameters), "\n")
-  }
-  
-  if (!is.null(x$contents)) {
-    
-    ret <- paste0(ret, render(x$contents)) 
-  }
-  
-  ret <- paste0(ret, "endobj\n")
-  
-  return(ret)
-  
-}
-
-#' @exportS3Method render pdf_dictionary
-render.pdf_dictionary <- function(x) {
-  
-  cnts <- c()
-  
-  for (itm in names(x)) {
-
-    cnts[length(cnts) + 1] <- paste0("/", itm, " ", render(x[[itm]]))
-  }
-  
-  cnts <- paste(cnts, collapse = " ")
-  
-  ret <- paste0("<<", cnts , ">>")
-  
-  return(ret)
-  
-}
-
-#' @exportS3Method render pdf_text_stream
-render.pdf_text_stream <- function(x) {
-  
-
-  if (length(x$contents) > 1) {
-    cnts <- paste0(x$contents, collapse = "\n")
-    cnts <- paste0(cnts, "\n")
-  } else {
-    
-    cnts <- paste0(x$contents, "\n") 
-  }
-  
-  strm <-   paste0("stream\n", cnts, "endstream\n")
-  
-  obj <- pdf_object(x$id, pdf_dictionary(Length = chars(cnts)), strm) 
-
-                                         
-  ret <- render.pdf_object(obj)
-  
-  return(ret)
-  
-}
-
-
-# This was hard to make work. Took a lot of research and trial
-# and error.  PDF has a lot of different way to render an image, and most
-# are very complicated.  This is the simplest one. Requires a JPEG.  
-#' @exportS3Method render pdf_image_stream
-render.pdf_image_stream <- function(x, view = FALSE) {
-  
-  
-  if (length(x$contents) > 1) {
-    cnts <- unlist(x$contents)
-  } 
-  
-  
-  if (rawToChar(cnts[[length(cnts)]]) != "\n")
-    cnts[[length(cnts) + 1]] <- charToRaw("\n")
-    
-  strm <- list()
-  strm[[1]] <- paste0(x$id, " ", x$version, " obj\n")
-  strm[[2]] <- paste0(render(pdf_dictionary(Type = "/XObject",
-                                     Subtype = "/Image",
-                                     Width = x$width, 
-                                     Height = x$height,
-                                     BitsPerComponent = 8,
-                                     ColorSpace = "/DeviceRGB",
-                                     Filter = "/DCTDecode",
-                                     # BitsPerComponent = 8,
-                                     # ColorSpace = pdf_array("/Indexed", 
-                                     #                        "/DeviceRGB",
-                                     #                        111,
-                                     #                        ref(10)),
-                                     Length = chars(cnts))), "\n")
-  strm[[3]] <- "stream\n"
-  strm[[4]] <- cnts
-  strm[[5]] <- "endstream\n"
-  strm[[6]] <- "endobj\n"
-  
-
-  if (view) 
-    ret <- strm
-  else 
-    ret <- unlist(vraw(strm))
-  
-  
-  return(ret)
-  
-}
-
-
-#' @exportS3Method render pdf_info
-render.pdf_info <- function(x) {
-  
-  
-  # Get current time
-  tm <- Sys.time()
-  cdt <- paste0(as.character(tm, "D:%Y%m%d%H%M%S"), 
-                stri_sub(as.character(tm, "%z"), 1, 3), "'",
-                stri_sub(as.character(tm, "%z"), 4, 5), "'")
-  
-  
-  dict <- pdf_dictionary(Producer = paste0("(", x$producer, ")"),
-                         Author = paste0("(", x$author, ")"),
-                         Title = paste0("(", x$title, ")"),
-                         Subject = paste0("(", x$subject, ")"),
-                         Creator = paste0("(", x$creator, ")"),
-                         Keywords = paste0("(", paste(x$keywords, collapse = " ")
-                                           , ")\n"),
-                         CreationDate = paste0("(", cdt, ")"),
-                         ModDate = paste0("(", cdt, ")"))
-  
-  obj <- pdf_object(x$id, dict)
-  
-  ret <- render.pdf_object(obj)
-  
-  
-  return(ret)
-  
-}
-
-# Returns a raw byte array that can be written
-# directly to disk with writeBin
-#' @encoding UTF-8
-#' @exportS3Method render pdf_document
-render.pdf_document <- function(x) {
-  
-  
-  #cnts <- c("%PDF-1.7\n", "%âãÏÓ\n")
-  
-  cnts <- list()
-  # First line identifies this a a PDF file of a particular version.
-  cnts[[1]] <- "%PDF-1.7\n"
-  
-  # Second line is comment of binary characters to identify the content as binary,
-  # so editors or operating systems won't mess with it.
-  cnts[[2]] <- paste0("%", rawToChar(binchars), "\n")
-  xrefs <- c()
-  infoid <- NULL
-  
-  for (itm in x) {
-    
-    if (!is.null(itm)) {
-      
-      # Sum up the number of bytes for all previous objects
-      # Plus 1 to offset to first character of block
-      xrefs[length(xrefs) + 1] <- chars(cnts) 
-      
-      #print(itm$id)
-      tmp <-  render(itm) 
-      #print(tmp)
-      cnts[[length(cnts) + 1]] <- tmp
-      
-      if ("pdf_info" %in% class(itm))
-        infoid <- itm$id
-    
-    }
-    
-  }
-
-
-  cnts[[length(cnts) + 1]] <- render.xref(xrefs, x[[1]]$id, infoid, chars(cnts)) 
-  cnts[[length(cnts) + 1]] <- "%%EOF"
-  
-  ret <- unlist(vraw(cnts))
-  
-  
-  return(ret)
-  
-}
-
-#' Create cross-reference table
-#' @noRd
-render.xref <- function(xrefs, rootID, infoID, startpos) {
-  
-  
-  # Create first entry of cross reference table
-  ret <- paste0("xref\n", "0 ", length(xrefs) + 1, "\n")
-  
-  
-  # # Dynamically create subsequent entries
-  # # Windows has two character end character, 
-  # # and therefore doesn't need an extra space.
-  # # Total width has to be 20 characters exactly.
-  # if (Sys.info()[["sysname"]] == "Windows") {
-  #   ret <- paste0(ret, "0000000000 65535 f\n")
-  #   refs <- paste0(sprintf("%010d", xrefs), " 00000 n\n", collapse = "")
-  # } else {
-    ret <- paste0(ret, "0000000000 65535 f \n")
-    refs <- paste0(sprintf("%010d", xrefs), " 00000 n \n", collapse = "")
-  # }
-    
-  # Combine first and subsequent entries
-  ret <- paste0(ret, refs)
-  
-  # Create dictionary for trailer
-  dict <- pdf_dictionary(Size = length(xrefs) + 1, 
-                         Root = ref(rootID))
-  
-  if (!is.null(infoID)) {
-
-    dict$Info <- ref(infoID)    
-  } 
-  
-  # Create trailer
-  ret <- paste0(ret, "trailer ", 
-                render(dict),
-                "\n", 
-                "startxref\n",
-                startpos, "\n")
-  
-  return(ret)
-  
-}
-
-
-# Class Definitions -------------------------------------------------------
-
-#' Class definition for the Document 
-#' Accepts a set of objects
-#' @noRd
-pdf_document <- function(...) {
-  
-  lst <- list(...)
-  
-
-  doc <- structure(list(), class = c("pdf_document", "list"))
-  
-  
-  for (itm in lst) {
-    
-    # Input can be a single object or a list of objects
-    if ("pdf_object" %in% class(itm)) {
-      doc[[itm$id]] <- itm
-    } else if (all("list" %in% class(itm))){
-      
-      for (sub in itm) {
-        if (!"pdf_object"  %in% class(sub))
-          stop("Document subitem must be of class pdf_object.")
-        else 
-          doc[[sub$id]] <- sub
-      }
-        
-    } else 
-      stop("Document item must be of class pdf_object.")
-      
-  }
-  
-  
-  return(doc)
-  
-}
-
-
-#' Define a class to contain a PDF array
-#' This is a list of numbers, strings, or object references
-#' @noRd
-pdf_array <- function(...) {
-  
-
-  arr <- structure(list(...), class = c("pdf_array", "list"))
-  
-  
-  return(arr)
-  
-}
-
-#' Define a general object class
-#' @param id The id number for the object
-#' @param params A dictionary of parameters for this object
-#' @param contents Contents for this object.  May be null.
-#' @noRd
-pdf_object <- function(id, params = NULL, contents = NULL) {
-  
-  
-  if (!class(id) %in% c("integer", "numeric"))
-    stop("Class of id must be integer or numeric.")
-  
-  if (!"pdf_dictionary" %in% class(params))
-    stop("Class of params must be pdf_dictionary.")
-  
-  obj <- structure(list(), class = c("pdf_object", "list"))
-  
-  obj$id <- id
-  obj$version <- 0
-  obj$parameters <- params
-  obj$contents <- contents
-  
-  return(obj)
-}
-
-
-#' Define a dictionary class, which is a list of name/value pairs
-#' @noRd
-pdf_dictionary <- function(...) {
-  
-  
-  d <- list(...)
-  
-  if (length(d) > 0 & length(names(d)) == 0)
-    stop("Dictionary entries must have names.")
-  
-
-  dict <- structure(d, class = c("pdf_dictionary", "list"))
-  
-  
-  return(dict)
-  
-}
-
-#' @param id The id for this page object
-#' @param content_id The id of the content object for this page
-#' @param graphic_ids The ids for the graphics streams for this page
-#' @noRd
-pdf_page <- function(id, content_id, graphic_ids = NULL) {
-  
-  
-  pg <- structure(list(), class = c("pdf_page", "pdf_object", "list"))
-  
-  # If there are graphics, expand the procedures
-  if (length(graphic_ids) > 0) {
-    
-    procs <- pdf_array("/PDF", 
-                      "/Text", 
-                      "/ImageB", 
-                      "/ImageC", 
-                      "/ImageI")
-    
-    xobj <- pdf_dictionary()
-    
-    for(g in graphic_ids) {
-      
-      xobj[[paste0("X", g)]] <- ref(g) 
-      
-    }
-    
-    
-    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2),
-                                                F2 = ref(3)), 
-                          ProcSet = procs,
-                          XObject = xobj)
-    
-    parms <-  pdf_dictionary(Type = "/Page",
-                             Parent = ref(4),
-                             Contents = ref(content_id),
-                             Resources = res)
-                             
-  } else {
-    
-    procs <- pdf_array("/PDF", "/Text")
-    
-    res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2),
-                                                F2 = ref(3)), 
-                          ProcSet = procs)
-    
-    parms <-  pdf_dictionary(Type = "/Page",
-                             Parent = ref(4),
-                             Contents = ref(content_id),
-                             Resources = res)
-  }
-
-  
-  # Assign properties
-  pg$id <- id
-  pg$version <- 0
-  pg$parameters <-parms
-  pg$content_id <- content_id
-  pg$graphic_ids <- graphic_ids
-  
-  
-  return(pg)
-  
-}
-
-#' Define a stream for text content
-#' @noRd
-pdf_text_stream <- function(id, contents = NULL) {
-
-  
-  strm <- structure(list(), class = c("pdf_text_stream", "pdf_object", "list"))
-
-  strm$id <- id
-  strm$contents <- contents
-  
-  return(strm)
-}
-
-#' Define a stream for image content
-#' @noRd
-pdf_image_stream <- function(id, height, width, contents = NULL) {
-  
-  
-  strm <- structure(list(), class = c("pdf_image_stream", "pdf_object", "list"))
-  
-  strm$id <- id
-  strm$contents <- contents
-  strm$version <- 0
-  strm$height <- height
-  strm$width <- width
-  
-  return(strm)
-}
-
-#' A function to create an info object.  The info object contains the 
-#' author, etc.  of the document.  The create date in this is desirable
-#' for production files, but make development a pain because it guarantees
-#' that the PDF file will change every time a test case is run, and therefore
-#' it is hard to tell which files have actually changed.  The only way to 
-#' tell is to open them all up and look at them.
-#' @noRd
-pdf_info <- function(id, 
-                     author = NULL, title = NULL,
-                     subject = NULL, creator = NULL,
-                     keywords = NULL) {
-  
-  
-  info <- structure(list(), class = c("pdf_info", "pdf_object", "list"))
-  
-  info$id <- id
-  info$producer <- paste0("reporter v", getNamespaceVersion("reporter"))
-  info$author <- author
-  info$title <- title
-  info$subject <- subject
-  info$creator <- R.Version()["version.string"]
-  info$keywords <- keywords
-  info$create_date <- Sys.time()
-  info$mod_date <- Sys.time()
-  
-  return(info)
-}
-
-
-
-
-# Utilities ---------------------------------------------------------------
-
-
-
-#' A function to cast lists of mixed content to lists of raw vectors
-#' @noRd
-vraw <- Vectorize(function(line) {
-  
-  
- if (class(line) == "raw") {
-   ret <- line
- } else {
-   
-  ret <- charToRaw(line)
- }
-  
-  return(ret)
-  
-})
-
-#' Count actual bytes as will exist in the file
-#' @noRd
-chars <- function(lines) {
-  
-  ret <- length(unlist(vraw(lines)))
-  
-  return(ret)
-}
-
-
-#' Return a reference.  Version numbers are all zero.  Not dealing with
-#' versions in these documents. 
-#' @noRd
-ref <- function(id) {
-  
- ret <- paste(id, "0 R")
+create_settings <- function(pth) {
+  
+ cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<w:settings
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh">
+	<w:zoom w:percent="100"/>
+	<w:proofState w:spelling="clean" w:grammar="clean"/>
+	<w:defaultTabStop w:val="720"/>
+	<w:characterSpacingControl w:val="doNotCompress"/>
+	<w:footnotePr>
+		<w:footnote w:id="-1"/>
+		<w:footnote w:id="0"/>
+	</w:footnotePr>
+	<w:endnotePr>
+		<w:endnote w:id="-1"/>
+		<w:endnote w:id="0"/>
+	</w:endnotePr>
+	<w:compat>
+		<w:compatSetting w:name="compatibilityMode" 
+		w:uri="http://schemas.microsoft.com/office/word" w:val="15"/>
+		<w:compatSetting w:name="overrideTableStyleFontSizeAndJustification" 
+		w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
+		<w:compatSetting w:name="enableOpenTypeFeatures" 
+		w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
+		<w:compatSetting w:name="doNotFlipMirrorIndents" 
+		w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
+		<w:compatSetting w:name="differentiateMultirowTableHeaders" 
+		w:uri="http://schemas.microsoft.com/office/word" w:val="1"/>
+		<w:compatSetting w:name="useWord2013TrackBottomHyphenation" 
+		w:uri="http://schemas.microsoft.com/office/word" w:val="0"/>
+	</w:compat>
+	<w:rsids>
+		<w:rsidRoot w:val="005D1180"/>
+		<w:rsid w:val="00046D2A"/>
+		<w:rsid w:val="00444C49"/>
+		<w:rsid w:val="005D1180"/>
+		<w:rsid w:val="00BC1857"/>
+		<w:rsid w:val="00F10374"/>
+		<w:rsid w:val="00FC21CA"/>
+	</w:rsids>
+	<m:mathPr>
+		<m:mathFont m:val="Cambria Math"/>
+		<m:brkBin m:val="before"/>
+		<m:brkBinSub m:val="--"/>
+		<m:smallFrac m:val="0"/>
+		<m:dispDef/>
+		<m:lMargin m:val="0"/>
+		<m:rMargin m:val="0"/>
+		<m:defJc m:val="centerGroup"/>
+		<m:wrapIndent m:val="1440"/>
+		<m:intLim m:val="subSup"/>
+		<m:naryLim m:val="undOvr"/>
+	</m:mathPr>
+	<w:themeFontLang w:val="en-US"/>
+	<w:clrSchemeMapping w:bg1="light1" w:t1="dark1" w:bg2="light2" w:t2="dark2" 
+	w:accent1="accent1" w:accent2="accent2" w:accent3="accent3" w:accent4="accent4" 
+	w:accent5="accent5" w:accent6="accent6" w:hyperlink="hyperlink" 
+	w:followedHyperlink="followedHyperlink"/>
+	<w:shapeDefaults>
+		<o:shapedefaults v:ext="edit" spidmax="1026"/>
+		<o:shapelayout v:ext="edit">
+			<o:idmap v:ext="edit" data="1"/>
+		</o:shapelayout>
+	</w:shapeDefaults>
+	<w:decimalSymbol w:val="."/>
+	<w:listSeparator w:val=","/>
+	<w14:docId w14:val="0322C6E4"/>
+	<w15:chartTrackingRefBased/>
+	<w15:docId w15:val="{C1FAABC8-AE44-436C-B3A7-4CB20B70DB45}"/>
+</w:settings>'
  
- return(ret)
-  
+ 
+ nm <- file.path(pth, "word/settings.xml")
+ 
+ f <- file(nm, open="w", encoding = "native.enc")
+ 
+ writeLines(cnt, f,  useBytes = TRUE) 
+ 
+ close(f)
+ 
 }
 
-#' Utility function to create content for a text stream.  This will 
-#' take a vector of strings, and create pdf statements to display each one.
-#' Multiple lines are separated by the distance specified in lineheight.
-#' Would like to add compression to this function to reduce size of PDF file.
-#' This function largely replaces get_text_stream() because it supports more special 
-#' characters.
-#' @noRd
-get_byte_stream <- function(contents, startx, starty, 
-                            lineheight, fontsize, fontscale, bold = FALSE) {
+create_styles <- function(pth) {
   
-  # Calculate y positions
-  ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<w:styles
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh">
+	<w:docDefaults>
+		<w:rPrDefault>
+			<w:rPr>
+				<w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="minorHAnsi" 
+				w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>
+				<w:sz w:val="22"/>
+				<w:szCs w:val="22"/>
+				<w:lang w:val="en-US" w:eastAsia="en-US" w:bidi="ar-SA"/>
+			</w:rPr>
+		</w:rPrDefault>
+		<w:pPrDefault>
+			<w:pPr>
+				<w:spacing w:after="160" w:line="259" w:lineRule="auto"/>
+			</w:pPr>
+		</w:pPrDefault>
+	</w:docDefaults>
+	<w:latentStyles w:defLockedState="0" w:defUIPriority="99" w:defSemiHidden="0" 
+	w:defUnhideWhenUsed="0" w:defQFormat="0" w:count="376">
+		<w:lsdException w:name="Normal" w:uiPriority="0" w:qFormat="1"/>
+		<w:lsdException w:name="heading 1" w:uiPriority="9" w:qFormat="1"/>
+		<w:lsdException w:name="heading 2" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 3" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 4" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 5" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 6" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 7" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 8" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="heading 9" w:semiHidden="1" w:uiPriority="9" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="index 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 6" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 7" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 8" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index 9" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 1" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 2" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 3" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 4" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 5" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 6" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 7" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 8" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toc 9" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Normal Indent" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="footnote text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="annotation text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="header" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="footer" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="index heading" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="caption" w:semiHidden="1" w:uiPriority="35" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="table of figures" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="envelope address" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="envelope return" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="footnote reference" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="annotation reference" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="line number" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="page number" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="endnote reference" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="endnote text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="table of authorities" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="macro" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="toa heading" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Bullet" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Number" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Bullet 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Bullet 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Bullet 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Bullet 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Number 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Number 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Number 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Number 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Title" w:uiPriority="10" w:qFormat="1"/>
+		<w:lsdException w:name="Closing" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Signature" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Default Paragraph Font" w:semiHidden="1" 
+		w:uiPriority="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text Indent" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Continue" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Continue 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Continue 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Continue 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="List Continue 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Message Header" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Subtitle" w:uiPriority="11" w:qFormat="1"/>
+		<w:lsdException w:name="Salutation" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Date" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text First Indent" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text First Indent 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Note Heading" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text Indent 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Body Text Indent 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Block Text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Hyperlink" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="FollowedHyperlink" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Strong" w:uiPriority="22" w:qFormat="1"/>
+		<w:lsdException w:name="Emphasis" w:uiPriority="20" w:qFormat="1"/>
+		<w:lsdException w:name="Document Map" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Plain Text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="E-mail Signature" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Top of Form" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Bottom of Form" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Normal (Web)" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Acronym" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Address" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Cite" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Code" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Definition" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Keyboard" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Preformatted" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Sample" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Typewriter" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="HTML Variable" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Normal Table" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="annotation subject" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="No List" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Outline List 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Outline List 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Outline List 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Simple 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Simple 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Simple 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Classic 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Classic 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Classic 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Classic 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Colorful 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Colorful 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Colorful 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Columns 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Columns 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Columns 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Columns 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Columns 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 6" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 7" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid 8" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 4" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 5" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 6" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 7" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table List 8" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table 3D effects 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table 3D effects 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table 3D effects 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Contemporary" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Elegant" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Professional" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Subtle 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Subtle 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Web 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Web 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Web 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Balloon Text" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Table Grid" w:uiPriority="39"/>
+		<w:lsdException w:name="Table Theme" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Placeholder Text" w:semiHidden="1"/>
+		<w:lsdException w:name="No Spacing" w:uiPriority="1" w:qFormat="1"/>
+		<w:lsdException w:name="Light Shading" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1" w:uiPriority="65"/>
+		<w:lsdException w:name="Medium List 2" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid" w:uiPriority="73"/>
+		<w:lsdException w:name="Light Shading Accent 1" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List Accent 1" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid Accent 1" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1 Accent 1" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2 Accent 1" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1 Accent 1" w:uiPriority="65"/>
+		<w:lsdException w:name="Revision" w:semiHidden="1"/>
+		<w:lsdException w:name="List Paragraph" w:uiPriority="34" w:qFormat="1"/>
+		<w:lsdException w:name="Quote" w:uiPriority="29" w:qFormat="1"/>
+		<w:lsdException w:name="Intense Quote" w:uiPriority="30" w:qFormat="1"/>
+		<w:lsdException w:name="Medium List 2 Accent 1" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1 Accent 1" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2 Accent 1" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3 Accent 1" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List Accent 1" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading Accent 1" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List Accent 1" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid Accent 1" w:uiPriority="73"/>
+		<w:lsdException w:name="Light Shading Accent 2" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List Accent 2" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid Accent 2" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1 Accent 2" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2 Accent 2" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1 Accent 2" w:uiPriority="65"/>
+		<w:lsdException w:name="Medium List 2 Accent 2" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1 Accent 2" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2 Accent 2" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3 Accent 2" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List Accent 2" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading Accent 2" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List Accent 2" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid Accent 2" w:uiPriority="73"/>
+		<w:lsdException w:name="Light Shading Accent 3" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List Accent 3" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid Accent 3" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1 Accent 3" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2 Accent 3" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1 Accent 3" w:uiPriority="65"/>
+		<w:lsdException w:name="Medium List 2 Accent 3" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1 Accent 3" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2 Accent 3" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3 Accent 3" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List Accent 3" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading Accent 3" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List Accent 3" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid Accent 3" w:uiPriority="73"/>
+		<w:lsdException w:name="Light Shading Accent 4" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List Accent 4" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid Accent 4" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1 Accent 4" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2 Accent 4" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1 Accent 4" w:uiPriority="65"/>
+		<w:lsdException w:name="Medium List 2 Accent 4" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1 Accent 4" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2 Accent 4" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3 Accent 4" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List Accent 4" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading Accent 4" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List Accent 4" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid Accent 4" w:uiPriority="73"/>
+		<w:lsdException w:name="Light Shading Accent 5" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List Accent 5" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid Accent 5" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1 Accent 5" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2 Accent 5" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1 Accent 5" w:uiPriority="65"/>
+		<w:lsdException w:name="Medium List 2 Accent 5" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1 Accent 5" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2 Accent 5" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3 Accent 5" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List Accent 5" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading Accent 5" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List Accent 5" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid Accent 5" w:uiPriority="73"/>
+		<w:lsdException w:name="Light Shading Accent 6" w:uiPriority="60"/>
+		<w:lsdException w:name="Light List Accent 6" w:uiPriority="61"/>
+		<w:lsdException w:name="Light Grid Accent 6" w:uiPriority="62"/>
+		<w:lsdException w:name="Medium Shading 1 Accent 6" w:uiPriority="63"/>
+		<w:lsdException w:name="Medium Shading 2 Accent 6" w:uiPriority="64"/>
+		<w:lsdException w:name="Medium List 1 Accent 6" w:uiPriority="65"/>
+		<w:lsdException w:name="Medium List 2 Accent 6" w:uiPriority="66"/>
+		<w:lsdException w:name="Medium Grid 1 Accent 6" w:uiPriority="67"/>
+		<w:lsdException w:name="Medium Grid 2 Accent 6" w:uiPriority="68"/>
+		<w:lsdException w:name="Medium Grid 3 Accent 6" w:uiPriority="69"/>
+		<w:lsdException w:name="Dark List Accent 6" w:uiPriority="70"/>
+		<w:lsdException w:name="Colorful Shading Accent 6" w:uiPriority="71"/>
+		<w:lsdException w:name="Colorful List Accent 6" w:uiPriority="72"/>
+		<w:lsdException w:name="Colorful Grid Accent 6" w:uiPriority="73"/>
+		<w:lsdException w:name="Subtle Emphasis" w:uiPriority="19" w:qFormat="1"/>
+		<w:lsdException w:name="Intense Emphasis" w:uiPriority="21" w:qFormat="1"/>
+		<w:lsdException w:name="Subtle Reference" w:uiPriority="31" w:qFormat="1"/>
+		<w:lsdException w:name="Intense Reference" w:uiPriority="32" w:qFormat="1"/>
+		<w:lsdException w:name="Book Title" w:uiPriority="33" w:qFormat="1"/>
+		<w:lsdException w:name="Bibliography" w:semiHidden="1" w:uiPriority="37" 
+		w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="TOC Heading" w:semiHidden="1" w:uiPriority="39" 
+		w:unhideWhenUsed="1" w:qFormat="1"/>
+		<w:lsdException w:name="Plain Table 1" w:uiPriority="41"/>
+		<w:lsdException w:name="Plain Table 2" w:uiPriority="42"/>
+		<w:lsdException w:name="Plain Table 3" w:uiPriority="43"/>
+		<w:lsdException w:name="Plain Table 4" w:uiPriority="44"/>
+		<w:lsdException w:name="Plain Table 5" w:uiPriority="45"/>
+		<w:lsdException w:name="Grid Table Light" w:uiPriority="40"/>
+		<w:lsdException w:name="Grid Table 1 Light" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful" w:uiPriority="52"/>
+		<w:lsdException w:name="Grid Table 1 Light Accent 1" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2 Accent 1" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3 Accent 1" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4 Accent 1" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark Accent 1" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful Accent 1" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful Accent 1" w:uiPriority="52"/>
+		<w:lsdException w:name="Grid Table 1 Light Accent 2" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2 Accent 2" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3 Accent 2" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4 Accent 2" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark Accent 2" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful Accent 2" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful Accent 2" w:uiPriority="52"/>
+		<w:lsdException w:name="Grid Table 1 Light Accent 3" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2 Accent 3" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3 Accent 3" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4 Accent 3" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark Accent 3" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful Accent 3" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful Accent 3" w:uiPriority="52"/>
+		<w:lsdException w:name="Grid Table 1 Light Accent 4" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2 Accent 4" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3 Accent 4" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4 Accent 4" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark Accent 4" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful Accent 4" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful Accent 4" w:uiPriority="52"/>
+		<w:lsdException w:name="Grid Table 1 Light Accent 5" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2 Accent 5" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3 Accent 5" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4 Accent 5" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark Accent 5" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful Accent 5" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful Accent 5" w:uiPriority="52"/>
+		<w:lsdException w:name="Grid Table 1 Light Accent 6" w:uiPriority="46"/>
+		<w:lsdException w:name="Grid Table 2 Accent 6" w:uiPriority="47"/>
+		<w:lsdException w:name="Grid Table 3 Accent 6" w:uiPriority="48"/>
+		<w:lsdException w:name="Grid Table 4 Accent 6" w:uiPriority="49"/>
+		<w:lsdException w:name="Grid Table 5 Dark Accent 6" w:uiPriority="50"/>
+		<w:lsdException w:name="Grid Table 6 Colorful Accent 6" w:uiPriority="51"/>
+		<w:lsdException w:name="Grid Table 7 Colorful Accent 6" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light Accent 1" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2 Accent 1" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3 Accent 1" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4 Accent 1" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark Accent 1" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful Accent 1" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful Accent 1" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light Accent 2" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2 Accent 2" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3 Accent 2" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4 Accent 2" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark Accent 2" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful Accent 2" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful Accent 2" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light Accent 3" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2 Accent 3" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3 Accent 3" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4 Accent 3" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark Accent 3" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful Accent 3" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful Accent 3" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light Accent 4" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2 Accent 4" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3 Accent 4" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4 Accent 4" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark Accent 4" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful Accent 4" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful Accent 4" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light Accent 5" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2 Accent 5" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3 Accent 5" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4 Accent 5" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark Accent 5" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful Accent 5" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful Accent 5" w:uiPriority="52"/>
+		<w:lsdException w:name="List Table 1 Light Accent 6" w:uiPriority="46"/>
+		<w:lsdException w:name="List Table 2 Accent 6" w:uiPriority="47"/>
+		<w:lsdException w:name="List Table 3 Accent 6" w:uiPriority="48"/>
+		<w:lsdException w:name="List Table 4 Accent 6" w:uiPriority="49"/>
+		<w:lsdException w:name="List Table 5 Dark Accent 6" w:uiPriority="50"/>
+		<w:lsdException w:name="List Table 6 Colorful Accent 6" w:uiPriority="51"/>
+		<w:lsdException w:name="List Table 7 Colorful Accent 6" w:uiPriority="52"/>
+		<w:lsdException w:name="Mention" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Smart Hyperlink" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Hashtag" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Unresolved Mention" w:semiHidden="1" w:unhideWhenUsed="1"/>
+		<w:lsdException w:name="Smart Link" w:semiHidden="1" w:unhideWhenUsed="1"/>
+	</w:latentStyles>
+	<w:style w:type="paragraph" w:default="1" w:styleId="Normal">
+		<w:name w:val="Normal"/>
+		<w:qFormat/>
+	</w:style>
+	<w:style w:type="character" w:default="1" w:styleId="DefaultParagraphFont">
+		<w:name w:val="Default Paragraph Font"/>
+		<w:uiPriority w:val="1"/>
+		<w:semiHidden/>
+		<w:unhideWhenUsed/>
+	</w:style>
+	<w:style w:type="table" w:default="1" w:styleId="TableNormal">
+		<w:name w:val="Normal Table"/>
+		<w:uiPriority w:val="99"/>
+		<w:semiHidden/>
+		<w:unhideWhenUsed/>
+		<w:tblPr>
+			<w:tblInd w:w="0" w:type="dxa"/>
+			<w:tblCellMar>
+				<w:top w:w="0" w:type="dxa"/>
+				<w:left w:w="108" w:type="dxa"/>
+				<w:bottom w:w="0" w:type="dxa"/>
+				<w:right w:w="108" w:type="dxa"/>
+			</w:tblCellMar>
+		</w:tblPr>
+	</w:style>
+	<w:style w:type="numbering" w:default="1" w:styleId="NoList">
+		<w:name w:val="No List"/>
+		<w:uiPriority w:val="99"/>
+		<w:semiHidden/>
+		<w:unhideWhenUsed/>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Header">
+		<w:name w:val="header"/>
+		<w:basedOn w:val="Normal"/>
+		<w:link w:val="HeaderChar"/>
+		<w:uiPriority w:val="99"/>
+		<w:unhideWhenUsed/>
+		<w:rsid w:val="00FC21CA"/>
+		<w:pPr>
+			<w:tabs>
+				<w:tab w:val="center" w:pos="4680"/>
+				<w:tab w:val="right" w:pos="9360"/>
+			</w:tabs>
+			<w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+		</w:pPr>
+	</w:style>
+	<w:style w:type="character" w:customStyle="1" w:styleId="HeaderChar">
+		<w:name w:val="Header Char"/>
+		<w:basedOn w:val="DefaultParagraphFont"/>
+		<w:link w:val="Header"/>
+		<w:uiPriority w:val="99"/>
+		<w:rsid w:val="00FC21CA"/>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Footer">
+		<w:name w:val="footer"/>
+		<w:basedOn w:val="Normal"/>
+		<w:link w:val="FooterChar"/>
+		<w:uiPriority w:val="99"/>
+		<w:unhideWhenUsed/>
+		<w:rsid w:val="00FC21CA"/>
+		<w:pPr>
+			<w:tabs>
+				<w:tab w:val="center" w:pos="4680"/>
+				<w:tab w:val="right" w:pos="9360"/>
+			</w:tabs>
+			<w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+		</w:pPr>
+	</w:style>
+	<w:style w:type="character" w:customStyle="1" w:styleId="FooterChar">
+		<w:name w:val="Footer Char"/>
+		<w:basedOn w:val="DefaultParagraphFont"/>
+		<w:link w:val="Footer"/>
+		<w:uiPriority w:val="99"/>
+		<w:rsid w:val="00FC21CA"/>
+	</w:style>
+</w:styles>'
   
-  # lns <- stri_encode(contents, from = stri_enc_detect2(contents),
-  #                    to = "Adobe-Standard-Encoding")
+  nm <- file.path(pth, "word/styles.xml")
   
+  f <- file(nm, open="w", encoding = "native.enc")
   
-  #print(stri_enc_detect(contents))
-  
-  cnts <- c()
-  
-  # Convert text characters to byte codes
-  for (ln in contents) {
-    cnts[length(cnts) + 1] <- paste0(charToRaw(viconv(ln)), collapse = "")
-  
-  }
-  
-  bld <- "/F1 "
-  if (bold == TRUE)
-    bld <- "/F2 "
-  
-
-  # Create report line
-  ret <- paste0("BT ", bld , fontsize, 
-                " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td <", 
-                cnts, ">Tj ET")
-  
-  return(ret)
-}
-
-
-#' Utility function to create content for a text stream.  This will 
-#' take a vector of strings, and create pdf statements to display each one.
-#' Multiple lines are separated by the distance specified in lineheight.
-#' Would like to add compression to this function to reduce size of PDF file.
-#' This function largely replace by get_byte_stream() to support more special 
-#' characters.
-#' @noRd
-get_text_stream <- function(contents, startx, starty, 
-                            lineheight, fontsize, fontscale) {
-  
-  
-  ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
-  
-  ret <- paste0("BT /F1 ", fontsize, 
-                " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td (", 
-                viconv(contents), ")Tj ET")
-  
-  # Not working
-  #ret <- memCompress(ret, type = "gzip")
-  
-  #ret <- paste0(ret, collapse = "")
-  
-  return(ret)
-  
-}
-
-#' Utility function to create content for an image stream.
-#' Has to be a JPEG, as that is the only format that PDF supports natively.
-#' @noRd
-get_image_stream <- function(filename) {
-  
-
-  
-  if (!file.exists(filename))
-    stop(paste0("File does not exist: ", filename))
-  
-  # Get file size and add 10% for safety
-  fz <- file.info(filename)[["size"]] * 1.1
-
-  # Read in bytes
-  f <- file(filename, open="rb", encoding = "native.enc")
-  
-  ret <- readBin(con = f, "raw", fz)
+  writeLines(cnt, f,  useBytes = TRUE) 
   
   close(f)
   
-  return(ret)
-  
-}
-
-#' Utility function to create text content for an image
-#' @noRd
-get_image_text <- function(img_ref, height, width, xpos, ypos) {
-  
-  ret <- c()
-  
-  ret[1] <- "q"
-  ret[2] <- paste(width, 0, 0, height, (xpos - 5), ypos, "cm")
-  ret[3] <- paste0("/X", img_ref, " Do")
-  ret[4] <- "Q"
-  
-  
-  return(ret)
-  
 }
 
 
-#' Utility function to create pdf codes for a line segment.
-#' @noRd
-get_line_segment <- function(startx, starty, endx, endy) {
+create_app <- function(pth) {
   
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<Properties
+	xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"
+	xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
+	<Template>Normal.dotm</Template>
+	<TotalTime>1</TotalTime>
+	<Pages>1</Pages>
+	<Words>2</Words>
+	<Characters>16</Characters>
+	<Application>Microsoft Office Word</Application>
+	<DocSecurity>0</DocSecurity>
+	<Lines>1</Lines>
+	<Paragraphs>1</Paragraphs>
+	<ScaleCrop>false</ScaleCrop>
+	<Company></Company>
+	<LinksUpToDate>false</LinksUpToDate>
+	<CharactersWithSpaces>17</CharactersWithSpaces>
+	<SharedDoc>false</SharedDoc>
+	<HyperlinksChanged>false</HyperlinksChanged>
+	<AppVersion>16.0000</AppVersion>
+</Properties>'
   
-  ret <- paste(startx, starty, "m", endx, endy, "l S")
+  nm <- file.path(pth, "docProps/app.xml")
   
+  f <- file(nm, open="w", encoding = "native.enc")
   
-  return(ret)
+  writeLines(cnt, f,  useBytes = TRUE) 
   
-}
-
-#' Utility function to create pdf codes for a box.
-#' @noRd
-get_box <- function(startx, starty, pheight, pwidth, except = "") {
-  
-  ret <- c()
-  
-  if (except != "top")
-    ret[length(ret) + 1] <- paste(startx, starty, "m", 
-                                  startx + pwidth, starty, "l S")
-  if (except != "left")
-    ret[length(ret) + 1] <- paste(startx, starty, "m", startx, starty - pheight, "l S")
-  if (except != "bottom")
-    ret[length(ret) + 1] <- paste(startx, starty - pheight, "m", startx + pwidth, 
-                  starty - pheight, "l S")
-  if (except != "right")
-    ret[length(ret) + 1] <- paste(startx + pwidth, starty, "m", startx + pwidth, 
-                  starty - pheight, "l S")
-  
-  return(ret)
-  
-}
-
-#' Utility function to create pdf codes for a grid.
-#' @noRd
-get_grid <- function(startx, starty, rows, cols, pheights, pwidths) {
-  
-  ret <- c()
-  
-  wdths <- rep(pwidths, cols/length(pwidths)) 
-  hgths <- rep(pheights, rows/length(pheights))
-  twidth <- sum(wdths)
-  theight <- sum(hgths)
-
-  # Start top and left lines  
-  ret[1] <- paste(startx, starty, "m", startx + twidth, starty, "l S")
-  ret[2] <- paste(startx, starty, "m", startx, starty - theight, "l S")
-
-  
-  # Create remaining rows
-  yline <- starty
-  for (rw in hgths) {
-    yline <- yline - rw
-    ret[length(ret) + 1] <- paste(startx, yline, "m", 
-                                  startx + twidth, yline, "l S")
-  
-  }
-  
-  # Create remaining columns
-  xcol <- startx
-  for (cl in wdths) {
-    
-    xcol <- xcol + cl
-    ret[length(ret) + 1] <- paste(xcol, starty, "m", 
-                                  xcol, starty - theight, "l S")
-    
-  }
-  
-  return(ret)
+  close(f)
   
 }
 
-#' @description This is a vectorized version of iconv(), which converts 
-#' encodings on a string.  The CP1252 is a Windows superset of Latin1
-#' which the PDF spec happens to support natively.  This is useful because
-#' we get more characters out of this than Latin1.  It is basically ANSI
-#' plus a few extra characters.  Also added logic to convert characters that
-#' fall outside this range to a question mark, which is better than the default
-#' empty box.
-#' @noRd
-viconv <- Vectorize(function(vstr) {
+
+create_core <- function(pth) {
   
   
-  #print(paste0(Encoding(vstr), ": ", vstr))
+
+  ts <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%SZ")
   
-  if (Encoding(vstr) == "UTF-8") {
-    ret <- iconv(vstr, from =Encoding(vstr), to = "CP1252", sub = "?")
-    
-    if (length(grep("???", ret, fixed = TRUE)) > 0) {
-      ret <- gsub("???", "?", ret, fixed = TRUE)
-      if (Encoding(ret) == "UTF-8")
-        ret <- iconv(ret, from ="UTF-8", to = "CP1252", sub = "?")
-    }
-    
-  } else {
-    
-    ret <- vstr
-  }
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<cp:coreProperties
+	xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dcmitype="http://purl.org/dc/dcmitype/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<dc:title></dc:title>
+	<dc:subject></dc:subject>
+	<dc:creator>',  Sys.info()[["user"]], '</dc:creator>
+	<cp:keywords></cp:keywords>
+	<dc:description></dc:description>
+	<cp:lastModifiedBy>',  Sys.info()[["user"]], '</cp:lastModifiedBy>
+	<cp:revision>1</cp:revision>
+	<dcterms:created xsi:type="dcterms:W3CDTF">', ts, '</dcterms:created>
+	<dcterms:modified xsi:type="dcterms:W3CDTF">', ts, '</dcterms:modified>
+</cp:coreProperties>')
   
-  return(ret)
+  nm <- file.path(pth, "docProps/core.xml")
   
-}, USE.NAMES = FALSE, SIMPLIFY = TRUE)
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+  
+}
+
+create_document <- function(pth) {
+  
+ cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<w:document
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+	<w:body>
+		<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" w:rsidR="00046D2A" 
+		w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00444C49">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+				</w:rPr>
+				<w:t>Fork</w:t>
+			</w:r>
+		</w:p>
+		<w:p w14:paraId="25273E55" w14:textId="6D8F00D8" w:rsidR="00444C49" 
+		w:rsidRDefault="00444C49"/>
+		<w:p w14:paraId="22204C21" w14:textId="4434A694" w:rsidR="00444C49" 
+		w:rsidRPr="00444C49" w:rsidRDefault="00444C49">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" 
+					w:cs="Times New Roman"/>
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00444C49">
+				<w:rPr>
+					<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" 
+					w:cs="Times New Roman"/>
+				</w:rPr>
+				<w:t>Bork</w:t>
+			</w:r>
+		</w:p>
+		<w:p w14:paraId="32E76245" w14:textId="71B1B71F" w:rsidR="00444C49" 
+		w:rsidRDefault="00444C49"/>
+		<w:p w14:paraId="49CB1A18" w14:textId="256FDEDD" w:rsidR="00444C49" 
+		w:rsidRPr="00444C49" w:rsidRDefault="00444C49">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00444C49">
+				<w:rPr>
+					<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>
+				</w:rPr>
+				<w:t>Spork</w:t>
+			</w:r>
+		</w:p>
+		<w:sectPr w:rsidR="00444C49" w:rsidRPr="00444C49">
+			<w:headerReference w:type="default" r:id="rId6"/>
+			<w:footerReference w:type="default" r:id="rId7"/>
+			<w:pgSz w:w="12240" w:h="15840"/>
+			<w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" 
+			w:header="720" w:footer="720" w:gutter="0"/>
+			<w:cols w:space="720"/>
+			<w:docGrid w:linePitch="360"/>
+		</w:sectPr>
+	</w:body>
+</w:document>'
+ 
+ nm <- file.path(pth, "word/document.xml")
+ 
+ f <- file(nm, open="w", encoding = "native.enc")
+ 
+ writeLines(cnt, f,  useBytes = TRUE) 
+ 
+ close(f)
+ 
+}
+
+create_header <- function(pth) {
+ 
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<w:hdr
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+	<w:p w14:paraId="48E489D3" w14:textId="3046F225" w:rsidR="00FC21CA" 
+	w:rsidRDefault="00FC21CA">
+		<w:pPr>
+			<w:pStyle w:val="Header"/>
+		</w:pPr>
+		<w:r>
+			<w:t>Header</w:t>
+		</w:r>
+	</w:p>
+</w:hdr>'
+  
+  nm <- file.path(pth, "word/header1.xml")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+  
+  
+}
+
+
+create_footer <- function(pth) {
+ 
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<w:ftr
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+	<w:p w14:paraId="65A3354A" w14:textId="3C459A2F" w:rsidR="00FC21CA" 
+	w:rsidRDefault="00FC21CA">
+		<w:pPr>
+			<w:pStyle w:val="Footer"/>
+		</w:pPr>
+		<w:r>
+			<w:t>Footer</w:t>
+		</w:r>
+	</w:p>
+</w:ftr>' 
+  
+  
+  nm <- file.path(pth, "word/footer1.xml")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}
+
+
+create_document_rels <- function(pth) {
+ 
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<Relationships
+	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+	<Relationship Id="rId8" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" 
+	Target="fontTable.xml"/>
+	<Relationship Id="rId3" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" 
+	Target="webSettings.xml"/>
+	<Relationship Id="rId7" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" 
+	Target="footer1.xml"/>
+	<Relationship Id="rId2" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" 
+	Target="settings.xml"/>
+	<Relationship Id="rId1" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" 
+	Target="styles.xml"/>
+	<Relationship Id="rId6" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" 
+	Target="header1.xml"/>
+	<Relationship Id="rId5" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes" 
+	Target="endnotes.xml"/>
+	<Relationship Id="rId4" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes" 
+	Target="footnotes.xml"/>
+</Relationships>' 
+  
+  
+  nm <- file.path(pth, "word/_rels/document.xml.rels")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}
+
+create_rels <- function(pth) {
+ 
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships
+	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+	<Relationship Id="rId3" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" 
+	Target="docProps/app.xml"/>
+	<Relationship Id="rId2" 
+	Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" 
+	Target="docProps/core.xml"/>
+	<Relationship Id="rId1" 
+	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" 
+	Target="word/document.xml"/>
+</Relationships>' 
+  
+  
+  nm <- file.path(pth, "_rels/.rels")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+  
+}
+
+create_endnotes <- function(pth) {
+ 
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:endnotes
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+	<w:endnote w:type="separator" w:id="-1">
+		<w:p w14:paraId="11DB1783" w14:textId="77777777" w:rsidR="00F10374" 
+		w:rsidRDefault="00F10374" w:rsidP="00FC21CA">
+			<w:pPr>
+				<w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+			</w:pPr>
+			<w:r>
+				<w:separator/>
+			</w:r>
+		</w:p>
+	</w:endnote>
+	<w:endnote w:type="continuationSeparator" w:id="0">
+		<w:p w14:paraId="304CAF46" w14:textId="77777777" w:rsidR="00F10374" w:rsidRDefault="00F10374" w:rsidP="00FC21CA">
+			<w:pPr>
+				<w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+			</w:pPr>
+			<w:r>
+				<w:continuationSeparator/>
+			</w:r>
+		</w:p>
+	</w:endnote>
+</w:endnotes>'
+  
+  
+  nm <- file.path(pth, "word/endnotes.xml")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+  
+}
+
+create_footnotes <- function(pth) {
+ 
+  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:footnotes
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+	<w:footnote w:type="separator" w:id="-1">
+		<w:p w14:paraId="32C960DE" w14:textId="77777777" w:rsidR="00F10374" 
+		w:rsidRDefault="00F10374" w:rsidP="00FC21CA">
+			<w:pPr>
+				<w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+			</w:pPr>
+			<w:r>
+				<w:separator/>
+			</w:r>
+		</w:p>
+	</w:footnote>
+	<w:footnote w:type="continuationSeparator" w:id="0">
+		<w:p w14:paraId="7E2E8024" w14:textId="77777777" w:rsidR="00F10374" w:rsidRDefault="00F10374" w:rsidP="00FC21CA">
+			<w:pPr>
+				<w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+			</w:pPr>
+			<w:r>
+				<w:continuationSeparator/>
+			</w:r>
+		</w:p>
+	</w:footnote>
+</w:footnotes>' 
+  
+  
+  
+  nm <- file.path(pth, "word/footnotes.xml")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}

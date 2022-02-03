@@ -26,7 +26,7 @@ report layout capabilities
 and a choice of output formats. The package will 
 initially focus on printable, file-based 
 output formats. 
-The current version supports TXT, RTF, PDF, and HTML output types. Note that, 
+The current version supports TXT, RTF, PDF, HTML, and DOCX output types. Note that, 
 unlike other packages, all outputs from the **reporter** package
 are paged by default.  
 
@@ -44,7 +44,8 @@ The **reporter** package contains the following key features:
 * Calculates default columns widths automatically
 * Includes automatic wrapping and splitting of wide and long tables
 * Integrates with the **fmtr** package to format numeric, date, and character data
-* Plots from the popular **ggplot2** package can be added to RTF, PDF, and HTML reports
+* Plots from the popular **ggplot2** package can be added to RTF, PDF, HTML, 
+and DOCX reports
 * Allows appending multiple tables to a report, multiple tables to a page, 
 and intermingling of text, tables, and plots
 * Supports in-report date/time stamps and "Page X of Y" page numbering
@@ -119,7 +120,7 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 As you can see, using the **reporter** package, you can 
 create a useful report with just a few lines of code.  By default, 
 the package creates a text report.  But you can create reports in 
-RTF, PDF, and HTML with just a single parameter change.  
+RTF, PDF, HTML, and DOCX with just a single parameter change.  
 
 Besides the functions shown above, there are additional functions to create
 page headers and footers, spanning headers, a report stub, a by-variable, 
@@ -142,7 +143,7 @@ list of examples:
 * [Example 6: Page Wrap](reporter-wrap.html)
 * [Example 7: Page By](reporter-pageby.html)
 * [Example 8: Title Header](reporter-title_header.html)
-* [Example 9: RTF, PDF, and HTML](reporter-rtf.html)
+* [Example 9: RTF, PDF, HTML, and DOCX](reporter-rtf.html)
 * [Complete Example 1: Listing](reporter-example1.html)
 * [Complete Example 2: Demographics](reporter-example2.html)
 * [Complete Example 3: Adverse Events](reporter-example3.html)

@@ -1,6 +1,6 @@
 
 
-# Write Report HTML -------------------------------------------------------
+# Write Report DOCX -------------------------------------------------------
 
 
 
@@ -582,7 +582,7 @@ page_setup_docx <- function(rs) {
   if (rs$units == "cm")
     rs$gutter_width <- ccm(rs$gutter_width)
   
-  rs$page_break_html <- paste0("<hr class=\"noprint\"><div style=\"page-break-before: always;",
+  rs$page_break_docx <- paste0("<hr class=\"noprint\"><div style=\"page-break-before: always;",
                                "height:", rs$margin_top, 
                                units_html(rs$units), ";", "\"></div>")
 
@@ -600,9 +600,13 @@ page_setup_docx <- function(rs) {
     print(paste("Gutter Width:", rs$gutter_width))
     print(paste("Char Width:", rs$char_width))
   }
-  # 
+  
+  
+  # Create temp directory structure for docx file
+  rs$temp_dir_docx <- create_new_docx()
+
   # Get page template
-  pt <- page_template_html(rs)
+  pt <- page_template_docx(rs)
   rs$page_template <- pt
 
 
@@ -629,4 +633,3 @@ page_setup_docx <- function(rs) {
   
   return(rs)
 }
-

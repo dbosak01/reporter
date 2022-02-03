@@ -12,18 +12,18 @@ page_template_docx <- function(rs) {
   
   pt <- structure(list(), class = c("page_template_html", "list"))
   
-  pt$page_header <- get_page_header_html(rs)
-  pt$title_hdr <- get_title_header_html(rs$title_hdr, rs$line_size, rs)
-  pt$titles <- get_titles_html(rs$titles, rs$line_size, rs)
+  pt$page_header <- get_page_header_docx(rs)
+  pt$title_hdr <- get_title_header_docx(rs$title_hdr, rs$line_size, rs)
+  pt$titles <- get_titles_docx(rs$titles, rs$line_size, rs)
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
     if (!is.null(rs$footnotes[[1]])) {
       if (rs$footnotes[[1]]$valign == "bottom")
-        pt$footnotes <- get_footnotes_html(rs$footnotes, rs$line_size, rs)
+        pt$footnotes <- get_footnotes_docx(rs$footnotes, rs$line_size, rs)
     }
     
-  }
-  pt$page_footer <- get_page_footer_html(rs)
+  } 
+  pt$page_footer <- get_page_footer_docx(rs)
   
   pt$lines <- sum(pt$page_header$lines, pt$page_footer$lines,
                   pt$title_hdr$lines, pt$titles$lines, pt$footnotes$lines)

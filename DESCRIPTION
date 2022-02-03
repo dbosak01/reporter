@@ -1,7 +1,7 @@
 Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
-Version: 1.2.9
+Version: 1.3.0
 Authors@R: c( 
     person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
     person("Kevin", "Kramer", role = "ctb"),
@@ -12,7 +12,8 @@ Description: Contains functions to create regulatory-style statistical reports.
     Originally designed to create tables, listings, and figures for the 
     pharmaceutical, biotechnology, and medical device industries, these
     reports are generalized enough that they could be used in any industry.
-    Generates text, rich-text, PDF and HTML file formats.  The package specializes 
+    Generates text, rich-text, PDF, HTML, and Microsoft Word file formats.  
+    The package specializes 
     in printing wide and long tables with automatic page wrapping and splitting.  
     Reports can be produced with a minimum of function calls, and without 
     relying on other table packages.  The package supports titles, footnotes, 
@@ -42,6 +43,8 @@ Imports: fmtr,
          crayon,
          jpeg,
          graphics,
-         grDevices
+         grDevices,
+         zip, 
+         withr
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
