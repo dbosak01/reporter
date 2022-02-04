@@ -2140,12 +2140,14 @@ write_report <- function(x, file_path = NULL,
   
     ret <- write_report_html(x)
     
+  } else if (toupper(x$output_type) == "DOCX") {
+    
+    ret <- write_report_docx(x)
+    
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
   }
-  # } else if (x$output_type == "docx") {
-  #   ret <- write_report_docx(x, ...)
-  # }
+
   
   log_logr(ret)
   

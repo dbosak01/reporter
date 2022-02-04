@@ -124,37 +124,10 @@ get_html_document <- function(rs) {
   
 
   
-  # Will need stuff in the header: style sheet, etc.
-  
-  # {\\fonttbl {\\f0 ", fnt , ";}}")
-  # if (rs$orientation == "landscape") {
-  #   ret[length(ret) + 1] <- "\\landscape\\horzdoc"
-  #   ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
-  #                                  "\\paperh", round(rs$page_size[1] * conv))
-  # } else {
-  #   ret[length(ret) + 1] <- "\\vertdoc"
-  #   ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
-  #                                  "\\paperh", round(rs$page_size[2] * conv))
-  # }
-  # 
-  # ret[length(ret) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
-  #                                "\\margr", round(rs$margin_right * conv),
-  #                                "\\margt", round(rs$margin_top * conv),
-  #                                "\\margb", round(rs$margin_bottom  * conv),
-  #                                "\\headery", round(rs$margin_top  * conv),
-  #                                "\\footery", round(rs$margin_bottom  * conv))
-  
   
   ret[length(ret) + 1] <- "</head>\n<body>"
   
-  # Will need this ultimately
-  # ph <- get_page_header_html(rs)
-  # if (ph$rtf != "")
-  #   ret[length(ret) + 1] <- ph$rtf
-  # 
-  # pf <- get_page_footer_html(rs)
-  # if (pf$rtf != "")
-  #   ret[length(ret) + 1] <- pf$rtf
+
   
 
   
@@ -194,7 +167,7 @@ paginate_content_html <- function(rs, ls) {
     obj <- cntnt$object
     
     # Remove blank row if last content object
-    cbr <- obj$blank_row
+    cbr <- cntnt$blank_row
     if (last_object) {
       if (all(cbr == "below")) 
         cbr <- "none"

@@ -21,13 +21,13 @@ write_report_docx <- function(rs) {
   if (file.exists(orig_path)) {
     file.remove(orig_path)
   }
-  remove_image_files(orig_path)
+
   
   # Establish content and body sizes
-  rs <- page_setup_html(rs)
+  rs <- page_setup_docx(rs)
   
   # Document header is mostly independent of content
-  hdr <- get_html_document(rs) 
+  hdr <- get_docx_document(rs) 
   
   # Put content in a new variable
   ls <- rs$content
@@ -35,7 +35,7 @@ write_report_docx <- function(rs) {
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
   # Page numbers need to be included
-  bdy <- paginate_content_html(rs, ls)
+  bdy <- paginate_content_docx(rs, ls)
   
   # Get column widths
   rs$column_widths <- bdy[["widths"]]
@@ -48,31 +48,15 @@ write_report_docx <- function(rs) {
   
   # Write content to file system
   # Later we can just return the stream
-  rs <- write_content_html(rs, hdr, bdy, rs$page_template)
+  rs <- write_content_docx(rs, hdr, bdy, rs$page_template)
   
   # Update page numbers for title headers
-  update_page_numbers_html(orig_path, rs$pages)
+ # update_page_numbers_docx(orig_path, rs$pages)
   
   return(rs)
 }
 
-#' @noRd
-remove_image_files <- function(htmlpath) {
-  
-  f <- paste0(gsub(".html", "", basename(htmlpath)), "-")
-  d <- dirname(htmlpath)
-  im <- paste0(d, "/images")
-  ret <- FALSE
-  
-  if (dir.exists(im)) {
-    fls <- list.files(path = im, paste0("^", f), full.names = TRUE,
-                      include.dirs = FALSE, no.. = TRUE)
-    
-    ret <- file.remove(fls)
-  }
 
-  return(ret)
-}
 
 #' @description Returns header for DOCX document.  This is independent of content,
 #' except for the page header and footer.
@@ -122,40 +106,7 @@ get_docx_document <- function(rs) {
   ret[length(ret) + 1] <- paste0("td {padding:0px 2px 0px 2px;}")
   ret[length(ret) + 1] <- "</style>"
   
-
-  
-  # Will need stuff in the header: style sheet, etc.
-  
-  # {\\fonttbl {\\f0 ", fnt , ";}}")
-  # if (rs$orientation == "landscape") {
-  #   ret[length(ret) + 1] <- "\\landscape\\horzdoc"
-  #   ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
-  #                                  "\\paperh", round(rs$page_size[1] * conv))
-  # } else {
-  #   ret[length(ret) + 1] <- "\\vertdoc"
-  #   ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
-  #                                  "\\paperh", round(rs$page_size[2] * conv))
-  # }
-  # 
-  # ret[length(ret) + 1] <- paste0("\\margl", round(rs$margin_left * conv),
-  #                                "\\margr", round(rs$margin_right * conv),
-  #                                "\\margt", round(rs$margin_top * conv),
-  #                                "\\margb", round(rs$margin_bottom  * conv),
-  #                                "\\headery", round(rs$margin_top  * conv),
-  #                                "\\footery", round(rs$margin_bottom  * conv))
-  
-  
   ret[length(ret) + 1] <- "</head>\n<body>"
-  
-  # Will need this ultimately
-  # ph <- get_page_header_html(rs)
-  # if (ph$rtf != "")
-  #   ret[length(ret) + 1] <- ph$rtf
-  # 
-  # pf <- get_page_footer_html(rs)
-  # if (pf$rtf != "")
-  #   ret[length(ret) + 1] <- pf$rtf
-  
 
   
   return(ret)
@@ -194,7 +145,7 @@ paginate_content_docx <- function(rs, ls) {
     obj <- cntnt$object
     
     # Remove blank row if last content object
-    cbr <- obj$blank_row
+    cbr <- cntnt$blank_row
     if (last_object) {
       if (all(cbr == "below")) 
         cbr <- "none"
@@ -463,38 +414,6 @@ update_page <- function(lns, pg) {
 
 # Setup Functions ---------------------------------------------------------
 
-# # A lot of these values are guesses.  Need to test.
-# # Row height and line height were defined independently in case
-# # they are different.  Right now, appear to be the same.
-# if (rs$font_size == 8) {
-#   rh <- 185 #round(.11 * 1440)
-#   lh <- 185 #round(.1 * 1440) 
-#   #pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
-#   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs16"
-#   gtr <- .1 
-#   cw <- .1
-#   cp <- 40
-#   sm <- "\\sl-180\\slmult0"
-# } else if (rs$font_size == 10) {
-#   rh <- 228 #round(.165 * 1440) # 225
-#   lh <- 228 #round(.165 * 1440)  
-#   #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
-#   pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
-#   gtr <- .1
-#   cw <- .11
-#   cp <- 40
-#   sm <- "\\sl-225\\slmult0"
-# } else if (rs$font_size == 12) {
-#   rh <- 275 #round(.2 * 1440)
-#   lh <- 275 #round(.1875 * 1440) #270
-#   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
-#   gtr <- .11
-#   cw <- .12
-#   cp <- 40
-#   sm <- "\\sl-275\\slmult0"
-# }
-# 
-# 
 
 
 #' @description Setup page for content

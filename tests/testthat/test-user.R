@@ -1032,3 +1032,28 @@ test_that("Title header alignment works as expected.", {
   
 })
 
+
+test_that("Titles and footnotes only on first last page.", {
+  
+  # Create temporary path
+  fp <- file.path(base_path, "user/user15")
+
+  ttls <- create_text(" ") %>%
+    titles("My Title Only on First Page", blank_row = "none")
+  
+  tbl <- create_table(iris)
+  
+  ftnts <- create_text(" ") %>%
+    footnotes("My Footnote Only on Last Page",
+              "Here is another footnote")
+  
+  rpt <- create_report(fp, font = "Arial", output_type = "RTF") %>%
+    add_content(ttls, page_break = FALSE, blank_row = "none")  %>% 
+    add_content(tbl, page_break = FALSE, blank_row = "none") %>%
+    add_content(ftnts, page_break = FALSE, blank_row = "none")
+  
+  res <-  write_report(rpt)
+  
+  expect_equal(file.exists(res$modified_path), TRUE)
+  
+})

@@ -136,7 +136,7 @@ paginate_content_rtf <- function(rs, ls) {
     obj <- cntnt$object
     
     # Remove blank row if last content object
-    cbr <- obj$blank_row
+    cbr <- cntnt$blank_row
     if (last_object) {
       if (all(cbr == "below")) 
         cbr <- "none"
