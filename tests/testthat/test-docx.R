@@ -23,38 +23,58 @@ dev <- FALSE
 
 # Basic Tests 1 - 10 ------------------------------------------------------
 
-# 
+
+test_that("docx0: Basic text works as expected.", {
+  
+  
+  fp <- file.path(base_path, "docx/test0.docx")
+
+  
+  txt <- create_text("here")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center")  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+#  expect_equal(res$pages, 1)
+  
+})
+
 # test_that("docx1: Basic table works as expected.", {
-#   
-#   
+# 
+# 
 #   fp <- file.path(base_path, "docx/test1.docx")
-#   
+# 
 #   dat <- mtcars[1:15, ]
 #   attr(dat[[2]], "label") <- "Cylin."
 #   attr(dat[[2]], "width") <- 1
 #   attr(dat[[2]], "justify") <- "center"
-#   
+# 
 #   tbl <- create_table(dat, borders = "none") %>%
-#     titles("Table 1.0", "My Nice Table", borders = c("none"), 
+#     titles("Table 1.0", "My Nice Table", borders = c("none"),
 #            width = "content") %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "none", 
-#               align = "left", width = "content") %>% 
-#     define(wt, width = 1, label = "Weight", align = "center", 
+#     footnotes("My footnote 1", "My footnote 2", borders = "none",
+#               align = "left", width = "content") %>%
+#     define(wt, width = 1, label = "Weight", align = "center",
 #            label_align = "right")
-#   
+# 
 #   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
 #                        font_size = 12, orientation = "landscape") %>%
 #     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
-#                 blank_row = "below") %>% 
-#     add_content(tbl, align = "center")  %>% 
+#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"),
+#                 blank_row = "below") %>%
+#     add_content(tbl, align = "center")  %>%
 #     page_footer("Left1", "Center1", "Right1")
-#   
+# 
 #   res <- write_report(rpt)
-#   
+# 
 #   expect_equal(file.exists(fp), TRUE)
 #   expect_equal(res$pages, 1)
-#   
+# 
 # })
 
 # 

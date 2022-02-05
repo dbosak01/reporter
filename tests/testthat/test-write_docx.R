@@ -13,7 +13,7 @@ test_that("create_new_docx() function works as expected.", {
 
 
   
-  p <- create_new_docx()
+  p <- create_new_docx("Arial", 12)
 
 
   expect_true(file.exists(p))
@@ -50,7 +50,7 @@ test_that("create_new_docx() function works as expected.", {
 
 test_that("write_docx() function works as expected.", {
   
-  p <- create_new_docx()
+  p <- create_new_docx("Arial", 10)
   
   fp <-  file.path(base_path, "docx/test.docx")
   
@@ -61,6 +61,25 @@ test_that("write_docx() function works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 
+  
+})
+
+
+test_that("get_docx_document() works as expected.", {
+  
+  fp <-  file.path(base_path, "docx/test1.docx")
+  
+  txt <- create_text("Fork")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial") %>%
+    add_content(txt)
+  
+  rpt <- page_setup_docx(rpt)
+  
+  res <- get_docx_document(rpt)
+  
+  expect_true(length(res) > 0)
+  
   
 })
   

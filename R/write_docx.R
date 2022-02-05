@@ -56,7 +56,7 @@ write_docx <- function(src, pth) {
 # Create DOCX --------------------------------------------------------------
 
 #' @noRd
-create_new_docx <- function() {
+create_new_docx <- function(font, font_size) {
   
   tdd <- file.path(tempdir(), stri_rand_strings(1, length = 6))
   
@@ -69,7 +69,7 @@ create_new_docx <- function() {
   create_content_types(tdd)
   create_web_settings(tdd)
   create_font_table(tdd)
-  create_styles(tdd)
+  create_styles(tdd, font, font_size)
   create_app(tdd)
   create_core(tdd)
   create_endnotes(tdd)
@@ -78,7 +78,7 @@ create_new_docx <- function() {
   create_rels(tdd)
   
   # Temporary
-  create_document(tdd) 
+ # create_document(tdd) 
   create_header(tdd)
   create_footer(tdd)
 
@@ -316,9 +316,18 @@ create_settings <- function(pth) {
  
 }
 
-create_styles <- function(pth) {
+create_styles <- function(pth, font, font_size) {
   
-  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+  fnt <- font
+  if (toupper(font) == "TIMES")
+    fnt <- "Times New Roman"
+  else if (toupper(font) == "COURIER")
+    fnt <- "Courier New"
+    
+  
+  fs <- font_size * 2
+  
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
 <w:styles
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -334,10 +343,10 @@ create_styles <- function(pth) {
 	<w:docDefaults>
 		<w:rPrDefault>
 			<w:rPr>
-				<w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="minorHAnsi" 
-				w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>
-				<w:sz w:val="22"/>
-				<w:szCs w:val="22"/>
+			  <w:rFonts w:ascii="', fnt, '" w:hAnsi="', fnt, 
+			  '" w:cs="', fnt, '"/>
+				<w:sz w:val="', fs, '"/>
+				<w:szCs w:val="', fs, '"/>
 				<w:lang w:val="en-US" w:eastAsia="en-US" w:bidi="ar-SA"/>
 			</w:rPr>
 		</w:rPrDefault>
@@ -822,7 +831,7 @@ create_styles <- function(pth) {
 		<w:uiPriority w:val="99"/>
 		<w:rsid w:val="00FC21CA"/>
 	</w:style>
-</w:styles>'
+</w:styles>')
   
   nm <- file.path(pth, "word/styles.xml")
   

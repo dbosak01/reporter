@@ -30,21 +30,44 @@ write_report_docx <- function(rs) {
   hdr <- get_docx_document(rs) 
   
   # Put content in a new variable
-  ls <- rs$content
+  #ls <- rs$content
   
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
   # Page numbers need to be included
-  bdy <- paginate_content_docx(rs, ls)
+  #bdy <- paginate_content_docx(rs, ls)
   
   # Get column widths
-  rs$column_widths <- bdy[["widths"]]
+  #rs$column_widths <- bdy[["widths"]]
   
   # Deal with preview
-  if (!is.null(rs$preview)) {
-    if (rs$preview < length(bdy[[1]]$pages))
-      bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
-  }
+  # if (!is.null(rs$preview)) {
+  #   if (rs$preview < length(bdy[[1]]$pages))
+  #     bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
+  # }
+  
+#   bdy <- '<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" 
+#   w:rsidR="00046D2A" w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
+# 			<w:pPr>
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+# 				</w:rPr>
+# 			</w:pPr>
+# 			<w:r w:rsidRPr="00444C49">
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+# 				</w:rPr>
+# 				<w:t>Fork</w:t>
+# 			</w:r>
+# 		</w:p>'
+  
+  
+  bdy <- '<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" 
+  w:rsidR="00046D2A" w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
+			<w:r w:rsidRPr="00444C49">
+				<w:t>Fork2</w:t>
+			</w:r>
+		</w:p>'
   
   # Write content to file system
   # Later we can just return the stream
@@ -72,42 +95,66 @@ get_docx_document <- function(rs) {
   if (tolower(rs$font) == "times")
     fnt <- "Times New Roman"
   
-  u <- rs$units
-  if (rs$units == "inches")
-    u <- "in"
-  
   # Prepare header
-  ret[length(ret) + 1] <- paste0("<!DOCTYPE html>\n",
-                                 "<html>\n", "<head>")
+  ret[length(ret) + 1] <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">'
+	
+	ret[length(ret) + 1] <- '<w:body>'
   
-  ret[length(ret) + 1] <- "<style>"
-  ret[length(ret) + 1] <- paste0("@media print{\n",
-                                 "@page {size:", rs$orientation, ";",
-                                  "margin:0;}\n",
-                                  ".noprint{display:none;}}")
-  ret[length(ret) + 1] <- paste0("body {\nfont-family: ", fnt,
-                                 ";\nfont-size: ", rs$font_size, "pt;\n", 
-                                 "margin-top: ", rs$margin_top, u, ";\n",
-                                 "margin-bottom: ", 
-                                 round(rs$margin_bottom/2, 3), u, ";\n",
-                                 "margin-left: ", rs$margin_left, u, ";\n",
-                                 "margin-right: ", rs$margin_right, u, ";\n",
-                                 "}")
-  ret[length(ret) + 1] <- paste0(".thdr {font-weight: normal;", 
-                                  "border-bottom: thin solid;", 
-                                  "}")
-  ret[length(ret) + 1] <- paste0(".tdc {text-align:center;}")
-  ret[length(ret) + 1] <- paste0(".tdl {text-align:left;}")
-  ret[length(ret) + 1] <- paste0(".tdr {text-align:right;}")
-  ret[length(ret) + 1] <- paste0("table {",
-                                 "border-spacing: 0;",
-                                 "border-collapse: collapse;",
-                                 "}")
-  ret[length(ret) + 1] <- paste0("td {padding:0px 2px 0px 2px;}")
-  ret[length(ret) + 1] <- "</style>"
-  
-  ret[length(ret) + 1] <- "</head>\n<body>"
 
+  # Assume landscape
+  pg_h <- rs$page_size[1]
+  pg_w <- rs$page_size[2]
+  
+  # Change to portrait
+  if(rs$orientation == "portrait") {
+    pg_w <- rs$page_size[1]
+    pg_h <- rs$page_size[2]
+  }
+  
+  ret[length(ret) + 1] <- paste0('<w:sectPr w:rsidR="00444C49" w:rsidRPr="00444C49">
+    <w:headerReference w:type="default" r:id="rId6"/>
+    <w:footerReference w:type="default" r:id="rId7"/>',
+    '<w:pgSz w:w="', pg_w * conv, '" w:h="', pg_h * conv, '"/>',
+    '<w:pgMar w:top="', rs$margin_top * conv, '" w:right="', rs$margin_right * conv, '" ', 
+    'w:bottom="', rs$margin_bottom * conv, '" w:left="', rs$margin_left * conv, '" ',
+    'w:header="720" w:footer="720" w:gutter="0"/>',
+    '<w:cols w:space="720"/>
+    <w:docGrid w:linePitch="360"/>
+    </w:sectPr>')
   
   return(ret)
   
@@ -262,9 +309,7 @@ paginate_content_docx <- function(rs, ls) {
 #' @noRd
 write_content_docx <- function(rs, hdr, body, pt) {
   
-  # Kill existing file
-  if (file.exists(rs$modified_path))
-    file.remove(rs$modified_path)
+
   
   counter <- 0
   page <- 0
@@ -272,115 +317,128 @@ write_content_docx <- function(rs, hdr, body, pt) {
   last_page <- FALSE
   page_open <- FALSE
   
+
+  tf <- create_new_docx(rs$font, rs$font_size)
   
-  f <- file(rs$modified_path, open="a", encoding = "native.enc")
+  fp <- file.path(tf, "word/document.xml")
+  
+  f <- file(fp, open="a", encoding = "native.enc")
   
   writeLines(hdr, con = f, useBytes = TRUE)
   
   
-  for (cont in body$pages) {
-    
-    
-    # Increment counter
-    counter <- counter + 1
-    page <- 0
-    
-    # Set last_object flag
-    if (counter == length(body$pages))
-      last_object <- TRUE
-    else 
-      last_object <- FALSE
-    
-    ta <- "align=\"left\" "
-    if (cont$align == "right")
-      ta <- "align=\"right\" "
-    else if (cont$align %in% c("center", "centre"))
-      ta <- "align=\"center\" "
-    
-    
-    for (pg in cont$pages) {
-      
-      page <- page + 1
-      
-      if (page == length(cont$pages))
-        last_page <- TRUE
-      else
-        last_page <- FALSE
-      
-      
-      #print(page_open)
-      if (page_open == FALSE) {
-        
-        if (!is.null(rs$page_template$page_header) & 
-            !is.null(rs$page_template$page_header$html))
-          writeLines(update_page(rs$page_template$page_header$html,  rs$pages), 
-                     con = f, useBytes = TRUE)
-        
-        # Write content div to keep page together
-        writeLines(paste0("<div ", ta, ">"), con = f, useBytes = TRUE)
-        
-        
-        if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
-          writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f, 
-                     useBytes = TRUE)
-        
-        if (!is.null(rs$titles) & !is.null(pt$titles$html))
-          writeLines(pt$titles$html, con = f, useBytes = TRUE)
-        
-      }
-      
-      if (!is.null(pg)) {
-        
-        writeLines(pg, con = f, useBytes = TRUE)
-        
-      }
-      
-      # Set page_open flag based on status of page_break and current objects
-      if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
-        page_open <- TRUE
-      else 
-        page_open <- FALSE
-      
-      if (page_open == FALSE) {
-        
-        if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
-          writeLines(update_page(pt$footnotes$html,  rs$pages), 
-                     con = f, useBytes = TRUE)
-        
-        # Content div
-        writeLines("</div>", con = f, useBytes = TRUE)
-        
-        if (!is.null(rs$page_template$page_footer) & 
-            !is.null(rs$page_template$page_footer$html))
-          writeLines(update_page(rs$page_template$page_footer$html, rs$pages), 
-                     con = f, useBytes = TRUE)
-        
-        
-        # Add form feed character for text page break
-        if (last_object == FALSE | last_page == FALSE) {
-          
-          if (is.null(rs$pages))
-            rs$pages <- 1
-          else 
-            rs$pages <- rs$pages + 1 
-          
-          writeLines(rs$page_break_html, con = f, useBytes = TRUE) 
-          
-        }
-      }
-      
-      if (last_object == TRUE & last_page == TRUE) {
-        
-        rs$pages <- rs$pages + 1 
-        
-      }
-    }
-    
-  }
+  writeLines(body, con = f, useBytes = TRUE)
   
-  writeLines("</body></html>", con = f, useBytes = TRUE)
+  # for (cont in body$pages) {
+  #   
+  #   
+  #   # Increment counter
+  #   counter <- counter + 1
+  #   page <- 0
+  #   
+  #   # Set last_object flag
+  #   if (counter == length(body$pages))
+  #     last_object <- TRUE
+  #   else 
+  #     last_object <- FALSE
+  #   
+  #   ta <- "align=\"left\" "
+  #   if (cont$align == "right")
+  #     ta <- "align=\"right\" "
+  #   else if (cont$align %in% c("center", "centre"))
+  #     ta <- "align=\"center\" "
+  #   
+  #   
+  #   for (pg in cont$pages) {
+  #     
+  #     page <- page + 1
+  #     
+  #     if (page == length(cont$pages))
+  #       last_page <- TRUE
+  #     else
+  #       last_page <- FALSE
+  #     
+  #     
+  #     #print(page_open)
+  #     if (page_open == FALSE) {
+  #       
+  #       if (!is.null(rs$page_template$page_header) & 
+  #           !is.null(rs$page_template$page_header$html))
+  #         writeLines(update_page(rs$page_template$page_header$html,  rs$pages), 
+  #                    con = f, useBytes = TRUE)
+  #       
+  #       # Write content div to keep page together
+  #       writeLines(paste0("<div ", ta, ">"), con = f, useBytes = TRUE)
+  #       
+  #       
+  #       if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
+  #         writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f, 
+  #                    useBytes = TRUE)
+  #       
+  #       if (!is.null(rs$titles) & !is.null(pt$titles$html))
+  #         writeLines(pt$titles$html, con = f, useBytes = TRUE)
+  #       
+  #     }
+  #     
+  #     if (!is.null(pg)) {
+  #       
+  #       writeLines(pg, con = f, useBytes = TRUE)
+  #       
+  #     }
+  #     
+  #     # Set page_open flag based on status of page_break and current objects
+  #     if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
+  #       page_open <- TRUE
+  #     else 
+  #       page_open <- FALSE
+  #     
+  #     if (page_open == FALSE) {
+  #       
+  #       if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
+  #         writeLines(update_page(pt$footnotes$html,  rs$pages), 
+  #                    con = f, useBytes = TRUE)
+  #       
+  #       # Content div
+  #       writeLines("</div>", con = f, useBytes = TRUE)
+  #       
+  #       if (!is.null(rs$page_template$page_footer) & 
+  #           !is.null(rs$page_template$page_footer$html))
+  #         writeLines(update_page(rs$page_template$page_footer$html, rs$pages), 
+  #                    con = f, useBytes = TRUE)
+  #       
+  #       
+  #       # Add form feed character for text page break
+  #       if (last_object == FALSE | last_page == FALSE) {
+  #         
+  #         if (is.null(rs$pages))
+  #           rs$pages <- 1
+  #         else 
+  #           rs$pages <- rs$pages + 1 
+  #         
+  #         writeLines(rs$page_break_html, con = f, useBytes = TRUE) 
+  #         
+  #       }
+  #     }
+  #     
+  #     if (last_object == TRUE & last_page == TRUE) {
+  #       
+  #       rs$pages <- rs$pages + 1 
+  #       
+  #     }
+  #   }
+  #   
+  # }
+  
+  writeLines("</w:body>\n</w:document>", con = f, useBytes = TRUE)
   
   close(f)
+  
+  
+  # Kill existing file
+  if (file.exists(rs$modified_path))
+    file.remove(rs$modified_path)
+  
+  write_docx(tf, rs$modified_path)
   
   return(rs)
   
@@ -488,6 +546,16 @@ page_setup_docx <- function(rs) {
     gtr <- ccm(gtr)
   }
   
+  
+  # Get conversion factor to twips
+  if (rs$units == "inches") {
+    conv <- 1440
+  } else {
+    conv <- 566.9291
+  }
+  
+  rs$twip_conversion <- conv
+  
   rs$row_height <- rh
   rs$line_height <- rh
   rs$char_width <- cw
@@ -522,7 +590,7 @@ page_setup_docx <- function(rs) {
   
   
   # Create temp directory structure for docx file
-  rs$temp_dir_docx <- create_new_docx()
+  #rs$temp_dir_docx <- create_new_docx()
 
   # Get page template
   pt <- page_template_docx(rs)
