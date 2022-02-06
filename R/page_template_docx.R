@@ -148,39 +148,47 @@ get_page_header_docx <- function(rs) {
 get_page_footer_docx <- function(rs) {
   
   ret <- ""
-  cnt <- 1
+  cnt <- 0
 
   fl <- rs$page_footer_left
   fc <- rs$page_footer_center
   fr <- rs$page_footer_right
+  
 
   maxf <- max(length(fl), length(fc), length(fr))
 
   if (maxf > 0) {
 
-    ret <- paste0("<br>\n<table ",
-                  "style=\"width:100%\">\n",
-                  "<colgroup>\n<col style=\"width:33.3%\">\n",
-                  "<col style=\"width:33.3%\">\n",
-                  "<col style=\"width:33.3%\">\n</colgroup>\n")
+    ret <- paste0("<w:tbl> ",
+                  "<w:tblPr>",
+                  '<w:tblStyle w:val="TableGrid"/>',
+                  '<w:tblW w:w="5000"',
+                  ' w:type="pct"/>',
+                  "</w:tblPr>",
+                  "<w:tblGrid>",
+                  '<w:gridCol w:w="1667" w:type="pct"/>',
+                  '<w:gridCol w:w="1666" w:type="pct"/>',
+                  '<w:gridCol w:w="1667" w:type="pct"/>',
+                  "</w:tblGrid>", collapse = "")
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
     for (i in seq(1, maxf)) {
 
-      ret <- paste0(ret, "<tr>")
+      ret <- paste0(ret, "<w:tr>")
 
       if (length(fl) >= i) {
 
         # Split strings if they exceed width
         tmp1 <- split_string_html(fl[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp1$html),
-                           "</td>")
+        
+        ret <- paste0(ret, cell_pct(tmp1$html, "left", 1667))
+        
         lcnt <- tmp1$lines
       } else {
-        ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp;</td>")
+        ret <- paste0(ret, cell_pct(" ", "left", 1667))
         lcnt <- 1
       }
 
@@ -189,11 +197,10 @@ get_page_footer_docx <- function(rs) {
         # Split strings if they exceed width
         tmp2 <- split_string_html(fc[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp2$html),
-                           "</td>")
+        ret <- paste0(ret,  cell_pct(tmp2$html, "center", 1666))
         ccnt <- tmp2$lines
       } else {
-        ret <- paste0(ret, "<td style=\"text-align:center\">&nbsp;</td>")
+        ret <- paste0(ret,  cell_pct(" ", "center", 1666))
         ccnt <- 1
       }
 
@@ -201,12 +208,11 @@ get_page_footer_docx <- function(rs) {
 
         tmp3 <- split_string_html(fr[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp3$html),
-                      "</td>")
+        ret <- paste0(ret, cell_pct(tmp3$html, "right", 1667))
         
         rcnt <- tmp3$lines
       } else {
-        ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp;</td>")
+        ret <- paste0(ret,  cell_pct(" ", "right", 1667))
         rcnt <- 1
       }
 
@@ -215,12 +221,13 @@ get_page_footer_docx <- function(rs) {
     }
     dev.off()
 
-    ret <- paste0(ret, "</tr>\n")
+    ret <- paste0(ret, "</w:tr>\n")
+    ret <- paste0(ret, "</w:tbl>\n")
   }
 
-  ret <- paste0(ret, "</table>\n")
+
   
-  res <- list(html = paste0(ret, collapse = ""),
+  res <- list(docx = paste0(ret, collapse = ""),
               lines = cnt)
   
   return(res)

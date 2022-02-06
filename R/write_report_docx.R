@@ -304,7 +304,7 @@ write_content_docx <- function(rs, hdr, body, pt) {
   create_header(tf, rs$page_template$page_header$docx)
   
   # Write out footer
-  # create_footer(tf, rs$page_template$page_footer)
+  create_footer(tf, rs$page_template$page_footer$docx)
   
   fp <- file.path(tf, "word/document.xml")
   
