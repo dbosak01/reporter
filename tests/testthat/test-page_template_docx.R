@@ -58,28 +58,29 @@ context("Page Template DOCX Tests")
 #   expect_equal(th$lines, 4) 
 # 
 # })
-# 
-# 
-# test_that("get_page_header_docx works as expected.", {
-# 
-#   rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
-#     page_header(left= c("Hello"),
-#                 right = paste("Right here is something that might wrap.",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer",
-#                               "If it is long enough so let's make it longer")) %>%
-#     page_footer("Left", "Center", "Right here is something")
-# 
-#   rpt3 <- page_setup_html(rpt3)
-# 
-#   ph <- get_page_header_html(rpt3)
-#   ph
-# 
-#   expect_equal(ph$lines, 3) 
-# 
-# })
-# 
-# 
+
+ 
+test_that("get_page_header_docx works as expected.", {
+
+  rpt3 <- create_report("", font = "Arial", font_size = 12) %>%
+    page_header(left= c("Left"), right = "Right") %>%
+                # right = paste("Right here is something that might wrap.",
+                #               "If it is long enough so let's make it longer",
+                #               "If it is long enough so let's make it longer",
+                #               "If it is long enough so let's make it longer")
+                # ) %>%
+    page_footer("Left", "Center", "Right here is something")
+
+  rpt3 <- page_setup_docx(rpt3)
+
+  ph <- get_page_header_docx(rpt3)
+  ph
+
+  expect_equal(ph$lines, 1)
+
+})
+
+ 
 # test_that("get_page_footer_docx works as expected.", {
 # 
 #   rpt3 <- create_report("", font = "Arial", font_size = 12) %>%

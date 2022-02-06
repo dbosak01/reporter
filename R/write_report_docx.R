@@ -46,28 +46,8 @@ write_report_docx <- function(rs) {
   #     bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
   # }
   
-#   bdy <- '<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" 
-#   w:rsidR="00046D2A" w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
-# 			<w:pPr>
-# 				<w:rPr>
-# 					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
-# 				</w:rPr>
-# 			</w:pPr>
-# 			<w:r w:rsidRPr="00444C49">
-# 				<w:rPr>
-# 					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
-# 				</w:rPr>
-# 				<w:t>Fork</w:t>
-# 			</w:r>
-# 		</w:p>'
   
-  
-  bdy <- '<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" 
-  w:rsidR="00046D2A" w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
-			<w:r w:rsidRPr="00444C49">
-				<w:t>Fork2</w:t>
-			</w:r>
-		</w:p>'
+  bdy <- para("Forker")
   
   # Write content to file system
   # Later we can just return the stream
@@ -317,13 +297,20 @@ write_content_docx <- function(rs, hdr, body, pt) {
   last_page <- FALSE
   page_open <- FALSE
   
-
+  # Create new document in temp location
   tf <- create_new_docx(rs$font, rs$font_size)
+  
+  # Write out header
+  create_header(tf, rs$page_template$page_header$docx)
+  
+  # Write out footer
+  # create_footer(tf, rs$page_template$page_footer)
   
   fp <- file.path(tf, "word/document.xml")
   
   f <- file(fp, open="a", encoding = "native.enc")
   
+
   writeLines(hdr, con = f, useBytes = TRUE)
   
   

@@ -35,7 +35,8 @@ test_that("docx0: Basic text works as expected.", {
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(txt, align = "center")  
+    add_content(txt, align = "center")  %>%
+    page_header("Left", "Right")
   
   res <- write_report(rpt)
   

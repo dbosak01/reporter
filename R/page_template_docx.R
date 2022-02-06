@@ -44,6 +44,7 @@ get_page_header_docx <- function(rs) {
   hl <- rs$page_header_left
   hr <- rs$page_header_right
   maxh <- max(length(hl), length(hr))
+  conv <- rs$twip_conversion
   
   u <- rs$units
   if (rs$units == "inches")
@@ -52,30 +53,51 @@ get_page_header_docx <- function(rs) {
   if (maxh > 0) {
 
 
-    ret <- paste0("<table ",
-                  "style=\"width:100%\">",
-                  "<colgroup>\n<col style=\"width:50%\">\n",
-                  "<col style=\"width:50%\">\n</colgroup>\n")
+    # ret <- paste0("<w:tbl> ",
+    #               "<w:tblPr>",
+    #               '<w:tblStyle w:val="TableGrid"/>',
+    #               '<w:tblW w:w="', rs$content_size[["width"]] * conv, '"',
+    #               ' w:type="pct"/>',
+    #               "</w:tblPr>",
+    #               "<w:tblGrid>",
+    #               '<w:gridCol w:w="', rs$content_size[["width"]] * conv/ 2, '"/>',
+    #               '<w:gridCol w:w="', rs$content_size[["width"]] * conv/ 2, '"/>',
+    #               "</w:tblGrid>", collapse = "")
+    
+    ret <- paste0("<w:tbl> ",
+                  "<w:tblPr>",
+                  '<w:tblStyle w:val="TableGrid"/>',
+                  '<w:tblW w:w="5000"',
+                  ' w:type="pct"/>',
+                  "</w:tblPr>",
+                  "<w:tblGrid>",
+                  '<w:gridCol w:w="2500" w:type="pct"/>',
+                  '<w:gridCol w:w="2500" w:type="pct"/>',
+                  "</w:tblGrid>", collapse = "")
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
 
     for (i in seq(1, maxh)) {
-      ret <- paste0(ret, "<tr>")
+      ret <- paste0(ret, "<w:tr>")
 
       if (length(hl) >= i) {
 
         # Split strings if they exceed width
         tmp <- split_string_html(hl[[i]], rs$content_size[["width"]]/2, rs$units)
         
-        ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp$html),
-                           "</td>\n")
+        ret <- paste0(ret, 
+                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      para(tmp$html),
+                           "</w:tc>\n")
         
         lcnt <- tmp$lines  
 
       } else {
-        ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp</td>\n")
+        ret <- paste0(ret, 
+                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      para(" "), "</w:tc>\n")
         lcnt <- 1
       }
 
@@ -85,13 +107,17 @@ get_page_header_docx <- function(rs) {
         tmp2 <- split_string_html(hr[[i]], rs$content_size[["width"]]/2, rs$units)
 
         
-        ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp2$html), 
-                           "</td></tr>\n")
+        ret <- paste0(ret, 
+                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      para(tmp2$html, "right"), 
+                      "</w:tc></w:tr>\n")
         
         rcnt <- tmp2$lines 
 
       } else {
-        ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp</td></tr>\n")
+        ret <- paste0(ret, 
+                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      para(" ", "right"), "</w:tc></w:tr>\n")
         rcnt <- 1
       }
 
@@ -101,7 +127,7 @@ get_page_header_docx <- function(rs) {
         cnt <- cnt + rcnt
     }
     
-    ret <- paste0(ret, "</table>")
+    ret <- paste0(ret, "</w:tbl>")
 
     dev.off()
 
@@ -112,7 +138,7 @@ get_page_header_docx <- function(rs) {
   }
 
   
-  res <- list(html = ret, lines = cnt)
+  res <- list(docx = ret, lines = cnt)
   
   return(res)
 }

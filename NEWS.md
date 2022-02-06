@@ -1,6 +1,8 @@
 # reporter 1.3.0
 
 * Added DOCX output type.
+* Fixed bug on RTF and HTML which was preventing multiple contents 
+from being added to the same report.
 
 # reporter 1.2.9
 

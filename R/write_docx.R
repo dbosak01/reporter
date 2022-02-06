@@ -79,8 +79,8 @@ create_new_docx <- function(font, font_size) {
   
   # Temporary
  # create_document(tdd) 
-  create_header(tdd)
-  create_footer(tdd)
+  # create_header(tdd)
+   create_footer(tdd)
 
   
   
@@ -913,117 +913,117 @@ create_core <- function(pth) {
   
 }
 
-create_document <- function(pth) {
-  
- cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
-<w:document
-	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
-	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
-	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
-	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
-	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
-	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
-	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
-	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
-	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
-	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
-	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
-	xmlns:o="urn:schemas-microsoft-com:office:office"
-	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
-	xmlns:v="urn:schemas-microsoft-com:vml"
-	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
-	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
-	xmlns:w10="urn:schemas-microsoft-com:office:word"
-	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
-	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
-	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
-	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
-	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
-	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
-	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
-	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
-	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
-	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
-	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
-	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
-	<w:body>
-		<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" w:rsidR="00046D2A" 
-		w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
-			<w:pPr>
-				<w:rPr>
-					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
-				</w:rPr>
-			</w:pPr>
-			<w:r w:rsidRPr="00444C49">
-				<w:rPr>
-					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
-				</w:rPr>
-				<w:t>Fork</w:t>
-			</w:r>
-		</w:p>
-		<w:p w14:paraId="25273E55" w14:textId="6D8F00D8" w:rsidR="00444C49" 
-		w:rsidRDefault="00444C49"/>
-		<w:p w14:paraId="22204C21" w14:textId="4434A694" w:rsidR="00444C49" 
-		w:rsidRPr="00444C49" w:rsidRDefault="00444C49">
-			<w:pPr>
-				<w:rPr>
-					<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" 
-					w:cs="Times New Roman"/>
-				</w:rPr>
-			</w:pPr>
-			<w:r w:rsidRPr="00444C49">
-				<w:rPr>
-					<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" 
-					w:cs="Times New Roman"/>
-				</w:rPr>
-				<w:t>Bork</w:t>
-			</w:r>
-		</w:p>
-		<w:p w14:paraId="32E76245" w14:textId="71B1B71F" w:rsidR="00444C49" 
-		w:rsidRDefault="00444C49"/>
-		<w:p w14:paraId="49CB1A18" w14:textId="256FDEDD" w:rsidR="00444C49" 
-		w:rsidRPr="00444C49" w:rsidRDefault="00444C49">
-			<w:pPr>
-				<w:rPr>
-					<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>
-				</w:rPr>
-			</w:pPr>
-			<w:r w:rsidRPr="00444C49">
-				<w:rPr>
-					<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>
-				</w:rPr>
-				<w:t>Spork</w:t>
-			</w:r>
-		</w:p>
-		<w:sectPr w:rsidR="00444C49" w:rsidRPr="00444C49">
-			<w:headerReference w:type="default" r:id="rId6"/>
-			<w:footerReference w:type="default" r:id="rId7"/>
-			<w:pgSz w:w="12240" w:h="15840"/>
-			<w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" 
-			w:header="720" w:footer="720" w:gutter="0"/>
-			<w:cols w:space="720"/>
-			<w:docGrid w:linePitch="360"/>
-		</w:sectPr>
-	</w:body>
-</w:document>'
- 
- nm <- file.path(pth, "word/document.xml")
- 
- f <- file(nm, open="w", encoding = "native.enc")
- 
- writeLines(cnt, f,  useBytes = TRUE) 
- 
- close(f)
- 
-}
+# create_document <- function(pth) {
+#   
+#  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+# <w:document
+# 	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+# 	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+# 	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+# 	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+# 	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+# 	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+# 	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+# 	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+# 	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+# 	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+# 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+# 	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+# 	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+# 	xmlns:o="urn:schemas-microsoft-com:office:office"
+# 	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+# 	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+# 	xmlns:v="urn:schemas-microsoft-com:vml"
+# 	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+# 	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+# 	xmlns:w10="urn:schemas-microsoft-com:office:word"
+# 	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+# 	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+# 	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+# 	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+# 	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+# 	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+# 	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+# 	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+# 	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+# 	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+# 	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+# 	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+# 	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+# 	<w:body>
+# 		<w:p w14:paraId="1BC7DC64" w14:textId="00AA6D14" w:rsidR="00046D2A" 
+# 		w:rsidRPr="00444C49" w:rsidRDefault="00BC1857">
+# 			<w:pPr>
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+# 				</w:rPr>
+# 			</w:pPr>
+# 			<w:r w:rsidRPr="00444C49">
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>
+# 				</w:rPr>
+# 				<w:t>Fork</w:t>
+# 			</w:r>
+# 		</w:p>
+# 		<w:p w14:paraId="25273E55" w14:textId="6D8F00D8" w:rsidR="00444C49" 
+# 		w:rsidRDefault="00444C49"/>
+# 		<w:p w14:paraId="22204C21" w14:textId="4434A694" w:rsidR="00444C49" 
+# 		w:rsidRPr="00444C49" w:rsidRDefault="00444C49">
+# 			<w:pPr>
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" 
+# 					w:cs="Times New Roman"/>
+# 				</w:rPr>
+# 			</w:pPr>
+# 			<w:r w:rsidRPr="00444C49">
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" 
+# 					w:cs="Times New Roman"/>
+# 				</w:rPr>
+# 				<w:t>Bork</w:t>
+# 			</w:r>
+# 		</w:p>
+# 		<w:p w14:paraId="32E76245" w14:textId="71B1B71F" w:rsidR="00444C49" 
+# 		w:rsidRDefault="00444C49"/>
+# 		<w:p w14:paraId="49CB1A18" w14:textId="256FDEDD" w:rsidR="00444C49" 
+# 		w:rsidRPr="00444C49" w:rsidRDefault="00444C49">
+# 			<w:pPr>
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>
+# 				</w:rPr>
+# 			</w:pPr>
+# 			<w:r w:rsidRPr="00444C49">
+# 				<w:rPr>
+# 					<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>
+# 				</w:rPr>
+# 				<w:t>Spork</w:t>
+# 			</w:r>
+# 		</w:p>
+# 		<w:sectPr w:rsidR="00444C49" w:rsidRPr="00444C49">
+# 			<w:headerReference w:type="default" r:id="rId6"/>
+# 			<w:footerReference w:type="default" r:id="rId7"/>
+# 			<w:pgSz w:w="12240" w:h="15840"/>
+# 			<w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" 
+# 			w:header="720" w:footer="720" w:gutter="0"/>
+# 			<w:cols w:space="720"/>
+# 			<w:docGrid w:linePitch="360"/>
+# 		</w:sectPr>
+# 	</w:body>
+# </w:document>'
+#  
+#  nm <- file.path(pth, "word/document.xml")
+#  
+#  f <- file(nm, open="w", encoding = "native.enc")
+#  
+#  writeLines(cnt, f,  useBytes = TRUE) 
+#  
+#  close(f)
+#  
+# }
 
-create_header <- function(pth) {
+create_header <- function(pth, cnt) {
  
-  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+  hdr <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:hdr
 	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
 	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
@@ -1057,23 +1057,15 @@ create_header <- function(pth) {
 	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
 	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
 	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
-	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
-	<w:p w14:paraId="48E489D3" w14:textId="3046F225" w:rsidR="00FC21CA" 
-	w:rsidRDefault="00FC21CA">
-		<w:pPr>
-			<w:pStyle w:val="Header"/>
-		</w:pPr>
-		<w:r>
-			<w:t>Header</w:t>
-		</w:r>
-	</w:p>
-</w:hdr>'
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">\n'
+  
+
   
   nm <- file.path(pth, "word/header1.xml")
   
   f <- file(nm, open="w", encoding = "native.enc")
   
-  writeLines(cnt, f,  useBytes = TRUE) 
+  writeLines(paste0(hdr, cnt, '\n</w:hdr>\n', collapse = ""), f,  useBytes = TRUE) 
   
   close(f)
   
@@ -1348,4 +1340,29 @@ create_footnotes <- function(pth) {
   writeLines(cnt, f,  useBytes = TRUE) 
   
   close(f)
+}
+
+
+# DOCX Construction -------------------------------------------------------
+
+
+para <- function(txt, align = "left") {
+  
+  if (align == "centre")
+    align <- "center"
+  
+ ret <- paste0('<w:p>',
+               '<w:pPr><w:jc w:val="', align, '"/></w:pPr>',
+               '<w:r><w:t>', txt, '</w:t></w:r></w:p>', collapse = "")
+ 
+ return(ret)
+  
+}
+
+run <- function(txt) {
+  
+  ret <- paste0('<w:r><w:t>', txt, '</w:t></w:r>', collapse = "")
+  
+  return(ret)
+  
 }
