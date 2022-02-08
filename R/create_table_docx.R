@@ -344,8 +344,8 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   return(ret) 
 }
 
-# Haven't quite decided what to do with this function in HTML
-# For now, just return the footnote and any blank lines above or below
+#' Footnotes takes special handling because of the valign option.
+#' @noRd
 get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
                                    wrap_flag, content_blank_row, talgn, 
                                    ex_brdr = FALSE) {
@@ -360,12 +360,12 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
       if (spec$footnotes[[length(spec$footnotes)]]$valign == "bottom") {
         
         vflag <- "bottom"
-        ftnts <- get_footnotes_html(spec$footnotes, 
+        ftnts <- get_footnotes_docx(spec$footnotes, 
                                    spec_width, rs, 
                                    talgn, FALSE) 
       } else {
         vflag <- "top"
-        ftnts <- get_footnotes_html(spec$footnotes, spec_width, rs, talgn, ex_brdr) 
+        ftnts <- get_footnotes_docx(spec$footnotes, spec_width, rs, talgn, ex_brdr) 
       }
       
     }
@@ -375,7 +375,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
       if (!is.null(rs$footnotes[[1]]$valign)) {
         if (rs$footnotes[[1]]$valign == "top") {
           vflag <- "top"
-          ftnts <- get_footnotes_html(rs$footnotes, 
+          ftnts <- get_footnotes_docx(rs$footnotes, 
                                      spec_width, rs, 
                                      talgn, ex_brdr) 
         } else {
@@ -390,7 +390,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
   b <- NULL
   blen <- 0
   if (content_blank_row %in% c("below", "both")) {
-    b <- "<br>"
+    #b <- "<br>"
     blen <- 1
   }
   
@@ -429,11 +429,9 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
   }
   
   tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
-  ret <- list(html = c(ublnks, ftnts$html, lblnks),
+  ret <- list(docx = c(ublnks, ftnts$docx, lblnks),
               lines = tlns)
   
-  # ret <- list(html =  ftnts$html,
-  #             lines = ftnts$lines)
   
   return(ret)
 }

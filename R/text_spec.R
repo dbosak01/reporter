@@ -1007,7 +1007,7 @@ create_text_pages_docx <- function(rs, cntnt, lpg_rows, content_blank_row) {
   if (!is.null(txt$width))
     w <- txt$width
   
-  res <- get_text_body_html(rs, txt, w, rs$body_line_count, 
+  res <- get_text_body_docx(rs, txt, w, rs$body_line_count, 
                             lpg_rows, content_blank_row, cntnt$align)
   
   
@@ -1022,12 +1022,13 @@ create_text_pages_docx <- function(rs, cntnt, lpg_rows, content_blank_row) {
 get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows, 
                                content_blank_row, talgn) {
   
+  conv <- rs$twip_conversion
   
   # Get content titles and footnotes
-  ttls <- get_titles_html(txt$titles, width, rs, talgn) 
-  ttl_hdr <- get_title_header_html(txt$title_hdr, width, rs, talgn)
+  ttls <- get_titles_docx(txt$titles, width, rs, talgn) 
+  ttl_hdr <- get_title_header_docx(txt$title_hdr, width, rs, talgn)
   
-  ftnts <- get_footnotes_html(txt$footnotes, width, rs, talgn, FALSE) 
+  ftnts <- get_footnotes_docx(txt$footnotes, width, rs, talgn, FALSE) 
   
   exclude_top <- NULL
   if (ttls$border_flag | ttl_hdr$border_flag)
@@ -1048,30 +1049,31 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
   if (u == "inches")
     u <- "in"
   
-  # Calculate text width in twips
-  w <- paste0("width:", round(width, 3), u, ";")
-  
-  
   # Get text alignment codes
-  if (txt$align == "right") 
-    algn <- "text-align:right;"
+  if (txt$align == "right")
+    algn <- "right"
   else if (txt$align %in% c("center", "centre"))
-    algn <- "text-align:center;"
-  else 
-    algn <- "text-align:left;"
-  
+    algn <- "center"
+  else
+    algn <- "left"
+   
   # Get cell border codes
-  b <- get_cell_borders_html(1, 1, 1, 1, txt$borders, exclude = exclude_top)  
-  
+  b <- get_table_borders_docx(txt$borders, exclude = exclude_top)  
+   
   # Prepare row header and footer
-  rwhd <- paste0("<table ", 
-                 " style=\"", w, algn, "\">\n<tr><td style=\"", b, "\">")
-  rwft <- paste0("</td></tr>\n</table>\n")
+  rwhd <- paste0("<w:tbl>\n", '<w:tblPr><w:tblW w:w="', width * conv, '"/>', 
+                 b,
+                 "</w:tblPr>",
+                 "<w:tr><w:tc>",
+                 '<w:tcPr><w:tcW w:w="', width * conv, '"/></w:tcPr>',
+                 '<w:p>',
+                 '<w:pPr><w:jc w:val="', algn, '"/></w:pPr>')
+  rwft <- paste0("</w:p></w:tc></w:tr>\n</w:tbl>\n")
   
   ret <- list()
   cnt <- c()
   
-  # Gather rtf and line counts for each page
+  # Gather docx and line counts for each page
   for (i in seq_along(txtpgs)) {
     
     if (i == length(txtpgs))
@@ -1082,16 +1084,16 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
     pg <- txtpgs[[i]]
     
     # Put line ending on all but last line
-    if (length(pg) > 1) {
-      s <- paste0(pg[seq(1, length(pg) - 1)], "<br>\n")
-      s <- c(s, pg[length(pg)])
-    } else
-      s <- pg
+    # if (length(pg) > 1) {
+    #   s <- paste0(pg[seq(1, length(pg) - 1)], "<br>\n")
+    #   s <- c(s, pg[length(pg)])
+    # } else
+      s <- run(pg)
     
     # Add blank above content if requested
     a <- NULL
-    if (i == 1 & content_blank_row %in% c("both", "above"))
-      a <- "<br>\n"
+    # if (i == 1 & content_blank_row %in% c("both", "above"))
+    #   a <- "<br>\n"
     
     
     # Sum up lines
@@ -1099,23 +1101,23 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
     
     # Get footnotes
     if ("bottom" %in% get_outer_borders(txt$borders))
-      ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
+      ftnts <- get_page_footnotes_docx(rs, txt, width, lpg_rows, cnts,
                                        wrap_flag, content_blank_row, talgn, TRUE)
     else 
-      ftnts <- get_page_footnotes_html(rs, txt, width, lpg_rows, cnts,
+      ftnts <- get_page_footnotes_docx(rs, txt, width, lpg_rows, cnts,
                                        wrap_flag, content_blank_row, talgn, FALSE)
     
     
     # Combine titles, blanks, body, and footnotes
-    rws <- c(a, ttls$html, ttl_hdr$html, 
+    rws <- c(a, ttls$docx, ttl_hdr$docx, 
              rwhd, s, rwft)
     
-    ret[[length(ret) + 1]] <- c(rws, ftnts$html)
+    ret[[length(ret) + 1]] <- c(rws, ftnts$docx)
     cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
     
   }
   
-  res <- list(html = ret, lines = cnt)
+  res <- list(docx = ret, lines = cnt)
   
   return(res)
   

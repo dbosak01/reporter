@@ -24,25 +24,53 @@ dev <- FALSE
 # Basic Tests 1 - 10 ------------------------------------------------------
 
 
-test_that("docx0: Basic text works as expected.", {
+test_that("docx0a: Basic text works as expected.", {
   
   
-  fp <- file.path(base_path, "docx/test0.docx")
+  fp <- file.path(base_path, "docx/test0a.docx")
 
   
-  txt <- create_text("here")
+  txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) %>%
+    titles("Here is my first title", blank_row = "below", borders = "all", 
+           align = "center") %>%
+    footnotes("Here is a footnote", blank_row = "both", borders = "all")
   
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
-                       font_size = 12, orientation = "landscape") %>%
+                       font_size = 11, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
-    page_header("Left", "Right") %>%
+    page_header(c("Left1", "Left2"), "Right") %>%
     page_footer("Left", "Center", "Right")
   
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
 #  expect_equal(res$pages, 1)
+  
+})
+
+test_that("docx0b: Basic text with title header works as expected.", {
+  
+  
+  fp <- file.path(base_path, "docx/test0b.docx")
+  
+  
+  txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) %>%
+    title_header("Here is my first title", right = "Right", blank_row = "none", 
+                 borders = "all") %>%
+    footnotes("Here is a footnote", blank_row = "both", borders = "all")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
+                       font_size = 11, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(txt, align = "center") %>%
+    page_header(c("Left1", "Left2"), "Right") %>%
+    page_footer("Left", "Center", "Right")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  #  expect_equal(res$pages, 1)
   
 })
 

@@ -30,12 +30,12 @@ write_report_docx <- function(rs) {
   hdr <- get_docx_document(rs) 
   
   # Put content in a new variable
-  #ls <- rs$content
+  ls <- rs$content
   
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
   # Page numbers need to be included
-  #bdy <- paginate_content_docx(rs, ls)
+  bdy <- paginate_content_docx(rs, ls)
   
   # Get column widths
   #rs$column_widths <- bdy[["widths"]]
@@ -47,7 +47,7 @@ write_report_docx <- function(rs) {
   # }
   
   
-  bdy <- para("Forker")
+ # bdy <- para("Forker")
   
   # Write content to file system
   # Later we can just return the stream
@@ -184,11 +184,11 @@ paginate_content_docx <- function(rs, ls) {
     # Break each content type into a list of pages
     if (any(class(obj) == "table_spec")) {
       
-      res <- create_table_pages_html(rs, cntnt, last_page_lines)
+      res <- create_table_pages_docx(rs, cntnt, last_page_lines)
       
       # Collect multiple pages and line counts
       for (j in seq_len(length(res$page_list))) {
-        pgs[[length(pgs) + 1]] <- res$page_list[[j]]$html
+        pgs[[length(pgs) + 1]] <- res$page_list[[j]]$docx
         lns[[length(lns) + 1]] <- res$page_list[[j]]$lines
       }
       
@@ -198,18 +198,18 @@ paginate_content_docx <- function(rs, ls) {
       
     } else if (any(class(obj) == "text_spec")) {
       
-      res <- create_text_pages_html(rs, cntnt, last_page_lines, cbr)
-      for (j in seq_len(length(res$html))) {
-        pgs[[length(pgs) + 1]] <- res$html[[j]]
+      res <- create_text_pages_docx(rs, cntnt, last_page_lines, cbr)
+      for (j in seq_len(length(res$docx))) {
+        pgs[[length(pgs) + 1]] <- res$docx[[j]]
         lns[[length(lns) + 1]] <- res$lines[[j]]
         
       }
       
     } else if (any(class(obj) == "plot_spec")) {
       
-      res <- create_plot_pages_html(rs, cntnt, last_page_lines, tempdir())
-      for (j in seq_len(length(res$html))) {
-        pgs[[length(pgs) + 1]] <- res$html[[j]]
+      res <- create_plot_pages_docx(rs, cntnt, last_page_lines, tempdir())
+      for (j in seq_len(length(res$docx))) {
+        pgs[[length(pgs) + 1]] <- res$docx[[j]]
         lns[[length(lns) + 1]] <- res$lines[[j]]
         
       }
@@ -242,30 +242,30 @@ paginate_content_docx <- function(rs, ls) {
     
     # If there is a page break or it's the last object in the
     # content list, add the blank lines if needed.
-    if (rs$paper_size != "none") {
-      if ((ls[[i]]$page_break | last_object) & hrf) {
-  
-  
-        # Add extra offsets if table has a lot of borders turned on
-        # to avoid undesired page wraps
-        boff <- 0
-        if (any(class(obj) == "table_spec") &
-            any(obj$borders %in% c("all", "inside"))) {
-
-          #boff <- round(last_page_lines * rs$border_height / rs$row_height)
-          boff <- 1
-        }
-  
-        blnks <- c()
-        bl <- rs$body_line_count - last_page_lines - boff
-        if (bl > 0)
-          blnks <- rep("<br>", bl)
-  
-        last_page <- append(last_page, blnks)
-        last_page_lines <- 0
-  
-      }
-    }
+    # if (rs$paper_size != "none") {
+    #   if ((ls[[i]]$page_break | last_object) & hrf) {
+    # 
+    # 
+    #     # Add extra offsets if table has a lot of borders turned on
+    #     # to avoid undesired page wraps
+    #     boff <- 0
+    #     if (any(class(obj) == "table_spec") &
+    #         any(obj$borders %in% c("all", "inside"))) {
+    # 
+    #       #boff <- round(last_page_lines * rs$border_height / rs$row_height)
+    #       boff <- 1
+    #     }
+    # 
+    #     blnks <- c()
+    #     bl <- rs$body_line_count - last_page_lines - boff
+    #     if (bl > 0)
+    #       blnks <- rep("<br>", bl)
+    # 
+    #     last_page <- append(last_page, blnks)
+    #     last_page_lines <- 0
+    # 
+    #   }
+    # }
 
     ls[[i]]$pages[[length(pgs)]] <- last_page
     
@@ -314,108 +314,109 @@ write_content_docx <- function(rs, hdr, body, pt) {
   writeLines(hdr, con = f, useBytes = TRUE)
   
   
-  writeLines(body, con = f, useBytes = TRUE)
+ # writeLines(body, con = f, useBytes = TRUE)
   
-  # for (cont in body$pages) {
-  #   
-  #   
-  #   # Increment counter
-  #   counter <- counter + 1
-  #   page <- 0
-  #   
-  #   # Set last_object flag
-  #   if (counter == length(body$pages))
-  #     last_object <- TRUE
-  #   else 
-  #     last_object <- FALSE
-  #   
-  #   ta <- "align=\"left\" "
-  #   if (cont$align == "right")
-  #     ta <- "align=\"right\" "
-  #   else if (cont$align %in% c("center", "centre"))
-  #     ta <- "align=\"center\" "
-  #   
-  #   
-  #   for (pg in cont$pages) {
-  #     
-  #     page <- page + 1
-  #     
-  #     if (page == length(cont$pages))
-  #       last_page <- TRUE
-  #     else
-  #       last_page <- FALSE
-  #     
-  #     
-  #     #print(page_open)
-  #     if (page_open == FALSE) {
-  #       
-  #       if (!is.null(rs$page_template$page_header) & 
-  #           !is.null(rs$page_template$page_header$html))
-  #         writeLines(update_page(rs$page_template$page_header$html,  rs$pages), 
-  #                    con = f, useBytes = TRUE)
-  #       
-  #       # Write content div to keep page together
-  #       writeLines(paste0("<div ", ta, ">"), con = f, useBytes = TRUE)
-  #       
-  #       
-  #       if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
-  #         writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f, 
-  #                    useBytes = TRUE)
-  #       
-  #       if (!is.null(rs$titles) & !is.null(pt$titles$html))
-  #         writeLines(pt$titles$html, con = f, useBytes = TRUE)
-  #       
-  #     }
-  #     
-  #     if (!is.null(pg)) {
-  #       
-  #       writeLines(pg, con = f, useBytes = TRUE)
-  #       
-  #     }
-  #     
-  #     # Set page_open flag based on status of page_break and current objects
-  #     if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
-  #       page_open <- TRUE
-  #     else 
-  #       page_open <- FALSE
-  #     
-  #     if (page_open == FALSE) {
-  #       
-  #       if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
-  #         writeLines(update_page(pt$footnotes$html,  rs$pages), 
-  #                    con = f, useBytes = TRUE)
-  #       
-  #       # Content div
-  #       writeLines("</div>", con = f, useBytes = TRUE)
-  #       
-  #       if (!is.null(rs$page_template$page_footer) & 
-  #           !is.null(rs$page_template$page_footer$html))
-  #         writeLines(update_page(rs$page_template$page_footer$html, rs$pages), 
-  #                    con = f, useBytes = TRUE)
-  #       
-  #       
-  #       # Add form feed character for text page break
-  #       if (last_object == FALSE | last_page == FALSE) {
-  #         
-  #         if (is.null(rs$pages))
-  #           rs$pages <- 1
-  #         else 
-  #           rs$pages <- rs$pages + 1 
-  #         
-  #         writeLines(rs$page_break_html, con = f, useBytes = TRUE) 
-  #         
-  #       }
-  #     }
-  #     
-  #     if (last_object == TRUE & last_page == TRUE) {
-  #       
-  #       rs$pages <- rs$pages + 1 
-  #       
-  #     }
-  #   }
-  #   
-  # }
+  for (cont in body$pages) {
+
+
+    # Increment counter
+    counter <- counter + 1
+    page <- 0
+
+    # Set last_object flag
+    if (counter == length(body$pages))
+      last_object <- TRUE
+    else
+      last_object <- FALSE
+
+    # ta <- "align=\"left\" "
+    # if (cont$align == "right")
+    #   ta <- "align=\"right\" "
+    # else if (cont$align %in% c("center", "centre"))
+    #   ta <- "align=\"center\" "
+
+
+    for (pg in cont$pages) {
+
+      page <- page + 1
+
+      if (page == length(cont$pages))
+        last_page <- TRUE
+      else
+        last_page <- FALSE
+
+
+      #print(page_open)
+      if (page_open == FALSE) {
+
+        # if (!is.null(rs$page_template$page_header) &
+        #     !is.null(rs$page_template$page_header$html))
+        #   writeLines(update_page(rs$page_template$page_header$html,  rs$pages),
+        #              con = f, useBytes = TRUE)
+
+        # Write content div to keep page together
+        # writeLines(paste0("<div ", ta, ">"), con = f, useBytes = TRUE)
+
+
+        if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
+          writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f,
+                     useBytes = TRUE)
+
+        if (!is.null(rs$titles) & !is.null(pt$titles$html))
+          writeLines(pt$titles$html, con = f, useBytes = TRUE)
+
+      }
+
+      if (!is.null(pg)) {
+
+        writeLines(pg, con = f, useBytes = TRUE)
+
+      }
+
+      # Set page_open flag based on status of page_break and current objects
+      if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
+        page_open <- TRUE
+      else
+        page_open <- FALSE
+
+      if (page_open == FALSE) {
+
+        if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
+          writeLines(update_page(pt$footnotes$html,  rs$pages),
+                     con = f, useBytes = TRUE)
+
+        # Content div
+        # writeLines("</div>", con = f, useBytes = TRUE)
+
+        # if (!is.null(rs$page_template$page_footer) &
+        #     !is.null(rs$page_template$page_footer$html))
+        #   writeLines(update_page(rs$page_template$page_footer$html, rs$pages),
+        #              con = f, useBytes = TRUE)
+
+
+        # Add form feed character for text page break
+        if (last_object == FALSE | last_page == FALSE) {
+
+          if (is.null(rs$pages))
+            rs$pages <- 1
+          else
+            rs$pages <- rs$pages + 1
+
+          writeLines(rs$page_break_docx, con = f, useBytes = TRUE)
+
+        }
+      }
+
+      if (last_object == TRUE & last_page == TRUE) {
+
+        rs$pages <- rs$pages + 1
+
+      }
+    }
+
+  }
   
+  # Close document body
   writeLines("</w:body>\n</w:document>", con = f, useBytes = TRUE)
   
   close(f)
@@ -425,6 +426,7 @@ write_content_docx <- function(rs, hdr, body, pt) {
   if (file.exists(rs$modified_path))
     file.remove(rs$modified_path)
   
+  # Copy from temp path to perm path and zip
   write_docx(tf, rs$modified_path)
   
   return(rs)
@@ -533,6 +535,16 @@ page_setup_docx <- function(rs) {
     gtr <- ccm(gtr)
   }
   
+  # A zero height paragraph to break between tables.
+  # Otherwise, Word will treat as one table and the column
+  # widths will be messed up.
+  rs$table_break <- '<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>\n'
   
   # Get conversion factor to twips
   if (rs$units == "inches") {
