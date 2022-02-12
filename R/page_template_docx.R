@@ -361,7 +361,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
           border_flag <- TRUE
       }
       
-      ret[length(ret) + 1] <- "</w:tbl>"
+      ret[length(ret) + 1] <- paste0("</w:tbl>", rs$table_break)
       dev.off()
       
 

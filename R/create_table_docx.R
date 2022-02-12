@@ -138,8 +138,8 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
-  fdat <- split_cells_variable(fdat, widths_uom, rs$font,
-                               rs$font_size, rs$units, rs$output_type)$data
+  # fdat <- split_cells_variable(fdat, widths_uom, rs$font,
+  #                              rs$font_size, rs$units, rs$output_type)$data
   # print("split_cells")
   # print(fdat)
   
@@ -159,7 +159,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   
   
   # Offsets are needed to calculate splits and page breaks
-  content_offset <- get_content_offsets_html(rs, ts, tmp_pi, content_blank_row)
+  content_offset <- get_content_offsets_docx(rs, ts, tmp_pi, content_blank_row)
   
   
   # split rows
@@ -206,7 +206,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
                       col_width = widths_uom[pg], col_align = aligns[pg],
                       font_name = font_name, label_align = label_aligns[pg],
                       pgby, cntnt$align)
-      pg_lst[[length(pg_lst) + 1]] <- create_table_html(rs, ts, pi, 
+      pg_lst[[length(pg_lst) + 1]] <- create_table_docx(rs, ts, pi, 
                                                        blnk_ind, wrap_flag,
                                                        lpg_rows)
     }
@@ -227,6 +227,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   rh <- rs$row_height
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
+  conv <- rs$twip_conversion
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -236,16 +237,16 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
     ls <- sum(pi$col_width, na.rm = TRUE)
   
   if (!is.null(ts$title_hdr))
-    ttls <- get_title_header_html(ts$title_hdr, ls, rs, pi$table_align)
+    ttls <- get_title_header_docx(ts$title_hdr, ls, rs, pi$table_align)
   else
-    ttls <- get_titles_html(ts$titles, ls, rs, pi$table_align) 
+    ttls <- get_titles_docx(ts$titles, ls, rs, pi$table_align) 
   
   
   if (!is.null(rs$page_by)) {
-    pgby <- get_page_by_html(rs$page_by, rs$content_size[["width"]], 
+    pgby <- get_page_by_docx(rs$page_by, rs$content_size[["width"]], 
                             pi$page_by, rs, pi$table_align, ttls$border_flag)
   } else if(!is.null(ts$page_by)) {
-    pgby <- get_page_by_html(ts$page_by, ls, pi$page_by, rs, 
+    pgby <- get_page_by_docx(ts$page_by, ls, pi$page_by, rs, 
                              pi$table_align, ttls$border_flag)
   } else 
     pgby <- c()
@@ -257,11 +258,11 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (ts$headerless == FALSE) {
     
     # Get table header also includes spanning header
-    hdrs <- get_table_header_html(rs, ts, pi, exbrdr)  
+    hdrs <- get_table_header_docx(rs, ts, pi, exbrdr)  
   }
   
   # rs, ts, widths,  algns, halgns, talgn
-  rws <- get_table_body_html(rs, pi$data, pi$col_width, 
+  rws <- get_table_body_docx(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, exbrdr)
   
   a <- NULL
@@ -284,7 +285,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
             length(a))
   
   # Get footnotes, passing in sum of all current lines
-  ftnts <- get_page_footnotes_html(rs, ts, ls, lpg_rows, rc,
+  ftnts <- get_page_footnotes_docx(rs, ts, ls, lpg_rows, rc,
                                   wrap_flag, content_blank_row,  pi$table_align, 
                                   rws$border_flag)
   
@@ -333,12 +334,17 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
     u <- "in"
   
   # ds <- paste0("<div ", ta, ">")
-  ts <- paste0("<table style=\"width:", 
-               round(sum(pi$col_width, 
-                         na.rm = TRUE), 3), u,";\">")
+  # ts <- paste0("<table style=\"width:", 
+  #              round(sum(pi$col_width, 
+  #                        na.rm = TRUE), 3), u,";\">")
+  ts <- paste0("<w:tbl>", "<w:tblPr>",
+               '<w:tblStyle w:val="TableGrid"/>',
+               '<w:tblW w:w="', round(sum(pi$col_width, na.rm = TRUE) * conv),'"',
+               ' w:type="dxa"/>',
+               "</w:tblPr>")
   
-  ret <- list(html = c(a, ttls$html, pgby$html, ts, shdrs$html, 
-                      hdrs$html, rws$html, "</table>", ftnts$html),
+  ret <- list(docx = c(a, ttls$docx, pgby$docx, ts, shdrs$docx, 
+                      hdrs$docx, rws$docx, "</w:tbl>", rs$table_break, ftnts$docx),
               lines = rc  + ftnts$lines)
   
   return(ret) 
@@ -460,21 +466,21 @@ get_content_offsets_docx <- function(rs, ts, pi, content_blank_row) {
   if (ts$headerless == FALSE) {
     
     # Spanning headers now inside get_table_header_html
-    hdrs <- get_table_header_html(rs, ts, pi)  
+    hdrs <- get_table_header_docx(rs, ts, pi)  
   }
   
   # Get title headers or titles
   if (is.null(ts$title_hdr))
-    ttls <- get_titles_html(ts$titles, wdth, rs) 
+    ttls <- get_titles_docx(ts$titles, wdth, rs) 
   else 
-    ttls <- get_title_header_html(ts$title_hdr, wdth, rs)
+    ttls <- get_title_header_docx(ts$title_hdr, wdth, rs)
   
   # Get page by if it exists
   pgb <- list(lines = 0, twips = 0)
   if (!is.null(ts$page_by))
-    pgb <- get_page_by_html(ts$page_by, wdth, NULL, rs, pi$table_align)
+    pgb <- get_page_by_docx(ts$page_by, wdth, NULL, rs, pi$table_align)
   else if (!is.null(rs$page_by))
-    pgb <- get_page_by_html(rs$page_by, wdth, NULL, rs, pi$table_align)
+    pgb <- get_page_by_docx(rs$page_by, wdth, NULL, rs, pi$table_align)
   
   # Add everything up
   cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
@@ -484,8 +490,8 @@ get_content_offsets_docx <- function(rs, ts, pi, content_blank_row) {
     cnt[["blank_upper"]] <- 1 
   }
   
-  ftnts <- get_footnotes_html(ts$footnotes, wdth, rs) 
-  rftnts <- get_footnotes_html(rs$footnotes, wdth, rs)
+  ftnts <- get_footnotes_docx(ts$footnotes, wdth, rs) 
+  rftnts <- get_footnotes_docx(rs$footnotes, wdth, rs)
   
   if (has_top_footnotes(rs)) {
     cnt[["lower"]] <- ftnts$lines + rftnts$lines
@@ -523,6 +529,8 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   cnt <- 0
   rh <- rs$row_height
   tbl <- ts$data
+  conv <- rs$twip_conversion
+  rht <- get_row_height(288)
 
   
   widths <- pi$col_width[!is.na(pi$col_width)]
@@ -534,18 +542,18 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
     exclude_top <- "top"
   
   
-  #conv <- rs$twip_conversion
+  conv <- rs$twip_conversion
   nms <- names(lbls)
   
-  u <- rs$units
-  if (rs$units == "inches")
-    u <- "in"
+  # u <- rs$units
+  # if (rs$units == "inches")
+  #   u <- "in"
   
   # Get cell widths
   sz <- c()
   for (k in seq_along(widths)) {
     if (!is.control(nms[k])) {
-        sz[k] <- paste0(widths[k], u)
+        sz[k] <- round(widths[k] * conv)
     }
   }
   
@@ -566,17 +574,17 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   for (k in seq_along(halgns)) {
     if (!is.control(nms[k])) {
       if (halgns[k] == "left")
-        ha[k] <- "tdl"
+        ha[k] <- "left"
       else if (halgns[k] == "right")
-        ha[k] <- "tdr"
+        ha[k] <- "right"
       else if (halgns[k] %in% c("center", "centre"))
-        ha[k] <- "tdc"
+        ha[k] <- "center"
     }
   }
   
   # Table Header
-  ret[1] <- "<tr>\n"
-  cols[1] <- "<colgroup>\n"
+  ret[1] <- paste0("<w:tr>", rht, "\n")
+  cols[1] <- "<w:tblGrid>\n"
   
 
   
@@ -590,23 +598,24 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   for(k in seq_along(widths)) {
     if (!is.control(nms[k])) {
       
-      cols[1] <- paste0(cols[1], "<col style=\"width:", sz[k], ";\">\n")
+      cols[1] <- paste0(cols[1], "<w:gridCol w:w=\"", sz[k], "\"/>\n")
       
-      b <- get_cell_borders_html(1, k, 2, length(widths), brdrs, 
-                                 exclude = exclude_top)
+      # b <- get_cell_borders_html(1, k, 2, length(widths), brdrs, 
+      #                            exclude = exclude_top)
       
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
 
-      if (b == "") {
-        ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
-                         encodeHTML(tmp$html), "</td>\n")
-      } else {
-        ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\" ", 
-                                 "style=\"", b, "\">", 
-                         encodeHTML(tmp$html), "</td>\n")
+      #if (b == "") {
+        ret[1] <- paste0(ret[1], cell_abs(tmp$html, ha[k], sz[k]))
+                         # "<w:tc>", 
+                         # para(tmp$html, ha[k]), "</w:tc>\n")
+      # } else {
+      #   ret[1] <- paste0(ret[1], "<w:tc class=\"thdr ", ha[k], "\" ", 
+      #                            "style=\"", b, "\">", 
+      #                    encodeHTML(tmp$html), "</td>\n")
         
-      }
+      # }
       
       # Add in extra lines for labels that wrap
       xtr <- tmp$lines
@@ -616,16 +625,20 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   }
   dev.off()
   
-  cols[1] <- paste0(cols[1], "</colgroup>\n")
-  ret[1] <- paste0(ret[1], "</tr>\n")
+  cols[1] <- paste0(cols[1], "</w:tblGrid>\n")
+  ret[1] <- paste0(ret[1], "</w:tr>\n")
   
   # Get spanning headers
-  sphdrs <- get_spanning_header_html(rs, ts, pi,
-                                     ifelse(is.null(exclude_top), FALSE, TRUE))
+  # sphdrs <- get_spanning_header_html(rs, ts, pi,
+  #                                    ifelse(is.null(exclude_top), FALSE, TRUE))
   
-  res <- list(html = paste0(cols, "<thead>\n", paste0(sphdrs$html, collapse=""), 
-                            ret, "</thead>\n"),
-              lines = cnt + sphdrs$lines)
+  # res <- list(docx = paste0(cols, "<thead>\n", paste0(sphdrs$docx, collapse=""), 
+  #                           ret, "</thead>\n"),
+  #             lines = cnt + sphdrs$lines)
+  
+  res <- list(docx = paste0(cols,  
+                            ret),
+              lines = cnt ) #+ sphdrs$lines)
   
   return(res)
   
@@ -777,7 +790,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   ret <- unlist(ln)
   
-  res <- list(html = ret, 
+  res <- list(docx = ret, 
               lines = sum(cnt))
   
   return(res)
@@ -788,6 +801,8 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr = FALSE) {
+  
+  rht <- get_row_height(288)
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -821,11 +836,11 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   for (k in seq_along(algns)) {
     if (!is.control(nms[k])) {
       if (algns[k] == "left")
-        ca[k] <- "class=\"tdl\""
+        ca[k] <- "left"
       else if (algns[k] == "right")
-        ca[k] <- "class=\"tdr\""
+        ca[k] <- "right"
       else if (algns[k] %in% c("center", "centre"))
-        ca[k] <- "class=\"tdc\""
+        ca[k] <- "center"
     }
   }
   
@@ -836,10 +851,10 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   for(i in seq_len(nrow(t))) {
     
     
-    if (i == 1)
-      ret[i] <- "<tbody>\n<tr>"
-    else
-      ret[i] <- "<tr>"
+    # if (i == 1)
+    #   ret[i] <- "<tbody>\n<tr>"
+    # else
+      ret[i] <- paste0("<w:tr>", rht)
     
     mxrw <- 1
     
@@ -849,16 +864,16 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
       
       if (!is.control(nms[j])) {
         
-        b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
-                                   exclude = exclude_top)
+        # b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
+        #                            exclude = exclude_top)
         
         # Construct html
-        if (b == "")
-          ret[i] <- paste0(ret[i], "<td ", ca[j], ">", 
-                           encodeHTML(t[i, j]), "</td>")
-        else 
-          ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
-                           encodeHTML(t[i, j]), "</td>")
+        # if (b == "")
+          ret[i] <- paste0(ret[i], "<w:tc>", 
+                           para(t[i, j], ca[j]), "</w:tc>")
+        # else 
+        #   ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
+        #                    encodeHTML(t[i, j]), "</td>")
         
         # Count lines in cell 
         cl <- grep("\n", t[i, j], fixed = TRUE)
@@ -870,10 +885,10 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
     
     rws[i] <- mxrw
     
-    if (i == nrow(t))
-      ret[i] <- paste0(ret[i], "</tr>\n</tbody>")
-    else 
-      ret[i] <- paste0(ret[i], "</tr>")
+    # if (i == nrow(t))
+    #   ret[i] <- paste0(ret[i], "</w:tr>\n</tbody>")
+    # else 
+      ret[i] <- paste0(ret[i], "</w:tr>")
     
     
   }
@@ -881,7 +896,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   if ("bottom" %in% get_outer_borders(brdrs))
     border_flag <- TRUE
   
-  res <- list(html = ret,
+  res <- list(docx = ret,
               lines = sum(rws), 
               border_flag = border_flag)
   
