@@ -267,7 +267,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
-    a <- "<br>"
+    a <- "<w:p/>"
   
   
   blnks <- c()
@@ -337,10 +337,14 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # ts <- paste0("<table style=\"width:", 
   #              round(sum(pi$col_width, 
   #                        na.rm = TRUE), 3), u,";\">")
+  
+  
+  tb <- get_table_borders_docx(ts$borders)
+  
   ts <- paste0("<w:tbl>", "<w:tblPr>",
                '<w:tblStyle w:val="TableGrid"/>',
                '<w:tblW w:w="', round(sum(pi$col_width, na.rm = TRUE) * conv),'"',
-               ' w:type="dxa"/>',
+               ' w:type="dxa"/>', tb,
                "</w:tblPr>")
   
   ret <- list(docx = c(a, ttls$docx, pgby$docx, ts, shdrs$docx, 
@@ -421,13 +425,13 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
     
     if (vflag == "bottom" & len_diff > 0) {
   
-      ublnks <- c(b, rep("<br>", len_diff))
+      ublnks <- c(b, rep("<w:p/>", len_diff))
   
     } else {
   
       if ((wrap_flag & len_diff > 0)) {
         if (vflag == "bottom" | has_page_footer(rs))
-          lblnks <- c(rep("<br>", len_diff), b)
+          lblnks <- c(rep("<w:p/>", len_diff), b)
       } else {
         lblnks <- b
       }
@@ -607,7 +611,7 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
 
       #if (b == "") {
-        ret[1] <- paste0(ret[1], cell_abs(tmp$html, ha[k], sz[k]))
+        ret[1] <- paste0(ret[1], cell_abs(tmp$html, ha[k], sz[k], bborder = TRUE))
                          # "<w:tc>", 
                          # para(tmp$html, ha[k]), "</w:tc>\n")
       # } else {

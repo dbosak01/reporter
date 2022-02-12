@@ -568,9 +568,11 @@ page_setup_docx <- function(rs) {
   if (rs$units == "cm")
     rs$gutter_width <- ccm(rs$gutter_width)
   
-  rs$page_break_docx <- paste0("<hr class=\"noprint\"><div style=\"page-break-before: always;",
-                               "height:", rs$margin_top, 
-                               units_html(rs$units), ";", "\"></div>")
+  rs$page_break_docx <- paste0('<w:p>
+                          			<w:r>
+                          				<w:br w:type="page"/>
+                          			</w:r>
+                          		</w:p>')
 
   if (is.null(rs$user_line_count)) {
     rs$line_count <- round(rs$content_size[[1]] / rh) 

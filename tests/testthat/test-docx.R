@@ -87,7 +87,8 @@ test_that("docx1: Basic table works as expected.", {
   tbl <- create_table(dat, borders = "none")  %>%
      titles("Table 1.0", "My Nice Table", borders = c("none"),
             width = "content") %>%
-     footnotes("My footnote 1", "My footnote 2", borders = "none",
+     footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
+               borders = "none",
                align = "left", width = "content") %>%
     define(wt, width = 2, label = "Weight", align = "center",
            label_align = "right")
@@ -95,10 +96,10 @@ test_that("docx1: Basic table works as expected.", {
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
                        font_size = 12, orientation = "landscape") %>%
      set_margins(top = 1, bottom = 1) %>%
-     page_header("Left", c("Right1", "Right2", "Page x of y"),
-                blank_row = "none") %>%
+     page_header("Left", c("Right1 and more", "Right2", "Page [pg] of [tpg]"),
+                blank_row = "below") %>%
      add_content(tbl, align = "center") %>%
-     page_footer("Left1", "Center1", "Right1")
+     page_footer("Left1", "Center1", "Page [pg] of [tpg]")
 
   res <- write_report(rpt)
 
@@ -107,42 +108,42 @@ test_that("docx1: Basic table works as expected.", {
 
 })
 
-# 
-# test_that("html2: Basic table with title header works as expected.", {
+
+test_that("docx2: Basic table with title header works as expected.", {
+
+
+  fp <- file.path(base_path, "docx/test2.docx")
+
+  dat <- mtcars[1:15, ]
+  attr(dat[[2]], "label") <- "Cylin."
+  attr(dat[[2]], "width") <- 1
+
+  tbl <- create_table(dat, borders = c("outside")) %>%
+    title_header("Table 1.0", "My Nice Table", right = "Right",
+                 borders = c("outside"), blank_row = "both",
+                 width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside",
+              align = "left", width = "content")
+
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"),
+                blank_row = "none") %>%
+    add_content(tbl)  %>%
+    page_footer("Left1", "Center1", "Right1")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+
+})
+
+# test_that("docx3: Spanning headers work as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test2.html")
-#   
-#   dat <- mtcars[1:15, ]
-#   attr(dat[[2]], "label") <- "Cylin."
-#   attr(dat[[2]], "width") <- 1
-#   
-#   tbl <- create_table(dat, borders = c("outside")) %>%
-#     title_header("Table 1.0", "My Nice Table", right = "Right", 
-#                  borders = c("outside"), blank_row = "both",
-#                  width = "content") %>%
-#     footnotes("My footnote 1", "My footnote 2", borders = "outside", 
-#               align = "left", width = "content")
-#   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-#                        font_size = 12, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
-#                 blank_row = "below") %>%
-#     add_content(tbl)  %>%
-#     page_footer("Left1", "Center1", "Right1")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 1)
-#   
-# })
-# 
-# test_that("html3: Spanning headers work as expected.", {
-#   
-#   
-#   fp <- file.path(base_path, "html/test3")
+#   fp <- file.path(base_path, "docx/test3")
 #   
 #   dat <- mtcars[1:15, ]
 #   
@@ -155,7 +156,7 @@ test_that("docx1: Basic table works as expected.", {
 #     titles("Table 1.0", "My Nice Table", borders = c("outside")) %>%
 #     footnotes("My footnote 1", "My footnote 2", borders = c("outside")) 
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt,
+#   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
 #                        font_size = fsz, orientation = "landscape") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
@@ -170,49 +171,49 @@ test_that("docx1: Basic table works as expected.", {
 #   expect_equal(res$pages, 1)
 #   
 # })
-# 
-# 
-# test_that("html4: Multi page table works as expected.", {
+
+
+test_that("docx4: Multi page table works as expected.", {
+
+
+  fp <- file.path(base_path, "docx/test4.docx")
+
+  dat <- iris
+
+
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
+    define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") %>%
+    define(Species, blank_after = TRUE)
+
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl, blank_row = "none") %>%
+    page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+    footnotes("My footnote 1", "My footnote 2")
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 7)
+
+
+})
+
+
+
+# test_that("docx5: Basic text works as expected.", {
 #   
-#   
-#   fp <- file.path(base_path, "html/test4.html")
-#   
-#   dat <- iris
-#   
-#   
-#   tbl <- create_table(dat, borders = "none") %>%
-#     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
-#     define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
-#     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") %>%
-#     define(Species, blank_after = TRUE)
-#   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
-#                        font_size = 12, orientation = "landscape") %>%
-#     set_margins(top = 1, bottom = 1) %>%
-#     page_header("Left", c("Right1")) %>%
-#     add_content(tbl, blank_row = "none") %>%
-#     page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
-#     footnotes("My footnote 1", "My footnote 2")
-#   
-#   res <- write_report(rpt)
-#   
-#   expect_equal(file.exists(fp), TRUE)
-#   expect_equal(res$pages, 7)
-#   
-#   
-# })
-# 
-# 
-# 
-# test_that("html5: Basic text works as expected.", {
-#   
-#   fp <- file.path(base_path, "html/test5")
+#   fp <- file.path(base_path, "docx/test5")
 #   
 #   txt <- create_text(cnt, width = 6, borders = "outside", align = "center") %>%
 #     titles("Text 1.0", "My Nice Text", borders = "outside", width = "content") %>%
 #     footnotes("My footnote 1", "My footnote 2", borders = "outside")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Courier",
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
 #                        font_size = 12, paper_size = "letter") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     page_header("Left", "Right") %>%
@@ -228,12 +229,12 @@ test_that("docx1: Basic table works as expected.", {
 # 
 # 
 # # Note that image may be deleted in next test case
-# test_that("html6: Basic plot works as expected.", {
+# test_that("docx6: Basic plot works as expected.", {
 #   
 #   
 #   library(ggplot2)
 #   
-#   fp <- file.path(base_path, "html/test6.html")
+#   fp <- file.path(base_path, "docx/test6.docx")
 #   
 #   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 #   
@@ -243,7 +244,7 @@ test_that("docx1: Basic table works as expected.", {
 #     footnotes("* Motor Trend, 1974", borders = "outside")
 #   
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
+#   rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
 #     page_header("Client", "Study: XYZ") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     add_content(plt, align = "center") %>%
@@ -263,7 +264,7 @@ test_that("docx1: Basic table works as expected.", {
 # test_that("remove_image_files works as expected.", {
 #   
 #   if (dev & FALSE) {
-#     pth <- file.path(base_path, "html/test6.html")
+#     pth <- file.path(base_path, "docx/test6.docx")
 #     
 #     
 #     remove_image_files(pth)
@@ -276,10 +277,10 @@ test_that("docx1: Basic table works as expected.", {
 # })
 # 
 # 
-# test_that("html7: Multi page table paper_size none works as expected.", {
+# test_that("docx7: Multi page table paper_size none works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test7.html")
+#   fp <- file.path(base_path, "docx/test7.docx")
 #   
 #   dat <- iris
 #   
@@ -290,7 +291,7 @@ test_that("docx1: Basic table works as expected.", {
 #     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") %>%
 #     define(Species, blank_after = TRUE)
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Times",
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Times",
 #                        font_size = 9, orientation = "portrait",
 #                        paper_size = "none") %>%
 #     set_margins(top = 1, bottom = 1) %>%
@@ -309,10 +310,10 @@ test_that("docx1: Basic table works as expected.", {
 # 
 # # Good for testing
 # # Borders throw off line counts.  Made rudimentary adjustment.
-# test_that("html8: Page by works as expected.", {
+# test_that("docx8: Page by works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test8")
+#   fp <- file.path(base_path, "docx/test8")
 #   
 #   dat <- iris
 #   
@@ -326,7 +327,7 @@ test_that("docx1: Basic table works as expected.", {
 #     define(Species, visible = FALSE) %>% 
 #     footnotes("My footnote 1", "My footnote 2", borders = "outside")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
 #                        font_size = 12, orientation = "portrait",
 #                        paper_size = "letter") %>%
 #     set_margins(top = 1, bottom = 1) %>%
@@ -344,10 +345,10 @@ test_that("docx1: Basic table works as expected.", {
 # 
 # 
 # # Good for testing
-# test_that("html9: Page by on report works as expected.", {
+# test_that("docx9: Page by on report works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test9.html")
+#   fp <- file.path(base_path, "docx/test9.docx")
 #   
 #   dat <- iris
 #   
@@ -357,7 +358,7 @@ test_that("docx1: Basic table works as expected.", {
 #     define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
 #     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre") 
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
 #                        font_size = 12, orientation = "landscape",
 #                        paper_size = "letter") %>%
 #     set_margins(top = 1, bottom = 1) %>%
@@ -375,10 +376,10 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html10: Title Header and page header/footer wrapping work as expected.", {
+# test_that("docx10: Title Header and page header/footer wrapping work as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test10.html")
+#   fp <- file.path(base_path, "docx/test10.docx")
 #   
 #   dat <- iris[1:10, ] 
 #   
@@ -396,7 +397,7 @@ test_that("docx1: Basic table works as expected.", {
 #               blank_row = "above") %>% 
 #     define(Sepal.Width, label = "Here is a rather long header label")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt,
+#   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
 #                        font_size = fsz, orientation = "landscape") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     add_content(tbl) %>%
@@ -417,19 +418,19 @@ test_that("docx1: Basic table works as expected.", {
 # })
 # 
 # 
-# test_that("html11: Basic plot with titles on report works as expected.", {
+# test_that("docx11: Basic plot with titles on report works as expected.", {
 #   
 #   
 #   library(ggplot2)
 #   
-#   fp <- file.path(base_path, "html/test11.html")
+#   fp <- file.path(base_path, "docx/test11.docx")
 #   
 #   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 #   
 #   plt <- create_plot(p, height = 4, width = 8, borders = c("none"))
 #   
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size =fsz) %>%
+#   rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
 #     page_header("Client", "Study: XYZ") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     add_content(plt, align = "center") %>%
@@ -448,13 +449,13 @@ test_that("docx1: Basic table works as expected.", {
 # })
 # 
 # 
-# test_that("html12: Text with titles on report works as expected.", {
+# test_that("docx12: Text with titles on report works as expected.", {
 #   
-#   fp <- file.path(base_path, "html/test12")
+#   fp <- file.path(base_path, "docx/test12")
 #   
 #   txt <- create_text(cnt, width = 6, borders = "none", align = "center") 
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Courier",
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
 #                        font_size = 12, paper_size = "letter") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     page_header("Left", "Right") %>%
@@ -472,10 +473,10 @@ test_that("docx1: Basic table works as expected.", {
 # 
 # 
 # # Works on all combinations on font and font size.  Needed adjustments to row height.
-# test_that("html13: Table with break between sections works as expected.", {
+# test_that("docx13: Table with break between sections works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test13.html")
+#   fp <- file.path(base_path, "docx/test13.docx")
 #   
 #   
 #   # Setup
@@ -504,7 +505,7 @@ test_that("docx1: Basic table works as expected.", {
 #   # spanning_header(sex, arm, label = "Here is a spanning header")
 #   
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
+#   rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size = fsz) %>%
 #     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
 #     # options_fixed(line_count = 46) %>% 
 #     titles("Table 1.0", "Analysis Data Subject Listing\n And more stuff", 
@@ -525,11 +526,11 @@ test_that("docx1: Basic table works as expected.", {
 # 
 # 
 # 
-# test_that("html14: Plot with page by on plot works as expected.", {
+# test_that("docx14: Plot with page by on plot works as expected.", {
 #   
 #   library(ggplot2)
 #   
-#   fp <- file.path(base_path, "html/test14.html")
+#   fp <- file.path(base_path, "docx/test14.docx")
 #   
 #   
 #   dat <- mtcars[order(mtcars$cyl), ]
@@ -548,7 +549,7 @@ test_that("docx1: Basic table works as expected.", {
 #     page_by(cyl, "Cylinders: ", borders = brdrs) %>% 
 #     footnotes("* Motor Trend, 1974", borders = brdrs) 
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
+#   rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size = fsz) %>%
 #     page_header("Client", "Study: XYZ") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     add_content(plt) %>%
@@ -565,10 +566,10 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html15: Title bold and font size works as expected.", {
+# test_that("docx15: Title bold and font size works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test15.html")
+#   fp <- file.path(base_path, "docx/test15.docx")
 #   
 #   dat <- mtcars[1:15, ]
 #   attr(dat[[2]], "label") <- "Cylin."
@@ -583,7 +584,7 @@ test_that("docx1: Basic table works as expected.", {
 #     define(wt, width = 1, label = "Weight", align = "center", 
 #            label_align = "right")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
 #                        font_size = 9, orientation = "landscape") %>%
 #     set_margins(top = 1, bottom = 1) %>%
 #     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
@@ -599,12 +600,12 @@ test_that("docx1: Basic table works as expected.", {
 # })
 # 
 # 
-# test_that("html16: 9 pt font inches works as expected.", {
+# test_that("docx16: 9 pt font inches works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test16.html")
+#   fp <- file.path(base_path, "docx/test16.docx")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font_size = 9, 
+#   rpt <- create_report(fp, output_type = "DOCX", font_size = 9, 
 #                        font = "Courier",
 #                        orientation = "portrait") %>%
 #     page_header("left", "right") %>%
@@ -621,12 +622,12 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html17: 9 pt font cm works as expected.", {
+# test_that("docx17: 9 pt font cm works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test17.html")
+#   fp <- file.path(base_path, "docx/test17.docx")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font_size = 9, 
+#   rpt <- create_report(fp, output_type = "DOCX", font_size = 9, 
 #                        font = "Courier",
 #                        orientation = "portrait") %>%
 #     page_header("left", "right") %>%
@@ -643,12 +644,12 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html8: 11 pt font inches works as expected.", {
+# test_that("docx8: 11 pt font inches works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test18.html")
+#   fp <- file.path(base_path, "docx/test18.docx")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font_size = 11, 
+#   rpt <- create_report(fp, output_type = "DOCX", font_size = 11, 
 #                        font = "Courier",
 #                        orientation = "portrait") %>%
 #     page_header("left", "right") %>%
@@ -665,12 +666,12 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html19: 11 pt font cm works as expected.", {
+# test_that("docx19: 11 pt font cm works as expected.", {
 #   
 #   
-#   fp <- file.path(base_path, "html/test19.html")
+#   fp <- file.path(base_path, "docx/test19.docx")
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font_size = 11, 
+#   rpt <- create_report(fp, output_type = "DOCX", font_size = 11, 
 #                        font = "Courier",
 #                        orientation = "portrait") %>%
 #     page_header("left", "right") %>%
@@ -688,15 +689,15 @@ test_that("docx1: Basic table works as expected.", {
 # })
 # 
 # 
-# test_that("html20: RTF Image file works as expected.", {
+# test_that("docx20: RTF Image file works as expected.", {
 #   
 #   library(ggplot2)
 #   
-#   fp <- file.path(base_path, "html/test20.html")
+#   fp <- file.path(base_path, "docx/test20.docx")
 #   
 #   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 #   
-#   pltpath <- file.path(base_path, "html/test20.jpg")
+#   pltpath <- file.path(base_path, "docx/test20.jpg")
 #   ggsave(pltpath, width = 8, height = 4, 
 #          units = "in",
 #          dpi = 300)
@@ -704,7 +705,7 @@ test_that("docx1: Basic table works as expected.", {
 #   plt <- create_plot(pltpath, height = 4, width = 8)
 #   
 #   
-#   rpt <- create_report(fp, output_type = "HTML", font = "Arial") %>%
+#   rpt <- create_report(fp, output_type = "DOCX", font = "Arial") %>%
 #     page_header("Client", "Study: XYZ") %>%
 #     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
 #     set_margins(top = 1, bottom = 1) %>%
@@ -727,7 +728,7 @@ test_that("docx1: Basic table works as expected.", {
 # # User Tests --------------------------------------------------------------
 # 
 # 
-# test_that("html-user1: demo table works.", {
+# test_that("docx-user1: demo table works.", {
 #   
 #   if (dev) {
 #     library(tidyr)
@@ -736,7 +737,7 @@ test_that("docx1: Basic table works as expected.", {
 #     # Data Filepath
 #     dir_data <- file.path(data_dir, "data")
 #     
-#     fp <- file.path(base_path, "html/user1.html")
+#     fp <- file.path(base_path, "docx/user1.docx")
 #     
 #     
 #     # Load Data
@@ -839,7 +840,7 @@ test_that("docx1: Basic table works as expected.", {
 #       define(`ARM D`, align = "center", label = "Competitor", n = 38)
 #     
 #     # Define Report
-#     rpt <- create_report(fp, output_type = "HTML", font = fnt, font_size = fsz) %>%
+#     rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size = fsz) %>%
 #       set_margins(top = 1, bottom = 1) %>% 
 #       options_fixed(font_size = 10) %>% 
 #       titles("Table 14.1/4",
@@ -864,7 +865,7 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html-user2: demo table with stub works.", {
+# test_that("docx-user2: demo table with stub works.", {
 #   
 #   
 #   if (dev) {
@@ -877,7 +878,7 @@ test_that("docx1: Basic table works as expected.", {
 #     # Data Filepath
 #     dir_data <- file.path(data_dir, "data")
 #     
-#     fp <- file.path(base_path, "html/user2.html")
+#     fp <- file.path(base_path, "docx/user2.docx")
 #     
 #     
 #     # Load Data
@@ -988,7 +989,7 @@ test_that("docx1: Basic table works as expected.", {
 #                 borders = "outside", blank_row = "both", align = "left")  
 #     
 #     # Define Report
-#     rpt <- create_report(fp, output_type = "HTML", 
+#     rpt <- create_report(fp, output_type = "DOCX", 
 #                          font = "Arial", font_size = 10) %>%
 #       add_content(tbl, align = "center") %>% 
 #       page_header("Sponsor", "Drug") %>% 
@@ -1006,12 +1007,12 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html-user3: listings works.", {
+# test_that("docx-user3: listings works.", {
 #   if (dev == TRUE) {
 #     # Data Filepath
 #     dir_data <- file.path(data_dir, "data")
 #     
-#     fp <- file.path(base_path, "html/user3.html")
+#     fp <- file.path(base_path, "docx/user3.docx")
 #     
 #     # Removing to make last page exactly equal to available rows on page.
 #     # In this case, any added blank rows should be skipped.
@@ -1057,7 +1058,7 @@ test_that("docx1: Basic table works as expected.", {
 #       footnotes("My footnotes")
 #     
 #     #Write out report
-#     res <- write_report(rpt, output_type = "HTML")
+#     res <- write_report(rpt, output_type = "DOCX")
 #     
 #     expect_equal(file.exists(fp), TRUE)
 #     
@@ -1073,12 +1074,12 @@ test_that("docx1: Basic table works as expected.", {
 # })
 # 
 # 
-# test_that("html-user4: listing in cm and times works.", {
+# test_that("docx-user4: listing in cm and times works.", {
 #   if (dev == TRUE) {
 #     # Data Filepath
 #     dir_data <- file.path(data_dir, "data")
 #     
-#     fp <- file.path(base_path, "html/user4.html")
+#     fp <- file.path(base_path, "docx/user4.docx")
 #     
 #     # Removing to make last page exactly equal to available rows on page.
 #     # In this case, any added blank rows should be skipped.
@@ -1124,7 +1125,7 @@ test_that("docx1: Basic table works as expected.", {
 #       footnotes("My footnote")
 #     
 #     #Write out report
-#     res <- write_report(rpt, output_type = "HTML")
+#     res <- write_report(rpt, output_type = "DOCX")
 #     
 #     expect_equal(file.exists(fp), TRUE)
 #     
@@ -1139,13 +1140,13 @@ test_that("docx1: Basic table works as expected.", {
 #   
 # })
 # 
-# test_that("html-user5: Portrait in 12pt Arial works as expected.", {
+# test_that("docx-user5: Portrait in 12pt Arial works as expected.", {
 #   
 #   if (dev == TRUE) {
 #     
 #     dir_data <- file.path(data_dir, "data")
 #     
-#     fp <- file.path(base_path, "html/user5.html")
+#     fp <- file.path(base_path, "docx/user5.docx")
 #     
 #     # Read in prepared data
 #     df <- read.table(header = TRUE, text = '
@@ -1169,7 +1170,7 @@ test_that("docx1: Basic table works as expected.", {
 #     
 #     
 #     # Create report and add content
-#     rpt <- create_report(fp, orientation = "portrait", output_type = "HTML",
+#     rpt <- create_report(fp, orientation = "portrait", output_type = "DOCX",
 #                          font = "Arial", font_size = 12) %>% 
 #       page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
 #       titles("Table 1.0", "MTCARS Summary Table") %>% 

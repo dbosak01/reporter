@@ -1412,15 +1412,22 @@ cell_pct <- function(txt, align = "left", width = NULL) {
 }
 
 
-cell_abs <- function(txt, align = "left", width = NULL) {
+cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
+  
+  bb <- '<w:tcBorders>
+    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+      </w:tcBorders>'
+  if (bborder == FALSE)
+    bb <- ""
+  
   
   if (is.null(width)) {
-    ret <- paste0('<w:tc>', 
+    ret <- paste0('<w:tc><w:tcPr>', bb, '</w:tcPr>', 
                   para(txt, align),
                   "</w:tc>\n", collapse = "")
     
   } else {
-    ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/></w:tcPr>', 
+    ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, '</w:tcPr>', 
                   para(txt, align),
                   "</w:tc>\n", collapse = "")
   }
@@ -1435,7 +1442,7 @@ para <- function(txt, align = "left") {
   
  ret <- paste0('<w:p>',
                '<w:pPr><w:jc w:val="', align, '"/></w:pPr>',
-               '<w:r><w:t>', txt, '</w:t></w:r></w:p>', collapse = "")
+               '<w:r><w:t xml:space="preserve">', txt, '</w:t></w:r></w:p>', collapse = "")
  
  return(ret)
   
@@ -1443,8 +1450,10 @@ para <- function(txt, align = "left") {
 
 run <- function(txt) {
   
-  ret <- paste0('<w:r><w:t>', txt, '</w:t></w:r>', collapse = "")
+  ret <- paste0('<w:r><w:t xml:space="preserve">', txt, '</w:t></w:r>', collapse = "")
   
   return(ret)
   
 }
+
+

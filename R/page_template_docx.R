@@ -78,7 +78,7 @@ get_page_header_docx <- function(rs) {
         
         ret <- paste0(ret, 
                       '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
-                      para(tmp$html),
+                      get_page_numbers_docx(para(tmp$html)),
                            "</w:tc>\n")
         
         lcnt <- tmp$lines  
@@ -98,7 +98,7 @@ get_page_header_docx <- function(rs) {
         
         ret <- paste0(ret, 
                       '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
-                      para(tmp2$html, "right"), 
+                      get_page_numbers_docx(para(tmp2$html, "right")), 
                       "</w:tc></w:tr>\n")
         
         rcnt <- tmp2$lines 
@@ -121,7 +121,7 @@ get_page_header_docx <- function(rs) {
     dev.off()
 
     if (rs$page_header_blank_row == "below") {
-      ret <- paste0(ret, "<br>")
+      ret <- paste0(ret, "<w:p/>")
       cnt <- cnt + 1
     }
   }
@@ -211,7 +211,7 @@ get_page_footer_docx <- function(rs) {
     }
     dev.off()
 
-    ret <- paste0(ret, "</w:tr>\n")
+    ret <- paste0(get_page_numbers_docx(ret), "</w:tr>\n")
     ret <- paste0(ret, "</w:tbl>\n")
   }
 
@@ -508,6 +508,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
 
     }
+    
+    ret <- get_page_numbers_docx(ret)
 
   }
 
@@ -891,10 +893,10 @@ get_page_numbers_docx <- function(val, tpg = TRUE) {
   
   ret <- val
   
-  ret <- gsub("[pg]", "\\chpgn ", ret, fixed = TRUE)
+  ret <- gsub("[pg]", get_page_number_docx(), ret, fixed = TRUE)
   
   if (tpg)
-    ret <- gsub("[tpg]", "{\\field{\\*\\fldinst  NUMPAGES }}", ret, fixed = TRUE)
+    ret <- gsub("[tpg]", get_total_pages_docx(), ret, fixed = TRUE)
   
   return(ret)
 }
@@ -907,4 +909,43 @@ get_row_height <- function(hgt) {
   
   return(ret)
   
+}
+
+
+get_page_number_docx <- function() {
+  
+  ret <- paste0('</w:t></w:r><w:r><w:fldChar w:fldCharType="begin"/></w:r>
+     <w:r>
+        <w:instrText xml:space="preserve"> PAGE   \\* MERGEFORMAT </w:instrText>
+     </w:r>
+     <w:r>
+        <w:fldChar w:fldCharType="separate"/>
+     </w:r>
+     <w:r>
+        <w:t>1</w:t>
+     </w:r>
+     <w:r>
+        <w:fldChar w:fldCharType="end"/>
+     </w:r><w:r><w:t xml:space="preserve">')
+  
+  return(ret)
+}
+
+get_total_pages_docx <- function() {
+  
+  ret <- paste0('</w:t></w:r><w:r><w:fldChar w:fldCharType="begin"/></w:r>
+     <w:r>
+        <w:instrText xml:space="preserve"> NUMPAGES   \\* MERGEFORMAT </w:instrText>
+     </w:r>
+     <w:r>
+        <w:fldChar w:fldCharType="separate"/>
+     </w:r>
+     <w:r>
+        <w:t>1</w:t>
+     </w:r>
+     <w:r>
+        <w:fldChar w:fldCharType="end"/>
+     </w:r><w:r><w:t xml:space="preserve">')
+  
+  return(ret)
 }
