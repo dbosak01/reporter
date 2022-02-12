@@ -39,8 +39,9 @@ test_that("docx0a: Basic text works as expected.", {
                        font_size = 11, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
+    add_content(create_text("Goodbye")) %>% 
     page_header(c("Left1", "Left2"), "Right") %>%
-    page_footer("Left", "Center", "Right")
+    page_footer("Page [pg] of [tpg]", "Center", "Right")
   
   res <- write_report(rpt)
   
@@ -176,7 +177,7 @@ test_that("docx2: Basic table with title header works as expected.", {
 test_that("docx4: Multi page table works as expected.", {
 
 
-  fp <- file.path(base_path, "docx/test4.docx")
+  fp <- file.path(base_path, "docx/test4")
 
   dat <- iris
 
@@ -197,7 +198,7 @@ test_that("docx4: Multi page table works as expected.", {
 
   res <- write_report(rpt)
 
-  expect_equal(file.exists(fp), TRUE)
+  expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 7)
 
 

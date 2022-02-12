@@ -213,7 +213,10 @@ paginate_content_docx <- function(rs, ls) {
         lns[[length(lns) + 1]] <- res$lines[[j]]
         
       }
-    }   
+    } else {
+      
+      stop(paste("Invalid content: ", class(obj))) 
+    }
     
     # Store pages and lines with content objects
     # The content settings will be used when writing content
@@ -242,30 +245,30 @@ paginate_content_docx <- function(rs, ls) {
     
     # If there is a page break or it's the last object in the
     # content list, add the blank lines if needed.
-    # if (rs$paper_size != "none") {
-    #   if ((ls[[i]]$page_break | last_object) & hrf) {
-    # 
-    # 
-    #     # Add extra offsets if table has a lot of borders turned on
-    #     # to avoid undesired page wraps
-    #     boff <- 0
-    #     if (any(class(obj) == "table_spec") &
-    #         any(obj$borders %in% c("all", "inside"))) {
-    # 
-    #       #boff <- round(last_page_lines * rs$border_height / rs$row_height)
-    #       boff <- 1
-    #     }
-    # 
-    #     blnks <- c()
-    #     bl <- rs$body_line_count - last_page_lines - boff
-    #     if (bl > 0)
-    #       blnks <- rep("<br>", bl)
-    # 
-    #     last_page <- append(last_page, blnks)
-    #     last_page_lines <- 0
-    # 
-    #   }
-    # }
+    if (rs$paper_size != "none") {
+      if ((ls[[i]]$page_break | last_object) & hrf) {
+
+
+        # Add extra offsets if table has a lot of borders turned on
+        # to avoid undesired page wraps
+        boff <- 0
+        if (any(class(obj) == "table_spec") &
+            any(obj$borders %in% c("all", "inside"))) {
+
+          #boff <- round(last_page_lines * rs$border_height / rs$row_height)
+          boff <- 1
+        }
+
+        blnks <- c()
+        bl <- rs$body_line_count - last_page_lines - boff
+        if (bl > 0)
+          blnks <- rep("<w:p/>", bl)
+
+        last_page <- append(last_page, blnks)
+        last_page_lines <- 0
+
+      }
+    }
 
     ls[[i]]$pages[[length(pgs)]] <- last_page
     
@@ -358,12 +361,12 @@ write_content_docx <- function(rs, hdr, body, pt) {
         # writeLines(paste0("<div ", ta, ">"), con = f, useBytes = TRUE)
 
 
-        if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$html))
-          writeLines(update_page(pt$title_hdr$html,  rs$pages), con = f,
+        if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$docx))
+          writeLines(update_page(pt$title_hdr$docx,  rs$pages), con = f,
                      useBytes = TRUE)
 
-        if (!is.null(rs$titles) & !is.null(pt$titles$html))
-          writeLines(pt$titles$html, con = f, useBytes = TRUE)
+        if (!is.null(rs$titles) & !is.null(pt$titles$docx))
+          writeLines(pt$titles$docx, con = f, useBytes = TRUE)
 
       }
 
@@ -381,8 +384,8 @@ write_content_docx <- function(rs, hdr, body, pt) {
 
       if (page_open == FALSE) {
 
-        if (!is.null(rs$footnotes) & !is.null(pt$footnotes$html))
-          writeLines(update_page(pt$footnotes$html,  rs$pages),
+        if (!is.null(rs$footnotes) & !is.null(pt$footnotes$docx))
+          writeLines(update_page(pt$footnotes$docx,  rs$pages),
                      con = f, useBytes = TRUE)
 
         # Content div
@@ -569,10 +572,17 @@ page_setup_docx <- function(rs) {
     rs$gutter_width <- ccm(rs$gutter_width)
   
   rs$page_break_docx <- paste0('<w:p>
-                          			<w:r>
-                          				<w:br w:type="page"/>
-                          			</w:r>
-                          		</w:p>')
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>')
 
   if (is.null(rs$user_line_count)) {
     rs$line_count <- round(rs$content_size[[1]] / rh) 
