@@ -38,16 +38,14 @@ write_report_docx <- function(rs) {
   bdy <- paginate_content_docx(rs, ls)
   
   # Get column widths
-  #rs$column_widths <- bdy[["widths"]]
+  rs$column_widths <- bdy[["widths"]]
   
   # Deal with preview
   # if (!is.null(rs$preview)) {
   #   if (rs$preview < length(bdy[[1]]$pages))
   #     bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
   # }
-  
-  
- # bdy <- para("Forker")
+
   
   # Write content to file system
   # Later we can just return the stream
@@ -131,7 +129,8 @@ get_docx_document <- function(rs) {
     '<w:pgSz w:w="', pg_w * conv, '" w:h="', pg_h * conv, '"/>',
     '<w:pgMar w:top="', rs$margin_top * conv, '" w:right="', rs$margin_right * conv, '" ', 
     'w:bottom="', rs$margin_bottom * conv, '" w:left="', rs$margin_left * conv, '" ',
-    'w:header="720" w:footer="720" w:gutter="0"/>',
+    'w:header="', rs$margin_top * conv, '" w:footer="', rs$margin_bottom * conv, 
+    '" w:gutter="0"/>',
     '<w:cols w:space="720"/>
     <w:docGrid w:linePitch="360"/>
     </w:sectPr>')
@@ -149,10 +148,9 @@ paginate_content_docx <- function(rs, ls) {
   last_object <- FALSE
   last_page_lines <- 0
   table_widths <- list()
+  imgCnt <- 0
   
   hrf <- has_bottom_footnotes(rs)
-  if (hrf ==  FALSE)
-    hrf <- has_page_footer(rs)
   
   
   # Loop through content objects
@@ -160,6 +158,7 @@ paginate_content_docx <- function(rs, ls) {
     
     pgs <- list()  # list of vectors with page rtf lines
     lns <- c()
+    imgs <- list()
     
     # Set last object flag
     if (i == length(ls))
@@ -211,7 +210,8 @@ paginate_content_docx <- function(rs, ls) {
       for (j in seq_len(length(res$docx))) {
         pgs[[length(pgs) + 1]] <- res$docx[[j]]
         lns[[length(lns) + 1]] <- res$lines[[j]]
-        
+        imgs[[length(imgs) + 1]] <- res$images[[j]]
+        imgCnt <- imgCnt + 1
       }
     } else {
       
@@ -222,6 +222,7 @@ paginate_content_docx <- function(rs, ls) {
     # The content settings will be used when writing content
     ls[[i]]$pages <- pgs
     ls[[i]]$lines <- lns
+    ls[[i]]$images <- imgs
     
     # This section of code is appending blank lines to get
     # footnotes at the bottom of the page.  The complication
@@ -262,7 +263,7 @@ paginate_content_docx <- function(rs, ls) {
         blnks <- c()
         bl <- rs$body_line_count - last_page_lines - boff
         if (bl > 0)
-          blnks <- rep("<w:p/>", bl)
+          blnks <- rep(rs$blank_row, bl)
 
         last_page <- append(last_page, blnks)
         last_page_lines <- 0
@@ -276,7 +277,7 @@ paginate_content_docx <- function(rs, ls) {
   
   
   # Can return something else if needed here
-  ret <- list(widths = table_widths, pages = ls)
+  ret <- list(widths = table_widths, pages = ls, imageCount = imgCnt )
   
   return(ret)
   
@@ -299,9 +300,10 @@ write_content_docx <- function(rs, hdr, body, pt) {
   last_object <- FALSE
   last_page <- FALSE
   page_open <- FALSE
+  imgCnt <- 0
   
   # Create new document in temp location
-  tf <- create_new_docx(rs$font, rs$font_size)
+  tf <- create_new_docx(rs$font, rs$font_size, body$imageCount)
   
   # Write out header
   create_header(tf, rs$page_template$page_header$docx)
@@ -320,6 +322,17 @@ write_content_docx <- function(rs, hdr, body, pt) {
  # writeLines(body, con = f, useBytes = TRUE)
   
   for (cont in body$pages) {
+    
+    # Copy images to document folder
+    if (length(cont$images) > 0) {
+      for (im in cont$images) { 
+        imgCnt <- imgCnt + 1
+        
+        ifp <- file.path(tf, paste0("word/media/image", imgCnt, ".jpeg"))
+        file.copy(im, ifp)
+      
+      }
+    }
 
 
     # Increment counter
@@ -485,49 +498,33 @@ page_setup_docx <- function(rs) {
   
   if (rs$font_size == 8) {
     
-    if (tolower(rs$font) == "times")
-      rh <- 0.1178  
-    else
-      rh <- 0.127451  
-        
     gtr <- .1
     cw <- .1    # na
     
   } else if (rs$font_size == 9) {
     
-    if (tolower(rs$font) == "times")
-      rh <- 0.158
-    else 
-      rh <- 0.148 
     cw <- .11  # na
     gtr <- .1
     
   } else if (rs$font_size == 10) {
-    
-    if (tolower(rs$font) == "times")
-      rh <- 0.17  
-    else 
-      rh <- 0.1585366
     
     gtr <- .11
     cw <- .11   # na
 
   } else if (rs$font_size == 11) {
     
-    if (tolower(rs$font) == "times")
-      rh <- 0.18
-    else 
-      rh <- 0.168 # na
+
     gtr <- .1
     cw <- .11  # na
     
   } else if (rs$font_size == 12) {
     
-    # inches 
-    rh <- 0.1911765  
+
     gtr <- 0.11
     cw <- .12  #na
   }
+  
+  rh <- get_rh(rs$font, rs$font_size)
   
   rs$border_height <- 1/72
   
@@ -549,12 +546,25 @@ page_setup_docx <- function(rs) {
               				</w:rPr>
               			</w:pPr></w:p>\n'
   
+  rs$blank_row <- paste0('<w:p><w:pPr>
+              				<w:spacing w:after="100" w:line="245" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="', rs$font_size * 2, '"/>
+              				</w:rPr>
+              			</w:pPr></w:p>\n')
+  
   # Get conversion factor to twips
   if (rs$units == "inches") {
     conv <- 1440
   } else {
     conv <- 566.9291
   }
+  
+  # The starting point for relationship IDs.
+  # This is used when adding images to the document.
+  # See plot_spec.
+  rs$relIndex <- 9
   
   rs$twip_conversion <- conv
   
@@ -625,9 +635,61 @@ page_setup_docx <- function(rs) {
     print(paste("Page Template Row Count:", rs$page_template_row_count))
 
   # Body line count is the number of rows available for content on each page
-  rs$body_line_count <- rs$line_count - rs$page_template_row_count
+  # - 1 adjustment needed for footer buffer
+  rs$body_line_count <- rs$line_count - rs$page_template_row_count - 1
   if (debug)
     print(paste0("Body Line Count: ", rs$body_line_count))
   
   return(rs)
+}
+
+get_rh <- function(font, font_size) {
+  
+  rh <- 0
+  
+  if (font_size == 8) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.1178  
+    else
+      rh <- 0.127451  
+    
+    
+  } else if (font_size == 9) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.158
+    else 
+      rh <- 0.148 
+
+    
+  } else if (font_size == 10) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.17  
+    else 
+      rh <- 0.1585366
+
+    
+  } else if (font_size == 11) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.18
+    else 
+      rh <- 0.168 # na
+
+    
+  } else if (font_size == 12) {
+    
+    # inches 
+    rh <- 0.1911765  
+
+  } else if (font_size == 14) {
+    
+    # inches 
+    rh <- 0.23 
+    
+  }
+  
+  return(rh)
 }

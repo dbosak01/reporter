@@ -56,7 +56,7 @@ write_docx <- function(src, pth) {
 # Create DOCX --------------------------------------------------------------
 
 #' @noRd
-create_new_docx <- function(font, font_size) {
+create_new_docx <- function(font, font_size, imageCount) {
   
   tdd <- file.path(tempdir(), stri_rand_strings(1, length = 6))
   
@@ -65,6 +65,7 @@ create_new_docx <- function(font, font_size) {
   dir.create(file.path(tdd, "docProps"))
   dir.create(file.path(tdd, "word"))
   dir.create(file.path(tdd, "word/_rels"))
+  dir.create(file.path(tdd, "word/media"))
   
   create_content_types(tdd)
   create_web_settings(tdd)
@@ -74,7 +75,7 @@ create_new_docx <- function(font, font_size) {
   create_core(tdd)
   create_endnotes(tdd)
   create_footnotes(tdd)
-  create_document_rels(tdd)
+  create_document_rels(tdd, imageCount)
   create_rels(tdd)
   
   # Temporary
@@ -94,6 +95,7 @@ create_content_types <- function(pth) {
 cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types
 	xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+	<Default Extension="jpeg" ContentType="image/jpeg"/>
 	<Default Extension="rels" 
 	ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
 	<Default Extension="xml" 
@@ -1180,9 +1182,19 @@ create_footer <- function(pth, cnt = "") {
 }
 
 
-create_document_rels <- function(pth) {
+create_document_rels <- function(pth, imgCnt) {
+  
+  imgs <- ""
+  
+  for (i in seq_len(imgCnt)) {
+    imgs <- paste0(imgs, '<Relationship Target="media/image', i, '.jpeg"', 
+' Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"',
+ ' Id="rId', 8 + i, '"/>\n')
+    
+  }
+  
  
-  cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
 <Relationships
 	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 	<Relationship Id="rId8" 
@@ -1208,8 +1220,7 @@ create_document_rels <- function(pth) {
 	Target="endnotes.xml"/>
 	<Relationship Id="rId4" 
 	Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes" 
-	Target="footnotes.xml"/>
-</Relationships>' 
+	Target="footnotes.xml"/>', imgs, '</Relationships>')
   
   
   nm <- file.path(pth, "word/_rels/document.xml.rels")
@@ -1391,6 +1402,9 @@ create_footnotes <- function(pth) {
 }
 
 
+
+
+
 # DOCX Construction -------------------------------------------------------
 
 
@@ -1435,14 +1449,30 @@ cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
   return(ret)
 }
 
-para <- function(txt, align = "left") {
+para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
   
+  
+  b <- ""
+  if (bold == TRUE)
+    b <-  '<w:b/><w:bCs/>'
+  
+  fs <- ""
+  if (!is.null(font_size))
+    fs <- paste0('<w:sz w:val="', font_size * 2, 
+           '"/><w:szCs w:val="', font_size * 2, '"/>')
+  
+  rpr <- ""
+  if (!is.null(font_size) | bold == TRUE)
+    rpr <- paste0('<w:rPr>', b, fs, '</w:rPr>')
+        
+        
   if (align == "centre")
     align <- "center"
   
  ret <- paste0('<w:p>',
-               '<w:pPr><w:jc w:val="', align, '"/></w:pPr>',
-               '<w:r><w:t xml:space="preserve">', txt, '</w:t></w:r></w:p>', collapse = "")
+               '<w:pPr><w:jc w:val="', align, '"/>', rpr, '</w:pPr>',
+               '<w:r>', rpr, '<w:t xml:space="preserve">', txt, 
+               '</w:t></w:r></w:p>', collapse = "")
  
  return(ret)
   

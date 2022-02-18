@@ -13,7 +13,7 @@ test_that("create_new_docx() function works as expected.", {
 
 
   
-  p <- create_new_docx("Arial", 12)
+  p <- create_new_docx("Arial", 12, 0)
 
 
   expect_true(file.exists(p))
@@ -50,7 +50,7 @@ test_that("create_new_docx() function works as expected.", {
 
 test_that("write_docx() function works as expected.", {
   
-  p <- create_new_docx("Arial", 10)
+  p <- create_new_docx("Arial", 10, 0)
   
   fp <-  file.path(base_path, "docx/test.docx")
   

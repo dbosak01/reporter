@@ -534,7 +534,7 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   rh <- rs$row_height
   tbl <- ts$data
   conv <- rs$twip_conversion
-  rht <- get_row_height(288)
+  rht <- get_row_height(round(rs$row_height * conv))
 
   
   widths <- pi$col_width[!is.na(pi$col_width)]
@@ -806,7 +806,8 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' @noRd
 get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr = FALSE) {
   
-  rht <- get_row_height(288)
+  conv <- rs$twip_conversion
+  rht <- get_row_height(round(rs$row_height * conv))
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank

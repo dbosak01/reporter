@@ -227,7 +227,7 @@ test_that("get_page_footnotes_docx works as expected.", {
   res2 <- get_page_footnotes_docx(rpt2, tbl2, 6,
                                  0, 25, TRUE, "below", "center")
   res2
-  expect_equal(res2$lines, 17)   # Need to do something with this
+  expect_equal(res2$lines, 16)   # Need to do something with this
 
 
   tbl3 <- create_table(iris)  %>%
@@ -243,7 +243,7 @@ test_that("get_page_footnotes_docx works as expected.", {
                                  0, 25, TRUE, "below", "center")
 
   res3
-  expect_equal(res3$lines, 16)
+  expect_equal(res3$lines, 15)
 
   tbl4 <- create_table(iris)  %>%
     footnotes("Here is a footnote", valign = "top")
