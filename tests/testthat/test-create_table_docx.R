@@ -1,6 +1,6 @@
 context("Create Table DOCX Tests")
 
-test_that("get_table_body_html works as expected.", {
+test_that("get_table_body_docx works as expected.", {
 
   fp <- ""
 
@@ -227,7 +227,7 @@ test_that("get_page_footnotes_docx works as expected.", {
   res2 <- get_page_footnotes_docx(rpt2, tbl2, 6,
                                  0, 25, TRUE, "below", "center")
   res2
-  expect_equal(res2$lines, 16)   # Need to do something with this
+  expect_equal(res2$lines, 10)   # Need to do something with this
 
 
   tbl3 <- create_table(iris)  %>%

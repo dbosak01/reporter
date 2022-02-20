@@ -69,15 +69,15 @@ get_page_header_docx <- function(rs) {
 
 
     for (i in seq(1, maxh)) {
-      ret <- paste0(ret, 
-            '<w:tr>', rht)
+
+      cret <- ""
 
       if (length(hl) >= i) {
 
         # Split strings if they exceed width
         tmp <- split_string_html(hl[[i]], rs$content_size[["width"]]/2, rs$units)
         
-        ret <- paste0(ret, 
+        cret <- paste0(cret, 
                       '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
                       get_page_numbers_docx(para(tmp$html)),
                            "</w:tc>\n")
@@ -85,7 +85,7 @@ get_page_header_docx <- function(rs) {
         lcnt <- tmp$lines  
 
       } else {
-        ret <- paste0(ret, 
+        cret <- paste0(cret, 
                       '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
                       para(" "), "</w:tc>\n")
         lcnt <- 1
@@ -97,7 +97,7 @@ get_page_header_docx <- function(rs) {
         tmp2 <- split_string_html(hr[[i]], rs$content_size[["width"]]/2, rs$units)
 
         
-        ret <- paste0(ret, 
+        cret <- paste0(cret, 
                       '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
                       get_page_numbers_docx(para(tmp2$html, "right")), 
                       "</w:tc></w:tr>\n")
@@ -105,16 +105,24 @@ get_page_header_docx <- function(rs) {
         rcnt <- tmp2$lines 
 
       } else {
-        ret <- paste0(ret, 
+        cret <- paste0(cret, 
                       '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
                       para(" ", "right"), "</w:tc></w:tr>\n")
         rcnt <- 1
       }
 
-      if (lcnt > rcnt)
+      if (lcnt > rcnt) {
+        trht <- get_row_height(round(rs$row_height * lcnt * conv))
         cnt <- cnt + lcnt
-      else
+
+      } else {
+        trht <- get_row_height(round(rs$row_height * rcnt * conv))
         cnt <- cnt + rcnt
+      }
+      
+      
+      ret <- paste0(ret, '<w:tr>', trht, cret)
+      
     }
     
     ret <- paste0(ret, "</w:tbl>")
@@ -168,8 +176,7 @@ get_page_footer_docx <- function(rs) {
 
     for (i in seq(1, maxf)) {
 
-      ret <- paste0(ret, 
-            '<w:tr>', rht)
+      tret <- ""
 
       if (length(fl) >= i) {
 
@@ -177,11 +184,11 @@ get_page_footer_docx <- function(rs) {
         tmp1 <- split_string_html(fl[[i]], rs$content_size[["width"]]/3, rs$units)
         
         
-        ret <- paste0(ret, cell_pct(tmp1$html, "left", 1667))
+        tret <- paste0(tret, cell_pct(tmp1$html, "left", 1667))
         
         lcnt <- tmp1$lines
       } else {
-        ret <- paste0(ret, cell_pct(" ", "left", 1667))
+        tret <- paste0(tret, cell_pct(" ", "left", 1667))
         lcnt <- 1
       }
 
@@ -190,10 +197,10 @@ get_page_footer_docx <- function(rs) {
         # Split strings if they exceed width
         tmp2 <- split_string_html(fc[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret,  cell_pct(tmp2$html, "center", 1666))
+        tret <- paste0(tret,  cell_pct(tmp2$html, "center", 1666))
         ccnt <- tmp2$lines
       } else {
-        ret <- paste0(ret,  cell_pct(" ", "center", 1666))
+        tret <- paste0(tret,  cell_pct(" ", "center", 1666))
         ccnt <- 1
       }
 
@@ -201,15 +208,21 @@ get_page_footer_docx <- function(rs) {
 
         tmp3 <- split_string_html(fr[[i]], rs$content_size[["width"]]/3, rs$units)
         
-        ret <- paste0(ret, cell_pct(tmp3$html, "right", 1667))
+        tret <- paste0(tret, cell_pct(tmp3$html, "right", 1667))
         
         rcnt <- tmp3$lines
       } else {
-        ret <- paste0(ret,  cell_pct(" ", "right", 1667))
+        tret <- paste0(tret,  cell_pct(" ", "right", 1667))
         rcnt <- 1
       }
 
       cnt <- cnt + max(lcnt, ccnt, rcnt)
+      
+      
+      trht <- get_row_height(round(rs$row_height * max(lcnt, ccnt, rcnt) * conv)) 
+      
+      
+      ret <- paste0(ret, '<w:tr>', trht, tret)
 
     }
     dev.off()
@@ -344,11 +357,14 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
           ret <- append(ret, al)
         
         if (is.null(ttls$font_size)) {
-          ret <- append(ret, paste0("<w:tr>", rht, "<w:tc>", tstr, 
+          
+          srht <- get_row_height(round(rs$row_height * tmp$lines * conv))
+          
+          ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", tstr, 
                                     "</w:tc></w:tr>\n"))
         } else {
           
-          srht <- get_row_height(round(get_rh(rs$font, ttls$font_size) * conv))
+          srht <- get_row_height(round(get_rh(rs$font, ttls$font_size) * tmp$lines * conv))
 
           ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", tstr, 
                                     "</w:tc></w:tr>\n"))
@@ -492,7 +508,10 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
           ret <- append(ret, al)
 
         # if (b == "")
-          ret <- append(ret, paste0("<w:tr>", rht, 
+        
+          trht <- get_row_height(round(rs$row_height * tmp$lines * conv))
+        
+          ret <- append(ret, paste0("<w:tr>", trht, 
                                    "<w:tc>", para(tmp$html, algn), 
                                     "</w:tc></w:tr>\n"))
         # else {

@@ -340,11 +340,17 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   
   tb <- get_table_borders_docx(ts$borders)
+  tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv),
+            round(length(pi$col_width[!is.na(pi$col_width)]) * .08 * conv))
   
   ts <- paste0("<w:tbl>", "<w:tblPr>",
                '<w:tblStyle w:val="TableGrid"/>',
-               '<w:tblW w:w="', round(sum(pi$col_width, na.rm = TRUE) * conv),'"',
+               '<w:tblW w:w="', tw,'"',
                ' w:type="dxa"/>', tb,
+               '<w:tblCellMar>
+        					<w:left w:w="72" w:type="dxa"/>
+        					<w:right w:w="72" w:type="dxa"/>
+        				</w:tblCellMar>',
                "</w:tblPr>")
   
   ret <- list(docx = c(a, ttls$docx, pgby$docx, ts, shdrs$docx, 
@@ -534,7 +540,7 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   rh <- rs$row_height
   tbl <- ts$data
   conv <- rs$twip_conversion
-  rht <- get_row_height(round(rs$row_height * conv))
+
 
   
   widths <- pi$col_width[!is.na(pi$col_width)]
@@ -587,7 +593,7 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   }
   
   # Table Header
-  ret[1] <- paste0("<w:tr>", rht, "\n")
+  ret[1] <- ""
   cols[1] <- "<w:tblGrid>\n"
   
 
@@ -627,10 +633,14 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
          cnt <- xtr
     }
   }
+  
+  
   dev.off()
   
+  rht <- get_row_height(round(rs$row_height * cnt * conv))
+  
   cols[1] <- paste0(cols[1], "</w:tblGrid>\n")
-  ret[1] <- paste0(ret[1], "</w:tr>\n")
+  ret[1] <- paste0("<w:tr>", rht, "\n", ret[1], "</w:tr>\n")
   
   # Get spanning headers
   # sphdrs <- get_spanning_header_html(rs, ts, pi,
@@ -872,16 +882,20 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
         # b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
         #                            exclude = exclude_top)
         
+        vl <- t[i, j]
+        if (!is.character(vl))
+          vl <- as.character(vl)
+        
         # Construct html
         # if (b == "")
           ret[i] <- paste0(ret[i], "<w:tc>", 
-                           para(t[i, j], ca[j]), "</w:tc>")
+                           para(vl, ca[j]), "</w:tc>")
         # else 
         #   ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
         #                    encodeHTML(t[i, j]), "</td>")
         
         # Count lines in cell 
-        cl <- grep("\n", t[i, j], fixed = TRUE)
+        cl <- grep("\n", vl, fixed = TRUE)
         if (length(cl) >= mxrw)
           mxrw <- length(cl) + 1
       }

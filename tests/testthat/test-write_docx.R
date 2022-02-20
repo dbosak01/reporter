@@ -82,5 +82,19 @@ test_that("get_docx_document() works as expected.", {
   
   
 })
+
+
+test_that("para() function works as expected.", {
+  
+  txt <- "here is \n a nice text string."
+  
+  
+  res <- para(txt)
+  
+  res
+  
+  expect_equal(nchar(res) > 100, TRUE)
+  
+})
   
 

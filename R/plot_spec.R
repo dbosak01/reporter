@@ -1207,14 +1207,14 @@ create_plot_pages_docx<- function(rs, cntnt, lpg_rows, tmp_dir) {
     # Get rtf page bodies
     res <- get_plot_body_docx(plt, tmp_nm, cntnt$align, rs,
                               lpg_rows, cntnt$blank_row, NULL, NULL, 
-                              FALSE)
+                              FALSE, relIndex)
     
     pgs[[length(pgs) + 1]] <- res$docx
     cnts[[length(cnts) + 1]] <- res$lines
     
     relID <- paste0("rId", relIndex)
     imgs[[relID]] <- tmp_nm
-    
+    relIndex <- relIndex + 1
     
   } else {
     

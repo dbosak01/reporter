@@ -1425,23 +1425,27 @@ cell_pct <- function(txt, align = "left", width = NULL) {
   return(ret)
 }
 
-
+#' Bottom border means it is a header row
+#' @noRd
 cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
   
+  al <- '<w:vAlign w:val="bottom"/>'
   bb <- '<w:tcBorders>
     <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
       </w:tcBorders>'
-  if (bborder == FALSE)
+  if (bborder == FALSE) {
     bb <- ""
+    al <- ""
+  }
   
   
   if (is.null(width)) {
-    ret <- paste0('<w:tc><w:tcPr>', bb, '</w:tcPr>', 
+    ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
                   para(txt, align),
                   "</w:tc>\n", collapse = "")
     
   } else {
-    ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, '</w:tcPr>', 
+    ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
                   para(txt, align),
                   "</w:tc>\n", collapse = "")
   }
@@ -1451,28 +1455,39 @@ cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
 
 para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
   
+  ret <- ""
+
+  splt <- strsplit(txt, split = "\n", fixed = TRUE)
   
-  b <- ""
-  if (bold == TRUE)
-    b <-  '<w:b/><w:bCs/>'
-  
-  fs <- ""
-  if (!is.null(font_size))
-    fs <- paste0('<w:sz w:val="', font_size * 2, 
-           '"/><w:szCs w:val="', font_size * 2, '"/>')
-  
-  rpr <- ""
-  if (!is.null(font_size) | bold == TRUE)
-    rpr <- paste0('<w:rPr>', b, fs, '</w:rPr>')
-        
-        
-  if (align == "centre")
-    align <- "center"
-  
- ret <- paste0('<w:p>',
-               '<w:pPr><w:jc w:val="', align, '"/>', rpr, '</w:pPr>',
-               '<w:r>', rpr, '<w:t xml:space="preserve">', txt, 
-               '</w:t></w:r></w:p>', collapse = "")
+  for (i in seq_len(length(splt))) {
+    
+    
+    for (j in seq_len(length(splt[[i]]))) {
+    
+      b <- ""
+      if (bold == TRUE)
+        b <-  '<w:b/><w:bCs/>'
+      
+      fs <- ""
+      if (!is.null(font_size))
+        fs <- paste0('<w:sz w:val="', font_size * 2, 
+               '"/><w:szCs w:val="', font_size * 2, '"/>')
+      
+      rpr <- ""
+      if (!is.null(font_size) | bold == TRUE)
+        rpr <- paste0('<w:rPr>', b, fs, '</w:rPr>')
+            
+            
+      if (align == "centre")
+        align <- "center"
+      
+     ret <- paste0(ret, '<w:p>',
+                   '<w:pPr><w:jc w:val="', align, '"/>',
+                   '<w:spacing w:after="0"/>', '</w:pPr>',
+                   '<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
+                   '</w:t></w:r></w:p>\n')
+    }
+  }
  
  return(ret)
   

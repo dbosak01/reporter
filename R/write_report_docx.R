@@ -650,9 +650,9 @@ get_rh <- function(font, font_size) {
   if (font_size == 8) {
     
     if (tolower(font) == "times")
-      rh <- 0.1178  
+      rh <- 0.142  
     else
-      rh <- 0.127451  
+      rh <- 0.142 
     
     
   } else if (font_size == 9) {
@@ -660,7 +660,7 @@ get_rh <- function(font, font_size) {
     if (tolower(font) == "times")
       rh <- 0.158
     else 
-      rh <- 0.148 
+      rh <- 0.16 
 
     
   } else if (font_size == 10) {
@@ -668,7 +668,7 @@ get_rh <- function(font, font_size) {
     if (tolower(font) == "times")
       rh <- 0.17  
     else 
-      rh <- 0.1585366
+      rh <- 0.182  # 0.1585366
 
     
   } else if (font_size == 11) {
@@ -676,18 +676,18 @@ get_rh <- function(font, font_size) {
     if (tolower(font) == "times")
       rh <- 0.18
     else 
-      rh <- 0.168 # na
+      rh <- 0.19 # 0.168
 
     
   } else if (font_size == 12) {
     
     # inches 
-    rh <- 0.1911765  
+    rh <- 0.22  # 1911765 
 
   } else if (font_size == 14) {
     
     # inches 
-    rh <- 0.23 
+    rh <- 0.25 
     
   }
   
