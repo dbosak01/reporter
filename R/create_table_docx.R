@@ -663,16 +663,21 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   ret[1] <- paste0("<w:tr>", rht, "\n", ret[1], "</w:tr>\n")
   
   # Get spanning headers
-  # sphdrs <- get_spanning_header_html(rs, ts, pi,
-  #                                    ifelse(is.null(exclude_top), FALSE, TRUE))
+  sphdrs <- get_spanning_header_docx(rs, ts, pi,
+                                     ifelse(is.null(exclude_top), FALSE, TRUE))
   
-  # res <- list(docx = paste0(cols, "<thead>\n", paste0(sphdrs$docx, collapse=""), 
+  
+  # res <- list(docx = paste0(cols, "<thead>\n", paste0(sphdrs$docx, collapse=""),
   #                           ret, "</thead>\n"),
   #             lines = cnt + sphdrs$lines)
   
-  res <- list(docx = paste0(cols,  
+  res <- list(docx = paste0(cols, paste0(sphdrs$docx, collapse=""),
                             ret),
-              lines = cnt ) #+ sphdrs$lines)
+              lines = cnt + sphdrs$lines)
+  
+  # res <- list(docx = paste0(cols,  
+  #                           ret),
+  #             lines = cnt ) #+ sphdrs$lines)
   
   return(res)
   
@@ -694,6 +699,8 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   w <- w[cols]
   gutter <- 0
   cnt <- c()
+  conv <- rs$twip_conversion
+  
   exclude_top <- NULL
   if (ex_brdr)
     exclude_top <- "top"
@@ -731,11 +738,11 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
     for (k in seq_along(algns)) {
       
       if (algns[k] == "right")
-        ha[k] <- "text-align:right;"
+        ha[k] <- "right"
       else if (algns[k] %in% c("center", "centre"))
-        ha[k] <- "text-align:center;"
+        ha[k] <- "center"
       else
-        ha[k] <- "text-align:left;"
+        ha[k] <- "left"
       
     }
     
@@ -743,7 +750,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
     cnt[length(cnt) + 1] <- 1 
     
     # Start row
-    r <-  "<tr>\n"
+    r <-  "<w:tr>\n"
     
     # Open device context
     pdf(NULL)
@@ -756,55 +763,67 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
       
       
-      b <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls) + 1, 
-                                 length(widths), brdrs, 
-                                 exclude = exclude_top)
+      # b <- get_table_borders_docx(length(lvls) - l + 1, k, length(lvls) + 1, 
+      #                            length(widths), brdrs, 
+      #                            exclude = exclude_top)
       
       # Add colspans
       vl <- tmp$html
+      bb <- ""
       
-      # Special handling of borders for different situations.  
-      # I hate this, but can't see a way around it.
+      # Special handling of cell borders for different situations.  
       if (any(brdrs %in% c("all", "inside"))) {
-        sflg <- "B"
-        if (k > 1) {
-          if (cs[k - 1] > 1)
-            sflg <- ""
+
+
+        if (cs[k] == 1) {
+          if (vl == "") {
+            
+            if (k == 1) {
+              
+              bb <- '<w:tcBorders>
+              <w:right w:val="nil"/>
+                </w:tcBorders>'
+              
+            } else if (k == length(cs)) {
+              
+              bb <- '<w:tcBorders>
+              <w:left w:val="nil"/>
+                </w:tcBorders>'
+              
+            } else {
+            
+              bb <- '<w:tcBorders>
+              <w:right w:val="nil"/>
+              <w:left w:val="nil"/>
+                </w:tcBorders>'
+            } 
+          
+          }
         }
-        
-        if (vl == "") {
-          bb <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls), 
-                                                 length(widths), brdrs, 
-                                                 flag = sflg,
-                                                 exclude = exclude_top)
-        } else 
-          bb <- b
-      } else if (all(brdrs == "outside")) {
-        
-        if (vl == "")
-          bb <- b
-        else 
-          bb <- paste0(b, "border-bottom:thin solid")
-        
+
       } else {
         
-        if (vl == "") {
-          bb <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls), 
-                                                      length(widths), brdrs, 
-                                                      flag = "",
-                                                      exclude = c("bottom", exclude_top))
-        } else 
-          bb <- paste0(b, "border-bottom:thin solid")
-        
+        if (cs[k] > 1 | vl != "") {
+            
+          if (s$underline[k]) {
+            bb <- '<w:tcBorders>
+               <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                </w:tcBorders>'
+          }
+            
+        } 
+
       }
       
       
+      r <- paste0(r, "<w:tc>", 
+                  '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', bb,
+                  '<w:vAlign w:val="bottom"/>',
+                  '<w:tcW w:w="', round(widths[k] * conv), '" w:type="dxa"/>',
+                  '</w:tcPr>', 
+                  para(vl, ha[k]), "</w:tc>\n")
       
-      r <- paste0(r, "<td colspan=\"", cs[k], 
-                  "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
-                  encodeHTML(vl), "</td>\n")
-      # print(lbls[k])
-      # print(widths[k])
+      
       # Add in extra lines for labels that wrap
       xtr <- tmp$lines
       
@@ -815,7 +834,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
     dev.off()
     
     
-    r <- paste0(r, "</tr>\n")
+    r <- paste0(r, "</w:tr>\n")
     
     ln[[length(ln) + 1]] <- r
     
