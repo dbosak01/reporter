@@ -38,7 +38,7 @@ test_that("docx0: Basic text works as expected.", {
   rpt <- create_report(fp, output_type = "DOCX", font = "Times",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(txt, align = "left") %>%
+    add_content(txt, align = "center") %>%
     #add_content(create_text("Goodbye")) %>% 
     page_header(c("Left1", "Left2"), "Right") %>%
     page_footer("Page [pg] of [tpg]", "Center", "Right")
@@ -122,7 +122,7 @@ test_that("docx3: Basic table with title header works as expected.", {
 
   tbl <- create_table(dat, borders = c("outside")) %>%
     title_header("Table 1.0", "My Nice Table", right = "Right",
-                 borders = c("outside"), blank_row = "both",
+                 borders = c("all"), blank_row = "both",
                  width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside",
               align = "left", width = "content")
@@ -265,7 +265,7 @@ test_that("docx7: Basic plot works as expected.", {
 
 
 # Good for testing
-# Borders throw off line counts.  Made rudimentary adjustment.
+# Borders throw off line counts.  Come back to this.
 test_that("docx8: Page by works as expected.", {
 
 
@@ -300,7 +300,7 @@ test_that("docx8: Page by works as expected.", {
 })
 
 
-# Good for testing
+# Good for testing.  Check bottom footnote positioning.
 test_that("docx9: Page by on report works as expected.", {
 
 
@@ -562,7 +562,7 @@ test_that("docx16: 9 pt font inches works as expected.", {
 
   fp <- file.path(base_path, "docx/test16.docx")
 
-  rpt <- create_report(fp, output_type = "DOCX", font_size = 9,
+  rpt <- create_report(fp, output_type = "DOCX", font_size = 12,
                        font = "Courier",
                        orientation = "portrait") %>%
     page_header("left", "right") %>%

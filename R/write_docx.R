@@ -1456,8 +1456,12 @@ cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
 para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
   
   ret <- ""
+  
+  vl <- txt
+  if (nchar(txt) == 0)
+    vl <- " "
 
-  splt <- strsplit(txt, split = "\n", fixed = TRUE)
+  splt <- strsplit(vl, split = "\n", fixed = TRUE)
   
   for (i in seq_len(length(splt))) {
     

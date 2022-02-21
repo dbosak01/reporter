@@ -1355,17 +1355,9 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   img <- get_image_docx(rID, algn, hgth, wdth)
   
   
-  ta <- ""
-  if (any(plt$borders %in% c("outside", "all", "left"))) {   
-    if (talign == "right")
-      aw <- round((rs$line_size - wth) * conv)  + rs$base_indent
-    else if (talign %in% c("center", "centre"))
-      aw <- round((((rs$line_size - wth) * conv) ) / 2) + rs$base_indent
-    else 
-      aw <- rs$base_indent
-    
-    ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
-  }
+  # Get indent codes for alignment
+  ta <- get_indent_docx(talign, rs$line_size, round(wth * conv), 
+                        rs$base_indent, plt$borders, conv)
   
 
   # Get border codes
@@ -1380,7 +1372,7 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
                "<w:tr><w:tc>\n",
                '<w:tcPr><w:tcW w:w="', round(wth * conv),'"/></w:tcPr>')
   
-  ft <- "</w:tc></w:tr></w:tbl>\n"
+  ft <- paste0("</w:tc></w:tr></w:tbl>\n", rs$table_break)
   
   
   # Concat RTF codes for image
@@ -1428,7 +1420,6 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
 
 get_image_docx <- function(id, algn, hgth, wdth) {
  
-  #             <a:ext cx="5943600" cy="2971800"/>
   
  ret <- paste0('<w:p>',
                '<w:pPr><w:jc w:val="', algn, '"/></w:pPr>',

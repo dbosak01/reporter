@@ -274,19 +274,10 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
         algn <- "right"
       else
         algn <- "left"
-      
-      
-      ta <- ""
-      if (any(ttls$borders %in% c("outside", "all", "left"))) { 
-        if (talgn == "right")
-          aw <- round(rs$line_size * conv) - w + rs$base_indent
-        else if (talgn %in% c("center", "centre"))
-          aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
-        else 
-          aw <- rs$base_indent
-        
-        ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
-      }
+
+      # Get indent codes for alignment
+      ta <- get_indent_docx(talgn, rs$line_size, w, 
+                           rs$base_indent, ttls$borders, conv)
       
       alcnt <- 0
       blcnt <- 0
@@ -451,17 +442,9 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       else
         algn <- "left"
       
-      ta <- ""
-      if (any(ftnts$borders %in% c("outside", "all", "left"))) {  
-        if (talgn == "right")
-          aw <- round(rs$line_size * conv) - w + rs$base_indent
-        else if (talgn %in% c("center", "centre"))
-          aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
-        else 
-          aw <- rs$base_indent
-        
-        ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
-      }
+      # Get indent codes for alignment
+      ta <- get_indent_docx(talgn, rs$line_size, w, 
+                           rs$base_indent, ftnts$borders, conv)
 
       alcnt <- 0
       blcnt <- 0
@@ -613,17 +596,8 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
       
       tb <- get_table_borders_docx(ttlhdr$borders)
       
-      ta <- ""
-      if (any(ttlhdr$borders %in% c("outside", "all", "left"))) { 
-        if (talgn == "right")
-          aw <- round(rs$line_size * conv) - w + rs$base_indent
-        else if (talgn %in% c("center", "centre"))
-          aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
-        else 
-          aw <- rs$base_indent
-        
-        ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
-      }
+      ta <- get_indent_docx(talgn, rs$line_size, w, 
+                            rs$base_indent, ttlhdr$borders, conv)
       
       ret[length(ret) + 1] <- paste0("<w:tbl>", 
                                      "<w:tblPr>",
@@ -633,7 +607,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
                               "<w:tblGrid>",
                               '<w:gridCol w:w="3500" w:type="pct"/>',
                               '<w:gridCol w:w="1500" w:type="pct"/>',
-                              "</w:tblGrid>")
+                              "</w:tblGrid>\n")
       
       
       # ret[length(ret) + 1] <- paste0("<table ",
@@ -662,6 +636,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
             #              "\">&nbsp;</td></tr>\n")
             
             al <- paste0("<w:tr>", rht, 
+                  "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>",
                   "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
             cnt <- cnt + 1
 
@@ -685,6 +660,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
             #              "\">&nbsp;</td></tr>\n")
             
             bl <- paste0("<w:tr>", rht, 
+                  "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>", 
                   "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
             cnt <- cnt + 1
           }
@@ -711,7 +687,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
           hdr <- tmp2$html
           hcnt <- tmp2$lines
         } else {
-          hdr <- ""
+          hdr <- " "
           hcnt <- 1
         }
 
@@ -810,17 +786,9 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
 
     tb <- get_table_borders_docx(pgby$borders)
     
-    ta <- ""
-    if (any(pgby$borders %in% c("outside", "all", "left"))) {  
-      if (talgn == "right")
-        aw <- round(rs$line_size * conv) - w + rs$base_indent
-      else if (talgn %in% c("center", "centre"))
-        aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
-      else 
-        aw <- rs$base_indent
-      
-      ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
-    }
+    
+    ta <- get_indent_docx(talgn, rs$line_size, w, 
+                          rs$base_indent, pgby$borders, conv)
     
     ret[length(ret) + 1] <- paste0("<w:tbl>",
                                    "<w:tblPr>",
@@ -968,6 +936,7 @@ get_table_borders_docx <- function(brdrs,
   
 }
 
+#' @noRd
 get_page_numbers_docx <- function(val, tpg = TRUE) {
   
   ret <- val
@@ -980,7 +949,7 @@ get_page_numbers_docx <- function(val, tpg = TRUE) {
   return(ret)
 }
 
-
+#' @noRd
 get_row_height <- function(hgt) {
   
   ret <- paste0('<w:trPr><w:trHeight w:hRule="exact" w:val="', hgt, 
@@ -990,7 +959,7 @@ get_row_height <- function(hgt) {
   
 }
 
-
+#' @noRd
 get_page_number_docx <- function() {
   
   ret <- paste0('</w:t></w:r><w:r><w:fldChar w:fldCharType="begin"/></w:r>
@@ -1010,6 +979,7 @@ get_page_number_docx <- function() {
   return(ret)
 }
 
+#' @noRd
 get_total_pages_docx <- function() {
   
   ret <- paste0('</w:t></w:r><w:r><w:fldChar w:fldCharType="begin"/></w:r>
@@ -1027,4 +997,27 @@ get_total_pages_docx <- function() {
      </w:r><w:r><w:t xml:space="preserve">')
   
   return(ret)
+}
+
+#' @noRd
+get_indent_docx <- function(talgn, line_size, width, base_indent, borders, conv) {
+  
+  ret <- ""
+  bi <- 0
+  
+  if (any(borders %in% c("outside", "all", "left"))) 
+    bi <- base_indent
+    
+    if (talgn == "right")
+      aw <- round(line_size * conv) - width + bi
+    else if (talgn %in% c("center", "centre"))
+      aw <- round(((line_size * conv) - width) / 2) + bi
+    else 
+      aw <- bi
+    
+  ret <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+  
+  
+  return(ret)
+  
 }
