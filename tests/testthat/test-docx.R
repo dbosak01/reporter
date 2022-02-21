@@ -38,15 +38,15 @@ test_that("docx0: Basic text works as expected.", {
   rpt <- create_report(fp, output_type = "DOCX", font = "Times",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(txt, align = "center") %>%
-    add_content(create_text("Goodbye")) %>% 
+    add_content(txt, align = "left") %>%
+    #add_content(create_text("Goodbye")) %>% 
     page_header(c("Left1", "Left2"), "Right") %>%
     page_footer("Page [pg] of [tpg]", "Center", "Right")
   
   res <- write_report(rpt)
   
-- expect_equal(file.exists(fp), TRUE)
-#  expect_equal(res$pages, 1)
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
   
 })
 
@@ -86,9 +86,9 @@ test_that("docx2: Basic table works as expected.", {
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
 
-  tbl <- create_table(dat, borders = "none")  %>%
+  tbl <- create_table(dat, borders = "outside")  %>%
      titles("Table 1.0", "My Nice Table", borders = c("none"),
-            width = "content") %>%
+            width = "content", align = "left") %>%
      footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
                borders = "none",
                align = "left", width = "content") %>%
@@ -100,7 +100,7 @@ test_that("docx2: Basic table works as expected.", {
      set_margins(top = 1, bottom = 1) %>%
      page_header("Left", c("Right1 and more", "Right2", "Page [pg] of [tpg]"),
                 blank_row = "below") %>%
-     add_content(tbl, align = "center") %>%
+     add_content(tbl, align = "left") %>%
      page_footer("Left1", "Center1", "Page [pg] of [tpg]")
 
   res <- write_report(rpt)

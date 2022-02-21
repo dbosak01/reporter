@@ -266,7 +266,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
       else if (is.numeric(ttls$width))
         width <- ttls$width
 
-      w <- round(width, 3) * conv
+      w <- round(width * conv)
       
       if (ttls$align %in% c("centre", "center"))
         algn <- "center"
@@ -274,6 +274,19 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
         algn <- "right"
       else
         algn <- "left"
+      
+      
+      ta <- ""
+      if (any(ttls$borders %in% c("outside", "all", "left"))) { 
+        if (talgn == "right")
+          aw <- round(rs$line_size * conv) - w + rs$base_indent
+        else if (talgn %in% c("center", "centre"))
+          aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
+        else 
+          aw <- rs$base_indent
+        
+        ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+      }
       
       alcnt <- 0
       blcnt <- 0
@@ -287,7 +300,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
-                                     "<w:tblW w:w=\"", w, "\"/>", tb,
+                                     "<w:tblW w:w=\"", w, "\"/>", ta, tb, 
                                      "</w:tblPr>")
       
       for (i in seq_along(ttls$titles)) {
@@ -428,15 +441,27 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       else if (is.numeric(ftnts$width))
         width <- ftnts$width
 
-      w <- round(width, 3) * conv
+      w <- round(width * conv)
 
-
+      
       if (ftnts$align %in% c("centre", "center"))
         algn <- "center"
       else if (ftnts$align == "right")
         algn <- "right"
       else
         algn <- "left"
+      
+      ta <- ""
+      if (any(ftnts$borders %in% c("outside", "all", "left"))) {  
+        if (talgn == "right")
+          aw <- round(rs$line_size * conv) - w + rs$base_indent
+        else if (talgn %in% c("center", "centre"))
+          aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
+        else 
+          aw <- rs$base_indent
+        
+        ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+      }
 
       alcnt <- 0
       blcnt <- 0
@@ -449,7 +474,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
-                                     "<w:tblW w:w=\"", w, "\"/>", tb,
+                                     "<w:tblW w:w=\"", w, "\"/>", ta, tb,
                                      "</w:tblPr>")
 
       for (i in seq_along(ftnts$footnotes)) {
@@ -588,15 +613,22 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
       
       tb <- get_table_borders_docx(ttlhdr$borders)
       
-      # ret[length(ret) + 1] <- paste0("<w:tbl>",
-      #                                "<w:tblPr>",
-      #                                "<w:tblW w:w=\"", w, "\"/>", tb,
-      #                                "</w:tblPr>")
+      ta <- ""
+      if (any(ttlhdr$borders %in% c("outside", "all", "left"))) { 
+        if (talgn == "right")
+          aw <- round(rs$line_size * conv) - w + rs$base_indent
+        else if (talgn %in% c("center", "centre"))
+          aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
+        else 
+          aw <- rs$base_indent
+        
+        ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+      }
       
       ret[length(ret) + 1] <- paste0("<w:tbl>", 
                                      "<w:tblPr>",
                               '<w:tblStyle w:val="TableGrid"/>',
-                              '<w:tblW w:w="', w, '"/>', tb,
+                              '<w:tblW w:w="', w, '"/>', ta, tb,
                               "</w:tblPr>",
                               "<w:tblGrid>",
                               '<w:gridCol w:w="3500" w:type="pct"/>',
@@ -778,9 +810,21 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
 
     tb <- get_table_borders_docx(pgby$borders)
     
+    ta <- ""
+    if (any(pgby$borders %in% c("outside", "all", "left"))) {  
+      if (talgn == "right")
+        aw <- round(rs$line_size * conv) - w + rs$base_indent
+      else if (talgn %in% c("center", "centre"))
+        aw <- round(((rs$line_size * conv) - w) / 2) + rs$base_indent
+      else 
+        aw <- rs$base_indent
+      
+      ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+    }
+    
     ret[length(ret) + 1] <- paste0("<w:tbl>",
                                    "<w:tblPr>",
-                                   "<w:tblW w:w=\"", w, "\"/>", tb,
+                                   "<w:tblW w:w=\"", w, "\"/>", ta, tb,
                                    "</w:tblPr>")
     
     trows <- 1

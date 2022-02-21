@@ -126,7 +126,8 @@ get_docx_document <- function(rs) {
   ret[length(ret) + 1] <- paste0('<w:sectPr w:rsidR="00444C49" w:rsidRPr="00444C49">
     <w:headerReference w:type="default" r:id="rId6"/>
     <w:footerReference w:type="default" r:id="rId7"/>',
-    '<w:pgSz w:w="', pg_w * conv, '" w:h="', pg_h * conv, '"/>',
+    '<w:pgSz w:w="', pg_w * conv, '" w:h="', pg_h * conv, '" w:orient="', 
+    rs$orientation, '"/>',
     '<w:pgMar w:top="', rs$margin_top * conv, '" w:right="', rs$margin_right * conv, '" ', 
     'w:bottom="', rs$margin_bottom * conv, '" w:left="', rs$margin_left * conv, '" ',
     'w:header="', rs$margin_top * conv, '" w:footer="', rs$margin_bottom * conv, 
@@ -571,6 +572,7 @@ page_setup_docx <- function(rs) {
   rs$row_height <- rh
   rs$line_height <- rh
   rs$char_width <- cw
+  rs$base_indent <- 130
   
   # Content size is the page size minus margins, in units of measure
   rs$content_size <- get_content_size(rs)

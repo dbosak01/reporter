@@ -343,7 +343,23 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv),
             round(length(pi$col_width[!is.na(pi$col_width)]) * .08 * conv))
   
+ 
+  ta <- ""
+  
+  if (any(ts$borders %in% c("outside", "all", "left"))) {  
+    if (pi$table_align == "right")
+      aw <- round(rs$line_size * conv) - tw + rs$base_indent
+    else if (pi$table_align %in% c("center", "centre"))
+      aw <- round(((rs$line_size * conv) - tw) / 2) + rs$base_indent
+    else 
+      aw <- round(rs$base_indent)
+    
+    ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+  }
+  
+  
   ts <- paste0("<w:tbl>", "<w:tblPr>",
+               ta,
                '<w:tblStyle w:val="TableGrid"/>',
                '<w:tblW w:w="', tw,'"',
                ' w:type="dxa"/>', tb,

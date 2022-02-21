@@ -1338,15 +1338,16 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
     algn <- "center"
   
   # algn <- "\\qc" 
+  # This height and width is for the image scaling.
   u <- rs$units
-  conv <- 914400
+  iconv <- 914400  # Image unit conversion. Not even sure what units this is.
   if (u == "inches") {
-    hgth <- plt$height * conv
-    wdth <- plt$width * conv
+    hgth <- (plt$height - .2) * iconv 
+    wdth <- (plt$width - .2) * iconv 
     
   } else {
-    hgth <- cin(plt$height) * conv
-    wdth <- cin(plt$width) * conv
+    hgth <- (cin(plt$height) - .2) * iconv 
+    wdth <- (cin(plt$width) - .2) * iconv
     
   }
   
@@ -1354,7 +1355,17 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   img <- get_image_docx(rID, algn, hgth, wdth)
   
   
-
+  ta <- ""
+  if (any(plt$borders %in% c("outside", "all", "left"))) {   
+    if (talign == "right")
+      aw <- round((rs$line_size - wth) * conv)  + rs$base_indent
+    else if (talign %in% c("center", "centre"))
+      aw <- round((((rs$line_size - wth) * conv) ) / 2) + rs$base_indent
+    else 
+      aw <- rs$base_indent
+    
+    ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+  }
   
 
   # Get border codes
@@ -1364,7 +1375,7 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   hd <- paste0("<w:tbl>",  "<w:tblPr>",
               # '<w:tblStyle w:val="TableGrid"/>',
                '<w:tblW w:w="', round(wth * conv),'"',
-               ' w:type="dxa"/>', tb,
+               ' w:type="dxa"/>', ta, tb,
                "</w:tblPr>\n",
                "<w:tr><w:tc>\n",
                '<w:tcPr><w:tcW w:w="', round(wth * conv),'"/></w:tcPr>')

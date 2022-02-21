@@ -1056,16 +1056,33 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
     algn <- "center"
   else
     algn <- "left"
+  
+  
+  tw <- round(width * conv)
+  
+  ta <- ""
+  if (any(txt$borders %in% c("outside", "all", "left"))) {   
+    if (talgn == "right")
+      aw <- round(rs$line_size * conv) - tw + rs$base_indent
+    else if (talgn %in% c("center", "centre"))
+      aw <- round(((rs$line_size * conv) - tw) / 2) + rs$base_indent
+    else 
+      aw <- rs$base_indent
+      
+    ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+  }
    
   # Get cell border codes
   b <- get_table_borders_docx(txt$borders, exclude = exclude_top)  
    
   # Prepare row header and footer
-  rwhd <- paste0("<w:tbl>\n", '<w:tblPr><w:tblW w:w="', width * conv, '"/>', 
+  rwhd <- paste0("<w:tbl>\n", '<w:tblPr>',
+                 '<w:tblW w:w="', tw, '"/>', 
+                 ta,
                  b,
                  "</w:tblPr>",
                  "<w:tr><w:tc>",
-                 '<w:tcPr><w:tcW w:w="', width * conv, '"/></w:tcPr>',
+                 '<w:tcPr><w:tcW w:w="', tw, '"/></w:tcPr>',
                  '<w:p>',
                  '<w:pPr><w:jc w:val="', algn, '"/></w:pPr>')
   rwft <- paste0("</w:p></w:tc></w:tr>\n</w:tbl>\n")
