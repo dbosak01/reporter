@@ -1102,7 +1102,7 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
     # Add blank above content if requested
     a <- NULL
     if (i == 1 & content_blank_row %in% c("both", "above"))
-      a <- "<w:p/>\n"
+      a <- rs$blank_row
     
     
     # Sum up lines

@@ -130,7 +130,7 @@ get_page_header_docx <- function(rs) {
     dev.off()
 
     if (rs$page_header_blank_row == "below") {
-      ret <- paste0(ret, "<w:p/>")
+      ret <- paste0(ret, rs$blank_row)
       cnt <- cnt + 1
     }
   }
@@ -241,7 +241,8 @@ get_page_footer_docx <- function(rs) {
 
 #' @import grDevices
 #' @noRd
-get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
+get_titles_docx <- function(ttllst, content_width, rs, talgn = "center", 
+                            colspan = 0) {
   
   ret <- c()
   cnt <- 0
@@ -250,9 +251,6 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
   rht <- get_row_height(round(rs$row_height * conv))
 
   
-  u <- rs$units
-  if (rs$units == "inches")
-    u <- "in"
   
   if (length(ttllst) > 0) {
     
@@ -267,6 +265,18 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
         width <- ttls$width
 
       w <- round(width * conv)
+      
+      
+      
+      csp <- ""
+      if (colspan > 0) {
+        csp <- paste0('<w:tcPr>', 
+                      '<w:gridSpan w:val="', colspan, '"/>',
+                      '<w:tcW w:w="', w, '"/>',
+                      '</w:tcPr>')
+      }
+      
+
       
       if (ttls$align %in% c("centre", "center"))
         algn <- "center"
@@ -291,6 +301,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
+                                     
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb, 
                                      "</w:tblPr>")
       
@@ -309,7 +320,8 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
             
             # if (tb == "")
               al <- paste0("<w:tr>", rht, 
-                    "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+                    "<w:tc>", csp, '<w:p><w:r><w:t>', 
+                    "</w:t></w:r></w:p></w:tc></w:tr>\n")
             # else 
             #   al <- paste0("<w:tr><w:tc style=\"", tb, "\">&nbsp;</td></tr>\n")
             
@@ -328,7 +340,8 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
 
             # if (tb == "")
               bl <- paste0("<w:tr>", rht, 
-                    "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+                    "<w:tc>", csp, 
+                    "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
             # else 
             #   bl <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
             
@@ -364,13 +377,13 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
           
           srht <- get_row_height(round(rs$row_height * tmp$lines * conv))
           
-          ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", tstr, 
+          ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", csp, tstr, 
                                     "</w:tc></w:tr>\n"))
         } else {
           
           srht <- get_row_height(round(get_rh(rs$font, ttls$font_size) * tmp$lines * conv))
 
-          ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", tstr, 
+          ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", csp, tstr, 
                                     "</w:tc></w:tr>\n"))
         }
           
@@ -386,6 +399,8 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center") {
       }
       
       ret[length(ret) + 1] <- paste0("</w:tbl>", rs$table_break)
+      #ret[length(ret) + 1] <- paste0("</w:tbl>")
+      
       dev.off()
       
 
@@ -534,7 +549,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
         cnt <- cnt + tmp$lines
       }
-      ret[length(ret) + 1] <- "</w:tbl>"
+      ret[length(ret) + 1] <- "</w:tbl>\n"
       dev.off()
 
 
@@ -545,7 +560,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
   }
 
   
-  res <- list(docx = paste0(ret, collapse = ""),
+  res <- list(docx = paste0(paste0(ret,  collapse = ""), rs$table_break),
               lines = cnt)
   
   return(res)

@@ -269,7 +269,7 @@ paginate_content_docx <- function(rs, ls) {
         last_page <- append(last_page, blnks)
         last_page_lines <- 0
 
-      }
+      } 
     }
 
     ls[[i]]$pages[[length(pgs)]] <- last_page
@@ -540,15 +540,14 @@ page_setup_docx <- function(rs) {
   # Otherwise, Word will treat as one table and the column
   # widths will be messed up.
   rs$table_break <- '<w:p><w:pPr>
-              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
-              				<w:contextualSpacing/>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
               				<w:rPr>
               					<w:sz w:val="0"/>
               				</w:rPr>
               			</w:pPr></w:p>\n'
   
   rs$blank_row <- paste0('<w:p><w:pPr>
-              				<w:spacing w:after="100" w:line="245" w:lineRule="auto"/>
+              				<w:spacing w:after="0" w:line="245" w:lineRule="auto"/>
               				<w:contextualSpacing/>
               				<w:rPr>
               					<w:sz w:val="', rs$font_size * 2, '"/>

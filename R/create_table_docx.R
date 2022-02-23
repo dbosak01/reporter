@@ -232,6 +232,8 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # Default to content width
   ls <- rs$content_size[["width"]]
   
+  ccnt <- length(pi$col_width[!is.na(pi$col_width)])
+  
   # Get table width
   if (!is.null(pi$col_width))
     ls <- sum(pi$col_width, na.rm = TRUE)
@@ -239,7 +241,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (!is.null(ts$title_hdr))
     ttls <- get_title_header_docx(ts$title_hdr, ls, rs, pi$table_align)
   else
-    ttls <- get_titles_docx(ts$titles, ls, rs, pi$table_align) 
+    ttls <- get_titles_docx(ts$titles, ls, rs, pi$table_align, colspan = ccnt) 
   
   
   if (!is.null(rs$page_by)) {
@@ -267,7 +269,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
-    a <- "<w:p/>"
+    a <- rs$blank_row
   
   
   blnks <- c()
@@ -322,44 +324,23 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   #       bpt <- ""
   #   }
   # }
-  # 
-  # ta <- "align=\"left\" "
-  # if (pi$table_align == "right")
-  #   ta <- "align=\"right\" "
-  # else if (pi$table_align %in% c("center", "centre"))
-  #   ta <- "align=\"center\" "
-  
+
   u <- rs$units
   if (u == "inches")
     u <- "in"
-  
-  # ds <- paste0("<div ", ta, ">")
-  # ts <- paste0("<table style=\"width:", 
-  #              round(sum(pi$col_width, 
-  #                        na.rm = TRUE), 3), u,";\">")
-  
-  
+
   tb <- get_table_borders_docx(ts$borders)
-  tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv),
-            round(length(pi$col_width[!is.na(pi$col_width)]) * .08 * conv))
+  
+  # Added buffer to avoid header label wrapping, but it is making the table too wide
+  # tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv),
+  #           round(length(pi$col_width[!is.na(pi$col_width)]) * .08 * conv))
+  tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv))
   
  
-  # ta <- ""
-  # 
-  # if (any(ts$borders %in% c("outside", "all", "left"))) {  
-  #   if (pi$table_align == "right")
-  #     aw <- round(rs$line_size * conv) - tw + rs$base_indent
-  #   else if (pi$table_align %in% c("center", "centre"))
-  #     aw <- round(((rs$line_size * conv) - tw) / 2) + rs$base_indent
-  #   else 
-  #     aw <- round(rs$base_indent)
-  #   
-  #   ta <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
-  # }
   
   # Get indent codes for alignment
   ta <- get_indent_docx(pi$table_align, rs$line_size, tw, 
-                        rs$base_indent, ts$borders, conv)
+                        rs$base_indent - 25, ts$borders, conv)
   
   
   ts <- paste0("<w:tbl>", "<w:tblPr>",
@@ -426,7 +407,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
   b <- NULL
   blen <- 0
   if (content_blank_row %in% c("below", "both")) {
-    #b <- "<br>"
+    b <- rs$blank_row
     blen <- 1
   }
   
@@ -451,13 +432,13 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
     
     if (vflag == "bottom" & len_diff > 0) {
   
-      ublnks <- c(b, rep("<w:p/>", len_diff))
+      ublnks <- c(b, rep(rs$blank_row, len_diff))
   
     } else {
   
       if ((wrap_flag & len_diff > 0)) {
         if (vflag == "bottom" | has_page_footer(rs))
-          lblnks <- c(rep("<w:p/>", len_diff), b)
+          lblnks <- c(rep(rs$blank_row, len_diff), b)
       } else {
         lblnks <- b
       }
@@ -774,7 +755,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       # Special handling of cell borders for different situations.  
       if (any(brdrs %in% c("all", "inside"))) {
 
-
+        # If borders are on, turn off vertical borders appropriately
         if (cs[k] == 1) {
           if (vl == "") {
             
@@ -803,6 +784,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
 
       } else {
         
+        # If borders are off, add an underline if requested
         if (cs[k] > 1 | vl != "") {
             
           if (s$underline[k]) {
@@ -810,9 +792,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
                <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
                 </w:tcBorders>'
           }
-            
         } 
-
       }
       
       
