@@ -242,14 +242,14 @@ get_page_footer_docx <- function(rs) {
 #' @import grDevices
 #' @noRd
 get_titles_docx <- function(ttllst, content_width, rs, talgn = "center", 
-                            colspan = 0) {
+                            colspan = 0, col_widths = NULL) {
   
   ret <- c()
   cnt <- 0
   border_flag <- FALSE
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
-
+  cflag <- FALSE
   
   
   if (length(ttllst) > 0) {
@@ -259,24 +259,26 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       if (ttls$width == "page")
         width <- rs$content_size[["width"]]
-      else if (ttls$width == "content")
+      else if (ttls$width == "content") {
         width <- content_width
-      else if (is.numeric(ttls$width))
+        cflag <- TRUE
+      } else if (is.numeric(ttls$width))
         width <- ttls$width
 
       w <- round(width * conv)
       
-      
-      
+      grd <- ""
       csp <- ""
       if (colspan > 0) {
+        
+        if (!is.null(col_widths)) {
+          grd <- get_col_grid(col_widths, conv)
+        }
         csp <- paste0('<w:tcPr>', 
                       '<w:gridSpan w:val="', colspan, '"/>',
                       '<w:tcW w:w="', w, '"/>',
                       '</w:tcPr>')
       }
-      
-
       
       if (ttls$align %in% c("centre", "center"))
         algn <- "center"
@@ -288,6 +290,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       # Get indent codes for alignment
       ta <- get_indent_docx(talgn, rs$line_size, w, 
                            rs$base_indent, ttls$borders, conv)
+
       
       alcnt <- 0
       blcnt <- 0
@@ -301,9 +304,12 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
-                                     
+                                     '<w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar>',
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb, 
-                                     "</w:tblPr>")
+                                     "</w:tblPr>\n", grd)
       
       for (i in seq_along(ttls$titles)) {
         
@@ -398,8 +404,12 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
           border_flag <- TRUE
       }
       
-      ret[length(ret) + 1] <- paste0("</w:tbl>", rs$table_break)
-      #ret[length(ret) + 1] <- paste0("</w:tbl>")
+      
+      if (cflag) {
+        ret[length(ret) + 1] <- paste0("</w:tbl>")
+      } else {
+        ret[length(ret) + 1] <- paste0("</w:tbl>", rs$table_break)
+      }
       
       dev.off()
       
@@ -420,7 +430,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
 #' @import grDevices
 #' @noRd
 get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center", 
-                               ex_brdr = FALSE) {
+                               ex_brdr = FALSE, colspan = 0, col_widths = NULL) {
   
   ret <- c()
   cnt <- 0
@@ -447,7 +457,25 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       else if (is.numeric(ftnts$width))
         width <- ftnts$width
 
-      w <- round(width * conv)
+      w <- round(width * conv) + 2
+      
+      
+      # grd <- ""
+      # csp <- ""
+      # if (colspan > 0) {
+      #   
+      #   
+      #   if (!is.null(col_widths)) {
+      #     
+      #     grd <- get_col_grid(col_widths, conv)
+      #   }
+      #   csp <- paste0('<w:tcPr>', 
+      #                 '<w:gridSpan w:val="', colspan, '"/>',
+      #                 '<w:tcW w:w="', w, '"/>',
+      #                 '</w:tcPr>')
+      # }
+      grd <- get_col_grid(c(all=w), 1)
+      csp <- ""
 
       
       if (ftnts$align %in% c("centre", "center"))
@@ -472,8 +500,12 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
+                                     '<w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar>',
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb,
-                                     "</w:tblPr>")
+                                     "</w:tblPr>", grd)
 
       for (i in seq_along(ftnts$footnotes)) {
 
@@ -489,7 +521,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
             
             # if (tb == "")
               al <- paste0("<w:tr>", rht, 
-                    "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+                    "<w:tc>", "<w:p><w:r><w:t>", 
+                    "</w:t></w:r></w:p></w:tc></w:tr>\n")
             # else 
             #   al <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
 
@@ -509,7 +542,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
             
             # if (tb == "")
               bl <- paste0("<w:tr>", rht, 
-                    "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+                    "<w:tc>", "<w:p><w:r><w:t>", 
+                    "</w:t></w:r></w:p></w:tc></w:tr>\n")
             # else 
             #   bl <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
             
@@ -568,13 +602,15 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
 #' @import grDevices
 #' @noRd
-get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") {
+get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center", 
+                                  colspan = 0, col_widths = NULL) {
   
   ret <- c()
   cnt <- 0
   border_flag <- FALSE
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
+  cflag <- FALSE
   
   # ta <- "align=\"left\" "
   # if (talgn == "right")
@@ -592,12 +628,19 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
 
       if (ttlhdr$width == "page")
         width <- rs$content_size[["width"]]
-      else if (ttlhdr$width == "content")
+      else if (ttlhdr$width == "content") {
         width <- content_width
-      else if (is.numeric(ttlhdr$width))
+        cflag <- TRUE
+      } else if (is.numeric(ttlhdr$width))
         width <- ttlhdr$width
 
-      w <- round(width, 3) * conv
+      w <- round(width * conv) + 2
+      wl <- round(w * .7)
+      wr <- round(w * .3)
+      
+
+      grd <- get_col_grid(c(left= wl, right = wr), 1)
+
 
       mx <- max(length(ttlhdr$titles), length(ttlhdr$right))
 
@@ -614,15 +657,25 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
       ta <- get_indent_docx(talgn, rs$line_size, w, 
                             rs$base_indent, ttlhdr$borders, conv)
       
+      # ret[length(ret) + 1] <- paste0("<w:tbl>", 
+      #                                "<w:tblPr>",
+      #                         '<w:tblStyle w:val="TableGrid"/>',
+      #                         '<w:tblW w:w="', w, '"/>', ta, tb,
+      #                         "</w:tblPr>",
+      #                         "<w:tblGrid>",
+      #                         '<w:gridCol w:w="3500" w:type="pct"/>',
+      #                         '<w:gridCol w:w="1500" w:type="pct"/>',
+      #                         "</w:tblGrid>\n")
+      
       ret[length(ret) + 1] <- paste0("<w:tbl>", 
                                      "<w:tblPr>",
-                              '<w:tblStyle w:val="TableGrid"/>',
-                              '<w:tblW w:w="', w, '"/>', ta, tb,
-                              "</w:tblPr>",
-                              "<w:tblGrid>",
-                              '<w:gridCol w:w="3500" w:type="pct"/>',
-                              '<w:gridCol w:w="1500" w:type="pct"/>',
-                              "</w:tblGrid>\n")
+                                     '<w:tblStyle w:val="TableGrid"/>',
+                                     '<w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar>',
+                                     '<w:tblW w:w="', w, '"/>', ta, tb,
+                                     "</w:tblPr>", grd, "\n")
       
       
       # ret[length(ret) + 1] <- paste0("<table ",
@@ -717,8 +770,8 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
         
         
         ret <- append(ret, paste0("<w:tr>", rht, 
-                                   cell_pct(ttl, "left", 3500), 
-                                   cell_pct(hdr, "right", 1500), 
+                                   cell_abs(ttl, "left", wl), 
+                                   cell_abs(hdr, "right", wr), 
                                   "</w:tr>\n"))
         
         # ret <- append(ret, paste0("<tr><td style=\"text-align:left;", b1, "\">",
@@ -739,11 +792,14 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center") 
           border_flag <- TRUE
       }
 
-      ret[length(ret) + 1] <- paste0('</w:tbl>\n', rs$table_break)
+      if (cflag) {
+        ret[length(ret) + 1] <- paste0('</w:tbl>\n')
+      } else {
+        ret[length(ret) + 1] <- paste0('</w:tbl>\n', rs$table_break)
+
+      }
       dev.off()
       
-
-
     }
 
   }
@@ -1031,6 +1087,31 @@ get_indent_docx <- function(talgn, line_size, width, base_indent, borders, conv)
       aw <- bi
     
   ret <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
+  
+  
+  return(ret)
+  
+}
+
+
+#' @noRd
+get_col_grid <- function(widths, conv) {
+  
+  nms <- names(widths) 
+  ret <- "<w:tblGrid>\n"
+  
+  
+  # Get cell widths
+  for (k in seq_along(widths)) {
+    if (!is.control(nms[k])) {
+      if (!is.na(widths[k])) {
+        ret <- paste0(ret,  "<w:gridCol w:w=\"", 
+                      round(widths[k] * conv), "\"/>\n")
+      }
+    }
+  } 
+  
+  ret <- paste0(ret, "</w:tblGrid>\n")
   
   
   return(ret)

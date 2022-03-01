@@ -152,7 +152,7 @@ test_that("create_table_docx works as expected.", {
   res
 
   # Doesn't seem right.  Come back to this.
-  expect_equal(length(res$docx), 17) 
+  expect_equal(length(res$docx), 16) 
   expect_equal(res$lines, 17)    # Should be 13
 
 })
@@ -196,8 +196,6 @@ test_that("get_spanning_header_docx works as expected.", {
 })
 
 
-# Haven't quite decided what to do with this function in HTML
-# For now, just return the footnote and any blank lines above or below
 test_that("get_page_footnotes_docx works as expected.", {
 
 
@@ -260,3 +258,16 @@ test_that("get_page_footnotes_docx works as expected.", {
   expect_equal(res4$lines, 2)
 
 })
+
+test_that("get_col_grid() works as expected.", {
+  
+  
+  w <- c(col1 = 1.5, col2 = 2.3, col3 = 3.6)
+  
+  res <- get_col_grid(w, 1440)
+  
+  expect_equal(length(res), 1)
+  
+})
+  
+

@@ -241,7 +241,8 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (!is.null(ts$title_hdr))
     ttls <- get_title_header_docx(ts$title_hdr, ls, rs, pi$table_align)
   else
-    ttls <- get_titles_docx(ts$titles, ls, rs, pi$table_align, colspan = ccnt) 
+    ttls <- get_titles_docx(ts$titles, ls, rs, pi$table_align, 
+                            colspan = ccnt, pi$col_width) 
   
   
   if (!is.null(rs$page_by)) {
@@ -289,7 +290,8 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # Get footnotes, passing in sum of all current lines
   ftnts <- get_page_footnotes_docx(rs, ts, ls, lpg_rows, rc,
                                   wrap_flag, content_blank_row,  pi$table_align, 
-                                  rws$border_flag)
+                                  rws$border_flag, 
+                                  colspan = ccnt, pi$col_width)
   
   # Deal with cell padding.  Don't count this in line count.
   # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
@@ -334,13 +336,13 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # Added buffer to avoid header label wrapping, but it is making the table too wide
   # tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv),
   #           round(length(pi$col_width[!is.na(pi$col_width)]) * .08 * conv))
-  tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv))
-  
+  #tw <- round(sum(sum(pi$col_width, na.rm = TRUE) * conv)) 
+  tw <- round(ls * conv)
  
   
   # Get indent codes for alignment
   ta <- get_indent_docx(pi$table_align, rs$line_size, tw, 
-                        rs$base_indent - 25, ts$borders, conv)
+                        rs$base_indent, ts$borders, conv)
   
   
   ts <- paste0("<w:tbl>", "<w:tblPr>",
@@ -355,7 +357,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
                "</w:tblPr>")
   
   ret <- list(docx = c(a, ttls$docx, pgby$docx, ts, shdrs$docx, 
-                      hdrs$docx, rws$docx, "</w:tbl>", rs$table_break, ftnts$docx),
+                      hdrs$docx, rws$docx, "</w:tbl>", ftnts$docx),
               lines = rc  + ftnts$lines)
   
   return(ret) 
@@ -365,7 +367,8 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
 #' @noRd
 get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
                                    wrap_flag, content_blank_row, talgn, 
-                                   ex_brdr = FALSE) {
+                                   ex_brdr = FALSE, colspan = 0, 
+                                   col_widths = NULL) {
   
   ftnts <- list(lines = 0, twips = 0, border_flag = FALSE)
   vflag <- "none"
@@ -382,7 +385,8 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
                                    talgn, FALSE) 
       } else {
         vflag <- "top"
-        ftnts <- get_footnotes_docx(spec$footnotes, spec_width, rs, talgn, ex_brdr) 
+        ftnts <- get_footnotes_docx(spec$footnotes, spec_width, rs, 
+                                    talgn, ex_brdr, colspan, col_widths) 
       }
       
     }
@@ -567,6 +571,8 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
         sz[k] <- round(widths[k] * conv)
     }
   }
+  
+  grd <- get_col_grid(widths, conv)
   
 
   brdrs <- ts$borders
@@ -960,4 +966,7 @@ encodeDOCX <- function(strng) {
   
   return(ret)
 }
+
+
+
 

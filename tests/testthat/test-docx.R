@@ -86,11 +86,11 @@ test_that("docx2: Basic table works as expected.", {
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
 
-  tbl <- create_table(dat, borders = "outside")  %>%
-     titles("Table 1.0", "My Nice Table", borders = c("none"),
+  tbl <- create_table(dat, borders = "all")  %>%
+     titles("Table 1.0", "My Nice Table", borders = c("all"),
             width = "content", align = "left") %>%
      footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
-               borders = "none",
+               borders = "all",
                align = "left", width = "content") %>%
     define(wt, width = 2, label = "Weight", align = "center",
            label_align = "right")
@@ -122,7 +122,7 @@ test_that("docx3: Basic table with title header works as expected.", {
 
   tbl <- create_table(dat, borders = c("outside")) %>%
     title_header("Table 1.0", "My Nice Table", right = "Right",
-                 borders = c("all"), blank_row = "both",
+                 borders = c("all"), blank_row = "none",
                  width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside",
               align = "left", width = "content")
