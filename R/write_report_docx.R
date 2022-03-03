@@ -510,19 +510,29 @@ page_setup_docx <- function(rs) {
     
   } else if (rs$font_size == 10) {
     
-    gtr <- .19
+    if (tolower(rs$font) == "courier")
+      gtr <- .195
+    else 
+      gtr <- .19
+    
     cw <- .11   # na
 
   } else if (rs$font_size == 11) {
     
-
-    gtr <- .2
+    if (tolower(rs$font) == "courier")
+      gtr <- .215
+    else 
+      gtr <- .2
+    
     cw <- .11  # na
     
   } else if (rs$font_size == 12) {
     
-
-    gtr <- 0.2
+    if (tolower(rs$font) == "courier")
+      gtr <- 0.24
+    else
+      gtr <- 0.2
+    
     cw <- .12  #na
   }
   
@@ -652,31 +662,37 @@ get_rh <- function(font, font_size) {
   if (font_size == 8) {
     
     if (tolower(font) == "times")
-      rh <- 0.142  
-    else
-      rh <- 0.142 
+      rh <- 0.141  
+    else if (tolower(font) == "arial")
+      rh <- 0.141 
+    else 
+      rh <- 0.141
     
     
   } else if (font_size == 9) {
     
     if (tolower(font) == "times")
-      rh <- 0.158
+      rh <- 0.156
+    else if (tolower(font) == "arial")
+      rh <- 0.156 
     else 
-      rh <- 0.16 
-
+      rh <- 0.155 
     
   } else if (font_size == 10) {
     
     if (tolower(font) == "times")
-      rh <- 0.17  
-    else 
-      rh <- 0.182  # 0.1585366
-
+      rh <- 0.175  
+    else if (tolower(font) == "arial")
+      rh <- 0.175 #0.182  # 0.1585366
+    else
+      rh <- 0.175 #0.182  # 0.1585366
     
   } else if (font_size == 11) {
     
     if (tolower(font) == "times")
-      rh <- 0.18
+      rh <- 0.19
+    else if (tolower(font) == "arial")
+      rh <- 0.19 # 0.168
     else 
       rh <- 0.19 # 0.168
 
@@ -684,12 +700,22 @@ get_rh <- function(font, font_size) {
   } else if (font_size == 12) {
     
     # inches 
-    rh <- 0.22  # 1911765 
+    if (tolower(font) == "times")
+      rh <- 0.21  # 1911765 
+    else if (tolower(font) == "arial")
+      rh <- 0.21  # 1911765 
+    else 
+      rh <- 0.205  # 1911765 
 
   } else if (font_size == 14) {
     
     # inches 
-    rh <- 0.25 
+    if (tolower(font) == "times")
+      rh <- 0.25 
+    else if (tolower(font) == "arial")
+      rh <- 0.25 
+    else 
+      rh <- 0.25 
     
   }
   

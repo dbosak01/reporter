@@ -1006,7 +1006,7 @@ test_that("docx-user3: listings works.", {
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Arial", font_size = 9,
+    rpt <- create_report(fp, font = "Courier", font_size = 12,
                          orientation = "portrait") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
