@@ -1063,21 +1063,27 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
   # Get indents for alignment
   ta <- get_indent_docx(talgn, rs$line_size, tw, 
                         rs$base_indent, txt$borders, conv)
+  
+  grd <- get_col_grid(c(text=tw), 1)
    
   # Get cell border codes
   b <- get_table_borders_docx(txt$borders, exclude = exclude_top)  
    
   # Prepare row header and footer
   rwhd <- paste0("<w:tbl>\n", '<w:tblPr>',
+                 '<w:tblCellMar>
+        					<w:left w:w="72" w:type="dxa"/>
+        					<w:right w:w="72" w:type="dxa"/>
+        			  	</w:tblCellMar>',
                  '<w:tblW w:w="', tw, '"/>', 
                  ta,
                  b,
-                 "</w:tblPr>",
+                 "</w:tblPr>", grd,
                  "<w:tr><w:tc>",
                  '<w:tcPr><w:tcW w:w="', tw, '"/></w:tcPr>',
                  '<w:p>',
                  '<w:pPr><w:jc w:val="', algn, '"/></w:pPr>')
-  rwft <- paste0("</w:p></w:tc></w:tr>\n</w:tbl>\n", rs$table_break)
+  rwft <- paste0("</w:p></w:tc></w:tr>\n</w:tbl>\n")
   
   ret <- list()
   cnt <- c()
@@ -1121,7 +1127,7 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
     rws <- c(a, ttls$docx, ttl_hdr$docx, 
              rwhd, s, rwft)
     
-    ret[[length(ret) + 1]] <- c(rws, ftnts$docx)
+    ret[[length(ret) + 1]] <- c(rws, ftnts$docx, rs$table_break)
     cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
     
   }

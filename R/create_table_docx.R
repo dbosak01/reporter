@@ -246,7 +246,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   
   if (!is.null(rs$page_by)) {
-    pgby <- get_page_by_docx(rs$page_by, rs$content_size[["width"]], 
+    pgby <- get_page_by_docx(rs$page_by, ls, 
                             pi$page_by, rs, pi$table_align, ttls$border_flag)
   } else if(!is.null(ts$page_by)) {
     pgby <- get_page_by_docx(ts$page_by, ls, pi$page_by, rs, 
@@ -415,6 +415,8 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
     blen <- 1
   }
   
+
+  
   
   # Add extra offsets if table has a lot of borders turned on
   # to avoid undesired page wraps
@@ -449,8 +451,16 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
     }
   }
   
+  tbr <- NULL
+  if (vflag == "bottom") {
+    if (length(ublnks) == 0) {
+      tbr <- rs$table_break
+    }
+  }
+  
+  
   tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
-  ret <- list(docx = c(ublnks, ftnts$docx, lblnks),
+  ret <- list(docx = c(ublnks, tbr, ftnts$docx, lblnks),
               lines = tlns)
   
   

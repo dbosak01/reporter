@@ -269,16 +269,18 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       grd <- ""
       csp <- ""
-      if (colspan > 0) {
-        
-        if (!is.null(col_widths)) {
-          grd <- get_col_grid(col_widths, conv)
-        }
-        csp <- paste0('<w:tcPr>', 
-                      '<w:gridSpan w:val="', colspan, '"/>',
-                      '<w:tcW w:w="', w, '"/>',
-                      '</w:tcPr>')
-      }
+      # if (colspan > 0) {
+      #   
+      #   if (!is.null(col_widths)) {
+      #     grd <- get_col_grid(col_widths, conv)
+      #   }
+      #   csp <- paste0('<w:tcPr>', 
+      #                 '<w:gridSpan w:val="', colspan, '"/>',
+      #                 '<w:tcW w:w="', w, '"/>',
+      #                 '</w:tcPr>')
+      # }
+      grd <- get_col_grid(c(title=width), conv)
+      
       
       if (ttls$align %in% c("centre", "center"))
         algn <- "center"
@@ -497,6 +499,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       par(family = get_font_family(rs$font), ps = rs$font_size)
       
       tb <- get_table_borders_docx(ftnts$borders)
+    
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
@@ -847,6 +850,8 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
       stop("pgby parameter value is not a page_by.")
 
     w <- round(width * conv)
+    
+    grd <- get_col_grid(c(pgby=w), 1)
 
     if (pgby$align %in% c("centre", "center"))
       algn <- "center"
@@ -862,9 +867,13 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
                           rs$base_indent, pgby$borders, conv)
     
     ret[length(ret) + 1] <- paste0("<w:tbl>",
-                                   "<w:tblPr>",
+                                   "<w:tblPr>", 
+                                   '<w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar>',
                                    "<w:tblW w:w=\"", w, "\"/>", ta, tb,
-                                   "</w:tblPr>")
+                                   "</w:tblPr>", grd)
     
     trows <- 1
     brow <- 1
@@ -892,9 +901,9 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
 #     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
 #                                    pgby$label, encodeHTML(value), "</td></tr>\n")
     
-    ret <- append(ret, paste0("<w:tr>", rht, "<w:tc>", 
-                              para(paste0(pgby$label, value)), 
-                              "</w:tc></w:tr>\n"))
+    ret <- append(ret, paste0("<w:tr>", rht, 
+                              cell_abs(paste0(pgby$label, value), width = w), 
+                              "</w:tr>\n"))
     
     cnt <- cnt + 1
 
@@ -912,7 +921,7 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
 
     }
 
-    ret[length(ret) + 1] <- paste0("</w:tbl>", rs$table_break)
+    ret[length(ret) + 1] <- paste0("</w:tbl>")
     
     if ("bottom" %in% get_outer_borders(pgby$borders))
       border_flag <- TRUE
@@ -1086,6 +1095,9 @@ get_indent_docx <- function(talgn, line_size, width, base_indent, borders, conv)
     else 
       aw <- bi
     
+  if (aw < 0)
+    aw <- 0
+  
   ret <- paste0('<w:tblInd w:w="', aw, '" w:type="dxa"/>')
   
   

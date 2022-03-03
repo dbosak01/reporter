@@ -2063,11 +2063,11 @@ write_report <- function(x, file_path = NULL,
   
   # Trap missing or invalid output_type parameter
   if (!is.null(output_type)) {
-    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
+    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML", "DOCX")) {
       
       stop(paste0("output_type parameter on create_report() ",
                   "function is invalid: '", output_type,
-                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML'."))
+                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML', 'DOCX'."))
     }
     x$output_type <- toupper(output_type)
 
