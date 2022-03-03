@@ -499,29 +499,30 @@ page_setup_docx <- function(rs) {
   
   if (rs$font_size == 8) {
     
-    gtr <- .1
+    gtr <- .17
     cw <- .1    # na
     
   } else if (rs$font_size == 9) {
     
-    cw <- .11  # na
-    gtr <- .1
+    gtr <- .18
+    cw <- .1  # na
+
     
   } else if (rs$font_size == 10) {
     
-    gtr <- .11
+    gtr <- .19
     cw <- .11   # na
 
   } else if (rs$font_size == 11) {
     
 
-    gtr <- .1
+    gtr <- .2
     cw <- .11  # na
     
   } else if (rs$font_size == 12) {
     
 
-    gtr <- 0.11
+    gtr <- 0.2
     cw <- .12  #na
   }
   

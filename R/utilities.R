@@ -609,7 +609,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
           
         } else {
           
-          if (output_type == "HTML") {
+          if (output_type %in% c("HTML", "DOCX")) {
             res <- split_string_html(x[[i, nm]], col_widths[[nm]], units)
             
             cell <- res$html

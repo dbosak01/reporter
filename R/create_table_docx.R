@@ -138,8 +138,8 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
-  # fdat <- split_cells_variable(fdat, widths_uom, rs$font,
-  #                              rs$font_size, rs$units, rs$output_type)$data
+  fdat <- split_cells_variable(fdat, widths_uom, rs$font,
+                               rs$font_size, rs$units, rs$output_type)$data
   # print("split_cells")
   # print(fdat)
   
@@ -904,7 +904,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
     # if (i == 1)
     #   ret[i] <- "<tbody>\n<tr>"
     # else
-      ret[i] <- paste0("<w:tr>", rht)
+      ret[i] <- paste0("<w:tr>")
     
     mxrw <- 1
     
@@ -942,7 +942,9 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
     # if (i == nrow(t))
     #   ret[i] <- paste0(ret[i], "</w:tr>\n</tbody>")
     # else 
-      ret[i] <- paste0(ret[i], "</w:tr>")
+    
+      rht <- get_row_height(round(rs$row_height * mxrw * conv))
+      ret[i] <- paste0(rht, ret[i], "</w:tr>")
     
     
   }
