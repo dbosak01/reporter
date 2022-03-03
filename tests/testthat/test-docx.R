@@ -1068,12 +1068,12 @@ test_that("docx-user4: listing in cm and times works.", {
     #print(widths(data_demo))
 
     # Define table
-    tbl <- create_table(data_demo) %>%
+    tbl <- create_table(data_demo, borders = "none") %>%
       define(USUBJID, id_var = TRUE)
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Times", font_size = 10,
+    rpt <- create_report(fp, font = "Arial", font_size = 12,
                          units = "cm", orientation = "landscape") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%

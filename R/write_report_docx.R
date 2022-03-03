@@ -501,11 +501,13 @@ page_setup_docx <- function(rs) {
     
     gtr <- .17
     cw <- .1    # na
+    radj <- 56
     
   } else if (rs$font_size == 9) {
     
     gtr <- .18
     cw <- .1  # na
+    radj <- 36
 
     
   } else if (rs$font_size == 10) {
@@ -516,6 +518,7 @@ page_setup_docx <- function(rs) {
       gtr <- .19
     
     cw <- .11   # na
+    radj <- 8
 
   } else if (rs$font_size == 11) {
     
@@ -525,6 +528,7 @@ page_setup_docx <- function(rs) {
       gtr <- .2
     
     cw <- .11  # na
+    radj <- -16
     
   } else if (rs$font_size == 12) {
     
@@ -534,6 +538,7 @@ page_setup_docx <- function(rs) {
       gtr <- 0.2
     
     cw <- .12  #na
+    radj <- -42
   }
   
   rh <- get_rh(rs$font, rs$font_size)
@@ -547,6 +552,13 @@ page_setup_docx <- function(rs) {
     gtr <- ccm(gtr)
   }
   
+  # Get conversion factor to twips
+  if (rs$units == "inches") {
+    conv <- 1440
+  } else {
+    conv <- 566.9291
+  }
+  
   # A zero height paragraph to break between tables.
   # Otherwise, Word will treat as one table and the column
   # widths will be messed up.
@@ -558,19 +570,15 @@ page_setup_docx <- function(rs) {
               			</w:pPr></w:p>\n'
   
   rs$blank_row <- paste0('<w:p><w:pPr>
-              				<w:spacing w:after="0" w:line="245" w:lineRule="auto"/>
+              				<w:spacing w:after="8" w:line="', round(rh * conv) + radj,
+              				'" w:lineRule="auto"/>
               				<w:contextualSpacing/>
               				<w:rPr>
               					<w:sz w:val="', rs$font_size * 2, '"/>
               				</w:rPr>
               			</w:pPr></w:p>\n')
   
-  # Get conversion factor to twips
-  if (rs$units == "inches") {
-    conv <- 1440
-  } else {
-    conv <- 566.9291
-  }
+
   
   # The starting point for relationship IDs.
   # This is used when adding images to the document.
