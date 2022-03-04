@@ -623,9 +623,6 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   if (ts$first_row_blank == TRUE) {
     
-    # b <- get_cell_borders_html(1, k, 2, length(widths), brdrs, 
-    #                            exclude = exclude_top)
-    
     if (any(brdrs == "body"))
       b <- get_cell_borders_html(2, 1, 3, 1, c("left", "right"))
     else

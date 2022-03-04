@@ -656,13 +656,15 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   cols[1] <- paste0(cols[1], "</w:tblGrid>\n")
   ret[1] <- paste0("<w:tr>", rht, "\n", ret[1], "</w:tr>\n")
   
-  # Deal with this
   if (ts$first_row_blank == TRUE) {
     
-    
-    # ret[1] <- paste0(ret[1], "<tr><td colspan=\"", length(sz), 
-    #                  "\">&nbsp;</td></tr>")
-    # cnt <- cnt + 1
+
+    ret[1] <- paste0(ret[1], "<w:tr>", rht, "<w:tc>", 
+               '<w:tcPr>', '<w:gridSpan w:val="', length(sz) , '"/>', 
+               "</w:tcPr>", para(" "),
+               "</w:tc></w:tr>")
+
+    cnt <- cnt + 1
   }
   
   # Get spanning headers

@@ -86,7 +86,7 @@ test_that("docx2: Basic table works as expected.", {
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
 
-  tbl <- create_table(dat, borders = "outside", first_row_blank = TRUE)  %>%
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE)  %>%
      titles("Table 1.0", "My Nice Table", borders = c("none"),
             width = "content", align = "left") %>%
      footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
