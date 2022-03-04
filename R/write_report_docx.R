@@ -578,7 +578,10 @@ page_setup_docx <- function(rs) {
               				</w:rPr>
               			</w:pPr></w:p>\n')
   
-
+  rs$cell_margin <- paste0('<w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar>')
   
   # The starting point for relationship IDs.
   # This is used when adding images to the document.

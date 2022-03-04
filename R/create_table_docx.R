@@ -350,10 +350,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
                '<w:tblStyle w:val="TableGrid"/>',
                '<w:tblW w:w="', tw,'"',
                ' w:type="dxa"/>', tb,
-               '<w:tblCellMar>
-        					<w:left w:w="72" w:type="dxa"/>
-        					<w:right w:w="72" w:type="dxa"/>
-        				</w:tblCellMar>',
+               rs$cell_margin,
                "</w:tblPr>")
   
   ret <- list(docx = c(a, ttls$docx, pgby$docx, ts, shdrs$docx, 
@@ -658,6 +655,15 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   cols[1] <- paste0(cols[1], "</w:tblGrid>\n")
   ret[1] <- paste0("<w:tr>", rht, "\n", ret[1], "</w:tr>\n")
+  
+  # Deal with this
+  if (ts$first_row_blank == TRUE) {
+    
+    
+    # ret[1] <- paste0(ret[1], "<tr><td colspan=\"", length(sz), 
+    #                  "\">&nbsp;</td></tr>")
+    # cnt <- cnt + 1
+  }
   
   # Get spanning headers
   sphdrs <- get_spanning_header_docx(rs, ts, pi,

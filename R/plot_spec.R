@@ -1359,20 +1359,30 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   ta <- get_indent_docx(talign, rs$line_size, round(wth * conv), 
                         rs$base_indent, plt$borders, conv)
   
+  grd <- get_col_grid(c(img = round(wth * conv)), 1)
+  
 
   # Get border codes
   tb <- get_table_borders_docx(plt$borders)
   
+  tcb <- paste('<w:tcBorders>', 
+               ifelse(any(plt$borders %in% c("all", "outside", "top")),
+							'<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>', ""),
+							ifelse(any(plt$borders %in% c("all", "outside", "bottom")),
+							'<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>', ""),
+						  '</w:tcBorders>')
+  
   # Concat all header codes
   hd <- paste0("<w:tbl>",  "<w:tblPr>",
-              # '<w:tblStyle w:val="TableGrid"/>',
+               '<w:tblStyle w:val="TableGrid"/>',
+               rs$cell_margin,
                '<w:tblW w:w="', round(wth * conv),'"',
                ' w:type="dxa"/>', ta, tb,
-               "</w:tblPr>\n",
+               "</w:tblPr>\n", grd,
                "<w:tr><w:tc>\n",
-               '<w:tcPr><w:tcW w:w="', round(wth * conv),'"/></w:tcPr>')
+               '<w:tcPr><w:tcW w:w="', round(wth * conv),'"/>', tcb,'</w:tcPr>')
   
-  ft <- paste0("</w:tc></w:tr></w:tbl>\n", rs$table_break)
+  ft <- paste0("</w:tc></w:tr></w:tbl>\n")
   
   
   # Concat RTF codes for image

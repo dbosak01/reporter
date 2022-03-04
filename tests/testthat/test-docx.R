@@ -86,11 +86,11 @@ test_that("docx2: Basic table works as expected.", {
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
 
-  tbl <- create_table(dat, borders = "all")  %>%
-     titles("Table 1.0", "My Nice Table", borders = c("all"),
+  tbl <- create_table(dat, borders = "outside", first_row_blank = TRUE)  %>%
+     titles("Table 1.0", "My Nice Table", borders = c("none"),
             width = "content", align = "left") %>%
      footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
-               borders = "all",
+               borders = "none",
                align = "left", width = "content") %>%
     define(wt, width = 2, label = "Weight", align = "center",
            label_align = "right")
@@ -499,12 +499,13 @@ test_that("docx14: Plot with page by on plot works as expected.", {
   #dats <- split(p$data, p$data$grp)
   #tbl <- create_table(dat[1:3, ])
 
-  plt <- create_plot(p, height = 4, width = 8, borders = brdrs) %>%
+  plt <- create_plot(p, height = 4, width = 8, borders = "all") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot",
-           borders = brdrs,
-           blank_row = "none") %>%
-    page_by(cyl, "Cylinders: ", borders = brdrs) %>%
-    footnotes("* Motor Trend, 1974", borders = brdrs)
+           borders = "all",
+           blank_row = "both") %>%
+    page_by(cyl, "Cylinders: ", borders = "all", blank_row = "both") %>%
+    footnotes("* Motor Trend, 1974", borders = "all", valign = "top", 
+              blank_row = "both")
 
   rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
@@ -1001,12 +1002,12 @@ test_that("docx-user3: listings works.", {
     #print(widths(data_demo))
     names(data_demo)
     # Define table
-    tbl <- create_table(data_demo) %>%
+    tbl <- create_table(data_demo, borders = "all") %>%
       define(USUBJID, id_var = TRUE)
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Courier", font_size = 12,
+    rpt <- create_report(fp, font = "Courier", font_size = 11,
                          orientation = "portrait") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%

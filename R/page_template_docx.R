@@ -306,10 +306,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
-                                     '<w:tblCellMar>
-                              					<w:left w:w="72" w:type="dxa"/>
-                              					<w:right w:w="72" w:type="dxa"/>
-                              				</w:tblCellMar>',
+                                     rs$cell_margin,
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb, 
                                      "</w:tblPr>\n", grd)
       
@@ -503,10 +500,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
-                                     '<w:tblCellMar>
-                              					<w:left w:w="72" w:type="dxa"/>
-                              					<w:right w:w="72" w:type="dxa"/>
-                              				</w:tblCellMar>',
+                                     rs$cell_margin,
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb,
                                      "</w:tblPr>", grd)
 
@@ -673,10 +667,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
       ret[length(ret) + 1] <- paste0("<w:tbl>", 
                                      "<w:tblPr>",
                                      '<w:tblStyle w:val="TableGrid"/>',
-                                     '<w:tblCellMar>
-                              					<w:left w:w="72" w:type="dxa"/>
-                              					<w:right w:w="72" w:type="dxa"/>
-                              				</w:tblCellMar>',
+                                     rs$cell_margin,
                                      '<w:tblW w:w="', w, '"/>', ta, tb,
                                      "</w:tblPr>", grd, "\n")
       
@@ -868,10 +859,7 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
     
     ret[length(ret) + 1] <- paste0("<w:tbl>",
                                    "<w:tblPr>", 
-                                   '<w:tblCellMar>
-                              					<w:left w:w="72" w:type="dxa"/>
-                              					<w:right w:w="72" w:type="dxa"/>
-                              				</w:tblCellMar>',
+                                   rs$cell_margin,
                                    "<w:tblW w:w=\"", w, "\"/>", ta, tb,
                                    "</w:tblPr>", grd)
     

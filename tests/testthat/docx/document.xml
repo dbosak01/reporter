@@ -39,41 +39,100 @@
     <w:footerReference w:type="default" r:id="rId7"/><w:pgSz w:w="15840" w:h="12240" w:orient="landscape"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="1440" w:footer="1440" w:gutter="0"/><w:cols w:space="720"/>
     <w:docGrid w:linePitch="360"/>
     </w:sectPr>
-
-<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblCellMar>
+<w:tbl><w:tblPr><w:tblCellMar>
                               					<w:left w:w="72" w:type="dxa"/>
                               					<w:right w:w="72" w:type="dxa"/>
-                              				</w:tblCellMar><w:tblW w:w="7202"/><w:tblInd w:w="3009" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
-<w:gridCol w:w="5041"/>
-<w:gridCol w:w="2161"/>
+                              				</w:tblCellMar><w:tblW w:w="11520"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="11520"/>
 </w:tblGrid>
-
-<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="274"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="5041"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Here is my first title</w:t></w:r></w:p>
-</w:tc>
-<w:tc><w:tcPr><w:tcW w:w="2161"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Right</w:t></w:r></w:p>
-</w:tc>
-</w:tr>
-</w:tbl>
-
-<w:tbl>
-<w:tblPr><w:tblW w:w="7200"/><w:tblInd w:w="3010" w:type="dxa"/><w:tblBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
-<w:gridCol w:w="7200"/>
-</w:tblGrid>
-<w:tr><w:tc><w:tcPr><w:tcW w:w="7200"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/></w:pPr>
-<w:r><w:t xml:space="preserve">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</w:t></w:r><w:r><w:t xml:space="preserve">tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim</w:t></w:r><w:r><w:t xml:space="preserve">veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea</w:t></w:r><w:r><w:t xml:space="preserve">commodo consequat. Duis aute irure dolor in reprehenderit in voluptate</w:t></w:r><w:r><w:t xml:space="preserve">velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</w:t></w:r><w:r><w:t xml:space="preserve">cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id</w:t></w:r><w:r><w:t xml:space="preserve">est laborum.</w:t></w:r>
-</w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Figure 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">MTCARS Miles per Cylinder Plot</w:t></w:r></w:p>
+</w:tc></w:tr>
 </w:tbl>
 
 <w:tbl><w:tblPr><w:tblCellMar>
                               					<w:left w:w="72" w:type="dxa"/>
                               					<w:right w:w="72" w:type="dxa"/>
-                              				</w:tblCellMar><w:tblW w:w="7202"/><w:tblInd w:w="3009" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
-<w:gridCol w:w="7202"/>
+                              				</w:tblCellMar><w:tblW w:w="11520"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="11520"/>
 </w:tblGrid>
-<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="274"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
-<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="274"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Here is my footnote</w:t></w:r></w:p>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="11520"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Cylinders: 4</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblCellMar>
+        					<w:left w:w="72" w:type="dxa"/>
+        					<w:right w:w="72" w:type="dxa"/>
+        				</w:tblCellMar><w:tblW w:w="11520" w:type="dxa"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:tc>
+<w:tcPr><w:tcW w:w="11520"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r>
+    <w:rPr>
+    <w:noProof/>
+    </w:rPr>
+    <w:drawing>
+    <wp:inline distT="0" distB="0" distL="0" distR="0" 
+       wp14:anchorId="53259B4E" wp14:editId="79F9BC2E">
+      <wp:extent cx="7132320" cy="3474720"/>
+        <wp:effectExtent l="0" t="0" r="0" b="0"/>
+          <wp:docPr id="9" name="Picture 9"/>
+            <wp:cNvGraphicFramePr>
+            <a:graphicFrameLocks
+          xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+            </wp:cNvGraphicFramePr>
+            <a:graphic
+          xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:pic
+          xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:nvPicPr>
+            <pic:cNvPr id="9" name="Picture 9"/>
+            <pic:cNvPicPr/>
+            </pic:nvPicPr>
+            <pic:blipFill>
+            <a:blip r:embed="rId9" cstate="print">
+            <a:extLst>
+            <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+            <a14:useLocalDpi
+          xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+            </a:ext>
+            </a:extLst>
+            </a:blip>
+            <a:stretch>
+            <a:fillRect/>
+            </a:stretch>
+            </pic:blipFill>
+            <pic:spPr>
+            <a:xfrm>
+            <a:off x="0" y="0"/>
+            <a:ext cx="7132320" cy="3474720"/>
+            </a:xfrm>
+            <a:prstGeom prst="rect">
+            <a:avLst/>
+            </a:prstGeom>
+            </pic:spPr>
+            </pic:pic>
+            </a:graphicData>
+            </a:graphic>
+            </wp:inline>
+            </w:drawing>
+            </w:r>
+            </w:p></w:tc></w:tr></w:tbl>
+
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11522"/><w:tblInd w:w="849" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="11522"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">* Motor Trend, 1974</w:t></w:r></w:p>
 </w:tc></w:tr>
-<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="274"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
 </w:tbl>
 <w:p><w:pPr>
               				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
@@ -83,9 +142,334 @@
               			</w:pPr></w:p>
 
 <w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11520"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Figure 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">MTCARS Miles per Cylinder Plot</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11520"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="11520"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Cylinders: 6</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblCellMar>
+        					<w:left w:w="72" w:type="dxa"/>
+        					<w:right w:w="72" w:type="dxa"/>
+        				</w:tblCellMar><w:tblW w:w="11520" w:type="dxa"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:tc>
+<w:tcPr><w:tcW w:w="11520"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r>
+    <w:rPr>
+    <w:noProof/>
+    </w:rPr>
+    <w:drawing>
+    <wp:inline distT="0" distB="0" distL="0" distR="0" 
+       wp14:anchorId="53259B4E" wp14:editId="79F9BC2E">
+      <wp:extent cx="7132320" cy="3474720"/>
+        <wp:effectExtent l="0" t="0" r="0" b="0"/>
+          <wp:docPr id="10" name="Picture 10"/>
+            <wp:cNvGraphicFramePr>
+            <a:graphicFrameLocks
+          xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+            </wp:cNvGraphicFramePr>
+            <a:graphic
+          xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:pic
+          xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:nvPicPr>
+            <pic:cNvPr id="10" name="Picture 10"/>
+            <pic:cNvPicPr/>
+            </pic:nvPicPr>
+            <pic:blipFill>
+            <a:blip r:embed="rId10" cstate="print">
+            <a:extLst>
+            <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+            <a14:useLocalDpi
+          xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+            </a:ext>
+            </a:extLst>
+            </a:blip>
+            <a:stretch>
+            <a:fillRect/>
+            </a:stretch>
+            </pic:blipFill>
+            <pic:spPr>
+            <a:xfrm>
+            <a:off x="0" y="0"/>
+            <a:ext cx="7132320" cy="3474720"/>
+            </a:xfrm>
+            <a:prstGeom prst="rect">
+            <a:avLst/>
+            </a:prstGeom>
+            </pic:spPr>
+            </pic:pic>
+            </a:graphicData>
+            </a:graphic>
+            </wp:inline>
+            </w:drawing>
+            </w:r>
+            </w:p></w:tc></w:tr></w:tbl>
+
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11522"/><w:tblInd w:w="849" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="11522"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">* Motor Trend, 1974</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
               				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
               				<w:rPr>
               					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11520"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Figure 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">MTCARS Miles per Cylinder Plot</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11520"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="11520"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Cylinders: 8</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblCellMar>
+        					<w:left w:w="72" w:type="dxa"/>
+        					<w:right w:w="72" w:type="dxa"/>
+        				</w:tblCellMar><w:tblW w:w="11520" w:type="dxa"/><w:tblInd w:w="850" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="11520"/>
+</w:tblGrid>
+<w:tr><w:tc>
+<w:tcPr><w:tcW w:w="11520"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r>
+    <w:rPr>
+    <w:noProof/>
+    </w:rPr>
+    <w:drawing>
+    <wp:inline distT="0" distB="0" distL="0" distR="0" 
+       wp14:anchorId="53259B4E" wp14:editId="79F9BC2E">
+      <wp:extent cx="7132320" cy="3474720"/>
+        <wp:effectExtent l="0" t="0" r="0" b="0"/>
+          <wp:docPr id="11" name="Picture 11"/>
+            <wp:cNvGraphicFramePr>
+            <a:graphicFrameLocks
+          xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+            </wp:cNvGraphicFramePr>
+            <a:graphic
+          xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:pic
+          xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+            <pic:nvPicPr>
+            <pic:cNvPr id="11" name="Picture 11"/>
+            <pic:cNvPicPr/>
+            </pic:nvPicPr>
+            <pic:blipFill>
+            <a:blip r:embed="rId11" cstate="print">
+            <a:extLst>
+            <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+            <a14:useLocalDpi
+          xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+            </a:ext>
+            </a:extLst>
+            </a:blip>
+            <a:stretch>
+            <a:fillRect/>
+            </a:stretch>
+            </pic:blipFill>
+            <pic:spPr>
+            <a:xfrm>
+            <a:off x="0" y="0"/>
+            <a:ext cx="7132320" cy="3474720"/>
+            </a:xfrm>
+            <a:prstGeom prst="rect">
+            <a:avLst/>
+            </a:prstGeom>
+            </pic:spPr>
+            </pic:pic>
+            </a:graphicData>
+            </a:graphic>
+            </wp:inline>
+            </w:drawing>
+            </w:r>
+            </w:p></w:tc></w:tr></w:tbl>
+
+<w:tbl><w:tblPr><w:tblCellMar>
+                              					<w:left w:w="72" w:type="dxa"/>
+                              					<w:right w:w="72" w:type="dxa"/>
+                              				</w:tblCellMar><w:tblW w:w="11522"/><w:tblInd w:w="849" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="11522"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="252"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">* Motor Trend, 1974</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="20"/>
               				</w:rPr>
               			</w:pPr></w:p>
 

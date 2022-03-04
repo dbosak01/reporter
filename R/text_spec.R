@@ -1071,10 +1071,7 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
    
   # Prepare row header and footer
   rwhd <- paste0("<w:tbl>\n", '<w:tblPr>',
-                 '<w:tblCellMar>
-        					<w:left w:w="72" w:type="dxa"/>
-        					<w:right w:w="72" w:type="dxa"/>
-        			  	</w:tblCellMar>',
+                 rs$cell_margin,
                  '<w:tblW w:w="', tw, '"/>', 
                  ta,
                  b,
