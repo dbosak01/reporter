@@ -567,9 +567,6 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   conv <- rs$twip_conversion
   nms <- names(lbls)
   
-  # u <- rs$units
-  # if (rs$units == "inches")
-  #   u <- "in"
   
   # Get cell widths
   sz <- c()
@@ -583,6 +580,7 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   
 
   brdrs <- ts$borders
+  # If there are spanning columns, adjust border spec
   if (length(ts$col_spans) > 0) {
     
     if (any(ts$borders %in% c("outside")))
@@ -610,10 +608,9 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   ret[1] <- ""
   cols[1] <- "<w:tblGrid>\n"
   
-
-  
+  # Always at least one header row
   cnt <-  1 
-  bd <- "border-bottom: thin solid;"
+
   
   # Loop for column names
   pdf(NULL)
@@ -624,22 +621,18 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       cols[1] <- paste0(cols[1], "<w:gridCol w:w=\"", sz[k], "\"/>\n")
       
-      # b <- get_cell_borders_html(1, k, 2, length(widths), brdrs, 
-      #                            exclude = exclude_top)
+
+      b <- "bottom"
+      if (any(brdrs %in% c("top", "outside", "all")))
+          b <- c("bottom", "top")
       
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
 
       #if (b == "") {
-        ret[1] <- paste0(ret[1], cell_abs(tmp$html, ha[k], sz[k], bborder = TRUE))
-                         # "<w:tc>", 
-                         # para(tmp$html, ha[k]), "</w:tc>\n")
-      # } else {
-      #   ret[1] <- paste0(ret[1], "<w:tc class=\"thdr ", ha[k], "\" ", 
-      #                            "style=\"", b, "\">", 
-      #                    encodeHTML(tmp$html), "</td>\n")
-        
-      # }
+        ret[1] <- paste0(ret[1], cell_abs(tmp$html, ha[k], sz[k], 
+                                          borders = b, 
+                                          valign = "bottom"))
       
       # Add in extra lines for labels that wrap
       xtr <- tmp$lines
@@ -658,9 +651,10 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   if (ts$first_row_blank == TRUE) {
     
-
+    b <- get_cell_borders_docx(2, 1, 3, 1, brdrs)
+    
     ret[1] <- paste0(ret[1], "<w:tr>", rht, "<w:tc>", 
-               '<w:tcPr>', '<w:gridSpan w:val="', length(sz) , '"/>', 
+               '<w:tcPr>', '<w:gridSpan w:val="', length(sz) , '"/>', b, 
                "</w:tcPr>", para(" "),
                "</w:tc></w:tr>")
 
@@ -671,18 +665,13 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   sphdrs <- get_spanning_header_docx(rs, ts, pi,
                                      ifelse(is.null(exclude_top), FALSE, TRUE))
   
-  
-  # res <- list(docx = paste0(cols, "<thead>\n", paste0(sphdrs$docx, collapse=""),
-  #                           ret, "</thead>\n"),
-  #             lines = cnt + sphdrs$lines)
-  
+
+  # Combine everything
   res <- list(docx = paste0(cols, paste0(sphdrs$docx, collapse=""),
                             ret),
               lines = cnt + sphdrs$lines)
   
-  # res <- list(docx = paste0(cols,  
-  #                           ret),
-  #             lines = cnt ) #+ sphdrs$lines)
+
   
   return(res)
   
@@ -908,11 +897,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   # Table Body
   for(i in seq_len(nrow(t))) {
     
-    
-    # if (i == 1)
-    #   ret[i] <- "<tbody>\n<tr>"
-    # else
-      ret[i] <- paste0("<w:tr>")
+    ret[i] <- paste0("<w:tr>")
     
     mxrw <- 1
     
@@ -922,20 +907,29 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
       
       if (!is.control(nms[j])) {
         
-        # b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
-        #                            exclude = exclude_top)
+        b <- ""
+        
+
+        if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
+
+          b <- get_cell_borders_docx(i, j, nrow(t), 
+                                     length(nms), brdrs)
+          
+          if (b != "") {
+            
+            b <- paste0('<w:tcPr>', b, '</w:tcPr>')
+          }
+          
+        }
         
         vl <- t[i, j]
         if (!is.character(vl))
           vl <- as.character(vl)
         
         # Construct html
-        # if (b == "")
-          ret[i] <- paste0(ret[i], "<w:tc>", 
-                           para(vl, ca[j]), "</w:tc>")
-        # else 
-        #   ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
-        #                    encodeHTML(t[i, j]), "</td>")
+        ret[i] <- paste0(ret[i], "<w:tc>", b,
+                         para(vl, ca[j]), "</w:tc>")
+
         
         # Count lines in cell 
         cl <- grep("\n", vl, fixed = TRUE)

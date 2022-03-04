@@ -1408,7 +1408,7 @@ create_footnotes <- function(pth) {
 # DOCX Construction -------------------------------------------------------
 
 
-
+#' @noRd
 cell_pct <- function(txt, align = "left", width = NULL) {
   
   if (is.null(width)) {
@@ -1427,17 +1427,25 @@ cell_pct <- function(txt, align = "left", width = NULL) {
 
 #' Bottom border means it is a header row
 #' @noRd
-cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
+cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL) {
   
-  al <- '<w:vAlign w:val="bottom"/>'
-  bb <- '<w:tcBorders>
-    <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-      </w:tcBorders>'
-  if (bborder == FALSE) {
-    bb <- ""
-    al <- ""
+  al <- ""
+  bb <- ""
+  if (!is.null(borders)) {
+
+    bb <- paste0('<w:tcBorders>',
+                 ifelse(any(borders %in% "bottom"),  
+                        '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>', ""),
+                 ifelse(any(borders %in% "top"),
+                        '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>', ""),
+                 '</w:tcBorders>')
   }
   
+  if (!is.null(valign)) {
+    if (valign == "bottom") {
+      al <- '<w:vAlign w:val="bottom"/>'
+    }
+  }
   
   if (is.null(width)) {
     ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
@@ -1453,6 +1461,8 @@ cell_abs <- function(txt, align = "left", width = NULL, bborder = FALSE) {
   return(ret)
 }
 
+
+#' @noRd
 para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
   
   ret <- ""
@@ -1497,6 +1507,7 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
   
 }
 
+#' @noRd
 run <- function(txt) {
   
   ret <- paste0('<w:r><w:t xml:space="preserve">', txt, '</w:t></w:r>', collapse = "")
@@ -1505,4 +1516,37 @@ run <- function(txt) {
   
 }
 
+#' @noRd
+get_cell_borders_docx <- function(row, col, trow, tcol, brdrs) {
+  
+  ret <- ""
+  r <- ""
+  l <- ""
+  b <- ""
+  t <- ""
+  
+  if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left"))) {
+    
+    if (row == trow & any(brdrs %in% c("bottom", "outside", "body"))) {
+      b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+    }
+    
+    if (col == 1 & any(brdrs %in% c("left", "body"))) {
+      l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+    }
+    
+    if (col == tcol & any(brdrs %in% c("right", "body"))) {
+      r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+    }
+    
+    if (b != "" | l != "" | r != "" | t!= "") {
+              
+      ret <-  paste0('<w:tcBorders>', r, l, t, b,
+                     '</w:tcBorders>')
+    }
+  }
+
+  
+  return(ret)
+}
 
