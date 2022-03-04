@@ -1525,7 +1525,11 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs) {
   b <- ""
   t <- ""
   
-  if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left"))) {
+  if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left", "top"))) {
+    
+    if (row == 1 & any(brdrs %in% c("top", "outside", "body"))) {
+      t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+    }
     
     if (row == trow & any(brdrs %in% c("bottom", "outside", "body"))) {
       b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'

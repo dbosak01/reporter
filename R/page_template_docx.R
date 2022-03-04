@@ -242,7 +242,8 @@ get_page_footer_docx <- function(rs) {
 #' @import grDevices
 #' @noRd
 get_titles_docx <- function(ttllst, content_width, rs, talgn = "center", 
-                            colspan = 0, col_widths = NULL) {
+                            colspan = 0, col_widths = NULL, 
+                            content_brdrs = NULL) {
   
   ret <- c()
   cnt <- 0
@@ -288,10 +289,19 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
         algn <- "right"
       else
         algn <- "left"
+      
+      brd <- ttls$borders
+      # If content borders are on, align indent with content
+      if (!is.null(content_brdrs)) {
+        
+        if (any(content_brdrs %in% c("all", "outside", "body", "left")))
+          brd <- "outside"
+        
+      }
 
       # Get indent codes for alignment
       ta <- get_indent_docx(talgn, rs$line_size, w, 
-                           rs$base_indent, ttls$borders, conv)
+                           rs$base_indent, brd, conv)
 
       
       alcnt <- 0
@@ -429,7 +439,8 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
 #' @import grDevices
 #' @noRd
 get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center", 
-                               ex_brdr = FALSE, colspan = 0, col_widths = NULL) {
+                               ex_brdr = FALSE, colspan = 0, col_widths = NULL,
+                               content_brdrs = NULL) {
   
   ret <- c()
   cnt <- 0
@@ -484,9 +495,18 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       else
         algn <- "left"
       
+      brd <- ftnts$borders
+      # If content borders are on, align indent with content
+      if (!is.null(content_brdrs)) {
+        
+        if (any(content_brdrs %in% c("all", "outside", "body", "left")))
+          brd <- "outside"
+        
+      }
+      
       # Get indent codes for alignment
       ta <- get_indent_docx(talgn, rs$line_size, w, 
-                           rs$base_indent, ftnts$borders, conv)
+                           rs$base_indent, brd, conv)
 
       alcnt <- 0
       blcnt <- 0
@@ -653,16 +673,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
       
       ta <- get_indent_docx(talgn, rs$line_size, w, 
                             rs$base_indent, ttlhdr$borders, conv)
-      
-      # ret[length(ret) + 1] <- paste0("<w:tbl>", 
-      #                                "<w:tblPr>",
-      #                         '<w:tblStyle w:val="TableGrid"/>',
-      #                         '<w:tblW w:w="', w, '"/>', ta, tb,
-      #                         "</w:tblPr>",
-      #                         "<w:tblGrid>",
-      #                         '<w:gridCol w:w="3500" w:type="pct"/>',
-      #                         '<w:gridCol w:w="1500" w:type="pct"/>',
-      #                         "</w:tblGrid>\n")
+
       
       ret[length(ret) + 1] <- paste0("<w:tbl>", 
                                      "<w:tblPr>",
@@ -671,13 +682,6 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
                                      '<w:tblW w:w="', w, '"/>', ta, tb,
                                      "</w:tblPr>", grd, "\n")
       
-      
-      # ret[length(ret) + 1] <- paste0("<table ",
-      #                              #  ta,
-      #                                "style=\"width:", w, u, ";", 
-      #                                "\">\n", 
-      #                                "<colgroup><col style=\"width:70%;\">\n",
-      #                                "<col style=\"width:30%;\"></colgroup>\n")
                                      
 
       for(i in seq_len(mx)) {
@@ -688,14 +692,6 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
 
             alcnt <- 1
 
-            # tb1 <- get_cell_borders_html(i, 1, mx + alcnt,
-            #                        2, ttlhdr$borders)
-            # tb2 <- get_cell_borders_html(i, 2, mx + alcnt,
-            #                             2, ttlhdr$borders)
-
-            # al <- paste0("<tr><td style=\"text-align:left;", tb1, "\">&nbsp;</td>", 
-            #              "<td style=\"text-align:right;", tb2, 
-            #              "\">&nbsp;</td></tr>\n")
             
             al <- paste0("<w:tr>", rht, 
                   "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>",
@@ -710,16 +706,6 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
           if (any(ttlhdr$blank_row %in% c("below", "both"))) {
             blcnt <- 1
 
-            # tb1 <- get_cell_borders_html(i + alcnt + blcnt, 1,
-            #                        mx + alcnt + blcnt,
-            #                        2, ttlhdr$borders)
-            # tb2 <- get_cell_borders_html(i + alcnt + blcnt, 2,
-            #                             mx + alcnt + blcnt,
-            #                             2, ttlhdr$borders)
-            
-            # bl <- paste0("<tr><td style=\"text-align:left;", tb1, "\">&nbsp;</td>", 
-            #              "<td style=\"text-align:right;", tb2, 
-            #              "\">&nbsp;</td></tr>\n")
             
             bl <- paste0("<w:tr>", rht, 
                   "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>", 
@@ -743,8 +729,7 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
         if (length(ttlhdr$right) >= i) {
           tmp2 <- split_string_html(ttlhdr$right[[i]],
                                    width * .3, rs$units)
-          #hdr <- get_page_numbers_html(tmp2$html, FALSE)
-          #hdr <- tmp2$html
+
           
           hdr <- tmp2$html
           hcnt <- tmp2$lines
@@ -753,10 +738,6 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
           hcnt <- 1
         }
 
-        # b1 <- get_cell_borders_html(i + alcnt, 1, mx + alcnt + blcnt, 
-        #                             2, ttlhdr$borders)
-        # b2 <- get_cell_borders_html(i + alcnt, 2, mx+ alcnt + blcnt, 
-        #                             2, ttlhdr$borders)
 
 
         if (al != "")
@@ -768,11 +749,6 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
                                    cell_abs(hdr, "right", wr), 
                                   "</w:tr>\n"))
         
-        # ret <- append(ret, paste0("<tr><td style=\"text-align:left;", b1, "\">",
-        #                           encodeHTML(ttl), 
-        #                           "</td><td style=\"text-align:right;", b2, "\">", 
-        #                           encodeHTML(hdr), 
-        #                           "</td></tr>\n"))
         
         if (bl != "")
           ret <- append(ret, bl)
@@ -850,6 +826,8 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
       algn <- "right"
     else
       algn <- "left"
+    
+
 
     tb <- get_table_borders_docx(pgby$borders)
     
@@ -873,30 +851,37 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
       trows <- trows + 1
 
     if (pgby$blank_row %in% c("above", "both")) {
+      
+      cb <- ""
+      if (any(pgby$borders %in% c("outside", "top"))) {
+        cb <- get_cell_borders_docx(1, 1, 2, 1, "top")
+        
+        if (cb != "")
+          cb <- paste0("<w:tcPr>", cb, "</w:tcPr>")
+      }
 
-      # tb <- get_cell_borders_html(1, 1, trows, 1, pgby$borders, 
-      #                             exclude = exclude_top)
 
       ret[length(ret) + 1] <- paste0("<w:tr>", rht, 
-                   "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+                   "<w:tc>", cb, 
+                   "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
       
       cnt <- cnt + 1
     }
 
-    # tb <- get_cell_borders_html(brow, 1 , trows, 1, pgby$borders, 
-    #                             exclude = exclude_top)
-# 
-#     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
-#                                    pgby$label, encodeHTML(value), "</td></tr>\n")
+    
+    vb <- NULL
+    if (any(pgby$borders %in% c("outside", "top")) & 
+        !pgby$blank_row %in% c("above", "both")) {
+      vb <- "top"
+    
+    }
     
     ret <- append(ret, paste0("<w:tr>", rht, 
-                              cell_abs(paste0(pgby$label, value), width = w), 
+                              cell_abs(paste0(pgby$label, value), width = w, 
+                                       borders = vb), 
                               "</w:tr>\n"))
     
     cnt <- cnt + 1
-
-    # cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
-    #                            rs$font, rs$font_size, rs$units)
 
 
     if (pgby$blank_row %in% c("below", "both")) {

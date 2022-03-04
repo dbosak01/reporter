@@ -1025,7 +1025,8 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
   conv <- rs$twip_conversion
   
   # Get content titles and footnotes
-  ttls <- get_titles_docx(txt$titles, width, rs, talgn) 
+  ttls <- get_titles_docx(txt$titles, width, rs, talgn, 
+                          content_brdrs = txt$borders) 
   ttl_hdr <- get_title_header_docx(txt$title_hdr, width, rs, talgn)
   
   ftnts <- get_footnotes_docx(txt$footnotes, width, rs, talgn, FALSE) 
@@ -1068,6 +1069,12 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
    
   # Get cell border codes
   b <- get_table_borders_docx(txt$borders, exclude = exclude_top)  
+  
+  cb <- ""
+  if (any(txt$borders %in% c("outside", "top", "bottom"))) {
+    cb <- get_cell_borders_docx(1, 1, 1, 1, txt$borders)
+    
+  }
    
   # Prepare row header and footer
   rwhd <- paste0("<w:tbl>\n", '<w:tblPr>',
@@ -1077,7 +1084,7 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
                  b,
                  "</w:tblPr>", grd,
                  "<w:tr><w:tc>",
-                 '<w:tcPr><w:tcW w:w="', tw, '"/></w:tcPr>',
+                 '<w:tcPr><w:tcW w:w="', tw, '"/>', cb, '</w:tcPr>',
                  '<w:p>',
                  '<w:pPr><w:jc w:val="', algn, '"/></w:pPr>')
   rwft <- paste0("</w:p></w:tc></w:tr>\n</w:tbl>\n")
@@ -1114,10 +1121,12 @@ get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows,
     # Get footnotes
     if ("bottom" %in% get_outer_borders(txt$borders))
       ftnts <- get_page_footnotes_docx(rs, txt, width, lpg_rows, cnts,
-                                       wrap_flag, content_blank_row, talgn, TRUE)
+                                       wrap_flag, content_blank_row, talgn, TRUE, 
+                                       content_brdrs = txt$borders)
     else 
       ftnts <- get_page_footnotes_docx(rs, txt, width, lpg_rows, cnts,
-                                       wrap_flag, content_blank_row, talgn, FALSE)
+                                       wrap_flag, content_blank_row, talgn, FALSE, 
+                                       content_brdrs = txt$borders)
     
     
     # Combine titles, blanks, body, and footnotes

@@ -75,7 +75,7 @@ test_that("docx1: Basic text with title header works as expected.", {
   
 })
 
-# Underline could use a pixel or two more padding
+# May want to push table over out of the margin
 test_that("docx2: Basic table works as expected.", {
 
 
@@ -206,14 +206,13 @@ test_that("docx5: Multi page table works as expected.", {
 })
 
 
-# Duplicated borders on footnotes
 test_that("docx6: Basic text works as expected.", {
 
   fp <- file.path(base_path, "docx/test6")
 
   txt <- create_text(cnt, width = 6, borders = "outside", align = "center") %>%
-    titles("Text 1.0", "My Nice Text", borders = "outside", width = "content") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+    titles("Text 1.0", "My Nice Text", borders = "none", width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
 
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
                        font_size = 12, paper_size = "letter") %>%
@@ -230,7 +229,6 @@ test_that("docx6: Basic text works as expected.", {
 })
 
 
-# Note that image may be deleted in next test case
 test_that("docx7: Basic plot works as expected.", {
 
 
@@ -240,7 +238,7 @@ test_that("docx7: Basic plot works as expected.", {
 
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 
-  plt <- create_plot(p, height = 4, width = 9, borders = c("none")) %>%
+  plt <- create_plot(p, height = 4, width = 7, borders = c("all")) %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
            font_size = 12, align = "left") %>%
     footnotes("* Motor Trend, 1974", borders = "none")
@@ -265,7 +263,6 @@ test_that("docx7: Basic plot works as expected.", {
 
 
 # Good for testing
-# Borders throw off line counts.  Come back to this.
 test_that("docx8: Page by works as expected.", {
 
 
@@ -276,19 +273,20 @@ test_that("docx8: Page by works as expected.", {
 
   tbl <- create_table(dat, borders = "all") %>%
     titles("Table 1.0", "My Nice Irises", "Another Title",
-           borders = "outside") %>%
-    page_by(Species, label = "Species: ", borders = "outside", align = "center") %>%
+           borders = "none") %>%
+    page_by(Species, label = "Species: ", borders = "outside",
+            blank_row = "both", align = "center") %>%
     define(Sepal.Length, label = "Sepal Length", width = 1.5, align = "center") %>%
     define(Sepal.Width, label = "Sepal Width", width = 1.25, align = "centre")  %>%
     define(Species, visible = FALSE) %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
 
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
                        font_size = 12, orientation = "portrait",
                        paper_size = "letter") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
-    add_content(tbl, blank_row = "none") %>%
+    add_content(tbl, blank_row = "none", align = "left") %>%
     page_footer("Left1", "Center1", "Page [pg] of [tpg]")
 
   res <- write_report(rpt)

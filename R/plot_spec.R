@@ -1314,7 +1314,8 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   
   
   # Get titles and footnotes
-  ttls <- get_titles_docx(plt$titles, wth, rs, talign) 
+  ttls <- get_titles_docx(plt$titles, wth, rs, talign,
+                          content_brdrs = plt$borders) 
   ttl_hdr <- get_title_header_docx(plt$title_hdr, wth, rs, talign)
   
   exclude_top <- NULL
@@ -1407,7 +1408,8 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   
   # Get footnotes, filler, and content blank line
   ftnts <- get_page_footnotes_docx(rs, plt, wth, lpg_rows, lns,
-                                   wrap_flag, content_blank_row, talign, extp)
+                                   wrap_flag, content_blank_row, talign, extp,
+                                   content_brdrs = plt$borders)
   
   # Combine titles, blanks, body, and footnotes
   rws <- c(a, ttls$docx, ttl_hdr$docx, pgbys$docx, img)
