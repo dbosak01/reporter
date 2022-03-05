@@ -646,7 +646,7 @@ test_that("docx19: 11 pt font cm works as expected.", {
 })
 
 
-test_that("docx20: RTF Image file works as expected.", {
+test_that("docx20:  Image file works as expected.", {
 
   library(ggplot2)
 
@@ -680,7 +680,6 @@ test_that("docx20: RTF Image file works as expected.", {
 
 
 })
-
 
 
 test_that("docx21: Check content blanks.", {
@@ -721,7 +720,7 @@ test_that("docx21: Check content blanks.", {
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, align = "center", page_break = FALSE) %>%
     add_content(tbl, align = "center", page_break = FALSE) %>%
-    add_content(txt, align = "center", page_break = FALSE) %>%
+    add_content(txt, align = "center", page_break = FALSE, blank_row = "none") %>%
     add_content(plt, align = "center", page_break = FALSE, blank_row = "none") %>%
     add_content(tbl, align = "center", page_break = FALSE, blank_row = "none") %>%
     add_content(txt, align = "center", page_break = FALSE, blank_row = "none") %>%
@@ -735,66 +734,41 @@ test_that("docx21: Check content blanks.", {
   
 })
 
-# May want to push table over out of the margin
-test_that("docx22: Check content blanks with table.", {
-  
-  
-  fp <- file.path(base_path, "docx/test2.docx")
-  
-  dat <- mtcars[1:15, ]
-  attr(dat[[2]], "label") <- "Cylin."
-  attr(dat[[2]], "width") <- 1
-  attr(dat[[2]], "justify") <- "center"
-  
-  tbl <- create_table(dat, borders = c("all"), first_row_blank = TRUE)  %>%
-    titles("Table 1.0", "My Nice Table", borders = c("none"),
-           width = "content", align = "left") %>%
-    footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
-              borders = "none",
-              align = "left", width = "content") %>%
-    define(wt, width = 2, label = "Weight", align = "center",
-           label_align = "right")
-  
-  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
-                       font_size = 12, orientation = "landscape") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    page_header("Left", c("Right1 and more", "Right2", "Page [pg] of [tpg]"),
-                blank_row = "below") %>%
-    add_content(tbl, align = "left") %>%
-    page_footer("Left1", "Center1", "Page [pg] of [tpg]")
-  
-  res <- write_report(rpt)
-  
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
-  
-})
-
-test_that("docx7: Basic plot works as expected.", {
+test_that("docx22: Check titles and footnotes on report.", {
   
   
   library(ggplot2)
   
-  fp <- file.path(base_path, "docx/test7.docx")
+  fp <- file.path(base_path, "docx/test22.docx")
   
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
   
-  plt <- create_plot(p, height = 4, width = 7, borders = c("all")) %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
-           font_size = 12, align = "left") %>%
-    footnotes("* Motor Trend, 1974", borders = "none")
+  plt <- create_plot(p, height = 4, width = 7, borders = c("all")) 
   
+  dat <- mtcars[1:5, ]
+  attr(dat[[2]], "label") <- "Cylin."
+  attr(dat[[2]], "width") <- 1
+  attr(dat[[2]], "justify") <- "center"
   
-  rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
-    page_header("Client", "Study: XYZ") %>%
+  tbl <- create_table(dat, borders = c("all"), first_row_blank = TRUE) %>%
+    define(wt, width = .75, label = "Weight", align = "center",
+           label_align = "right")
+  
+  txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) 
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Times",
+                       font_size = 10, orientation = "portrait") %>%
     set_margins(top = 1, bottom = 1) %>%
-    add_content(plt, align = "center") %>%
-    page_footer("Time", "Confidential", "Page [pg] of [tpg]")
-  
+    add_content(plt, align = "center", page_break = TRUE) %>%
+    add_content(tbl, align = "center", page_break = TRUE) %>%
+    add_content(txt, align = "center", page_break = TRUE) %>%
+    page_header(c("Left1", "Left2"), "Right") %>%
+    page_footer("Page [pg] of [tpg]", "Center", "Right") %>%
+    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
+           font_size = 12, align = "left", blank_row = "none") %>%
+    footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
   
   res <- write_report(rpt)
-  
-  #print(res)
   
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)

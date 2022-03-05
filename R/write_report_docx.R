@@ -257,8 +257,8 @@ paginate_content_docx <- function(rs, ls) {
         if (any(class(obj) == "table_spec") &
             any(obj$borders %in% c("all", "inside"))) {
 
-          #boff <- round(last_page_lines * rs$border_height / rs$row_height)
-          boff <- 1
+          boff <- round(last_page_lines * rs$border_height / rs$row_height)
+          #boff <- 1
         }
 
         blnks <- c()
@@ -543,7 +543,7 @@ page_setup_docx <- function(rs) {
   
   rh <- get_rh(rs$font, rs$font_size)
   
-  rs$border_height <- 1/72
+  rs$border_height <- 1/72/2
   
   if (rs$units == "cm") {
     rh <- ccm(rh)

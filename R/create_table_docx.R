@@ -426,8 +426,8 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
   if (any(class(spec) == "table_spec") &
       any(spec$borders %in% c("all", "inside"))) {
 
-    #boff <- round(row_count * rs$border_height / rs$row_height)
-    boff <- 1
+    boff <- round(row_count * rs$border_height / rs$row_height)
+    #boff <- 1
   }
 
   ublnks <- c()
