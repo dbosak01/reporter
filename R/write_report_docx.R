@@ -608,11 +608,16 @@ page_setup_docx <- function(rs) {
                       <w:pPr>
               				<w:spacing w:after="0" w:before="0" w:line="120" w:lineRule="auto"/>
               				<w:contextualSpacing/>
-              				</w:pPr>
-                			<w:r>
-                			  <w:rPr>
+              				  <w:rPr>
               					<w:sz w:val="0"/>
               				  </w:rPr>
+              				</w:pPr>
+              				<w:r>
+              				  <w:rPr>
+              					<w:sz w:val="0"/>
+              				  </w:rPr>
+              				</w:r>
+                			<w:r>
                 				<w:br w:type="page"/>
                 			</w:r>
                 		</w:p>')
