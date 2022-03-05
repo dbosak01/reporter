@@ -606,6 +606,7 @@ page_setup_docx <- function(rs) {
   
   rs$page_break_docx <- paste0('<w:p>
                       <w:pPr>
+                      <w:pStyle w:val="Normal"/>
               				<w:spacing w:after="0" w:before="0" w:line="120" w:lineRule="auto"/>
               				<w:contextualSpacing/>
               				  <w:rPr>
