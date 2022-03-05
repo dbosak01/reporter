@@ -771,7 +771,7 @@ test_that("docx22: Check titles and footnotes on report.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  expect_equal(res$pages, 3)
   
 })
 
