@@ -872,7 +872,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   if (ex_brdr)
     exclude_top <- "top"
   
-  
+  tb <- ifelse(is.na(tbl[["..blank"]]), "", tbl[["..blank"]])
   nms <- names(widths)
   nms <- nms[!is.na(nms)]
   nms <- nms[!is.controlv(nms)]
@@ -922,32 +922,40 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       if (!is.control(nms[j])) {
         
         b <- ""
-        
+        cs <- ""
 
         if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
 
           b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
                                      length(nms), brdrs)
           
-          if (b != "") {
-            
-            b <- paste0('<w:tcPr>', b, '</w:tcPr>')
-          }
+
           
+        }
+        
+        
+        if (tb[i] %in% c("B", "L")) {
+          cs <-  paste0('<w:gridSpan w:val="', length(nms) , '"/>')
+        }
+        
+        if (b != "" | cs != "") {
+          b <- paste0('<w:tcPr>', b, cs, '</w:tcPr>')
         }
         
         vl <- t[i, j]
         if (!is.character(vl))
           vl <- as.character(vl)
         
-        # Construct html
-        ret[i] <- paste0(ret[i], "<w:tc>", b,
-                         para(vl, ca[j]), "</w:tc>")
+        if (!(tb[i] %in% c("B", "L") & j > 1)) {
+          # Construct html
+          ret[i] <- paste0(ret[i], "<w:tc>", b,
+                           para(vl, ca[j]), "</w:tc>")
+        }
 
         
         # Count lines in cell 
         cl <- strsplit(vl, "\n", fixed = TRUE)[[1]]
-        if (length(cl) >= mxrw)
+        if (length(cl) > mxrw)
           mxrw <- length(cl) 
       }
       

@@ -1044,7 +1044,8 @@ test_that("docx-user2: demo table with stub works.", {
                          font = "Arial", font_size = 10) %>%
       add_content(tbl, align = "center") %>%
       page_header("Sponsor", "Drug") %>%
-      page_footer(left = "Time", right = "Page [pg] of [tpg]") #%>%
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>%
+      footnotes("Here is a footnote on the bottom") #%>%
     #page_by(var = "var", label = "Variable: ")
 
     # Write out report
