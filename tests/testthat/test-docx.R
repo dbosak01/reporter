@@ -532,7 +532,7 @@ test_that("docx15: Title bold and font size works as expected.", {
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
 
-  tbl <- create_table(dat, borders = "outside") %>%
+  tbl <- create_table(dat, borders = "outside", first_row_blank = TRUE) %>%
     titles("Table 1.0", "My Nice Table", borders = c("outside"),
            width = "content", font_size = 14, bold = TRUE, blank_row = "none") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside",

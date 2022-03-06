@@ -267,7 +267,8 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_docx(rs, pi$data, pi$col_width, 
-                             pi$col_align, pi$table_align, ts$borders, exbrdr)
+                             pi$col_align, pi$table_align, ts$borders, 
+                             exbrdr, ts$first_row_blank)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -853,7 +854,8 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr = FALSE) {
+get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
+                                ex_brdr = FALSE, frb = FALSE) {
   
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
@@ -900,6 +902,11 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   
   ret <- c()
   
+  badj <- 0
+  if (frb == TRUE) {
+    badj <- 1
+  }
+  
   
   # Table Body
   for(i in seq_len(nrow(t))) {
@@ -919,7 +926,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
 
         if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
 
-          b <- get_cell_borders_docx(i, j, nrow(t), 
+          b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
                                      length(nms), brdrs)
           
           if (b != "") {
