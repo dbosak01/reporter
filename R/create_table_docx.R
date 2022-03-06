@@ -946,9 +946,9 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
 
         
         # Count lines in cell 
-        cl <- grep("\n", vl, fixed = TRUE)
+        cl <- strsplit(vl, "\n", fixed = TRUE)[[1]]
         if (length(cl) >= mxrw)
-          mxrw <- length(cl) + 1
+          mxrw <- length(cl) 
       }
       
     }

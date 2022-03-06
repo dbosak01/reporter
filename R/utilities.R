@@ -542,7 +542,7 @@ split_string_rtf <- function(strng, width, units) {
 split_string_html <- function(strng, width, units) {
   
   
-  res <- split_strings(strng, width, units)
+  res <- split_strings(strng, width, units, multiplier = 1)
   
   ret <- list(html = paste0(res$text, collapse = "\n"),
               lines = length(res$text),

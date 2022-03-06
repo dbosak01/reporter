@@ -499,13 +499,13 @@ page_setup_docx <- function(rs) {
   
   if (rs$font_size == 8) {
     
-    gtr <- .17
+    gtr <- .12
     cw <- .1    # na
     radj <- 56
     
   } else if (rs$font_size == 9) {
     
-    gtr <- .18
+    gtr <- .13
     cw <- .1  # na
     radj <- 36
 
@@ -513,9 +513,9 @@ page_setup_docx <- function(rs) {
   } else if (rs$font_size == 10) {
     
     if (tolower(rs$font) == "courier")
-      gtr <- .195
+      gtr <- .14
     else 
-      gtr <- .19
+      gtr <- .15
     
     cw <- .11   # na
     radj <- 8
@@ -523,9 +523,9 @@ page_setup_docx <- function(rs) {
   } else if (rs$font_size == 11) {
     
     if (tolower(rs$font) == "courier")
-      gtr <- .215
+      gtr <- .15
     else 
-      gtr <- .2
+      gtr <- .16
     
     cw <- .11  # na
     radj <- -16
@@ -533,9 +533,9 @@ page_setup_docx <- function(rs) {
   } else if (rs$font_size == 12) {
     
     if (tolower(rs$font) == "courier")
-      gtr <- 0.24
+      gtr <- 0.16
     else
-      gtr <- 0.2
+      gtr <- 0.16
     
     cw <- .12  #na
     radj <- -42

@@ -438,8 +438,8 @@ test_that("docx13: Table with break between sections works as expected.", {
   subjid <- 100:109
   name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
             "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma",
-            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
-            "Smith, Shaileigh")
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon here is some more",
+            "Smith, Shaileigh and \nmore and more and even more and more and more")
   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
   age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
   arm <- c(rep("A", 5), rep("B", 5))
@@ -448,13 +448,13 @@ test_that("docx13: Table with break between sections works as expected.", {
   df <- data.frame(subjid, name, sex, age, arm)
 
 
-  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+  tbl1 <- create_table(df, first_row_blank = TRUE, borders = "all") %>%
     define(subjid, label = "Subject ID", align = "left", width = 1) %>%
     define(name, label = "Subject Name", width = 1) %>%
     define(sex, label = "Sex") %>%
     define(age, label = "Age") %>%
     define(arm, label = "Arm",
-           blank_after = FALSE,
+           blank_after = TRUE,
            dedupe = TRUE,
            align = "right") #%>%
   # spanning_header(sex, arm, label = "Here is a spanning header")
@@ -1095,11 +1095,12 @@ test_that("docx-user3: listings works.", {
     names(data_demo)
     # Define table
     tbl <- create_table(data_demo, borders = "all") %>%
-      define(USUBJID, id_var = TRUE)
+      define(USUBJID, id_var = TRUE) #%>%
+      #define(ETHNIC, width = 1)
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Courier", font_size = 11,
+    rpt <- create_report(fp, font = "Arial", font_size = 12,
                          orientation = "portrait") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%

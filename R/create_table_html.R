@@ -880,10 +880,14 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
           ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
                            encodeHTML(t[i, j]), "</td>")
         
-        # Count lines in cell 
-        cl <- grep("\n", t[i, j], fixed = TRUE)
-        if (length(cl) >= mxrw)
-          mxrw <- length(cl) + 1
+        vl <- t[i, j]
+        if (class(vl) != "character")
+          vl <- as.character(vl)
+        
+        # Count lines in cell - Doesn't work right
+        cl <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+        if (length(cl) > mxrw)
+          mxrw <- length(cl) 
       }
       
     }
