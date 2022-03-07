@@ -624,17 +624,25 @@ page_setup_docx <- function(rs) {
   #               		</w:p>')
   
   
-  rs$page_break_docx <- paste0('<w:p><w:pPr><w:pStyle w:val="Normal"/>',
-                               '<w:bidi w:val="0"/><w:jc w:val="left"/><w:rPr></w:rPr>',
-                               '</w:pPr><w:r><w:rPr></w:rPr></w:r>', 
-                               '<w:r><w:br w:type="page"/></w:r></w:p>')
+  # rs$page_break_docx <- paste0('<w:p><w:pPr><w:pStyle w:val="Normal"/>',
+  #                              '<w:bidi w:val="0"/><w:jc w:val="left"/><w:rPr></w:rPr>',
+  #                              '</w:pPr><w:r><w:rPr></w:rPr></w:r>', 
+  #                              '<w:r><w:br w:type="page"/></w:r></w:p>')
+  # 
+  # 
+  # rs$page_break_docx <- paste0('<w:p><w:pPr><w:pStyle w:val="Normal"/>',
+  #    '<w:spacing w:after="0" w:before="0" w:line="120" w:lineRule="auto"/>',
+  #    '<w:bidi w:val="0"/><w:jc w:val="left"/><w:rPr></w:rPr>',
+  #    '</w:pPr><w:r><w:rPr><w:sz w:val="0"/></w:rPr></w:r>', 
+  #    '<w:r><w:br w:type="page"/></w:r></w:p>')
   
   
-  rs$page_break_docx <- paste0('<w:p><w:pPr><w:pStyle w:val="Normal"/>',
-     '<w:spacing w:after="0" w:before="0" w:line="0" w:lineRule="none"/>',
-     '<w:bidi w:val="0"/><w:jc w:val="left"/><w:rPr><w:sz w:val="0"/></w:rPr>',
+  rs$page_break_docx <- paste0('<w:p><w:pPr>',
+     '<w:rPr><w:sz w:val="0"/></w:rPr>',
      '</w:pPr><w:r><w:rPr><w:sz w:val="0"/></w:rPr></w:r>', 
      '<w:r><w:br w:type="page"/></w:r></w:p>')
+  
+  
 
   if (is.null(rs$user_line_count)) {
     rs$line_count <- round(rs$content_size[[1]] / rh) 
