@@ -120,9 +120,9 @@ test_that("docx3: Basic table with title header works as expected.", {
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
 
-  tbl <- create_table(dat, borders = c("outside")) %>%
+  tbl <- create_table(dat, borders = c("body")) %>%
     title_header("Table 1.0", "My Nice Table", right = "Right",
-                 borders = c("all"), blank_row = "none",
+                 borders = c("top", "bottom"), blank_row = "none",
                  width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "outside",
               align = "left", width = "content")
@@ -149,14 +149,16 @@ test_that("docx4: Spanning headers work as expected.", {
 
   dat <- mtcars[1:15, ]
 
-  tbl <- create_table(dat, borders = c("all")) %>%
+  tbl <- create_table(dat, borders = c( "none")) %>%
     spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span",
                     n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table", borders = c("outside")) %>%
-    footnotes("My footnote 1", "My footnote 2", borders = c("outside"))
+    titles("Table 1.0", "My Nice Table", blank_row = "none", 
+           borders = c("top", "bottom")) %>%
+    footnotes("My footnote 1", "My footnote 2", 
+              blank_row = "none", borders = c("top", "bottom"))
 
   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
@@ -605,13 +607,17 @@ test_that("docx18: 11 pt font inches works as expected.", {
 
 
   fp <- file.path(base_path, "docx/test18.docx")
+  
+  tbl <- create_table(iris) %>% 
+    define(Species, page_break = TRUE)
 
   rpt <- create_report(fp, output_type = "DOCX", font_size = 11,
                        font = "Courier",
                        orientation = "portrait") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
-    add_content(create_table(iris)) %>%
+    add_content(tbl) %>%
+    add_content(tbl) %>%
     page_footer("left", "center", "Page [pg] of [tpg]") %>%
     set_margins(top = 1, bottom = 1)
 
@@ -1132,7 +1138,7 @@ test_that("docx-user4: listing in cm and times works.", {
     # Data Filepath
     dir_data <- file.path(data_dir, "data")
 
-    fp <- file.path(base_path, "docx/user4.docx")
+    fp <- file.path(base_path, "docx/user4.rtf")
 
     # Removing to make last page exactly equal to available rows on page.
     # In this case, any added blank rows should be skipped.
@@ -1178,7 +1184,7 @@ test_that("docx-user4: listing in cm and times works.", {
       footnotes("My footnote")
 
     #Write out report
-    res <- write_report(rpt, output_type = "DOCX")
+    res <- write_report(rpt, output_type = "RTF")
 
     expect_equal(file.exists(fp), TRUE)
 

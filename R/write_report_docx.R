@@ -637,11 +637,17 @@ page_setup_docx <- function(rs) {
   #    '<w:r><w:br w:type="page"/></w:r></w:p>')
   
   
+  # rs$page_break_docx <- paste0('<w:p><w:pPr>',
+  #    '<w:rPr><w:sz w:val="0"/></w:rPr>',
+  #    '</w:pPr><w:r><w:rPr><w:sz w:val="0"/></w:rPr></w:r>', 
+  #    '<w:r><w:br w:type="page"/></w:r></w:p>')
+  
   rs$page_break_docx <- paste0('<w:p><w:pPr>',
+     '<w:spacing w:after="0" w:before="0" w:line="0" w:lineRule="none"/>',
+     '<w:pageBreakBefore/>',
      '<w:rPr><w:sz w:val="0"/></w:rPr>',
      '</w:pPr><w:r><w:rPr><w:sz w:val="0"/></w:rPr></w:r>', 
-     '<w:r><w:br w:type="page"/></w:r></w:p>')
-  
+     '</w:p>')
   
 
   if (is.null(rs$user_line_count)) {

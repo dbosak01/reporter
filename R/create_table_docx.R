@@ -804,16 +804,32 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
         }
 
       } else {
+        t <- ""
+        b <- ""
+        
+        # Add top border for top and outside border specs.
+        if (any(brdrs %in% c("top", "outside"))) {
+          
+          if (l == length( lvls)) {
+            
+            t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+            
+          }
+          
+          
+        }
         
         # If borders are off, add an underline if requested
         if (cs[k] > 1 | vl != "") {
             
           if (s$underline[k]) {
-            bb <- '<w:tcBorders>
-               <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
-                </w:tcBorders>'
+            b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+                
           }
         } 
+        
+        
+        bb <- paste0('<w:tcBorders>', t, b, '</w:tcBorders>\n')
       }
       
       
