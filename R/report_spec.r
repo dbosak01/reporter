@@ -51,7 +51,7 @@
 #' the \code{\link{write_report}} function will add a file extension based
 #' on the \code{output_type} specified.
 #' @param output_type The report output type.  Default is "TXT".  Valid
-#' values are "TXT", "RTF", "PDF", and "HTML".
+#' values are "TXT", "RTF", "PDF", "HTML", and "DOCX".
 #' @param orientation The page orientation of the desired report.  Valid values
 #' are "landscape" or "portrait".  The default page orientation is "landscape".
 #' @param units Specifies the units of measurement.  This setting will 
@@ -145,11 +145,11 @@ create_report <- function(file_path = "", output_type = "TXT",
   x <- structure(list(), class = c("report_spec", "list"))
 
   # Trap missing or invalid output_type parameter
-  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
+  if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML", "DOCX")) {
     
     stop(paste0("output_type parameter on create_report() ",
                 "function is invalid: '", output_type,
-                "'\n\tValid values are: 'TXT', 'PDF', 'RTF', and 'HTML'."))
+                "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML', and 'DOCX'."))
   } else {
     
     output_type <- toupper(output_type) 
@@ -2063,11 +2063,11 @@ write_report <- function(x, file_path = NULL,
   
   # Trap missing or invalid output_type parameter
   if (!is.null(output_type)) {
-    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML")) {
+    if (!toupper(output_type) %in% c("TXT", "PDF", "RTF", "HTML", "DOCX")) {
       
       stop(paste0("output_type parameter on create_report() ",
                   "function is invalid: '", output_type,
-                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML'."))
+                  "'\n\tValid values are: 'TXT', 'PDF', 'RTF', 'HTML', 'DOCX'."))
     }
     x$output_type <- toupper(output_type)
 
@@ -2140,12 +2140,14 @@ write_report <- function(x, file_path = NULL,
   
     ret <- write_report_html(x)
     
+  } else if (toupper(x$output_type) == "DOCX") {
+    
+    ret <- write_report_docx(x)
+    
   } else {
    stop(paste("Output type currently not supported:", x$output_type))
   }
-  # } else if (x$output_type == "docx") {
-  #   ret <- write_report_docx(x, ...)
-  # }
+
   
   log_logr(ret)
   

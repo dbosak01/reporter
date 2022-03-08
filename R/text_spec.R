@@ -986,5 +986,164 @@ get_text_body_pdf <- function(rs, txt, width, line_count, lpg_rows,
 
 
 
+# Write DOCX Functions -------------------------------------------------------
+
+
+#' @noRd
+create_text_pages_docx <- function(rs, cntnt, lpg_rows, content_blank_row) {
+  
+  if (!"report_spec" %in% class(rs))
+    stop("Report spec expected for parameter rs")
+  
+  if (!"report_content" %in% class(cntnt))
+    stop("Report Content expected for parameter cntnt")
+  
+  txt <- cntnt$object
+  
+  # Default to content width
+  w <- rs$content_size[["width"]] 
+  
+  # If user supplies a width, override default
+  if (!is.null(txt$width))
+    w <- txt$width
+  
+  res <- get_text_body_docx(rs, txt, w, rs$body_line_count, 
+                            lpg_rows, content_blank_row, cntnt$align)
+  
+  
+  return(res)
+  
+  
+}
+
+#' Create list of vectors of strings for each page 
+#' @import stringi
+#' @noRd
+get_text_body_docx <- function(rs, txt, width, line_count, lpg_rows, 
+                               content_blank_row, talgn) {
+  
+  conv <- rs$twip_conversion
+  
+  # Get content titles and footnotes
+  ttls <- get_titles_docx(txt$titles, width, rs, talgn, 
+                          content_brdrs = txt$borders) 
+  ttl_hdr <- get_title_header_docx(txt$title_hdr, width, rs, talgn)
+  
+  ftnts <- get_footnotes_docx(txt$footnotes, width, rs, talgn, FALSE) 
+  
+  exclude_top <- NULL
+  if (ttls$border_flag | ttl_hdr$border_flag)
+    exclude_top <- "top"
+  
+  t <- sum(ttls$lines, ftnts$lines, ttl_hdr$lines)
+  hgt <- line_count - t
+  
+  # Break text content into pages if necessary
+  tpgs <- split_text(txt$text, hgt, width, rs$font, 
+                     rs$font_size, rs$units, lpg_rows)
+  
+  # Capture rtf pages and line counts
+  txtpgs <- tpgs$text
+  lns <- tpgs$lines
+  
+  u <- rs$units
+  if (u == "inches")
+    u <- "in"
+  
+  # Get text alignment codes
+  if (txt$align == "right")
+    algn <- "right"
+  else if (txt$align %in% c("center", "centre"))
+    algn <- "center"
+  else
+    algn <- "left"
+  
+  
+  tw <- round(width * conv)
+  
+  # Get indents for alignment
+  ta <- get_indent_docx(talgn, rs$line_size, tw, 
+                        rs$base_indent, txt$borders, conv)
+  
+  grd <- get_col_grid(c(text=tw), 1)
+   
+  # Get cell border codes
+  b <- get_table_borders_docx(txt$borders, exclude = exclude_top)  
+  
+  cb <- ""
+  if (any(txt$borders %in% c("outside", "top", "bottom"))) {
+    cb <- get_cell_borders_docx(1, 1, 1, 1, txt$borders)
+    
+  }
+   
+  # Prepare row header and footer
+  rwhd <- paste0("<w:tbl>\n", '<w:tblPr>',
+                 rs$cell_margin,
+                 '<w:tblW w:w="', tw, '"/>', 
+                 ta,
+                 b,
+                 "</w:tblPr>", grd,
+                 "<w:tr><w:tc>",
+                 '<w:tcPr><w:tcW w:w="', tw, '"/>', cb, '</w:tcPr>',
+                 '<w:p>',
+                 '<w:pPr><w:jc w:val="', algn, '"/></w:pPr>')
+  rwft <- paste0("</w:p></w:tc></w:tr>\n</w:tbl>\n")
+  
+  ret <- list()
+  cnt <- c()
+  
+  # Gather docx and line counts for each page
+  for (i in seq_along(txtpgs)) {
+    
+    if (i == length(txtpgs))
+      wrap_flag <- FALSE
+    else 
+      wrap_flag <- TRUE
+    
+    pg <- txtpgs[[i]]
+    
+    # Put line ending on all but last line
+    # if (length(pg) > 1) {
+    #   s <- paste0(pg[seq(1, length(pg) - 1)], "<br>\n")
+    #   s <- c(s, pg[length(pg)])
+    # } else
+      s <- run(pg)
+    
+    # Add blank above content if requested
+    a <- NULL
+    if (i == 1 & content_blank_row %in% c("both", "above"))
+      a <- rs$blank_row
+    
+    
+    # Sum up lines
+    cnts <- sum(length(a),  ttls$lines, ttl_hdr$lines, lns[[i]])
+    
+    # Get footnotes
+    if ("bottom" %in% get_outer_borders(txt$borders))
+      ftnts <- get_page_footnotes_docx(rs, txt, width, lpg_rows, cnts,
+                                       wrap_flag, content_blank_row, talgn, TRUE, 
+                                       content_brdrs = txt$borders)
+    else 
+      ftnts <- get_page_footnotes_docx(rs, txt, width, lpg_rows, cnts,
+                                       wrap_flag, content_blank_row, talgn, FALSE, 
+                                       content_brdrs = txt$borders)
+    
+    
+    # Combine titles, blanks, body, and footnotes
+    rws <- c(a, ttls$docx, ttl_hdr$docx, 
+             rwhd, s, rwft)
+    
+    ret[[length(ret) + 1]] <- c(rws, ftnts$docx, rs$table_break)
+    cnt[[length(cnt) + 1]] <- sum(cnts, ftnts$lines)
+    
+  }
+  
+  res <- list(docx = ret, lines = cnt)
+  
+  return(res)
+  
+}
+
+
 
 

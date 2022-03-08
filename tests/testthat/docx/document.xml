@@ -1,0 +1,1357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document
+	xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+	xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"
+	xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex"
+	xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex"
+	xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex"
+	xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex"
+	xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex"
+	xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex"
+	xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex"
+	xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"
+	xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+	xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"
+	xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"
+	xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"
+	xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"
+	xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
+	xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
+	xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+	xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+	xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" 
+	mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+<w:body>
+<w:sectPr w:rsidR="00444C49" w:rsidRPr="00444C49">
+    <w:headerReference w:type="default" r:id="rId6"/>
+    <w:footerReference w:type="default" r:id="rId7"/><w:pgSz w:w="12240" w:h="15840" w:orient="portrait"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="1440" w:footer="1440" w:gutter="0"/><w:cols w:space="720"/>
+    <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Table 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My Nice Irises</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Another Title</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="7023"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Species: setosa</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblInd w:w="1298" w:type="dxa"/><w:tblStyle w:val="TableGrid"/><w:tblW w:w="7023" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="2160"/>
+<w:gridCol w:w="1800"/>
+<w:gridCol w:w="1590"/>
+<w:gridCol w:w="1473"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr>
+<w:tc><w:tcPr><w:tcW w:w="2160"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1800"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Width</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1590"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1473"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Width</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7025"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7025"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1168" w:type="dxa"/><w:tblBorders></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Table 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My Nice Irises</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Another Title</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="7023"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Species: setosa</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblInd w:w="1298" w:type="dxa"/><w:tblStyle w:val="TableGrid"/><w:tblW w:w="7023" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="2160"/>
+<w:gridCol w:w="1800"/>
+<w:gridCol w:w="1590"/>
+<w:gridCol w:w="1473"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr>
+<w:tc><w:tcPr><w:tcW w:w="2160"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1800"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Width</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1590"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1473"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Width</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.6</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">0.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7025"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7025"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1168" w:type="dxa"/><w:tblBorders></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Table 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My Nice Irises</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Another Title</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="7023"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Species: versicolor</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblInd w:w="1298" w:type="dxa"/><w:tblStyle w:val="TableGrid"/><w:tblW w:w="7023" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="2160"/>
+<w:gridCol w:w="1800"/>
+<w:gridCol w:w="1590"/>
+<w:gridCol w:w="1473"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr>
+<w:tc><w:tcPr><w:tcW w:w="2160"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1800"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Width</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1590"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1473"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Width</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.7</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7025"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7025"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1168" w:type="dxa"/><w:tblBorders></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Table 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My Nice Irises</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Another Title</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="7023"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Species: versicolor</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblInd w:w="1298" w:type="dxa"/><w:tblStyle w:val="TableGrid"/><w:tblW w:w="7023" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="2160"/>
+<w:gridCol w:w="1800"/>
+<w:gridCol w:w="1590"/>
+<w:gridCol w:w="1473"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr>
+<w:tc><w:tcPr><w:tcW w:w="2160"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1800"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Width</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1590"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1473"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Width</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7025"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7025"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="260" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="24"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1168" w:type="dxa"/><w:tblBorders></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Table 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My Nice Irises</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Another Title</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="7023"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Species: virginica</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblInd w:w="1298" w:type="dxa"/><w:tblStyle w:val="TableGrid"/><w:tblW w:w="7023" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="2160"/>
+<w:gridCol w:w="1800"/>
+<w:gridCol w:w="1590"/>
+<w:gridCol w:w="1473"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr>
+<w:tc><w:tcPr><w:tcW w:w="2160"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1800"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Width</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1590"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1473"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Width</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.7</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7025"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7025"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+<w:p>
+                      <w:pPr>
+              				<w:spacing w:after="0" w:line="120" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              				</w:pPr>
+                			<w:r>
+                				<w:br w:type="page"/>
+                			</w:r>
+                		</w:p>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1168" w:type="dxa"/><w:tblBorders></w:tblBorders></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Table 1.0</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My Nice Irises</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Another Title</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7023"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7023"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="7023"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Species: virginica</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblInd w:w="1298" w:type="dxa"/><w:tblStyle w:val="TableGrid"/><w:tblW w:w="7023" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar></w:tblPr>
+<w:tblGrid>
+<w:gridCol w:w="2160"/>
+<w:gridCol w:w="1800"/>
+<w:gridCol w:w="1590"/>
+<w:gridCol w:w="1473"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr>
+<w:tc><w:tcPr><w:tcW w:w="2160"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1800"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Sepal Width</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1590"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Length</w:t></w:r></w:p>
+</w:tc>
+<w:tc><w:tcPr><w:tcW w:w="1473"/><w:tcBorders><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tcBorders><w:vAlign w:val="bottom"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">Petal.Width</w:t></w:r></w:p>
+</w:tc>
+</w:tr>
+
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.6</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">7.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">4.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.6</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.4</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.8</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.7</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.9</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.5</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">6.2</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.4</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">2.3</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tr><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.9</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">3</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">5.1</w:t></w:r></w:p>
+</w:tc><w:tc><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">1.8</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:tbl><w:tblPr><w:tblCellMar>
+                           <w:left w:w="72" w:type="dxa"/>
+                           <w:right w:w="72" w:type="dxa"/>
+                           </w:tblCellMar><w:tblW w:w="7025"/><w:tblInd w:w="1298" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr><w:tblGrid>
+<w:gridCol w:w="7025"/>
+</w:tblGrid>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 1</w:t></w:r></w:p>
+</w:tc></w:tr>
+<w:tr><w:trPr><w:trHeight w:hRule="exact" w:val="302"/></w:trPr><w:tc><w:p><w:pPr><w:jc w:val="left"/><w:spacing w:after="0"/></w:pPr><w:r><w:t xml:space="preserve">My footnote 2</w:t></w:r></w:p>
+</w:tc></w:tr>
+</w:tbl>
+<w:p><w:pPr>
+              				<w:spacing w:after="0" w:line="0" w:lineRule="none"/>
+              				<w:rPr>
+              					<w:sz w:val="0"/>
+              				</w:rPr>
+              			</w:pPr></w:p>
+
+</w:body>
+</w:document>

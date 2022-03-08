@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Example 9: RTF, PDF, and HTML • reporter</title>
+<title>Example 9: RTF, PDF, HTML, and DOCX • reporter</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="Example 9: RTF, PDF, and HTML">
+<script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="Example 9: RTF, PDF, HTML, and DOCX">
 <meta property="og:description" content="reporter">
 <meta property="og:image" content="https://reporter.r-sassy.org/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.0</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
       <a href="../articles/reporter-title_header.html">Example 8: Title Header</a>
     </li>
     <li>
-      <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, and HTML</a>
+      <a href="../articles/reporter-rtf.html">Example 9: RTF, PDF, HTML, and DOCX</a>
     </li>
     <li>
       <a href="../articles/reporter-fonts.html">Example 10: Fonts and Borders</a>
@@ -139,7 +139,7 @@
       </header><script src="reporter-rtf_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Example 9: RTF, PDF, and HTML</h1>
+      <h1 data-toc-skip>Example 9: RTF, PDF, HTML, and DOCX</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-rtf.Rmd"><code>vignettes/reporter-rtf.Rmd</code></a></small>
@@ -149,10 +149,10 @@
 
     
     
-<div id="output-to-rtf-pdf-and-html" class="section level3">
+<div id="output-to-rtf-pdf-html-and-docx" class="section level3">
 <h3 class="hasAnchor">
-<a href="#output-to-rtf-pdf-and-html" class="anchor"></a>Output to RTF, PDF, and HTML</h3>
-<p>The <strong>reporter</strong> package supports four types of output: TXT, RTF, PDF, and HTML. The package produces TXT reports by default. If you want to produce RTF, PDF, or HTML output, simply change the output type. Below is the summary table with stub example from above, the only change being that the <code>output_type</code> is now set to RTF.</p>
+<a href="#output-to-rtf-pdf-html-and-docx" class="anchor"></a>Output to RTF, PDF, HTML, and DOCX</h3>
+<p>The <strong>reporter</strong> package supports four types of output: TXT, RTF, PDF, HTML, and DOCX. The package produces TXT reports by default. If you want to produce RTF, PDF, HTML, or DOCX output, simply change the output type. Below is the summary table with stub example from above, the only change being that the <code>output_type</code> is now set to RTF.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span>
 

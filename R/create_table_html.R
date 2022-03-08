@@ -621,6 +621,24 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   cols[1] <- paste0(cols[1], "</colgroup>\n")
   ret[1] <- paste0(ret[1], "</tr>\n")
   
+  if (ts$first_row_blank == TRUE) {
+    
+    if (any(brdrs == "body"))
+      b <- get_cell_borders_html(2, 1, 3, 1, c("left", "right"))
+    else
+      b <- get_cell_borders_html(2, 1, 3, 1, brdrs)
+
+    if (b == "") {
+      ret[1] <- paste0(ret[1], "<tr><td colspan=\"", length(sz), 
+                     "\">&nbsp;</td></tr>")
+    } else {
+      ret[1] <- paste0(ret[1], "<tr><td colspan=\"", length(sz), 
+                       "\" style=\"", b, "\">&nbsp;</td></tr>")
+      
+    }
+    cnt <- cnt + 1
+  }
+  
   # Get spanning headers
   sphdrs <- get_spanning_header_html(rs, ts, pi,
                                      ifelse(is.null(exclude_top), FALSE, TRUE))
@@ -862,10 +880,14 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
           ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
                            encodeHTML(t[i, j]), "</td>")
         
-        # Count lines in cell 
-        cl <- grep("\n", t[i, j], fixed = TRUE)
-        if (length(cl) >= mxrw)
-          mxrw <- length(cl) + 1
+        vl <- t[i, j]
+        if (class(vl) != "character")
+          vl <- as.character(vl)
+        
+        # Count lines in cell - Doesn't work right
+        cl <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+        if (length(cl) > mxrw)
+          mxrw <- length(cl) 
       }
       
     }
