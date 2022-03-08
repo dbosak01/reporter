@@ -401,7 +401,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
           ftnts <- get_footnotes_docx(rs$footnotes, 
                                      spec_width, rs, 
                                      talgn, ex_brdr,
-                                     content_brdr) 
+                                     content_brdrs) 
         } else {
           
           if (wrap_flag)
