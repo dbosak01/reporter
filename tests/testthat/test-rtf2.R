@@ -172,7 +172,7 @@ test_that("rtf2-3: Three page text spec increased margins works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 3)
+  expect_equal(res$pages, 4)
 
 
 })
@@ -562,7 +562,7 @@ test_that("rtf2-16: Valign on table footnotes works as expected.", {
   res$column_widths
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 4)
+  expect_equal(res$pages, 6)
   expect_equal(length(res$column_widths[[1]]), 5)
   
   
@@ -575,11 +575,12 @@ test_that("rtf2-17: Title header on table works as expected.", {
   
   dat <- iris[1:25, ] 
   
-  tbl <- create_table(dat, width = 9) %>% 
+  tbl <- create_table(dat, width = 8.9) %>% 
     title_header("Table 1.0", "My Nice Table", 
                  right = c("Right1", 
                            "Right2", "Page [pg] of [tpg]")) %>%
-    footnotes("My footnote 1", "My footnote 2")
+    footnotes("My footnote 1", "My footnote 2") #%>%
+    #define(Petal.Length, page_wrap = TRUE)
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 10, orientation = "landscape") %>%
@@ -689,7 +690,7 @@ test_that("rtf2-20: Title Header borders work as expected.", {
   res$column_widths
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
+  expect_equal(res$pages, 2)
   expect_equal(length(res$column_widths[[1]]), 5)
   
   
@@ -1172,7 +1173,7 @@ test_that("rtf2-34: Table with break between sections works as expected.", {
   df <- data.frame(subjid, name, sex, age, arm)
   
   
-  tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+  tbl1 <- create_table(df, first_row_blank = FALSE) %>%
     define(subjid, label = "Subject ID", align = "left", width = 1) %>% 
     define(name, label = "Subject Name", width = 1) %>% 
     define(sex, label = "Sex") %>% 
@@ -1419,7 +1420,7 @@ test_that("rtf2-41: Page by with borders works as expected.", {
   res$column_widths
   
   expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 6)
+  expect_equal(res$pages, 9)
   expect_equal(length(res$column_widths[[1]]), 5)
   
   
@@ -2066,8 +2067,8 @@ test_that("user3: listings works.", {
     
     
     # Define Report
-    rpt <- create_report(fp, font = "Arial", font_size = 12, 
-                         orientation = "portrait") %>%
+    rpt <- create_report(fp, font = "Times", font_size = 8, 
+                         orientation = "landscape") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
       add_content(tbl, align = "left") %>% 
@@ -2133,7 +2134,8 @@ test_that("user4: listing in cm and times works.", {
     
     
     # Define Report
-    rpt <- create_report(fp, font = "Times", font_size = 10, units = "cm") %>%
+    rpt <- create_report(fp, font = "Arial", font_size = 10, units = "cm", 
+                         orientation = "portrait") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
       add_content(tbl, align = "left") %>% 

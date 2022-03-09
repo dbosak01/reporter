@@ -585,7 +585,7 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
     if (!is.control(nms[k])) {
       
       # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+      tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font)
       ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
 
       # Add in extra lines for labels that wrap
@@ -766,7 +766,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
     for(k in seq_along(lbls)) {
 
       # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units)
+      tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font)
       
       # Concat label
       r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
@@ -896,10 +896,14 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
         # Construct rtf
         ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
         
+        vl <- t[i, j]
+        if (class(vl) != "character")
+          vl <- as.character(vl)
+        
         # Count lines in cell 
-        cl <- grep("\\line", t[i, j], fixed = TRUE)
-        if (length(cl) >= mxrw)
-            mxrw <- length(cl) + 1
+        cl <- strsplit(vl, "\\line", fixed = TRUE)[[1]]
+        if (length(cl) > mxrw)
+            mxrw <- length(cl)
       }
       
     }

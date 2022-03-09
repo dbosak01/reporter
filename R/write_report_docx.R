@@ -601,8 +601,7 @@ page_setup_docx <- function(rs) {
   
 
   rs$gutter_width <- gtr
-  if (rs$units == "cm")
-    rs$gutter_width <- ccm(rs$gutter_width)
+
   
   # rs$page_break_docx <- paste0('<w:p>
   #                     <w:pPr>

@@ -522,10 +522,15 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
 #' width.  Lines are returned as a single rtf string separated by an rtf
 #' line ending.  
 #' @noRd
-split_string_rtf <- function(strng, width, units) {
+split_string_rtf <- function(strng, width, units, font = "Arial") {
   
   
-  res <- split_strings(strng, width, units)
+  if (tolower(font) == "courier")
+    mp <- 1.01
+  else 
+    mp <- 1.02
+  
+  res <- split_strings(strng, width, units, multiplier = mp)
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
@@ -615,7 +620,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             cell <- res$html
           
           } else if (output_type == "RTF") {
-            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units)
+            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font)
           
             cell <- res$rtf
           } else if (output_type == "PDF") {

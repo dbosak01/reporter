@@ -1107,7 +1107,7 @@ test_that("docx-user3: listings works.", {
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Arial", font_size = 12,
+    rpt <- create_report(fp, font = "Times", font_size = 10,
                          orientation = "portrait") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
@@ -1138,7 +1138,7 @@ test_that("docx-user4: listing in cm and times works.", {
     # Data Filepath
     dir_data <- file.path(data_dir, "data")
 
-    fp <- file.path(base_path, "docx/user4.rtf")
+    fp <- file.path(base_path, "docx/user4.docx")
 
     # Removing to make last page exactly equal to available rows on page.
     # In this case, any added blank rows should be skipped.
@@ -1174,7 +1174,7 @@ test_that("docx-user4: listing in cm and times works.", {
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Arial", font_size = 10,
+    rpt <- create_report(fp, font = "Courier", font_size = 10,
                          units = "cm", orientation = "landscape") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
@@ -1184,11 +1184,11 @@ test_that("docx-user4: listing in cm and times works.", {
       footnotes("My footnote")
 
     #Write out report
-    res <- write_report(rpt, output_type = "RTF")
+    res <- write_report(rpt, output_type = "DOCX")
 
     expect_equal(file.exists(fp), TRUE)
 
-    #print(res$column_widths)
+    print(res$column_widths)
 
     # pdfpth <- file.path(base_path, "user/user3.pdf")
     # write_report(rpt, pdfpth, output_type = "PDF")

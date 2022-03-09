@@ -224,7 +224,7 @@ test_that("get_page_footnotes_rtf works as expected.", {
   res2 <- get_page_footnotes_rtf(rpt2, tbl2, 6,
                                   0, 25, TRUE, "below", "center")  
   
-  expect_equal(res2$lines, 17)
+  expect_equal(res2$lines, 13)
   
   
   tbl3 <- create_table(iris)  %>% 
@@ -239,7 +239,7 @@ test_that("get_page_footnotes_rtf works as expected.", {
   res3 <- get_page_footnotes_rtf(rpt3, tbl3, 6,
                                   0, 25, TRUE, "below", "center")  
   
-  expect_equal(res3$lines, 19)
+  expect_equal(res3$lines, 15)
   
   tbl4 <- create_table(iris)  %>% 
     footnotes("Here is a footnote", valign = "top")

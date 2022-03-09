@@ -3,7 +3,7 @@
 * Added DOCX output type.
 * Fixed bug on RTF and HTML which was preventing multiple contents 
 from being added to the same report.
-* Fixed bug calculating cell wrapping on HTML.
+* Fixed bug calculating cell wrapping on RTF and HTML.
 * Fixed bug on HTML preventing _first_row_blank_ parameter from working properly.
 
 # reporter 1.2.9

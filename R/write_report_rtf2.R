@@ -388,29 +388,38 @@ page_setup_rtf <- function(rs) {
   # Row height and line height were defined independently in case
   # they are different.  Right now, appear to be the same.
   if (rs$font_size == 8) {
-    rh <- 185 #round(.11 * 1440)
-    lh <- 185 #round(.1 * 1440) 
+    rh <- 228 #round(.11 * 1440)
+    lh <- 228 #round(.1 * 1440) 
     #pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
     pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs16"
-    gtr <- .1 
+    if (tolower(rs$font) == "courier")
+      gtr <- .15
+    else
+      gtr <- .13 
     cw <- .1
     cp <- 40
    # sm <- "\\sl-180\\slmult0"
   } else if (rs$font_size == 9) {
-    rh <- 218 #round(.165 * 1440) # 225
-    lh <- 218 #round(.165 * 1440)  
+    rh <- 244 #round(.165 * 1440) # 225
+    lh <- 244 #round(.165 * 1440)  
     #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
     pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs18"
-    gtr <- .11
+    if (tolower(rs$font) == "courier")
+      gtr <- .16
+    else
+      gtr <- .14
     cw <- .11
     cp <- 40
     #sm <- "\\sl-200\\slmult0"
   } else if (rs$font_size == 10) {
-    rh <- 228 #round(.165 * 1440) # 225
-    lh <- 228 #round(.165 * 1440)  
+    rh <- 250 #round(.165 * 1440) # 225
+    lh <- 250 #round(.165 * 1440)  
     #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
     pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
-    gtr <- .11
+    if (tolower(rs$font) == "courier")
+      gtr <- .17
+    else
+      gtr <- .15
     cw <- .11
     cp <- 40
     #sm <- "\\sl-225\\slmult0"
@@ -419,7 +428,10 @@ page_setup_rtf <- function(rs) {
     lh <- 250 #round(.165 * 1440)  
     #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
     pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs22"
-    gtr <- .11
+    if (tolower(rs$font) == "courier")
+      gtr <- .18
+    else
+      gtr <- .16
     cw <- .12
     cp <- 40
     #sm <- "\\sl-250\\slmult0"
@@ -427,7 +439,10 @@ page_setup_rtf <- function(rs) {
     rh <- 275 #round(.2 * 1440)
     lh <- 275 #round(.1875 * 1440) #270
     pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
-    gtr <- .11
+    if (tolower(rs$font) == "courier")
+      gtr <- .19
+    else 
+      gtr <- .17
     cw <- .12
     cp <- 40
     #sm <- "\\sl-275\\slmult0"
@@ -532,11 +547,11 @@ page_setup_rtf <- function(rs) {
 get_spacing_multiplier <- function(font_size) {
   
   if (font_size == 8) {
-    sm <- "\\sl-180\\slmult0" 
+    sm <- "\\sl-228\\slmult0" 
   } else if (font_size == 9) {
-    sm <- "\\sl-200\\slmult0" 
+    sm <- "\\sl-244\\slmult0" 
   } else if (font_size == 10) {
-    sm <- "\\sl-225\\slmult0"
+    sm <- "\\sl-250\\slmult0"
   } else if (font_size == 11) {
     sm <- "\\sl-250\\slmult0" 
   } else if (font_size == 12) {
