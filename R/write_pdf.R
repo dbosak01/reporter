@@ -1298,7 +1298,7 @@ pdf_info <- function(id,
 vraw <- Vectorize(function(line) {
   
   
- if (class(line) == "raw") {
+ if (any(class(line) == "raw")) {
    ret <- line
  } else {
    

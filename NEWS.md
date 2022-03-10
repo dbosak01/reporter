@@ -1,4 +1,4 @@
-# reporter 1.3.0
+# reporter 1.3.1
 
 * Added DOCX output type.
 * Fixed bug on RTF and HTML which was preventing multiple contents 
