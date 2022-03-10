@@ -75,7 +75,6 @@ test_that("docx1: Basic text with title header works as expected.", {
   
 })
 
-# May want to push table over out of the margin
 test_that("docx2: Basic table works as expected.", {
 
 
@@ -110,7 +109,7 @@ test_that("docx2: Basic table works as expected.", {
 
 })
 
-# Title header is a mess
+
 test_that("docx3: Basic table with title header works as expected.", {
 
 
@@ -303,7 +302,9 @@ test_that("docx8: Page by works as expected.", {
 # Good for testing.  Check bottom footnote positioning.
 test_that("docx9: Page by on report works as expected.", {
 
+  if (dev == TRUE) {
 
+  
   fp <- file.path(base_path, "docx/test9.docx")
 
   dat <- iris
@@ -328,6 +329,9 @@ test_that("docx9: Page by on report works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 9)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 
 })
@@ -377,7 +381,9 @@ test_that("docx10: Title Header and page header/footer wrapping work as expected
 
 test_that("docx11: Basic plot with titles on report works as expected.", {
 
+  if (dev == TRUE) {
 
+  
   library(ggplot2)
 
   fp <- file.path(base_path, "docx/test11.docx")
@@ -402,12 +408,18 @@ test_that("docx11: Basic plot with titles on report works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 })
 
 
 test_that("docx12: Text with titles on report works as expected.", {
 
+  if (dev == TRUE) {
+
+  
   fp <- file.path(base_path, "docx/test12")
 
   txt <- create_text(cnt, width = 6, borders = "none", align = "center")
@@ -425,6 +437,9 @@ test_that("docx12: Text with titles on report works as expected.", {
 
   expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 1)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 })
 
@@ -526,6 +541,8 @@ test_that("docx14: Plot with page by on plot works as expected.", {
 
 test_that("docx15: Title bold and font size works as expected.", {
 
+  if (dev == TRUE) {
+
 
   fp <- file.path(base_path, "docx/test15.docx")
 
@@ -555,11 +572,16 @@ test_that("docx15: Title bold and font size works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 })
 
 
 test_that("docx16: 9 pt font inches works as expected.", {
+
+  if (dev == TRUE) {
 
 
   fp <- file.path(base_path, "docx/test16.docx")
@@ -577,11 +599,16 @@ test_that("docx16: 9 pt font inches works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 
 })
 
 test_that("docx17: 9 pt font cm works as expected.", {
+
+  if (dev == TRUE) {
 
 
   fp <- file.path(base_path, "docx/test17.docx")
@@ -599,13 +626,18 @@ test_that("docx17: 9 pt font cm works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 
 })
 
 test_that("docx18: 11 pt font inches works as expected.", {
 
+  if (dev == TRUE) {
 
+  
   fp <- file.path(base_path, "docx/test18.docx")
   
   tbl <- create_table(iris) %>% 
@@ -625,11 +657,16 @@ test_that("docx18: 11 pt font inches works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 
 })
 
 test_that("docx19: 11 pt font cm works as expected.", {
+
+  if (dev == TRUE) {
 
 
   fp <- file.path(base_path, "docx/test19.docx")
@@ -647,6 +684,9 @@ test_that("docx19: 11 pt font cm works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 
 })
@@ -654,6 +694,9 @@ test_that("docx19: 11 pt font cm works as expected.", {
 
 test_that("docx20:  Image file works as expected.", {
 
+  if (dev == TRUE) {
+
+  
   library(ggplot2)
 
   fp <- file.path(base_path, "docx/test20.docx")
@@ -683,6 +726,9 @@ test_that("docx20:  Image file works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
 
 
 })
@@ -690,6 +736,8 @@ test_that("docx20:  Image file works as expected.", {
 
 test_that("docx21: Check content blanks.", {
   
+  if (dev == TRUE) {
+
 
   library(ggplot2)
   
@@ -738,10 +786,15 @@ test_that("docx21: Check content blanks.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   
+  } else 
+    expect_equal(TRUE, TRUE)
+  
 })
 
 test_that("docx22: Check titles and footnotes on report.", {
   
+  if (dev == TRUE) {
+
   
   library(ggplot2)
   
@@ -778,6 +831,36 @@ test_that("docx22: Check titles and footnotes on report.", {
   
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 3)
+  
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+})
+
+
+test_that("docx23: Preview works as expected.", {
+  
+  
+  fp <- file.path(base_path, "docx/test23.docx")
+  
+  dat <- iris
+  
+  tbl <- create_table(dat, borders = "none") %>%
+    titles("Table 1.0", "My Nice Irises", "Another Title") %>%
+    footnotes("My footnote 1", "My footnote 2")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
+                       font_size = 12, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1")) %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt, preview = 2)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 2)
+  
   
 })
 
