@@ -5,6 +5,8 @@
 from being added to the same report.
 * Fixed bug calculating cell wrapping on RTF and HTML.
 * Fixed bug on HTML preventing _first_row_blank_ parameter from working properly.
+* Fixed bug on spanning header underline on RTF and HTML.
+* Improved column width and page size estimates on RTF and HTML.
 
 # reporter 1.2.9
 
