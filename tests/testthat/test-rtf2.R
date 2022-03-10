@@ -1638,7 +1638,7 @@ test_that("rtf2-50: Spanning headers borders work as expected.", {
   
   dat <- mtcars[1:15, ]
   
-  tbl <- create_table(dat, borders = c("body")) %>%
+  tbl <- create_table(dat, borders = c("outside")) %>%
     spanning_header(cyl, disp, "Span 1", label_align = "left") %>% 
     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%

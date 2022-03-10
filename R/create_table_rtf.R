@@ -737,8 +737,12 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
         
         if (vl == "")
           bb <- b
-        else 
-          bb <- paste0(b, "\\clbrdrb\\brdrs")
+        else {
+          
+          bb <- b #paste0(b, "\\clbrdrb\\brdrs")
+          
+          
+        }
         
       } else {
         
@@ -747,7 +751,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
                                       length(sz), brdrs, 
                                       flag = "")
         } else 
-          bb <- paste0(b, "\\clbrdrb\\brdrs")
+          bb <- b  #paste0(b, "\\clbrdrb\\brdrs")
         
       }
       
