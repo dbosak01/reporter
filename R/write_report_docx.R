@@ -22,15 +22,20 @@ write_report_docx <- function(rs) {
     file.remove(orig_path)
   }
 
+  print("Before page setup")
   
   # Establish content and body sizes
   rs <- page_setup_docx(rs)
+  
+  print("Before get docx document")
   
   # Document header is mostly independent of content
   hdr <- get_docx_document(rs) 
   
   # Put content in a new variable
   ls <- rs$content
+  
+  print("Before paginate content")
   
   # Get content and break it into pages
   # Needs to return a list of pages so preview can work
@@ -46,6 +51,7 @@ write_report_docx <- function(rs) {
   #     bdy[[1]]$pages <- bdy[[1]]$pages[seq(1, rs$preview)]
   # }
 
+  print("Before write content")
   
   # Write content to file system
   # Later we can just return the stream
