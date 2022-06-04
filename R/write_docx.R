@@ -21,27 +21,31 @@ write_docx <- function(src, pth) {
   
   if (file.exists(src)) {
     
+    npth <- suppressWarnings(normalizePath(pth))
     
-    if (file.exists(pth))
-      file.remove(pth)
+    if (file.exists(npth))
+      file.remove(npth)
     
-    if (!file.exists(dirname(pth)))
-      dir.create(dirname(pth))
+    if (!file.exists(dirname(npth)))
+      dir.create(dirname(npth))
     
     
     fls <- list.files(src, recursive = TRUE, all.files = TRUE)
     
+    # print("Just before withr")
+    # print(src)
+    # print(npth)
     # 
     # tmp <- getwd()
     # print(tmp)
     withr::with_dir(src,
    # setwd(src)
-    zip::zip(pth, fls, mode = "mirror"))
+    zip::zip(npth, fls, mode = "mirror"))
     # setwd(src)
     # utils::zip(pth, fls)
     
   #  setwd(tmp)
-    
+    # print("Just after zip")
   
     
   } else {

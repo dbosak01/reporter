@@ -1271,7 +1271,7 @@ test_that("docx-user4: listing in cm and times works.", {
 
     expect_equal(file.exists(fp), TRUE)
 
-    print(res$column_widths)
+    #print(res$column_widths)
 
     # pdfpth <- file.path(base_path, "user/user3.pdf")
     # write_report(rpt, pdfpth, output_type = "PDF")
