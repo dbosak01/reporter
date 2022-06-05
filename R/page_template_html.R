@@ -214,6 +214,10 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
   # else if (talgn %in% c("center", "centre"))
   #   ta <- "align=\"center\" "
   
+  sty <- paste0(get_style_html(rs, "title_font_color"),
+                get_style_html(rs, "title_background"),
+                get_style_html(rs, "title_font_bold"))
+  
   u <- rs$units
   if (rs$units == "inches")
     u <- "in"
@@ -248,7 +252,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
       
       ret[length(ret) + 1] <- paste0("<table ",
                                      "style=\"width:", w, u, ";", 
-                                     algn, 
+                                     algn, sty,
                                      "\">\n")
       
       for (i in seq_along(ttls$titles)) {

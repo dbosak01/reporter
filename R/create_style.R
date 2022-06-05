@@ -2,13 +2,13 @@
 # Style class -------------------------------------------------------------
 
 #' @noRd
-#' @export
 create_style <- function(font_name = NULL,
                          font_size = NULL,
                          text_color = NULL,
                          background_color = NULL,
                          title_font_bold = NULL,
                          title_font_color = NULL,
+                         title_background = NULL,
                          border_color = NULL,
                          table_header_background = NULL,
                          table_header_font_bold = NULL,
@@ -29,6 +29,7 @@ create_style <- function(font_name = NULL,
   ret$background_color <- background_color
   ret$title_font_bold <- title_font_bold
   ret$title_font_color <- title_font_color
+  ret$title_background <- title_background
   ret$border_color <- border_color
   ret$table_header_background <- table_header_background
   ret$table_header_font_bold <- table_header_font_bold
@@ -46,7 +47,6 @@ create_style <- function(font_name = NULL,
 }
 
 #' @noRd
-#' @export
 add_style <- function(rpt, style = NULL, theme = NULL) {
   
   if (is.null(rpt)) {
@@ -109,7 +109,7 @@ theme_lookup <- function(theme_name) {
   if (theme_name == "basic1") {
     
     ret <- create_style(font_name = "Arial",
-                        font_size = 11,
+                        font_size = 10,
                         text_color = "DarkGrey",
                         background_color = "#FAFBFE",
                         title_font_color = "MidnightBlue",
@@ -166,6 +166,7 @@ get_style <- function(rs, style_name) {
   return(ret)
 }
 
+#' @noRd
 get_style_html <- function(rs, style_name, default = NULL) {
   
   ret <- ""
@@ -179,6 +180,20 @@ get_style_html <- function(rs, style_name, default = NULL) {
   
 
   if (val != "") {
+    
+    if (style_name == "title_font_color")
+      ret <- paste0("color: ", val, ";")
+    
+    if (style_name == "title_background")
+      ret <- paste0("background-color: ", val, ";")
+    
+    if (style_name == "title_font_bold") {
+      if (val == TRUE)
+        ret <- paste0("font-weight: bold;")
+      else 
+        ret <- paste0("font-weight: normal;")
+      
+    }
     
     if (style_name == "background_color")
       ret <- paste0("background-color: ", val, ";")

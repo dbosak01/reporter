@@ -49,9 +49,9 @@ test_that("style1: theme works with html.", {
   attr(dat[[2]], "justify") <- "center"
   
   tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
-    titles("Table 1.0", "My Nice Table", borders = c("all"), 
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
            width = "content") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "all", 
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
               align = "left", width = "content") %>% 
     define(wt, width = 1, label = "Weight", align = "center", 
            label_align = "right")
