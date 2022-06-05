@@ -16,9 +16,9 @@ create_style <- function(font_name = NULL,
                          table_body_background = NULL,
                          table_body_background_even = NULL,
                          table_body_background_odd = NULL,
-                         table_label_column_background = NULL,
-                         table_label_column_font_color = NULL,
-                         table_label_column_font_bold = NULL) {
+                         table_stub_background = NULL,
+                         table_stub_font_color = NULL,
+                         table_stub_font_bold = NULL) {
 
 
   ret <- structure(list(), class = c("style_spec", "list"))
@@ -37,9 +37,9 @@ create_style <- function(font_name = NULL,
   ret$table_body_background <- table_body_background
   ret$table_body_background_even <- table_body_background_even 
   ret$table_body_background_odd <- table_body_background_odd
-  ret$table_label_column_background <- table_label_column_background
-  ret$table_label_column_font_color <- table_label_column_font_color
-  ret$table_label_column_font_bold <- table_label_column_font_bold
+  ret$table_stub_background <- table_stub_background
+  ret$table_stub_font_color <- table_stub_font_color
+  ret$table_stub_font_bold <- table_stub_font_bold
   
   
   return(ret)
@@ -119,9 +119,9 @@ theme_lookup <- function(theme_name) {
                         table_header_font_bold = TRUE,
                         table_header_font_color = "MidnightBlue",
                         table_body_background = "White",
-                        table_label_column_background = "LightSteelBlue",
-                        table_label_column_font_bold = TRUE,
-                        table_label_column_font_color = "MidnightBlue")
+                        table_stub_background = "LightSteelBlue",
+                        table_stub_font_bold = TRUE,
+                        table_stub_font_color = "MidnightBlue")
                         
     
   } else {
@@ -213,6 +213,21 @@ get_style_html <- function(rs, style_name, default = NULL) {
     
     if (style_name == "table_header_font_color")
       ret <- paste0("color: ", val, ";")
+    
+    if (style_name == "table_stub_font_color")
+      ret <- paste0("color: ", val, ";")
+    
+    if (style_name == "table_stub_background")
+      ret <- paste0("background-color: ", val, ";")
+    
+    if (style_name == "table_stub_font_bold") {
+      if (val == TRUE)
+        ret <- paste0("font-weight: bold;")
+      else 
+        ret <- paste0("font-weight: normal;")
+      
+    }
+    
         
   }
   
