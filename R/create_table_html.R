@@ -802,12 +802,21 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   ca <- c()
   for (k in seq_along(algns)) {
     if (!is.control(nms[k])) {
+      if (is.na(nms[k]) | is.null(nms[k])) {
+        tcls <- "tc"
+      } else {
+        if (nms[k] == "stub")
+          tcls <- "ts"
+        else 
+          tcls <- "tc"
+      }
+      
       if (algns[k] == "left")
-        ca[k] <- "class=\"tc tdl\""
+        ca[k] <- paste0("class=\"", tcls, " tdl\"")
       else if (algns[k] == "right")
-        ca[k] <- "class=\"tc tdr\""
+        ca[k] <- paste0("class=\"", tcls, " tdr\"")
       else if (algns[k] %in% c("center", "centre"))
-        ca[k] <- "class=\"tc tdc\""
+        ca[k] <- paste0("class=\"", tcls, " tdc\"")
     }
   }
   

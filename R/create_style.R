@@ -1,7 +1,7 @@
 
 # Style class -------------------------------------------------------------
 
-#' @noRd
+
 create_style <- function(font_name = NULL,
                          font_size = NULL,
                          text_color = NULL,
@@ -46,7 +46,7 @@ create_style <- function(font_name = NULL,
 
 }
 
-#' @noRd
+
 add_style <- function(rpt, style = NULL, theme = NULL) {
   
   if (is.null(rpt)) {
@@ -119,7 +119,7 @@ theme_lookup <- function(theme_name) {
                         table_header_font_bold = TRUE,
                         table_header_font_color = "MidnightBlue",
                         table_body_background = "White",
-                        table_stub_background = "LightSteelBlue",
+                        table_stub_background = "#EDF2F9",
                         table_stub_font_bold = TRUE,
                         table_stub_font_color = "MidnightBlue")
                         

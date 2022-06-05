@@ -44,7 +44,7 @@ test_that("style1: theme works with html.", {
   fp <- file.path(base_path, "html/style1.html")
   # print(fp)
   
-  dat <- mtcars[1:15, ]
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
@@ -55,7 +55,7 @@ test_that("style1: theme works with html.", {
     footnotes("My footnote 1", "My footnote 2", borders = "none", 
               align = "left", width = "content") %>% 
     define(wt, width = 1, label = "Weight", align = "center", 
-           label_align = "right")
+           label_align = "right") 
   
   rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
