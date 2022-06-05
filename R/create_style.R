@@ -14,8 +14,8 @@ create_style <- function(font_name = NULL,
                          table_header_font_bold = NULL,
                          table_header_font_color = NULL,
                          table_body_background = NULL,
-                         table_body_background_even = NULL,
-                         table_body_background_odd = NULL,
+                         # table_body_background_even = NULL,
+                         # table_body_background_odd = NULL,
                          table_stub_background = NULL,
                          table_stub_font_color = NULL,
                          table_stub_font_bold = NULL) {
@@ -35,8 +35,8 @@ create_style <- function(font_name = NULL,
   ret$table_header_font_bold <- table_header_font_bold
   ret$table_header_font_color <- table_header_font_color
   ret$table_body_background <- table_body_background
-  ret$table_body_background_even <- table_body_background_even 
-  ret$table_body_background_odd <- table_body_background_odd
+  # ret$table_body_background_even <- table_body_background_even 
+  # ret$table_body_background_odd <- table_body_background_odd
   ret$table_stub_background <- table_stub_background
   ret$table_stub_font_color <- table_stub_font_color
   ret$table_stub_font_bold <- table_stub_font_bold
