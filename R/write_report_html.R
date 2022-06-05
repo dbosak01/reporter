@@ -82,6 +82,8 @@ get_html_document <- function(rs) {
   # Set up vectors
   ret <- c()
   
+  sty <- rs$style
+  
   conv <- rs$twip_conversion
   
   fnt <- rs$font
@@ -108,13 +110,21 @@ get_html_document <- function(rs) {
                                  round(rs$margin_bottom/2, 3), u, ";\n",
                                  "margin-left: ", rs$margin_left, u, ";\n",
                                  "margin-right: ", rs$margin_right, u, ";\n",
+                                 get_style_html(rs, "background_color"),
                                  "}")
-  ret[length(ret) + 1] <- paste0(".thdr {font-weight: normal;", 
+  ret[length(ret) + 1] <- paste0(".thdr {", 
                                   "border-bottom: thin solid;", 
+                                  get_style_html(rs, "table_header_background"),
+                                  get_style_html(rs, "table_header_font_color"),
+                                  get_style_html(rs, "table_header_font_bold", FALSE),
                                   "}")
   ret[length(ret) + 1] <- paste0(".tdc {text-align:center;}")
   ret[length(ret) + 1] <- paste0(".tdl {text-align:left;}")
   ret[length(ret) + 1] <- paste0(".tdr {text-align:right;}")
+  ret[length(ret) + 1] <- paste0(".tc {", 
+                                 get_style_html(rs, "table_body_background"), 
+                                 "}")
+  
   ret[length(ret) + 1] <- paste0("table {",
                                  "border-spacing: 0;",
                                  "border-collapse: collapse;",

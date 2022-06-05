@@ -1,3 +1,7 @@
+# reporter 1.3.2
+
+* Fixed bug on DOCX that was causing R Studio to crash when using a relative path.
+
 # reporter 1.3.1
 
 * Added DOCX output type.
