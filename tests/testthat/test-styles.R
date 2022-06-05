@@ -45,9 +45,9 @@ test_that("style1: theme works with html.", {
   # print(fp)
   
   dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
-  attr(dat[[2]], "label") <- "Cylin."
-  attr(dat[[2]], "width") <- 1
-  attr(dat[[2]], "justify") <- "center"
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
   
   tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
     titles("Table 1.0", "My Nice Table", borders = c("none"), 
@@ -55,7 +55,8 @@ test_that("style1: theme works with html.", {
     footnotes("My footnote 1", "My footnote 2", borders = "none", 
               align = "left", width = "content") %>% 
     define(wt, width = 1, label = "Weight", align = "center", 
-           label_align = "right") 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
   
   rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%

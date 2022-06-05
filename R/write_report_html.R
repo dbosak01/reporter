@@ -118,6 +118,11 @@ get_html_document <- function(rs) {
                                   get_style_html(rs, "table_header_font_color"),
                                   get_style_html(rs, "table_header_font_bold", FALSE),
                                   "}")
+  ret[length(ret) + 1] <- paste0(".shdr {", 
+                                 get_style_html(rs, "table_header_background"),
+                                 get_style_html(rs, "table_header_font_color"),
+                                 get_style_html(rs, "table_header_font_bold", FALSE),
+                                 "}")
   ret[length(ret) + 1] <- paste0(".tdc {text-align:center;}")
   ret[length(ret) + 1] <- paste0(".tdl {text-align:left;}")
   ret[length(ret) + 1] <- paste0(".tdr {text-align:right;}")

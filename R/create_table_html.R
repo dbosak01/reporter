@@ -735,7 +735,7 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       
       
-      r <- paste0(r, "<td colspan=\"", cs[k], 
+      r <- paste0(r, "<td class=\"shdr\" colspan=\"", cs[k], 
                   "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
                   encodeHTML(vl), "</td>\n")
       # print(lbls[k])
