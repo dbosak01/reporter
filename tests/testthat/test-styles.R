@@ -1,10 +1,11 @@
 
 context("Style Tests")
 
-
 base_path <- "c:/packages/reporter/tests/testthat"
 data_dir <- base_path
 
+base_path <- tempdir()
+data_dir <- "."
 
 test_that("style0: Style functions work as expected.", {
   
