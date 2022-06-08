@@ -727,31 +727,31 @@ get_rh <- function(font, font_size) {
   } else if (font_size == 10) {
     
     if (tolower(font) == "times")
-      rh <- 0.175  
+      rh <- 0.178  
     else if (tolower(font) == "arial")
-      rh <- 0.175 #0.182  # 0.1585366
+      rh <- 0.178 #0.182  # 0.1585366
     else
       rh <- 0.175 #0.182  # 0.1585366
     
   } else if (font_size == 11) {
     
     if (tolower(font) == "times")
-      rh <- 0.19
+      rh <- 0.195
     else if (tolower(font) == "arial")
-      rh <- 0.19 # 0.168
+      rh <- 0.195 # 0.168
     else 
-      rh <- 0.19 # 0.168
+      rh <- 0.192 # 0.168
 
     
   } else if (font_size == 12) {
     
     # inches 
     if (tolower(font) == "times")
-      rh <- 0.21  # 1911765 
+      rh <- 0.212  # 1911765 
     else if (tolower(font) == "arial")
-      rh <- 0.21  # 1911765 
+      rh <- 0.212  # 1911765 
     else 
-      rh <- 0.205  # 1911765 
+      rh <- 0.212  # 1911765 
 
   } else if (font_size == 14) {
     

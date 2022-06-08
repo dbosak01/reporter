@@ -1184,13 +1184,13 @@ test_that("docx-user3: listings works.", {
     #print(widths(data_demo))
     names(data_demo)
     # Define table
-    tbl <- create_table(data_demo, borders = "all") %>%
+    tbl <- create_table(data_demo, borders = "none") %>%
       define(USUBJID, id_var = TRUE) #%>%
       #define(ETHNIC, width = 1)
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Times", font_size = 10,
+    rpt <- create_report(fp, font = "Arial", font_size = 10,
                          orientation = "portrait") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
@@ -1257,7 +1257,7 @@ test_that("docx-user4: listing in cm and times works.", {
 
 
     # Define Report
-    rpt <- create_report(fp, font = "Courier", font_size = 10,
+    rpt <- create_report(fp, font = "Times", font_size = 10,
                          units = "cm", orientation = "landscape") %>%
       titles("Listing 1.0",
              "Demographics Dataset") %>%
@@ -1332,4 +1332,48 @@ test_that("docx-user5: Portrait in 12pt Arial works as expected.", {
 
 })
 
+
+test_that("docx-user6: Check wrapping.", {
+  
+  if (dev == TRUE) {
+    
+    dir_data <- file.path(data_dir, "data")
+    
+    fp <- file.path(base_path, "docx/user6.docx")
+    
+    
+    # Load Data
+    data_demo   <- file.path(dir_data, "dm.csv") %>%
+      read.csv()
+    
+    
+    dt <- data_demo[ , c("USUBJID", "BRTHDTC", "AGE", "SEX", "RACE", "ARM")]
+    
+    attr(dt$USUBJID, "label") <- "Universal Subject ID"
+    attr(dt$BRTHDTC, "label") <- "Subject Birth Date"
+    attr(dt$AGE, "label") <- "Subject Age in Years"
+    attr(dt$SEX, "label") <- "Subject Biological Sex at Birth"
+    attr(dt$RACE, "label") <- "Subject Race Category"
+    attr(dt$ARM, "label") <- "Treatment Group"
+    
+
+    # Create table
+    tbl <- create_table(dt)
+    
+    # Create report
+    rpt <- create_report(fp, orientation = "portrait", font_size = 12,
+                         output_type = "DOCX", font = "Times") %>% 
+      titles("Our first SASSY report", bold = TRUE) %>% 
+      add_content(tbl)
+    
+    # write out the report
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+  } else
+    expect_equal(TRUE, TRUE)
+  
+})
 
