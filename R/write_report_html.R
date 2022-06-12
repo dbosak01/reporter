@@ -134,6 +134,9 @@ get_html_document <- function(rs) {
                                  get_style_html(rs, "table_stub_font_bold"),
                                  get_style_html(rs, "table_stub_font_color"),
                                  "}")
+  ret[length(ret) + 1] <- paste0(".tbstr {", 
+                                 get_style_html(rs, "table_body_stripe"),
+                                 "}")
   
   ret[length(ret) + 1] <- paste0("table {",
                                  "border-spacing: 0;",

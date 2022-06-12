@@ -375,6 +375,10 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
   if (rs$units == "inches")
     u <- "in"
   
+  sty <- paste0(get_style_html(rs, "footnote_font_color"),
+                get_style_html(rs, "footnote_background"),
+                get_style_html(rs, "footnote_font_bold"))
+  
   
   if (length(ftnlst) > 0) {
 
@@ -405,7 +409,7 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
       par(family = get_font_family(rs$font), ps = rs$font_size)
       ret[length(ret) + 1] <- paste0("<table ",
                                      "style=\"width:", w, u, ";",
-                                     algn,
+                                     algn, sty,
                                      "\">\n")
 
       for (i in seq_along(ftnts$footnotes)) {

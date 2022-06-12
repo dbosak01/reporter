@@ -9,13 +9,15 @@ create_style <- function(font_name = NULL,
                          title_font_bold = NULL,
                          title_font_color = NULL,
                          title_background = NULL,
+                         footnote_font_bold = NULL,
+                         footnote_font_color = NULL,
+                         footnote_background = NULL,
                          border_color = NULL,
                          table_header_background = NULL,
                          table_header_font_bold = NULL,
                          table_header_font_color = NULL,
                          table_body_background = NULL,
-                         # table_body_background_even = NULL,
-                         # table_body_background_odd = NULL,
+                         table_body_stripe = NULL,
                          table_stub_background = NULL,
                          table_stub_font_color = NULL,
                          table_stub_font_bold = NULL) {
@@ -30,13 +32,15 @@ create_style <- function(font_name = NULL,
   ret$title_font_bold <- title_font_bold
   ret$title_font_color <- title_font_color
   ret$title_background <- title_background
+  ret$footnote_font_bold <- footnote_font_bold
+  ret$footnote_font_color <- footnote_font_color
+  ret$footnote_background <- footnote_background
   ret$border_color <- border_color
   ret$table_header_background <- table_header_background
   ret$table_header_font_bold <- table_header_font_bold
   ret$table_header_font_color <- table_header_font_color
   ret$table_body_background <- table_body_background
-  # ret$table_body_background_even <- table_body_background_even 
-  # ret$table_body_background_odd <- table_body_background_odd
+  ret$table_body_stripe <- table_body_stripe
   ret$table_stub_background <- table_stub_background
   ret$table_stub_font_color <- table_stub_font_color
   ret$table_stub_font_bold <- table_stub_font_bold
@@ -195,10 +199,27 @@ get_style_html <- function(rs, style_name, default = NULL) {
       
     }
     
+    if (style_name == "footnote_font_color")
+      ret <- paste0("color: ", val, ";")
+    
+    if (style_name == "footnote_background")
+      ret <- paste0("background-color: ", val, ";")
+    
+    if (style_name == "footnote_font_bold") {
+      if (val == TRUE)
+        ret <- paste0("font-weight: bold;")
+      else 
+        ret <- paste0("font-weight: normal;")
+      
+    }
+    
     if (style_name == "background_color")
       ret <- paste0("background-color: ", val, ";")
     
     if (style_name == "table_body_background")
+      ret <- paste0("background-color: ", val, ";")
+    
+    if (style_name == "table_body_stripe")
       ret <- paste0("background-color: ", val, ";")
     
     if (style_name == "table_header_background") 

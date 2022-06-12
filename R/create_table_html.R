@@ -800,6 +800,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
 
   # Cell alignment
   ca <- c()
+  castr <- c()
   for (k in seq_along(algns)) {
     if (!is.control(nms[k])) {
       if (is.na(nms[k]) | is.null(nms[k])) {
@@ -817,6 +818,14 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
         ca[k] <- paste0("class=\"", tcls, " tdr\"")
       else if (algns[k] %in% c("center", "centre"))
         ca[k] <- paste0("class=\"", tcls, " tdc\"")
+      
+      
+      if (algns[k] == "left")
+        castr[k] <- paste0("class=\"", tcls, " tdl tbstr\"")
+      else if (algns[k] == "right")
+        castr[k] <- paste0("class=\"", tcls, " tdr tbstr\"")
+      else if (algns[k] %in% c("center", "centre"))
+        castr[k] <- paste0("class=\"", tcls, " tdc tbstr\"")
     }
   }
   
@@ -845,12 +854,23 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
                                    border_color = get_style(rs, "border_color"))
         
         # Construct html
-        if (b == "")
-          ret[i] <- paste0(ret[i], "<td ", ca[j], ">", 
-                           encodeHTML(t[i, j]), "</td>")
-        else 
-          ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
-                           encodeHTML(t[i, j]), "</td>")
+        if (b == "") {
+          if (i %% 2 == 1 | nms[j] == "stub") {
+            ret[i] <- paste0(ret[i], "<td ", ca[j], ">", 
+                             encodeHTML(t[i, j]), "</td>")
+          } else {
+            ret[i] <- paste0(ret[i], "<td ", castr[j], ">", 
+                             encodeHTML(t[i, j]), "</td>")
+          }
+        } else { 
+          if (i %% 2 == 1 | nms[j] == "stub") {
+            ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
+                             encodeHTML(t[i, j]), "</td>")
+          } else {
+            ret[i] <- paste0(ret[i], "<td ", castr[j], " style=\"", b, "\">", 
+                             encodeHTML(t[i, j]), "</td>")
+          }
+        }
         
         vl <- t[i, j]
         if (class(vl) != "character")

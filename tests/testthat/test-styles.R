@@ -82,12 +82,22 @@ test_that("style2: add_style() works with html.", {
   fp <- file.path(base_path, "html/style2.html")
   # print(fp)
   
-  dat <- mtcars[1:15, ]
+  dat <- data.frame(stub = rownames(mtcars[1:15, ]), mtcars[1:15, ])
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
   
-  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+  sty <- create_style(font_name = "Arial", font_size = 12, text_color = "blue",
+                      background_color = "pink", title_font_bold = TRUE,
+                      title_font_color = "orange", title_background = "brown",
+                      border_color = "grey", table_body_background = "yellow",
+                      table_body_stripe = "blue", table_stub_background = "purple",
+                      table_stub_font_bold = TRUE, table_stub_font_color = "green", 
+                      table_header_background = "green", table_header_font_bold = TRUE,
+                      table_header_font_color = "orange", footnote_font_bold = TRUE,
+                      footnote_font_color = "orange", footnote_background = "brown")
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = FALSE) %>%
     titles("Table 1.0", "My Nice Table", borders = c("all"), 
            width = "content") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "all", 
@@ -100,7 +110,8 @@ test_that("style2: add_style() works with html.", {
     page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
                 blank_row = "below") %>% 
     add_content(tbl, align = "center")  %>% 
-    page_footer("Left1", "Center1", "Right1")
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(sty)
   
   res <- write_report(rpt)
   
