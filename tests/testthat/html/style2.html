@@ -12,14 +12,15 @@ margin-top: 1in;
 margin-bottom: 0.5in;
 margin-left: 1in;
 margin-right: 1in;
-background-color: pink;}
-.thdr {border-bottom: thin solid;background-color: green;color: orange;font-weight: bold;}
-.shdr {background-color: green;color: orange;font-weight: bold;}
+background-color: pink;color: blue;}
+.thdr {border-bottom: thin solid;background-color: green;color: brown;font-weight: bold;}
+.shdr {background-color: green;color: brown;font-weight: bold;}
 .tdc {text-align:center;}
 .tdl {text-align:left;}
 .tdr {text-align:right;}
 .tc {background-color: yellow;}
 .ts {background-color: purple;font-weight: bold;color: green;}
+.tbs {color: red;}
 .tbstr {background-color: blue;}
 table {border-spacing: 0;border-collapse: collapse;}
 td {padding:0px 2px 0px 2px;}
@@ -43,7 +44,7 @@ td {padding:0px 2px 0px 2px;}
 <tr><td style="border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">My&nbsp;Nice&nbsp;Table</td></tr>
 <tr><td style="border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">&nbsp;</td></tr>
 </table>
-<table style="width:7.128in;">
+<table class="tbs" style="width:7.128in;">
 <colgroup>
 <col style="width:1.49in;">
 <col style="width:1in;">
@@ -59,6 +60,11 @@ td {padding:0px 2px 0px 2px;}
 <col style="width:0.4260625in;">
 </colgroup>
 <thead>
+<tr>
+<td class="shdr" colspan="1" style="vertical-align:bottom;text-align:left;border-bottom:thin solid grey;border-left:thin solid grey;">&nbsp;</td>
+<td class="shdr" colspan="5" style="vertical-align:bottom;text-align:center;border-bottom:thin solid grey;border-left:thin solid grey;">Span&nbsp;1</td>
+<td class="shdr" colspan="6" style="vertical-align:bottom;text-align:center;border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">Span&nbsp;2</td>
+</tr>
 <tr>
 <td class="thdr tdl" style="border-bottom:thin solid grey;border-left:thin solid grey;">stub</td>
 <td class="thdr tdc" style="border-bottom:thin solid grey;border-left:thin solid grey;">Cylin.</td>
@@ -93,12 +99,11 @@ td {padding:0px 2px 0px 2px;}
 <tr><td class="ts tdl" style="border-bottom:thin solid grey;border-left:thin solid grey;">Cadillac&nbsp;Fleetwood</td><td class="tc tdc" style="border-bottom:thin solid grey;border-left:thin solid grey;">10.4</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">8</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">472</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">205</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">2.93</td><td class="tc tdc" style="border-bottom:thin solid grey;border-left:thin solid grey;">5.25</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">17.98</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">0</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">0</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;">3</td><td class="tc tdr" style="border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">4</td></tr>
 </tbody>
 </table>
-<table style="width:7.128in;text-align: left;color: orange;background-color: brown;font-weight: bold;">
+<table style="width:7.128in;text-align: left;color: brown;background-color: orange;font-weight: bold;">
 <tr><td style="border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">&nbsp;</td></tr>
 <tr><td style="border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">My&nbsp;footnote&nbsp;1</td></tr>
 <tr><td style="border-bottom:thin solid grey;border-left:thin solid grey;border-right:thin solid grey;">My&nbsp;footnote&nbsp;2</td></tr>
 </table>
-<br>
 <br>
 <br>
 <br>

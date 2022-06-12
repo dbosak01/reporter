@@ -289,7 +289,7 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
     u <- "in"
   
   # ds <- paste0("<div ", ta, ">")
-  ts <- paste0("<table style=\"width:", 
+  ts <- paste0("<table class=\"tbs\" style=\"width:", 
                round(sum(pi$col_width, 
                          na.rm = TRUE), 3), u,";\">")
   

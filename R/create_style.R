@@ -18,6 +18,7 @@ create_style <- function(font_name = NULL,
                          table_header_font_color = NULL,
                          table_body_background = NULL,
                          table_body_stripe = NULL,
+                         table_body_font_color = NULL,
                          table_stub_background = NULL,
                          table_stub_font_color = NULL,
                          table_stub_font_bold = NULL) {
@@ -44,6 +45,7 @@ create_style <- function(font_name = NULL,
   ret$table_stub_background <- table_stub_background
   ret$table_stub_font_color <- table_stub_font_color
   ret$table_stub_font_bold <- table_stub_font_bold
+  ret$table_body_font_color <- table_body_font_color
   
   
   return(ret)
@@ -185,6 +187,9 @@ get_style_html <- function(rs, style_name, default = NULL) {
 
   if (val != "") {
     
+    if (style_name == "text_color")
+      ret <- paste0("color: ", val, ";")
+    
     if (style_name == "title_font_color")
       ret <- paste0("color: ", val, ";")
     
@@ -215,6 +220,9 @@ get_style_html <- function(rs, style_name, default = NULL) {
     
     if (style_name == "background_color")
       ret <- paste0("background-color: ", val, ";")
+    
+    if (style_name == "table_body_font_color")
+      ret <- paste0("color: ", val, ";")
     
     if (style_name == "table_body_background")
       ret <- paste0("background-color: ", val, ";")

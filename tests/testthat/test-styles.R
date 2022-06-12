@@ -94,8 +94,9 @@ test_that("style2: add_style() works with html.", {
                       table_body_stripe = "blue", table_stub_background = "purple",
                       table_stub_font_bold = TRUE, table_stub_font_color = "green", 
                       table_header_background = "green", table_header_font_bold = TRUE,
-                      table_header_font_color = "orange", footnote_font_bold = TRUE,
-                      footnote_font_color = "orange", footnote_background = "brown")
+                      table_header_font_color = "brown", footnote_font_bold = TRUE,
+                      footnote_font_color = "brown", footnote_background = "orange",
+                      table_body_font_color = "red")
   
   tbl <- create_table(dat, borders = "all", first_row_blank = FALSE) %>%
     titles("Table 1.0", "My Nice Table", borders = c("all"), 
@@ -103,7 +104,9 @@ test_that("style2: add_style() works with html.", {
     footnotes("My footnote 1", "My footnote 2", borders = "all", 
               align = "left", width = "content") %>% 
     define(wt, width = 1, label = "Weight", align = "center", 
-           label_align = "right")
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "drat", label = "Span 1") %>% 
+    spanning_header(from = "wt", to ="carb", label = "Span 2")
   
   rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%

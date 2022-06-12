@@ -111,6 +111,7 @@ get_html_document <- function(rs) {
                                  "margin-left: ", rs$margin_left, u, ";\n",
                                  "margin-right: ", rs$margin_right, u, ";\n",
                                  get_style_html(rs, "background_color"),
+                                 get_style_html(rs, "text_color"),
                                  "}")
   ret[length(ret) + 1] <- paste0(".thdr {", 
                                   "border-bottom: thin solid;", 
@@ -133,6 +134,9 @@ get_html_document <- function(rs) {
                                  get_style_html(rs, "table_stub_background"), 
                                  get_style_html(rs, "table_stub_font_bold"),
                                  get_style_html(rs, "table_stub_font_color"),
+                                 "}")
+  ret[length(ret) + 1] <- paste0(".tbs {", 
+                                 get_style_html(rs, "table_body_font_color"),
                                  "}")
   ret[length(ret) + 1] <- paste0(".tbstr {", 
                                  get_style_html(rs, "table_body_stripe"),
