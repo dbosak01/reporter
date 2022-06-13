@@ -121,4 +121,5 @@ test_that("style2: add_style() works with html.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   
+  
 })
