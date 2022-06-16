@@ -7,6 +7,8 @@ data_dir <- base_path
 base_path <- tempdir()
 data_dir <- "."
 
+dev <- FALSE
+
 test_that("style0: Style functions work as expected.", {
   
   res1 <- create_style(font_name = "Arial", font_size = 10,
@@ -30,7 +32,7 @@ test_that("style0: Style functions work as expected.", {
   expect_equal(has_style(rpt, "border_color"), TRUE)
   expect_equal(get_style(rpt, "border_color"), "grey")
   
-  rpt <- create_report() %>% add_style(theme = "basic1")
+  rpt <- create_report() %>% add_style(theme = "SASDefault")
   
   expect_equal(get_style(rpt, "border_color"), "Grey")
   
@@ -38,7 +40,7 @@ test_that("style0: Style functions work as expected.", {
 
 
 
-test_that("style1: theme works with html.", {
+test_that("style1: SAS theme works with html.", {
   
   
   fp <- file.path(base_path, "html/style1.html")
@@ -64,9 +66,12 @@ test_that("style1: theme works with html.", {
                 blank_row = "below") %>% 
     add_content(tbl, align = "center")  %>% 
     page_footer("Left1", "Center1", "Right1") %>% 
-    add_style(theme = "basic1")
+    add_style(theme = "SASDefault")
   
   res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
   
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
@@ -123,3 +128,256 @@ test_that("style2: add_style() works with html.", {
   
   
 })
+
+test_that("style3: Test print.style_spec() and get_theme().", {
+  
+  s1 <- create_style(font_name = "Arial", font_size = 12, 
+                     table_body_background = "Blue",
+                     table_header_background = "Red")
+  if (dev)
+    print(s1)
+  
+  
+  s2 <- get_theme("SASDefault")
+  
+  if (dev)
+    print(s2)
+  
+  if (dev)
+    print(s1, verbose = TRUE)
+  
+  expect_equal(TRUE, TRUE)
+  
+})
+
+
+test_that("style4: DarkRed theme works.", {
+  
+  
+  fp <- file.path(base_path, "html/style4.html")
+  # print(fp)
+  
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
+  
+  rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>% 
+    add_content(tbl, align = "center")  %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(theme = "DarkRed")
+  
+  res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+test_that("style5: SeaGreen theme works.", {
+  
+  
+  fp <- file.path(base_path, "html/style5.html")
+  # print(fp)
+  
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
+  
+  rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>% 
+    add_content(tbl, align = "center")  %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(theme = "SeaGreen")
+  
+  res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+test_that("style6: SlateGrey theme works.", {
+  
+  
+  fp <- file.path(base_path, "html/style6.html")
+  # print(fp)
+  
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
+  
+  rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>% 
+    add_content(tbl, align = "center")  %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(theme = "SlateGrey")
+  
+  res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+
+test_that("style7: MidnightBlue theme works with html.", {
+  
+  
+  fp <- file.path(base_path, "html/style7.html")
+  # print(fp)
+  
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
+  
+  rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>% 
+    add_content(tbl, align = "center")  %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(theme = "MidnightBlue")
+  
+  res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+
+test_that("style8: SteelBlue theme works.", {
+  
+  
+  fp <- file.path(base_path, "html/style8.html")
+  # print(fp)
+  
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
+  
+  rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>% 
+    add_content(tbl, align = "center")  %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(theme = "SteelBlue")
+  
+  res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+test_that("style9: Plain theme works.", {
+  
+  
+  fp <- file.path(base_path, "html/style9.html")
+  # print(fp)
+  
+  dat <- data.frame(stub = rownames(mtcars)[1:15], mtcars[1:15, ])
+  attr(dat[[3]], "label") <- "Cylin."
+  attr(dat[[3]], "width") <- 1
+  attr(dat[[3]], "justify") <- "center"
+  
+  tbl <- create_table(dat, borders = "all", first_row_blank = TRUE) %>%
+    titles("Table 1.0", "My Nice Table", borders = c("none"), 
+           width = "content") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "none", 
+              align = "left", width = "content") %>% 
+    define(wt, width = 1, label = "Weight", align = "center", 
+           label_align = "right") %>% 
+    spanning_header(from = "mpg", to = "cyl", label = "Span1")
+  
+  rpt <- create_report(fp, output_type = "HTML", orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), 
+                blank_row = "below") %>% 
+    add_content(tbl, align = "center")  %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    add_style(theme = "Plain")
+  
+  res <- write_report(rpt)
+  
+  if (dev == TRUE)
+    file.show(res$modified_path)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+

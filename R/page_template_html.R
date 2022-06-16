@@ -216,7 +216,8 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
   
   sty <- paste0(get_style_html(rs, "title_font_color"),
                 get_style_html(rs, "title_background"),
-                get_style_html(rs, "title_font_bold"))
+                get_style_html(rs, "title_font_bold"),
+                get_style_html(rs, "title_font_size"))
   
   u <- rs$units
   if (rs$units == "inches")

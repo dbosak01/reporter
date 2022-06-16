@@ -51,12 +51,12 @@ pass the desired character string to the missing parameter.}
 used for the entire report.  Valid values are "Courier", "Arial", "Times",
 and "fixed".  The value of "fixed" will create a fixed-width, text style
 report in Courier font.  The \code{font} parameter only applies to 
-RTF, HTML, and PDF reports.  The default value is "fixed".}
+RTF, HTML, PDF, and DOCX reports.  The default value is "fixed".}
 
 \item{font_size}{The size of the font to use on the report. The \code{font_size}
 specified will be used for the entire report.  Valid values are 8, 9, 10, 11,
-and 12.  The \code{font_size} parameter only applies to RTF, PDF, and HTML 
-output types. The default value is 10.}
+and 12.  The \code{font_size} parameter only applies to RTF, PDF, HTML, and  
+DOCX output types. The default value is 10.}
 }
 \value{
 A new report_spec object.
