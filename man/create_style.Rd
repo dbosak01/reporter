@@ -94,7 +94,7 @@ values are TRUE and FALSE.}
 }
 \description{
 This function will create a style object to control background colors and 
-font specifications on your report.  The style object can be applied to a 
+font settings on your report.  The style object can be applied to a 
 report using the \code{\link{add_style}} function. Currently, styles may only
 be applied to HTML reports.
 }
@@ -111,11 +111,10 @@ of the \strong{reporter} package will provide style support for other
 output types.
 
 On the style object, colors for background and fonts may be passed as 
-a style   
-you to control 
-The 
-border color may be specified using a hex color code or an html/css style
-color name.
+an RGB hex code or a color name. For example, the color red may be passed as
+the hex code "#FF0000" or as the color name "Red". Color names must conform
+to HTML/CSS standards.  These color names can be easily discovered on 
+the internet.  A sample of common color names is presented below.
 }
 \section{Color Names}{
 

@@ -5,7 +5,7 @@
 #' Creates a style object
 #' @description 
 #' This function will create a style object to control background colors and 
-#' font specifications on your report.  The style object can be applied to a 
+#' font settings on your report.  The style object can be applied to a 
 #' report using the \code{\link{add_style}} function. Currently, styles may only
 #' be applied to HTML reports.
 #' @details
@@ -21,11 +21,11 @@
 #' output types.
 #' 
 #' On the style object, colors for background and fonts may be passed as 
-#' a style   
-#' you to control 
-#' The 
-#' border color may be specified using a hex color code or an html/css style
-#' color name.  
+#' an RGB hex code or a color name. For example, the color red may be passed as
+#' the hex code "#FF0000" or as the color name "Red". Color names must conform
+#' to HTML/CSS standards.  These color names can be easily discovered on 
+#' the internet.  A sample of common color names is presented below.
+#' 
 #' @section Color Names:
 #' Many of the parameter on the style object accept a color name or code.
 #' The values accepted for these parameters follow standard html/css style
@@ -151,22 +151,40 @@ create_style <- function(font_name = NULL,
 #' Add a style object to a report.
 #' @description 
 #' This function will add a style object to a report specification.  The 
-#' style may be added either by passing a style object to the "style" parameter,
-#' or by passing a theme name to the "theme" parameter.
+#' style may be added either by passing a style object to the \code{style} 
+#' parameter, or by passing a theme name to the \code{theme} parameter.
 #' @details
-#' Here are some details on the add style function.
+#' The \code{add_style()} function allows you to add styling to HTML reports.
+#' This functionality will apply to additional output types in future
+#' versons of the \strong{reporter} package.
+#' 
+#' Styling can be added by passing a named theme to the \code{theme} parameter,
+#' or by creating a style object using the \code{\link{create_style}} function
+#' and passing that object to the \code{style} parameter.  You may also export 
+#' a theme as a style object using the \code{\link{get_theme}} function,
+#' modify it, and pass that on the \code{style} parameter.
+#' 
+#' @section Style Specifications:
+#' The style specification is created using the \code{\link{create_style}},
+#' and provides the most styling flexibility.  The style object allows you
+#' to control background colors, font colors, border colors, and more.  Colors
+#' can be specified using an RGB hex code, or an HTML/CSS-compliant color name.
+#' See the \code{\link{create_style}} documentation for additional information.
 #' 
 #' @section Themes:
-#' There are currently seven themes available.  All use Arial 10pt font:
-#' \itemize{
-#'   \item \strong{Plain:} 
-#'   \item \strong{DarkRed:} Arial font, a very light blue document background,
-#'   and table headers and titles in shades of red.
-#'   \item \strong{SeaGreen:} Arial font, a very light blue document background,
-#'   and table headers and titles in shades of green.
-#'   \item \strong{BasicGrey:} Arial font, a very light blue document background,
-#'   and table headers and titles in shades of grey
-#' }
+#' There are currently seven themes available: "MidnightBlue", "SteelBlue", 
+#' "DarkRed", "SeaGreen", "SlateGrey", "Plain", and "SASDefault". 
+#' All themes use Arial 10pt font. These themes are intended to provide a 
+#' basic set of examples on how to create styles. Themes can be used by 
+#' passing the theme name to the theme parameter on the \code{add_style()}
+#' function. The theme will assign a variety of style settings according 
+#' to the specifics of the theme.  For example, the "MidnightBlue" theme
+#' sets the title font and header background colors to "MidnightBlue" and sets
+#' border colors to "Grey".
+#' 
+#' To view theme style settings, you can use \code{\link{get_theme}} function. 
+#' This function will return the theme as a style object.  See
+#' the \code{\link{get_theme}} documentation for further details.
 #' @param rpt The report specification to add a style to.
 #' @param style A style object which contains style settings to add to the 
 #' report. This parameter is optional.  Default is NULL.  Either add a style
