@@ -27,8 +27,8 @@
 #' the internet.  A sample of common color names is presented below.
 #' 
 #' @section Color Names:
-#' Many of the parameter on the style object accept a color name or code.
-#' The values accepted for these parameters follow standard html/css style
+#' Many of the parameters on the style object accept a color name or code.
+#' The values accepted for these parameters follow standard HTML/CSS style
 #' color specifications and values.  Below is a sample of common color names
 #' that can be used to specify colors with the \code{create_style} function.
 #' These color names should be passed as a quoted string:
@@ -60,7 +60,7 @@
 #' @param background_color The color to use for the background of the report.
 #' This color will appear everywhere on the document unless overridden 
 #' by another color specification.  
-#' @param title_font_size The size to use for the title font in points.
+#' @param title_font_size The font size to use for the title font in points.
 #' @param title_font_bold Whether to bold the title or not.  Valid values 
 #' are TRUE or FALSE. By default, the title will not be bold.
 #' @param title_font_color The color to use for the title font.
@@ -89,11 +89,52 @@
 #' if one exists on the table. 
 #' @param table_stub_font_color The font color to be used for the stub column,
 #' if one exists on the table.
-#' @param table_stub_font_bold Whether or not bold the stub column.  Valid
+#' @param table_stub_font_bold Whether or not to bold the stub column.  Valid
 #' values are TRUE and FALSE.
 #' @family styles
 #' @examples 
 #' library(reporter)
+#' library(magrittr)
+#' 
+#' # Prepare data
+#' dat <- data.frame(stub = rownames(mtcars), mtcars)
+#' dat <- dat[1:15, ]
+#' 
+#' # Create temp file path
+#' tmp <- file.path(tempdir(), "HairAndEyes2.html")
+#' 
+#' # Define custom style
+#' sty <- create_style(font_name = "Arial",
+#'                     font_size = 10,
+#'                     background_color = "WhiteSmoke",
+#'                     border_color = "Grey",
+#'                     title_font_size = 12,
+#'                     title_font_bold = TRUE,
+#'                     title_font_color = "SteelBlue",
+#'                     table_header_background = "Tan",
+#'                     table_header_font_bold = TRUE,
+#'                     table_header_font_color = "White",
+#'                     table_body_background = "White",
+#'                     table_body_stripe = "Wheat", 
+#'                     table_stub_background = "Tan",
+#'                     table_stub_font_color = "White")
+#' 
+#' # Create table object
+#' tbl <- create_table(dat, borders = "all") %>% 
+#' titles("MTCARS Dataset With Style") %>% 
+#' column_defaults(width = .5) %>% 
+#' define(stub, label = "Car Make and Model", width = 1.5)
+#' 
+#' # Create report and add style spec
+#' rpt <- create_report(tmp, output_type = "HTML") %>% 
+#'        add_content(tbl) %>% 
+#'        add_style(style = sty)
+#'
+#' # Write out the report        
+#' write_report(rpt)
+#' 
+#' # Uncomment to View report
+#' # file.show(tmp)
 #' @export
 create_style <- function(font_name = NULL,
                          font_size = NULL,
@@ -162,10 +203,10 @@ create_style <- function(font_name = NULL,
 #' or by creating a style object using the \code{\link{create_style}} function
 #' and passing that object to the \code{style} parameter.  You may also export 
 #' a theme as a style object using the \code{\link{get_theme}} function,
-#' modify it, and pass that on the \code{style} parameter.
+#' modify it, and pass that to the \code{style} parameter.
 #' 
 #' @section Style Specifications:
-#' The style specification is created using the \code{\link{create_style}},
+#' The style specification is created using the \code{\link{create_style}} function,
 #' and provides the most styling flexibility.  The style object allows you
 #' to control background colors, font colors, border colors, and more.  Colors
 #' can be specified using an RGB hex code, or an HTML/CSS-compliant color name.
@@ -180,16 +221,17 @@ create_style <- function(font_name = NULL,
 #' function. The theme will assign a variety of style settings according 
 #' to the specifics of the theme.  For example, the "MidnightBlue" theme
 #' sets the title font and header background colors to "MidnightBlue" and sets
-#' border colors to "Grey".
+#' the border color to "Grey".
 #' 
 #' To view theme style settings, you can use \code{\link{get_theme}} function. 
 #' This function will return the theme as a style object.  See
 #' the \code{\link{get_theme}} documentation for further details.
 #' @param rpt The report specification to add a style to.
 #' @param style A style object which contains style settings to add to the 
-#' report. This parameter is optional.  Default is NULL.  Either add a style
-#' to this parameter, or pass a theme name to the \strong{theme} parameter.
-#' @param theme A theme name to use for this report.
+#' report. This parameter is optional.  Default is NULL.  
+#' @param theme A theme name to use for this report. Valid values are
+#' "MidnightBlue", "SteelBlue", "DarkRed", "SeaGreen", "SlateGrey", "Plain", 
+#' and "SASDefault".  Default is NULL.
 #' @family styles
 #' @examples 
 #' library(reporter)
@@ -242,7 +284,7 @@ create_style <- function(font_name = NULL,
 #' titles("Hair and Eye Colors with Style") %>% 
 #' column_defaults(width = .6)
 #' 
-#' # Create report and add theme
+#' # Create report and add style spec
 #' rpt <- create_report(tmp2, output_type = "HTML") %>% 
 #'        add_content(tbl) %>% 
 #'        add_style(style = sty)

@@ -10,10 +10,11 @@ add_style(rpt, style = NULL, theme = NULL)
 \item{rpt}{The report specification to add a style to.}
 
 \item{style}{A style object which contains style settings to add to the 
-report. This parameter is optional.  Default is NULL.  Either add a style
-to this parameter, or pass a theme name to the \strong{theme} parameter.}
+report. This parameter is optional.  Default is NULL.}
 
-\item{theme}{A theme name to use for this report.}
+\item{theme}{A theme name to use for this report. Valid values are
+"MidnightBlue", "SteelBlue", "DarkRed", "SeaGreen", "SlateGrey", "Plain", 
+and "SASDefault".  Default is NULL.}
 }
 \description{
 This function will add a style object to a report specification.  The 
@@ -29,11 +30,11 @@ Styling can be added by passing a named theme to the \code{theme} parameter,
 or by creating a style object using the \code{\link{create_style}} function
 and passing that object to the \code{style} parameter.  You may also export 
 a theme as a style object using the \code{\link{get_theme}} function,
-modify it, and pass that on the \code{style} parameter.
+modify it, and pass that to the \code{style} parameter.
 }
 \section{Style Specifications}{
 
-The style specification is created using the \code{\link{create_style}},
+The style specification is created using the \code{\link{create_style}} function,
 and provides the most styling flexibility.  The style object allows you
 to control background colors, font colors, border colors, and more.  Colors
 can be specified using an RGB hex code, or an HTML/CSS-compliant color name.
@@ -50,7 +51,7 @@ passing the theme name to the theme parameter on the \code{add_style()}
 function. The theme will assign a variety of style settings according 
 to the specifics of the theme.  For example, the "MidnightBlue" theme
 sets the title font and header background colors to "MidnightBlue" and sets
-border colors to "Grey".
+the border color to "Grey".
 
 To view theme style settings, you can use \code{\link{get_theme}} function. 
 This function will return the theme as a style object.  See
@@ -108,7 +109,7 @@ tbl <- create_table(dat, borders = "outside") \%>\%
 titles("Hair and Eye Colors with Style") \%>\% 
 column_defaults(width = .6)
 
-# Create report and add theme
+# Create report and add style spec
 rpt <- create_report(tmp2, output_type = "HTML") \%>\% 
        add_content(tbl) \%>\% 
        add_style(style = sty)

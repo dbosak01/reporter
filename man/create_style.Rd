@@ -44,7 +44,7 @@ font color settings.}
 This color will appear everywhere on the document unless overridden 
 by another color specification.}
 
-\item{title_font_size}{The size to use for the title font in points.}
+\item{title_font_size}{The font size to use for the title font in points.}
 
 \item{title_font_bold}{Whether to bold the title or not.  Valid values 
 are TRUE or FALSE. By default, the title will not be bold.}
@@ -89,7 +89,7 @@ if one exists on the table.}
 \item{table_stub_font_color}{The font color to be used for the stub column,
 if one exists on the table.}
 
-\item{table_stub_font_bold}{Whether or not bold the stub column.  Valid
+\item{table_stub_font_bold}{Whether or not to bold the stub column.  Valid
 values are TRUE and FALSE.}
 }
 \description{
@@ -118,8 +118,8 @@ the internet.  A sample of common color names is presented below.
 }
 \section{Color Names}{
 
-Many of the parameter on the style object accept a color name or code.
-The values accepted for these parameters follow standard html/css style
+Many of the parameters on the style object accept a color name or code.
+The values accepted for these parameters follow standard HTML/CSS style
 color specifications and values.  Below is a sample of common color names
 that can be used to specify colors with the \code{create_style} function.
 These color names should be passed as a quoted string:
@@ -144,6 +144,47 @@ These color names should be passed as a quoted string:
 
 \examples{
 library(reporter)
+library(magrittr)
+
+# Prepare data
+dat <- data.frame(stub = rownames(mtcars), mtcars)
+dat <- dat[1:15, ]
+
+# Create temp file path
+tmp <- file.path(tempdir(), "HairAndEyes2.html")
+
+# Define custom style
+sty <- create_style(font_name = "Arial",
+                    font_size = 10,
+                    background_color = "WhiteSmoke",
+                    border_color = "Grey",
+                    title_font_size = 12,
+                    title_font_bold = TRUE,
+                    title_font_color = "SteelBlue",
+                    table_header_background = "Tan",
+                    table_header_font_bold = TRUE,
+                    table_header_font_color = "White",
+                    table_body_background = "White",
+                    table_body_stripe = "Wheat", 
+                    table_stub_background = "Tan",
+                    table_stub_font_color = "White")
+
+# Create table object
+tbl <- create_table(dat, borders = "all") \%>\% 
+titles("MTCARS Dataset With Style") \%>\% 
+column_defaults(width = .5) \%>\% 
+define(stub, label = "Car Make and Model", width = 1.5)
+
+# Create report and add style spec
+rpt <- create_report(tmp, output_type = "HTML") \%>\% 
+       add_content(tbl) \%>\% 
+       add_style(style = sty)
+
+# Write out the report        
+write_report(rpt)
+
+# Uncomment to View report
+# file.show(tmp)
 }
 \seealso{
 Other styles: 
