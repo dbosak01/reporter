@@ -777,6 +777,9 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
   l <- ""
   r <- ""
   
+  if (border_color == "")
+    border_color <- "black"
+  
   
   if ("all" %in% brdrs) {
     t <- paste0("border-top:thin solid ", border_color, ";")

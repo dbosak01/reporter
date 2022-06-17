@@ -539,7 +539,11 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
 
   
   cnt <-  1 
-  bd <- "border-bottom: thin solid;"
+  if (has_style(rs, "border_color")) {
+    bd <- paste0("border-bottom: thin solid ", get_style(rs, "border_color"), ";")
+  } else {
+    bd <- "border-bottom: thin solid black;"
+  }
   
   # Loop for column names
   pdf(NULL)
@@ -644,6 +648,10 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   # Get borders
   brdrs <- ts$borders
   
+  brdrcolor <- get_style(rs, "border_color")
+  if (brdrcolor == "")
+    brdrcolor <- "black"
+  
   # Format labels for each level
   ln <- c()
   for (l in lvls) {
@@ -718,7 +726,7 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
         if (vl == "")
           bb <- b
         else 
-          bb <- paste0(b, "border-bottom:thin solid")
+          bb <- paste0(b, "border-bottom:thin solid ", brdrcolor)
         
       } else {
         
@@ -729,7 +737,7 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
                                                       exclude = c("bottom", exclude_top),
                                       border_color = get_style(rs, "border_color"))
         } else 
-          bb <- paste0(b, "border-bottom:thin solid")
+          bb <- paste0(b, "border-bottom:thin solid ", brdrcolor)
         
       }
       

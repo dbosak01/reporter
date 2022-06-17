@@ -175,6 +175,65 @@ create_style <- function(font_name = NULL,
 #' @family styles
 #' @examples 
 #' library(reporter)
+#' library(magrittr)
+#' 
+#' # Prepare data
+#' dat <- as.data.frame(HairEyeColor)
+#' dat <- dat[dat$Freq >= 10, ]
+#' 
+#' ## Example 1: Use Pre-defined Theme ##
+#' 
+#' # Create temp file path
+#' tmp1 <- file.path(tempdir(), "HairAndEyes1.html")
+#' 
+#' # Create table object
+#' tbl <- create_table(dat, borders = "outside") %>% 
+#' titles("Hair and Eye Colors with Theme") %>% 
+#' column_defaults(width = .6)
+#' 
+#' # Create report and add theme
+#' rpt <- create_report(tmp1, output_type = "HTML") %>% 
+#'        add_content(tbl) %>% 
+#'        add_style(theme = "SteelBlue")
+#'
+#' # Write out the report        
+#' write_report(rpt)
+#' 
+#' # Uncomment to View report
+#' # file.show(tmp1)
+#' 
+#' #' ## Example 2: Create Custom Style ##
+#' 
+#' # Create temp file path
+#' tmp2 <- file.path(tempdir(), "HairAndEyes2.html")
+#' 
+#' # Define custom style
+#' sty <- create_style(font_name = "Times",
+#'                     font_size = 10,
+#'                     title_font_size = 12,
+#'                     title_font_bold = TRUE,
+#'                     title_font_color = "Blue",
+#'                     table_header_background = "Blue",
+#'                     table_header_font_bold = TRUE,
+#'                     table_header_font_color = "White",
+#'                     table_body_background = "White",
+#'                     table_body_stripe = "Red")
+#' 
+#' # Create table object
+#' tbl <- create_table(dat, borders = "outside") %>% 
+#' titles("Hair and Eye Colors with Style") %>% 
+#' column_defaults(width = .6)
+#' 
+#' # Create report and add theme
+#' rpt <- create_report(tmp2, output_type = "HTML") %>% 
+#'        add_content(tbl) %>% 
+#'        add_style(style = sty)
+#'
+#' # Write out the report        
+#' write_report(rpt)
+#' 
+#' # Uncomment to View report
+#' # file.show(tmp2)
 #' @export
 add_style <- function(rpt, style = NULL, theme = NULL) {
   
@@ -451,6 +510,22 @@ get_theme <- function(theme_name) {
 #' 
 #' # View theme settings
 #' print(tm)
+#' ## A style specification: 
+#' #- font_name: 'Arial'
+#' #- font_size: 10
+#' #- text_color: 'DimGrey'
+#' #- title_font_size: 11
+#' #- title_font_bold: TRUE
+#' #- title_font_color: 'SteelBlue'
+#' #- border_color: 'Grey'
+#' #- table_header_background: 'SteelBlue'
+#' #- table_header_font_bold: TRUE
+#' #- table_header_font_color: 'LightGrey'
+#' #- table_body_background: 'White'
+#' #- table_body_stripe: 'WhiteSmoke'
+#' #- table_stub_background: 'SteelBlue'
+#' #- table_stub_font_color: 'LightGrey'
+#' #- table_stub_font_bold: TRUE
 #' @export
 print.style_spec <- function(x, ..., verbose = FALSE) {
   

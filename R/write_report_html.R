@@ -113,8 +113,13 @@ get_html_document <- function(rs) {
                                  get_style_html(rs, "background_color"),
                                  get_style_html(rs, "text_color"),
                                  "}")
+  
+  brdrcolor <- get_style(rs, "border_color")
+  if (brdrcolor == "")
+    brdrcolor <- "black"
+  
   ret[length(ret) + 1] <- paste0(".thdr {", 
-                                  "border-bottom: thin solid;", 
+                                  "border-bottom: thin solid ", brdrcolor, ";", 
                                   get_style_html(rs, "table_header_background"),
                                   get_style_html(rs, "table_header_font_color"),
                                   get_style_html(rs, "table_header_font_bold", FALSE),

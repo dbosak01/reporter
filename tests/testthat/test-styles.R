@@ -381,3 +381,46 @@ test_that("style9: Plain theme works.", {
   
 })
 
+
+test_that("style10: Header border works as expected.", {
+  
+
+  # Create temp file path
+  fp <- file.path(base_path, "html/style10.html")
+  
+  dat <- as.data.frame(HairEyeColor)
+  dat <- dat[dat$Freq > 10, ]
+
+  # Define custom style
+  sty <- create_style(font_name = "Times",
+                      font_size = 10,
+                      title_font_size = 12,
+                      title_font_bold = TRUE,
+                      title_font_color = "Blue",
+                      table_header_background = "Grey",
+                      table_header_font_bold = TRUE,
+                      table_header_font_color = "White",
+                      table_body_background = "White",
+                      table_body_stripe = "Red")
+
+  # Create table object
+  tbl <- create_table(dat, borders = "outside") %>%
+  titles("Hair and Eye Colors with Style") %>%
+  column_defaults(width = .6) %>% 
+  spanning_header(Hair, Freq, label = "Span")
+
+  # Create report and add theme
+  rpt <- create_report(fp, output_type = "HTML") %>%
+         add_content(tbl) %>%
+         add_style(style = sty)
+
+  # Write out the report
+  res <- write_report(rpt)
+
+  if (dev)
+    file.show(fp)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})

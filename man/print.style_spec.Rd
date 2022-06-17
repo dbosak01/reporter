@@ -29,6 +29,22 @@ tm <- get_theme("SteelBlue")
 
 # View theme settings
 print(tm)
+## A style specification: 
+#- font_name: 'Arial'
+#- font_size: 10
+#- text_color: 'DimGrey'
+#- title_font_size: 11
+#- title_font_bold: TRUE
+#- title_font_color: 'SteelBlue'
+#- border_color: 'Grey'
+#- table_header_background: 'SteelBlue'
+#- table_header_font_bold: TRUE
+#- table_header_font_color: 'LightGrey'
+#- table_body_background: 'White'
+#- table_body_stripe: 'WhiteSmoke'
+#- table_stub_background: 'SteelBlue'
+#- table_stub_font_color: 'LightGrey'
+#- table_stub_font_bold: TRUE
 }
 \seealso{
 Other styles: 
