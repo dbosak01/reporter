@@ -135,18 +135,18 @@ get_html_document <- function(rs) {
   ret[length(ret) + 1] <- paste0(".tc {", 
                                  get_style_html(rs, "table_body_background"), 
                                  "}")
-  ret[length(ret) + 1] <- paste0(".ts {", 
-                                 get_style_html(rs, "table_stub_background"), 
-                                 get_style_html(rs, "table_stub_font_bold"),
-                                 get_style_html(rs, "table_stub_font_color"),
-                                 "}")
+
   ret[length(ret) + 1] <- paste0(".tbs {", 
                                  get_style_html(rs, "table_body_font_color"),
                                  "}")
   ret[length(ret) + 1] <- paste0(".tbstr {", 
                                  get_style_html(rs, "table_body_stripe"),
                                  "}")
-  
+  ret[length(ret) + 1] <- paste0(".ts {", 
+                                 get_style_html(rs, "table_stub_background"), 
+                                 get_style_html(rs, "table_stub_font_bold"),
+                                 get_style_html(rs, "table_stub_font_color"),
+                                 "}")
   ret[length(ret) + 1] <- paste0("table {",
                                  "border-spacing: 0;",
                                  "border-collapse: collapse;",

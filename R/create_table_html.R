@@ -262,7 +262,8 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_html(rs, pi$data, pi$col_width, 
-                             pi$col_align, pi$table_align, ts$borders, exbrdr)
+                             pi$col_align, pi$table_align, ts$borders, exbrdr,
+                             ts$first_row_blank)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -554,12 +555,15 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       cols[1] <- paste0(cols[1], "<col style=\"width:", sz[k], ";\">\n")
       
+      
       b <- get_cell_borders_html(1, k, 2, length(widths), brdrs, 
                                  exclude = exclude_top,
                                  border_color = get_style(rs, "border_color"))
       
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
+      
+
 
       if (b == "") {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
@@ -584,20 +588,44 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   
   if (ts$first_row_blank == TRUE) {
     
-    if (any(brdrs == "body"))
-      b <- get_cell_borders_html(2, 1, 3, 1, c("left", "right"),
-                                 border_color = get_style(rs, "border_color"))
-    else
-      b <- get_cell_borders_html(2, 1, 3, 1, brdrs,
-                                 border_color = get_style(rs, "border_color"))
+    sflg <- nms[1] == "stub" &  has_style(rs, "table_stub_background")
 
-    if (b == "") {
-      ret[1] <- paste0(ret[1], "<tr><td class=\"tc\" colspan=\"", length(sz), 
-                     "\">&nbsp;</td></tr>")
-    } else {
-      ret[1] <- paste0(ret[1], "<tr><td class=\"tc\" colspan=\"", length(sz), 
-                       "\" style=\"", b, "\">&nbsp;</td></tr>")
+    tstub <- ""
+    if (sflg)
+      tstub <- " ts"
+
+    if (sflg) {
       
+      b1 <- get_cell_borders_html(2, 1, 3, 1, brdrs,
+                                 border_color = get_style(rs, "border_color"), 
+                                 stub_flag = TRUE)
+      
+      b2 <- get_cell_borders_html(2, 1, 3, 1, brdrs,
+                                  border_color = get_style(rs, "border_color"), 
+                                  stub_flag = FALSE)
+
+      ret[1] <- paste0(ret[1], "<tr><td class=\"tc ts\"", 
+                       "\" style=\"", b1, "\">&nbsp;</td>",
+                       "<td class=\"tc\" colspan=\"", length(sz) - 1, 
+                       "\" style=\"", b2, "\">&nbsp;</td></tr>")
+
+    } else {
+    
+      if (any(brdrs == "body"))
+        b <- get_cell_borders_html(2, 1, 3, 1, c("left", "right"),
+                                   border_color = get_style(rs, "border_color"))
+      else {
+        b <- get_cell_borders_html(2, 1, 3, 1, brdrs,
+                                   border_color = get_style(rs, "border_color"))
+      }
+  
+      if (b == "") {
+        ret[1] <- paste0(ret[1], "<tr><td class=\"tc\" colspan=\"", length(sz), 
+                       "\">&nbsp;</td></tr>")
+      } else {
+        ret[1] <- paste0(ret[1], "<tr><td class=\"tc\" colspan=\"", length(sz), 
+                         "\" style=\"", b, "\">&nbsp;</td></tr>")
+      }
     }
     cnt <- cnt + 1
   }
@@ -777,7 +805,8 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr = FALSE) {
+get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
+                                ex_brdr = FALSE, frb = FALSE) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -812,32 +841,36 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
   for (k in seq_along(algns)) {
     if (!is.control(nms[k])) {
       if (is.na(nms[k]) | is.null(nms[k])) {
-        tcls <- "tc"
+        tcls <- ""
       } else {
         if (nms[k] == "stub")
           tcls <- "ts"
         else 
-          tcls <- "tc"
+          tcls <- ""
       }
       
       if (algns[k] == "left")
-        ca[k] <- paste0("class=\"", tcls, " tdl\"")
+        ca[k] <- paste0("class=\"tc tdl ", tcls, "\"")
       else if (algns[k] == "right")
-        ca[k] <- paste0("class=\"", tcls, " tdr\"")
+        ca[k] <- paste0("class=\"tc tdr ", tcls, "\"")
       else if (algns[k] %in% c("center", "centre"))
-        ca[k] <- paste0("class=\"", tcls, " tdc\"")
+        ca[k] <- paste0("class=\"tc tdc ", tcls, "\"")
       
       
       if (algns[k] == "left")
-        castr[k] <- paste0("class=\"", tcls, " tdl tbstr\"")
+        castr[k] <- paste0("class=\"tc tdl tbstr ", tcls, "\"")
       else if (algns[k] == "right")
-        castr[k] <- paste0("class=\"", tcls, " tdr tbstr\"")
+        castr[k] <- paste0("class=\"tc tdr tbstr ", tcls, "\"")
       else if (algns[k] %in% c("center", "centre"))
-        castr[k] <- paste0("class=\"", tcls, " tdc tbstr\"")
+        castr[k] <- paste0("class=\"tc tdc tbstr ", tcls, "\"")
     }
   }
   
   ret <- c()
+  
+  strpmod <- 1
+  if (frb)
+    strpmod <- 0
   
   
   # Table Body
@@ -857,13 +890,16 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
       
       if (!is.control(nms[j])) {
         
+        sflg <- nms[j] == "stub" &  has_style(rs, "table_stub_background")
+        
         b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
                                    exclude = exclude_top, 
-                                   border_color = get_style(rs, "border_color"))
+                                   border_color = get_style(rs, "border_color"),
+                                    stub_flag = sflg)
         
         # Construct html
         if (b == "") {
-          if (i %% 2 == 1 | nms[j] == "stub") {
+          if (i %% 2 == strpmod) {
             ret[i] <- paste0(ret[i], "<td ", ca[j], ">", 
                              encodeHTML(t[i, j]), "</td>")
           } else {
@@ -871,7 +907,8 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, ex_brdr =
                              encodeHTML(t[i, j]), "</td>")
           }
         } else { 
-          if (i %% 2 == 1 | nms[j] == "stub") {
+
+          if (i %% 2 == strpmod) {
             ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
                              encodeHTML(t[i, j]), "</td>")
           } else {

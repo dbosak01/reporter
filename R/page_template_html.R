@@ -770,7 +770,9 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
 #' great.
 #' @noRd
  get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, 
-                                  flag = "", exclude = NULL, border_color = "") {
+                                  flag = "", exclude = NULL, 
+                                  border_color = "",
+                                  stub_flag = FALSE) {
   
   t <- ""
   b <- ""
@@ -790,7 +792,7 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
     if (row > 1)
       t <- ""
     
-    if (col < ncol)
+    if (col < ncol & stub_flag == FALSE)
       r <- ""
     
   } else {
@@ -835,7 +837,7 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
   if (!is.null(flag)) {
     if (flag %in% c("L", "B")) {
       
-      if (col != ncol)
+      if (col != ncol & stub_flag == FALSE)
         r <- ""
       
       if (col != 1)

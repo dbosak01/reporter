@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@media print{
+@page {size:landscape;margin:0;}
+.noprint{display:none;}}
+body {
+font-family: Arial;
+font-size: 10pt;
+margin-top: 1in;
+margin-bottom: 0.5in;
+margin-left: 1in;
+margin-right: 1in;
+background-color: WhiteSmoke;}
+.thdr {border-bottom: thin solid Grey;background-color: Tan;color: White;font-weight: bold;}
+.shdr {background-color: Tan;color: White;font-weight: bold;}
+.tdc {text-align:center;}
+.tdl {text-align:left;}
+.tdr {text-align:right;}
+.tc {background-color: White;}
+.tbs {}
+.tbstr {background-color: Wheat;}
+.ts {font-weight: bold;}
+table {border-spacing: 0;border-collapse: collapse;}
+td {padding:0px 2px 0px 2px;}
+</style>
+</head>
+<body>
+
+<div align="center" >
+<table style="width:3.6in;text-align: center;color: SteelBlue;font-weight: bold;font-size: 12pt;">
+<tr><td>Table&nbsp;1.0</td></tr>
+<tr><td>MTCARS&nbsp;Summary&nbsp;Table&nbsp;with&nbsp;Custom&nbsp;Style</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+<table class="tbs" style="width:3.6in;">
+<colgroup>
+<col style="width:1.1in;">
+<col style="width:1.25in;">
+<col style="width:1.25in;">
+</colgroup>
+<thead>
+<tr>
+<td class="thdr tdl" style="border-top:thin solid Grey;border-left:thin solid Grey;">&nbsp;</td>
+<td class="thdr tdc" style="border-top:thin solid Grey;">Group&nbsp;A<br>(N=19)</td>
+<td class="thdr tdc" style="border-top:thin solid Grey;border-right:thin solid Grey;">Group&nbsp;B<br>(N=13)</td>
+</tr>
+<tr><td class="tc" colspan="3" style="border-left:thin solid Grey;border-right:thin solid Grey;">&nbsp;</td></tr></thead>
+
+<tbody>
+<tr><td class="tc tdl tbstr ts" style="border-top:thin solid Grey;border-left:thin solid Grey;">Miles&nbsp;Per&nbsp;Gallon</td><td class="tc tdc tbstr " style="border-top:thin solid Grey;">&nbsp;</td><td class="tc tdc tbstr " style="border-top:thin solid Grey;border-right:thin solid Grey;">&nbsp;</td></tr>
+<tr><td class="tc tdl ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;N</td><td class="tc tdc ">19</td><td class="tc tdc " style="border-right:thin solid Grey;">13</td></tr>
+<tr><td class="tc tdl tbstr ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;Mean</td><td class="tc tdc tbstr ">18.8&nbsp;(6.5)</td><td class="tc tdc tbstr " style="border-right:thin solid Grey;">22.0&nbsp;(4.9)</td></tr>
+<tr><td class="tc tdl ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;Median</td><td class="tc tdc ">16.4</td><td class="tc tdc " style="border-right:thin solid Grey;">21.4</td></tr>
+<tr><td class="tc tdl tbstr ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;Q1&nbsp;-&nbsp;Q3</td><td class="tc tdc tbstr ">15.1&nbsp;-&nbsp;21.2</td><td class="tc tdc tbstr " style="border-right:thin solid Grey;">19.2&nbsp;-&nbsp;22.8</td></tr>
+<tr><td class="tc tdl ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;Range</td><td class="tc tdc ">10.4&nbsp;-&nbsp;33.9</td><td class="tc tdc " style="border-right:thin solid Grey;">14.7&nbsp;-&nbsp;32.4</td></tr>
+<tr><td class="tc tdl tbstr ts" style="border-left:thin solid Grey;">&nbsp;</td><td class="tc tdc tbstr ">&nbsp;</td><td class="tc tdc tbstr " style="border-right:thin solid Grey;">&nbsp;</td></tr>
+<tr><td class="tc tdl ts" style="border-left:thin solid Grey;">Cylinders</td><td class="tc tdc ">&nbsp;</td><td class="tc tdc " style="border-right:thin solid Grey;">&nbsp;</td></tr>
+<tr><td class="tc tdl tbstr ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;8&nbsp;Cylinder</td><td class="tc tdc tbstr ">10&nbsp;(&nbsp;52.6%)</td><td class="tc tdc tbstr " style="border-right:thin solid Grey;">4&nbsp;(&nbsp;30.8%)</td></tr>
+<tr><td class="tc tdl ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;6&nbsp;Cylinder</td><td class="tc tdc ">4&nbsp;(&nbsp;21.1%)</td><td class="tc tdc " style="border-right:thin solid Grey;">3&nbsp;(&nbsp;23.1%)</td></tr>
+<tr><td class="tc tdl tbstr ts" style="border-left:thin solid Grey;">&nbsp;&nbsp;4&nbsp;Cylinder</td><td class="tc tdc tbstr ">5&nbsp;(&nbsp;26.3%)</td><td class="tc tdc tbstr " style="border-right:thin solid Grey;">6&nbsp;(&nbsp;46.2%)</td></tr>
+<tr><td class="tc tdl ts" style="border-bottom:thin solid Grey;border-left:thin solid Grey;">&nbsp;</td><td class="tc tdc " style="border-bottom:thin solid Grey;">&nbsp;</td><td class="tc tdc " style="border-bottom:thin solid Grey;border-right:thin solid Grey;">&nbsp;</td></tr>
+</tbody>
+</table>
+<table style="width:3.6in;text-align: left;">
+<tr><td style="border-left:thin solid Grey;border-right:thin solid Grey;">&nbsp;</td></tr>
+<tr><td style="border-bottom:thin solid Grey;border-left:thin solid Grey;border-right:thin solid Grey;">*&nbsp;Motor&nbsp;Trend,&nbsp;1974</td></tr>
+</table>
+<br>
+</div>
+</table>
+
+</body></html>
