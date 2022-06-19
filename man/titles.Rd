@@ -52,8 +52,7 @@ PDF, and DOCX output types.}
 \item{font_size}{The font size to use for the title block.  The font size
 of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
 13, and 14.  This parameter only applies to variable-width RTF, HTML, PDF,
-and DOCX output types.
-\code{\link{create_report}}.}
+and DOCX output types.}
 }
 \value{
 The modified report.

@@ -218,6 +218,7 @@ create_report <- function(file_path = "", output_type = "TXT",
   x$font_size <- font_size
 
   
+  # Not needed for DOCX and HTML because there is no text version
   if (output_type %in% c("TXT", "PDF", "RTF")) {
     
     # Set default options for text
@@ -244,45 +245,6 @@ create_report <- function(file_path = "", output_type = "TXT",
 
 
 # Options -----------------------------------------------------------------
-
-
-#' @title
-#' Set options for a report (variable width font)
-#'
-#' @description
-#' This function sets the options for a report of output type 
-#' 'RTF', or 'PDF' when the \code{font_type} parameter on 
-#' \code{\link{create_report}} function is set to "variable".
-#'
-#' @param x The report spec.
-#' @param font_name The font name to use on the report.  The specified font
-#' will be used on the entire report.  Valid values are "Courier", "Courier New", 
-#' "Arial", "Calibri", or "Times New Roman".  The default font is "Courier New".
-#' @param font_size The font point size.  Valid values are 10 or 12.
-#' @return The updated report spec.
-#' @family report
-#' @examples
-#' # Here is an example
-#' # This function commented out for now, until variable width fonts are available.
-#' @noRd  
-NULL
-# options_variable <- function(x, font_name="Courier New", font_size=10) {
-#   
-#   # Trap missing or invalid font_name parameter.
-#   if (!font_name %in% c("Courier New", "Times New Roman", "Arial", "Calibri")) {
-#     
-#     stop(paste0("font_name parameter on create_report() ",
-#                 "function is invalid: '", font_name,
-#                 "'\n\tValid values are: 'Arial', 'Calibri', 'Courier New', ",
-#                 "and 'Times New Roman'."))
-#   }
-#   
-#   x$font_size <-font_size
-#   x$font_name <- font_name
-#   x$font_family <- get_font_family(font_name)
-#   
-#   return(x)
-# }
 
 
 #' @description This is a lookup table to get standard settings for various 
@@ -366,7 +328,7 @@ editor_settings <- read.table(header = TRUE, text = '
 #' 
 #' Some of the \code{options_fixed} function apply only to RTF and PDF.
 #' In particular, the \code{font_size} parameter applies only to RTF and PDF
-#' reports.  Valid font size options are 8, 10, and 12.  The font size may
+#' reports.  Valid font size options are 8, 9, 10, 11, and 12.  The font size may
 #' also be set on the \code{\link{create_report}} function.
 #' 
 #' @param x The report spec.
@@ -1241,7 +1203,6 @@ title_header <- function(x, ..., right = "",
 #' of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
 #' 13, and 14.  This parameter only applies to variable-width RTF, HTML, PDF,
 #' and DOCX output types.
-#' \code{\link{create_report}}.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1853,8 +1814,8 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' whether there is a page break before or after.
 #' @details 
 #' The \code{add_content} function adds a piece of content to a report. For a 
-#' text report, valid objects are a table or text object.  For an RTF, PDF, or 
-#' HTML report, valid objects are a table, text, or plot object.  See 
+#' text report, valid objects are a table or text object.  For an RTF, PDF,  
+#' HTML, or DOCX report, valid objects are a table, text, or plot object.  See 
 #' \code{\link{create_table}}, \code{\link{create_text}}, or 
 #' \code{\link{create_plot}} for further 
 #' information on how to create content objects.  

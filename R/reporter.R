@@ -1,7 +1,7 @@
 #' @title reporter: A package for creating statistical reports
 #'
 #' @description The \strong{reporter} package creates statistical reports in TXT, 
-#' RTF, PDF, and HTML file formats.  Features include automatic page wrapping and 
+#' RTF, PDF, HTML, and DOCX file formats.  Features include automatic page wrapping and 
 #' breaking for wide and long tables, spanning headers, titles, footnotes, 
 #' page headers, page footers, and page numbering.  The package allows mixing
 #' of multiple tables, text, and plots in a single report, or even on a single
@@ -22,7 +22,7 @@
 #' output formats, as there are already numerous R packages that 
 #' provide tabular reporting in HTML. 
 #' 
-#' PDF output may have limitations not associated with TXT and RTF.  
+#' PDF output may have limitations not associated with other output types.  
 #' See \link{NotesOnPDF}
 #' for more information.
 #'     
@@ -36,7 +36,7 @@
 #'   \item Integrates with the \strong{\link[fmtr]{fmtr}} package to format 
 #'         numeric, date, and character data
 #'   \item Plots from the popular \strong{\link[ggplot2]{ggplot2}} package can 
-#'         be added to RTF, PDF, and HTML reports
+#'         be added to RTF, PDF, HTML, and DOCX reports
 #'   \item Allows appending multiple tables to a report, multiple tables to a page, 
 #'         and intermingling of text, tables, and plots
 #'   \item Supports in-report date/time stamps and "Page X of Y" page numbering
@@ -56,15 +56,12 @@
 #' has some limitations.  Those
 #' assumptions and limitations are as follows:
 #' \itemize{
-#'   \item The package assumes that displaying the data in the proper
-#'   layout is more important than aesthetic considerations like colors,
-#'   borders, fonts, striping, etc.  
 #'   \item The current version supports both a monospace, fixed-width style 
 #'   report and a variable-width style report.  The monospace report is the 
 #'   default.  To create a variable width report, set the font parameter on
 #'   the \code{create_report} function to 'Arial', 'Courier', or 'Times'.
 #'   \item If a font is selected, it will be applied uniformly to the entire
-#'   reports.  The package has no capabilities to mix different fonts in the 
+#'   report.  The package has no capabilities to mix different fonts in the 
 #'   same report.
 #'   \item The package assumes that, except for formatting and layout, 
 #'   the incoming data is ready for 
@@ -95,8 +92,12 @@
 #'   \item The max automatic column width
 #'   is 5 inches.  Longer data values will be wrapped.
 #'   \item The package support plots from \strong{ggplot2}. These plots
-#'   can be added to RTF, PDF, and HTML output types.  The package does not 
+#'   can be added to RTF, PDF, HTML, and DOCX output types.  The package does not 
 #'   support Base R plots.
+#'   \item The package currently supports styling for HTML reports.  
+#'   This styling allows setting background colors, font colors, border
+#'   colors, and some font sizing and bolding.  Styling for additional
+#'   output types will be available in future versions of the package.  
 #' }
 #' 
 #' @docType package
@@ -105,6 +106,15 @@ NULL
 
 #' @title Notes on PDF output type
 #' @description 
+#' PDF output supports a limited character set.  Some Unicode characters
+#' can cause the PDF rendering to fail.  All Latin characters and other 
+#' common characters like 
+#' mathematical operators and Greek letters are supported.  However, 
+#' other special characters and characters from Asian languages may not 
+#' be supported, depending on the operating system and installed operating 
+#' system languages. If a character is not supported, it will be replaced
+#' with a question mark (?).
+#' 
 #' As of \strong{reporter} v1.1.3, the package will 
 #' generate PDF files directly, without using \strong{rmarkdown} as an 
 #' intermediary. This technique eliminates dependencies, makes the package 
@@ -123,11 +133,5 @@ NULL
 #' furthermore be added to the \code{path} environment variable on the system
 #' where \strong{reporter} will run, so that \strong{reporter} can find it.
 #' 
-#' PDF output also supports a limited character set.  Some Unicode characters
-#' can cause the PDF rendering to fail.  Common characters like 
-#' mathematical operators and Greek letters are supported.  However, 
-#' other special characters and characters from Asian languages may not 
-#' be supported, depending on the operating system and installed operating 
-#' system languages. 
 #' @name NotesOnPDF
 NULL

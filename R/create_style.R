@@ -331,7 +331,7 @@ add_style <- function(rpt, style = NULL, theme = NULL) {
     }
   }
   
-  
+  # Get theme if requested
   if (!is.null(theme)) {
     
     style <- get_theme(theme)
@@ -341,6 +341,7 @@ add_style <- function(rpt, style = NULL, theme = NULL) {
     
     rpt$style <- style
     
+    # Set font name and size if requested
     if (!is.null(style$font_name))
       rpt$font <- style$font_name
     
@@ -545,7 +546,7 @@ get_theme <- function(theme_name) {
                          table_label_row_bold = TRUE)
   } else {
     
-   stop("Theme name is not available.") 
+   stop(paste0("Theme name '", theme, "' is not available."))
     
   }
   
@@ -609,6 +610,7 @@ print.style_spec <- function(x, ..., verbose = FALSE) {
     # Print header
     cat(grey60("# A style specification: \n"))
     
+    # Print values for each style parameter
     for (nm in names(x)) {
       
       if (any(class(x[[nm]]) %in% "character")) {
@@ -631,7 +633,8 @@ print.style_spec <- function(x, ..., verbose = FALSE) {
 
 
 
-
+# A function to determine whether a style exists.
+# Returns a TRUE or FALSE.
 #' @noRd
 has_style <- function(rs, style_name) {
  
@@ -648,6 +651,8 @@ has_style <- function(rs, style_name) {
   
 }
 
+# A function to get a style value if it exists.
+# Returns the value or an empty string if it does not exist.
 #' @noRd
 get_style <- function(rs, style_name) {
   
@@ -663,6 +668,8 @@ get_style <- function(rs, style_name) {
   return(ret)
 }
 
+# A function to convert a style setting to the appropriate css.
+# Returns an empty string if the style setting is not found.
 #' @noRd
 get_style_html <- function(rs, style_name, default = NULL) {
   

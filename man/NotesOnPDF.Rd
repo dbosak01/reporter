@@ -4,6 +4,15 @@
 \alias{NotesOnPDF}
 \title{Notes on PDF output type}
 \description{
+PDF output supports a limited character set.  Some Unicode characters
+can cause the PDF rendering to fail.  All Latin characters and other 
+common characters like 
+mathematical operators and Greek letters are supported.  However, 
+other special characters and characters from Asian languages may not 
+be supported, depending on the operating system and installed operating 
+system languages. If a character is not supported, it will be replaced
+with a question mark (?).
+
 As of \strong{reporter} v1.1.3, the package will 
 generate PDF files directly, without using \strong{rmarkdown} as an 
 intermediary. This technique eliminates dependencies, makes the package 
@@ -21,11 +30,4 @@ LaTeX renderer like \strong{MiKTeX}.
 not be installed as part of the \strong{reporter} install.  This program must
 furthermore be added to the \code{path} environment variable on the system
 where \strong{reporter} will run, so that \strong{reporter} can find it.
-
-PDF output also supports a limited character set.  Some Unicode characters
-can cause the PDF rendering to fail.  Common characters like 
-mathematical operators and Greek letters are supported.  However, 
-other special characters and characters from Asian languages may not 
-be supported, depending on the operating system and installed operating 
-system languages.
 }

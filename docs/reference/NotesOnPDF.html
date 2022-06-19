@@ -49,7 +49,15 @@
   <script src="../extra.js"></script>
 
 <meta property="og:title" content="Notes on PDF output type — NotesOnPDF" />
-<meta property="og:description" content="As of reporter v1.1.3, the package will 
+<meta property="og:description" content="PDF output supports a limited character set.  Some Unicode characters
+can cause the PDF rendering to fail.  All Latin characters and other 
+common characters like 
+mathematical operators and Greek letters are supported.  However, 
+other special characters and characters from Asian languages may not 
+be supported, depending on the operating system and installed operating 
+system languages. If a character is not supported, it will be replaced
+with a question mark (?).
+As of reporter v1.1.3, the package will 
 generate PDF files directly, without using rmarkdown as an 
 intermediary. This technique eliminates dependencies, makes the package 
 easier to install, and greatly improves performance.  It is recommended
@@ -200,7 +208,15 @@ additional dependencies and installation requirements.  See details below." />
     </div>
 
     <div class="ref-description">
-    <p>As of <strong>reporter</strong> v1.1.3, the package will 
+    <p>PDF output supports a limited character set.  Some Unicode characters
+can cause the PDF rendering to fail.  All Latin characters and other 
+common characters like 
+mathematical operators and Greek letters are supported.  However, 
+other special characters and characters from Asian languages may not 
+be supported, depending on the operating system and installed operating 
+system languages. If a character is not supported, it will be replaced
+with a question mark (?).</p>
+<p>As of <strong>reporter</strong> v1.1.3, the package will 
 generate PDF files directly, without using <strong>rmarkdown</strong> as an 
 intermediary. This technique eliminates dependencies, makes the package 
 easier to install, and greatly improves performance.  It is recommended
@@ -220,12 +236,6 @@ LaTeX renderer like <strong>MiKTeX</strong>.
 not be installed as part of the <strong>reporter</strong> install.  This program must
 furthermore be added to the <code>path</code> environment variable on the system
 where <strong>reporter</strong> will run, so that <strong>reporter</strong> can find it.</p>
-<p>PDF output also supports a limited character set.  Some Unicode characters
-can cause the PDF rendering to fail.  Common characters like 
-mathematical operators and Greek letters are supported.  However, 
-other special characters and characters from Asian languages may not 
-be supported, depending on the operating system and installed operating 
-system languages.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -507,11 +507,6 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
   cnt <- 0
   border_flag <- FALSE
   
-  # ta <- "align=\"left\" "
-  # if (talgn == "right")
-  #   ta <- "align=\"right\" "
-  # else if (talgn %in% c("center", "centre"))
-  #   ta <- "align=\"center\" "
   
   u <- rs$units
   if (rs$units == "inches")
@@ -539,7 +534,6 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
       par(family = get_font_family(rs$font), ps = rs$font_size)
       
       ret[length(ret) + 1] <- paste0("<table ",
-                                   #  ta,
                                      "style=\"width:", w, u, ";", 
                                      "\">\n", 
                                      "<colgroup><col style=\"width:70%;\">\n",
@@ -664,8 +658,6 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
 
 #' Get page by text strings suitable for printing
 #' @import stringi
-#' @param titles Page by object
-#' @param width The width to set the page by strings to
 #' @return A vector of strings
 #' @noRd
 get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
@@ -730,9 +722,6 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
                                    pgby$label, encodeHTML(value), "</td></tr>\n")
     cnt <- cnt + 1
-
-    # cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
-    #                            rs$font, rs$font_size, rs$units)
 
 
     if (pgby$blank_row %in% c("below", "both")) {

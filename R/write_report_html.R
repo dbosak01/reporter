@@ -474,36 +474,6 @@ update_page <- function(lns, pg) {
 # # A lot of these values are guesses.  Need to test.
 # # Row height and line height were defined independently in case
 # # they are different.  Right now, appear to be the same.
-# if (rs$font_size == 8) {
-#   rh <- 185 #round(.11 * 1440)
-#   lh <- 185 #round(.1 * 1440) 
-#   #pb <- "\\fs1\\sl0\\par\\pard\\fs16\\page\\fs1\\sl0\\par\\pard\\fs16"
-#   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs16"
-#   gtr <- .1 
-#   cw <- .1
-#   cp <- 40
-#   sm <- "\\sl-180\\slmult0"
-# } else if (rs$font_size == 10) {
-#   rh <- 228 #round(.165 * 1440) # 225
-#   lh <- 228 #round(.165 * 1440)  
-#   #pb <- "\\page\\line" #fs1\\sl0\\par\\pard\\fs20"
-#   pb <-  "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs20"
-#   gtr <- .1
-#   cw <- .11
-#   cp <- 40
-#   sm <- "\\sl-225\\slmult0"
-# } else if (rs$font_size == 12) {
-#   rh <- 275 #round(.2 * 1440)
-#   lh <- 275 #round(.1875 * 1440) #270
-#   pb <- "{\\pard\\pagebb\\fs1\\sl0\\par}\\fs24"
-#   gtr <- .11
-#   cw <- .12
-#   cp <- 40
-#   sm <- "\\sl-275\\slmult0"
-# }
-# 
-# 
-
 
 #' @description Setup page for content
 #' @details  Calculates available space for content and prepares text lines

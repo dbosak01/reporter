@@ -57,4 +57,4 @@ res <- write_report(rpt)
 <img src="../man/images/plot.png"/>
 
 
-Next: [Example 11: Styles and Themes](reporter-styles.html)
+Next: [Example 12: Styles and Themes](reporter-styles.html)
