@@ -13,10 +13,16 @@ margin-bottom: 0.25in;
 margin-left: 1in;
 margin-right: 1in;
 }
-.thdr {font-weight: normal;border-bottom: thin solid;}
+.thdr {border-bottom: thin solid black;font-weight: normal;}
+.shdr {font-weight: normal;}
 .tdc {text-align:center;}
 .tdl {text-align:left;}
 .tdr {text-align:right;}
+.tc {}
+.tbs {}
+.tbstr {}
+.ts {}
+.tlr {}
 table {border-spacing: 0;border-collapse: collapse;}
 td {padding:0px 2px 0px 2px;}
 </style>
@@ -36,7 +42,7 @@ td {padding:0px 2px 0px 2px;}
 <tr><td>&nbsp;</td></tr>
 </table>
 
-<table style="width:4.03in;">
+<table class="tbs" style="width:4.03in;">
 <colgroup>
 <col style="width:1.3in;">
 <col style="width:0.85in;">
@@ -50,19 +56,19 @@ td {padding:0px 2px 0px 2px;}
 <td class="thdr tdc">Group&nbsp;A<br>(N=19)</td>
 <td class="thdr tdc">Group&nbsp;B<br>(N=13)</td>
 </tr>
-<tr><td colspan="4">&nbsp;</td></tr></thead>
+<tr><td class="tc" colspan="4">&nbsp;</td></tr></thead>
 
 <tbody>
-<tr><td class="tdl">Miles&nbsp;Per&nbsp;Gallon</td><td class="tdl">N</td><td class="tdc">19</td><td class="tdc">13</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">Mean</td><td class="tdc">18.8&nbsp;(6.5)</td><td class="tdc">22.0&nbsp;(4.9)</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">Median</td><td class="tdc">16.4</td><td class="tdc">21.4</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">Q1&nbsp;-&nbsp;Q3</td><td class="tdc">15.1&nbsp;-&nbsp;21.2</td><td class="tdc">19.2&nbsp;-&nbsp;22.8</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">Range</td><td class="tdc">10.4&nbsp;-&nbsp;33.9</td><td class="tdc">14.7&nbsp;-&nbsp;32.4</td></tr>
-<tr><td class="tdl">&nbsp;</td><td class="tdl">&nbsp;</td><td class="tdc">&nbsp;</td><td class="tdc">&nbsp;</td></tr>
-<tr><td class="tdl">Cylinders</td><td class="tdl">8&nbsp;Cylinder</td><td class="tdc">10&nbsp;(&nbsp;52.6%)</td><td class="tdc">4&nbsp;(&nbsp;30.8%)</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">6&nbsp;Cylinder</td><td class="tdc">4&nbsp;(&nbsp;21.1%)</td><td class="tdc">3&nbsp;(&nbsp;23.1%)</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">4&nbsp;Cylinder</td><td class="tdc">5&nbsp;(&nbsp;26.3%)</td><td class="tdc">6&nbsp;(&nbsp;46.2%)</td></tr>
-<tr><td class="tdl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tdl">&nbsp;</td><td class="tdc">&nbsp;</td><td class="tdc">&nbsp;</td></tr>
+<tr><td class="tc tdl tbstr ">Miles&nbsp;Per&nbsp;Gallon</td><td class="tc tdl tbstr ">N</td><td class="tc tdc tbstr ">19</td><td class="tc tdc tbstr ">13</td></tr>
+<tr><td class="tc tdl ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl ">Mean</td><td class="tc tdc ">18.8&nbsp;(6.5)</td><td class="tc tdc ">22.0&nbsp;(4.9)</td></tr>
+<tr><td class="tc tdl tbstr ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl tbstr ">Median</td><td class="tc tdc tbstr ">16.4</td><td class="tc tdc tbstr ">21.4</td></tr>
+<tr><td class="tc tdl ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl ">Q1&nbsp;-&nbsp;Q3</td><td class="tc tdc ">15.1&nbsp;-&nbsp;21.2</td><td class="tc tdc ">19.2&nbsp;-&nbsp;22.8</td></tr>
+<tr><td class="tc tdl tbstr ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl tbstr ">Range</td><td class="tc tdc tbstr ">10.4&nbsp;-&nbsp;33.9</td><td class="tc tdc tbstr ">14.7&nbsp;-&nbsp;32.4</td></tr>
+<tr><td class="tc tdl ">&nbsp;</td><td class="tc tdl ">&nbsp;</td><td class="tc tdc ">&nbsp;</td><td class="tc tdc ">&nbsp;</td></tr>
+<tr><td class="tc tdl tbstr ">Cylinders</td><td class="tc tdl tbstr ">8&nbsp;Cylinder</td><td class="tc tdc tbstr ">10&nbsp;(&nbsp;52.6%)</td><td class="tc tdc tbstr ">4&nbsp;(&nbsp;30.8%)</td></tr>
+<tr><td class="tc tdl ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl ">6&nbsp;Cylinder</td><td class="tc tdc ">4&nbsp;(&nbsp;21.1%)</td><td class="tc tdc ">3&nbsp;(&nbsp;23.1%)</td></tr>
+<tr><td class="tc tdl tbstr ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl tbstr ">4&nbsp;Cylinder</td><td class="tc tdc tbstr ">5&nbsp;(&nbsp;26.3%)</td><td class="tc tdc tbstr ">6&nbsp;(&nbsp;46.2%)</td></tr>
+<tr><td class="tc tdl ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="tc tdl ">&nbsp;</td><td class="tc tdc ">&nbsp;</td><td class="tc tdc ">&nbsp;</td></tr>
 </tbody>
 </table>
 <br>
@@ -108,7 +114,7 @@ td {padding:0px 2px 0px 2px;}
 <col style="width:33.3%">
 <col style="width:33.3%">
 </colgroup>
-<tr><td style="text-align:left">2022-03-08&nbsp;16:50:02</td><td style="text-align:center">Confidential</td><td style="text-align:right">Page&nbsp;1&nbsp;of&nbsp;1</td></tr>
+<tr><td style="text-align:left">2022-06-19&nbsp;12:53:25</td><td style="text-align:center">Confidential</td><td style="text-align:right">Page&nbsp;1&nbsp;of&nbsp;1</td></tr>
 </table>
 
 </body></html>

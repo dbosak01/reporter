@@ -13,10 +13,16 @@ margin-bottom: 0.5in;
 margin-left: 1in;
 margin-right: 1in;
 }
-.thdr {font-weight: normal;border-bottom: thin solid;}
+.thdr {border-bottom: thin solid black;font-weight: normal;}
+.shdr {font-weight: normal;}
 .tdc {text-align:center;}
 .tdl {text-align:left;}
 .tdr {text-align:right;}
+.tc {}
+.tbs {}
+.tbstr {}
+.ts {}
+.tlr {}
 table {border-spacing: 0;border-collapse: collapse;}
 td {padding:0px 2px 0px 2px;}
 </style>
@@ -35,7 +41,7 @@ td {padding:0px 2px 0px 2px;}
 <tr><td>&nbsp;</td></tr>
 </table>
 
-<table style="width:4.604in;">
+<table class="tbs" style="width:4.604in;">
 <colgroup>
 <col style="width:0.9775in;">
 <col style="width:0.904375in;">
@@ -54,61 +60,61 @@ td {padding:0px 2px 0px 2px;}
 </thead>
 
 <tbody>
-<tr><td class="tdr">5.1</td><td class="tdr">3.5</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.9</td><td class="tdr">3</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.7</td><td class="tdr">3.2</td><td class="tdr">1.3</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.6</td><td class="tdr">3.1</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.6</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.4</td><td class="tdr">3.9</td><td class="tdr">1.7</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.6</td><td class="tdr">3.4</td><td class="tdr">1.4</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.4</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.4</td><td class="tdr">2.9</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.9</td><td class="tdr">3.1</td><td class="tdr">1.5</td><td class="tdr">0.1</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.4</td><td class="tdr">3.7</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.8</td><td class="tdr">3.4</td><td class="tdr">1.6</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.8</td><td class="tdr">3</td><td class="tdr">1.4</td><td class="tdr">0.1</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.3</td><td class="tdr">3</td><td class="tdr">1.1</td><td class="tdr">0.1</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">4</td><td class="tdr">1.2</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">4.4</td><td class="tdr">1.5</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.4</td><td class="tdr">3.9</td><td class="tdr">1.3</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.5</td><td class="tdr">1.4</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">3.8</td><td class="tdr">1.7</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.8</td><td class="tdr">1.5</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.4</td><td class="tdr">3.4</td><td class="tdr">1.7</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.7</td><td class="tdr">1.5</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.6</td><td class="tdr">3.6</td><td class="tdr">1</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.3</td><td class="tdr">1.7</td><td class="tdr">0.5</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.8</td><td class="tdr">3.4</td><td class="tdr">1.9</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3</td><td class="tdr">1.6</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.4</td><td class="tdr">1.6</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.2</td><td class="tdr">3.5</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.2</td><td class="tdr">3.4</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.7</td><td class="tdr">3.2</td><td class="tdr">1.6</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.8</td><td class="tdr">3.1</td><td class="tdr">1.6</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.4</td><td class="tdr">3.4</td><td class="tdr">1.5</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.2</td><td class="tdr">4.1</td><td class="tdr">1.5</td><td class="tdr">0.1</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">4.2</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.9</td><td class="tdr">3.1</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.2</td><td class="tdr">1.2</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">3.5</td><td class="tdr">1.3</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.9</td><td class="tdr">3.6</td><td class="tdr">1.4</td><td class="tdr">0.1</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.4</td><td class="tdr">3</td><td class="tdr">1.3</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.4</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.5</td><td class="tdr">1.3</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.5</td><td class="tdr">2.3</td><td class="tdr">1.3</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.4</td><td class="tdr">3.2</td><td class="tdr">1.3</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.5</td><td class="tdr">1.6</td><td class="tdr">0.6</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.8</td><td class="tdr">1.9</td><td class="tdr">0.4</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.8</td><td class="tdr">3</td><td class="tdr">1.4</td><td class="tdr">0.3</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">3.8</td><td class="tdr">1.6</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">4.6</td><td class="tdr">3.2</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5.3</td><td class="tdr">3.7</td><td class="tdr">1.5</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">3.3</td><td class="tdr">1.4</td><td class="tdr">0.2</td><td class="tdr">setosa</td></tr>
-<tr><td class="tdr">7</td><td class="tdr">3.2</td><td class="tdr">4.7</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">3.2</td><td class="tdr">4.5</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.9</td><td class="tdr">3.1</td><td class="tdr">4.9</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">2.3</td><td class="tdr">4</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.5</td><td class="tdr">2.8</td><td class="tdr">4.6</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
+<tr><td class="tc tdr ">5.1</td><td class="tc tdr ">3.5</td><td class="tc tdr ">1.4</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.7</td><td class="tc tdr ">3.2</td><td class="tc tdr ">1.3</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.6</td><td class="tc tdr tbstr ">3.1</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5</td><td class="tc tdr ">3.6</td><td class="tc tdr ">1.4</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.4</td><td class="tc tdr tbstr ">3.9</td><td class="tc tdr tbstr ">1.7</td><td class="tc tdr tbstr ">0.4</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.6</td><td class="tc tdr ">3.4</td><td class="tc tdr ">1.4</td><td class="tc tdr ">0.3</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">3.4</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.4</td><td class="tc tdr ">2.9</td><td class="tc tdr ">1.4</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">3.1</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.1</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.4</td><td class="tc tdr ">3.7</td><td class="tc tdr ">1.5</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.8</td><td class="tc tdr tbstr ">3.4</td><td class="tc tdr tbstr ">1.6</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.8</td><td class="tc tdr ">3</td><td class="tc tdr ">1.4</td><td class="tc tdr ">0.1</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.3</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">1.1</td><td class="tc tdr tbstr ">0.1</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.8</td><td class="tc tdr ">4</td><td class="tc tdr ">1.2</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.7</td><td class="tc tdr tbstr ">4.4</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.4</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.4</td><td class="tc tdr ">3.9</td><td class="tc tdr ">1.3</td><td class="tc tdr ">0.4</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">3.5</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.3</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.7</td><td class="tc tdr ">3.8</td><td class="tc tdr ">1.7</td><td class="tc tdr ">0.3</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">3.8</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.3</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.4</td><td class="tc tdr ">3.4</td><td class="tc tdr ">1.7</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">3.7</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.4</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.6</td><td class="tc tdr ">3.6</td><td class="tc tdr ">1</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">3.3</td><td class="tc tdr tbstr ">1.7</td><td class="tc tdr tbstr ">0.5</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.8</td><td class="tc tdr ">3.4</td><td class="tc tdr ">1.9</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">1.6</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5</td><td class="tc tdr ">3.4</td><td class="tc tdr ">1.6</td><td class="tc tdr ">0.4</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.2</td><td class="tc tdr tbstr ">3.5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.2</td><td class="tc tdr ">3.4</td><td class="tc tdr ">1.4</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.7</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">1.6</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.8</td><td class="tc tdr ">3.1</td><td class="tc tdr ">1.6</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.4</td><td class="tc tdr tbstr ">3.4</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.4</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.2</td><td class="tc tdr ">4.1</td><td class="tc tdr ">1.5</td><td class="tc tdr ">0.1</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.5</td><td class="tc tdr tbstr ">4.2</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.9</td><td class="tc tdr ">3.1</td><td class="tc tdr ">1.5</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">1.2</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.5</td><td class="tc tdr ">3.5</td><td class="tc tdr ">1.3</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">3.6</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.1</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.4</td><td class="tc tdr ">3</td><td class="tc tdr ">1.3</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">3.4</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5</td><td class="tc tdr ">3.5</td><td class="tc tdr ">1.3</td><td class="tc tdr ">0.3</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">0.3</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">4.4</td><td class="tc tdr ">3.2</td><td class="tc tdr ">1.3</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">3.5</td><td class="tc tdr tbstr ">1.6</td><td class="tc tdr tbstr ">0.6</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.1</td><td class="tc tdr ">3.8</td><td class="tc tdr ">1.9</td><td class="tc tdr ">0.4</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.8</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.3</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.1</td><td class="tc tdr ">3.8</td><td class="tc tdr ">1.6</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">4.6</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">5.3</td><td class="tc tdr ">3.7</td><td class="tc tdr ">1.5</td><td class="tc tdr ">0.2</td><td class="tc tdr ">setosa</td></tr>
+<tr><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">3.3</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">0.2</td><td class="tc tdr tbstr ">setosa</td></tr>
+<tr><td class="tc tdr ">7</td><td class="tc tdr ">3.2</td><td class="tc tdr ">4.7</td><td class="tc tdr ">1.4</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.4</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.9</td><td class="tc tdr ">3.1</td><td class="tc tdr ">4.9</td><td class="tc tdr ">1.5</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.5</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">4</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.5</td><td class="tc tdr ">2.8</td><td class="tc tdr ">4.6</td><td class="tc tdr ">1.5</td><td class="tc tdr ">versicolor</td></tr>
 </tbody>
 </table>
 </div>
@@ -136,7 +142,7 @@ td {padding:0px 2px 0px 2px;}
 <tr><td>&nbsp;</td></tr>
 </table>
 
-<table style="width:4.604in;">
+<table class="tbs" style="width:4.604in;">
 <colgroup>
 <col style="width:0.9775in;">
 <col style="width:0.904375in;">
@@ -155,61 +161,61 @@ td {padding:0px 2px 0px 2px;}
 </thead>
 
 <tbody>
-<tr><td class="tdr">5.7</td><td class="tdr">2.8</td><td class="tdr">4.5</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">3.3</td><td class="tdr">4.7</td><td class="tdr">1.6</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">4.9</td><td class="tdr">2.4</td><td class="tdr">3.3</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.6</td><td class="tdr">2.9</td><td class="tdr">4.6</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.2</td><td class="tdr">2.7</td><td class="tdr">3.9</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">2</td><td class="tdr">3.5</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.9</td><td class="tdr">3</td><td class="tdr">4.2</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6</td><td class="tdr">2.2</td><td class="tdr">4</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.1</td><td class="tdr">2.9</td><td class="tdr">4.7</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.6</td><td class="tdr">2.9</td><td class="tdr">3.6</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3.1</td><td class="tdr">4.4</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.6</td><td class="tdr">3</td><td class="tdr">4.5</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">2.7</td><td class="tdr">4.1</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.2</td><td class="tdr">2.2</td><td class="tdr">4.5</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.6</td><td class="tdr">2.5</td><td class="tdr">3.9</td><td class="tdr">1.1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.9</td><td class="tdr">3.2</td><td class="tdr">4.8</td><td class="tdr">1.8</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.1</td><td class="tdr">2.8</td><td class="tdr">4</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">2.5</td><td class="tdr">4.9</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.1</td><td class="tdr">2.8</td><td class="tdr">4.7</td><td class="tdr">1.2</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">2.9</td><td class="tdr">4.3</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.6</td><td class="tdr">3</td><td class="tdr">4.4</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.8</td><td class="tdr">2.8</td><td class="tdr">4.8</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3</td><td class="tdr">5</td><td class="tdr">1.7</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6</td><td class="tdr">2.9</td><td class="tdr">4.5</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">2.6</td><td class="tdr">3.5</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">2.4</td><td class="tdr">3.8</td><td class="tdr">1.1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">2.4</td><td class="tdr">3.7</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">2.7</td><td class="tdr">3.9</td><td class="tdr">1.2</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6</td><td class="tdr">2.7</td><td class="tdr">5.1</td><td class="tdr">1.6</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.4</td><td class="tdr">3</td><td class="tdr">4.5</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6</td><td class="tdr">3.4</td><td class="tdr">4.5</td><td class="tdr">1.6</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3.1</td><td class="tdr">4.7</td><td class="tdr">1.5</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">2.3</td><td class="tdr">4.4</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.6</td><td class="tdr">3</td><td class="tdr">4.1</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">2.5</td><td class="tdr">4</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.5</td><td class="tdr">2.6</td><td class="tdr">4.4</td><td class="tdr">1.2</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.1</td><td class="tdr">3</td><td class="tdr">4.6</td><td class="tdr">1.4</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">2.6</td><td class="tdr">4</td><td class="tdr">1.2</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5</td><td class="tdr">2.3</td><td class="tdr">3.3</td><td class="tdr">1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.6</td><td class="tdr">2.7</td><td class="tdr">4.2</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">3</td><td class="tdr">4.2</td><td class="tdr">1.2</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">2.9</td><td class="tdr">4.2</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.2</td><td class="tdr">2.9</td><td class="tdr">4.3</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.1</td><td class="tdr">2.5</td><td class="tdr">3</td><td class="tdr">1.1</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">2.8</td><td class="tdr">4.1</td><td class="tdr">1.3</td><td class="tdr">versicolor</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">3.3</td><td class="tdr">6</td><td class="tdr">2.5</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">2.7</td><td class="tdr">5.1</td><td class="tdr">1.9</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.1</td><td class="tdr">3</td><td class="tdr">5.9</td><td class="tdr">2.1</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">2.9</td><td class="tdr">5.6</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.5</td><td class="tdr">3</td><td class="tdr">5.8</td><td class="tdr">2.2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.6</td><td class="tdr">3</td><td class="tdr">6.6</td><td class="tdr">2.1</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">4.9</td><td class="tdr">2.5</td><td class="tdr">4.5</td><td class="tdr">1.7</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.3</td><td class="tdr">2.9</td><td class="tdr">6.3</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">2.5</td><td class="tdr">5.8</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.2</td><td class="tdr">3.6</td><td class="tdr">6.1</td><td class="tdr">2.5</td><td class="tdr">virginica</td></tr>
+<tr><td class="tc tdr ">5.7</td><td class="tc tdr ">2.8</td><td class="tc tdr ">4.5</td><td class="tc tdr ">1.3</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.3</td><td class="tc tdr tbstr ">3.3</td><td class="tc tdr tbstr ">4.7</td><td class="tc tdr tbstr ">1.6</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">4.9</td><td class="tc tdr ">2.4</td><td class="tc tdr ">3.3</td><td class="tc tdr ">1</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.6</td><td class="tc tdr tbstr ">2.9</td><td class="tc tdr tbstr ">4.6</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.2</td><td class="tc tdr ">2.7</td><td class="tc tdr ">3.9</td><td class="tc tdr ">1.4</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">2</td><td class="tc tdr tbstr ">3.5</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.9</td><td class="tc tdr ">3</td><td class="tc tdr ">4.2</td><td class="tc tdr ">1.5</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6</td><td class="tc tdr tbstr ">2.2</td><td class="tc tdr tbstr ">4</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.1</td><td class="tc tdr ">2.9</td><td class="tc tdr ">4.7</td><td class="tc tdr ">1.4</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.6</td><td class="tc tdr tbstr ">2.9</td><td class="tc tdr tbstr ">3.6</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.7</td><td class="tc tdr ">3.1</td><td class="tc tdr ">4.4</td><td class="tc tdr ">1.4</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.6</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.8</td><td class="tc tdr ">2.7</td><td class="tc tdr ">4.1</td><td class="tc tdr ">1</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.2</td><td class="tc tdr tbstr ">2.2</td><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.6</td><td class="tc tdr ">2.5</td><td class="tc tdr ">3.9</td><td class="tc tdr ">1.1</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.9</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">4.8</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.1</td><td class="tc tdr ">2.8</td><td class="tc tdr ">4</td><td class="tc tdr ">1.3</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.3</td><td class="tc tdr tbstr ">2.5</td><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.1</td><td class="tc tdr ">2.8</td><td class="tc tdr ">4.7</td><td class="tc tdr ">1.2</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.4</td><td class="tc tdr tbstr ">2.9</td><td class="tc tdr tbstr ">4.3</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.6</td><td class="tc tdr ">3</td><td class="tc tdr ">4.4</td><td class="tc tdr ">1.4</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.8</td><td class="tc tdr tbstr ">2.8</td><td class="tc tdr tbstr ">4.8</td><td class="tc tdr tbstr ">1.4</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.7</td><td class="tc tdr ">3</td><td class="tc tdr ">5</td><td class="tc tdr ">1.7</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6</td><td class="tc tdr tbstr ">2.9</td><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.7</td><td class="tc tdr ">2.6</td><td class="tc tdr ">3.5</td><td class="tc tdr ">1</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.5</td><td class="tc tdr tbstr ">2.4</td><td class="tc tdr tbstr ">3.8</td><td class="tc tdr tbstr ">1.1</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.5</td><td class="tc tdr ">2.4</td><td class="tc tdr ">3.7</td><td class="tc tdr ">1</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.8</td><td class="tc tdr tbstr ">2.7</td><td class="tc tdr tbstr ">3.9</td><td class="tc tdr tbstr ">1.2</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6</td><td class="tc tdr ">2.7</td><td class="tc tdr ">5.1</td><td class="tc tdr ">1.6</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.4</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6</td><td class="tc tdr ">3.4</td><td class="tc tdr ">4.5</td><td class="tc tdr ">1.6</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.7</td><td class="tc tdr tbstr ">3.1</td><td class="tc tdr tbstr ">4.7</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.3</td><td class="tc tdr ">2.3</td><td class="tc tdr ">4.4</td><td class="tc tdr ">1.3</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.6</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">4.1</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.5</td><td class="tc tdr ">2.5</td><td class="tc tdr ">4</td><td class="tc tdr ">1.3</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.5</td><td class="tc tdr tbstr ">2.6</td><td class="tc tdr tbstr ">4.4</td><td class="tc tdr tbstr ">1.2</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.1</td><td class="tc tdr ">3</td><td class="tc tdr ">4.6</td><td class="tc tdr ">1.4</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.8</td><td class="tc tdr tbstr ">2.6</td><td class="tc tdr tbstr ">4</td><td class="tc tdr tbstr ">1.2</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5</td><td class="tc tdr ">2.3</td><td class="tc tdr ">3.3</td><td class="tc tdr ">1</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.6</td><td class="tc tdr tbstr ">2.7</td><td class="tc tdr tbstr ">4.2</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.7</td><td class="tc tdr ">3</td><td class="tc tdr ">4.2</td><td class="tc tdr ">1.2</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.7</td><td class="tc tdr tbstr ">2.9</td><td class="tc tdr tbstr ">4.2</td><td class="tc tdr tbstr ">1.3</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">6.2</td><td class="tc tdr ">2.9</td><td class="tc tdr ">4.3</td><td class="tc tdr ">1.3</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">2.5</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">1.1</td><td class="tc tdr tbstr ">versicolor</td></tr>
+<tr><td class="tc tdr ">5.7</td><td class="tc tdr ">2.8</td><td class="tc tdr ">4.1</td><td class="tc tdr ">1.3</td><td class="tc tdr ">versicolor</td></tr>
+<tr><td class="tc tdr tbstr ">6.3</td><td class="tc tdr tbstr ">3.3</td><td class="tc tdr tbstr ">6</td><td class="tc tdr tbstr ">2.5</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">5.8</td><td class="tc tdr ">2.7</td><td class="tc tdr ">5.1</td><td class="tc tdr ">1.9</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">7.1</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">5.9</td><td class="tc tdr tbstr ">2.1</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.3</td><td class="tc tdr ">2.9</td><td class="tc tdr ">5.6</td><td class="tc tdr ">1.8</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.5</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">5.8</td><td class="tc tdr tbstr ">2.2</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">7.6</td><td class="tc tdr ">3</td><td class="tc tdr ">6.6</td><td class="tc tdr ">2.1</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">2.5</td><td class="tc tdr tbstr ">4.5</td><td class="tc tdr tbstr ">1.7</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">7.3</td><td class="tc tdr ">2.9</td><td class="tc tdr ">6.3</td><td class="tc tdr ">1.8</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.7</td><td class="tc tdr tbstr ">2.5</td><td class="tc tdr tbstr ">5.8</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">7.2</td><td class="tc tdr ">3.6</td><td class="tc tdr ">6.1</td><td class="tc tdr ">2.5</td><td class="tc tdr ">virginica</td></tr>
 </tbody>
 </table>
 </div>
@@ -237,7 +243,7 @@ td {padding:0px 2px 0px 2px;}
 <tr><td>&nbsp;</td></tr>
 </table>
 
-<table style="width:4.604in;">
+<table class="tbs" style="width:4.604in;">
 <colgroup>
 <col style="width:0.9775in;">
 <col style="width:0.904375in;">
@@ -256,46 +262,46 @@ td {padding:0px 2px 0px 2px;}
 </thead>
 
 <tbody>
-<tr><td class="tdr">6.5</td><td class="tdr">3.2</td><td class="tdr">5.1</td><td class="tdr">2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">2.7</td><td class="tdr">5.3</td><td class="tdr">1.9</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.8</td><td class="tdr">3</td><td class="tdr">5.5</td><td class="tdr">2.1</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">5.7</td><td class="tdr">2.5</td><td class="tdr">5</td><td class="tdr">2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">2.8</td><td class="tdr">5.1</td><td class="tdr">2.4</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">3.2</td><td class="tdr">5.3</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.5</td><td class="tdr">3</td><td class="tdr">5.5</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.7</td><td class="tdr">3.8</td><td class="tdr">6.7</td><td class="tdr">2.2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.7</td><td class="tdr">2.6</td><td class="tdr">6.9</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6</td><td class="tdr">2.2</td><td class="tdr">5</td><td class="tdr">1.5</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.9</td><td class="tdr">3.2</td><td class="tdr">5.7</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">5.6</td><td class="tdr">2.8</td><td class="tdr">4.9</td><td class="tdr">2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.7</td><td class="tdr">2.8</td><td class="tdr">6.7</td><td class="tdr">2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">2.7</td><td class="tdr">4.9</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3.3</td><td class="tdr">5.7</td><td class="tdr">2.1</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.2</td><td class="tdr">3.2</td><td class="tdr">6</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.2</td><td class="tdr">2.8</td><td class="tdr">4.8</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.1</td><td class="tdr">3</td><td class="tdr">4.9</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">2.8</td><td class="tdr">5.6</td><td class="tdr">2.1</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.2</td><td class="tdr">3</td><td class="tdr">5.8</td><td class="tdr">1.6</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.4</td><td class="tdr">2.8</td><td class="tdr">6.1</td><td class="tdr">1.9</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.9</td><td class="tdr">3.8</td><td class="tdr">6.4</td><td class="tdr">2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">2.8</td><td class="tdr">5.6</td><td class="tdr">2.2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">2.8</td><td class="tdr">5.1</td><td class="tdr">1.5</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.1</td><td class="tdr">2.6</td><td class="tdr">5.6</td><td class="tdr">1.4</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">7.7</td><td class="tdr">3</td><td class="tdr">6.1</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">3.4</td><td class="tdr">5.6</td><td class="tdr">2.4</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.4</td><td class="tdr">3.1</td><td class="tdr">5.5</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6</td><td class="tdr">3</td><td class="tdr">4.8</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.9</td><td class="tdr">3.1</td><td class="tdr">5.4</td><td class="tdr">2.1</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3.1</td><td class="tdr">5.6</td><td class="tdr">2.4</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.9</td><td class="tdr">3.1</td><td class="tdr">5.1</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">5.8</td><td class="tdr">2.7</td><td class="tdr">5.1</td><td class="tdr">1.9</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.8</td><td class="tdr">3.2</td><td class="tdr">5.9</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3.3</td><td class="tdr">5.7</td><td class="tdr">2.5</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.7</td><td class="tdr">3</td><td class="tdr">5.2</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.3</td><td class="tdr">2.5</td><td class="tdr">5</td><td class="tdr">1.9</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.5</td><td class="tdr">3</td><td class="tdr">5.2</td><td class="tdr">2</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">6.2</td><td class="tdr">3.4</td><td class="tdr">5.4</td><td class="tdr">2.3</td><td class="tdr">virginica</td></tr>
-<tr><td class="tdr">5.9</td><td class="tdr">3</td><td class="tdr">5.1</td><td class="tdr">1.8</td><td class="tdr">virginica</td></tr>
+<tr><td class="tc tdr ">6.5</td><td class="tc tdr ">3.2</td><td class="tc tdr ">5.1</td><td class="tc tdr ">2</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.4</td><td class="tc tdr tbstr ">2.7</td><td class="tc tdr tbstr ">5.3</td><td class="tc tdr tbstr ">1.9</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.8</td><td class="tc tdr ">3</td><td class="tc tdr ">5.5</td><td class="tc tdr ">2.1</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">5.7</td><td class="tc tdr tbstr ">2.5</td><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">2</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">5.8</td><td class="tc tdr ">2.8</td><td class="tc tdr ">5.1</td><td class="tc tdr ">2.4</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.4</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">5.3</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.5</td><td class="tc tdr ">3</td><td class="tc tdr ">5.5</td><td class="tc tdr ">1.8</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">7.7</td><td class="tc tdr tbstr ">3.8</td><td class="tc tdr tbstr ">6.7</td><td class="tc tdr tbstr ">2.2</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">7.7</td><td class="tc tdr ">2.6</td><td class="tc tdr ">6.9</td><td class="tc tdr ">2.3</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6</td><td class="tc tdr tbstr ">2.2</td><td class="tc tdr tbstr ">5</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.9</td><td class="tc tdr ">3.2</td><td class="tc tdr ">5.7</td><td class="tc tdr ">2.3</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">5.6</td><td class="tc tdr tbstr ">2.8</td><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">2</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">7.7</td><td class="tc tdr ">2.8</td><td class="tc tdr ">6.7</td><td class="tc tdr ">2</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.3</td><td class="tc tdr tbstr ">2.7</td><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.7</td><td class="tc tdr ">3.3</td><td class="tc tdr ">5.7</td><td class="tc tdr ">2.1</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">7.2</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">6</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.2</td><td class="tc tdr ">2.8</td><td class="tc tdr ">4.8</td><td class="tc tdr ">1.8</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.1</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">4.9</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.4</td><td class="tc tdr ">2.8</td><td class="tc tdr ">5.6</td><td class="tc tdr ">2.1</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">7.2</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">5.8</td><td class="tc tdr tbstr ">1.6</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">7.4</td><td class="tc tdr ">2.8</td><td class="tc tdr ">6.1</td><td class="tc tdr ">1.9</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">7.9</td><td class="tc tdr tbstr ">3.8</td><td class="tc tdr tbstr ">6.4</td><td class="tc tdr tbstr ">2</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.4</td><td class="tc tdr ">2.8</td><td class="tc tdr ">5.6</td><td class="tc tdr ">2.2</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.3</td><td class="tc tdr tbstr ">2.8</td><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">1.5</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.1</td><td class="tc tdr ">2.6</td><td class="tc tdr ">5.6</td><td class="tc tdr ">1.4</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">7.7</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">6.1</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.3</td><td class="tc tdr ">3.4</td><td class="tc tdr ">5.6</td><td class="tc tdr ">2.4</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.4</td><td class="tc tdr tbstr ">3.1</td><td class="tc tdr tbstr ">5.5</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6</td><td class="tc tdr ">3</td><td class="tc tdr ">4.8</td><td class="tc tdr ">1.8</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.9</td><td class="tc tdr tbstr ">3.1</td><td class="tc tdr tbstr ">5.4</td><td class="tc tdr tbstr ">2.1</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.7</td><td class="tc tdr ">3.1</td><td class="tc tdr ">5.6</td><td class="tc tdr ">2.4</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.9</td><td class="tc tdr tbstr ">3.1</td><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">5.8</td><td class="tc tdr ">2.7</td><td class="tc tdr ">5.1</td><td class="tc tdr ">1.9</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.8</td><td class="tc tdr tbstr ">3.2</td><td class="tc tdr tbstr ">5.9</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.7</td><td class="tc tdr ">3.3</td><td class="tc tdr ">5.7</td><td class="tc tdr ">2.5</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.7</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">5.2</td><td class="tc tdr tbstr ">2.3</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.3</td><td class="tc tdr ">2.5</td><td class="tc tdr ">5</td><td class="tc tdr ">1.9</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">6.5</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">5.2</td><td class="tc tdr tbstr ">2</td><td class="tc tdr tbstr ">virginica</td></tr>
+<tr><td class="tc tdr ">6.2</td><td class="tc tdr ">3.4</td><td class="tc tdr ">5.4</td><td class="tc tdr ">2.3</td><td class="tc tdr ">virginica</td></tr>
+<tr><td class="tc tdr tbstr ">5.9</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr ">5.1</td><td class="tc tdr tbstr ">1.8</td><td class="tc tdr tbstr ">virginica</td></tr>
 </tbody>
 </table>
 <br>

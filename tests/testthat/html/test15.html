@@ -13,10 +13,16 @@ margin-bottom: 0.5in;
 margin-left: 1in;
 margin-right: 1in;
 }
-.thdr {font-weight: normal;border-bottom: thin solid;}
+.thdr {border-bottom: thin solid black;font-weight: normal;}
+.shdr {font-weight: normal;}
 .tdc {text-align:center;}
 .tdl {text-align:left;}
 .tdr {text-align:right;}
+.tc {}
+.tbs {}
+.tbstr {}
+.ts {}
+.tlr {}
 table {border-spacing: 0;border-collapse: collapse;}
 td {padding:0px 2px 0px 2px;}
 </style>
@@ -39,7 +45,7 @@ td {padding:0px 2px 0px 2px;}
 <tr><td style="font-size:14pt;"><b>My&nbsp;Nice&nbsp;Table</b></td></tr>
 <tr><td>&nbsp;</td></tr>
 </table>
-<table style="width:4.982in;">
+<table class="tbs" style="width:4.982in;">
 <colgroup>
 <col style="width:0.34in;">
 <col style="width:1in;">
@@ -55,36 +61,36 @@ td {padding:0px 2px 0px 2px;}
 </colgroup>
 <thead>
 <tr>
-<td class="thdr tdr" style="border-top:thin solid;border-left:thin solid;">mpg</td>
-<td class="thdr tdc" style="border-top:thin solid;">Cylin.</td>
-<td class="thdr tdr" style="border-top:thin solid;">disp</td>
-<td class="thdr tdr" style="border-top:thin solid;">hp</td>
-<td class="thdr tdr" style="border-top:thin solid;">drat</td>
-<td class="thdr tdr" style="border-top:thin solid;">Weight</td>
-<td class="thdr tdr" style="border-top:thin solid;">qsec</td>
-<td class="thdr tdr" style="border-top:thin solid;">vs</td>
-<td class="thdr tdr" style="border-top:thin solid;">am</td>
-<td class="thdr tdr" style="border-top:thin solid;">gear</td>
-<td class="thdr tdr" style="border-top:thin solid;border-right:thin solid;">carb</td>
+<td class="thdr tdr" style="border-top:thin solid black;border-left:thin solid black;">mpg</td>
+<td class="thdr tdc" style="border-top:thin solid black;">Cylin.</td>
+<td class="thdr tdr" style="border-top:thin solid black;">disp</td>
+<td class="thdr tdr" style="border-top:thin solid black;">hp</td>
+<td class="thdr tdr" style="border-top:thin solid black;">drat</td>
+<td class="thdr tdr" style="border-top:thin solid black;">Weight</td>
+<td class="thdr tdr" style="border-top:thin solid black;">qsec</td>
+<td class="thdr tdr" style="border-top:thin solid black;">vs</td>
+<td class="thdr tdr" style="border-top:thin solid black;">am</td>
+<td class="thdr tdr" style="border-top:thin solid black;">gear</td>
+<td class="thdr tdr" style="border-top:thin solid black;border-right:thin solid black;">carb</td>
 </tr>
 </thead>
 
 <tbody>
-<tr><td class="tdr" style="border-top:thin solid;border-left:thin solid;">21</td><td class="tdc" style="border-top:thin solid;">6</td><td class="tdr" style="border-top:thin solid;">160</td><td class="tdr" style="border-top:thin solid;">110</td><td class="tdr" style="border-top:thin solid;">3.9</td><td class="tdc" style="border-top:thin solid;">2.62</td><td class="tdr" style="border-top:thin solid;">16.46</td><td class="tdr" style="border-top:thin solid;">0</td><td class="tdr" style="border-top:thin solid;">1</td><td class="tdr" style="border-top:thin solid;">4</td><td class="tdr" style="border-top:thin solid;border-right:thin solid;">4</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">21</td><td class="tdc">6</td><td class="tdr">160</td><td class="tdr">110</td><td class="tdr">3.9</td><td class="tdc">2.875</td><td class="tdr">17.02</td><td class="tdr">0</td><td class="tdr">1</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">22.8</td><td class="tdc">4</td><td class="tdr">108</td><td class="tdr">93</td><td class="tdr">3.85</td><td class="tdc">2.32</td><td class="tdr">18.61</td><td class="tdr">1</td><td class="tdr">1</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">1</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">21.4</td><td class="tdc">6</td><td class="tdr">258</td><td class="tdr">110</td><td class="tdr">3.08</td><td class="tdc">3.215</td><td class="tdr">19.44</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">1</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">18.7</td><td class="tdc">8</td><td class="tdr">360</td><td class="tdr">175</td><td class="tdr">3.15</td><td class="tdc">3.44</td><td class="tdr">17.02</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">2</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">18.1</td><td class="tdc">6</td><td class="tdr">225</td><td class="tdr">105</td><td class="tdr">2.76</td><td class="tdc">3.46</td><td class="tdr">20.22</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">1</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">14.3</td><td class="tdc">8</td><td class="tdr">360</td><td class="tdr">245</td><td class="tdr">3.21</td><td class="tdc">3.57</td><td class="tdr">15.84</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">24.4</td><td class="tdc">4</td><td class="tdr">146.7</td><td class="tdr">62</td><td class="tdr">3.69</td><td class="tdc">3.19</td><td class="tdr">20</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">2</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">22.8</td><td class="tdc">4</td><td class="tdr">140.8</td><td class="tdr">95</td><td class="tdr">3.92</td><td class="tdc">3.15</td><td class="tdr">22.9</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">2</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">19.2</td><td class="tdc">6</td><td class="tdr">167.6</td><td class="tdr">123</td><td class="tdr">3.92</td><td class="tdc">3.44</td><td class="tdr">18.3</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">17.8</td><td class="tdc">6</td><td class="tdr">167.6</td><td class="tdr">123</td><td class="tdr">3.92</td><td class="tdc">3.44</td><td class="tdr">18.9</td><td class="tdr">1</td><td class="tdr">0</td><td class="tdr">4</td><td class="tdr" style="border-right:thin solid;">4</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">16.4</td><td class="tdc">8</td><td class="tdr">275.8</td><td class="tdr">180</td><td class="tdr">3.07</td><td class="tdc">4.07</td><td class="tdr">17.4</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">3</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">17.3</td><td class="tdc">8</td><td class="tdr">275.8</td><td class="tdr">180</td><td class="tdr">3.07</td><td class="tdc">3.73</td><td class="tdr">17.6</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">3</td></tr>
-<tr><td class="tdr" style="border-left:thin solid;">15.2</td><td class="tdc">8</td><td class="tdr">275.8</td><td class="tdr">180</td><td class="tdr">3.07</td><td class="tdc">3.78</td><td class="tdr">18</td><td class="tdr">0</td><td class="tdr">0</td><td class="tdr">3</td><td class="tdr" style="border-right:thin solid;">3</td></tr>
-<tr><td class="tdr" style="border-bottom:thin solid;border-left:thin solid;">10.4</td><td class="tdc" style="border-bottom:thin solid;">8</td><td class="tdr" style="border-bottom:thin solid;">472</td><td class="tdr" style="border-bottom:thin solid;">205</td><td class="tdr" style="border-bottom:thin solid;">2.93</td><td class="tdc" style="border-bottom:thin solid;">5.25</td><td class="tdr" style="border-bottom:thin solid;">17.98</td><td class="tdr" style="border-bottom:thin solid;">0</td><td class="tdr" style="border-bottom:thin solid;">0</td><td class="tdr" style="border-bottom:thin solid;">3</td><td class="tdr" style="border-bottom:thin solid;border-right:thin solid;">4</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">21</td><td class="tc tdc ">6</td><td class="tc tdr ">160</td><td class="tc tdr ">110</td><td class="tc tdr ">3.9</td><td class="tc tdc ">2.62</td><td class="tc tdr ">16.46</td><td class="tc tdr ">0</td><td class="tc tdr ">1</td><td class="tc tdr ">4</td><td class="tc tdr " style="border-right:thin solid black;">4</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">21</td><td class="tc tdc tbstr ">6</td><td class="tc tdr tbstr ">160</td><td class="tc tdr tbstr ">110</td><td class="tc tdr tbstr ">3.9</td><td class="tc tdc tbstr ">2.875</td><td class="tc tdr tbstr ">17.02</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">4</td><td class="tc tdr tbstr " style="border-right:thin solid black;">4</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">22.8</td><td class="tc tdc ">4</td><td class="tc tdr ">108</td><td class="tc tdr ">93</td><td class="tc tdr ">3.85</td><td class="tc tdc ">2.32</td><td class="tc tdr ">18.61</td><td class="tc tdr ">1</td><td class="tc tdr ">1</td><td class="tc tdr ">4</td><td class="tc tdr " style="border-right:thin solid black;">1</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">21.4</td><td class="tc tdc tbstr ">6</td><td class="tc tdr tbstr ">258</td><td class="tc tdr tbstr ">110</td><td class="tc tdr tbstr ">3.08</td><td class="tc tdc tbstr ">3.215</td><td class="tc tdr tbstr ">19.44</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr " style="border-right:thin solid black;">1</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">18.7</td><td class="tc tdc ">8</td><td class="tc tdr ">360</td><td class="tc tdr ">175</td><td class="tc tdr ">3.15</td><td class="tc tdc ">3.44</td><td class="tc tdr ">17.02</td><td class="tc tdr ">0</td><td class="tc tdr ">0</td><td class="tc tdr ">3</td><td class="tc tdr " style="border-right:thin solid black;">2</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">18.1</td><td class="tc tdc tbstr ">6</td><td class="tc tdr tbstr ">225</td><td class="tc tdr tbstr ">105</td><td class="tc tdr tbstr ">2.76</td><td class="tc tdc tbstr ">3.46</td><td class="tc tdr tbstr ">20.22</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr " style="border-right:thin solid black;">1</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">14.3</td><td class="tc tdc ">8</td><td class="tc tdr ">360</td><td class="tc tdr ">245</td><td class="tc tdr ">3.21</td><td class="tc tdc ">3.57</td><td class="tc tdr ">15.84</td><td class="tc tdr ">0</td><td class="tc tdr ">0</td><td class="tc tdr ">3</td><td class="tc tdr " style="border-right:thin solid black;">4</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">24.4</td><td class="tc tdc tbstr ">4</td><td class="tc tdr tbstr ">146.7</td><td class="tc tdr tbstr ">62</td><td class="tc tdr tbstr ">3.69</td><td class="tc tdc tbstr ">3.19</td><td class="tc tdr tbstr ">20</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">4</td><td class="tc tdr tbstr " style="border-right:thin solid black;">2</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">22.8</td><td class="tc tdc ">4</td><td class="tc tdr ">140.8</td><td class="tc tdr ">95</td><td class="tc tdr ">3.92</td><td class="tc tdc ">3.15</td><td class="tc tdr ">22.9</td><td class="tc tdr ">1</td><td class="tc tdr ">0</td><td class="tc tdr ">4</td><td class="tc tdr " style="border-right:thin solid black;">2</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">19.2</td><td class="tc tdc tbstr ">6</td><td class="tc tdr tbstr ">167.6</td><td class="tc tdr tbstr ">123</td><td class="tc tdr tbstr ">3.92</td><td class="tc tdc tbstr ">3.44</td><td class="tc tdr tbstr ">18.3</td><td class="tc tdr tbstr ">1</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">4</td><td class="tc tdr tbstr " style="border-right:thin solid black;">4</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">17.8</td><td class="tc tdc ">6</td><td class="tc tdr ">167.6</td><td class="tc tdr ">123</td><td class="tc tdr ">3.92</td><td class="tc tdc ">3.44</td><td class="tc tdr ">18.9</td><td class="tc tdr ">1</td><td class="tc tdr ">0</td><td class="tc tdr ">4</td><td class="tc tdr " style="border-right:thin solid black;">4</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">16.4</td><td class="tc tdc tbstr ">8</td><td class="tc tdr tbstr ">275.8</td><td class="tc tdr tbstr ">180</td><td class="tc tdr tbstr ">3.07</td><td class="tc tdc tbstr ">4.07</td><td class="tc tdr tbstr ">17.4</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr " style="border-right:thin solid black;">3</td></tr>
+<tr><td class="tc tdr " style="border-left:thin solid black;">17.3</td><td class="tc tdc ">8</td><td class="tc tdr ">275.8</td><td class="tc tdr ">180</td><td class="tc tdr ">3.07</td><td class="tc tdc ">3.73</td><td class="tc tdr ">17.6</td><td class="tc tdr ">0</td><td class="tc tdr ">0</td><td class="tc tdr ">3</td><td class="tc tdr " style="border-right:thin solid black;">3</td></tr>
+<tr><td class="tc tdr tbstr " style="border-left:thin solid black;">15.2</td><td class="tc tdc tbstr ">8</td><td class="tc tdr tbstr ">275.8</td><td class="tc tdr tbstr ">180</td><td class="tc tdr tbstr ">3.07</td><td class="tc tdc tbstr ">3.78</td><td class="tc tdr tbstr ">18</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">0</td><td class="tc tdr tbstr ">3</td><td class="tc tdr tbstr " style="border-right:thin solid black;">3</td></tr>
+<tr><td class="tc tdr " style="border-bottom:thin solid black;border-left:thin solid black;">10.4</td><td class="tc tdc " style="border-bottom:thin solid black;">8</td><td class="tc tdr " style="border-bottom:thin solid black;">472</td><td class="tc tdr " style="border-bottom:thin solid black;">205</td><td class="tc tdr " style="border-bottom:thin solid black;">2.93</td><td class="tc tdc " style="border-bottom:thin solid black;">5.25</td><td class="tc tdr " style="border-bottom:thin solid black;">17.98</td><td class="tc tdr " style="border-bottom:thin solid black;">0</td><td class="tc tdr " style="border-bottom:thin solid black;">0</td><td class="tc tdr " style="border-bottom:thin solid black;">3</td><td class="tc tdr " style="border-bottom:thin solid black;border-right:thin solid black;">4</td></tr>
 </tbody>
 </table>
 <table style="width:4.982in;text-align: left;">
