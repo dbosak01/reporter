@@ -92,7 +92,7 @@ knitr::opts_chunk$set(
 #    define(label, indent = .25) %>%
 #    define(A, label = "Group A", align = "center", n = 19) %>%
 #    define(B, label = "Group B", align = "center", n = 13)  %>%
-#    titles("Table 1.0", "MTCARS Summary Table with SASDefault Theme",
+#    titles("Table 1.0", "MTCARS Summary Table with SteelBlue Theme",
 #           borders = "none") %>%
 #    footnotes("* Motor Trend, 1974", borders = "outside")
 #  
@@ -101,12 +101,12 @@ knitr::opts_chunk$set(
 #                       font_size = 12) %>%
 #    set_margins(top = 1, bottom = 1) %>%
 #    add_content(tbl) %>%
-#    add_style(theme = "SASDefault")
+#    add_style(theme = "SteelBlue")
 #  
 #  # Write out report
 #  write_report(rpt)
 #  
 #  # View report
-#  file.show(tmp)
+#  # file.show(tmp)
 #  
 

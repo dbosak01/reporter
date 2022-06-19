@@ -86,7 +86,7 @@ also be added to a table, text, or plot object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@ also be added to a table, text, or plot object." />
   <a href="../articles/reporter.html">Get started</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -143,6 +143,9 @@ also be added to a table, text, or plot object." />
     </li>
     <li>
       <a href="../articles/reporter-figure.html">Example 11: Figure</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-styles.html">Example 12: Styles</a>
     </li>
     <li>
       <a href="../articles/reporter-example1.html">Complete Example 1</a>
@@ -241,7 +244,7 @@ a table, text, or plot specification.</p></td>
 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'.  
 Default is "none".  
 The 'left', 'right', 'outside', and 'inside' border specifications 
-only apply to RTF and HTML reports.</p></td>
+only apply to RTF, HTML, PDF and DOCX reports.</p></td>
     </tr>
     <tr>
       <th>width</th>
@@ -261,14 +264,14 @@ units of measure is determined by the 'units' parameter on</p></td>
       <th>bold</th>
       <td><p>A parameter to bold the titles.  Valid values are TRUE and FALSE.
 Default is FALSE.  This parameter only applies to variable-width RTF, HTML, 
-and PDF output types.</p></td>
+PDF, and DOCX output types.</p></td>
     </tr>
     <tr>
       <th>font_size</th>
       <td><p>The font size to use for the title block.  The font size
 of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
-13, and 14.  This parameter only applies to variable-width RTF, HTML, and PDF
-output types.
+13, and 14.  This parameter only applies to variable-width RTF, HTML, PDF,
+and DOCX output types.
 <code><a href='create_report.html'>create_report</a></code>.</p></td>
     </tr>
     </table>

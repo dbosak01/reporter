@@ -15,6 +15,7 @@ articles:
   - reporter-rtf
   - reporter-fonts
   - reporter-figure
+  - reporter-styles
   - reporter-example1
   - reporter-example2
   - reporter-example3
@@ -56,6 +57,13 @@ reference:
   - footnotes
   - title_header
   - page_by
+- title: Styling Functions
+  desc: Functions to create styles and apply/view themes.
+  contents:
+  - create_style
+  - add_style
+  - get_theme
+  - print.style_spec
 - title: Other Functions
   desc: Here are some other functions included in the reporter package.
   contents:

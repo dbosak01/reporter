@@ -124,7 +124,7 @@ tbl <- create_table(df, first_row_blank = FALSE, borders = "all") %>%
   define(label, indent = .25) %>% 
   define(A, label = "Group A", align = "center", n = 19) %>% 
   define(B, label = "Group B", align = "center", n = 13)  %>% 
-  titles("Table 1.0", "MTCARS Summary Table with SASDefault Theme", 
+  titles("Table 1.0", "MTCARS Summary Table with SteelBlue Theme", 
          borders = "none") %>% 
   footnotes("* Motor Trend, 1974", borders = "outside")
 
@@ -133,13 +133,13 @@ rpt <- create_report(tmp, output_type = "HTML", font = "Arial",
                      font_size = 12) %>% 
   set_margins(top = 1, bottom = 1) %>%
   add_content(tbl) %>% 
-  add_style(theme = "SASDefault")
+  add_style(theme = "SteelBlue")
 
 # Write out report
 write_report(rpt)
 
 # View report
-file.show(tmp)
+# file.show(tmp)
 
 ```
 
@@ -147,24 +147,18 @@ file.show(tmp)
 
 #### Theme Gallery
 In addition to the SteelBlue theme shown above, there are six more themes.
-Here are samples of each:
+Here is a sample of each:
 
-##### Plain
 <img src="../man/images/example12c.png"/>
 
-##### MidnightBlue
 <img src="../man/images/example12d.png"/>
 
-##### DarkRed
 <img src="../man/images/example12e.png"/>
 
-##### SeaGreen
 <img src="../man/images/example12f.png"/>
 
-##### SlateGrey
 <img src="../man/images/example12g.png"/>
 
-##### SASDefault
 <img src="../man/images/example12h.png"/>
 
 

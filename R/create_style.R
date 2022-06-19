@@ -29,7 +29,7 @@
 #' @section Color Names:
 #' Many of the parameters on the style object accept a color name or code.
 #' The values accepted for these parameters follow standard HTML/CSS style
-#' color specifications and values.  Below is a sample of common color names
+#' color values.  Below is a sample of common color names
 #' that can be used to specify colors with the \code{create_style} function.
 #' These color names should be passed as a quoted string:
 #' \itemize{

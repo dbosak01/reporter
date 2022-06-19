@@ -7,6 +7,9 @@
     <loc>https://reporter.r-sassy.org/reference/add_content.html</loc>
   </url>
   <url>
+    <loc>https://reporter.r-sassy.org/reference/add_style.html</loc>
+  </url>
+  <url>
     <loc>https://reporter.r-sassy.org/reference/column_defaults.html</loc>
   </url>
   <url>
@@ -14,6 +17,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/create_report.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/reference/create_style.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/create_table.html</loc>
@@ -26,6 +32,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/footnotes.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/reference/get_theme.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/lowcase_parens.html</loc>
@@ -50,6 +59,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/print.report_spec.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/reference/print.style_spec.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/print.table_spec.html</loc>
@@ -119,6 +131,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-stub.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/articles/reporter-styles.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-table.html</loc>

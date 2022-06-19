@@ -48,7 +48,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@
   <a href="articles/reporter.html">Get started</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -103,6 +103,9 @@
     </li>
     <li>
       <a href="articles/reporter-figure.html">Example 11: Figure</a>
+    </li>
+    <li>
+      <a href="articles/reporter-styles.html">Example 12: Styles</a>
     </li>
     <li>
       <a href="articles/reporter-example1.html">Complete Example 1</a>
@@ -156,34 +159,66 @@
 <a href="#introduction-to-reporter" class="anchor"></a>Introduction to <strong>reporter</strong>
 </h1></div>
 <p><img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;"></p>
-<p>Historically, R has not been very strong on reporting. The <strong>reporter</strong> package aims to fill that gap.</p>
-<p>Using <strong>reporter</strong>, you can create a report in just a few lines of code. Not only is it easy to create a report, but the <strong>reporter</strong> package can handle all sorts of situations that other packages struggle with.</p>
-<p>For example, unlike other packages, the <strong>reporter</strong> package creates the <em>entire report</em>: page header and footer, titles, footnotes, tables - everything. The end result of a reporter call is a complete, printable report.</p>
-<p>In addition, <strong>reporter</strong> can handle page breaking, page wrapping, and automatic sizing of column widths. The package offers a choice of output file types. And it supports the inclusion of tables, text and graphics into a report.</p>
-<p>What is more, the package does not expect you to know R Markdown, knitr, or pandoc. You do not need to learn Latex, HTML, or any other intermediate language. With <strong>reporter</strong>, you send your data into a create function, assign titles and footnotes, and write the report. That’s it!</p>
-<p>If you are familiar with SAS® software, you may notice some similarity between <strong>reporter</strong> functions and <code>proc report</code>. This similarity, however, is only on the surface. The implementation of <strong>reporter</strong> is done entirely in R, and, internally, is modeled in a different way. However, SAS® users will find the <strong>reporter</strong> functions very convenient and easy to understand compared to the alternatives.</p>
+<p>Historically, R has not been very strong on reporting. The
+<strong>reporter</strong> package aims to fill that gap.</p>
+<p>Using <strong>reporter</strong>, you can create a report in just a
+few lines of code. Not only is it easy to create a report, but the
+<strong>reporter</strong> package can handle all sorts of situations
+that other packages struggle with.</p>
+<p>For example, unlike other packages, the <strong>reporter</strong>
+package creates the <em>entire report</em>: page header and footer,
+titles, footnotes, tables - everything. The end result of a reporter
+call is a complete, printable report.</p>
+<p>In addition, <strong>reporter</strong> can handle page breaking, page
+wrapping, and automatic sizing of column widths. The package offers a
+choice of output file types. And it supports the inclusion of tables,
+text and graphics into a report.</p>
+<p>What is more, the package does not expect you to know R Markdown,
+knitr, or pandoc. You do not need to learn Latex, HTML, or any other
+intermediate language. With <strong>reporter</strong>, you send your
+data into a create function, assign titles and footnotes, and write the
+report. That’s it!</p>
+<p>If you are familiar with SAS® software, you may notice some
+similarity between <strong>reporter</strong> functions and
+<code>proc report</code>. This similarity, however, is only on the
+surface. The implementation of <strong>reporter</strong> is done
+entirely in R, and, internally, is modeled in a different way. However,
+SAS® users will find the <strong>reporter</strong> functions very
+convenient and easy to understand compared to the alternatives.</p>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
-<p>The <strong>reporter</strong> package can be installed from the console. Simply run the following command:</p>
+<p>The <strong>reporter</strong> package can be installed from the
+console. Simply run the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"reporter"</span>)</span></code></pre></div>
-<p>Or if you want the latest development version, you can install it directly from github:</p>
+<p>Or if you want the latest development version, you can install it
+directly from github:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"https://github.com/dbosak01/reporter"</span>)</span></code></pre></div>
 <p>Then put the following line at the top of your program or script:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reporter)</span></code></pre></div>
-<p>The <strong>reporter</strong> package will give you access to a number of functions to help create, lay out, and write your report to the file system. For examples and usage information, visit the <strong>reporter</strong> documentation site <a href="https://reporter.r-sassy.org/articles/reporter.html">here</a>.</p>
+<p>The <strong>reporter</strong> package will give you access to a
+number of functions to help create, lay out, and write your report to
+the file system. For examples and usage information, visit the
+<strong>reporter</strong> documentation site <a href="https://reporter.r-sassy.org/articles/reporter.html">here</a>.</p>
 </div>
 <div id="getting-help" class="section level3">
 <h3 class="hasAnchor">
 <a href="#getting-help" class="anchor"></a>Getting Help</h3>
-<p>If you need help, the first place to turn to is the <a href="https://reporter.r-sassy.org">reporter</a> web site. The web site has full documentation on all <strong>reporter</strong> functions.</p>
-<p>If you want to look at the code for the <strong>reporter</strong> package, visit the github page <a href="https://github.com/dbosak01/reporter">here</a>.</p>
-<p>If you encounter a bug or have a feature request, please submit an issue <a href="https://github.com/dbosak01/reporter/issues">here</a>.</p>
+<p>If you need help, the first place to turn to is the <a href="https://reporter.r-sassy.org">reporter</a> web site. The web site
+has full documentation on all <strong>reporter</strong> functions.</p>
+<p>If you want to look at the code for the <strong>reporter</strong>
+package, visit the github page <a href="https://github.com/dbosak01/reporter">here</a>.</p>
+<p>If you encounter a bug or have a feature request, please submit an
+issue <a href="https://github.com/dbosak01/reporter/issues">here</a>.</p>
 </div>
 <div id="see-also" class="section level3">
 <h3 class="hasAnchor">
 <a href="#see-also" class="anchor"></a>See Also</h3>
-<p>The <strong>reporter</strong> package is part of the <strong>sassy</strong> meta-package. The <strong>sassy</strong> meta-package includes several packages that help make R easier for SAS® programmers. You can read more about the <strong>sassy</strong> package <a href="https://sassy.r-sassy.org">here</a>.</p>
+<p>The <strong>reporter</strong> package is part of the
+<strong>sassy</strong> meta-package. The <strong>sassy</strong>
+meta-package includes several packages that help make R easier for SAS®
+programmers. You can read more about the <strong>sassy</strong> package
+<a href="https://sassy.r-sassy.org">here</a>.</p>
 </div>
 </div>
 

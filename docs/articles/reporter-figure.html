@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@
   <a href="../articles/reporter.html">Get started</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -93,6 +93,9 @@
     </li>
     <li>
       <a href="../articles/reporter-figure.html">Example 11: Figure</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-styles.html">Example 12: Styles</a>
     </li>
     <li>
       <a href="../articles/reporter-example1.html">Complete Example 1</a>
@@ -136,7 +139,7 @@
 
       
 
-      </header><script src="reporter-figure_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><script src="reporter-figure_files/header-attrs-2.14/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example 11: Figure</h1>
@@ -152,7 +155,10 @@
 <div id="create-a-report-with-a-figure" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-a-report-with-a-figure" class="anchor"></a>Create a Report with a Figure</h3>
-<p>RTF, PDF, and HTML also support plots produced with the ggplot2 package. Use the <code><a href="../reference/create_plot.html">create_plot()</a></code> function to create plot content for a report. The plot can be added to the report with the <code><a href="../reference/add_content.html">add_content()</a></code> function, just like tables and text.</p>
+<p>RTF, PDF, and HTML also support plots produced with the ggplot2
+package. Use the <code><a href="../reference/create_plot.html">create_plot()</a></code> function to create plot
+content for a report. The plot can be added to the report with the
+<code><a href="../reference/add_content.html">add_content()</a></code> function, just like tables and text.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
@@ -186,7 +192,8 @@
 <span class="co"># View report</span>
 <span class="co"># file.show(tmp)</span></code></pre></div>
 <p><img src="../man/images/plot.png"></p>
-<p>Next: <a href="reporter-example1.html">Complete Example 1</a></p>
+<p>Next: <a href="reporter-styles.html">Example 11: Styles and
+Themes</a></p>
 </div>
   </div>
 

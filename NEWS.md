@@ -1,6 +1,10 @@
 # reporter 1.3.2
 
 * Fixed bug on DOCX that was causing R Studio to crash when using a relative path.
+* Fixed some DOCX spacing issues.
+* Added `create_style()` and `add_style()` functions, which allow the user
+to add styling to a report.  Only HTML implemented in this release.
+* Documentation fixes and updates.
 
 # reporter 1.3.1
 
