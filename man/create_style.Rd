@@ -25,7 +25,8 @@ create_style(
   table_body_font_color = NULL,
   table_stub_background = NULL,
   table_stub_font_color = NULL,
-  table_stub_font_bold = NULL
+  table_stub_font_bold = NULL,
+  table_label_row_bold = NULL
 )
 }
 \arguments{
@@ -91,6 +92,10 @@ if one exists on the table.}
 
 \item{table_stub_font_bold}{Whether or not to bold the stub column.  Valid
 values are TRUE and FALSE.}
+
+\item{table_label_row_bold}{Whether or not to bold the label row on a stub
+column.  This parameter is so you can bold the label row, but not the 
+values in the stub column.  Valid values are TRUE and FALSE.}
 }
 \description{
 This function will create a style object to control background colors and 

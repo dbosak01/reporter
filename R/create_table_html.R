@@ -262,7 +262,8 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_html(rs, pi$data, pi$col_width, 
-                             pi$col_align, pi$table_align, ts$borders, exbrdr,
+                             pi$col_align, pi$table_align, ts$borders, 
+                             !ts$headerless,
                              ts$first_row_blank)
   
   a <- NULL
@@ -596,13 +597,27 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
 
     if (sflg) {
       
-      b1 <- get_cell_borders_html(2, 1, 3, 1, brdrs,
-                                 border_color = get_style(rs, "border_color"), 
-                                 stub_flag = TRUE)
+      if (any(brdrs == "body")) {
+        
+        b1 <- get_cell_borders_html(2, 1, 3, 1, "left",
+                                    border_color = get_style(rs, "border_color"), 
+                                    stub_flag = TRUE)
+        
+        b2 <- get_cell_borders_html(2, 1, 3, 1, "right",
+                                    border_color = get_style(rs, "border_color"), 
+                                    stub_flag = FALSE)
+        
+      } else {
+        
+        b1 <- get_cell_borders_html(2, 1, 3, 1, brdrs,
+                                   border_color = get_style(rs, "border_color"), 
+                                   stub_flag = TRUE)
+        
+        b2 <- get_cell_borders_html(2, 1, 3, 1, brdrs,
+                                    border_color = get_style(rs, "border_color"), 
+                                    stub_flag = FALSE)
       
-      b2 <- get_cell_borders_html(2, 1, 3, 1, brdrs,
-                                  border_color = get_style(rs, "border_color"), 
-                                  stub_flag = FALSE)
+      }
 
       ret[1] <- paste0(ret[1], "<tr><td class=\"tc ts\"", 
                        "\" style=\"", b1, "\">&nbsp;</td>",
@@ -850,19 +865,19 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       }
       
       if (algns[k] == "left")
-        ca[k] <- paste0("class=\"tc tdl ", tcls, "\"")
+        ca[k] <- paste0("tc tdl ", tcls)
       else if (algns[k] == "right")
-        ca[k] <- paste0("class=\"tc tdr ", tcls, "\"")
+        ca[k] <- paste0("tc tdr ", tcls)
       else if (algns[k] %in% c("center", "centre"))
-        ca[k] <- paste0("class=\"tc tdc ", tcls, "\"")
+        ca[k] <- paste0("tc tdc ", tcls)
       
       
       if (algns[k] == "left")
-        castr[k] <- paste0("class=\"tc tdl tbstr ", tcls, "\"")
+        castr[k] <- paste0("tc tdl tbstr ", tcls)
       else if (algns[k] == "right")
-        castr[k] <- paste0("class=\"tc tdr tbstr ", tcls, "\"")
+        castr[k] <- paste0("tc tdr tbstr ", tcls)
       else if (algns[k] %in% c("center", "centre"))
-        castr[k] <- paste0("class=\"tc tdc tbstr ", tcls, "\"")
+        castr[k] <- paste0("tc tdc tbstr ", tcls)
     }
   }
   
@@ -897,22 +912,28 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
                                    border_color = get_style(rs, "border_color"),
                                     stub_flag = sflg)
         
+        lrflg <- ""
+        if ( nms[j] == "stub" & flgs[i] == "L")
+          lrflg <- " tlr"
+        
         # Construct html
         if (b == "") {
           if (i %% 2 == strpmod) {
-            ret[i] <- paste0(ret[i], "<td ", ca[j], ">", 
+            ret[i] <- paste0(ret[i], "<td class=\"", ca[j], lrflg, "\">", 
                              encodeHTML(t[i, j]), "</td>")
           } else {
-            ret[i] <- paste0(ret[i], "<td ", castr[j], ">", 
+            ret[i] <- paste0(ret[i], "<td class=\"", castr[j], lrflg, "\">", 
                              encodeHTML(t[i, j]), "</td>")
           }
         } else { 
 
           if (i %% 2 == strpmod) {
-            ret[i] <- paste0(ret[i], "<td ", ca[j], " style=\"", b, "\">", 
+            ret[i] <- paste0(ret[i], "<td class=\"", ca[j], lrflg, 
+                             "\" style=\"", b, "\">", 
                              encodeHTML(t[i, j]), "</td>")
           } else {
-            ret[i] <- paste0(ret[i], "<td ", castr[j], " style=\"", b, "\">", 
+            ret[i] <- paste0(ret[i], "<td class=\"", castr[j], lrflg, 
+                             "\" style=\"", b, "\">", 
                              encodeHTML(t[i, j]), "</td>")
           }
         }

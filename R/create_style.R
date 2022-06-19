@@ -91,6 +91,9 @@
 #' if one exists on the table.
 #' @param table_stub_font_bold Whether or not to bold the stub column.  Valid
 #' values are TRUE and FALSE.
+#' @param table_label_row_bold Whether or not to bold the label row on a stub
+#' column.  This parameter is so you can bold the label row, but not the 
+#' values in the stub column.  Valid values are TRUE and FALSE.
 #' @family styles
 #' @examples 
 #' library(reporter)
@@ -156,7 +159,8 @@ create_style <- function(font_name = NULL,
                          table_body_font_color = NULL,
                          table_stub_background = NULL,
                          table_stub_font_color = NULL,
-                         table_stub_font_bold = NULL) {
+                         table_stub_font_bold = NULL,
+                         table_label_row_bold = NULL) {
 
 
   ret <- structure(list(), class = c("style_spec", "list"))
@@ -182,6 +186,7 @@ create_style <- function(font_name = NULL,
   ret$table_stub_font_color <- table_stub_font_color
   ret$table_stub_font_bold <- table_stub_font_bold
   ret$table_body_font_color <- table_body_font_color
+  ret$table_label_row_bold <- table_label_row_bold
   
   
   return(ret)
@@ -536,7 +541,8 @@ get_theme <- function(theme_name) {
                          title_font_bold = TRUE,
                          title_font_size = 11,
                          border_color = "Grey",
-                         table_header_font_bold = TRUE)
+                         table_header_font_bold = TRUE,
+                         table_label_row_bold = TRUE)
   } else {
     
    stop("Theme name is not available.") 
@@ -738,6 +744,14 @@ get_style_html <- function(rs, style_name, default = NULL) {
       ret <- paste0("background-color: ", val, ";")
     
     if (style_name == "table_stub_font_bold") {
+      if (val == TRUE)
+        ret <- paste0("font-weight: bold;")
+      else 
+        ret <- paste0("font-weight: normal;")
+      
+    }
+    
+    if (style_name == "table_label_row_bold") {
       if (val == TRUE)
         ret <- paste0("font-weight: bold;")
       else 

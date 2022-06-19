@@ -458,13 +458,13 @@ test_that("style11: stub border work as expected.", {
                       table_header_font_color = "White",
                       table_body_background = "White",
                       table_body_stripe = "Wheat",
-                      # table_stub_background = "Tan",
-                      # table_stub_font_color = "White",
+                      table_stub_background = "Tan",
+                      table_stub_font_color = "White",
                       table_stub_font_bold = TRUE
                    )
   
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE, borders = "outside") %>% 
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
     stub(c("var", "label")) %>% 
     column_defaults(width = 1.25) %>% 
     define(var, blank_after = TRUE, label_row = TRUE, 

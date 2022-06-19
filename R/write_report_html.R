@@ -147,6 +147,9 @@ get_html_document <- function(rs) {
                                  get_style_html(rs, "table_stub_font_bold"),
                                  get_style_html(rs, "table_stub_font_color"),
                                  "}")
+  ret[length(ret) + 1] <- paste0(".tlr {", 
+                                 get_style_html(rs, "table_label_row_bold"), 
+                                 "}")
   ret[length(ret) + 1] <- paste0("table {",
                                  "border-spacing: 0;",
                                  "border-collapse: collapse;",
