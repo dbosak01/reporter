@@ -361,7 +361,7 @@ add_style <- function(rpt, style = NULL, theme = NULL) {
 #' This function will return a style object for a specified theme.
 #' There are currently seven themes available.  The returned object 
 #' may be modifed and applied to a report using \code{\link{add_style}}.
-#' @param theme_name A string that contains the desired theme name to return.
+#' @param theme A string that contains the desired theme name to return.
 #' Valid values are "MidnightBlue", "SteelBlue", "DarkRed", "SeaGreen", 
 #' "SlateGrey", "Plain", and "SASDefault". 
 #' @family styles
@@ -418,11 +418,11 @@ add_style <- function(rpt, style = NULL, theme = NULL) {
 #' # file.show(tmp)
 #' 
 #' @export
-get_theme <- function(theme_name) {
+get_theme <- function(theme) {
   
   ret <- NULL
   
-  if (tolower(theme_name) == "sasdefault") {
+  if (tolower(theme) == "sasdefault") {
     
     ret <- create_style(font_name = "Arial",
                         font_size = 10,
@@ -440,7 +440,7 @@ get_theme <- function(theme_name) {
                         table_stub_font_bold = TRUE,
                         table_stub_font_color = "MidnightBlue")
     
-  } else if (tolower(theme_name) == "midnightblue") {
+  } else if (tolower(theme) == "midnightblue") {
       
       ret <- create_style(font_name = "Arial",
                           font_size = 10,
@@ -459,7 +459,7 @@ get_theme <- function(theme_name) {
                           table_stub_font_color = "LightGrey",
                           table_body_stripe = "WhiteSmoke")
       
-   } else if (tolower(theme_name) == "darkred") {
+   } else if (tolower(theme) == "darkred") {
       
       ret <- create_style(font_name = "Arial",
                           font_size = 10,
@@ -478,7 +478,7 @@ get_theme <- function(theme_name) {
                           table_stub_font_color = "LightGrey",
                           table_body_stripe = "WhiteSmoke" )
       
-   } else if (tolower(theme_name) == "seagreen") {
+   } else if (tolower(theme) == "seagreen") {
      
      ret <- create_style(font_name = "Arial",
                          font_size = 10,
@@ -497,7 +497,7 @@ get_theme <- function(theme_name) {
                          table_stub_font_color = "LightGrey",
                          table_body_stripe = "WhiteSmoke")
      
-   } else if (tolower(theme_name) == "steelblue") {
+   } else if (tolower(theme) == "steelblue") {
      
      ret <- create_style(font_name = "Arial",
                          font_size = 10,
@@ -516,7 +516,7 @@ get_theme <- function(theme_name) {
                          table_stub_font_color = "LightGrey",
                          table_body_stripe = "WhiteSmoke")
      
-   } else if (tolower(theme_name) == "slategrey") {
+   } else if (tolower(theme) == "slategrey") {
      
      ret <- create_style(font_name = "Arial",
                          font_size = 10,
@@ -535,7 +535,7 @@ get_theme <- function(theme_name) {
                          table_stub_font_color = "LightGrey",
                          table_body_stripe = "WhiteSmoke")
      
-   } else if (tolower(theme_name) == "plain") {
+   } else if (tolower(theme) == "plain") {
      
      ret <- create_style(font_name = "Arial",
                          font_size = 10,

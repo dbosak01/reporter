@@ -4,10 +4,10 @@
 \alias{get_theme}
 \title{Get a theme}
 \usage{
-get_theme(theme_name)
+get_theme(theme)
 }
 \arguments{
-\item{theme_name}{A string that contains the desired theme name to return.
+\item{theme}{A string that contains the desired theme name to return.
 Valid values are "MidnightBlue", "SteelBlue", "DarkRed", "SeaGreen", 
 "SlateGrey", "Plain", and "SASDefault".}
 }
