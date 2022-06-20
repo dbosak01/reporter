@@ -1,4 +1,4 @@
-# reporter 1.3.2
+# reporter 1.3.3
 
 * Fixed bug on DOCX that was causing R Studio to crash when using a relative path.
 * Fixed some DOCX spacing issues.

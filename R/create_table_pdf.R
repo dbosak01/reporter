@@ -1078,7 +1078,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       # Seems like this should be done already
       # Need to get widths from split_cells
-      if (class(tbl[i, j]) != "character")
+      if (all(class(tbl[i, j]) != "character"))
         vl <- as.character(tbl[i, j])
       else 
         vl <- tbl[i, j]

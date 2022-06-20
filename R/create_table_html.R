@@ -939,7 +939,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         }
         
         vl <- t[i, j]
-        if (class(vl) != "character")
+        if (all(class(vl) != "character"))
           vl <- as.character(vl)
         
         # Count lines in cell - Doesn't work right

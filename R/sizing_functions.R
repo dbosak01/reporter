@@ -1128,7 +1128,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
 
   
   # Convert ..page back to number if necessary
-  if (class(x$..page) != "numeric")
+  if (all(class(x$..page) != "numeric"))
     x$..page <- as.numeric(x$..page)
   
   #print(paste("Page count:", counter))

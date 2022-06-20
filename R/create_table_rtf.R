@@ -901,7 +901,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
         ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
         
         vl <- t[i, j]
-        if (class(vl) != "character")
+        if (all(class(vl) != "character"))
           vl <- as.character(vl)
         
         # Count lines in cell 
