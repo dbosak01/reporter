@@ -73,12 +73,14 @@ The RTF, PDF, HTML, and DOCX output types support Courier, Arial, and Times New 
 **Q:** The examples show little in the way of styling: fonts, colors, bolding, 
 etc.  What options are there for adding styles to the report?
 
-**A:** The current development effort is focused on layout and output types.
-Thus far in the development cycle, styling has been deprioritized. 
-However, some limited styling of 
-titles is available.  The `titles()` function has parameters to bold the title
-block, and set the font size independently of the main report.  More styling
-options will become available in 2022.
+**A:** Styles and themes are now available for the HTML output type. 
+Take a look at the [styles vignette](reporter-styles.html) for more information
+about this exciting new feature.
+
+For all other output types, the `titles()` function has parameters to bold the title
+block, and set the font size independently of the main report.  Styling such
+as that for HTML will
+become available for other output types in the near future.
 
 [top](#top) 
 
