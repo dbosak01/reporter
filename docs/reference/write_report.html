@@ -199,7 +199,7 @@ specifications provided in the object." />
 specifications provided in the object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>write_report</span><span class='op'>(</span><span class='va'>x</span>, file_path <span class='op'>=</span> <span class='cn'>NULL</span>, output_type <span class='op'>=</span> <span class='cn'>NULL</span>, preview <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span><span class='fu'>write_report</span><span class='op'>(</span><span class='va'>x</span>, file_path <span class='op'>=</span> <span class='cn'>NULL</span>, output_type <span class='op'>=</span> <span class='cn'>NULL</span>, preview <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -268,66 +268,65 @@ report definition procedure.</p>
 <code><a href='titles.html'>titles</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://fmtr.r-sassy.org'>fmtr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-
-<span class='co'># Create temp file path</span>
-<span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"beaver2.txt"</span><span class='op'>)</span>
-
-<span class='co'># Take Sample of Data</span>
-<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>beaver2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>, <span class='fl'>15</span><span class='op'>)</span>, <span class='op'>]</span>
-
-<span class='co'># Create format for active variable</span>
-<span class='va'>fmt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://fmtr.r-sassy.org/reference/value.html'>value</a></span><span class='op'>(</span><span class='fu'><a href='https://fmtr.r-sassy.org/reference/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span><span class='op'>)</span>,
-             <span class='fu'><a href='https://fmtr.r-sassy.org/reference/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>1</span>, <span class='st'>"Yes"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Create the table</span>
-<span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 1.0"</span>, <span class='st'>"BEAVERS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='column_defaults.html'>column_defaults</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>.75</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>day</span>, label <span class='op'>=</span> <span class='st'>"Day"</span>, format <span class='op'>=</span> <span class='st'>"Day %s"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>time</span>, label <span class='op'>=</span> <span class='st'>"Time"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>temp</span>, label <span class='op'>=</span> <span class='st'>"Temperature"</span>, width <span class='op'>=</span> <span class='fl'>1</span>, format <span class='op'>=</span> <span class='st'>"%.1f"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>activ</span>,label <span class='op'>=</span> <span class='st'>"Active"</span>, format <span class='op'>=</span> <span class='va'>fmt</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* NOTE: Data on beaver habits"</span><span class='op'>)</span>
-
-<span class='co'># Create the report object</span>
-<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span> 
-
-<span class='co'># Write the report to the file system</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>write_report</span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-
-<span class='co'># Write the modified report object to the console</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-
-<span class='co'># Write the report to console</span>
-<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'>#                 Table 1.0</span>
-<span class='co'>#           BEAVERS Sample Report</span>
-<span class='co'># </span>
-<span class='co'>#      Day      Time  Temperature    Active</span>
-<span class='co'># -----------------------------------------</span>
-<span class='co'>#  Day 307      1020         37.2        No</span>
-<span class='co'>#  Day 307      1030         37.2        No</span>
-<span class='co'>#  Day 307       940         36.7        No</span>
-<span class='co'>#  Day 307      1340         37.1        No</span>
-<span class='co'>#  Day 307      1410         37.2        No</span>
-<span class='co'>#  Day 307      1400         37.1        No</span>
-<span class='co'>#  Day 307      1130         36.9        No</span>
-<span class='co'>#  Day 307      1140         37.0        No</span>
-<span class='co'>#  Day 307      1120         37.0        No</span>
-<span class='co'>#  Day 307      1000         37.1        No</span>
-<span class='co'>#  Day 307      1250         37.0        No</span>
-<span class='co'>#  Day 307      2100         37.9       Yes</span>
-<span class='co'>#  Day 307      1210         37.0        No</span>
-<span class='co'>#  Day 307      1740         38.0       Yes</span>
-<span class='co'>#  Day 308       130         37.8       Yes</span>
-<span class='co'># </span>
-<span class='co'># * NOTE: Data on beaver habits</span>
-</pre>
+    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://fmtr.r-sassy.org'>fmtr</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create temp file path</span></span>
+<span><span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"beaver2.txt"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Take Sample of Data</span></span>
+<span><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>beaver2</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>, <span class='fl'>15</span><span class='op'>)</span>, <span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Create format for active variable</span></span>
+<span><span class='va'>fmt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://fmtr.r-sassy.org/reference/value.html'>value</a></span><span class='op'>(</span><span class='fu'><a href='https://fmtr.r-sassy.org/reference/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>0</span>, <span class='st'>"No"</span><span class='op'>)</span>,</span>
+<span>             <span class='fu'><a href='https://fmtr.r-sassy.org/reference/condition.html'>condition</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>1</span>, <span class='st'>"Yes"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create the table</span></span>
+<span><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 1.0"</span>, <span class='st'>"BEAVERS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='column_defaults.html'>column_defaults</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>.75</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>day</span>, label <span class='op'>=</span> <span class='st'>"Day"</span>, format <span class='op'>=</span> <span class='st'>"Day %s"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>time</span>, label <span class='op'>=</span> <span class='st'>"Time"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>temp</span>, label <span class='op'>=</span> <span class='st'>"Temperature"</span>, width <span class='op'>=</span> <span class='fl'>1</span>, format <span class='op'>=</span> <span class='st'>"%.1f"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>activ</span>,label <span class='op'>=</span> <span class='st'>"Active"</span>, format <span class='op'>=</span> <span class='va'>fmt</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* NOTE: Data on beaver habits"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create the report object</span></span>
+<span><span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span> </span>
+<span></span>
+<span><span class='co'># Write the report to the file system</span></span>
+<span><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>write_report</span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Write the modified report object to the console</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Write the report to console</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#                 Table 1.0</span></span>
+<span><span class='co'>#           BEAVERS Sample Report</span></span>
+<span><span class='co'># </span></span>
+<span><span class='co'>#      Day      Time  Temperature    Active</span></span>
+<span><span class='co'># -----------------------------------------</span></span>
+<span><span class='co'>#  Day 307      1020         37.2        No</span></span>
+<span><span class='co'>#  Day 307      1030         37.2        No</span></span>
+<span><span class='co'>#  Day 307       940         36.7        No</span></span>
+<span><span class='co'>#  Day 307      1340         37.1        No</span></span>
+<span><span class='co'>#  Day 307      1410         37.2        No</span></span>
+<span><span class='co'>#  Day 307      1400         37.1        No</span></span>
+<span><span class='co'>#  Day 307      1130         36.9        No</span></span>
+<span><span class='co'>#  Day 307      1140         37.0        No</span></span>
+<span><span class='co'>#  Day 307      1120         37.0        No</span></span>
+<span><span class='co'>#  Day 307      1000         37.1        No</span></span>
+<span><span class='co'>#  Day 307      1250         37.0        No</span></span>
+<span><span class='co'>#  Day 307      2100         37.9       Yes</span></span>
+<span><span class='co'>#  Day 307      1210         37.0        No</span></span>
+<span><span class='co'>#  Day 307      1740         38.0       Yes</span></span>
+<span><span class='co'>#  Day 308       130         37.8       Yes</span></span>
+<span><span class='co'># </span></span>
+<span><span class='co'># * NOTE: Data on beaver habits</span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

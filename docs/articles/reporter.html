@@ -210,55 +210,55 @@ Finally, the report can be written to a file with the
 <code><a href="../reference/write_report.html">write_report()</a></code> function.</p>
 <p>Let’s look at a simple example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
-
-<span class="co"># Create temp file name </span>
-<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example.txt"</span><span class="op">)</span>
-
-<span class="co"># Create report content</span>
-<span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"MTCARS Sample Data"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span>
-
-<span class="co"># Create report and add content  </span>
-<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span>
-  
-<span class="co"># Write out the report</span>
-<span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span>
-<span class="co"># # A report specification: 1 pages</span>
-<span class="co"># - file_path: 'C:\Users\User\AppData\Local\Temp\RtmpeC1s5u/example.txt'</span>
-<span class="co"># - output_type: TXT</span>
-<span class="co"># - units: inches</span>
-<span class="co"># - orientation: landscape</span>
-<span class="co"># - margins: top 0.5 bottom 0.5 left 1 right 1</span>
-<span class="co"># - line size/count: 108/45</span>
-<span class="co"># - content: </span>
-<span class="co"># # A table specification:</span>
-<span class="co"># - data: data.frame 'mtcars[1:10, ]' 10 rows 11 cols</span>
-<span class="co"># - show_cols: all</span>
-<span class="co"># - use_attributes: all</span>
-<span class="co"># - title 1: 'MTCARS Sample Data'</span>
-<span class="co"># - footnote 1: '* Motor Trend, 1974'</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#                        MTCARS Sample Data</span>
-<span class="co"># </span>
-<span class="co">#          mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="co">#         ---------------------------------------------------</span>
-<span class="co">#           21   6   160 110  3.9  2.62 16.46  0  1    4    4</span>
-<span class="co">#           21   6   160 110  3.9 2.875 17.02  0  1    4    4</span>
-<span class="co">#         22.8   4   108  93 3.85  2.32 18.61  1  1    4    1</span>
-<span class="co">#         21.4   6   258 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="co">#         18.7   8   360 175 3.15  3.44 17.02  0  0    3    2</span>
-<span class="co">#         18.1   6   225 105 2.76  3.46 20.22  1  0    3    1</span>
-<span class="co">#         14.3   8   360 245 3.21  3.57 15.84  0  0    3    4</span>
-<span class="co">#         24.4   4 146.7  62 3.69  3.19    20  1  0    4    2</span>
-<span class="co">#         22.8   4 140.8  95 3.92  3.15  22.9  1  0    4    2</span>
-<span class="co">#         19.2   6 167.6 123 3.92  3.44  18.3  1  0    4    4</span>
-<span class="co"># </span>
-<span class="co">#         * Motor Trend, 1974</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create temp file name </span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example.txt"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create report content</span></span>
+<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"MTCARS Sample Data"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create report and add content  </span></span>
+<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="co"># Write out the report</span></span>
+<span><span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
+<span><span class="co"># # A report specification: 1 pages</span></span>
+<span><span class="co"># - file_path: 'C:\Users\User\AppData\Local\Temp\RtmpeC1s5u/example.txt'</span></span>
+<span><span class="co"># - output_type: TXT</span></span>
+<span><span class="co"># - units: inches</span></span>
+<span><span class="co"># - orientation: landscape</span></span>
+<span><span class="co"># - margins: top 0.5 bottom 0.5 left 1 right 1</span></span>
+<span><span class="co"># - line size/count: 108/45</span></span>
+<span><span class="co"># - content: </span></span>
+<span><span class="co"># # A table specification:</span></span>
+<span><span class="co"># - data: data.frame 'mtcars[1:10, ]' 10 rows 11 cols</span></span>
+<span><span class="co"># - show_cols: all</span></span>
+<span><span class="co"># - use_attributes: all</span></span>
+<span><span class="co"># - title 1: 'MTCARS Sample Data'</span></span>
+<span><span class="co"># - footnote 1: '* Motor Trend, 1974'</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#                        MTCARS Sample Data</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co">#          mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span><span class="co">#         ---------------------------------------------------</span></span>
+<span><span class="co">#           21   6   160 110  3.9  2.62 16.46  0  1    4    4</span></span>
+<span><span class="co">#           21   6   160 110  3.9 2.875 17.02  0  1    4    4</span></span>
+<span><span class="co">#         22.8   4   108  93 3.85  2.32 18.61  1  1    4    1</span></span>
+<span><span class="co">#         21.4   6   258 110 3.08 3.215 19.44  1  0    3    1</span></span>
+<span><span class="co">#         18.7   8   360 175 3.15  3.44 17.02  0  0    3    2</span></span>
+<span><span class="co">#         18.1   6   225 105 2.76  3.46 20.22  1  0    3    1</span></span>
+<span><span class="co">#         14.3   8   360 245 3.21  3.57 15.84  0  0    3    4</span></span>
+<span><span class="co">#         24.4   4 146.7  62 3.69  3.19    20  1  0    4    2</span></span>
+<span><span class="co">#         22.8   4 140.8  95 3.92  3.15  22.9  1  0    4    2</span></span>
+<span><span class="co">#         19.2   6 167.6 123 3.92  3.44  18.3  1  0    4    4</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co">#         * Motor Trend, 1974</span></span></code></pre></div>
 <p>As you can see, using the <strong>reporter</strong> package, you can
 create a useful report with just a few lines of code. By default, the
 package creates a text report. But you can create reports in RTF, PDF,

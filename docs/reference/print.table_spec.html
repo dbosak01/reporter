@@ -201,8 +201,8 @@ The <strong>print</strong> function will print the table spec in summary
 form.  To view all parameters, set the <code>verbose</code> parameter to TRUE.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for table_spec</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span><span class='co'># S3 method for table_spec</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -236,27 +236,26 @@ a list.  Default is FALSE, which prints in summary form.</p></td>
 <code><a href='stub.html'>stub</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-
-<span class='co'># Create Table</span>
-<span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>mpg</span>, label <span class='op'>=</span> <span class='st'>"Miles Per Gallon"</span>, width <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>cyl</span>, label <span class='op'>=</span> <span class='st'>"Cylinders"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 6.4"</span>, <span class='st'>"MTCARS Sample Table"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* Motor Trend, 1974"</span><span class='op'>)</span>
-  
-<span class='va'>tbl</span>
-
-<span class='co'># A table specification:</span>
-<span class='co'># - data: data.frame 'mtcars' 32 rows 11 cols</span>
-<span class='co'># - show_cols: all</span>
-<span class='co'># - use_attributes: all</span>
-<span class='co'># - title 1: 'Table 6.4'</span>
-<span class='co'># - title 2: 'MTCARS Sample Table'</span>
-<span class='co'># - footnote 1: '* Motor Trend, 1974'</span>
-<span class='co'># - define: mpg 'Miles Per Gallon' width=0.5 </span>
-<span class='co'># - define: cyl 'Cylinders' </span>
-</pre>
+    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create Table</span></span>
+<span><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>mpg</span>, label <span class='op'>=</span> <span class='st'>"Miles Per Gallon"</span>, width <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>cyl</span>, label <span class='op'>=</span> <span class='st'>"Cylinders"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 6.4"</span>, <span class='st'>"MTCARS Sample Table"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* Motor Trend, 1974"</span><span class='op'>)</span></span>
+<span>  </span>
+<span><span class='va'>tbl</span></span>
+<span></span>
+<span><span class='co'># A table specification:</span></span>
+<span><span class='co'># - data: data.frame 'mtcars' 32 rows 11 cols</span></span>
+<span><span class='co'># - show_cols: all</span></span>
+<span><span class='co'># - use_attributes: all</span></span>
+<span><span class='co'># - title 1: 'Table 6.4'</span></span>
+<span><span class='co'># - title 2: 'MTCARS Sample Table'</span></span>
+<span><span class='co'># - footnote 1: '* Motor Trend, 1974'</span></span>
+<span><span class='co'># - define: mpg 'Miles Per Gallon' width=0.5 </span></span>
+<span><span class='co'># - define: cyl 'Cylinders' </span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

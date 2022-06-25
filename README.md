@@ -10,7 +10,7 @@
 <!-- badges: end -->
 
 # Introduction to **reporter**
-<img src="man/images/reporter4.png" align="left" height="138" style="margin-right:10px;"/>
+<img src="man/images/reporter_blue.png" align="left" height="138" style="margin-right:10px;"/>
 
 Historically, R has not been very strong on reporting.  The **reporter**
 package aims to fill that gap.  

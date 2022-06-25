@@ -207,19 +207,19 @@ the <code>define</code> function.  The overall purpose of the
 function is to minimize redundancy in column definitions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>column_defaults</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  vars <span class='op'>=</span> <span class='cn'>NULL</span>,
-  from <span class='op'>=</span> <span class='cn'>NULL</span>,
-  to <span class='op'>=</span> <span class='cn'>NULL</span>,
-  label <span class='op'>=</span> <span class='cn'>NULL</span>,
-  format <span class='op'>=</span> <span class='cn'>NULL</span>,
-  align <span class='op'>=</span> <span class='cn'>NULL</span>,
-  label_align <span class='op'>=</span> <span class='cn'>NULL</span>,
-  width <span class='op'>=</span> <span class='cn'>NULL</span>,
-  n <span class='op'>=</span> <span class='cn'>NULL</span>,
-  standard_eval <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span><span class='fu'>column_defaults</span><span class='op'>(</span></span>
+<span>  <span class='va'>x</span>,</span>
+<span>  vars <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  from <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  to <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  label <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  format <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  align <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  label_align <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  width <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  n <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  standard_eval <span class='op'>=</span> <span class='cn'>FALSE</span></span>
+<span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -328,50 +328,49 @@ calls would be made with a different set or range of variables.</p>
 <code><a href='stub.html'>stub</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
- 
-<span class='co'># Create temp file name</span>
-<span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"mtcars.txt"</span><span class='op'>)</span>
-
-<span class='co'># Prepare data</span>
-<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span>
-<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>vehicle <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>, <span class='va'>dat</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-
-<span class='co'># Define table</span>
-<span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span>, show_cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'>column_defaults</span><span class='op'>(</span>from <span class='op'>=</span> <span class='va'>mpg</span>, to <span class='op'>=</span> <span class='va'>qsec</span>, width <span class='op'>=</span> <span class='fl'>.5</span>, format <span class='op'>=</span> <span class='st'>"%.1f"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>vehicle</span>, label <span class='op'>=</span> <span class='st'>"Vehicle"</span>, width <span class='op'>=</span> <span class='fl'>1.5</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>cyl</span>, <span class='va'>hp</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"%.0f"</span><span class='op'>)</span> 
-
-<span class='co'># Create the report</span>
-<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 2.5"</span>, <span class='st'>"MTCARS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span><span class='op'>)</span> 
-
-<span class='co'># Write the report</span>
-<span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-
-<span class='co'># Send report to console for viewing</span>
-<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'>#                                 Table 2.5</span>
-<span class='co'>#                            MTCARS Sample Report</span>
-<span class='co'># </span>
-<span class='co'>#    Vehicle               mpg    cyl   disp     hp   drat     wt   qsec</span>
-<span class='co'>#    -------------------------------------------------------------------</span>
-<span class='co'>#    Mazda RX4            21.0      6  160.0    110    3.9    2.6   16.5</span>
-<span class='co'>#    Mazda RX4 Wag        21.0      6  160.0    110    3.9    2.9   17.0</span>
-<span class='co'>#    Datsun 710           22.8      4  108.0     93    3.8    2.3   18.6</span>
-<span class='co'>#    Hornet 4 Drive       21.4      6  258.0    110    3.1    3.2   19.4</span>
-<span class='co'>#    Hornet Sportabout    18.7      8  360.0    175    3.1    3.4   17.0</span>
-<span class='co'>#    Valiant              18.1      6  225.0    105    2.8    3.5   20.2</span>
-<span class='co'>#    Duster 360           14.3      8  360.0    245    3.2    3.6   15.8</span>
-<span class='co'>#    Merc 240D            24.4      4  146.7     62    3.7    3.2   20.0</span>
-<span class='co'>#    Merc 230             22.8      4  140.8     95    3.9    3.1   22.9</span>
-<span class='co'>#    Merc 280             19.2      6  167.6    123    3.9    3.4   18.3</span>
-<span class='co'>#</span>
-</pre>
+    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
+<span> </span>
+<span><span class='co'># Create temp file name</span></span>
+<span><span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"mtcars.txt"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Prepare data</span></span>
+<span><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span></span>
+<span><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>vehicle <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>)</span>, <span class='va'>dat</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define table</span></span>
+<span><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span>, show_cols <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'>column_defaults</span><span class='op'>(</span>from <span class='op'>=</span> <span class='va'>mpg</span>, to <span class='op'>=</span> <span class='va'>qsec</span>, width <span class='op'>=</span> <span class='fl'>.5</span>, format <span class='op'>=</span> <span class='st'>"%.1f"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>vehicle</span>, label <span class='op'>=</span> <span class='st'>"Vehicle"</span>, width <span class='op'>=</span> <span class='fl'>1.5</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>cyl</span>, <span class='va'>hp</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"%.0f"</span><span class='op'>)</span> </span>
+<span></span>
+<span><span class='co'># Create the report</span></span>
+<span><span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 2.5"</span>, <span class='st'>"MTCARS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span><span class='op'>)</span> </span>
+<span></span>
+<span><span class='co'># Write the report</span></span>
+<span><span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Send report to console for viewing</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#                                 Table 2.5</span></span>
+<span><span class='co'>#                            MTCARS Sample Report</span></span>
+<span><span class='co'># </span></span>
+<span><span class='co'>#    Vehicle               mpg    cyl   disp     hp   drat     wt   qsec</span></span>
+<span><span class='co'>#    -------------------------------------------------------------------</span></span>
+<span><span class='co'>#    Mazda RX4            21.0      6  160.0    110    3.9    2.6   16.5</span></span>
+<span><span class='co'>#    Mazda RX4 Wag        21.0      6  160.0    110    3.9    2.9   17.0</span></span>
+<span><span class='co'>#    Datsun 710           22.8      4  108.0     93    3.8    2.3   18.6</span></span>
+<span><span class='co'>#    Hornet 4 Drive       21.4      6  258.0    110    3.1    3.2   19.4</span></span>
+<span><span class='co'>#    Hornet Sportabout    18.7      8  360.0    175    3.1    3.4   17.0</span></span>
+<span><span class='co'>#    Valiant              18.1      6  225.0    105    2.8    3.5   20.2</span></span>
+<span><span class='co'>#    Duster 360           14.3      8  360.0    245    3.2    3.6   15.8</span></span>
+<span><span class='co'>#    Merc 240D            24.4      4  146.7     62    3.7    3.2   20.0</span></span>
+<span><span class='co'>#    Merc 230             22.8      4  140.8     95    3.9    3.1   22.9</span></span>
+<span><span class='co'>#    Merc 280             19.2      6  167.6    123    3.9    3.4   18.3</span></span>
+<span><span class='co'>#</span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -158,71 +158,71 @@
 <p>Here is an example of a regulatory-style listing using
 <strong>reporter</strong> and the mtcars sample data frame:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span>
-
-<span class="co"># Create temp file name</span>
-<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example1.txt"</span><span class="op">)</span>
-
-<span class="co"># Create the report</span>
-<span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span>left <span class="op">=</span> <span class="st">"Client: Motor Trend"</span>, right <span class="op">=</span> <span class="st">"Study: Cars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 1.0"</span>, <span class="st">"MTCARS Data Listing"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span>left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, 
-              center <span class="op">=</span> <span class="st">"Confidential"</span>, 
-              right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span>
-
-<span class="co"># Write the report</span>
-<span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span>
-
-<span class="co"># Send report to console for viewing</span>
-<span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># Client: Motor Trend                                                Study: Cars</span>
-<span class="co">#                                  Listing 1.0</span>
-<span class="co">#                             MTCARS Data Listing</span>
-<span class="co">#</span>
-<span class="co">#            mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
-<span class="co">#          ---------------------------------------------------------</span>
-<span class="co">#             21   6    160  110   3.9   2.62  16.46  0  1    4    4</span>
-<span class="co">#             21   6    160  110   3.9  2.875  17.02  0  1    4    4</span>
-<span class="co">#           22.8   4    108   93  3.85   2.32  18.61  1  1    4    1</span>
-<span class="co">#           21.4   6    258  110  3.08  3.215  19.44  1  0    3    1</span>
-<span class="co">#           18.7   8    360  175  3.15   3.44  17.02  0  0    3    2</span>
-<span class="co">#           18.1   6    225  105  2.76   3.46  20.22  1  0    3    1</span>
-<span class="co">#           14.3   8    360  245  3.21   3.57  15.84  0  0    3    4</span>
-<span class="co">#           24.4   4  146.7   62  3.69   3.19     20  1  0    4    2</span>
-<span class="co">#           22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2</span>
-<span class="co">#           19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4</span>
-<span class="co">#           17.8   6  167.6  123  3.92   3.44   18.9  1  0    4    4</span>
-<span class="co">#           16.4   8  275.8  180  3.07   4.07   17.4  0  0    3    3</span>
-<span class="co">#           17.3   8  275.8  180  3.07   3.73   17.6  0  0    3    3</span>
-<span class="co">#           15.2   8  275.8  180  3.07   3.78     18  0  0    3    3</span>
-<span class="co">#           10.4   8    472  205  2.93   5.25  17.98  0  0    3    4</span>
-<span class="co">#           10.4   8    460  215     3  5.424  17.82  0  0    3    4</span>
-<span class="co">#           14.7   8    440  230  3.23  5.345  17.42  0  0    3    4</span>
-<span class="co">#           32.4   4   78.7   66  4.08    2.2  19.47  1  1    4    1</span>
-<span class="co">#           30.4   4   75.7   52  4.93  1.615  18.52  1  1    4    2</span>
-<span class="co">#           33.9   4   71.1   65  4.22  1.835   19.9  1  1    4    1</span>
-<span class="co">#           21.5   4  120.1   97   3.7  2.465  20.01  1  0    3    1</span>
-<span class="co">#           15.5   8    318  150  2.76   3.52  16.87  0  0    3    2</span>
-<span class="co">#           15.2   8    304  150  3.15  3.435   17.3  0  0    3    2</span>
-<span class="co">#           13.3   8    350  245  3.73   3.84  15.41  0  0    3    4</span>
-<span class="co">#           19.2   8    400  175  3.08  3.845  17.05  0  0    3    2</span>
-<span class="co">#           27.3   4     79   66  4.08  1.935   18.9  1  1    4    1</span>
-<span class="co">#             26   4  120.3   91  4.43   2.14   16.7  0  1    5    2</span>
-<span class="co">#           30.4   4   95.1  113  3.77  1.513   16.9  1  1    5    2</span>
-<span class="co">#           15.8   8    351  264  4.22   3.17   14.5  0  1    5    4</span>
-<span class="co">#           19.7   6    145  175  3.62   2.77   15.5  0  1    5    6</span>
-<span class="co">#             15   8    301  335  3.54   3.57   14.6  0  1    5    8</span>
-<span class="co">#           21.4   4    121  109  4.11   2.78   18.6  1  1    4    2</span>
-<span class="co"># </span>
-<span class="co"># ...</span>
-<span class="co"># </span>
-<span class="co"># * Motor Trend, 1974</span>
-<span class="co"># </span>
-<span class="co"># 2020-08-25 23:57:30              Confidential                      Page 1 of 1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create temp file name</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example1.txt"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create the report</span></span>
+<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span>left <span class="op">=</span> <span class="st">"Client: Motor Trend"</span>, right <span class="op">=</span> <span class="st">"Study: Cars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 1.0"</span>, <span class="st">"MTCARS Data Listing"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span>left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>              center <span class="op">=</span> <span class="st">"Confidential"</span>, </span>
+<span>              right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Write the report</span></span>
+<span><span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Send report to console for viewing</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Client: Motor Trend                                                Study: Cars</span></span>
+<span><span class="co">#                                  Listing 1.0</span></span>
+<span><span class="co">#                             MTCARS Data Listing</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co">#            mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span></span>
+<span><span class="co">#          ---------------------------------------------------------</span></span>
+<span><span class="co">#             21   6    160  110   3.9   2.62  16.46  0  1    4    4</span></span>
+<span><span class="co">#             21   6    160  110   3.9  2.875  17.02  0  1    4    4</span></span>
+<span><span class="co">#           22.8   4    108   93  3.85   2.32  18.61  1  1    4    1</span></span>
+<span><span class="co">#           21.4   6    258  110  3.08  3.215  19.44  1  0    3    1</span></span>
+<span><span class="co">#           18.7   8    360  175  3.15   3.44  17.02  0  0    3    2</span></span>
+<span><span class="co">#           18.1   6    225  105  2.76   3.46  20.22  1  0    3    1</span></span>
+<span><span class="co">#           14.3   8    360  245  3.21   3.57  15.84  0  0    3    4</span></span>
+<span><span class="co">#           24.4   4  146.7   62  3.69   3.19     20  1  0    4    2</span></span>
+<span><span class="co">#           22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2</span></span>
+<span><span class="co">#           19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4</span></span>
+<span><span class="co">#           17.8   6  167.6  123  3.92   3.44   18.9  1  0    4    4</span></span>
+<span><span class="co">#           16.4   8  275.8  180  3.07   4.07   17.4  0  0    3    3</span></span>
+<span><span class="co">#           17.3   8  275.8  180  3.07   3.73   17.6  0  0    3    3</span></span>
+<span><span class="co">#           15.2   8  275.8  180  3.07   3.78     18  0  0    3    3</span></span>
+<span><span class="co">#           10.4   8    472  205  2.93   5.25  17.98  0  0    3    4</span></span>
+<span><span class="co">#           10.4   8    460  215     3  5.424  17.82  0  0    3    4</span></span>
+<span><span class="co">#           14.7   8    440  230  3.23  5.345  17.42  0  0    3    4</span></span>
+<span><span class="co">#           32.4   4   78.7   66  4.08    2.2  19.47  1  1    4    1</span></span>
+<span><span class="co">#           30.4   4   75.7   52  4.93  1.615  18.52  1  1    4    2</span></span>
+<span><span class="co">#           33.9   4   71.1   65  4.22  1.835   19.9  1  1    4    1</span></span>
+<span><span class="co">#           21.5   4  120.1   97   3.7  2.465  20.01  1  0    3    1</span></span>
+<span><span class="co">#           15.5   8    318  150  2.76   3.52  16.87  0  0    3    2</span></span>
+<span><span class="co">#           15.2   8    304  150  3.15  3.435   17.3  0  0    3    2</span></span>
+<span><span class="co">#           13.3   8    350  245  3.73   3.84  15.41  0  0    3    4</span></span>
+<span><span class="co">#           19.2   8    400  175  3.08  3.845  17.05  0  0    3    2</span></span>
+<span><span class="co">#           27.3   4     79   66  4.08  1.935   18.9  1  1    4    1</span></span>
+<span><span class="co">#             26   4  120.3   91  4.43   2.14   16.7  0  1    5    2</span></span>
+<span><span class="co">#           30.4   4   95.1  113  3.77  1.513   16.9  1  1    5    2</span></span>
+<span><span class="co">#           15.8   8    351  264  4.22   3.17   14.5  0  1    5    4</span></span>
+<span><span class="co">#           19.7   6    145  175  3.62   2.77   15.5  0  1    5    6</span></span>
+<span><span class="co">#             15   8    301  335  3.54   3.57   14.6  0  1    5    8</span></span>
+<span><span class="co">#           21.4   4    121  109  4.11   2.78   18.6  1  1    4    2</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># ...</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># * Motor Trend, 1974</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># 2020-08-25 23:57:30              Confidential                      Page 1 of 1</span></span></code></pre></div>
 <p>Next: <a href="reporter-table.html">Example 2: Table</a></p>
 </div>
   </div>

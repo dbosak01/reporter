@@ -203,8 +203,8 @@ form by default.  To print in list form, set the <code>verbose</code> parameter
 to TRUE.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for report_spec</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span><span class='co'># S3 method for report_spec</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -244,42 +244,41 @@ or summary form.  The default is FALSE.</p></td>
 <code><a href='write_report.html'>write_report</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-
-<span class='co'># Create temp file path</span>
-<span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"mtcars.txt"</span><span class='op'>)</span>
-
-<span class='co'># Create the table</span>
-<span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 1.0"</span>, <span class='st'>"MTCARS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* NOTE: Data from 1974"</span><span class='op'>)</span>
-
-<span class='co'># Create the report object</span>
-<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span> 
-
-<span class='co'># Write the report to the file system</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-
-<span class='co'># Write the modified report object to the console</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-
-<span class='co'># # A report specification: 1 pages</span>
-<span class='co'># - file_path: 'C:/Users/User/AppData/Local/Temp/RtmpWQybXs/mtcars.txt'</span>
-<span class='co'># - output_type: TXT</span>
-<span class='co'># - units: inches</span>
-<span class='co'># - orientation: landscape</span>
-<span class='co'># - line size/count: 108/45</span>
-<span class='co'># - content: </span>
-<span class='co'># # A table specification:</span>
-<span class='co'># - data: data.frame 'mtcars' 32 rows 11 cols</span>
-<span class='co'># - show_cols: all</span>
-<span class='co'># - use_attributes: all</span>
-<span class='co'># - title 1: 'Table 1.0'</span>
-<span class='co'># - title 2: 'MTCARS Sample Report'</span>
-<span class='co'># - footnote 1: '* NOTE: Data from 1974'</span>
-</pre>
+    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create temp file path</span></span>
+<span><span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"mtcars.txt"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create the table</span></span>
+<span><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 1.0"</span>, <span class='st'>"MTCARS Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* NOTE: Data from 1974"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create the report object</span></span>
+<span><span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span> </span>
+<span></span>
+<span><span class='co'># Write the report to the file system</span></span>
+<span><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Write the modified report object to the console</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># # A report specification: 1 pages</span></span>
+<span><span class='co'># - file_path: 'C:/Users/User/AppData/Local/Temp/RtmpWQybXs/mtcars.txt'</span></span>
+<span><span class='co'># - output_type: TXT</span></span>
+<span><span class='co'># - units: inches</span></span>
+<span><span class='co'># - orientation: landscape</span></span>
+<span><span class='co'># - line size/count: 108/45</span></span>
+<span><span class='co'># - content: </span></span>
+<span><span class='co'># # A table specification:</span></span>
+<span><span class='co'># - data: data.frame 'mtcars' 32 rows 11 cols</span></span>
+<span><span class='co'># - show_cols: all</span></span>
+<span><span class='co'># - use_attributes: all</span></span>
+<span><span class='co'># - title 1: 'Table 1.0'</span></span>
+<span><span class='co'># - title 2: 'MTCARS Sample Report'</span></span>
+<span><span class='co'># - footnote 1: '* NOTE: Data from 1974'</span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

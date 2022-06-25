@@ -201,7 +201,7 @@ There are currently seven themes available.  The returned object
 may be modifed and applied to a report using <code><a href='add_style.html'>add_style</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_theme</span><span class='op'>(</span><span class='va'>theme</span><span class='op'>)</span></pre>
+    <pre class="usage"><span><span class='fu'>get_theme</span><span class='op'>(</span><span class='va'>theme</span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,58 +222,57 @@ Valid values are "MidnightBlue", "SteelBlue", "DarkRed", "SeaGreen",
 <code><a href='print.style_spec.html'>print.style_spec</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-
-<span class='co'># Get theme</span>
-<span class='va'>tm</span> <span class='op'>&lt;-</span> <span class='fu'>get_theme</span><span class='op'>(</span><span class='st'>"SteelBlue"</span><span class='op'>)</span>
-
-<span class='co'># View theme settings</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>tm</span><span class='op'>)</span>
-<span class='co'>## A style specification: </span>
-<span class='co'>#- font_name: 'Arial'</span>
-<span class='co'>#- font_size: 10</span>
-<span class='co'>#- text_color: 'DimGrey'</span>
-<span class='co'>#- title_font_size: 11</span>
-<span class='co'>#- title_font_bold: TRUE</span>
-<span class='co'>#- title_font_color: 'SteelBlue'</span>
-<span class='co'>#- border_color: 'Grey'</span>
-<span class='co'>#- table_header_background: 'SteelBlue'</span>
-<span class='co'>#- table_header_font_bold: TRUE</span>
-<span class='co'>#- table_header_font_color: 'LightGrey'</span>
-<span class='co'>#- table_body_background: 'White'</span>
-<span class='co'>#- table_body_stripe: 'WhiteSmoke'</span>
-<span class='co'>#- table_stub_background: 'SteelBlue'</span>
-<span class='co'>#- table_stub_font_color: 'LightGrey'</span>
-<span class='co'>#- table_stub_font_bold: TRUE</span>
-
-<span class='co'># Modify theme</span>
-<span class='va'>tm</span><span class='op'>$</span><span class='va'>font_size</span> <span class='op'>&lt;-</span> <span class='fl'>12</span>
-<span class='va'>tm</span><span class='op'>$</span><span class='va'>title_font_size</span> <span class='op'>&lt;-</span> <span class='fl'>13</span>
-
-<span class='co'># Create temp file path</span>
-<span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"HairAndEyes.html"</span><span class='op'>)</span>
-
-<span class='co'># Get data</span>
-<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>HairEyeColor</span><span class='op'>)</span>
-
-<span class='co'># Create table object</span>
-<span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>[</span><span class='va'>dat</span><span class='op'>$</span><span class='va'>Freq</span> <span class='op'>&gt;=</span> <span class='fl'>10</span>, <span class='op'>]</span>, 
-borders <span class='op'>=</span> <span class='st'>"outside"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-<span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Hair and Eye Colors"</span><span class='op'>)</span>
-
-<span class='co'># Use modified theme</span>
-<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, output_type <span class='op'>=</span> <span class='st'>"HTML"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-       <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-       <span class='fu'><a href='add_style.html'>add_style</a></span><span class='op'>(</span><span class='va'>tm</span><span class='op'>)</span>
-
-<span class='co'># Write out the report        </span>
-<span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-
-<span class='co'># Uncomment to View report</span>
-<span class='co'># file.show(tmp)</span>
-
-</pre>
+    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Get theme</span></span>
+<span><span class='va'>tm</span> <span class='op'>&lt;-</span> <span class='fu'>get_theme</span><span class='op'>(</span><span class='st'>"SteelBlue"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># View theme settings</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>tm</span><span class='op'>)</span></span>
+<span><span class='co'>## A style specification: </span></span>
+<span><span class='co'>#- font_name: 'Arial'</span></span>
+<span><span class='co'>#- font_size: 10</span></span>
+<span><span class='co'>#- text_color: 'DimGrey'</span></span>
+<span><span class='co'>#- title_font_size: 11</span></span>
+<span><span class='co'>#- title_font_bold: TRUE</span></span>
+<span><span class='co'>#- title_font_color: 'SteelBlue'</span></span>
+<span><span class='co'>#- border_color: 'Grey'</span></span>
+<span><span class='co'>#- table_header_background: 'SteelBlue'</span></span>
+<span><span class='co'>#- table_header_font_bold: TRUE</span></span>
+<span><span class='co'>#- table_header_font_color: 'LightGrey'</span></span>
+<span><span class='co'>#- table_body_background: 'White'</span></span>
+<span><span class='co'>#- table_body_stripe: 'WhiteSmoke'</span></span>
+<span><span class='co'>#- table_stub_background: 'SteelBlue'</span></span>
+<span><span class='co'>#- table_stub_font_color: 'LightGrey'</span></span>
+<span><span class='co'>#- table_stub_font_bold: TRUE</span></span>
+<span></span>
+<span><span class='co'># Modify theme</span></span>
+<span><span class='va'>tm</span><span class='op'>$</span><span class='va'>font_size</span> <span class='op'>&lt;-</span> <span class='fl'>12</span></span>
+<span><span class='va'>tm</span><span class='op'>$</span><span class='va'>title_font_size</span> <span class='op'>&lt;-</span> <span class='fl'>13</span></span>
+<span></span>
+<span><span class='co'># Create temp file path</span></span>
+<span><span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"HairAndEyes.html"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Get data</span></span>
+<span><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>HairEyeColor</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create table object</span></span>
+<span><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span><span class='op'>[</span><span class='va'>dat</span><span class='op'>$</span><span class='va'>Freq</span> <span class='op'>&gt;=</span> <span class='fl'>10</span>, <span class='op'>]</span>, </span>
+<span>borders <span class='op'>=</span> <span class='st'>"outside"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span><span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Hair and Eye Colors"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Use modified theme</span></span>
+<span><span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, output_type <span class='op'>=</span> <span class='st'>"HTML"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>       <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>       <span class='fu'><a href='add_style.html'>add_style</a></span><span class='op'>(</span><span class='va'>tm</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Write out the report        </span></span>
+<span><span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Uncomment to View report</span></span>
+<span><span class='co'># file.show(tmp)</span></span>
+<span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

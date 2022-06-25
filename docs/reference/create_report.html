@@ -197,16 +197,16 @@
     <p>Creates a report shell to which you may add titles, footnotes, content, etc.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_report</span><span class='op'>(</span>
-  file_path <span class='op'>=</span> <span class='st'>""</span>,
-  output_type <span class='op'>=</span> <span class='st'>"TXT"</span>,
-  orientation <span class='op'>=</span> <span class='st'>"landscape"</span>,
-  units <span class='op'>=</span> <span class='st'>"inches"</span>,
-  paper_size <span class='op'>=</span> <span class='st'>"letter"</span>,
-  missing <span class='op'>=</span> <span class='st'>""</span>,
-  font <span class='op'>=</span> <span class='st'>"fixed"</span>,
-  font_size <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span><span class='fu'>create_report</span><span class='op'>(</span></span>
+<span>  file_path <span class='op'>=</span> <span class='st'>""</span>,</span>
+<span>  output_type <span class='op'>=</span> <span class='st'>"TXT"</span>,</span>
+<span>  orientation <span class='op'>=</span> <span class='st'>"landscape"</span>,</span>
+<span>  units <span class='op'>=</span> <span class='st'>"inches"</span>,</span>
+<span>  paper_size <span class='op'>=</span> <span class='st'>"letter"</span>,</span>
+<span>  missing <span class='op'>=</span> <span class='st'>""</span>,</span>
+<span>  font <span class='op'>=</span> <span class='st'>"fixed"</span>,</span>
+<span>  font_size <span class='op'>=</span> <span class='cn'>NULL</span></span>
+<span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -327,57 +327,56 @@ to create content for the report.</p>
 <code><a href='write_report.html'>write_report</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
-
-<span class='co'># Create temp file path</span>
-<span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"airquality.txt"</span><span class='op'>)</span>
-
-<span class='co'># Prepare Data</span>
-<span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>airquality</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>153</span>, <span class='fl'>15</span><span class='op'>)</span>, <span class='op'>]</span>
-<span class='va'>dat</span><span class='op'>$</span><span class='va'>Month</span> <span class='op'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"1973-"</span>, <span class='va'>dat</span><span class='op'>$</span><span class='va'>Month</span>, <span class='st'>"-01"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Define table</span>
-<span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span>, show_cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Month"</span>, <span class='st'>"Day"</span>, <span class='st'>"Wind"</span>, <span class='st'>"Temp"</span>, <span class='st'>"Ozone"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 9.6"</span>, <span class='st'>"Air Quality Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='column_defaults.html'>column_defaults</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>Month</span>, format <span class='op'>=</span> <span class='st'>"%B"</span>, align <span class='op'>=</span> <span class='st'>"left"</span>, width <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>Temp</span>, format <span class='op'>=</span> <span class='st'>"%.0f"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* New York, May to September 1973"</span><span class='op'>)</span>
-
-<span class='co'># Define report </span>
-<span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'>create_report</span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span>,  missing <span class='op'>=</span> <span class='st'>"-"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
-  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span><span class='op'>)</span> 
-
-<span class='co'># Write the report to the file system</span>
-<span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span>
-
-<span class='co'># Write the report to the console</span>
-<span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'>#                      Table 9.6</span>
-<span class='co'>#              Air Quality Sample Report</span>
-<span class='co'>#      </span>
-<span class='co'>#      Month           Day   Wind   Temp  Ozone</span>
-<span class='co'>#      ----------------------------------------</span>
-<span class='co'>#      July              8    6.3     92     97</span>
-<span class='co'>#      July              9    5.7     92     97</span>
-<span class='co'>#      August            1    6.9     81     39</span>
-<span class='co'>#      July             23   11.5     82      -</span>
-<span class='co'>#      June              9   13.8     90     71</span>
-<span class='co'>#      July             12   14.3     73     10</span>
-<span class='co'>#      July              4   10.9     84      -</span>
-<span class='co'>#      May              31    7.4     76     37</span>
-<span class='co'>#      September        30   11.5     68     20</span>
-<span class='co'>#      June             25      8     75      -</span>
-<span class='co'>#      June             28   11.5     80      -</span>
-<span class='co'>#      August           18    7.4     76     23</span>
-<span class='co'>#      June             20   10.3     76     13</span>
-<span class='co'>#      July              1    4.1     84    135</span>
-<span class='co'>#      May              23    9.7     61      4</span>
-<span class='co'>#      </span>
-<span class='co'>#      * New York, May to September 1973</span>
-</pre>
+    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Create temp file path</span></span>
+<span><span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"airquality.txt"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Prepare Data</span></span>
+<span><span class='va'>dat</span> <span class='op'>&lt;-</span> <span class='va'>airquality</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>153</span>, <span class='fl'>15</span><span class='op'>)</span>, <span class='op'>]</span></span>
+<span><span class='va'>dat</span><span class='op'>$</span><span class='va'>Month</span> <span class='op'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"1973-"</span>, <span class='va'>dat</span><span class='op'>$</span><span class='va'>Month</span>, <span class='st'>"-01"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define table</span></span>
+<span><span class='va'>tbl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_table.html'>create_table</a></span><span class='op'>(</span><span class='va'>dat</span>, show_cols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Month"</span>, <span class='st'>"Day"</span>, <span class='st'>"Wind"</span>, <span class='st'>"Temp"</span>, <span class='st'>"Ozone"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Table 9.6"</span>, <span class='st'>"Air Quality Sample Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='column_defaults.html'>column_defaults</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>Month</span>, format <span class='op'>=</span> <span class='st'>"%B"</span>, align <span class='op'>=</span> <span class='st'>"left"</span>, width <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span><span class='va'>Temp</span>, format <span class='op'>=</span> <span class='st'>"%.0f"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* New York, May to September 1973"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Define report </span></span>
+<span><span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'>create_report</span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span>,  missing <span class='op'>=</span> <span class='st'>"-"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>tbl</span><span class='op'>)</span> </span>
+<span></span>
+<span><span class='co'># Write the report to the file system</span></span>
+<span><span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Write the report to the console</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#                      Table 9.6</span></span>
+<span><span class='co'>#              Air Quality Sample Report</span></span>
+<span><span class='co'>#      </span></span>
+<span><span class='co'>#      Month           Day   Wind   Temp  Ozone</span></span>
+<span><span class='co'>#      ----------------------------------------</span></span>
+<span><span class='co'>#      July              8    6.3     92     97</span></span>
+<span><span class='co'>#      July              9    5.7     92     97</span></span>
+<span><span class='co'>#      August            1    6.9     81     39</span></span>
+<span><span class='co'>#      July             23   11.5     82      -</span></span>
+<span><span class='co'>#      June              9   13.8     90     71</span></span>
+<span><span class='co'>#      July             12   14.3     73     10</span></span>
+<span><span class='co'>#      July              4   10.9     84      -</span></span>
+<span><span class='co'>#      May              31    7.4     76     37</span></span>
+<span><span class='co'>#      September        30   11.5     68     20</span></span>
+<span><span class='co'>#      June             25      8     75      -</span></span>
+<span><span class='co'>#      June             28   11.5     80      -</span></span>
+<span><span class='co'>#      August           18    7.4     76     23</span></span>
+<span><span class='co'>#      June             20   10.3     76     13</span></span>
+<span><span class='co'>#      July              1    4.1     84    135</span></span>
+<span><span class='co'>#      May              23    9.7     61      4</span></span>
+<span><span class='co'>#      </span></span>
+<span><span class='co'>#      * New York, May to September 1973</span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
