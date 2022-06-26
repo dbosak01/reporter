@@ -98,6 +98,9 @@
       <a href="../articles/reporter-styles.html">Example 12: Styles</a>
     </li>
     <li>
+      <a href="../articles/reporter-super.html">Example 13: Superscripts and Subscripts</a>
+    </li>
+    <li>
       <a href="../articles/reporter-example1.html">Complete Example 1</a>
     </li>
     <li>
@@ -174,6 +177,8 @@ reporter?</a></li>
 data?</a></li>
 <li><a href="#filter">Does reporter have a way to filter the report
 data?</a></li>
+<li><a href="#super">Does reporter support superscripts and
+subscripts?</a></li>
 <li><a href="#visible">Do I have to include all the columns in my data
 on the final report?</a></li>
 <li><a href="#order">Is there a way to order the columns on my
@@ -314,6 +319,20 @@ filter the data?</p>
 <p><strong>A:</strong> No. There are many ways to filter data in R. It
 is therefore recommended to filter the data before sending it into the
 <strong>reporter</strong> package.</p>
+<p><a href="#top">top</a></p>
+<hr>
+</div>
+<div id="super" class="section level3">
+<h3 class="hasAnchor">
+<a href="#super" class="anchor"></a>Does reporter support superscripts and subscripts?</h3>
+<p><strong>Q:</strong> I want to add some superscripts and subscripts to
+my report. Does reporter have a way to do that?</p>
+<p><strong>A:</strong> Yes. The reporting functions recognize Unicode
+superscript and subscript characters. These characters may be entered as
+a 4-digit unicode code, or by directly copying the rendered Unicode
+character. For instance, the code “\U00B2” specifies a superscript two.
+See the <a href="reporter-super.html">superscript and subscript
+vignette</a> for further explanation on this topic.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>

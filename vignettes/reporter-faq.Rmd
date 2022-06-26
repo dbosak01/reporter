@@ -31,6 +31,7 @@ on the links below to navigate to the full question and answer content.
 * [Can I perform grouping with reporter?](#grouping)
 * [Does reporter have a way to sort the report data?](#sort)
 * [Does reporter have a way to filter the report data?](#filter)
+* [Does reporter support superscripts and subscripts?](#super)
 * [Do I have to include all the columns in my data on the final report?](#visible)
 * [Is there a way to order the columns on my report?](#order)
 * [Is there a way to format a variable?](#format)
@@ -181,6 +182,22 @@ recommended to filter the data before sending it into the **reporter** package.
 
 ******
 
+### Does reporter support superscripts and subscripts? {#super}
+
+**Q:** I want to add some superscripts and subscripts to my report.  Does
+reporter have a way to do that?
+
+
+**A:** Yes. The reporting functions recognize Unicode superscript and subscript
+characters.  These characters may be entered as a 4-digit unicode code,
+or by directly copying the rendered Unicode character.  For instance, the 
+code "\\U00B2" specifies a superscript two.  See the 
+[superscript and subscript vignette](reporter-super.html)
+for further explanation on this topic.
+
+[top](#top) 
+
+******
 
 ### Do I have to include all the columns in my data on the final report? {#visible}
 
