@@ -16,12 +16,13 @@ articles:
   reporter-spanning: reporter-spanning.html
   reporter-stub: reporter-stub.html
   reporter-styles: reporter-styles.html
+  reporter-super: reporter-super.html
   reporter-table: reporter-table.html
   reporter-text: reporter-text.html
   reporter-title_header: reporter-title_header.html
   reporter-wrap: reporter-wrap.html
   reporter: reporter.html
-last_built: 2022-06-25T13:11Z
+last_built: 2022-06-26T06:15Z
 urls:
   reference: https://reporter.r-sassy.org/reference
   article: https://reporter.r-sassy.org/articles
