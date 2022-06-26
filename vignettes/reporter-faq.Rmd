@@ -189,8 +189,8 @@ reporter have a way to do that?
 
 
 **A:** Yes. The reporting functions recognize Unicode superscript and subscript
-characters.  These characters may be entered as a 4-digit unicode code,
-or by directly copying the rendered Unicode character.  For instance, the 
+characters.  These characters may be entered as a 4-digit Unicode code. 
+For instance, the 
 code "\\U00B2" specifies a superscript two.  See the 
 [superscript and subscript vignette](reporter-super.html)
 for further explanation on this topic.
