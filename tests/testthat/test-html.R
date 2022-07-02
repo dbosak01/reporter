@@ -54,6 +54,7 @@ test_that("html1: Basic table works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   
+  
 })
 
 test_that("html2: Basic table with title header works as expected.", {
