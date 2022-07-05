@@ -2,7 +2,7 @@
 title: "Full Program 3: Adverse Events"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example3}
+  %\VignetteIndexEntry{Full Program 3: Adverse Events}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

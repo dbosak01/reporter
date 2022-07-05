@@ -2,7 +2,7 @@
 title: "Full Program 5: Survival Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example5}
+  %\VignetteIndexEntry{Full Program 5: Survival Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

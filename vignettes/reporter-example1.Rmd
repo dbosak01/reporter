@@ -2,7 +2,7 @@
 title: "Full Program 1: Listing"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example1}
+  %\VignetteIndexEntry{Full Program 1: Listing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
