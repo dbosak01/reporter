@@ -1,5 +1,5 @@
 ---
-title: "Complete Example 4"
+title: "Full Program 4: Figure"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{example4}
@@ -303,4 +303,4 @@ Log Elapsed Time: 0 00:00:07
 ```
 
 
-Next: [Complete Example 5](reporter-example5.html)
+Next: [Full Program 5: Survival Analysis](reporter-example5.html)

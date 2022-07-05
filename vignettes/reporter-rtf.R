@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 #  library(reporter)
 #  
 #  # Create temporary path
-#  tmp <- file.path(tempdir(), "example9.rtf")
+#  tmp <- file.path(tempdir(), "example9.docx")
 #  
 #  # Read in prepared data
 #  df <- read.table(header = TRUE, text = '
@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 #  
 #  
 #  # Create report and add content
-#  rpt <- create_report(tmp, output_type = "RTF") %>%
+#  rpt <- create_report(tmp, output_type = "DOCX") %>%
 #    set_margins(top = 1, bottom = 1) %>%
 #    options_fixed(font_size = 12) %>%
 #    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%

@@ -21,13 +21,13 @@ and DOCX.
 The package produces TXT reports by default.  If you want to produce RTF, PDF, 
 HTML, or DOCX output, simply change the output type.  Below is the summary table
 with stub example from above, the only change being that the `output_type`
-is now set to RTF.
+is now set to DOCX.
 
 ```{r eval=FALSE, echo=TRUE} 
 library(reporter)
 
 # Create temporary path
-tmp <- file.path(tempdir(), "example9.rtf")
+tmp <- file.path(tempdir(), "example9.docx")
 
 # Read in prepared data
 df <- read.table(header = TRUE, text = '
@@ -52,7 +52,7 @@ tbl <- create_table(df, first_row_blank = TRUE) %>%
 
 
 # Create report and add content
-rpt <- create_report(tmp, output_type = "RTF") %>% 
+rpt <- create_report(tmp, output_type = "DOCX") %>% 
   set_margins(top = 1, bottom = 1) %>%
   options_fixed(font_size = 12) %>% 
   page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
