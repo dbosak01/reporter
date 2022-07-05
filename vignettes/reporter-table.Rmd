@@ -17,8 +17,8 @@ knitr::opts_chunk$set(
 ### Create a Summary Table
 
 Here is an example of a regulatory-style table of summary statistics. This
-example also introduces the `define()` function on `create_table()`.  This 
-function allows you to control many aspects of a column, including
+example also introduces the `define()` function on `create_table()`.  The
+`define()` function allows you to control many aspects of a column, including
 the label, format, width, alignment, and much more:
 
 ```{r eval=FALSE, echo=TRUE} 

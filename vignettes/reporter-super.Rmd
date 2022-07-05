@@ -127,7 +127,7 @@ in the same way as the numbers shown above.
 
 ### Complex Superscript and Subscript Expressions
 
-Also note that multiple Unicode characters can be combined
+Multiple Unicode characters can be combined
 to create more complex superscript or subscript expressions.  Here is an
 example of such an expression:
 
