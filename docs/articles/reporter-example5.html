@@ -160,8 +160,27 @@
 <a href="#program" class="anchor"></a>Program</h2>
 <p>Below is another complete example showing how the
 <strong>reporter</strong> package interacts with
-<strong>tidyverse</strong> and <strong>sassy</strong> functions to
-create a survival analysis.</p>
+<strong>tidyverse</strong> and <a href="https://sassy.r-sassy.org">sassy</a> functions to create a
+survival analysis. This is the most complicated example in the
+documentation.</p>
+<p>There are several interesting aspects to this report. The first is to
+note that the <strong>reporter</strong> package gives you the freedom to
+perform any analysis you want. Any statistics that R can produce can be
+added to a <strong>reporter</strong> report. You just need to get them
+into a data frame or plot, and the <strong>reporter</strong> package
+will render the analysis as desired.</p>
+<p>Also note that the table on page one is a complex table, that is
+actually composed of two tables stacked on top of one another. The first
+table <code>tbl1</code> contains the column headers and some PSGA
+counts. The second table <code>tbl2</code> is marked as
+<code>headerless</code> and contains the Kaplan-Meier analysis. The two
+tables are lined up so they appear as one table. This technique of
+stacking one table on top of another allows you to create very complex
+tables in an easy manner.</p>
+<p>Lastly, observe the ability to append both tabular and plot content
+onto the same report. This appending ability was designed into the
+<strong>reporter</strong> package from the beginning, and gives you the
+flexibility you need to document your entire analysis.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-sassy.org">sassy</a></span><span class="op">)</span></span>
@@ -505,10 +524,10 @@ create a survival analysis.</p>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">block</span>, label_row <span class="op">=</span> <span class="cn">TRUE</span>, format <span class="op">=</span> <span class="va">label_lookup</span>, blank_after <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label1</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label2</span>, indent <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM A`</span>,  n <span class="op">=</span> <span class="va">arm_pop</span><span class="op">[</span><span class="st">"ARM A"</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM B`</span>,  n <span class="op">=</span> <span class="va">arm_pop</span><span class="op">[</span><span class="st">"ARM B"</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM C`</span>,  n <span class="op">=</span> <span class="va">arm_pop</span><span class="op">[</span><span class="st">"ARM C"</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM D`</span>,  n <span class="op">=</span> <span class="va">arm_pop</span><span class="op">[</span><span class="st">"ARM D"</span><span class="op">]</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM A`</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM B`</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM C`</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">`ARM D`</span><span class="op">)</span> </span>
 <span></span>
 <span></span>
 <span><span class="co"># Create plot</span></span>

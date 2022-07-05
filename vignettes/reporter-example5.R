@@ -350,10 +350,10 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 #    define(block, label_row = TRUE, format = label_lookup, blank_after = TRUE) %>%
 #    define(label1, indent = .25) %>%
 #    define(label2, indent = .5) %>%
-#    define(`ARM A`,  n = arm_pop["ARM A"]) %>%
-#    define(`ARM B`,  n = arm_pop["ARM B"]) %>%
-#    define(`ARM C`,  n = arm_pop["ARM C"]) %>%
-#    define(`ARM D`,  n = arm_pop["ARM D"])
+#    define(`ARM A`) %>%
+#    define(`ARM B`) %>%
+#    define(`ARM C`) %>%
+#    define(`ARM D`)
 #  
 #  
 #  # Create plot

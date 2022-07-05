@@ -19,8 +19,28 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ## Program
 
 Below is another complete example showing how the **reporter** package
-interacts with **tidyverse** and **sassy** functions to create a survival
-analysis.
+interacts with **tidyverse** and [sassy](https://sassy.r-sassy.org) 
+functions to create a survival
+analysis.  This is the most complicated example in the documentation.
+
+There are several interesting aspects to this report.  The first is to note
+that the **reporter** package gives you the freedom to perform any analysis
+you want. Any statistics that R can produce can be added to a **reporter**
+report.  You just need to get them into a data frame or plot, 
+and the **reporter** package will render the analysis as desired.
+
+Also note that the table on page one is a complex table, that is actually
+composed of two tables stacked on top of one another. The first table 
+`tbl1` contains the column headers and some PSGA counts.  The second
+table `tbl2` is marked as `headerless` and contains the Kaplan-Meier analysis.
+The two tables are lined up so they appear as one table.
+This technique of stacking one table on top of another 
+allows you to create very complex tables in an easy manner.
+
+Lastly, observe the ability to append both tabular and plot content onto the
+same report.  This appending ability was designed into the **reporter**
+package from the beginning, and gives you the flexibility you need to document
+your entire analysis.
 
 ```{r eval=FALSE, echo=TRUE}
 library(tidyverse)
@@ -365,10 +385,10 @@ tbl2 <- create_table(stat_block, width = 9, headerless = TRUE) %>%
   define(block, label_row = TRUE, format = label_lookup, blank_after = TRUE) %>% 
   define(label1, indent = .25) %>% 
   define(label2, indent = .5) %>% 
-  define(`ARM A`,  n = arm_pop["ARM A"]) %>% 
-  define(`ARM B`,  n = arm_pop["ARM B"]) %>% 
-  define(`ARM C`,  n = arm_pop["ARM C"]) %>% 
-  define(`ARM D`,  n = arm_pop["ARM D"]) 
+  define(`ARM A`) %>% 
+  define(`ARM B`) %>% 
+  define(`ARM C`) %>% 
+  define(`ARM D`) 
 
 
 # Create plot

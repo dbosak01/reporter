@@ -17,7 +17,11 @@ knitr::opts_chunk$set(
 ### Create a Summary Table with Stub Column
 
 Here is an example of the same table of summary statistics,
-but with row labels merged into a stub column:
+but with row labels merged into a stub column.  Creation of a stub
+column is accomplished by the `stub()` function, which identifies
+two or more variable to merge into a single column.  The `label_row`
+parameter tells `write_report()` to use that variable as a label row,
+and the `indent` parameter nests the second variable value under the first:
 
 ```{r eval=FALSE, echo=TRUE} 
 library(reporter)

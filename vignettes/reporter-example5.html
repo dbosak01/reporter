@@ -338,8 +338,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Program</h2>
 <p>Below is another complete example showing how the
 <strong>reporter</strong> package interacts with
-<strong>tidyverse</strong> and <strong>sassy</strong> functions to
-create a survival analysis.</p>
+<strong>tidyverse</strong> and <a href="https://sassy.r-sassy.org">sassy</a> functions to create a
+survival analysis. This is the most complicated example in the
+documentation.</p>
+<p>There are several interesting aspects to this report. The first is to
+note that the <strong>reporter</strong> package gives you the freedom to
+perform any analysis you want. Any statistics that R can produce can be
+added to a <strong>reporter</strong> report. You just need to get them
+into a data frame or plot, and the <strong>reporter</strong> package
+will render the analysis as desired.</p>
+<p>Also note that the table on page one is a complex table, that is
+actually composed of two tables stacked on top of one another. The first
+table <code>tbl1</code> contains the column headers and some PSGA
+counts. The second table <code>tbl2</code> is marked as
+<code>headerless</code> and contains the Kaplan-Meier analysis. The two
+tables are lined up so they appear as one table. This technique of
+stacking one table on top of another allows you to create very complex
+tables in an easy manner.</p>
+<p>Lastly, observe the ability to append both tabular and plot content
+onto the same report. This appending ability was designed into the
+<strong>reporter</strong> package from the beginning, and gives you the
+flexibility you need to document your entire analysis.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sassy)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
@@ -682,10 +701,10 @@ create a survival analysis.</p>
 <span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(block, <span class="at">label_row =</span> <span class="cn">TRUE</span>, <span class="at">format =</span> label_lookup, <span class="at">blank_after =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(label1, <span class="at">indent =</span> .<span class="dv">25</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(label2, <span class="at">indent =</span> .<span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM A</span><span class="st">`</span>,  <span class="at">n =</span> arm_pop[<span class="st">&quot;ARM A&quot;</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM B</span><span class="st">`</span>,  <span class="at">n =</span> arm_pop[<span class="st">&quot;ARM B&quot;</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM C</span><span class="st">`</span>,  <span class="at">n =</span> arm_pop[<span class="st">&quot;ARM C&quot;</span>]) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM D</span><span class="st">`</span>,  <span class="at">n =</span> arm_pop[<span class="st">&quot;ARM D&quot;</span>]) </span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM A</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM B</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM C</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="st">`</span><span class="at">ARM D</span><span class="st">`</span>) </span>
 <span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a><span class="co"># Create plot</span></span>

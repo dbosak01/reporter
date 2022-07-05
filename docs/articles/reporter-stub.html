@@ -159,7 +159,12 @@
 <h3 class="hasAnchor">
 <a href="#create-a-summary-table-with-stub-column" class="anchor"></a>Create a Summary Table with Stub Column</h3>
 <p>Here is an example of the same table of summary statistics, but with
-row labels merged into a stub column:</p>
+row labels merged into a stub column. Creation of a stub column is
+accomplished by the <code><a href="../reference/stub.html">stub()</a></code> function, which identifies two
+or more variable to merge into a single column. The
+<code>label_row</code> parameter tells <code><a href="../reference/write_report.html">write_report()</a></code> to
+use that variable as a label row, and the <code>indent</code> parameter
+nests the second variable value under the first:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span></span>

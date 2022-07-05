@@ -20,8 +20,13 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 Below is another complete example showing how the **reporter** package
 can be used to create figures.  The example also shows how multiple 
-pieces of content can be added to a single report.
+pieces of content can be added to a single report. 
 
+Note that content
+can be appended to the report endlessly. You can append tables, 
+figures, and textual analysis onto the same report.  The `page_break`
+parameter on the `add_content()` function allows you to control whether
+or not page breaks should occur in between pieces of content.
 
 ```{r eval=FALSE, echo=TRUE}
 library(tidyverse)

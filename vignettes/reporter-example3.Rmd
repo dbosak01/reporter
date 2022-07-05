@@ -19,8 +19,8 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ## Program
 
 Below is another complete example showing how the **reporter** package
-interacts with **tidyverse** and **sassy** functions to create an Adverse
-Events report.
+interacts with **tidyverse** and [sassy](https://sassy.r-sassy.org)
+functions to create an Adverse Events report.
 
 ```{r eval=FALSE, echo=TRUE}
 library(tidyverse)

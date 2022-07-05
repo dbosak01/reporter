@@ -23,7 +23,7 @@ simplified to focus on the workings of a particular function.  It is helpful,
 however, to also view **reporter** functions in the context of a complete 
 program.  The following example shows a complete program.  The example illustrates
 how **reporter** functions work together, and interact with 
-**sassy** functions to create a listing.  
+[sassy](https://sassy.r-sassy.org) functions to create a listing.  
 
 Notice that the data for this example is both wide and long.  The **reporter**
 package handles both to break and wrap pages at the appropriate spot.
