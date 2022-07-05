@@ -28,8 +28,7 @@ the rest.
 This example also shows how multiple 
 pieces of content can be added to a single report using the 
 `add_content()` function. Content
-can be appended to the report endlessly. You can append tables, 
-figures, and textual analysis onto the same report.  The `page_break`
+can be appended to the report endlessly. The `page_break`
 parameter on the `add_content()` function allows you to control whether
 or not page breaks should occur in between pieces of content.
 

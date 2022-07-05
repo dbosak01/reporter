@@ -23,9 +23,9 @@ interacts with **tidyverse** and [sassy](https://sassy.r-sassy.org)
 functions to create a survival
 analysis.  This is the most complicated example in the documentation.
 
-There are several interesting aspects to this report.  The first is to note
+There are several interesting aspects to this report.  The first is 
 that the **reporter** package gives you the freedom to perform any analysis
-you want. Any statistics that R can produce can be added to a **reporter**
+you want. Any statistics that R can produce may be added to a **reporter**
 report.  You just need to get them into a data frame or plot, 
 and the **reporter** package will render the analysis as desired.
 
