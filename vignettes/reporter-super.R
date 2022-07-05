@@ -8,47 +8,31 @@ knitr::opts_chunk$set(
 #  library(reporter)
 #  library(magrittr)
 #  
-#  # Create temporary path
+#  # Create temp file path
 #  tmp <- file.path(tempdir(), "example13.rtf")
 #  
-#  # Read in prepared data
-#  df <- read.table(header = TRUE, text = '
-#        var     label        A             B
-#        "ampg"   "N"          "19"          "13"
-#        "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
-#        "ampg"   "Median"     "16.4"        "21.4"
-#        "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
-#        "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-#        "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
-#        "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
-#        "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+#  # Prepare Data
+#  dat <- airquality[sample(1:153, 15), ]
+#  dat$Month <-  as.Date(paste0("1973-", dat$Month, "-01"))
 #  
-#  # Create table
-#  tbl <- create_table(df, first_row_blank = TRUE) %>%
-#    stub(c("var", "label")) %>%
-#    define(var, blank_after = TRUE, label_row = TRUE,
-#           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
-#    define(label, indent = .25) %>%
-#    define(A, label = "Group A", align = "center", n = 19) %>%
-#    define(B, label = "Group B", align = "center", n = 13) %>%
-#    titles("Table 1.0", "MTCARS Summary Table\U00B9", # Superscript in title
+#  # Define table
+#  tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone")) %>%
+#    titles("Table 9.6", "Air Quality Sample Report\U00B9",
 #           borders = c("top", "bottom"), blank_row = "none") %>%
-#    footnotes("\U00B9 Motor Trend, 1974", # Superscript in footnote
-#              valign = "top", blank_row = "none",
-#              borders = c("top", "bottom"))
+#    column_defaults(width = .7) %>%
+#    define(Month, format = "%B", align = "left", width = 1) %>%
+#    define(Temp, format = "%.0f") %>%
+#    footnotes("\U00B9 New York, May to September 1973",
+#              borders = c("top", "bottom"), blank_row = "none")
 #  
-#  
-#  # Create report and add content
-#  rpt <- create_report(tmp, output_type = "RTF", font = "Arial") %>%
-#    set_margins(top = 1, bottom = 1) %>%
-#    options_fixed(font_size = 12) %>%
-#    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+#  # Define report
+#  rpt <- create_report(tmp, output_type = "RTF", font = "Arial",
+#                       font_size = 12, missing = "-") %>%
+#    page_header("Sponsor: EPA", "Study: B34958", blank_row = "below") %>%
 #    add_content(tbl) %>%
-#    page_footer(left = Sys.time(),
-#                center = "Confidential",
-#                right = "Page [pg] of [tpg]")
+#    page_footer(Sys.Date(), right = "Page [pg] of [tpg]")
 #  
-#  # Write out report
+#  # Write the report to the file system
 #  write_report(rpt)
 #  
 #  # View report
