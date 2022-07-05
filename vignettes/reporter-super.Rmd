@@ -113,12 +113,17 @@ df
 
 ### Unicode Superscript and Subscript Table
 
-The below table shows all of the available Unicode superscripts and subscripts.
+The below table shows all of the available numeric superscripts and subscripts.
 Note that in addition to superscript and subscript numbers, Unicode also 
 contains characters for common mathematical operators and some frequently 
 used letters.  
 
 <img src="../man/images/supertable.png"/>
+
+There are Unicode superscripts and subscripts available for
+most letters of the Latin alphabet, plus numerous special symbols.
+These codes may be discovered via an internet search, and can be used
+in the same way as the numbers shown above.
 
 ### Complex Superscript and Subscript Expressions
 

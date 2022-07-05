@@ -19,10 +19,15 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ## Program
 
 Below is another complete example showing how the **reporter** package
-can be used to create figures.  The example also shows how multiple 
-pieces of content can be added to a single report. 
+can be used to create figures.  The figures are created via the popular
+**ggplot2** package, and then appended as content to the report.  There
+is no need to export the image to a file.  Simply pass the entire **ggplot2**
+object to the `create_plot()` function, and the system will take care of 
+the rest.
 
-Note that content
+This example also shows how multiple 
+pieces of content can be added to a single report using the 
+`add_content()` function. Content
 can be appended to the report endlessly. You can append tables, 
 figures, and textual analysis onto the same report.  The `page_break`
 parameter on the `add_content()` function allows you to control whether

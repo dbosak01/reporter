@@ -347,18 +347,18 @@ perform any analysis you want. Any statistics that R can produce can be
 added to a <strong>reporter</strong> report. You just need to get them
 into a data frame or plot, and the <strong>reporter</strong> package
 will render the analysis as desired.</p>
-<p>Also note that the table on page one is a complex table, that is
-actually composed of two tables stacked on top of one another. The first
-table <code>tbl1</code> contains the column headers and some PSGA
+<p>Second, observe the ability to append both tabular and plot content
+onto the same report. This appending ability was designed into the
+<strong>reporter</strong> package from the beginning, and gives you the
+flexibility you need to document your entire analysis.</p>
+<p>Finally, notice that the table on page one is a complex table, that
+is actually composed of two tables stacked on top of one another. The
+first table <code>tbl1</code> contains the column headers and some PSGA
 counts. The second table <code>tbl2</code> is marked as
 <code>headerless</code> and contains the Kaplan-Meier analysis. The two
 tables are lined up so they appear as one table. This technique of
 stacking one table on top of another allows you to create very complex
-tables in an easy manner.</p>
-<p>Lastly, observe the ability to append both tabular and plot content
-onto the same report. This appending ability was designed into the
-<strong>reporter</strong> package from the beginning, and gives you the
-flexibility you need to document your entire analysis.</p>
+tables in a straight-forward manner.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sassy)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>

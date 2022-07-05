@@ -160,10 +160,15 @@
 <a href="#program" class="anchor"></a>Program</h2>
 <p>Below is another complete example showing how the
 <strong>reporter</strong> package can be used to create figures. The
-example also shows how multiple pieces of content can be added to a
-single report.</p>
-<p>Note that content can be appended to the report endlessly. You can
-append tables, figures, and textual analysis onto the same report. The
+figures are created via the popular <strong>ggplot2</strong> package,
+and then appended as content to the report. There is no need to export
+the image to a file. Simply pass the entire <strong>ggplot2</strong>
+object to the <code><a href="../reference/create_plot.html">create_plot()</a></code> function, and the system will
+take care of the rest.</p>
+<p>This example also shows how multiple pieces of content can be added
+to a single report using the <code><a href="../reference/add_content.html">add_content()</a></code> function.
+Content can be appended to the report endlessly. You can append tables,
+figures, and textual analysis onto the same report. The
 <code>page_break</code> parameter on the <code><a href="../reference/add_content.html">add_content()</a></code>
 function allows you to control whether or not page breaks should occur
 in between pieces of content.</p>

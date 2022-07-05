@@ -340,6 +340,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <strong>reporter</strong> package interacts with
 <strong>tidyverse</strong> and <a href="https://sassy.r-sassy.org">sassy</a> functions to create an
 Adverse Events report.</p>
+<p>This report is a good demonstration of the <strong>reporter</strong>
+package’s page-wrapping capability. This a wide report. There are four
+ARMS: A, B, C, and D. Each ARM has been placed on a separate page using
+the <code>page_wrap</code> parameter on the <code>define()</code>
+function. That means the report is actually four pages wide, and four
+pages long, for 16 total pages. No other R reporting package can do this
+as easily.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sassy)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>

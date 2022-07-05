@@ -23,6 +23,8 @@ like tables and text.
 
 If you want to add a custom image from another charting
 package, you may also pass a path to a JPEG file on the `create_plot()` function.
+The `write_report()` function will then get the image and insert it into 
+the report at the specified location.
 
 ```{r eval=FALSE, echo=TRUE} 
 library(reporter)

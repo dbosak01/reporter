@@ -20,8 +20,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 Below is another complete example showing how the **reporter** package
 interacts with **tidyverse** and [sassy](https://sassy.r-sassy.org)
-functions to create a statistical
-report.  
+functions to create a demographics summary table.
 
 This example highlights many capabilities of the 
 [sassy](https://sassy.r-sassy.org) family of packages: logging, libnames,

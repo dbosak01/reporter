@@ -20,7 +20,14 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 Below is another complete example showing how the **reporter** package
 interacts with **tidyverse** and [sassy](https://sassy.r-sassy.org)
-functions to create an Adverse Events report.
+functions to create an Adverse Events report.  
+
+This report is a good demonstration of the **reporter** package's page-wrapping
+capability.  This a wide report.  There are four ARMS: A, B,
+C, and D.  Each ARM has been placed on a separate page using the `page_wrap`
+parameter on the `define()` function.  That means the report is actually
+four pages wide, and four pages long, for 16 total pages.  No other R reporting
+package can do this as easily.
 
 ```{r eval=FALSE, echo=TRUE}
 library(tidyverse)
