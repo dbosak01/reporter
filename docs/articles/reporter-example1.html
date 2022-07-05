@@ -165,6 +165,9 @@ functions in the context of a complete program. The following example
 shows a complete program. The example illustrates how
 <strong>reporter</strong> functions work together, and interact with
 <strong>sassy</strong> functions to create a listing.</p>
+<p>Notice that the data for this example is both wide and long. The
+<strong>reporter</strong> package handles both to break and wrap pages
+at the appropriate spot.</p>
 <p>The data for this example has been included in the
 <strong>reporter</strong> package as an external data file. It may be
 accessed using the <code><a href="https://rdrr.io/r/base/system.file.html">system.file()</a></code> function as shown below,
@@ -227,6 +230,12 @@ or downloaded directly from the <strong>reporter</strong> GitHub site <a href="h
 <span></span>
 <span><span class="co"># View report</span></span>
 <span><span class="co"># file.show(res$modified_path)</span></span></code></pre></div>
+</div>
+<div id="output" class="section level2">
+<h2 class="hasAnchor">
+<a href="#output" class="anchor"></a>Output</h2>
+<p>Here is the listing produced by the sample program above:</p>
+<p><img src="../man/images/example1a.png"><img src="../man/images/example1b.png"><img src="../man/images/example1c.png"><img src="../man/images/example1d.png"><img src="../man/images/example1e.png"><img src="../man/images/example1f.png"></p>
 </div>
 <div id="log" class="section level2">
 <h2 class="hasAnchor">
@@ -295,12 +304,6 @@ lib_unload: library 'sdtm' unloaded
 Log End Time: 2021-11-21 09:36:42
 Log Elapsed Time: 0 00:00:10
 =========================================================================</code></pre>
-</div>
-<div id="output" class="section level2">
-<h2 class="hasAnchor">
-<a href="#output" class="anchor"></a>Output</h2>
-<p>Here is the listing produced by the sample program above:</p>
-<p><img src="../man/images/example1a.png"><img src="../man/images/example1b.png"><img src="../man/images/example1c.png"><img src="../man/images/example1d.png"><img src="../man/images/example1e.png"><img src="../man/images/example1f.png"></p>
 <p>Next: <a href="reporter-example2.html">Complete Example 2</a></p>
 </div>
   </div>

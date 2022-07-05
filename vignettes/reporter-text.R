@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 #  library(reporter)
 #  
 #  # Create temporary path
-#  tmp <- file.path(tempdir(), "example4.txt")
+#  tmp <- file.path(tempdir(), "example4.pdf")
 #  
 #  # Dummy text
 #  cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 #                "qui officia deserunt mollit anim id est laborum.")
 #  
 #  # Create text content
-#  txt <- create_text(cnt)
+#  txt <- create_text(cnt, width = 6)
 #  
 #  # Prepare data
 #  dat <- mtcars[1:10, ]
@@ -31,7 +31,8 @@ knitr::opts_chunk$set(
 #    footnotes("* Motor Trend, 1974")
 #  
 #  # Create report and add both table and text content
-#  rpt <- create_report(tmp, orientation = "portrait") %>%
+#  rpt <- create_report(tmp, font_size = 12,
+#                       output_type = "PDF") %>%
 #    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
 #    add_content(tbl, page_break = FALSE) %>%
 #    add_content(txt) %>%
@@ -42,38 +43,6 @@ knitr::opts_chunk$set(
 #  # Write the report
 #  write_report(rpt)
 #  
-#  # View in console
-#  writeLines(readLines(tmp, encoding = "UTF-8"))
-#  
-#  # Client: Motor Trend                                                Study: Cars
-#  #                                   Table 1.0
-#  #                               MTCARS Sample Data
-#  #
-#  #             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb
-#  #           ---------------------------------------------------------
-#  #              21   6    160  110   3.9   2.62  16.46  0  1    4    4
-#  #              21   6    160  110   3.9  2.875  17.02  0  1    4    4
-#  #            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1
-#  #            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1
-#  #            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2
-#  #            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1
-#  #            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4
-#  #            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2
-#  #            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2
-#  #            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4
-#  #
-#  #           * Motor Trend, 1974
-#  #
-#  # Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-#  # incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-#  # nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-#  # Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-#  # eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-#  # in culpa qui officia deserunt mollit anim id est laborum.
-#  #
-#  #
-#  # ...
-#  #
-#  # 2020-08-30 04:44:53              Confidential                      Page 1 of 1
+#  # file.show(tmp)
 #  
 

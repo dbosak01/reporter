@@ -421,6 +421,14 @@ writeLines(readLines(lf, encoding = "UTF-8"))
 
 ```
 
+# Output
+
+Here is the report produced by the sample program above:
+
+<img src="../man/images/example5a.png"/>
+<img src="../man/images/example5b.png"/>
+
+
 # Log
 
 The above program produces the following log:
@@ -1087,11 +1095,4 @@ Log End Time: 2021-11-21 15:30:39
 Log Elapsed Time: 0 00:00:02
 =========================================================================
 ```
-
-# Output
-
-Here is the report produced by the sample program above:
-
-<img src="../man/images/example5a.png"/>
-<img src="../man/images/example5b.png"/>
 

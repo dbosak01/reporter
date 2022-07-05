@@ -56,9 +56,11 @@ tbl <- create_table(df, first_row_blank = TRUE) %>%
   define(label, indent = .25) %>% 
   define(A, label = "Group A", align = "center", n = 19) %>% 
   define(B, label = "Group B", align = "center", n = 13) %>% 
-  titles("Table 1.0", "MTCARS Summary Table\U00B9") %>%  # Superscript in title
+  titles("Table 1.0", "MTCARS Summary Table\U00B9", # Superscript in title
+         borders = c("top", "bottom"), blank_row = "none") %>%  
   footnotes("\U00B9 Motor Trend, 1974", # Superscript in footnote
-            valign = "top", blank_row = "none") 
+            valign = "top", blank_row = "none",
+            borders = c("top", "bottom")) 
 
 
 # Create report and add content

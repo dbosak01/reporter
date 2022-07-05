@@ -25,6 +25,9 @@ program.  The following example shows a complete program.  The example illustrat
 how **reporter** functions work together, and interact with 
 **sassy** functions to create a listing.  
 
+Notice that the data for this example is both wide and long.  The **reporter**
+package handles both to break and wrap pages at the appropriate spot.
+
 The data for this example has been included in the **reporter** package as an
 external data file.  It may be accessed using the `system.file()` function
 as shown below, or downloaded directly from the **reporter** GitHub site 
@@ -90,6 +93,18 @@ writeLines(readLines(lf, encoding = "UTF-8"))
 # file.show(res$modified_path)
 
 ```
+
+## Output
+
+Here is the listing produced by the sample program above:
+
+<img src="../man/images/example1a.png"/>
+<img src="../man/images/example1b.png"/>
+<img src="../man/images/example1c.png"/>
+<img src="../man/images/example1d.png"/>
+<img src="../man/images/example1e.png"/>
+<img src="../man/images/example1f.png"/>
+
 
 ## Log
 
@@ -159,16 +174,5 @@ Log End Time: 2021-11-21 09:36:42
 Log Elapsed Time: 0 00:00:10
 =========================================================================
 ```
-
-## Output
-
-Here is the listing produced by the sample program above:
-
-<img src="../man/images/example1a.png"/>
-<img src="../man/images/example1b.png"/>
-<img src="../man/images/example1c.png"/>
-<img src="../man/images/example1d.png"/>
-<img src="../man/images/example1e.png"/>
-<img src="../man/images/example1f.png"/>
 
 Next: [Complete Example 2](reporter-example2.html)

@@ -168,7 +168,7 @@ prior to reporting.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create temp file name</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example7.txt"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example7.pdf"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Prepare data</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, <span class="op">]</span></span>
@@ -179,78 +179,22 @@ prior to reporting.</p>
 <span>  <span class="fu"><a href="../reference/page_by.html">page_by</a></span><span class="op">(</span><span class="va">cyl</span>, label<span class="op">=</span><span class="st">"Cylinders: "</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Create the report</span></span>
-<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"PDF"</span>, </span>
+<span>                     font <span class="op">=</span> <span class="st">"Courier"</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span>left <span class="op">=</span> <span class="st">"Client: Motor Trend"</span>, right <span class="op">=</span> <span class="st">"Study: Cars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 3.0"</span>, <span class="st">"MTCARS Data Listing with Page By"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span></span>
-<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> </span>
+<span>  <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span>left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>          center <span class="op">=</span> <span class="st">"Confidential"</span>, </span>
+<span>          right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Write the report</span></span>
 <span><span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Send report to console for viewing</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#                                 Listing 3.0</span></span>
-<span><span class="co">#                       MTCARS Data Listing with Page By</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#       Cylinders: 4</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
-<span><span class="co">#       --------------------------------------------------------------</span></span>
-<span><span class="co">#       Datsun 710            22.8   4    108   93  3.85   2.32  18.61</span></span>
-<span><span class="co">#       Merc 240D             24.4   4  146.7   62  3.69   3.19     20</span></span>
-<span><span class="co">#       Merc 230              22.8   4  140.8   95  3.92   3.15   22.9</span></span>
-<span><span class="co">#       Fiat 128              32.4   4   78.7   66  4.08    2.2  19.47</span></span>
-<span><span class="co">#       Honda Civic           30.4   4   75.7   52  4.93  1.615  18.52</span></span>
-<span><span class="co">#       Toyota Corolla        33.9   4   71.1   65  4.22  1.835   19.9</span></span>
-<span><span class="co">#       Toyota Corona         21.5   4  120.1   97   3.7  2.465  20.01</span></span>
-<span><span class="co">#       Fiat X1-9             27.3   4     79   66  4.08  1.935   18.9</span></span>
-<span><span class="co">#       Porsche 914-2           26   4  120.3   91  4.43   2.14   16.7</span></span>
-<span><span class="co">#       Lotus Europa          30.4   4   95.1  113  3.77  1.513   16.9</span></span>
-<span><span class="co">#       Volvo 142E            21.4   4    121  109  4.11   2.78   18.6</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ...</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#                                 Listing 3.0</span></span>
-<span><span class="co">#                       MTCARS Data Listing with Page By</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#       Cylinders: 6</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
-<span><span class="co">#       --------------------------------------------------------------</span></span>
-<span><span class="co">#       Mazda RX4               21   6    160  110   3.9   2.62  16.46</span></span>
-<span><span class="co">#       Mazda RX4 Wag           21   6    160  110   3.9  2.875  17.02</span></span>
-<span><span class="co">#       Hornet 4 Drive        21.4   6    258  110  3.08  3.215  19.44</span></span>
-<span><span class="co">#       Valiant               18.1   6    225  105  2.76   3.46  20.22</span></span>
-<span><span class="co">#       Merc 280              19.2   6  167.6  123  3.92   3.44   18.3</span></span>
-<span><span class="co">#       Merc 280C             17.8   6  167.6  123  3.92   3.44   18.9</span></span>
-<span><span class="co">#       Ferrari Dino          19.7   6    145  175  3.62   2.77   15.5</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># ...</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#                                 Listing 3.0</span></span>
-<span><span class="co">#                       MTCARS Data Listing with Page By</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#       Cylinders: 8</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co">#       vehicle                mpg cyl   disp   hp  drat     wt   qsec</span></span>
-<span><span class="co">#       --------------------------------------------------------------</span></span>
-<span><span class="co">#       Hornet Sportabout     18.7   8    360  175  3.15   3.44  17.02</span></span>
-<span><span class="co">#       Duster 360            14.3   8    360  245  3.21   3.57  15.84</span></span>
-<span><span class="co">#       Merc 450SE            16.4   8  275.8  180  3.07   4.07   17.4</span></span>
-<span><span class="co">#       Merc 450SL            17.3   8  275.8  180  3.07   3.73   17.6</span></span>
-<span><span class="co">#       Merc 450SLC           15.2   8  275.8  180  3.07   3.78     18</span></span>
-<span><span class="co">#       Cadillac Fleetwood    10.4   8    472  205  2.93   5.25  17.98</span></span>
-<span><span class="co">#       Lincoln Continental   10.4   8    460  215     3  5.424  17.82</span></span>
-<span><span class="co">#       Chrysler Imperial     14.7   8    440  230  3.23  5.345  17.42</span></span>
-<span><span class="co">#       Dodge Challenger      15.5   8    318  150  2.76   3.52  16.87</span></span>
-<span><span class="co">#       AMC Javelin           15.2   8    304  150  3.15  3.435   17.3</span></span>
-<span><span class="co">#       Camaro Z28            13.3   8    350  245  3.73   3.84  15.41</span></span>
-<span><span class="co">#       Pontiac Firebird      19.2   8    400  175  3.08  3.845  17.05</span></span>
-<span><span class="co">#       Ford Pantera L        15.8   8    351  264  4.22   3.17   14.5</span></span>
-<span><span class="co">#       Maserati Bora           15   8    301  335  3.54   3.57   14.6</span></span>
-<span><span class="co">#</span></span></code></pre></div>
+<span><span class="co"># file.show(tmp)</span></span></code></pre></div>
+<p><img src="../man/images/e7a.png"><img src="../man/images/e7b.png"><img src="../man/images/e7c.png"></p>
 <p>Next: <a href="reporter-title_header.html">Example 8: Title
 Header</a></p>
 </div>

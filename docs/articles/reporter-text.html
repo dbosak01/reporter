@@ -167,7 +167,7 @@ analysis of tabular data.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create temporary path</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example4.txt"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example4.pdf"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Dummy text</span></span>
 <span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, "</span>,</span>
@@ -179,7 +179,7 @@ analysis of tabular data.</p>
 <span>              <span class="st">"qui officia deserunt mollit anim id est laborum."</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create text content</span></span>
-<span><span class="va">txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_text.html">create_text</a></span><span class="op">(</span><span class="va">cnt</span><span class="op">)</span> </span>
+<span><span class="va">txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_text.html">create_text</a></span><span class="op">(</span><span class="va">cnt</span>, width <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Prepare data</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span>
@@ -190,7 +190,8 @@ analysis of tabular data.</p>
 <span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create report and add both table and text content</span></span>
-<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, font_size <span class="op">=</span> <span class="fl">12</span>,</span>
+<span>                     output_type <span class="op">=</span> <span class="st">"PDF"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span>left <span class="op">=</span> <span class="st">"Client: Motor Trend"</span>, right <span class="op">=</span> <span class="st">"Study: Cars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span>, page_break <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">txt</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
@@ -201,39 +202,8 @@ analysis of tabular data.</p>
 <span><span class="co"># Write the report</span></span>
 <span><span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># View in console</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Client: Motor Trend                                                Study: Cars</span></span>
-<span><span class="co">#                                   Table 1.0</span></span>
-<span><span class="co">#                               MTCARS Sample Data</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co">#             mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span></span>
-<span><span class="co">#           ---------------------------------------------------------</span></span>
-<span><span class="co">#              21   6    160  110   3.9   2.62  16.46  0  1    4    4</span></span>
-<span><span class="co">#              21   6    160  110   3.9  2.875  17.02  0  1    4    4</span></span>
-<span><span class="co">#            22.8   4    108   93  3.85   2.32  18.61  1  1    4    1</span></span>
-<span><span class="co">#            21.4   6    258  110  3.08  3.215  19.44  1  0    3    1</span></span>
-<span><span class="co">#            18.7   8    360  175  3.15   3.44  17.02  0  0    3    2</span></span>
-<span><span class="co">#            18.1   6    225  105  2.76   3.46  20.22  1  0    3    1</span></span>
-<span><span class="co">#            14.3   8    360  245  3.21   3.57  15.84  0  0    3    4</span></span>
-<span><span class="co">#            24.4   4  146.7   62  3.69   3.19     20  1  0    4    2</span></span>
-<span><span class="co">#            22.8   4  140.8   95  3.92   3.15   22.9  1  0    4    2</span></span>
-<span><span class="co">#            19.2   6  167.6  123  3.92   3.44   18.3  1  0    4    4</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co">#           * Motor Trend, 1974</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</span></span>
-<span><span class="co"># incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis</span></span>
-<span><span class="co"># nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></span>
-<span><span class="co"># Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</span></span>
-<span><span class="co"># eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt</span></span>
-<span><span class="co"># in culpa qui officia deserunt mollit anim id est laborum.</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># ...</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># 2020-08-30 04:44:53              Confidential                      Page 1 of 1</span></span></code></pre></div>
+<span><span class="co"># file.show(tmp)</span></span></code></pre></div>
+<p><img src="../man/images/e4.png"></p>
 <p>Next: <a href="reporter-spanning.html">Example 5: Spanning
 Headers</a></p>
 </div>

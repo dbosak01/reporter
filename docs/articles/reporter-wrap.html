@@ -167,7 +167,7 @@ to cause the vehicle column to be retained on each wrapped page.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create temp file name</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example6.txt"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example6.pdf"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Prepare data</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span>
@@ -186,56 +186,18 @@ to cause the vehicle column to be retained on each wrapped page.</p>
 <span></span>
 <span>  </span>
 <span><span class="co"># Create the report</span></span>
-<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, orientation <span class="op">=</span> <span class="st">"portrait"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"PDF"</span>, </span>
+<span>                     font <span class="op">=</span> <span class="st">"Courier"</span>, font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Listing 2.0"</span>, <span class="st">"MTCARS Data Listing with Page Wrap"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span>, align <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span>right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Write the report</span></span>
 <span><span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Send report to console for viewing</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="va">tmp</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#                                  Listing 2.0</span></span>
-<span><span class="co">#                       MTCARS Data Listing with Page Wrap</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co">#                                         Miles per</span></span>
-<span><span class="co"># Vehicle                                    Gallon Cylinders Displacement</span></span>
-<span><span class="co"># ------------------------------------------------------------------------</span></span>
-<span><span class="co"># Mazda RX4                                      21       6.0          160</span></span>
-<span><span class="co"># Mazda RX4 Wag                                  21       6.0          160</span></span>
-<span><span class="co"># Datsun 710                                   22.8       4.0          108</span></span>
-<span><span class="co"># Hornet 4 Drive                               21.4       6.0          258</span></span>
-<span><span class="co"># Hornet Sportabout                            18.7       8.0          360</span></span>
-<span><span class="co"># Valiant                                      18.1       6.0          225</span></span>
-<span><span class="co"># Duster 360                                   14.3       8.0          360</span></span>
-<span><span class="co"># Merc 240D                                    24.4       4.0        146.7</span></span>
-<span><span class="co"># Merc 230                                     22.8       4.0        140.8</span></span>
-<span><span class="co"># Merc 280                                     19.2       6.0        167.6</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># ...</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co">#                                                                    Page 1 of 2</span></span>
-<span><span class="co">#                                  Listing 2.0</span></span>
-<span><span class="co">#                       MTCARS Data Listing with Page Wrap</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># Vehicle                              Horsepower Weight  Quarter Mile Time</span></span>
-<span><span class="co"># -------------------------------------------------------------------------</span></span>
-<span><span class="co"># Mazda RX4                                   110   2.62              16.46</span></span>
-<span><span class="co"># Mazda RX4 Wag                               110  2.875              17.02</span></span>
-<span><span class="co"># Datsun 710                                   93   2.32              18.61</span></span>
-<span><span class="co"># Hornet 4 Drive                              110  3.215              19.44</span></span>
-<span><span class="co"># Hornet Sportabout                           175   3.44              17.02</span></span>
-<span><span class="co"># Valiant                                     105   3.46              20.22</span></span>
-<span><span class="co"># Duster 360                                  245   3.57              15.84</span></span>
-<span><span class="co"># Merc 240D                                    62   3.19                 20</span></span>
-<span><span class="co"># Merc 230                                     95   3.15               22.9</span></span>
-<span><span class="co"># Merc 280                                    123   3.44               18.3</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co"># ...</span></span>
-<span><span class="co"># </span></span>
-<span><span class="co">#                                                                    Page 2 of 2</span></span></code></pre></div>
+<span><span class="co"># file.show(tmp)</span></span></code></pre></div>
+<p><img src="../man/images/e6a.png"><img src="../man/images/e6b.png"></p>
 <p>Next: <a href="reporter-pageby.html">Example 7: Page By</a></p>
 </div>
   </div>
