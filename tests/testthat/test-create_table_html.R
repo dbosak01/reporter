@@ -71,6 +71,7 @@ test_that("get_table_header_html works as expected.", {
   expect_equal(length(res$html), 1)
   expect_equal(res$lines, 2)
   
+  
 })
 
 test_that("get_content_offsets_html works as expected.", {
