@@ -1548,6 +1548,43 @@ print.table_spec <- function(x, ..., verbose = FALSE){
 #' cat(paste0(l, customN(n)))
 #' # Label: N=47
 #' 
+#' ## Use alternate n format ##
+#' library(reporter)
+#' library(magrittr)
+#' 
+#' tmp <- tempfile(fileext = ".txt")
+#' 
+#' # Prepare data
+#' df <- read.table(header = TRUE, text = '
+#'       Hair  Group1  Group2
+#'       Black    25      16
+#'       Brown    13      18
+#'       Blonde   5        7
+#'       Red      2        1')
+#'       
+#' # Create table with lowcase n formatting
+#' tbl <- create_table(df, n_format=lowcase_n) %>% 
+#'        titles("Hair Color") %>% 
+#'        define(Group1, n = 45) %>% 
+#'        define(Group2, n = 42)
+#' 
+#' # Create report
+#' rpt <- create_report(tmp) %>% 
+#'        add_content(tbl, align = "left")
+#'        
+#' # Write to file system
+#' write_report(rpt)     
+#' 
+#' writeLines(readLines(tmp))
+#' #      Hair Color
+#' # 
+#' #        Group1 Group2
+#' # Hair     n=45   n=42
+#' # ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+#' # Black      25     16
+#' # Brown      13     18
+#' # Blonde      5      7
+#' # Red         2      1
 #' @export
 lowcase_parens <- function(x) {
   

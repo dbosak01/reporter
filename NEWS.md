@@ -1,3 +1,9 @@
+# reporter 1.3.4
+
+* Fixed several borders-related bugs on RTF, DOC, and PDF.
+* Fixed valign bug on footnote on RTF.
+* Documentation fixes and updates.
+
 # reporter 1.3.3
 
 * Fixed bug on DOCX that was causing R Studio to crash when using a relative path.
