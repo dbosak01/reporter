@@ -2337,6 +2337,8 @@ test_that("user5: Portrait in 12pt Arial works as expected.", {
 
 test_that("user6: Borders with spanning headers work as expected.", {
   
+  if (dev == TRUE) {
+  
   df <- read.table(header = TRUE, text = '
       var     label           A             B             C            
       "AGE"   "n"             "19"          "13"          "32"         
@@ -2378,6 +2380,80 @@ test_that("user6: Borders with spanning headers work as expected.", {
   
   # file.show(fp)
   
+  
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+})
+
+# This is good
+test_that("user7: Check footnotes on page by.", {
+  
+  if (dev == TRUE) {
+    
+  fp <- file.path(base_path, "rtf2/user7")
+  
+  
+  df <- read.table(header = TRUE, text = '
+      var     stat        A             B          
+      "Age (yrs)"   "n"          "19"          "13"         
+      " "   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      " "   "Median"     "16.4"        "21.4"       
+      " "   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      " "   " "          " "           " "
+      "Race"  "White" "10 ( 52.6%)" "4 ( 30.8%)" 
+      " "     "Black" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      " "     "Others\U1D47" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df1 <- df
+  df2 <- df
+  df3 <- df
+  
+  df1$SEX <- 'Female'
+  df2$SEX <- 'Male'
+  df3$SEX <- 'Other'
+  
+  df <- rbind(df1, df2, df3)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE, borders=c("top")) %>% 
+    page_by(SEX, "Sex: ", align = "left", blank_row="none") %>% 
+    # stub(c("var", "label")) %>% 
+    column_defaults(width = 1.25) %>% 
+    
+    spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%
+    
+    define(SEX, visible = FALSE) %>%
+    define(var, label = " ", align = "left") %>% 
+    define(stat,label = " ", align = "left") %>% 
+    define(A,   label = "Treament A", align = "center", n = 19) %>% 
+    
+    define(B,   label = "Treament B", align = "center", n = 13)  %>%
+    titles("Table 1.1 Demographics", "Randomised Population", font_size = 10) %>% 
+    
+    footnotes("Page [pg] of [tpg]", align = "right", blank_row="none", borders=c("top")) %>% 
+    footnotes("\U1D43 study drug treatments", blank_row="none", borders=c("top")  ) %>%
+    footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none", borders="bottom")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial", font_size = 10) %>% 
+    
+    #This is page header and it goes into the header of the table
+    page_header("Protocol: 9999") %>% 
+    
+    add_content(tbl) %>%
+    
+    page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
+    footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above", valign = "bottom") 
+  
+  
+  
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(res$modified_path), TRUE)
+    expect_equal(res$pages, 2)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
   
 })
 

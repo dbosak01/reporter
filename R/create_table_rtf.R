@@ -398,7 +398,7 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   } else {
     
     if ((wrap_flag & len_diff > 0)) {
-      if (vflag == "bottom")
+      if (vflag == "bottom" | has_bottom_footnotes(rs))
         lblnks <- c(rep("\\par", len_diff), b)
     } else {
       lblnks <- b

@@ -446,7 +446,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
     } else {
   
       if ((wrap_flag & len_diff > 0)) {
-        if (vflag == "bottom" | has_page_footer(rs))
+        if (vflag == "bottom" | has_bottom_footnotes(rs))
           lblnks <- c(rep(rs$blank_row, len_diff), b)
       } else {
         lblnks <- b

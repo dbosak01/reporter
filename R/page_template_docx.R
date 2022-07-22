@@ -539,8 +539,6 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
         }
 
 
-
-
         # Split footnote strings if they exceed width
         tmp <- split_string_html(ftnts$footnotes[[i]], width, rs$units)
 
