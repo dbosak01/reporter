@@ -516,6 +516,7 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   tbl <- ts$data
   conv <- rs$twip_conversion
   nms <- names(lbls)
+  nms <- nms[!is.controlv(nms)]
   
   # Get cell widths
   sz <- c()
@@ -535,10 +536,6 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   else if (talgn %in% c("center", "centre"))
     ta <- "\\trqc"
 
-  # if (length(ts$col_spans) == 0)
-  #   brdrs <- ts$borders
-  # else
-  #   brdrs <- "none"
   
   brdrs <- ts$borders
   if (length(ts$col_spans) > 0) {
@@ -568,9 +565,9 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
   
   # Loop for cell definitions
-  for(j in seq_along(tbl)) {
+  for(j in seq_along(nms)) {
     if (!is.control(nms[j])) {
-      b <- get_cell_borders(1, j, 2, ncol(tbl), brdrs)
+      b <- get_cell_borders(1, j, 2, length(nms), brdrs)
       ret[1] <- paste0(ret[1], "\\clvertalb", b, "\\clbrdrb\\brdrs\\cellx", sz[j])
     }
   }
@@ -581,7 +578,7 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = rs$font_size)
   
-  for(k in seq_along(lbls)) {
+  for(k in seq_along(nms)) {
     if (!is.control(nms[k])) {
       
       # Split label strings if they exceed column width
@@ -660,6 +657,8 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 
   # Get borders
   brdrs <- ts$borders
+  if (any(ts$borders %in% "bottom"))
+    brdrs <- brdrs[!brdrs %in% "bottom"]
   
   rh <- rs$row_height
   

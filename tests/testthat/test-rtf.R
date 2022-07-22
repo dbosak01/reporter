@@ -1299,7 +1299,7 @@ test_that("rtf39: Borders with spanning headers work as expected.", {
   
   fp <- file.path(base_path, "rtf/test39.rtf")
   
-  tbl <- create_table(df, first_row_blank = TRUE, borders = c("top", "bottom")) %>% 
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("outside")) %>% 
     stub(vars = c("var", "label"), " ", width = 2.5) %>% 
     spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%
     define(var, blank_after = TRUE, format = var_fmt, label_row = TRUE) %>% 
@@ -1322,7 +1322,7 @@ test_that("rtf39: Borders with spanning headers work as expected.", {
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
   
-  # file.show(fp)
+   file.show(fp)
   
   
 })
