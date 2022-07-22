@@ -498,7 +498,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
         bb <- ""
         if (i == 1) {
           
-          if (any(ftnts$borders %in% c("bottom", "outside"))) {
+          if (any(ftnts$borders %in% c("top", "bottom", "outside"))) {
             bb <- get_cell_borders_docx(1, 1, 2, 1, ftnts$borders)
             
             

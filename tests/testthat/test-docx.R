@@ -85,12 +85,12 @@ test_that("docx2: Basic table works as expected.", {
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
 
-  tbl <- create_table(dat, first_row_blank = TRUE)  %>%
-     titles("Table 1.0", "My Nice Table", borders = c("none"),
+  tbl <- create_table(dat, first_row_blank = TRUE, borders = "top")  %>%
+     titles("Table 1.0", "My Nice Table", borders = c("top"),
             width = "content", align = "left") %>%
      footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
-               borders = c("top", "bottom"),
-               align = "left", width = "content") %>%
+               borders = c( "top"),
+               align = "left", width = "content", blank_row = "none") %>%
     define(wt, width = 2, label = "Weight", align = "center",
            label_align = "right")
 
@@ -1462,7 +1462,7 @@ test_that("user8: Check footnotes on page by.", {
     
     # Create table
     tbl <- create_table(df, first_row_blank = TRUE, borders=c("top")) %>% 
-     # page_by(SEX, "Sex: ", align = "left", blank_row="none") %>% 
+      page_by(SEX, "Sex: ", align = "left", blank_row="none") %>% 
       # stub(c("var", "label")) %>% 
       column_defaults(width = 1.25) %>% 
       
