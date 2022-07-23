@@ -2,6 +2,8 @@
 
 * Fixed several borders-related bugs on RTF, DOC, and PDF.
 * Fixed valign bug on footnote on RTF.
+* Added `ttlattr()`, `ftnattr()`, and `spanattr()` attribute functions.
+Used by other r-sassy packages to create reports.
 * Documentation fixes and updates.
 
 # reporter 1.3.3

@@ -976,11 +976,13 @@ spanning_header <- function(x, from, to, label = "",
   
   if (standard_eval) {
     
-    if (typeof(from) != "character")
-      stop("from parameter must be a type of character if standard_eval is TRUE.")
+    if (!typeof(from) %in% c("double", "integer", "character"))
+      stop(paste0("from parameter must be a type of character, ", 
+                  "integer, or double if standard_eval is TRUE."))
     
-    if (typeof(to) != "character")
-      stop("to parameter must be a type of character if standard_eval is TRUE.")
+    if (!typeof(to)  %in% c("double", "integer", "character"))
+      stop(paste0("to parameter must be a type of character, ",
+                  "integer, or double if standard_eval is TRUE."))
     
     f <- from
     t <- to

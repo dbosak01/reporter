@@ -61,6 +61,14 @@ test_that("spanning header constructor works as expected.", {
   expect_equal(s[[1]]$from, "mpg")
   expect_equal(s[[1]]$to, "disp")
   
+  # Positions with standard_eval = TRUE
+  tbl <- create_table(mtcars[1:10, ]) %>% 
+    spanning_header(from = 1, to = 3, standard_eval = TRUE)
+  s <- tbl$col_spans
+  expect_equal(s[[1]]$from, "mpg")
+  expect_equal(s[[1]]$to, "disp")
+  
+  
   # Parameter checks
   expect_error(spanning_header(tbl, "mpgg", "disP"))
   expect_error(spanning_header(tbl, 1, 25))
