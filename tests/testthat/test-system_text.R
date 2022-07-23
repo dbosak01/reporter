@@ -33,9 +33,10 @@ test_that("create_text function output works as expected.", {
 
 test_that("text1: Simplest text output works as expected.", {
   
-  fp <- file.path(base_path, "text/text1.out")
+  fp <- file.path(base_path, "text/text1.txt")
   
-  rpt <- create_report(fp, orientation = "portrait") %>%
+  rpt <- create_report(fp, orientation = "portrait",
+                       output_type = "TXT") %>%
     titles("Report 1.0", "Simple Text Report") %>% 
     add_content(create_text(cnt)) 
   

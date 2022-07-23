@@ -1868,6 +1868,27 @@ test_that("rtf2-52: Table with break between sections works as expected.", {
   
 })
 
+test_that("rtf2-53: Text with line feed works as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test53.rtf")
+  
+  cnt2 <- paste0("Hello here \nis something ", cnt)
+  
+  rpt <- create_report(fp, orientation = "portrait",
+                       output_type = "RTF", font = "Arial") %>%
+    titles("Report 1.0", "Simple Text Report") %>% 
+    add_content(create_text(cnt2)) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(res$pages, 1)
+})
+
+
 
 
 # User Tests --------------------------------------------------------------

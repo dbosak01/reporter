@@ -1196,6 +1196,7 @@ title_header <- function(x, ..., right = "",
 #' In addition to these two convenience settings, you 
 #' may also specify a specific width in the current units of measure.  The
 #' units of measure is determined by the 'units' parameter on 
+#' \code{\link{create_report}}.
 #' @param bold A parameter to bold the titles.  Valid values are TRUE and FALSE.
 #' Default is FALSE.  This parameter only applies to variable-width RTF, HTML, 
 #' PDF, and DOCX output types.

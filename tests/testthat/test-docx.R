@@ -1463,7 +1463,7 @@ test_that("user8: Check footnotes on page by.", {
     # Create table
     tbl <- create_table(df, first_row_blank = TRUE, borders=c("top")) %>% 
       page_by(SEX, "Sex: ", align = "left", blank_row="none") %>% 
-      # stub(c("var", "label")) %>% 
+      #stub(c("var", "label")) %>% 
       column_defaults(width = 1.25) %>% 
       
       spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%

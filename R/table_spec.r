@@ -240,6 +240,10 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
     ret$use_attributes <- c("")
   else  
     ret$use_attributes <- use_attributes
+  
+  # Apply any titles, footnotes, or spans
+  # attached to the data frame itself
+  ret <- apply_attributes(ret, x)
 
   return(ret)
 
