@@ -34,6 +34,9 @@
     <loc>https://reporter.r-sassy.org/reference/footnotes.html</loc>
   </url>
   <url>
+    <loc>https://reporter.r-sassy.org/reference/ftn.html</loc>
+  </url>
+  <url>
     <loc>https://reporter.r-sassy.org/reference/get_theme.html</loc>
   </url>
   <url>
@@ -76,6 +79,9 @@
     <loc>https://reporter.r-sassy.org/reference/set_margins.html</loc>
   </url>
   <url>
+    <loc>https://reporter.r-sassy.org/reference/span.html</loc>
+  </url>
+  <url>
     <loc>https://reporter.r-sassy.org/reference/spanning_header.html</loc>
   </url>
   <url>
@@ -86,6 +92,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/title_header.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/reference/ttl.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/reference/write_registration_file.html</loc>
@@ -107,6 +116,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-example5.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/articles/reporter-example6.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-faq.html</loc>

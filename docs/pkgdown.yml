@@ -1,4 +1,4 @@
-pandoc: 2.17.1.1
+pandoc: '2.18'
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -7,6 +7,7 @@ articles:
   reporter-example3: reporter-example3.html
   reporter-example4: reporter-example4.html
   reporter-example5: reporter-example5.html
+  reporter-example6: reporter-example6.html
   reporter-faq: reporter-faq.html
   reporter-figure: reporter-figure.html
   reporter-fonts: reporter-fonts.html
@@ -22,7 +23,7 @@ articles:
   reporter-title_header: reporter-title_header.html
   reporter-wrap: reporter-wrap.html
   reporter: reporter.html
-last_built: 2022-07-07T19:23Z
+last_built: 2022-07-29T11:05Z
 urls:
   reference: https://reporter.r-sassy.org/reference
   article: https://reporter.r-sassy.org/articles

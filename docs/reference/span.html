@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create text content — create_text • reporter</title>
+<title>Defines a spanning header attribute — span • reporter</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,11 +48,11 @@
   
   <script src="../extra.js"></script>
 
-<meta property="og:title" content="Create text content — create_text" />
-<meta property="og:description" content="Function to create a text specification that can be 
-added as content to a report.   The text content can be used to include 
-analysis on a statistical report.  A text specification is an S3 
-object of class 'text_spec'." />
+<meta property="og:title" content="Defines a spanning header attribute — span" />
+<meta property="og:description" content="Create a spanning header attribute object that can be
+attached to a data frame and passed to the create_table
+function.  This attribute is used internally by other packages in the 
+r-sassy system." />
 <meta property="og:image" content="https://reporter.r-sassy.org/logo.png" />
 
 
@@ -197,110 +197,86 @@ object of class 'text_spec'." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create text content</h1>
-    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/text_spec.R'><code>R/text_spec.R</code></a></small>
-    <div class="hidden name"><code>create_text.Rd</code></div>
+    <h1>Defines a spanning header attribute</h1>
+    <small class="dont-index">Source: <a href='https://github.com/dbosak01/reporter/blob/master/R/attributes.R'><code>R/attributes.R</code></a></small>
+    <div class="hidden name"><code>span.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function to create a text specification that can be 
-added as content to a report.   The text content can be used to include 
-analysis on a statistical report.  A text specification is an S3 
-object of class 'text_spec'.</p>
+    <p>Create a spanning header attribute object that can be
+attached to a data frame and passed to the <code><a href='create_table.html'>create_table</a></code>
+function.  This attribute is used internally by other packages in the 
+<strong>r-sassy</strong> system.</p>
     </div>
 
-    <pre class="usage"><span><span class='fu'>create_text</span><span class='op'>(</span><span class='va'>txt</span>, width <span class='op'>=</span> <span class='cn'>NULL</span>, align <span class='op'>=</span> <span class='st'>"left"</span>, borders <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span></span></pre>
+    <pre class="usage"><span><span class='fu'>span</span><span class='op'>(</span></span>
+<span>  <span class='va'>from</span>,</span>
+<span>  <span class='va'>to</span>,</span>
+<span>  label <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  label_align <span class='op'>=</span> <span class='st'>"center"</span>,</span>
+<span>  level <span class='op'>=</span> <span class='fl'>1</span>,</span>
+<span>  underline <span class='op'>=</span> <span class='cn'>TRUE</span></span>
+<span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>txt</th>
-      <td><p>The text to create.</p></td>
+      <th>from</th>
+      <td><p>The starting column to span.  Spanning columns are defined as
+range of columns 'from' and 'to'. The columns may be identified by position, 
+or by quoted or unquoted variable names. 
+The <code>from</code> parameter is required.</p></td>
     </tr>
     <tr>
-      <th>width</th>
-      <td><p>The width of the text in the specified units of measure.  If 
-no width is specified, the full page width will be used.</p></td>
+      <th>to</th>
+      <td><p>The ending column to span.  Spanning columns are defined as
+range of columns 'from' and 'to'. The columns may be identified by position,
+or by quoted or unquoted variable names.  
+The <code>to</code> parameter is required.</p></td>
     </tr>
     <tr>
-      <th>align</th>
-      <td><p>How to align the text within the content area.  Valid values
-are 'left', 'right', 'center', or 'centre'.  Default is 'left'.</p></td>
+      <th>label</th>
+      <td><p>The label to apply to the spanning header.</p></td>
     </tr>
     <tr>
-      <th>borders</th>
-      <td><p>Whether and where to place a border. Valid values are 'top',
-'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
-Default is 'none'.  The 'left', 'right', and 'outside' 
-border specifications only apply to RTF reports.</p></td>
+      <th>label_align</th>
+      <td><p>The alignment to use for the label. Valid values are 
+"left", "right", "center", and "centre".  The default for spanning columns
+is "center".</p></td>
+    </tr>
+    <tr>
+      <th>level</th>
+      <td><p>The level to use for the spanning header.  The lowest
+spanning level is level 1, the next level above is level 2, and so on.  
+By default, the level is set to 1.</p></td>
+    </tr>
+    <tr>
+      <th>underline</th>
+      <td><p>A TRUE or FALSE value indicating whether the spanning
+header should be underlined.  Default is TRUE.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The text specification.</p>
+    <p>The spanning header attribute object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>To add plain text to a report, use the <code>create_text</code> function.  The 
-function allows you to set a width and alignment for the text.  The
-function will preserve any other formatting you apply to the text.  See
-the <code><a href='add_content.html'>add_content</a></code> function to control page breaking and 
-blanks spaces above or below the text.</p>
-<p>The text specification also accepts titles and footnotes.  See the 
-<code><a href='titles.html'>titles</a></code> and <code><a href='footnotes.html'>footnotes</a></code> functions for further 
-details.</p>
+    <p>A spanning header is a label and underline that spans one or more 
+columns.  A spanning header is defined minimally by identifying the
+column range to be spanned, and a label.  A label alignment 
+may also be supplied.</p>
+<p>The spanning column range is defined by the <code>from</code> and <code>to</code> 
+parameters.  The range identifies a contiguous set of variables on the data.
+Variables can be identified by position, a quoted variable name, or an 
+unquoted variable name.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='titles.html'>titles</a></code> to add a title block to the text,  
-<code><a href='footnotes.html'>footnotes</a></code> to add footnotes, and <code><a href='add_content.html'>add_content</a></code> 
-to add the text object to a report.</p>
-<p>Other text: 
-<code><a href='print.text_spec.html'>print.text_spec</a>()</code></p></div>
+    <div class='dont-index'><p>Other attributes: 
+<code><a href='ftn.html'>ftn</a>()</code>,
+<code><a href='ttl.html'>ttl</a>()</code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://reporter.r-sassy.org'>reporter</a></span><span class='op'>)</span></span>
-<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Create temp file path</span></span>
-<span><span class='va'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"mtcars.txt"</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Create dummy text</span></span>
-<span><span class='va'>dt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, "</span>,</span>
-<span>  <span class='st'>"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "</span>,</span>
-<span>  <span class='st'>"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "</span>,</span>
-<span>  <span class='st'>"nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in "</span>, </span>
-<span>  <span class='st'>"reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla "</span>,</span>
-<span>  <span class='st'>"pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa "</span>,</span>
-<span>  <span class='st'>"qui officia deserunt mollit anim id est laborum."</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Create the text object</span></span>
-<span><span class='va'>txt</span> <span class='op'>&lt;-</span> <span class='fu'>create_text</span><span class='op'>(</span><span class='va'>dt</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span>  <span class='fu'><a href='titles.html'>titles</a></span><span class='op'>(</span><span class='st'>"Text Content 1.0"</span>, <span class='st'>"Sample Text Report"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span>  <span class='fu'><a href='footnotes.html'>footnotes</a></span><span class='op'>(</span><span class='st'>"* Cicero, 1st century BCE"</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Create the report object</span></span>
-<span><span class='va'>rpt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_report.html'>create_report</a></span><span class='op'>(</span><span class='va'>tmp</span>, orientation <span class='op'>=</span> <span class='st'>"portrait"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
-<span>  <span class='fu'><a href='add_content.html'>add_content</a></span><span class='op'>(</span><span class='va'>txt</span><span class='op'>)</span> </span>
-<span></span>
-<span><span class='co'># Write the report to the file system</span></span>
-<span><span class='fu'><a href='write_report.html'>write_report</a></span><span class='op'>(</span><span class='va'>rpt</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Write the report to console</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/writeLines.html'>writeLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='va'>tmp</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'>#                                Text Content 1.0</span></span>
-<span><span class='co'>#                               Sample Text Report</span></span>
-<span><span class='co'># </span></span>
-<span><span class='co'># Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</span></span>
-<span><span class='co'># incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis</span></span>
-<span><span class='co'># nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></span>
-<span><span class='co'># Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</span></span>
-<span><span class='co'># eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt</span></span>
-<span><span class='co'># in culpa qui officia deserunt mollit anim id est laborum.</span></span>
-<span><span class='co'># </span></span>
-<span><span class='co'># * Cicero, 1st century BCE</span></span>
-<span><span class='co'>#</span></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

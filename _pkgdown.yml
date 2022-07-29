@@ -74,6 +74,9 @@ reference:
   - upcase_parens
   - lowcase_n
   - upcase_n
+  - ttl
+  - ftn
+  - span
 
 navbar:
   type: inverse

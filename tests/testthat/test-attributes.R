@@ -28,7 +28,7 @@ test_that("attr0: Title attribute class works.", {
   
   
   
-  t1 <- ttlattr(c("Title1", "Title2"), bold = TRUE, font_size = 12,
+  t1 <- ttl(c("Title1", "Title2"), bold = TRUE, font_size = 12,
                    align = "right", borders = c("top", "bottom"),
                    blank_row = "above", width = 8)
   
@@ -48,7 +48,7 @@ test_that("attr1: Footnote attribute class works.", {
   
   
   
-  f1 <- ftnattr(c("Foot1", "foot2"), valign = "top", width = 8,
+  f1 <- ftn(c("Foot1", "foot2"), valign = "top", width = 8,
                    align = "right", borders = c("top", "bottom"),
                    blank_row = "above")
   
@@ -68,7 +68,7 @@ test_that("attr2: Span attribute class works.", {
   
   
   
-  s1 <- spanattr(from = "col1", to = "col2", label = "here",
+  s1 <- span(from = "col1", to = "col2", label = "here",
                    label_align = "right", level = 2, underline = TRUE)
   
   s1
@@ -90,7 +90,7 @@ test_that("attr3: apply_attributes works with title.", {
   
   tbl <- create_table(dt)
   
-  attr(dt, "titles") <- list(ttlattr(c("Title1", "Title2")))
+  attr(dt, "titles") <- list(ttl(c("Title1", "Title2")))
 
   
   expect_equal(is.null(attr(dt, "titles")), FALSE)
@@ -118,7 +118,7 @@ test_that("attr4: apply_attributes works with footnote.", {
   tbl <- create_table(dt)
   
   
-  attr(dt, "footnotes") <- list(ftnattr(c("Foot1", "Foot2")))
+  attr(dt, "footnotes") <- list(ftn(c("Foot1", "Foot2")))
   
 
   
@@ -144,7 +144,7 @@ test_that("attr4: apply_attributes works with spanning_header", {
   
   tbl <- create_table(dt)
   
-  attr(dt, "spans") <- list(spanattr(from = "mpg", to = "disp", 
+  attr(dt, "spans") <- list(span(from = "mpg", to = "disp", 
                                      label = "Fork"))
   
 
@@ -170,9 +170,9 @@ test_that("attr5: Attribute classes work.", {
   
   dt <- mtcars
   
-  attr(dt, "titles") <- list(ttlattr(c("Title1", "Title2")))
-  attr(dt, "footnotes") <- list(ftnattr(c("foot1", "foot2")))
-  attr(dt, "spans") <- list(spanattr("mpg", "disp", "Here"))
+  attr(dt, "titles") <- list(ttl(c("Title1", "Title2")))
+  attr(dt, "footnotes") <- list(ftn(c("foot1", "foot2")))
+  attr(dt, "spans") <- list(span("mpg", "disp", "Here"))
   
   tbl <- create_table(dt)
 
@@ -191,9 +191,9 @@ test_that("attr6: Create report works with attributes.", {
   
   dt <- mtcars
   
-  attr(dt, "titles") <- list(ttlattr(c("Title1", "Title2")))
-  attr(dt, "footnotes") <- list(ftnattr(c("foot1", "foot2")))
-  attr(dt, "spans") <- list(spanattr("mpg", "disp", "Here"))
+  attr(dt, "titles") <- list(ttl(c("Title1", "Title2")))
+  attr(dt, "footnotes") <- list(ftn(c("foot1", "foot2")))
+  attr(dt, "spans") <- list(span("mpg", "disp", "Here"))
   
   tbl <- create_table(dt)
   

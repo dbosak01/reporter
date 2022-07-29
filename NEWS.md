@@ -2,7 +2,7 @@
 
 * Fixed several borders-related bugs on RTF, DOC, and PDF.
 * Fixed valign bug on footnote on RTF.
-* Added `ttlattr()`, `ftnattr()`, and `spanattr()` attribute functions.
+* Added `ttl()`, `ftn()`, and `span()` attribute functions.
 Used by other r-sassy packages to create reports.
 * Documentation fixes and updates.
 

@@ -3,15 +3,16 @@
 # Attribute Classes --------------------------------------------------------
 
 
-#' @title Defines a spanning header
-#' @description Create a header that spans multiple columns.  Spanning headers
-#' are used to group related columns.  Such groupings are a common 
-#' feature of statistical reports.
+#' @title Defines a spanning header attribute
+#' @description Create a spanning header attribute object that can be
+#' attached to a data frame and passed to the \code{\link{create_table}}
+#' function.  This attribute is used internally by other packages in the 
+#' \strong{r-sassy} system.  
 #' @details 
 #' A spanning header is a label and underline that spans one or more 
 #' columns.  A spanning header is defined minimally by identifying the
-#' column range to be spanned, and a label.  A label alignment and "N="
-#' value may also be supplied.
+#' column range to be spanned, and a label.  A label alignment 
+#' may also be supplied.
 #' 
 #' The spanning column range is defined by the \code{from} and \code{to} 
 #' parameters.  The range identifies a contiguous set of variables on the data.
@@ -19,15 +20,11 @@
 #' unquoted variable name.
 #' @param from The starting column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position, 
-#' or by quoted or unquoted variable names. If you want to pass the \code{from} 
-#' value using an R variable,
-#' set the \code{standard_eval} parameter to TRUE.
+#' or by quoted or unquoted variable names. 
 #' The \code{from} parameter is required.  
 #' @param to The ending column to span.  Spanning columns are defined as
 #' range of columns 'from' and 'to'. The columns may be identified by position,
-#' or by quoted or unquoted variable names.  If you want to pass the \code{to} 
-#' value using an R variable,
-#' set the \code{standard_eval} parameter to TRUE.
+#' or by quoted or unquoted variable names.  
 #' The \code{to} parameter is required. 
 #' @param label The label to apply to the spanning header.
 #' @param label_align The alignment to use for the label. Valid values are 
@@ -41,7 +38,7 @@
 #' @return The spanning header attribute object.
 #' @family attributes
 #' @export
-spanattr <- function(from, to, label = NULL, label_align = 'center',
+span <- function(from, to, label = NULL, label_align = 'center',
                       level = 1, underline = TRUE) {
   
   # Create new structure of class "span_attr"
@@ -81,7 +78,7 @@ spanattr <- function(from, to, label = NULL, label_align = 'center',
 #' @seealso \code{\link{titles}} function.
 #' @family attributes
 #' @export
-ttlattr <- function(titles, align = 'center',
+ttl <- function(titles, align = 'center',
                        blank_row = "below", borders = NULL, width = NULL,
                        bold = FALSE, font_size = NULL) {
   
@@ -102,9 +99,10 @@ ttlattr <- function(titles, align = 'center',
 #' @title
 #' Creates a footnote attribute
 #' @description
-#' The \code{footnote_attr} function creates a footnote attribute,
+#' The \code{ftn} function creates a footnote attribute,
 #' which may be attached as an attribute to a data frame and passed
-#' into \code{\link{create_table}}. This function is used internally.
+#' into \code{\link{create_table}}. This function is used internally to
+#' the system.
 #' @param footnotes A vector of footnote strings.
 #' @param align The position to align the footnotes.  Valid values are: 'left',
 #' 'right', 'center', or 'centre'.
@@ -120,7 +118,7 @@ ttlattr <- function(titles, align = 'center',
 #' @seealso \code{\link{footnotes}} to create a footnote.
 #' @family attributes
 #' @export
-ftnattr <- function(footnotes, align = 'left',
+ftn <- function(footnotes, align = 'left',
                           blank_row = "above", borders = "none",
                           valign = NULL, width = NULL) {
   
