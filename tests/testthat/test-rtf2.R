@@ -1877,7 +1877,7 @@ test_that("rtf2-53: Text with line feed works as expected.", {
   rpt <- create_report(fp, orientation = "portrait",
                        output_type = "RTF", font = "Arial") %>%
     titles("Report 1.0", "Simple Text Report") %>% 
-    add_content(create_text(cnt2)) |> 
+    add_content(create_text(cnt2)) %>%
     footnotes("My footnote")
   
   res <- write_report(rpt)

@@ -3,7 +3,7 @@
 * Fixed several borders-related bugs on RTF, DOC, and PDF.
 * Fixed valign bug on footnote on RTF.
 * Fixed bug on `create_text()` that was not allowing 
-carrige returns to work properly.
+new line escapes to work properly.
 * Added `ttl()`, `ftn()`, and `span()` attribute functions.
 Used by other r-sassy packages to create reports.
 * Moved some examples to **sassy** package to reduce size.
