@@ -537,8 +537,15 @@ split_string_rtf <- function(strng, width, units, font = "Arial") {
   # Doing it here handles for the entire report, as every piece runs
   # through here.
   ret <- list(rtf = paste0(encodeRTF(res$text), collapse = "\\line "),
-              lines = length(res$text), 
+              lines = length(res$text),
               widths = res$widths)
+  
+  # Not sure whether I can do this
+  # ret <- list(rtf = paste0(res$text, collapse = "\\line "),
+  #             lines = length(res$text), 
+  #             widths = res$widths)
+  
+
   
   return(ret)
 }

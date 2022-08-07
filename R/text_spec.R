@@ -491,6 +491,7 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
 
 #' @description lines is the number of lines per page or cell before breaking.
 #' Width is the width of the page or cell.
+#' @import stringi
 #' @noRd
 split_text <- function(txt, lines, width, font, 
                            font_size, units, offset = 0) {
@@ -504,74 +505,133 @@ split_text <- function(txt, lines, width, font,
   wdths <- c()
   wdth <- c()
   
-  # Split text into words
-  wrds <- strsplit(txt, " ", fixed = TRUE)[[1]]
+  # Break string into paragraphs defined by user
+  paras <- unlist(stri_split_fixed(txt, "\n"))
   
-  # Set font
-  f <- "mono"
-  if (tolower(font) == "arial")
-    f <- "sans"
-  else if (tolower(font) == "times")
-    f <- "serif"
+  for (k in seq_along(paras)) {
   
-  lngths <- c()
-  
-  
-  lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
-     get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
-  
-  # Loop through words and add up lines
-  for (i in seq_along(wrds)) {
+    # Split text into words
+    wrds <- strsplit(trimws(paras[k]), " ", fixed = TRUE)[[1]]
     
-    lnlngth <- lnlngth + lngths[i] 
-    if (lnlngth <= width)
-      ln <- append(ln, wrds[i])
-    else {
-      cnt <- cnt + 1
+    if (length(wrds) == 0)
+      wrds <- paras[k]
+    
+    # Set font
+    f <- "mono"
+    if (tolower(font) == "arial")
+      f <- "sans"
+    else if (tolower(font) == "times")
+      f <- "serif"
+    
+    lngths <- c()
+    
+    
+    lngths <- (get_text_width(wrds, units = units, font = font, font_size = font_size) + 
+       get_text_width(" ", units = units, font = font, font_size = font_size)) * 1.03
+    
+    # Loop through words and add up lines
+    for (i in seq_along(wrds)) {
       
-      # If cnt exceeds allowed lines per page, start a new page
-      if (cnt <= lines - offset) {
-        lns <- append(lns, paste(ln, collapse = " "))
-        wdth[length(wdth) + 1] <- lnlngth - lngths[i] 
-        ln <- wrds[i]
-        lnlngth <- lngths[i]
-      } else {
+      lnlngth <- lnlngth + lngths[i] 
+      if (lnlngth <= width)
+        ln <- append(ln, wrds[i])
+      else {
+        cnt <- cnt + 1
         
-        # Assign current lines and counts
+        # If cnt exceeds allowed lines per page, start a new page
+        if (cnt <= lines - offset) {
+          lns <- append(lns, paste(ln, collapse = " "))
+          wdth[length(wdth) + 1] <- lnlngth - lngths[i] 
+          ln <- wrds[i]
+          lnlngth <- lngths[i]
+        } else {
+          
+          # Assign current lines and counts
+          pgs[[length(pgs) + 1]] <- lns
+          cnts[[length(cnts) + 1]] <- length(lns)
+          wdths[[length(wdths) + 1]] <- wdth
+          wdth <- lnlngth  - lngths[i] 
+          
+          # Assign overflow to next page
+          lns <- paste(ln, collapse = " ")
+          ln <- wrds[i]
+          lnlngth <- lngths[i]
+  
+          # After first page, set this to zero.
+          offset <- 0
+          cnt <- 1
+        }
+      }
+    }
+    
+    if (length(lns) > 0 | length(ln) > 0) {
+      cnt <- cnt + 1
+      if (cnt <= lines - offset) {
+        # Not a new page
+        lns <- append(lns, paste(ln, collapse = " "))
+        wdth[length(wdth) + 1] <- lnlngth
+        ln <- c()
+        lnlngth <- 0
+       } else {
+         
+        # Add to page 
         pgs[[length(pgs) + 1]] <- lns
         cnts[[length(cnts) + 1]] <- length(lns)
         wdths[[length(wdths) + 1]] <- wdth
-        wdth <- lnlngth  - lngths[i] 
+
+        # Deal with overflow
+        lns <-  paste(ln, collapse = " ")
+        wdth <- lnlngth  
+        
+        # Reset line so it won't append any more
+        ln <- c()
+        lnlngth <- 0
+        
+        #wdth <- lnlngth
+        #lnlngth <- width
         
         # Assign overflow to next page
-        lns <- paste(ln, collapse = " ")
-        ln <- wrds[i]
-        lnlngth <- lngths[i]
-
+        # lns <- paste(ln, collapse = " ")
+        # ln <- wrds[i]
+        # lnlngth <- lngths[i]
+        
         # After first page, set this to zero.
         offset <- 0
         cnt <- 1
       }
     }
+  
   }
   
+  # This block covers any remaining text left over 
+  # from the previous block.
   if (length(lns) > 0 | length(ln) > 0) {
     cnt <- cnt + 1
     if (cnt <= lines - offset) {
-      lns <- append(lns, paste(ln, collapse = " "))
-      wdth[length(wdth) + 1] <- lnlngth
+      if (!is.null(ln)) {
+        lns <- append(lns, paste(ln, collapse = " "))
+        wdth[length(wdth) + 1] <- lnlngth
+
+      }
+      
+      pgs[[length(pgs) + 1]] <- lns
+      cnts[[length(cnts) + 1]] <- length(lns)
+      wdths[[length(wdths) + 1]] <- wdth
       
     } else {
       pgs[[length(pgs) + 1]] <- lns
       cnts[[length(cnts) + 1]] <- length(lns)
       wdths[[length(wdths) + 1]] <- wdth
       
-      lns <-  paste(ln, collapse = " ")
-      wdth[length(wdth) + 1] <- lnlngth
+      if (!is.null(ln)) {
+        lns <-  paste(ln, collapse = " ")
+        wdth[length(wdth) + 1] <- lnlngth
+        pgs[[length(pgs) + 1]] <- lns
+        cnts[[length(cnts) + 1]] <- length(lns)
+        wdths[[length(wdths) + 1]] <- wdth
+      }
     }
-    pgs[[length(pgs) + 1]] <- lns
-    cnts[[length(cnts) + 1]] <- length(lns)
-    wdths[[length(wdths) + 1]] <- wdth
+
   }
   
   res <- list(text = pgs, 

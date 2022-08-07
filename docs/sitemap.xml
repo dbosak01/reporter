@@ -103,24 +103,6 @@
     <loc>https://reporter.r-sassy.org/reference/write_report.html</loc>
   </url>
   <url>
-    <loc>https://reporter.r-sassy.org/articles/reporter-example1.html</loc>
-  </url>
-  <url>
-    <loc>https://reporter.r-sassy.org/articles/reporter-example2.html</loc>
-  </url>
-  <url>
-    <loc>https://reporter.r-sassy.org/articles/reporter-example3.html</loc>
-  </url>
-  <url>
-    <loc>https://reporter.r-sassy.org/articles/reporter-example4.html</loc>
-  </url>
-  <url>
-    <loc>https://reporter.r-sassy.org/articles/reporter-example5.html</loc>
-  </url>
-  <url>
-    <loc>https://reporter.r-sassy.org/articles/reporter-example6.html</loc>
-  </url>
-  <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-faq.html</loc>
   </url>
   <url>
@@ -131,6 +113,9 @@
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-listing.html</loc>
+  </url>
+  <url>
+    <loc>https://reporter.r-sassy.org/articles/reporter-more.html</loc>
   </url>
   <url>
     <loc>https://reporter.r-sassy.org/articles/reporter-pageby.html</loc>

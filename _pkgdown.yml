@@ -17,12 +17,7 @@ articles:
   - reporter-figure
   - reporter-styles
   - reporter-super
-  - reporter-example1
-  - reporter-example2
-  - reporter-example3
-  - reporter-example4
-  - reporter-example5
-  - reporter-example6
+  - reporter-more
 
 reference:
 - title: Report Functions

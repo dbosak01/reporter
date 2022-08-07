@@ -1,0 +1,30 @@
+---
+title: "More Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{More Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
+
+```
+## Report Gallery
+
+The previous examples in the **reporter** documentation were intentionally
+simplified to focus on the workings of a particular function.  It is helpful,
+however, to also view **reporter** functions in the context of a complete 
+program.  There is a gallery of examples included in the  
+[sassy](https://sassy.r-sassy.org) package that illustrate
+how **reporter** functions work together with other **sassy** functions to
+create a complete report.  You can find the report gallery 
+[here](https://sassy.r-sassy.org/articles/sassy.html).
+
+

@@ -1877,7 +1877,8 @@ test_that("rtf2-53: Text with line feed works as expected.", {
   rpt <- create_report(fp, orientation = "portrait",
                        output_type = "RTF", font = "Arial") %>%
     titles("Report 1.0", "Simple Text Report") %>% 
-    add_content(create_text(cnt2)) 
+    add_content(create_text(cnt2)) |> 
+    footnotes("My footnote")
   
   res <- write_report(rpt)
   
@@ -2290,7 +2291,7 @@ test_that("user4: listing in cm and times works.", {
     #Write out report
     res <- write_report(rpt, output_type = "RTF")
     
-    print(res$column_widths)
+    #print(res$column_widths)
     
     expect_equal(file.exists(fp), TRUE)
     
@@ -2471,7 +2472,7 @@ test_that("user7: Check footnotes on page by.", {
     res <- write_report(rpt)
     
     expect_equal(file.exists(res$modified_path), TRUE)
-    expect_equal(res$pages, 2)
+    expect_equal(res$pages, 3)
     
   } else 
     expect_equal(TRUE, TRUE)

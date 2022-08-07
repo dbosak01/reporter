@@ -1038,12 +1038,12 @@ test_that("Titles and footnotes only on first last page.", {
   # Create temporary path
   fp <- file.path(base_path, "user/user15")
 
-  ttls <- create_text(" ") %>%
+  ttls <- create_text("  ") %>%
     titles("My Title Only on First Page", blank_row = "none")
   
   tbl <- create_table(iris)
   
-  ftnts <- create_text(" ") %>%
+  ftnts <- create_text("  ") %>%
     footnotes("My Footnote Only on Last Page",
               "Here is another footnote")
   

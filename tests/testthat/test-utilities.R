@@ -455,6 +455,14 @@ test_that("split_string_rtf() works as expected.", {
   expect_equal(length(res4$rtf), 1)
   expect_equal(res4$lines, 3)
   
+  res6 <- split_string_rtf("here \nis a\nreally \nlong string\n longer than 3 cm", 
+                           3, "cm")
+  res6
+  
+  expect_equal(length(res6$rtf), 1)
+  expect_equal(res6$lines, 5)
+  
+  
   dev.off()
   
 
