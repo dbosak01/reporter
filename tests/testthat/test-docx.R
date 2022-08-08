@@ -1495,11 +1495,66 @@ test_that("user8: Check footnotes on page by.", {
     res <- write_report(rpt)
     
     expect_equal(file.exists(res$modified_path), TRUE)
-    expect_equal(res$pages, 2)
+    expect_equal(res$pages, 3)
     
   } else 
     expect_equal(TRUE, TRUE)
   
 })
 
-
+# Custom line count.  Needed because something is wrong. But I can't figure it out.
+test_that("user9: Report with top and bottom borders stays on one page.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "docx/user9")
+    
+    df <- read.table(header = TRUE, text = '
+        var     label           A             B             C            
+        "AGE"   "n"             "19"          "13"          "32"         
+        "AGE"   "Mean"          "18.8 (6.5)"  "22.0 (4.9)"  "20.0 (5.9)" 
+        "AGE"   "Median"        "16.4"        "21.4"        "20.1"       
+        "AGE"   "Q1 - Q3"       "15.1 - 21.2" "19.2 - 22.8" "15.2 - 21.8"
+        "RACE"  "White"         "10 (52.6)"   "4 (30.8)"    "14 (43.8)" 
+        "RACE"  "Black"         "4 (21.1)"    "3 (23.1)"    "7 (21.9)" 
+        "RACE"  "Others\U1D47"  "5 (26.3)"    "6 (46.2)"    "11 (34.4.2)"
+        ')
+    
+    var_fmt <- c(AGE = "Age (yrs)", RACE = "Race - n (%)")
+    
+    
+    tbl <- create_table(df, first_row_blank = TRUE, borders = c("top", "bottom")) %>% 
+      stub(vars = c("var", "label"), " ", width = 2.5) %>% 
+      # define(var, blank_after = TRUE, dedupe = TRUE, label = "Variable", format = var_fmt,label_row = TRUE) %>% 
+      spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%
+      define(var, blank_after = TRUE, format = var_fmt, label_row = TRUE) %>% 
+      define(label, indent=0.25) %>% 
+      # define(A,  align = "center", label = "Placebo\n(N = 19)", n = 19) %>% 
+      # define(B,  align = "center", label = "Drug\n(N = 13)", n = 13) %>%
+      # define(C,  align = "center", label = "Total\n(N = 32)", n = 32) %>%
+      define(A,  align = "center", label = "Placebo", n = 19) %>% 
+      define(B,  align = "center", label = "Drug", n = 13) %>%
+      define(C,  align = "center", label = "Total", n = 32) %>%
+      footnotes("\U1D43 study drug", blank_row="none" ) %>%
+      footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none") %>% 
+      titles("My title", "My title 2")
+    
+    rpt <- create_report(fp, output_type = "DOCX", 
+                         font = "Arial", font_size = 11) %>% 
+      set_margins(top = 1, bottom = 1) %>% 
+      options_fixed(line_count = 32) %>%
+      add_content(tbl) %>%
+      # page_header("Help") %>%
+      #page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
+      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above") 
+    
+    res <- write_report(rpt)
+    
+    #file.show(res$modified_path)
+    expect_equal(file.exists(res$modified_path), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+})

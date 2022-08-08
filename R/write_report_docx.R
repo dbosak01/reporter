@@ -694,6 +694,7 @@ page_setup_docx <- function(rs) {
 
   # Body line count is the number of rows available for content on each page
   # - 1 adjustment needed for footer buffer
+  
   rs$body_line_count <- rs$line_count - rs$page_template_row_count - 1
   if (debug)
     print(paste0("Body Line Count: ", rs$body_line_count))
@@ -741,7 +742,7 @@ get_rh <- function(font, font_size) {
       rh <- 0.195 # 0.168
     else 
       rh <- 0.192 # 0.168
-
+    
     
   } else if (font_size == 12) {
     
@@ -749,9 +750,77 @@ get_rh <- function(font, font_size) {
     if (tolower(font) == "times")
       rh <- 0.212  # 1911765 
     else if (tolower(font) == "arial")
-      rh <- 0.212  # 1911765 
+      rh <- 0.212 #0.212  # 1911765 
     else 
       rh <- 0.212  # 1911765 
+    
+  } else if (font_size == 14) {
+    
+    # inches 
+    if (tolower(font) == "times")
+      rh <- 0.25 
+    else if (tolower(font) == "arial")
+      rh <- 0.25 
+    else 
+      rh <- 0.25 
+    
+  }
+  
+  return(rh)
+}
+
+
+get_rh2 <- function(font, font_size) {
+  
+  rh <- 0
+  
+  if (font_size == 8) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.144  
+    else if (tolower(font) == "arial")
+      rh <- 0.144 
+    else 
+      rh <- 0.144
+    
+    
+  } else if (font_size == 9) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.166
+    else if (tolower(font) == "arial")
+      rh <- 0.166 
+    else 
+      rh <- 0.1625 
+    
+  } else if (font_size == 10) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.185  
+    else if (tolower(font) == "arial")
+      rh <- 0.185 #0.182  # 0.1585366
+    else
+      rh <- 0.185 #0.182  # 0.1585366
+    
+  } else if (font_size == 11) {
+    
+    if (tolower(font) == "times")
+      rh <- 0.208
+    else if (tolower(font) == "arial")
+      rh <- 0.208 # 0.168
+    else 
+      rh <- 0.203 # 0.168
+
+    
+  } else if (font_size == 12) {
+    
+    # inches 
+    if (tolower(font) == "times")
+      rh <- 0.23  # 1911765 
+    else if (tolower(font) == "arial")
+      rh <- 0.23 #0.212  # 1911765 
+    else 
+      rh <- 0.23  # 1911765 
 
   } else if (font_size == 14) {
     
