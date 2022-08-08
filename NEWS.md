@@ -1,6 +1,6 @@
-# reporter 1.3.4
+# reporter 1.3.5
 
-* Fixed several borders-related bugs on RTF, DOC, and PDF.
+* Fixed several borders-related bugs on RTF, DOCX, and PDF.
 * Fixed valign bug on footnote on RTF.
 * Fixed bug on `create_text()` that was not allowing 
 new line escapes to work properly.
