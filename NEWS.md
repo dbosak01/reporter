@@ -1,3 +1,8 @@
+# reporter 1.3.6
+
+* Added option to `write_report()` to turn off logging if desired.
+
+
 # reporter 1.3.5
 
 * Fixed several borders-related bugs on RTF, DOCX, and PDF.

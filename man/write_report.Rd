@@ -4,7 +4,13 @@
 \alias{write_report}
 \title{Write a report to the file system}
 \usage{
-write_report(x, file_path = NULL, output_type = NULL, preview = NULL)
+write_report(
+  x,
+  file_path = NULL,
+  output_type = NULL,
+  preview = NULL,
+  log = TRUE
+)
 }
 \arguments{
 \item{x}{The report object to write.}
@@ -25,6 +31,10 @@ A report preview is a subset of pages of the report.  The default value is
 NULL, meaning the entire report will be written.  You may also pass 
 a number of pages to write.  For example, passing the number 1 will print
 the first page, while passing a 5 will print the first five pages.}
+
+\item{log}{Whether the function should log itself automatically, if
+the \strong{logr} package is available.  This parameter is used internally.
+Default is TRUE.}
 }
 \value{
 The report spec, with settings modified during rendering.  These 
