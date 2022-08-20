@@ -83,7 +83,7 @@ specifications provided in the object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.6</span>
       </span>
     </div>
 
@@ -190,7 +190,13 @@ specifications provided in the object." />
 specifications provided in the object.</p>
     </div>
 
-    <pre class="usage"><span><span class='fu'>write_report</span><span class='op'>(</span><span class='va'>x</span>, file_path <span class='op'>=</span> <span class='cn'>NULL</span>, output_type <span class='op'>=</span> <span class='cn'>NULL</span>, preview <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span></pre>
+    <pre class="usage"><span><span class='fu'>write_report</span><span class='op'>(</span></span>
+<span>  <span class='va'>x</span>,</span>
+<span>  file_path <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  output_type <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  preview <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  log <span class='op'>=</span> <span class='cn'>TRUE</span></span>
+<span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -221,6 +227,12 @@ A report preview is a subset of pages of the report.  The default value is
 NULL, meaning the entire report will be written.  You may also pass 
 a number of pages to write.  For example, passing the number 1 will print
 the first page, while passing a 5 will print the first five pages.</p></td>
+    </tr>
+    <tr>
+      <th>log</th>
+      <td><p>Whether the function should log itself automatically, if
+the <strong>logr</strong> package is available.  This parameter is used internally.
+Default is TRUE.</p></td>
     </tr>
     </table>
 

@@ -1,6 +1,7 @@
 # reporter 1.3.6
 
 * Added option to `write_report()` to turn off logging if desired.
+* Updated logo.
 
 
 # reporter 1.3.5
