@@ -565,14 +565,18 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       tmp <- split_string_html(lbls[k], widths[k], rs$units)
       
 
+      if (ts$header_bold)
+        tstr <- paste0("<b>", encodeHTML(tmp$html), "</b>")
+      else 
+        tstr <- encodeHTML(tmp$html)
 
       if (b == "") {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
-                         encodeHTML(tmp$html), "</td>\n")
+                         tstr, "</td>\n")
       } else {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\" ", 
                                  "style=\"", b, "\">", 
-                         encodeHTML(tmp$html), "</td>\n")
+                         tstr, "</td>\n")
         
       }
       

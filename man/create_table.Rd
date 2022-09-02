@@ -12,7 +12,8 @@ create_table(
   first_row_blank = FALSE,
   n_format = upcase_parens,
   headerless = FALSE,
-  borders = "none"
+  borders = "none",
+  header_bold = FALSE
 )
 }
 \arguments{
@@ -66,6 +67,9 @@ Default is 'none'.  The 'left', 'right', 'outside', 'inside', and 'body'
 border specifications only apply to RTF, HTML, PDF, and DOCX reports.  
 The 'body' border 
 specification means put borders around only the body of the table.}
+
+\item{header_bold}{Whether or not the column headers on the tables should
+be bolded.  Valid values are TRUE and FALSE.  The default is FALSE.}
 }
 \description{
 The \code{create_table} function creates a table object to which 

@@ -1883,14 +1883,33 @@ test_that("rtf2-53: Text with line feed works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
-  
-  lns <- readLines(fp)
-  
   expect_equal(res$pages, 1)
 })
 
 
+test_that("rtf2-54: Header_bold works as expected", {
+  
+  dat <- mtcars[1:10, 1:3]
+  
+  fp <- file.path(base_path, "rtf2/test54.rtf")
+  
+  tbl <- create_table(dat, header_bold = TRUE, borders = "all") %>%
+    column_defaults(width = 1) %>%
+    titles("Report 1.0", "Simple Report", borders = "outside", 
+           blank_row = "none", bold = TRUE) %>%
+    footnotes("My footnote", blank_row = "none")
+  
+  rpt <- create_report(fp, orientation = "portrait",
+                       output_type = "RTF", font = "Arial") %>%
+    add_content(tbl) %>%
+    set_margins(top = 1)
+  
+  res <- write_report(rpt)
 
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
 
 # User Tests --------------------------------------------------------------
 

@@ -112,6 +112,8 @@
 #' border specifications only apply to RTF, HTML, PDF, and DOCX reports.  
 #' The 'body' border 
 #' specification means put borders around only the body of the table.
+#' @param header_bold Whether or not the column headers on the tables should
+#' be bolded.  Valid values are TRUE and FALSE.  The default is FALSE.
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,
@@ -185,7 +187,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
                          width = NULL, 
                          first_row_blank=FALSE,
                          n_format = upcase_parens, headerless = FALSE,
-                         borders = "none") {
+                         borders = "none", header_bold = FALSE) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -234,6 +236,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   ret$width <- width
   ret$page_var <- NULL
   ret$borders <- borders
+  ret$header_bold <- header_bold
   if (any(use_attributes == "all"))
     ret$use_attributes <- c("label", "width", "justify", "format")
   else if (all(use_attributes == "none"))

@@ -1,5 +1,7 @@
 context("Sizing Functions Tests")
 
+options("logr.output" = FALSE)
+
 test_that("get_table_cols() works as expected.", {
   
 

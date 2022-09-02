@@ -638,7 +638,8 @@ get_table_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       #if (b == "") {
         ret[1] <- paste0(ret[1], cell_abs(tmp$html, ha[k], sz[k], 
                                           borders = b, 
-                                          valign = "bottom"))
+                                          valign = "bottom", 
+                                          bold = ts$header_bold))
       
       # Add in extra lines for labels that wrap
       xtr <- tmp$lines

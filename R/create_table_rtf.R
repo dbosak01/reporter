@@ -583,7 +583,12 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
       
       # Split label strings if they exceed column width
       tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font)
-      ret[1] <- paste0(ret[1], ha[k], " ", tmp$rtf, "\\cell")
+      
+      tb <- tmp$rtf
+      if (ts$header_bold)
+        tb <- paste0("\\b ", tmp$rtf, "\\b0")
+      
+      ret[1] <- paste0(ret[1], ha[k], " ", tb, "\\cell")
 
       # Add in extra lines for labels that wrap
       xtr <- tmp$lines

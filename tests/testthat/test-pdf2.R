@@ -2013,6 +2013,31 @@ test_that("pdf2-52: PDF Image file works as expected.", {
     expect_equal(TRUE, TRUE)
 })
 
+test_that("pdf2-53: Header_bold works as expected", {
+  
+  dat <- mtcars[1:10, 1:3]
+  
+  fp <- file.path(base_path, "pdf2/test53.pdf")
+  
+  tbl <- create_table(dat, header_bold = TRUE, borders = "all") %>%
+    column_defaults(width = 1) %>%
+    titles("Report 1.0", "Simple Report", borders = "outside", 
+           blank_row = "none", bold = TRUE) %>%
+    footnotes("My footnote", blank_row = "none")
+  
+  rpt <- create_report(fp, orientation = "portrait",
+                       output_type = "PDF", font = "Arial") %>%
+    add_content(tbl) %>%
+    set_margins(top = 1)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+
 
 # # User Tests --------------------------------------------------------------
 

@@ -636,7 +636,7 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
     for (ln in seq_len(tmp$lines)) {
       
       ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
-                                          bold = FALSE,
+                                          bold = ts$header_bold,
                                           xpos = get_points(lb, 
                                                             rb,
                                                             tmp$widths[ln],

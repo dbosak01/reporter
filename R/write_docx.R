@@ -1431,7 +1431,7 @@ cell_pct <- function(txt, align = "left", width = NULL) {
 
 #' Bottom border means it is a header row
 #' @noRd
-cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL) {
+cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL, bold = FALSE) {
   
   al <- ""
   bb <- ""
@@ -1451,6 +1451,7 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
     }
   }
   
+  
   if (is.null(width)) {
     ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
                   para(txt, align),
@@ -1458,7 +1459,7 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
     
   } else {
     ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
-                  para(txt, align),
+                  para(txt, align, bold = bold),
                   "</w:tc>\n", collapse = "")
   }
   

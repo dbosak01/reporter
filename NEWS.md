@@ -1,6 +1,7 @@
 # reporter 1.3.6
 
 * Added option to `write_report()` to turn off logging if desired.
+* Added "header_bold" parameter to `create_table()` to bold the header.
 * Updated logo.
 
 

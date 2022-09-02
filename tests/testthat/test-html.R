@@ -673,6 +673,32 @@ test_that("html20: RTF Image file works as expected.", {
 })
 
 
+test_that("html21: Header_bold works as expected", {
+  
+  dat <- mtcars[1:10, 1:3]
+  
+  fp <- file.path(base_path, "html/test21.html")
+  
+  tbl <- create_table(dat, header_bold = TRUE, borders = "all") %>%
+    column_defaults(width = 1) %>%
+    titles("Report 1.0", "Simple Report", borders = "outside", 
+           blank_row = "none", bold = TRUE) %>%
+    footnotes("My footnote", blank_row = "none")
+  
+  rpt <- create_report(fp, orientation = "portrait",
+                       output_type = "HTML", font = "Arial") %>%
+    add_content(tbl) %>%
+    set_margins(top = 1)
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+
+
 # User Tests --------------------------------------------------------------
 
 
