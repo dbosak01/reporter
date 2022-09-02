@@ -51,7 +51,7 @@ get_page_header_rtf <- function(rs) {
   
   maxh <- max(length(hl), length(hr))
   
-  if (maxh > 0) {
+  if (maxh > 0 | length(rs$header_titles) > 0) {
     
     fs <- rs$font_size * 2
     
@@ -60,58 +60,70 @@ get_page_header_rtf <- function(rs) {
     
     ret <- paste0("{\\header \\f0\\fs", fs)
     
-    pdf(NULL)
-    par(family = get_font_family(rs$font), ps = rs$font_size)
-    
-    
-    for (i in seq(1, maxh)) {
-      ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
-                    "\\cellx", c1, "\\cellx", c2)
+    if (maxh > 0) {
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
       
-      if (length(hl) >= i) {
+      for (i in seq(1, maxh)) {
+        ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
+                      "\\cellx", c1, "\\cellx", c2)
         
-        # Split strings if they exceed width
-        tmp <- split_string_rtf(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+        if (length(hl) >= i) {
+          
+          # Split strings if they exceed width
+          tmp <- split_string_rtf(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+          
+          ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
+          lcnt <- tmp$lines
+          
+        } else {
+          ret <- paste0(ret, "\\ql \\cell")
+          lcnt <- 1 
+        }
         
-        ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
-        lcnt <- tmp$lines
+        if (length(hr) >= i) {
+          
+          # Split strings if they exceed width
+          tmp2 <- split_string_rtf(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+          
+          ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
+          rcnt <- tmp2$lines
+          
+        } else {
+          ret <- paste0(ret, "\\qr \\cell\\row\n")
+          rcnt <- 1
+        }
         
-      } else {
-        ret <- paste0(ret, "\\ql \\cell")
-        lcnt <- 1 
+        if (lcnt > rcnt)
+          cnt <- cnt + lcnt
+        else 
+          cnt <- cnt + rcnt
       }
       
-      if (length(hr) >= i) {
-        
-        # Split strings if they exceed width
-        tmp2 <- split_string_rtf(hr[[i]], rs$content_size[["width"]]/2, rs$units)
-        
-        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
-        rcnt <- tmp2$lines
-        
+      dev.off()
+
+    
+      if (rs$page_header_blank_row == "below") {
+        ret <- paste0(ret, "\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
+        cnt <- cnt + 1
       } else {
-        ret <- paste0(ret, "\\qr \\cell\\row\n")
-        rcnt <- 1
+        
+        ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
+                      rs$spacing_multiplier) 
       }
-      
-      if (lcnt > rcnt)
-        cnt <- cnt + lcnt
-      else 
-        cnt <- cnt + rcnt
     }
     
-    dev.off()
+    htitles <- ""
+    if (!is.null(rs$header_titles)) {
     
-    if (rs$page_header_blank_row == "below") {
-      ret <- paste0(ret, "\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
-      cnt <- cnt + 1
-    } else {
-      
-      ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
-                    rs$spacing_multiplier) 
+      tret <- get_titles_rtf(rs$header_titles, rs$content_size[["width"]], rs)
+      htitles <- paste0(tret$rtf, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
+                                              rs$spacing_multiplier) 
+      cnt <- cnt + tret$lines
+    
     }
     
-    ret <- paste0(ret, "}")
+    ret <- paste0(ret, htitles, "}")
   }
   
   twps <- cnt * lh
@@ -137,7 +149,7 @@ get_page_footer_rtf <- function(rs) {
   
   maxf <- max(length(fl), length(fc), length(fr))
   
-  if (maxf > 0) {
+  if (maxf > 0 | length(rs$footer_footnotes) > 0) {
     
     fs <- rs$font_size * 2
     
@@ -145,60 +157,76 @@ get_page_footer_rtf <- function(rs) {
     c1 <- round(c3 / 3)
     c2 <- round(c1 * 2)
     
-    ret <- paste0("{\\footer \\f0\\fs", fs)
+    ret <- paste0("{\\footer \\f0\\fs", fs, "[ff]")
     
-    pdf(NULL)
-    par(family = get_font_family(rs$font), ps = rs$font_size)
+    if (maxf > 0) {
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      for (i in seq(1, maxf)) {
+        
+        ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
+                      "\\cellx", c2 , "\\cellx", c3)
+        
+        if (length(fl) >= i) {
+          
+          # Split strings if they exceed width
+          tmp1 <- split_string_rtf(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+          
+          ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
+          lcnt <- tmp1$lines
+        } else {
+          ret <- paste0(ret, "\\ql \\cell")
+          lcnt <- 1
+        }
+        
+        if (length(fc) >= i) {
+          
+          # Split strings if they exceed width
+          tmp2 <- split_string_rtf(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+          
+          ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
+          ccnt <- tmp2$lines
+        } else {
+          ret <- paste0(ret, "\\qc \\cell")
+          ccnt <- 1
+        }
+        
+        if (length(fr) >= i) {
+          
+          tmp3 <- split_string_rtf(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+          
+          ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
+          rcnt <- tmp3$lines
+        } else {
+          ret <- paste0(ret, "\\qr \\cell\\row\n")
+          rcnt <- 1
+        }
+        
+        cnt <- cnt + max(lcnt, ccnt, rcnt)
+        
+      }
+      dev.off()
+    }
     
-    for (i in seq(1, maxf)) {
+    
+    ffootnotes <- ""
+    if (!is.null(rs$footer_footnotes)) {
       
-      ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
-                    "\\cellx", c2 , "\\cellx", c3)
-      
-      if (length(fl) >= i) {
-        
-        # Split strings if they exceed width
-        tmp1 <- split_string_rtf(fl[[i]], rs$content_size[["width"]]/3, rs$units)
-        
-        ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
-        lcnt <- tmp1$lines
-      } else {
-        ret <- paste0(ret, "\\ql \\cell")
-        lcnt <- 1
-      }
-      
-      if (length(fc) >= i) {
-        
-        # Split strings if they exceed width
-        tmp2 <- split_string_rtf(fc[[i]], rs$content_size[["width"]]/3, rs$units)
-        
-        ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
-        ccnt <- tmp2$lines
-      } else {
-        ret <- paste0(ret, "\\qc \\cell")
-        ccnt <- 1
-      }
-      
-      if (length(fr) >= i) {
-        
-        tmp3 <- split_string_rtf(fr[[i]], rs$content_size[["width"]]/3, rs$units)
-        
-        ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
-        rcnt <- tmp3$lines
-      } else {
-        ret <- paste0(ret, "\\qr \\cell\\row\n")
-        rcnt <- 1
-      }
-      
-      cnt <- cnt + max(lcnt, ccnt, rcnt)
+      tret <- get_footnotes_rtf(rs$footer_footnotes, rs$content_size[["width"]], rs)
+      ffootnotes <- paste0(tret$rtf, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
+                        rs$spacing_multiplier) 
+      cnt <- cnt + tret$lines
       
     }
-    dev.off()
+    
+    ret <- sub("[ff]", ffootnotes, ret, fixed = TRUE)
     
     ret <- paste0(ret, "\\fs1\\sl0\\par\\pard", 
                   rs$font_rtf, rs$spacing_multiplier, "}")
   }
   
+
   res <- list(rtf = paste0(ret, collapse = ""),
               lines = cnt, 
               twips = cnt * lh)

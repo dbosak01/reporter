@@ -1204,6 +1204,9 @@ title_header <- function(x, ..., right = "",
 #' of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
 #' 13, and 14.  This parameter only applies to variable-width RTF, HTML, PDF,
 #' and DOCX output types.
+#' @param header Whether to put the titles in the page header. Valid values
+#' are TRUE and FALSE.  Default is FALSE. This option only works on RTF and 
+#' DOCX output types, and only applies to titles assigned to the report object.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1253,7 +1256,7 @@ title_header <- function(x, ..., right = "",
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below", 
                    borders = "none", width = NULL, bold = FALSE, 
-                   font_size = NULL){
+                   font_size = NULL, header = FALSE){
 
   # Create title structure
   ttl <- structure(list(), class = c("title_spec", "list"))
@@ -1299,6 +1302,12 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     }
   }
   
+  if (header == TRUE & !"report_spec" %in% class(x)) {
+    
+    stop("Header titles can only be assigned to a report.")
+    
+  }
+  
       
   
   # Assign attributes
@@ -1309,9 +1318,12 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   ttl$width <- width
   ttl$bold <- bold
   ttl$font_size <- font_size
-  
+  ttl$header <- header
 
-  x$titles[[length(x$titles) + 1]] <- ttl
+  if (header == TRUE)
+    x$header_titles[[length(x$header_titles) + 1]] <- ttl
+  else 
+    x$titles[[length(x$titles) + 1]] <- ttl
   
   return(x)
 
@@ -1380,6 +1392,11 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' may also specify a specific width in the current unit of measure.  The
 #' unit of measure is determined by the 'units' parameter on 
 #' \code{\link{create_report}}.
+#' @param footer Whether to put the footnotes in the page footer. Valid
+#' values are TRUE and FALSE.  Default is FALSE.  This parameter only works
+#' with RTF and DOCX output types.  It also only applies to footnotes
+#' assigned to the report object.  Footnotes in the page footer will be the
+#' same throughout the report.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1429,7 +1446,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' #     * In billions of dollars
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
-                      borders = "none", valign = NULL, width = NULL){
+                      borders = "none", valign = NULL, width = NULL, 
+                      footer = FALSE){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1477,12 +1495,19 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
                    "'content' or a number."))
     }
   }
+  
+  if (footer == TRUE & !"report_spec" %in% class(x)) {
+    
+    stop("Footer footnotes can only be assigned to a report.")
+    
+  }
 
   ftn$footnotes <- ft
   ftn$blank_row <- blank_row
   ftn$align <- align
   ftn$borders <- borders
   ftn$width <- width  
+  ftn$footer <- footer
 
   if (is.null(valign)) {
     if ("report_spec" %in% class(x))
@@ -1494,7 +1519,10 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
    ftn$valign <- valign 
   }
   
-  x$footnotes[[length(x$footnotes) + 1]] <- ftn
+  if (footer == TRUE)
+    x$footer_footnotes[[length(x$footer_footnotes) + 1]] <- ftn
+  else
+    x$footnotes[[length(x$footnotes) + 1]] <- ftn
 
   return(x)
 

@@ -2,6 +2,9 @@
 
 * Added option to `write_report()` to turn off logging if desired.
 * Added "header_bold" parameter to `create_table()` to bold the header.
+* Added "header" parameter to `titles()` to put the title in the page header.
+* Added "footer" parameter to `footnotes()` to put the footnotes in the
+page footer.
 * Updated logo.
 
 

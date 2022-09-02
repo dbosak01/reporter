@@ -11,7 +11,8 @@ footnotes(
   blank_row = "above",
   borders = "none",
   valign = NULL,
-  width = NULL
+  width = NULL,
+  footer = FALSE
 )
 }
 \arguments{
@@ -50,6 +51,12 @@ In addition to these two convenience settings, you
 may also specify a specific width in the current unit of measure.  The
 unit of measure is determined by the 'units' parameter on 
 \code{\link{create_report}}.}
+
+\item{footer}{Whether to put the footnotes in the page footer. Valid
+values are TRUE and FALSE.  Default is FALSE.  This parameter only works
+with RTF and DOCX output types.  It also only applies to footnotes
+assigned to the report object.  Footnotes in the page footer will be the
+same throughout the report.}
 }
 \value{
 The modified report.

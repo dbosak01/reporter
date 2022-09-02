@@ -1911,6 +1911,89 @@ test_that("rtf2-54: Header_bold works as expected", {
   
 })
 
+test_that("rtf2-55: Titles and footnotes in header and footer works as expected", {
+  
+  dat <- mtcars[1:10, 1:3]
+  
+  fp <- file.path(base_path, "rtf2/test55.rtf")
+  
+  tbl <- create_table(dat) %>%
+    column_defaults(width = 1) 
+  
+  rpt <- create_report(fp, orientation = "landscape",
+                       output_type = "RTF", font = "Arial") %>%
+    add_content(tbl) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    titles("Report 1.0", "Simple Report", 
+           blank_row = "none", header = TRUE) %>%
+    footnotes("My footnote", "Another footnote", "And another", 
+              blank_row = "none", footer = TRUE) %>%
+    page_footer("Left", "Center", "Right")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+test_that("rtf2-56: Titles and footnotes variations in header and footer work as expected", {
+  
+  dat <- mtcars[1:10, 1:3]
+  
+  fp <- file.path(base_path, "rtf2/test56.rtf")
+  
+  tbl <- create_table(dat) %>%
+    column_defaults(width = 1) 
+  
+  rpt <- create_report(fp, orientation = "landscape",
+                       output_type = "RTF", font = "Arial") %>%
+    add_content(tbl) %>%
+    set_margins(top = 1) %>%
+    page_header("Left", "Right") %>%
+    titles("Report 1.0", "Simple Report", align = "left", width = 6,
+           blank_row = "none", header = TRUE) %>%
+    titles("Report 1.0", "Simple Report", align = "right", width = 6,
+           blank_row = "below", header = TRUE, borders = "bottom") %>%
+    footnotes("My footnote", blank_row = "none", footer = TRUE, borders = "top") %>%
+    footnotes("My footnote2", blank_row = "none", footer = TRUE, align = "right") %>%
+    footnotes("My footnote3", blank_row = "none", footer = TRUE, align = "center") %>%
+    page_footer("Left", "Center", "Right")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
+test_that("rtf2-57: Titles and footnotes in header and footer no page header/footer works as expected", {
+  
+  dat <- mtcars[1:10, 1:3]
+  
+  fp <- file.path(base_path, "rtf2/test57.rtf")
+  
+  tbl <- create_table(dat) %>%
+    column_defaults(width = 1) 
+  
+  rpt <- create_report(fp, orientation = "landscape",
+                       output_type = "RTF", font = "Arial") %>%
+    add_content(tbl) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    titles("Report 1.0 here is a big long title", "Simple Report", align = "left",
+           blank_row = "none", header = TRUE) %>%
+    titles("Report 1.0", "Simple Report", align = "center", width = 6,
+           blank_row = "below", header = TRUE) %>%
+    footnotes("My footnote1", "My footnote2", blank_row = "none", footer = TRUE) 
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
+  
+})
+
 # User Tests --------------------------------------------------------------
 
 test_that("rtf2-user1: demo table works.", {
