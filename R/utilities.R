@@ -540,13 +540,6 @@ split_string_rtf <- function(strng, width, units, font = "Arial") {
               lines = length(res$text),
               widths = res$widths)
   
-  # Not sure whether I can do this
-  # ret <- list(rtf = paste0(res$text, collapse = "\\line "),
-  #             lines = length(res$text), 
-  #             widths = res$widths)
-  
-
-  
   return(ret)
 }
 

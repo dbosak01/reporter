@@ -560,6 +560,13 @@ get_col_widths_variable <- function(dat, ts, labels, font,
     if (is.control(nm) | all(is.na(dat[[nm]]) == TRUE))
       w <- 0
     else {
+      
+      # Clear out label rows, as these can mess up column width calculations.
+      # Label row widths are dealt with later.
+      if ("..blank" %in% names(dat)) {
+        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
+      }
+      
       w <-  max(get_text_width(dat[[nm]], units=uom, font=font, font_size = font_size))
       
       sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
