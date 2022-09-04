@@ -337,7 +337,8 @@ create_stub <- function(dat, ts) {
 # @import graphics
 #' @import stringi
 #' @noRd
-get_col_widths <- function(dat, ts, labels, char_width, uom) {
+get_col_widths <- function(dat, ts, labels, char_width, uom, 
+                           merge_label_row = TRUE) {
   
   defs <- ts$col_defs
   if (uom == "cm") {
@@ -365,6 +366,13 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
     if (is.control(nm) | all(is.na(dat[[nm]]) == TRUE))
       w <- 0
     else {
+      
+      # Clear out label rows, as these can mess up column width calculations.
+      # Label row widths are dealt with later.
+      if ("..blank" %in% names(dat) & merge_label_row) {
+        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
+      }
+      
       w <- max(nchar(as.character(dat[[nm]])), na.rm = TRUE) * char_width
       
       sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
@@ -532,7 +540,8 @@ get_col_widths <- function(dat, ts, labels, char_width, uom) {
 #' @import stringi
 #' @noRd
 get_col_widths_variable <- function(dat, ts, labels, font, 
-                               font_size, uom, gutter_width) {
+                               font_size, uom, gutter_width,
+                               merge_label_row = TRUE) {
   
   
   defs <- ts$col_defs
@@ -563,7 +572,7 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       
       # Clear out label rows, as these can mess up column width calculations.
       # Label row widths are dealt with later.
-      if ("..blank" %in% names(dat)) {
+      if ("..blank" %in% names(dat) & merge_label_row) {
         dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
       }
       

@@ -144,13 +144,15 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
 
   # Apply widths and justification
-  widths(fdat) <- widths_char
+  # widths(fdat) <- widths_char
   # print(widths_char)
-  justification(fdat) <- aligns
+  # justification(fdat) <- aligns
   # print(aligns)
-  fdat <- fdata(fdat)
+  # fdat <- fdata(fdat)
   # print("fdata2")
   # print(fdat)
+  
+  fdat <- apply_widths(fdat, widths_char, aligns)
   
   # Break columns into pages
   wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1)

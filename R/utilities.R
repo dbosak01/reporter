@@ -367,6 +367,7 @@ split_cells <- function(x, col_widths) {
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
   max_length <- 0       # The maximum number of splits of a cell in that row
+  wdths <- col_widths[!is.controlv(names(x))]
 
   for (i in seq_len(nrow(x))) {
     for (nm in names(x)) {
@@ -378,7 +379,14 @@ split_cells <- function(x, col_widths) {
           
           cell <- substr(x[[i, nm]], 1, col_widths[[nm]])
           
+        } else if ("..blank" %in% names(x) && x[[i, "..blank"]] == "L") {
+          
+          cell <- stri_wrap(unlist(
+            strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
+            width = sum(wdths), normalize = FALSE)
+          
         } else {
+          
           cell <- stri_wrap(unlist(
             strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
             width = col_widths[[nm]], normalize = FALSE)
@@ -712,7 +720,12 @@ align_cells <- function(x, len) {
     t <- len - length(x[[nm]])
     
     if (t > 0) {
-      if (any(typeof(x[[nm]]) == "character")) 
+      if (nm == "..blank") {
+        if (is.na(x[[nm]])) 
+          v <- c(rep(NA, t))
+        else
+          v <- c(rep(x[[nm]], t))
+      } else if (any(typeof(x[[nm]]) == "character")) 
         v <- c(rep("", t))
       else
         v <- c(rep(NA, t))
@@ -1116,6 +1129,58 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
 }
 
 
+#' @import stringi
+apply_widths <- function(dat, wdths, algns) {
+  
+  w <- wdths[!is.controlv(names(wdths))]
+  ret <- dat
+  
+  for (nm in names(ret)) {
+    if (!is.control(nm)) {
+      
+      if (algns[nm] == "left") {
+        
+        ret[[nm]] <- stri_pad_right(ret[[nm]], wdths[[nm]])
+      } else if (algns[nm] == "right") {
+        
+        ret[[nm]] <- stri_pad_left(ret[[nm]], wdths[[nm]])
+      } else if (algns[nm] == "center") {
+        
+        ret[[nm]] <- stri_pad_both(ret[[nm]], wdths[[nm]]) 
+      }
+      
+      # Clear out label rows
+      ret[[nm]] <- clear_labels(ret[[nm]], ret[["..blank"]], sum(w)) 
+
+    }
+    
+    if (any(class(ret[[nm]]) == "factor"))
+      ret[[nm]] <- as.character(ret[[nm]])
+    
+  }
+  
+
+   
+  return(ret)
+}
+
+#' @import stringi
+clear_labels <- Vectorize(function(vect, bvect, tw) {
+  
+  ret <- vect
+  if (bvect == "L") {
+    if (trimws(vect) == "") {
+      ret <- ""
+    
+    } else {
+      
+      ret <- stri_pad_right(vect, tw)
+    }
+  }
+  
+  return(ret)
+}, USE.NAMES = FALSE)
+
 # Sizing utilities --------------------------------------------------------
 
 #' @noRd
@@ -1231,6 +1296,7 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches",
 
 # PDF Functions -----------------------------------------------------------
 
+# Convert units to points for PDF x/y placement
 cpoints <- function(vals, units) {
   
   if (units == "inches")

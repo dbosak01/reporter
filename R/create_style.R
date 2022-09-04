@@ -476,7 +476,7 @@ get_theme <- function(theme) {
                           table_stub_background = "DarkRed",
                           table_stub_font_bold = TRUE,
                           table_stub_font_color = "LightGrey",
-                          table_body_stripe = "WhiteSmoke" )
+                          table_body_stripe = "WhiteSmoke")
       
    } else if (tolower(theme) == "seagreen") {
      

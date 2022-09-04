@@ -924,6 +924,8 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     badj <- 1
   }
   
+  pdf(NULL)
+  par(family = get_font_family(rs$font), ps = rs$font_size)
   
   # Table Body
   for(i in seq_len(nrow(t))) {
@@ -944,7 +946,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
 
           b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
-                                     length(nms), brdrs)
+                                     length(nms), brdrs, tb[i])
           
 
           
@@ -962,6 +964,17 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         vl <- t[i, j]
         if (!is.character(vl))
           vl <- as.character(vl)
+        
+        if (tb[i] %in% c("B", "L")) {
+          
+          # Strip out line feeds for label rows
+          vl <- gsub("\n", " ", vl, fixed = TRUE)
+          
+          # Redo splits
+          vtmp <- split_string_html(vl, sum(wdths), rs$units)
+          vl <- vtmp$html
+          
+        }
         
         if (!(tb[i] %in% c("B", "L") & j > 1)) {
           # Construct html
@@ -989,6 +1002,8 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     
     
   }
+  
+  dev.off()
   
   if ("bottom" %in% get_outer_borders(brdrs))
     border_flag <- TRUE

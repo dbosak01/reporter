@@ -128,11 +128,15 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # print("Original Widths")
   # print(widths(dat))
   
+  # Don't merge if there is a stub with background color
+  merge_label_row <- TRUE
+  if (has_style(rs, "table_stub_background") & "stub" %in% keys)
+    merge_label_row <- FALSE
   
   # Get column widths
   widths_uom <- get_col_widths_variable(fdat, ts, labels, 
                                         rs$font, rs$font_size, rs$units, 
-                                        rs$gutter_width) 
+                                        rs$gutter_width, merge_label_row) 
   # print("Widths UOM")
   # print(widths_uom)
   
@@ -891,6 +895,13 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   if (frb)
     strpmod <- 0
   
+  merge_label_row <- TRUE
+  if (has_style(rs, "table_stub_background") & "stub" %in% nms)
+    merge_label_row <- FALSE
+  
+  pdf(NULL)
+  par(family = get_font_family(rs$font), ps = rs$font_size)
+  
   
   # Table Body
   for(i in seq_len(nrow(t))) {
@@ -911,6 +922,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         
         sflg <- nms[j] == "stub" &  has_style(rs, "table_stub_background")
         
+        
         b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
                                    exclude = exclude_top, 
                                    border_color = get_style(rs, "border_color"),
@@ -920,33 +932,59 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if ( nms[j] == "stub" & flgs[i] == "L")
           lrflg <- " tlr"
         
-        # Construct html
-        if (b == "") {
-          if (i %% 2 == strpmod) {
-            ret[i] <- paste0(ret[i], "<td class=\"", ca[j], lrflg, "\">", 
-                             encodeHTML(t[i, j]), "</td>")
-          } else {
-            ret[i] <- paste0(ret[i], "<td class=\"", castr[j], lrflg, "\">", 
-                             encodeHTML(t[i, j]), "</td>")
-          }
-        } else { 
-
-          if (i %% 2 == strpmod) {
-            ret[i] <- paste0(ret[i], "<td class=\"", ca[j], lrflg, 
-                             "\" style=\"", b, "\">", 
-                             encodeHTML(t[i, j]), "</td>")
-          } else {
-            ret[i] <- paste0(ret[i], "<td class=\"", castr[j], lrflg, 
-                             "\" style=\"", b, "\">", 
-                             encodeHTML(t[i, j]), "</td>")
-          }
+        # Stripe class
+        if (i %% 2 == strpmod) {
+          scls <- ca[j]
+        } else {
+          scls <- castr[j]
         }
         
         vl <- t[i, j]
         if (all(class(vl) != "character"))
           vl <- as.character(vl)
         
-        # Count lines in cell - Doesn't work right
+        if (merge_label_row  & flgs[i] %in% c("B", "L")) {
+          if (j == 1) {
+            
+            # Strip out line feeds for label rows
+            vl <- gsub("\n", " ", vl, fixed = TRUE)
+            
+            # Recalculate based on total width of table
+            tmp <- split_string_html(vl, sum(wdths), rs$units)
+            
+            vl <- tmp$html
+          
+            if (b == "") {
+              
+              ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\"",
+                               " colspan = \"", ncol(t), "\">", 
+                               encodeHTML(vl), "</td>")
+            } else { 
+              
+              ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\"",
+                               " colspan = \"", ncol(t), "\"",
+                               " style=\"", b, "\">", 
+                               encodeHTML(vl), "</td>")
+            }
+          
+          
+          }
+        } else {
+          
+          # Construct html
+          if (b == "") {
+  
+            ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\">", 
+                             encodeHTML(t[i, j]), "</td>")
+          } else { 
+            
+            ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, 
+                             "\" style=\"", b, "\">", 
+                             encodeHTML(t[i, j]), "</td>")
+          }
+        }
+        
+        # Count lines in cell
         cl <- strsplit(vl, "\n", fixed = TRUE)[[1]]
         if (length(cl) > mxrw)
           mxrw <- length(cl) 
@@ -963,6 +1001,8 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     
     
   }
+  
+  dev.off()
   
   if ("bottom" %in% get_outer_borders(brdrs))
     border_flag <- TRUE

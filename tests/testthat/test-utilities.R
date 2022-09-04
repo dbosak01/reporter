@@ -577,3 +577,25 @@ test_that("get_points_* functions work as expected.", {
   
   expect_equal(res3, c(73, 80.2, 91))
 })
+
+test_that("apply_widths works as expected.", {
+  
+  df1 <- data.frame(col1 = c("here is a something", "fork", "bork"),
+                    col2 = c("", 3, 43),
+                    col3 = c("", "B", "C"), stringsAsFactors = FALSE,
+                    "..blank" = c("L", "", ""))
+  
+  wdth <- c(col1 = 4, col2 = 3, col3 = 5)
+  jst <- c(col1 = "left", col2 = "right", col3 = "center")
+  
+  res1 <- apply_widths(df1, wdth, jst)
+  
+  res1$col1
+  res1$col2 
+  res1$col3
+  
+  expect_equal(res1$col1[2], "fork")
+  expect_equal(nchar(res1$col2[1]), 0)
+  expect_equal(nchar(res1$col3[1]), 0)             
+
+})

@@ -1522,7 +1522,7 @@ run <- function(txt) {
 }
 
 #' @noRd
-get_cell_borders_docx <- function(row, col, trow, tcol, brdrs) {
+get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
   
   ret <- ""
   r <- ""
@@ -1546,6 +1546,14 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs) {
     
     if (col == tcol & any(brdrs %in% c("right", "body"))) {
       r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+    }
+    
+    if (!is.null(flg)) {
+      if (flg %in% c("L", "B")) {
+        if (col == 1 & any(brdrs %in% c("right", "body"))) {
+          r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+        }
+      }
     }
     
     if (b != "" | l != "" | r != "" | t!= "") {

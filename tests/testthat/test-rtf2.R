@@ -18,7 +18,7 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
 fnt <- "Arial"
 fsz <- 10
 
-dev <- FALSE
+dev <- TRUE
 
 
 # Basic Tests 1 - 10 ------------------------------------------------------
@@ -2015,7 +2015,7 @@ test_that("rtf2-58: Label row is one cell.", {
   ll <- "Here is a super long label to see if it can span the entire table."
   
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
     stub(c("var", "label")) %>% 
     define(var, blank_after = TRUE, label_row = TRUE, 
            format = c(ampg = ll, cyl = "Cylinders")) %>% 

@@ -149,10 +149,10 @@ test_that("rtf2-2: get_cell_borders works as expected.", {
                "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrr\\brdrs")    
   
   expect_equal(get_cell_borders(2, 3, 4, 4, "all", "B"), 
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs")  
+               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrr\\brdrs")  
   
   expect_equal(get_cell_borders(2, 1, 4, 4, "all", "B"), 
-               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs") 
+               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs\\clbrdrr\\brdrs") 
   
 })
 

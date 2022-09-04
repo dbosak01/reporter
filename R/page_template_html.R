@@ -780,9 +780,10 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
     
     if (row > 1)
       t <- ""
-    
+
     if (col < ncol & stub_flag == FALSE)
       r <- ""
+    
     
   } else {
     
@@ -826,7 +827,9 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
   if (!is.null(flag)) {
     if (flag %in% c("L", "B")) {
       
-      if (col != ncol & stub_flag == FALSE)
+      if (stub_flag == FALSE & col == 1 & any(brdrs %in% c("outside", "all", "right")))
+        r <- paste0("border-right:thin solid ", border_color, ";")
+      else if (col != ncol & stub_flag == FALSE)
         r <- ""
       
       if (col != 1)

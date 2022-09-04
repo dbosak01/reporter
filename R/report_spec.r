@@ -2110,6 +2110,21 @@ write_report <- function(x, file_path = NULL,
       dir.create(dirname(x$modified_path))
     
   }
+  
+  # If there are header titles or footnotes, reassign
+  # to regular title and footnotes lists if not RTF
+  # This is the lowest risk way to deal with it.
+  if (!x$output_type %in% c("RTF")) {
+    if (length(x$header_titles) > 0) {
+      x$titles <- append(x$header_titles, x$titles)
+      x$header_titles <- NULL
+    }
+    
+    if (length(x$footer_footnotes) > 0) {
+      x$footnotes <- append(x$footer_footnotes, x$footnotes)
+      x$footer_footnotes <- NULL
+    }
+  }
 
   ret <- ""
 

@@ -1083,7 +1083,21 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       else 
         vl <- tbl[i, j]
       
-      tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+      if (flgs[i] %in% c("B", "L")) {
+        
+        # Strip out line feeds for label rows
+        vl <- gsub("\n", " ", vl, fixed = TRUE)
+        
+        #browser()
+        # Recalculate based on total width of table
+        stmp <- split_string_text(vl, sum(wdths), rs$units)
+        
+        tmp <- stmp$text
+        
+      } else {
+      
+        tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+      }
         
       
       if (j == nms[1]) {
@@ -1182,12 +1196,23 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   }
   
+  dev.off()
+  
+  if (frb & "body" %in% tbrdrs) {
+    
+    
+    ypos <- ystart - rs$row_height - rs$row_height + bh 
+    
+    #ylen <- cnt * rh
+    ylen <- rline - rh + rs$row_height + bs + 1
+    
+  } else {
 
-  ypos <- ystart - rs$row_height + bh - 1
-  
-  
-  #ylen <- cnt * rh
-  ylen <- rline - rh + bs + 1
+    ypos <- ystart - rs$row_height + bh - 1
+    
+    #ylen <- cnt * rh
+    ylen <- rline - rh + bs + 1
+  }
   
   if (any(brdrs %in% c("all", "left", "outside"))) {
     
@@ -1220,7 +1245,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   }
 
   
-  dev.off()
+
   
   rws <- rline
   
