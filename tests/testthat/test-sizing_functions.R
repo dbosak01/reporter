@@ -4,14 +4,14 @@ options("logr.output" = FALSE)
 
 test_that("get_table_cols() works as expected.", {
   
-
+  control_cols <- c("..blank", "..page", "..row", "..page_by")
   
   tbl <- create_table(mtcars[1:10, ], show_cols = "none") %>% 
     define(mpg, format = "%.1f") %>% 
     define(cyl, width = 1) %>% 
     define(hp)
   
-  lst1 <- get_table_cols(tbl)
+  lst1 <- get_table_cols(tbl, control_cols)
   
   expect_equal(lst1, c("mpg", "cyl", "hp", control_cols))
   
@@ -20,7 +20,7 @@ test_that("get_table_cols() works as expected.", {
     define(cyl, width = 1) %>% 
     define(hp)
   
-  lst2 <- get_table_cols(tbl2)
+  lst2 <- get_table_cols(tbl2, control_cols)
   
   expect_equal(length(lst2), 11 + length(control_cols))
   
@@ -29,7 +29,7 @@ test_that("get_table_cols() works as expected.", {
     define(cyl, width = 1) %>% 
     define(hp)
   
-  lst3 <- get_table_cols(tbl3)
+  lst3 <- get_table_cols(tbl3, control_cols)
   
   expect_equal(lst3, c("mpg", "disp", "wt", "cyl", "hp", control_cols))
   
@@ -227,7 +227,7 @@ test_that("get_page_wraps works as expected.", {
   wdths <- rep(1, 11)
   names(wdths) <- names(mtcars)
 
-  res <- get_page_wraps(4, tbl, wdths, .2)
+  res <- get_page_wraps(4, tbl, wdths, .2, c())
     
   expect_equal(length(res), 4)
   expect_equal(all(c("mpg", "cyl", "disp") %in% res[[1]]), TRUE)

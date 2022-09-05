@@ -204,7 +204,8 @@ also be added to a table, text, or plot object.</p>
 <span>  borders <span class='op'>=</span> <span class='st'>"none"</span>,</span>
 <span>  width <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
 <span>  bold <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
-<span>  font_size <span class='op'>=</span> <span class='cn'>NULL</span></span>
+<span>  font_size <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  header <span class='op'>=</span> <span class='cn'>FALSE</span></span>
 <span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -264,6 +265,12 @@ PDF, and DOCX output types.</p></td>
 of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
 13, and 14.  This parameter only applies to variable-width RTF, HTML, PDF,
 and DOCX output types.</p></td>
+    </tr>
+    <tr>
+      <th>header</th>
+      <td><p>Whether to put the titles in the page header. Valid values
+are TRUE and FALSE.  Default is FALSE. This option only works on RTF and 
+DOCX output types, and only applies to titles assigned to the report object.</p></td>
     </tr>
     </table>
 

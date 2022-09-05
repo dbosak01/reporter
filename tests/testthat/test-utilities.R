@@ -599,3 +599,18 @@ test_that("apply_widths works as expected.", {
   expect_equal(nchar(res1$col3[1]), 0)             
 
 })
+
+test_that("invisible functions work as expected.", {
+  
+  lst <- c("A", "B", "..blank", "..x.C")
+  
+  expect_equal(has_invisible(lst), TRUE)
+  expect_equal(is.invisible("..x.C"), TRUE)
+  expect_equal(is.invisible("..blank"), FALSE)
+  expect_equal(is.invisiblev(lst), c(A = FALSE, B = FALSE, 
+                                     ..blank = FALSE, ..x.C = TRUE))
+  
+  expect_equal(translate_invisible("C", lst), "..x.C")
+  expect_equal(translate_invisible("D", lst), "D")
+  
+})

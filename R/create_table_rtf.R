@@ -64,11 +64,24 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
       message("Page by variable not sorted.")
   }
   
+  # Deal with invisible columns
+  if (!is.null(ts$col_defs)) {
+    for (def in ts$col_defs) {
+      if (def$visible == FALSE) {
+        nnm <- paste0("..x.", def$var_c)
+        dat[[nnm]] <- dat[[def$var_c]]
+      }
+    }
+  }
+  
+  # Get control column names 
+  control_cols <- names(dat)[is.controlv(names(dat))]
+  
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
   # depends on show_cols parameter on create_table and
   # visible parameter on column definitions
-  keys <- get_table_cols(ts)
+  keys <- get_table_cols(ts, control_cols)
   # print("keys")
   # print(keys)
   
@@ -146,7 +159,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   
   # Break columns into pages
   wraps <- get_page_wraps(rs$line_size, ts, 
-                          widths_uom, 0)  # No gutter width for RTF
+                          widths_uom, 0, control_cols)  # No gutter width for RTF
   # print("wraps")
   # print(wraps)
   

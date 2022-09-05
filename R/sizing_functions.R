@@ -96,7 +96,7 @@ get_data_subset <- function(dat, keys, pages) {
 
 #' Gets the page wraps for both text and variable width reports
 #' @noRd
-get_page_wraps <- function(content_width, ts, widths, gutter) {
+get_page_wraps <- function(content_width, ts, widths, gutter, control_cols) {
   
   defs <- ts$col_defs
   
@@ -218,7 +218,7 @@ prep_data <- function(dat, ts, char_width, missing_val) {
   for (def in defs) {
 
     if (def$blank_after)
-      ls[length(ls) + 1] <- def$var_c
+      ls[length(ls) + 1] <- translate_invisible(def$var_c, names(dat))
   }
 
   # Add blanks on requested columns
@@ -952,7 +952,7 @@ get_labels <- function(dat, ts){
 #'
 #' @param x The Table spec object
 #' @noRd
-get_table_cols <- function(x) {
+get_table_cols <- function(x, control_cols) {
   
   dat <- x$data
   

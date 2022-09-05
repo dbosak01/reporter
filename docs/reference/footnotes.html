@@ -201,7 +201,8 @@ Footnotes may also be added directly to table, text, or plot content.</p>
 <span>  blank_row <span class='op'>=</span> <span class='st'>"above"</span>,</span>
 <span>  borders <span class='op'>=</span> <span class='st'>"none"</span>,</span>
 <span>  valign <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
-<span>  width <span class='op'>=</span> <span class='cn'>NULL</span></span>
+<span>  width <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>  footer <span class='op'>=</span> <span class='cn'>FALSE</span></span>
 <span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -256,6 +257,14 @@ In addition to these two convenience settings, you
 may also specify a specific width in the current unit of measure.  The
 unit of measure is determined by the 'units' parameter on 
 <code><a href='create_report.html'>create_report</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>footer</th>
+      <td><p>Whether to put the footnotes in the page footer. Valid
+values are TRUE and FALSE.  Default is FALSE.  This parameter only works
+with RTF and DOCX output types.  It also only applies to footnotes
+assigned to the report object.  Footnotes in the page footer will be the
+same throughout the report.</p></td>
     </tr>
     </table>
 

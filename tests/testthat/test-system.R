@@ -2505,6 +2505,56 @@ test_that("test75: Label row is one cell.", {
   
 })
 
-tmp <- c("Here is a string", "fork", "bork")
+test_that("test76: Page break on invisible column.", {
+  
+  fp <- file.path(base_path, "output/test76.out")
+  
+  dat <- iris
+  dat$Sequence <- seq(1, nrow(iris))
+  
+  tbl <- create_table(dat, borders = "all") %>%
+    define(Species, page_break = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp) %>%
+    page_header("Left", "Right") %>% 
+    add_content(tbl) %>% 
+    page_footer("left", "", "right") %>% 
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>% 
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
 
-fapply(tmp, width = 4)
+test_that("test77: Blank after on invisible column.", {
+
+  fp <- file.path(base_path, "output/test77.out")
+
+  tbl <- create_table(iris, borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+
+  rpt <- create_report(fp) %>%
+    page_header("Left", "Right") %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote", "And another")
+
+
+  res <- write_report(rpt)
+
+  expect_equal(file.exists(fp), TRUE)
+
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+})

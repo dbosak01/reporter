@@ -5,6 +5,7 @@
 * Added "header" parameter to `titles()` to put the title in the page header.
 * Added "footer" parameter to `footnotes()` to put the footnotes in the
 page footer.
+* Fixed bug when trying to create blank rows on an invisible column.
 * Updated logo.
 
 

@@ -1069,3 +1069,25 @@ test_that("pdf33: PDF Image file works as expected.", {
   } else 
     expect_equal(TRUE, TRUE)
 })
+
+test_that("pdf34: Blank after on invisible column.", {
+  
+  fp <- file.path(base_path, "pdf/test34.pdf")
+  
+  tbl <- create_table(iris, borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Left", "Right") %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})

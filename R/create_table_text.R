@@ -1,11 +1,5 @@
 
 
-# Globals -----------------------------------------------------------------
-
-
-control_cols <- c("..blank", "..page", "..row", "..page_by")
-
-
 
 # Create Tables -----------------------------------------------------------
 
@@ -59,12 +53,25 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
     if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
       message("Page by variable not sorted.")
   }
+  
+  # Deal with invisible columns
+  if (!is.null(ts$col_defs)) {
+    for (def in ts$col_defs) {
+      if (def$visible == FALSE) {
+        nnm <- paste0("..x.", def$var_c)
+        dat[[nnm]] <- dat[[def$var_c]]
+      }
+    }
+  }
+  
+  # Get control column names 
+  control_cols <- names(dat)[is.controlv(names(dat))]
 
   # Get vector of all included column names
   # Not all columns in dataset are necessarily included
   # depends on show_cols parameter on create_table and
   # visible parameter on column definitions
-  keys <- get_table_cols(ts)
+  keys <- get_table_cols(ts, control_cols)
   # print("keys")
   # print(keys)
 
@@ -155,7 +162,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   fdat <- apply_widths(fdat, widths_char, aligns)
   
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1)
+  wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1, control_cols)
   # print("wraps")
   # print(wraps)
 
@@ -727,6 +734,56 @@ is.controlv <- Vectorize(function(x) {
   return(is.control(x))
 })
 
+#' @noRd
+is.invisible <- function(x) {
+  
+  ret <- FALSE
+  if (!is.na(x)) {
+    if (substr(x, 1, 4) == "..x.")
+      ret <- TRUE
+  }
+  
+  return(ret)
+  
+}
+
+is.invisiblev <- Vectorize(function(x) {
+  
+  return(is.invisible(x))
+})
+
+
+has_invisible <- function(lst) {
+  
+  ret <- FALSE
+  
+  if (length(lst[is.invisiblev(lst)]) > 0)
+    ret <- TRUE
+  
+  return(ret)
+}
+
+get_invisible <- function(nm) {
+ 
+  return(paste0("..x.", nm)) 
+  
+}
+
+translate_invisible <- function(nm, lst) {
+ 
+  ret <- nm
+  
+  if (has_invisible(lst)) {
+    
+    inv <- lst[is.invisiblev(lst)]
+    
+    if (get_invisible(nm) %in% inv) {
+      ret <- get_invisible(nm)
+    }
+  }
+  
+  return(ret)
+}
 
 #' @noRd
 get_justify <- function(x) {
