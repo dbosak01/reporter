@@ -2492,7 +2492,7 @@ test_that("test75: Label row is one cell.", {
     titles("Table 1.0", "MTCARS Summary Table") %>% 
     add_content(tbl) %>% 
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Left", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
@@ -2558,3 +2558,54 @@ test_that("test77: Blank after on invisible column.", {
   
   expect_equal(length(lns), res$pages * res$line_count)
 })
+
+
+
+test_that("test78: Blank nested stub works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test78.out")
+  
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "Stats"    "19"          "13"         
+      "ampg"   "Stats"    "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Stats"    "16.4"        "21.4"       
+      "ampg"   "Stats"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Stats"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  ll <- "Here is a super long label to see if it can span the entire table."
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
+    stub(c("var", "label")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = ll, cyl = "Cylinders")) %>% 
+    define(label, indent = .25, dedupe = TRUE) %>% 
+    define(A, label = "Group A", align = "center", n = 19) %>% 
+    define(B, label = "Group B", align = "center", n = 13)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = Sys.time(), 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  
+  
+  res <- write_report(rpt)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+

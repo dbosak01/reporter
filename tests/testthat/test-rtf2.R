@@ -18,7 +18,7 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
 fnt <- "Arial"
 fsz <- 10
 
-dev <- TRUE
+dev <- FALSE
 
 
 # Basic Tests 1 - 10 ------------------------------------------------------
@@ -1855,7 +1855,7 @@ test_that("rtf2-52: Table with break between sections works as expected.", {
     titles("Table 1.0", "MTCARS Summary Table") %>% 
     add_content(tbl) %>% 
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Left", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
@@ -2031,7 +2031,7 @@ test_that("rtf2-58: Label row is one cell.", {
     titles("Table 1.0", "MTCARS Summary Table") %>% 
     add_content(tbl) %>% 
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Left", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
@@ -2065,6 +2065,57 @@ test_that("rtf2-59: Blank after on invisible column.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+
+test_that("rtf2-60: Blank nested stub works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test60.rtf")
+  
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "Stats"    "19"          "13"         
+      "ampg"   "Stats"    "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Stats"    "16.4"        "21.4"       
+      "ampg"   "Stats"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Stats"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  ll <- "Here is a super long label to see if it can span the entire table."
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
+    stub(c("var", "label")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = ll, cyl = "Cylinders")) %>% 
+    define(label, indent = .25, dedupe = TRUE) %>% 
+    define(A, label = "Group A", align = "center", n = 19) %>% 
+    define(B, label = "Group B", align = "center", n = 13)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                       font = "Times") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = "Left", 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  
+  
+  res <- write_report(rpt)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
 
 # User Tests --------------------------------------------------------------
 
@@ -2516,7 +2567,7 @@ test_that("user5: Portrait in 12pt Arial works as expected.", {
       titles("Table 1.0", "MTCARS Summary Table") %>% 
       add_content(tbl) %>% 
       footnotes("* Motor Trend, 1974") %>%
-      page_footer(left = Sys.time(), 
+      page_footer(left = "Left", 
                   center = "Confidential", 
                   right = "Page [pg] of [tpg]")
     
@@ -2566,7 +2617,7 @@ test_that("user6: Borders with spanning headers work as expected.", {
                        font = "Arial") %>% 
     set_margins(top = 1, bottom = 1) %>% 
     add_content(tbl) %>%
-    page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
+    page_footer(left = paste("Date:", "Left"), right = "Page [pg] of [tpg]", blank_row="none") %>%
     footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above") 
   
   res <- write_report(rpt)
@@ -2638,7 +2689,7 @@ test_that("user7: Check footnotes on page by.", {
     
     add_content(tbl) %>%
     
-    page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
+    page_footer(left = paste("Date:", "Left"), right = "Page [pg] of [tpg]", blank_row="none") %>%
     footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above", valign = "bottom") 
   
   

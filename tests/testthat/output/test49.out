@@ -12,14 +12,14 @@ Kaplan-Meier estimates
    75th percentile                        47                    9                   47                    9
       95% confidence interval             52                   42                   52                   42
 
-Cox PH estimates and some more
-really long stuff
+Cox PH estimates and some more really long stuff
    25th percentile                        38                   67                   38                   67
       95% confidence interval             25                   65                   25                   65
    median (weeks)                         37                   56                   37                   56
       95% confidence interval             23                   12                   23                   12
    75th percentile                        78                   91                   78                   91
       95% confidence interval             21                   32                   21                   32
+
 
 
 

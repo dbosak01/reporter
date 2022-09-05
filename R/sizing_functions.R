@@ -305,11 +305,21 @@ create_stub <- function(dat, ts) {
     st <- dat[[v[1]]]
     #print(st)
     
+    nms <- names(dat)
+    
     # For each subsequent column, if the value is not NA,
     # replace first column value.
     for (i in seq(from = 2, to = length(v), by = 1)) {
       
-      st <- ifelse(is.na(dat[[v[i]]]) | trimws(dat[[v[i]]]) == "", st, dat[[v[i]]])    
+      if ("..blank" %in% nms) {
+        st <- ifelse(is.na(dat[[v[i]]]) | (trimws(dat[[v[i]]]) == "" & dat[["..blank"]] == "L"), 
+                   st, dat[[v[i]]])   
+      } else {
+        st <- ifelse(is.na(dat[[v[i]]]), st, dat[[v[i]]])  
+      }
+      
+      # Allow empty to remain.  Sure I put this in for a reason.  Need to test.
+      #st <- ifelse(is.na(dat[[v[i]]]) | trimws(dat[[v[i]]]) == "", st, dat[[v[i]]])    
       
     }
 
@@ -339,7 +349,7 @@ create_stub <- function(dat, ts) {
 #' @noRd
 get_col_widths <- function(dat, ts, labels, char_width, uom, 
                            merge_label_row = TRUE) {
-  
+
   defs <- ts$col_defs
   if (uom == "cm") {
     #12.7
@@ -370,7 +380,9 @@ get_col_widths <- function(dat, ts, labels, char_width, uom,
       # Clear out label rows, as these can mess up column width calculations.
       # Label row widths are dealt with later.
       if ("..blank" %in% names(dat) & merge_label_row) {
+        colattr <- attributes(dat[[nm]])
         dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
+        attributes(dat[[nm]]) <- colattr
       }
       
       w <- max(nchar(as.character(dat[[nm]])), na.rm = TRUE) * char_width
@@ -1032,6 +1044,12 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
   # Perform column deduping
   ret <- dedupe_pages(ret, defs)
   
+  # Dedupe stub if child column dedupe was requested.
+  # Somewhat unsure of this.
+  if (stub_dedupe(ts$stub, defs)) {
+    sdef <- define_c("stub", dedupe = TRUE)
+    ret <- dedupe_pages(ret, list(sdef))
+  }
 
   
   return(ret)
@@ -1154,7 +1172,21 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
 
 
 
-
+stub_dedupe <- function(stb, defs) {
+  
+  ret <- FALSE
+  
+  for (df in defs) {
+    
+    if (df$var_c %in% stb$vars) {
+      if (df$dedupe == TRUE & df$label_row == FALSE) {
+        ret <- TRUE
+      }
+    }
+  }
+  
+  return(ret)
+}
 
 
 

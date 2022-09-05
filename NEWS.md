@@ -6,6 +6,7 @@
 * Added "footer" parameter to `footnotes()` to put the footnotes in the
 page footer.
 * Fixed bug when trying to create blank rows on an invisible column.
+* Fixed bug when trying to dedupe columns in stub.
 * Updated logo.
 
 

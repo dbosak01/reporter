@@ -797,7 +797,7 @@ dedupe_pages <- function(pgs, defs) {
             dat[[def$var_c]] <- as.character(dat[[def$var_c]])
           
           # Fill with blanks as appropriate
-          w <- nchar(dat[[def$var_c]][1])
+          w <- min(nchar(dat[[def$var_c]])) # Take min to exclude label row
           v <- paste0(rep(" ", times = w), collapse = "")
           
           dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 

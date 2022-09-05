@@ -1,7 +1,7 @@
 context("Utilities Tests")
 
 
-test_that("gen_groups() works as expected.", {
+test_that("utils1: gen_groups() works as expected.", {
   
   expect_equal(gen_groups(10, 3),
                c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4))
@@ -17,7 +17,7 @@ test_that("gen_groups() works as expected.", {
 
 })
 
-test_that("get_font_family() works as expected.", {
+test_that("utils2: get_font_family() works as expected.", {
   
   expect_equal(get_font_family("Arial"), "sans")
   expect_error(get_font_family("Calibri"))
@@ -28,7 +28,7 @@ test_that("get_font_family() works as expected.", {
 })
 
 
-test_that("get_page_size() works as expected.", {
+test_that("utils3: get_page_size() works as expected.", {
   ret <- get_page_size("letter", "inches")
   
   expect_equal(ret[1], 8.5)
@@ -41,7 +41,7 @@ test_that("get_page_size() works as expected.", {
 })
 
 
-test_that("add_blank_rows() works as expected.", {
+test_that("utils4: add_blank_rows() works as expected.", {
   
   tdat <- iris[order(iris$Species, decreasing = TRUE), ]
   tdat$cat <- c(rep("A", 25), rep("B", 25))
@@ -64,7 +64,7 @@ test_that("add_blank_rows() works as expected.", {
 
 
 
-test_that("split_cells works as expected.", {
+test_that("utils5: split_cells works as expected.", {
   
   
   a1 <- c("one", "two", "three")
@@ -92,7 +92,7 @@ test_that("split_cells works as expected.", {
   
 })
 
-test_that("align_cells works as expected.", {
+test_that("utils6: align_cells works as expected.", {
   
   
   x <- list(a1 = c("a", "b", "c"), 
@@ -106,7 +106,7 @@ test_that("align_cells works as expected.", {
 })
 
 
-test_that("clear_missing works as expected.", {
+test_that("utils7: clear_missing works as expected.", {
   
   
   df <- data.frame(a = c(1, 2, 3), b = c("A", "B", "C"), 
@@ -120,7 +120,7 @@ test_that("clear_missing works as expected.", {
 })
 
 
-test_that("push_down works as expected.", {
+test_that("utils8: push_down works as expected.", {
   
   x <- data.frame(a1 = c("a", "b", "c", "", ""), 
             b1  = c("a", rep("", 4)), 
@@ -134,14 +134,14 @@ test_that("push_down works as expected.", {
   
 })
 
-test_that("create_stub works as expected.", {
+test_that("utils9: create_stub works as expected.", {
   
   x <- data.frame(a1 = c("a", "a", "a", "a", "a", "a"), 
                   b1  = c(NA, "b", "b", NA, "b", "b"), 
                   c1 = c(NA, NA, "c", NA, NA, "c"), 
                   d1 = c("Here", "is", "some", "stuff", "shouldn't", "touch"), 
                   stringsAsFactors = FALSE)
-  
+  x
   
   tbl <- create_table(x) %>% stub(c("a1", "b1", "c1"))
   
@@ -152,7 +152,7 @@ test_that("create_stub works as expected.", {
 })
 
 
-test_that("quote_names function works as expected.", {
+test_that("utils10: quote_names function works as expected.", {
 
   expect_equal(quote_names(c("fork")), c("fork"))
   expect_equal(quote_names(c(fork)), c("fork"))
@@ -163,7 +163,7 @@ test_that("quote_names function works as expected.", {
   
 })
 
-test_that("set_column_defaults function works as expected.", {
+test_that("utils11: set_column_defaults function works as expected.", {
   
   tbl <- create_table(mtcars) 
   tbl <- column_defaults(tbl, c(mpg, cyl, disp), width = 2, format = "%.1f")
@@ -183,7 +183,7 @@ test_that("set_column_defaults function works as expected.", {
 })
   
 
-test_that("set_column_defaults function with range works as expected.", {
+test_that("utils12: set_column_defaults function with range works as expected.", {
   
   tbl <- create_table(mtcars) 
   tbl <- column_defaults(tbl, from = mpg, to = drat, width = 2, format = "%.1f")
@@ -203,7 +203,7 @@ test_that("set_column_defaults function with range works as expected.", {
 })
 
 
-test_that("set_column_defaults function all cols works as expected.", {
+test_that("utils13: set_column_defaults function all cols works as expected.", {
   
   tbl <- create_table(mtcars) 
   tbl <- column_defaults(tbl, width = 2, format = "%.1f")
@@ -224,7 +224,7 @@ test_that("set_column_defaults function all cols works as expected.", {
 
 # Commented out this test because the dm_final.rds file creates a dependency 
 # on higher level of R > 3.5.
-test_that("data with extra names on variables doesn't crash labels function.", {
+test_that("utils14: data with extra names on variables doesn't crash labels function.", {
   
   # fp <- file.path(base_path, "user/user8.out")
   # 
@@ -255,7 +255,7 @@ test_that("data with extra names on variables doesn't crash labels function.", {
 })
 
 
-test_that("split_cells_variable works as expected.", {
+test_that("utils15: split_cells_variable works as expected.", {
   
   # split_cells_variable <- function(x, col_widths, font, font_size, units)
   
@@ -285,7 +285,7 @@ test_that("split_cells_variable works as expected.", {
 })
 
 
-test_that("get_width function works as expected.", {
+test_that("utils16: get_width function works as expected.", {
   
   res1 <- get_text_width("This is cool.", "Arial", 12)
   res1
@@ -307,7 +307,7 @@ test_that("get_width function works as expected.", {
   
 })
 
-test_that("has_bottom_footnotes works as expected.", {
+test_that("utils17: has_bottom_footnotes works as expected.", {
   
   rpt <- create_report("") 
   
@@ -325,7 +325,7 @@ test_that("has_bottom_footnotes works as expected.", {
   
 })
 
-test_that("has_top_footnotes works as expected.", {
+test_that("utils18: has_top_footnotes works as expected.", {
   
   rpt <- create_report("") 
   
@@ -343,7 +343,7 @@ test_that("has_top_footnotes works as expected.", {
   
 })
 
-test_that("get_spanning_info works as expected.", {
+test_that("utils19: get_spanning_info works as expected.", {
   
   
   fp <- ""
@@ -382,7 +382,7 @@ test_that("get_spanning_info works as expected.", {
   
 })
 
-test_that("get_lines_rtf works as expected.", {
+test_that("utils20: get_lines_rtf works as expected.", {
   
   
   expect_equal(get_lines_rtf("Here There", 3, "Arial", 10), 1)
@@ -406,7 +406,7 @@ test_that("get_lines_rtf works as expected.", {
 })
 
 
-test_that("split_string_rtf() works as expected.", {
+test_that("utils21: split_string_rtf() works as expected.", {
   
   cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -470,7 +470,7 @@ test_that("split_string_rtf() works as expected.", {
   
 })
 
-test_that("split_cells_variable() works as expected.", {
+test_that("utils22: split_cells_variable() works as expected.", {
   
   dat <- data.frame(col1 = c("hello", "there", "here is a big long\nline to wrap and wrap"),
                     col2 = c(1, 2, 3),
@@ -492,7 +492,7 @@ test_that("split_cells_variable() works as expected.", {
 })
 
 
-test_that("get_image_html works as expected.", {
+test_that("utils23: get_image_html works as expected.", {
   
   
   tmp <-  tempfile(fileext = ".jpg")
@@ -509,7 +509,7 @@ test_that("get_image_html works as expected.", {
 })
 
 
-test_that("get_outer_borders works as expected.", {
+test_that("utils24: get_outer_borders works as expected.", {
   
  
   expect_equal(is.null(get_outer_borders("none")), TRUE) 
@@ -520,7 +520,7 @@ test_that("get_outer_borders works as expected.", {
   
 })
 
-test_that("split_strings() works as expected.", {
+test_that("utils25: split_strings() works as expected.", {
   
   pdf(NULL)
   par(family = "sans", ps = 10)
@@ -538,7 +538,7 @@ test_that("split_strings() works as expected.", {
 })
 
 
-test_that("split_string_text() works as expected.", {
+test_that("utils26: split_string_text() works as expected.", {
   
   pdf(NULL)
   par(family = "sans", ps = 10)
@@ -557,7 +557,7 @@ test_that("split_string_text() works as expected.", {
   
 })
 
-test_that("get_points_* functions work as expected.", {
+test_that("utils27: get_points_* functions work as expected.", {
   
   w <- c(1, .8, .5)
   
@@ -578,7 +578,7 @@ test_that("get_points_* functions work as expected.", {
   expect_equal(res3, c(73, 80.2, 91))
 })
 
-test_that("apply_widths works as expected.", {
+test_that("utils28: apply_widths works as expected.", {
   
   df1 <- data.frame(col1 = c("here is a something", "fork", "bork"),
                     col2 = c("", 3, 43),
@@ -600,7 +600,7 @@ test_that("apply_widths works as expected.", {
 
 })
 
-test_that("invisible functions work as expected.", {
+test_that("utils29: invisible functions work as expected.", {
   
   lst <- c("A", "B", "..blank", "..x.C")
   

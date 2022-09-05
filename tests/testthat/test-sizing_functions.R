@@ -263,3 +263,29 @@ test_that("get_col_widths_rtf works as expected.", {
 })
 
 
+test_that("stub_dedupe works as expected", {
+  
+  df <- mtcars
+  
+  tbl <- create_table(df) %>% 
+    stub(c("cyl", "mpg"),  width = 2, label = "Fork") %>%
+    define(cyl,) %>% 
+    define(mpg, dedupe = TRUE) %>% 
+    define(disp, width = 2) 
+  
+  res <- stub_dedupe(tbl$stub, tbl$col_defs)
+  
+  expect_equal(res, TRUE)
+  
+  tbl <- create_table(df) %>% 
+    stub(c("cyl", "mpg"),  width = 2, label = "Fork") %>%
+    define(cyl,) %>% 
+    define(mpg) %>% 
+    define(disp, width = 2) 
+  
+  res <- stub_dedupe(tbl$stub, tbl$col_defs)
+  
+  expect_equal(res, FALSE)
+  
+})
+
