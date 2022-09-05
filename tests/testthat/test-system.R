@@ -2597,7 +2597,7 @@ test_that("test78: Blank nested stub works as expected.", {
     titles("Table 1.0", "MTCARS Summary Table") %>% 
     add_content(tbl) %>% 
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = Sys.time(), 
+    page_footer(left = "Left", 
                 center = "Confidential", 
                 right = "Page [pg] of [tpg]")
   
@@ -2605,6 +2605,30 @@ test_that("test78: Blank nested stub works as expected.", {
   
   res <- write_report(rpt)
   res
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test79: Page header width works.", {
+  
+  fp <- file.path(base_path, "output/test79.out")
+  
+  tbl <- create_table(iris[1:10, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp) %>%
+    page_header(paste0("Left and here is a really long left ",
+                       "cell text to put it and more and more"), 
+                "Right", width = 8) %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
   expect_equal(file.exists(fp), TRUE)
   
 })

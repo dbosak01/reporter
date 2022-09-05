@@ -2117,6 +2117,30 @@ test_that("rtf2-60: Blank nested stub works as expected.", {
 })
 
 
+
+test_that("rtf2-61: Page header width works.", {
+  
+  fp <- file.path(base_path, "rtf2/test61.rtf")
+  
+  tbl <- create_table(iris, borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    page_header("Left and here is a really long left cell text to put it", 
+                "Right", width = 8) %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
 # User Tests --------------------------------------------------------------
 
 test_that("rtf2-user1: demo table works.", {

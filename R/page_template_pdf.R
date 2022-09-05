@@ -58,6 +58,17 @@ get_page_header_pdf <- function(rs) {
   lh <- rs$row_height
   
   rb <- rs$content_size[["width"]] 
+  
+  # User controlled width of left column
+  lwdth <- rs$page_header_width
+  if (is.null(lwdth))
+    lwdth <- rs$content_size[["width"]]/2
+  
+  # Calculate right column width
+  rwdth <- rs$content_size[["width"]] - lwdth
+  # lpct <- round(5000 * lwdth / rs$content_size[["width"]])
+  # rpct <- round(5000 * rwdth / rs$content_size[["width"]])
+  
 
   maxh <- max(length(hl), length(hr))
 
@@ -75,7 +86,7 @@ get_page_header_pdf <- function(rs) {
       if (length(hl) >= i) {
 
         # Split strings if they exceed width
-        tmp <- split_string_text(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+        tmp <- split_string_text(hl[[i]], lwdth, rs$units)
         
         
         for (ln in seq_len(tmp$lines)) {
@@ -101,7 +112,7 @@ get_page_header_pdf <- function(rs) {
       if (length(hr) >= i) {
 
         # Split strings if they exceed width
-        tmp2 <- split_string_text(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+        tmp2 <- split_string_text(hr[[i]], rwdth, rs$units)
 
         for (ln in seq_len(tmp2$lines)) {
           ret[[length(ret) + 1]] <- page_text(tmp2$text[ln], rs$font_size, 

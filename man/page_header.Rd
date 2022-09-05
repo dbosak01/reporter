@@ -4,7 +4,7 @@
 \alias{page_header}
 \title{Add a page header}
 \usage{
-page_header(x, left = "", right = "", blank_row = "none")
+page_header(x, left = "", right = "", blank_row = "none", width = NULL)
 }
 \arguments{
 \item{x}{The report object.}
@@ -17,6 +17,10 @@ of strings.}
 
 \item{blank_row}{Whether to create a blank row below the page header.
 Valid values are 'below' and 'none'.  Default is 'none'.}
+
+\item{width}{The width of the left column of the page header, in 
+report units of measure.  The right column will adjust automatically
+to equal the page width.}
 }
 \value{
 The modified report specification.

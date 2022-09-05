@@ -1091,3 +1091,26 @@ test_that("pdf34: Blank after on invisible column.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+test_that("pdf35: Page header width works as expected.", {
+  
+  fp <- file.path(base_path, "pdf/test35.pdf")
+  
+  tbl <- create_table(iris[1:10, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF") %>%
+    page_header("Left here is some stuff and more stuff trying to get out in the middle", 
+                "Right", width = 8) %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})

@@ -962,6 +962,29 @@ test_that("docx26: Blank after on invisible column.", {
 })
 
 
+test_that("docx27: Page header width works.", {
+  
+  fp <- file.path(base_path, "docx/test27.docx")
+  
+  tbl <- create_table(iris[1:10, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    page_header("Left and here is a really long left cell text to put it", 
+                "Right", width = 8) %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
 
 # User Tests --------------------------------------------------------------
 

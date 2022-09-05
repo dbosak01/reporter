@@ -1302,3 +1302,27 @@ test_that("rtf39: Blank after on invisible column.", {
   
 })
 
+
+test_that("rtf40: Page header width works as expected.", {
+  
+  fp <- file.path(base_path, "rtf/test40.rtf")
+  
+  tbl <- create_table(iris[1:10, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    page_header("Left here is some stuff and more stuff trying to get out in the middle", 
+                "Right", width = 8) %>%
+    add_content(tbl) %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", header = TRUE) %>%
+    footnotes("Here is a footnote", "And another", footer = TRUE)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+

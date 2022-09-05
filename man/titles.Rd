@@ -57,8 +57,8 @@ of the report will be used by default.  Valid values are 8, 9, 10, 11, 12,
 and DOCX output types.}
 
 \item{header}{Whether to put the titles in the page header. Valid values
-are TRUE and FALSE.  Default is FALSE. This option only works on RTF and 
-DOCX output types, and only applies to titles assigned to the report object.}
+are TRUE and FALSE.  Default is FALSE. This option only works on the RTF 
+output type, and only applies to titles assigned to the report object.}
 }
 \value{
 The modified report.

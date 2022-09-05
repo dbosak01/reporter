@@ -45,6 +45,16 @@ get_page_header_html <- function(rs) {
   hr <- rs$page_header_right
   maxh <- max(length(hl), length(hr))
   
+  # User controlled width of left column
+  lwdth <- rs$page_header_width
+  if (is.null(lwdth))
+    lwdth <- rs$content_size[["width"]]/2
+  
+  # Calculate right column width
+  rwdth <- rs$content_size[["width"]] - lwdth
+  lpct <- round(lwdth / rs$content_size[["width"]] * 100)
+  rpct <- round(rwdth / rs$content_size[["width"]] * 100)
+  
   u <- rs$units
   if (rs$units == "inches")
     u <- "in"
@@ -54,8 +64,8 @@ get_page_header_html <- function(rs) {
 
     ret <- paste0("<table ",
                   "style=\"width:100%\">",
-                  "<colgroup>\n<col style=\"width:50%\">\n",
-                  "<col style=\"width:50%\">\n</colgroup>\n")
+                  "<colgroup>\n<col style=\"width:", lpct, "%\">\n",
+                  "<col style=\"width:", rpct,"%\">\n</colgroup>\n")
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -67,7 +77,7 @@ get_page_header_html <- function(rs) {
       if (length(hl) >= i) {
 
         # Split strings if they exceed width
-        tmp <- split_string_html(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+        tmp <- split_string_html(hl[[i]], lwdth, rs$units)
         
         ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp$html),
                            "</td>\n")
@@ -82,7 +92,7 @@ get_page_header_html <- function(rs) {
       if (length(hr) >= i) {
 
         # Split strings if they exceed width
-        tmp2 <- split_string_html(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+        tmp2 <- split_string_html(hr[[i]], rwdth, rs$units)
 
         
         ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp2$html), 

@@ -190,7 +190,7 @@ at the top of each page of the report." />
 at the top of each page of the report.</p>
     </div>
 
-    <pre class="usage"><span><span class='fu'>page_header</span><span class='op'>(</span><span class='va'>x</span>, left <span class='op'>=</span> <span class='st'>""</span>, right <span class='op'>=</span> <span class='st'>""</span>, blank_row <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span></span></pre>
+    <pre class="usage"><span><span class='fu'>page_header</span><span class='op'>(</span><span class='va'>x</span>, left <span class='op'>=</span> <span class='st'>""</span>, right <span class='op'>=</span> <span class='st'>""</span>, blank_row <span class='op'>=</span> <span class='st'>"none"</span>, width <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -213,6 +213,12 @@ of strings.</p></td>
       <th>blank_row</th>
       <td><p>Whether to create a blank row below the page header.
 Valid values are 'below' and 'none'.  Default is 'none'.</p></td>
+    </tr>
+    <tr>
+      <th>width</th>
+      <td><p>The width of the left column of the page header, in 
+report units of measure.  The right column will adjust automatically
+to equal the page width.</p></td>
     </tr>
     </table>
 

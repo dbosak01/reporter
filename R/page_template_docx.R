@@ -47,6 +47,16 @@ get_page_header_docx <- function(rs) {
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
   
+  # User controlled width of left column
+  lwdth <- rs$page_header_width
+  if (is.null(lwdth))
+    lwdth <- rs$content_size[["width"]]/2
+  
+  # Calculate right column width
+  rwdth <- rs$content_size[["width"]] - lwdth
+  lpct <- round(5000 * lwdth / rs$content_size[["width"]])
+  rpct <- round(5000 * rwdth / rs$content_size[["width"]])
+  
   u <- rs$units
   if (rs$units == "inches")
     u <- "in"
@@ -60,8 +70,8 @@ get_page_header_docx <- function(rs) {
                   ' w:type="pct"/>',
                   "</w:tblPr>",
                   "<w:tblGrid>",
-                  '<w:gridCol w:w="2500" w:type="pct"/>',
-                  '<w:gridCol w:w="2500" w:type="pct"/>',
+                  '<w:gridCol w:w="', lpct, '" w:type="pct"/>',
+                  '<w:gridCol w:w="', rpct, '" w:type="pct"/>',
                   "</w:tblGrid>", collapse = "")
 
     pdf(NULL)
@@ -75,10 +85,10 @@ get_page_header_docx <- function(rs) {
       if (length(hl) >= i) {
 
         # Split strings if they exceed width
-        tmp <- split_string_html(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+        tmp <- split_string_html(hl[[i]], lwdth, rs$units)
         
         cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      '<w:tc><w:tcPr><w:tcW w:w="', lpct, '" w:type="pct"/></w:tcPr>', 
                       get_page_numbers_docx(para(tmp$html)),
                            "</w:tc>\n")
         
@@ -86,7 +96,7 @@ get_page_header_docx <- function(rs) {
 
       } else {
         cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      '<w:tc><w:tcPr><w:tcW w:w="', lpct, '" w:type="pct"/></w:tcPr>', 
                       para(" "), "</w:tc>\n")
         lcnt <- 1
       }
@@ -94,11 +104,11 @@ get_page_header_docx <- function(rs) {
       if (length(hr) >= i) {
 
         # Split strings if they exceed width
-        tmp2 <- split_string_html(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+        tmp2 <- split_string_html(hr[[i]], rwdth, rs$units)
 
         
         cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      '<w:tc><w:tcPr><w:tcW w:w="', rpct, '" w:type="pct"/></w:tcPr>', 
                       get_page_numbers_docx(para(tmp2$html, "right")), 
                       "</w:tc></w:tr>\n")
         
@@ -106,7 +116,7 @@ get_page_header_docx <- function(rs) {
 
       } else {
         cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="2500" w:type="pct"/></w:tcPr>', 
+                      '<w:tc><w:tcPr><w:tcW w:w="', rpct, '" w:type="pct"/></w:tcPr>', 
                       para(" ", "right"), "</w:tc></w:tr>\n")
         rcnt <- 1
       }

@@ -885,6 +885,9 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' of strings.
 #' @param blank_row Whether to create a blank row below the page header.
 #' Valid values are 'below' and 'none'.  Default is 'none'.
+#' @param width The width of the left column of the page header, in 
+#' report units of measure.  The right column will adjust automatically
+#' to equal the page width.
 #' @return The modified report specification.
 #' @family report
 #' @examples
@@ -929,7 +932,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' # 
 #' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
-page_header <- function(x, left="", right="", blank_row = "none"){
+page_header <- function(x, left="", right="", blank_row = "none", width = NULL){
 
   if (!"report_spec" %in% class(x))
     stop("Page header can only be assigned to an object of class 'report_spec'")
@@ -952,6 +955,7 @@ page_header <- function(x, left="", right="", blank_row = "none"){
   x$page_header_left <- left
   x$page_header_right <- right
   x$page_header_blank_row <- blank_row
+  x$page_header_width <- width
 
   return(x)
 }
@@ -1205,8 +1209,8 @@ title_header <- function(x, ..., right = "",
 #' 13, and 14.  This parameter only applies to variable-width RTF, HTML, PDF,
 #' and DOCX output types.
 #' @param header Whether to put the titles in the page header. Valid values
-#' are TRUE and FALSE.  Default is FALSE. This option only works on RTF and 
-#' DOCX output types, and only applies to titles assigned to the report object.
+#' are TRUE and FALSE.  Default is FALSE. This option only works on the RTF 
+#' output type, and only applies to titles assigned to the report object.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -2111,10 +2115,10 @@ write_report <- function(x, file_path = NULL,
     
   }
   
-  # If there are header titles or footnotes, reassign
-  # to regular title and footnotes lists if not RTF
+  # If there are header titles or footer footnotes, 
+  # reassign to regular title and footnotes lists if not RTF.
   # This is the lowest risk way to deal with it.
-  if (!x$output_type %in% c("RTF")) {
+  if (!x$output_type %in% c("RTF") | x$font == "fixed") {
     if (length(x$header_titles) > 0) {
       x$titles <- append(x$header_titles, x$titles)
       x$header_titles <- NULL

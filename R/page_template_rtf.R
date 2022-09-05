@@ -46,8 +46,17 @@ get_page_header_rtf <- function(rs) {
   
   hl <- rs$page_header_left
   hr <- rs$page_header_right
+
   conv <- rs$twip_conversion
   lh <- rs$row_height
+  
+  # User controlled width of left column
+  lwdth <- rs$page_header_width
+  if (is.null(lwdth))
+    lwdth <- rs$content_size[["width"]]/2
+  
+  # Calculate right column width
+  rwdth <- rs$content_size[["width"]] - lwdth
   
   maxh <- max(length(hl), length(hr))
   
@@ -55,8 +64,8 @@ get_page_header_rtf <- function(rs) {
     
     fs <- rs$font_size * 2
     
-    c2 <- round(rs$content_size[["width"]] * conv)
-    c1 <- round(c2 / 2)
+    c1 <- round(lwdth * conv) 
+    c2 <- round(rwdth * conv) + c1
     
     ret <- paste0("{\\header \\f0\\fs", fs)
     
@@ -71,7 +80,7 @@ get_page_header_rtf <- function(rs) {
         if (length(hl) >= i) {
           
           # Split strings if they exceed width
-          tmp <- split_string_rtf(hl[[i]], rs$content_size[["width"]]/2, rs$units)
+          tmp <- split_string_rtf(hl[[i]], lwdth, rs$units)
           
           ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
           lcnt <- tmp$lines
@@ -84,7 +93,7 @@ get_page_header_rtf <- function(rs) {
         if (length(hr) >= i) {
           
           # Split strings if they exceed width
-          tmp2 <- split_string_rtf(hr[[i]], rs$content_size[["width"]]/2, rs$units)
+          tmp2 <- split_string_rtf(hr[[i]], rwdth, rs$units)
           
           ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
           rcnt <- tmp2$lines
