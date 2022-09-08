@@ -959,13 +959,13 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (merge_label_row  & flgs[i] %in% c("B", "L")) {
           if (j == 1) {
             
-            # Strip out line feeds for label rows
-            vl <- gsub("\n", " ", vl, fixed = TRUE)
-            
-            # Recalculate based on total width of table
-            tmp <- split_string_html(vl, sum(wdths), rs$units)
-            
-            vl <- tmp$html
+            # # Strip out line feeds for label rows
+            # vl <- gsub("\n", " ", vl, fixed = TRUE)
+            # 
+            # # Recalculate based on total width of table
+            # tmp <- split_string_html(vl, sum(wdths), rs$units)
+            # 
+            # vl <- tmp$html
           
             if (b == "") {
               

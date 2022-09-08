@@ -933,16 +933,22 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
       # Deal with label rows
       vl <- t[i, 1]
       
-      # Strip out line feeds for label rows
-      vl <- gsub("\\line", "", vl, fixed = TRUE)
+      # # Strip out line feeds for label rows
+      # vl <- gsub("\\line", "", vl, fixed = TRUE)
+      # 
+      # # Recalculate based on total width of table
+      # tmp <- split_string_rtf(vl, sum(wdths), rs$units, rs$font)
       
-      # Recalculate based on total width of table
-      tmp <- split_string_rtf(vl, sum(wdths), rs$units, rs$font)
+      ret[i] <- paste0(ret[i], ca[1], " ", vl, "\\cell")
       
       # Construct rtf
-      ret[i] <- paste0(ret[i], ca[1], " ", tmp$rtf, "\\cell")
+      #ret[i] <- paste0(ret[i], ca[1], " ", tmp$rtf, "\\cell")
       
-      if (length(tmp$lines) > mxrw)
+      # if (length(tmp$lines) > mxrw)
+      #   mxrw <- length(cl)
+      
+      cl <- strsplit(vl, "\\line", fixed = TRUE)[[1]]
+      if (length(cl) > mxrw)
         mxrw <- length(cl)
       
     } else {

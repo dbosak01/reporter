@@ -1099,13 +1099,15 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       if (flgs[i] %in% c("B", "L")) {
         
         # Strip out line feeds for label rows
-        vl <- gsub("\n", " ", vl, fixed = TRUE)
+        #vl <- gsub("\n", " ", vl, fixed = TRUE)
         
         #browser()
         # Recalculate based on total width of table
-        stmp <- split_string_text(vl, sum(wdths), rs$units)
+        #stmp <- split_string_text(vl, sum(wdths), rs$units)
         
-        tmp <- stmp$text
+        #tmp <- stmp$text
+        
+        tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
         
       } else {
       

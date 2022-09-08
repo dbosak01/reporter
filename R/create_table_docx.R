@@ -978,16 +978,16 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (!is.character(vl))
           vl <- as.character(vl)
         
-        if (tb[i] %in% c("B", "L")) {
-          
-          # Strip out line feeds for label rows
-          vl <- gsub("\n", " ", vl, fixed = TRUE)
-          
-          # Redo splits
-          vtmp <- split_string_html(vl, sum(wdths), rs$units)
-          vl <- vtmp$html
-          
-        }
+        # if (tb[i] %in% c("B", "L")) {
+        #   
+        #   # Strip out line feeds for label rows
+        #   vl <- gsub("\n", " ", vl, fixed = TRUE)
+        #   
+        #   # Redo splits
+        #   vtmp <- split_string_html(vl, sum(wdths), rs$units)
+        #   vl <- vtmp$html
+        #   
+        # }
         
         if (!(tb[i] %in% c("B", "L") & j > 1)) {
           # Construct html

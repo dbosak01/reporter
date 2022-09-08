@@ -620,6 +620,25 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
           
           cell <- ""
           
+        } else if ("..blank" %in% names(x) && x[[i, "..blank"]] == "L") {
+          
+          if (output_type %in% c("HTML", "DOCX")) {
+            res <- split_string_html(x[[i, nm]], sum(col_widths), units)
+            
+            cell <- res$html
+            
+          } else if (output_type == "RTF") {
+            res <- split_string_rtf(x[[i, nm]], sum(col_widths), units, font)
+            
+            cell <- res$rtf
+          } else if (output_type == "PDF") {
+            
+            res <- split_string_text(x[[i, nm]], sum(col_widths), units)
+            
+            cell <- paste0(res$text, collapse = "\n")
+            
+          }
+          
         } else {
           
           if (output_type %in% c("HTML", "DOCX")) {
