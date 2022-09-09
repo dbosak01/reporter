@@ -292,8 +292,15 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
 
   # Add blank row for each split
   for (i in seq_along(lst)) {
+    
+    # Don't append line for blank rows
+    if ("..blank" %in% names(lst[[i]]) & all(lst[[i]][["..blank"]] == "B")) {
+      
+      ret[[i]] <- lst[[i]]
+    } else {
 
-    ret[[i]] <- add_blank_row(lst[[i]], location = location, vars = vars)
+      ret[[i]] <- add_blank_row(lst[[i]], location = location, vars = vars)
+    }
 
   }
 
@@ -1157,15 +1164,24 @@ apply_widths <- function(dat, wdths, algns) {
   for (nm in names(ret)) {
     if (!is.control(nm)) {
       
+      cw <- wdths[[nm]]
+      
+      # If column width is miscalculated, fix it.
+      if ("..blank" %in% names(dat)) {
+        mxw <- max(ifelse(ret[["..blank"]] == "L", 0, nchar(ret[[nm]])), na.rm = TRUE)
+        if (mxw > cw)
+          cw <- mxw
+      }
+        
       if (algns[nm] == "left") {
         
-        ret[[nm]] <- stri_pad_right(ret[[nm]], wdths[[nm]])
+        ret[[nm]] <- stri_pad_right(ret[[nm]], cw)
       } else if (algns[nm] == "right") {
         
-        ret[[nm]] <- stri_pad_left(ret[[nm]], wdths[[nm]])
+        ret[[nm]] <- stri_pad_left(ret[[nm]], cw)
       } else if (algns[nm] == "center") {
         
-        ret[[nm]] <- stri_pad_both(ret[[nm]], wdths[[nm]]) 
+        ret[[nm]] <- stri_pad_both(ret[[nm]], cw) 
       }
       
       # Clear out label rows

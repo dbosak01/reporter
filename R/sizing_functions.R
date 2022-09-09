@@ -389,7 +389,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom,
       
       sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
       mwidths[[nm]]  <- max(nchar(as.character(sd)), na.rm = TRUE) * char_width 
-      
+
     }
      
     if (w > max_col_width)

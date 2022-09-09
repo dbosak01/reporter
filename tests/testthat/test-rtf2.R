@@ -2192,7 +2192,7 @@ test_that("rtf2-62: Carriage return in label row works.", {
 })
 
 
-test_that("rtf2-63: Carriage return in label row works.", {
+test_that("rtf2-63: Glue works.", {
   
   
   fp <- file.path(base_path, "rtf2/test63.rtf")

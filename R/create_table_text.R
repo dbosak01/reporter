@@ -695,12 +695,18 @@ get_table_body <- function(dat) {
       p <-df[i, j]
       if (!is.null(p) & !is.na(p))
         v <- p
+      
 
-      if (!is.control(nm[j]) & 
-          (trimws(df[i, "..blank"]) == "" | trimws(df[i, "..blank"]) == "L")) {
-
-        r <- paste0(r, v, " ")
-
+      if (!is.control(nm[j])) { 
+        if ("..blank" %in% names(df)) {
+          if (!trimws(df[i, "..blank"]) %in% c("B", "A")) {
+  
+            r <- paste0(r, v, " ")
+          
+          }
+        } else {
+          r <- paste0(r, v, " ") 
+        }
       }
     }
     

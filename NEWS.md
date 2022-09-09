@@ -7,8 +7,9 @@
 page footer.
 * Fixed bug when trying to create blank rows on an invisible column.
 * Fixed bug when trying to dedupe columns in stub.
+* Added glue functionality to titles, footnotes, page header, page footer, 
+and column labels.  
 * Updated logo.
-
 
 # reporter 1.3.5
 

@@ -832,6 +832,7 @@ test_that("user12: Complex table works as expected.", {
   
   if (dev) {
     library(readr)
+    library(fmtr)
     
     # Data Filepath
     dir_data <- file.path(data_dir, "data")
@@ -842,29 +843,17 @@ test_that("user12: Complex table works as expected.", {
     dat <- file.path(dir_data, "kk.csv") %>%
       read_csv() 
     
-    mfmt <- Vectorize(function(x) {
-      
-      if (is.na(x))
-        ret <- "-"
-      else 
-        ret <- as.character(x)
-    })
     
-    pfmt <- Vectorize(function(x) {
-      
-      if (is.na(x))
-        ret <- ""
-      else 
-        ret <- paste0("(", format(x, width = 4, justify = "right"), ")")
-    })
+    mfmt <- value(condition(is.na(x), "-"),
+                  condition(x == 0, "%d"),
+                  condition(TRUE, "%5.3f"))
     
-    nfmt <- Vectorize(function(x) {
-      
-      if (is.na(x))
-        ret <- ""
-      else 
-        ret <- paste0(format(x, width = 2, justify = "right"), "  ")
-    })
+    nfmt <- value(condition(is.na(x), " "), 
+                  condition(TRUE, "%2d"))
+    
+    pfmt <- value(condition(is.na(x), " "),
+                  condition(TRUE, "(%4.1f)"))
+    
     
     # Define table
     tbl <- create_table(dat, width = 9) %>% 
@@ -873,15 +862,15 @@ test_that("user12: Complex table works as expected.", {
       spanning_header(COL5, COL6, "LLY75", n = 19, underline = FALSE, label_align = "center") %>% 
       spanning_header(COL8, COL10, "Pairwise p-values*b") %>% 
       spanning_header(COL11, COL11, "Odds\nratios*c") %>% 
-      column_defaults(from = COL1, to = COL11, align = "center", width = .4) %>% 
+      column_defaults(from = COL1, to = COL11, align = "center", width = .45) %>% 
       stub(c(CATEGORY, LABEL), width = 3.25) %>% 
       define(CATEGORY, label_row = TRUE) %>% 
       define(LABEL, indent = .25) %>% 
-      define(COL1, label = "n", format = nfmt) %>% 
+      define(COL1, label = "n") %>% 
       define(COL2, label = "(%)", format = pfmt) %>% 
-      define(COL3, label = "n", format = nfmt) %>% 
+      define(COL3, label = "n") %>% 
       define(COL4, label = "(%)", format = pfmt) %>% 
-      define(COL5, label = "n", format = nfmt) %>% 
+      define(COL5, label = "n") %>% 
       define(COL6, label = "(%)", format = pfmt) %>% 
       define(COL7, label = "Overall\np-value*a", format = mfmt, width = .7) %>% 
       define(COL8, label = "LLY20\nvs\nLLY10", format = mfmt) %>% 
@@ -913,6 +902,8 @@ test_that("user12: Complex table works as expected.", {
     # Write out report
     res <- write_report(rpt)
     res
+    
+    file.show(res$modified_path)
     
     expect_equal(file.exists(res$modified_path), TRUE)
 
@@ -1055,5 +1046,126 @@ test_that("user15: Titles and footnotes only on first last page.", {
   res <-  write_report(rpt)
   
   expect_equal(file.exists(res$modified_path), TRUE)
+  
+})
+
+test_that("user16: Label row does not create extra blank spaces.", {
+  
+  library(libr)
+  library(fmtr)
+  
+  # Create temporary path
+  fp <- file.path(base_path, "user/user16")
+  
+  adsl <- read.table(header = TRUE, text = '
+    SITEID SITENAME         USUBJID AGE SEX RACE WEIGHT 
+    10003  "Advance ENT" 1000310001 22 M "WHITE" 74.843827
+    10003  "Advance ENT" 1000310002 56 F "ASIAN" 60.312484')
+  
+  adsl
+  
+  
+  adot <- read.table(header = TRUE, text = '
+  USUBJID    COHORT      TREATMENT                DOSE  DOSENUM  DOSEDATE   EAR   VISDAY VISDATE      ANAVISIT OBSRESP IMPRESP
+  1000310001 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" L     2     "2020-09-30" "Day 2"   No       NA
+  1000310001 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" L     4     "2020-10-03" "Day 3"   No       NA  
+  1000310001 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" L     8     "2020-10-06" "Week 1"  No       NA 
+  1000310001 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" L     14    "2020-10-12" "Week 2"  No       NA 
+  1000310001 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" L     28    "2020-10-26" "Week 4"  No       NA
+  1000310001 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" L     57    "2020-11-24" "Week 8"  No       No 
+  1000310002 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" R     2     "2020-09-30" "Day 2"   No       NA
+  1000310002 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" R     4     "2020-10-03" "Day 3"   No       NA  
+  1000310002 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" R     8     "2020-10-06" "Week 1"  No       NA 
+  1000310002 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" R     14    "2020-10-12" "Week 2"  No       NA 
+  1000310002 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" R     28    "2020-10-26" "Week 4"  Yes      NA 
+  1000310002 "COHORT 1"  "Single Dose Escalation" 0.03  1      "2020-09-29" R     57    "2020-11-24" "Week 8"  Yes      NA 
+                   ')
+  
+  adot
+  
+  
+
+  fc <- fcat(SEX = c("M" = "Male", "F" = "Female"),
+             AGE = "%d Years",
+             RACE = value(condition(x == "WHITE", "White"),
+                          condition(x == "BLACK", "Black or African American"),
+                          condition(x == "ASIAN", "Asian or Pacific Islander"),
+                          condition(TRUE, "Other")),
+             WEIGHT = "%6.2f kg",
+             EAR = c("L" = "Left", "R" = "Right"),
+             DOSE = "%4.2fug")
+  
+  
+  # Merge and assign formats
+  acomb <- 
+    datastep(adsl, format = fc,
+             merge = adot, merge_by = USUBJID, {})
+  
+  # Apply formats
+  acombf <- fdata(acomb) 
+  
+  acombf
+  
+  # Prepare final data for reporting
+  final <- 
+    datastep(acombf, by = USUBJID,
+             {
+               
+               BASELINE <- paste0("Investigator Site = ", SITEID,
+                                 " - ", SITENAME, ",\nSubject ID=", USUBJID,
+                                ",Age=", AGE, ",Sex=", SEX, ",Race=", RACE,
+                                  ",Weight=", WEIGHT)
+               
+               if (first.) {
+                 GROUP <- paste0(COHORT, " - ", TREATMENT, " - ", DOSE)
+                 DOSELBL <- paste0(DOSENUM, "/\n", DOSEDATE, "/\n", EAR)
+               } else {
+                 
+                 GROUP <- "" 
+               }
+               VSTLBL <- paste0(VISDAY, "/", VISDATE)
+               
+             })
+  
+  final
+  
+  tbl <- create_table(final, show_cols = "none", 
+                      width = 9, first_row_blank = TRUE) |> 
+    stub(v(BASELINE, GROUP), label = "Cohort") |> 
+    define(BASELINE, label_row = TRUE) |> 
+    define(GROUP) |> 
+    define(DOSELBL, label = "Dose\nDay/\nDate/\nTreated Ear", width = 1.5) |> 
+    define(VSTLBL, label = "Visit\nDay/Date", width = 1.5) |> 
+    define(ANAVISIT, label = "Analysis\nVisit", width = .75) |> 
+    define(OBSRESP, label = "Observed\nResponse", width = .75) |> 
+    define(IMPRESP, label = "Imputed\nResponse", width = .75) |> 
+    define(USUBJID, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, font = "Courier", font_size = 9) |> 
+    add_content(tbl) |> 
+    set_margins(top = 1, bottom = 1) |> 
+    page_header(c("Program:" %p% Sys.path(), "Study: 0598-CL-0101"), 
+                right = c("Draft", "Source: ADAE, ADOT"), width = 7) |> 
+    titles( "Appendix 10.2.6.1.2.1",
+            "TMP Complete Closure Response - Single Ascending Dose (SAD)",
+            "All Randomized Patients", align = "center", header = TRUE, blank_row = "below") |> 
+    footnotes("# Time to First Complete Closure of TMP.",
+              "Values flagged with '@' were excluded from the by-visit " %p% 
+                "analysis in tables showing the qualitative test results.",
+              blank_row = "none", footer = TRUE) |> 
+    page_footer("Date: " %p% toupper(fapply(Sys.time(), "%d%b%Y %H:%M:%S")),
+                "Astellas", "Page [pg] of [tpg]")
+  
+  res1 <- write_report(rpt, output_type = "RTF")
+  res2 <- write_report(rpt, output_type = "PDF")
+  
+  
+  #file.show(res1$modified_path)
+  #file.show(res2$modified_path)
+  
+  
+  expect_equal(file.exists(res1$modified_path), TRUE)
+  expect_equal(file.exists(res2$modified_path), TRUE)
+  
   
 })
