@@ -1130,29 +1130,29 @@ test_that("user16: Label row does not create extra blank spaces.", {
   final
   
   tbl <- create_table(final, show_cols = "none", 
-                      width = 9, first_row_blank = TRUE) |> 
-    stub(v(BASELINE, GROUP), label = "Cohort") |> 
-    define(BASELINE, label_row = TRUE) |> 
-    define(GROUP) |> 
-    define(DOSELBL, label = "Dose\nDay/\nDate/\nTreated Ear", width = 1.5) |> 
-    define(VSTLBL, label = "Visit\nDay/Date", width = 1.5) |> 
-    define(ANAVISIT, label = "Analysis\nVisit", width = .75) |> 
-    define(OBSRESP, label = "Observed\nResponse", width = .75) |> 
-    define(IMPRESP, label = "Imputed\nResponse", width = .75) |> 
+                      width = 9, first_row_blank = TRUE) %>% 
+    stub(v(BASELINE, GROUP), label = "Cohort") %>% 
+    define(BASELINE, label_row = TRUE) %>% 
+    define(GROUP) %>% 
+    define(DOSELBL, label = "Dose\nDay/\nDate/\nTreated Ear", width = 1.5) %>% 
+    define(VSTLBL, label = "Visit\nDay/Date", width = 1.5) %>% 
+    define(ANAVISIT, label = "Analysis\nVisit", width = .75) %>% 
+    define(OBSRESP, label = "Observed\nResponse", width = .75) %>% 
+    define(IMPRESP, label = "Imputed\nResponse", width = .75) %>% 
     define(USUBJID, blank_after = TRUE, visible = FALSE)
   
-  rpt <- create_report(fp, font = "Courier", font_size = 9) |> 
-    add_content(tbl) |> 
-    set_margins(top = 1, bottom = 1) |> 
+  rpt <- create_report(fp, font = "Courier", font_size = 9) %>% 
+    add_content(tbl) %>% 
+    set_margins(top = 1, bottom = 1) %>% 
     page_header(c("Program:" %p% Sys.path(), "Study: 0598-CL-0101"), 
-                right = c("Draft", "Source: ADAE, ADOT"), width = 7) |> 
+                right = c("Draft", "Source: ADAE, ADOT"), width = 7) %>% 
     titles( "Appendix 10.2.6.1.2.1",
             "TMP Complete Closure Response - Single Ascending Dose (SAD)",
-            "All Randomized Patients", align = "center", header = TRUE, blank_row = "below") |> 
+            "All Randomized Patients", align = "center", header = TRUE, blank_row = "below") %>% 
     footnotes("# Time to First Complete Closure of TMP.",
               "Values flagged with '@' were excluded from the by-visit " %p% 
                 "analysis in tables showing the qualitative test results.",
-              blank_row = "none", footer = TRUE) |> 
+              blank_row = "none", footer = TRUE) %>% 
     page_footer("Date: " %p% toupper(fapply(Sys.time(), "%d%b%Y %H:%M:%S")),
                 "Astellas", "Page [pg] of [tpg]")
   
