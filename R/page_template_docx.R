@@ -138,14 +138,22 @@ get_page_header_docx <- function(rs) {
     ret <- paste0(ret, "</w:tbl>")
 
     dev.off()
-
+    
     if (rs$page_header_blank_row == "below") {
       ret <- paste0(ret, rs$blank_row)
       cnt <- cnt + 1
     }
+    
+  }
+    
+  if (!is.null(rs$header_titles)) {
+    
+    tret <- get_titles_docx(rs$header_titles, rs$content_size[["width"]], rs)
+    ret <- paste0(ret, rs$table_break, tret$docx)
+    cnt <- cnt + tret$lines
+    
   }
 
-  
   res <- list(docx = ret, lines = cnt)
   
   return(res)
@@ -239,6 +247,14 @@ get_page_footer_docx <- function(rs) {
 
     ret <- paste0(get_page_numbers_docx(ret), "</w:tr>\n")
     ret <- paste0(ret, "</w:tbl>\n")
+  }
+  
+  if (!is.null(rs$footer_footnotes)) {
+    
+    tret <- get_footnotes_docx(rs$footer_footnotes, rs$content_size[["width"]], rs)
+    ret <- paste0(tret$docx, rs$table_break, ret)
+    cnt <- cnt + tret$lines
+    
   }
 
 

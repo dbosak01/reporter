@@ -384,11 +384,11 @@ with <strong>reporter</strong>. Here is an example:</p>
 <h3>Superscript and Subscript Functions</h3>
 <p>The <code>supsc()</code> function shown above is a superscript
 function. This function will translate a normal character into a
-superscript character. This function works by looking up a UTF-8
-superscript character based on the passed parameter string. The function
-will attempt to translate each character into a UTF-8 superscript
-equivalent. All numbers and most Latin letters are available in a
-superscript version.</p>
+superscript character. It works by looking up a UTF-8 superscript
+character based on the passed parameter string. The function will
+attempt to translate each character into a UTF-8 superscript equivalent.
+All numbers and most Latin letters are available in a superscript
+version.</p>
 <p>The <strong>common</strong> package includes two more useful
 functions: <code>subsc()</code> and <code>symbol()</code>. The
 <code>subsc()</code> function is similar to the superscript function,
@@ -454,7 +454,7 @@ can be embedded in any string.</p>
 </div>
 <div id="output-type-limitations" class="section level3">
 <h3>Output Type Limitations</h3>
-<p>The Unicode character will work on all output types, with one
+<p>The Unicode characters will work on all output types, with one
 exception. The PDF output type only supports superscripts for the
 numbers one, two, and three, and a few other special characters. PDF
 will render unsupported characters as a question mark. If you need to

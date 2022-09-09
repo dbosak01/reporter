@@ -58,7 +58,9 @@ and DOCX output types.}
 
 \item{header}{Whether to put the titles in the page header. Valid values
 are TRUE and FALSE.  Default is FALSE. This option only works on the RTF 
-output type, and only applies to titles assigned to the report object.}
+and DOCX output types, and only applies to titles assigned 
+to the report object.  Titles in the page header will appear on every page, 
+and be the same throughout the report.}
 }
 \value{
 The modified report.

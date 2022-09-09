@@ -1229,7 +1229,9 @@ title_header <- function(x, ..., right = "",
 #' and DOCX output types.
 #' @param header Whether to put the titles in the page header. Valid values
 #' are TRUE and FALSE.  Default is FALSE. This option only works on the RTF 
-#' output type, and only applies to titles assigned to the report object.
+#' and DOCX output types, and only applies to titles assigned 
+#' to the report object.  Titles in the page header will appear on every page, 
+#' and be the same throughout the report.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1422,8 +1424,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @param footer Whether to put the footnotes in the page footer. Valid
 #' values are TRUE and FALSE.  Default is FALSE.  This parameter only works
 #' with RTF and DOCX output types.  It also only applies to footnotes
-#' assigned to the report object.  Footnotes in the page footer will be the
-#' same throughout the report.
+#' assigned to the report object.  Footnotes in the page footer will 
+#' appear on every page, and be the same throughout the report.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -2153,7 +2155,7 @@ write_report <- function(x, file_path = NULL,
   # If there are header titles or footer footnotes, 
   # reassign to regular title and footnotes lists if not RTF.
   # This is the lowest risk way to deal with it.
-  if (!x$output_type %in% c("RTF") | x$font == "fixed") {
+  if (!x$output_type %in% c("RTF", "DOCX") | x$font == "fixed") {
     if (length(x$header_titles) > 0) {
       x$titles <- append(x$header_titles, x$titles)
       x$header_titles <- NULL

@@ -1053,7 +1053,7 @@ test_that("docx29: Titles and footnotes in header and footer works as expected",
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     titles("Report 1.0", "Simple Report", 
-           blank_row = "none", header = TRUE) %>%
+           blank_row = "none", header = TRUE, align = "left") %>%
     footnotes("My footnote", "Another footnote", "And another", 
               blank_row = "none", footer = TRUE) %>%
     page_footer("Left", "Center", "Right")

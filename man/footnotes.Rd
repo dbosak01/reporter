@@ -55,8 +55,8 @@ unit of measure is determined by the 'units' parameter on
 \item{footer}{Whether to put the footnotes in the page footer. Valid
 values are TRUE and FALSE.  Default is FALSE.  This parameter only works
 with RTF and DOCX output types.  It also only applies to footnotes
-assigned to the report object.  Footnotes in the page footer will be the
-same throughout the report.}
+assigned to the report object.  Footnotes in the page footer will 
+appear on every page, and be the same throughout the report.}
 }
 \value{
 The modified report.
