@@ -271,6 +271,8 @@ report?</a></li>
 <li><a href="#wraps">Is there a way to control page wraps?</a></li>
 <li><a href="#width">Is there a way to set the width of a
 table?</a></li>
+<li><a href="#curly">Why am I getting an error when using curly braces
+in my footnotes?</a></li>
 </ul>
 </div>
 <div id="content" class="section level2">
@@ -502,6 +504,20 @@ entire table. The width should be specified in the units identified on
 the <code>units</code> parameter on the <code>create_report()</code>
 function. See the <code>create_table()</code> function documentation for
 more information on the <code>width</code> parameter.</p>
+<p><a href="#top">top</a></p>
+<hr />
+</div>
+<div id="curly" class="section level3">
+<h3>Why am I getting an error when using curly braces in my
+footnotes?</h3>
+<p><strong>Q:</strong> I’m trying to use curly braces in my footnotes.
+For some reason, I keep getting an error. Why?</p>
+<p><strong>A:</strong> The curly braces are delimiter characters for the
+glue function, which is automatically run on titles, footnotes, and
+labels. You can use the curly braces to reference a variable or run a
+function from within string. To avoid the error, you can escape the glue
+functionality by doubling the curly braces. In other words, use
+“{{mystring}}” instead of “{mystring}.</p>
 <p><a href="#top">top</a></p>
 <hr />
 <!-- ### Question 1? {#q1} -->

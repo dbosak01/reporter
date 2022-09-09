@@ -614,3 +614,42 @@ test_that("utils29: invisible functions work as expected.", {
   expect_equal(translate_invisible("D", lst), "D")
   
 })
+
+test_that("utils30: gluev() works as expected.", {
+  
+  library(common)
+  
+  v1 <- c("here{supsc('1')}", "there{subsc('a')}")
+  
+  
+  res <- gluev(v1)
+  
+  res 
+  
+  expect_equal(res, c("here\U00B9", "there\U2090"))
+  
+  res2 <- gluev(NULL)
+  
+  expect_equal(is.null(res2), TRUE)
+})
+
+test_that("utils30: has_glue() works as expected.", {
+  
+  res1 <- has_glue()
+  
+  expect_equal(res1, TRUE)
+  
+  options("reporter.glue" = FALSE)
+  
+  res2 <- has_glue()
+
+  expect_equal(res2, FALSE)
+  
+  options("reporter.glue" = NULL)
+  
+  
+  res3 <- has_glue()
+  
+  expect_equal(res3, TRUE)
+  
+})

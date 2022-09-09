@@ -16,13 +16,14 @@ knitr::opts_chunk$set(
 #  dat$Month <-  as.Date(paste0("1973-", dat$Month, "-01"))
 #  
 #  # Define table
-#  tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone")) %>%
-#    titles("Table 9.6", "Air Quality Sample Report\U00B9",
+#  tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind",
+#                                         "Temp", "Ozone")) %>%
+#    titles("Table 9.6", "Air Quality Sample Report{supsc('1')}",   # Superscript 1
 #           borders = c("top", "bottom"), blank_row = "none") %>%
 #    column_defaults(width = .7) %>%
 #    define(Month, format = "%B", align = "left", width = 1) %>%
 #    define(Temp, format = "%.0f") %>%
-#    footnotes("\U00B9 New York, May to September 1973",
+#    footnotes("{supsc('1')}New York, May to September 1973",       # Superscript 1
 #              borders = c("top", "bottom"), blank_row = "none")
 #  
 #  # Define report
@@ -41,8 +42,18 @@ knitr::opts_chunk$set(
 
 ## ----eval=FALSE, echo=TRUE----------------------------------------------------
 #  
+#  # Create complex superscript expression
+#  ex1 <- "x" %p% supsc("(n+4)")
+#  
+#  # View expression
+#  ex1
+#  # [1] "x⁽ⁿ⁺⁴⁾"
+#  
+
+## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  
 #  # Append superscript using paste0()
-#  df[2, "A"] <- paste0(df[2, "A"], "\U00B2")
+#  df[2, "A"] <- df[2, "A"] %p% supsc('2')
 #  
 #  # View data frame
 #  df
@@ -55,15 +66,5 @@ knitr::opts_chunk$set(
 #  # 6  cyl 8 Cylinder 10 ( 52.6%)  4 ( 30.8%)
 #  # 7  cyl 6 Cylinder  4 ( 21.1%)  3 ( 23.1%)
 #  # 8  cyl 4 Cylinder  5 ( 26.3%)  6 ( 46.2%)
-#  
-
-## ----eval=FALSE, echo=TRUE----------------------------------------------------
-#  
-#  # Create complex unicode expression
-#  ex1 <- "x\U207D\U207F\U207A\U2074\U207E"
-#  
-#  # View expression
-#  ex1
-#  # [1] "x⁽ⁿ⁺⁴⁾"
 #  
 

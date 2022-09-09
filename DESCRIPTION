@@ -24,7 +24,8 @@ License: CC BY-NC 4.0
 Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues
-Depends: R (>= 3.6.0)
+Depends: R (>= 3.6.0), 
+         common
 Suggests: 
     testthat,
     magrittr,
@@ -46,6 +47,7 @@ Imports: fmtr,
          graphics,
          grDevices,
          zip, 
-         withr
+         withr,
+         glue
 RoxygenNote: 7.2.0
 VignetteBuilder: knitr

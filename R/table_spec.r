@@ -494,8 +494,15 @@ define <- function(x, vars, label = NULL, format = NULL,
   # This make subsequent processing much easier
   for (nm in vars_c) {
     
+    if (has_glue()) {
+      lbl <- gluev(label) 
+    } else {
+      
+      lbl <- label
+    }
     
-   def <- define_c(nm, label = label, format = format, 
+    
+   def <- define_c(nm, label = lbl, format = format, 
                    align=align, label_align=label_align, width=width,
                    visible=visible, n = n, blank_after=blank_after,
                    dedupe=dedupe, id_var = id_var, page_wrap = page_wrap,
@@ -1075,10 +1082,15 @@ spanning_header <- function(x, from, to, label = "",
   endpos <- match(t, nms)
   spn <- nms[startpos:endpos]
   
+  if (has_glue()) {
+    sh$label <- gluev(label)
+  } else {
+    sh$label <- label
+  }
+  
   sh$span_cols <- spn
   sh$from = f
   sh$to = t
-  sh$label = label
   sh$label_align = label_align
   sh$level = level
   sh$n = n
@@ -1300,8 +1312,11 @@ stub <- function(x, vars, label = "", label_align = NULL,
     }
   }
   
-  
-  def$label <- label
+  if (has_glue()) {
+    def$label <- gluev(label)
+  } else {
+    def$label <- label
+  }
   def$label_align <- label_align
   def$align <- align
   def$vars <- vars_c

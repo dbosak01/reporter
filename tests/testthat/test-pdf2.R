@@ -2164,10 +2164,45 @@ test_that("pdf2-57: Page header width works.", {
   
 })
 
-test_that("pdf2-58: Carriage return in label row works.", {
+
+test_that("pdf2-58: Glue feature works.", {
   
+  library(common)
   
   fp <- file.path(base_path, "pdf2/test58.pdf")
+  
+  tbl <- create_table(mtcars[1:10, ], borders = "outside") %>%
+    spanning_header(1, 4, label = "My span{subsc('4')}") %>%
+    define(mpg, label = "Mpg{subsc('3')}")
+  
+  myvar <- "23"
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    page_header(c("Left {supsc('2')}really long left ",
+                  "cell text to put it{supsc('3')} and more and more"), 
+                "Right{supsc('x')}") %>%
+    add_content(tbl) %>%
+    page_footer(c("left1{supsc('5')}", "left2{supsc('6')}"), "", 
+                "right{supsc('7')}") %>%
+    titles("Table 1.0{supsc('1')}", "IRIS Data Frame{{myvar}}",
+           blank_row = "below") %>%
+    footnotes("Here is a footnote{subsc('a')}", "And another{subsc('9')}")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+  
+})
+
+
+
+test_that("pdf2-59: Carriage return in label row works.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test59.pdf")
   
   
   # Read in prepared data
@@ -2211,6 +2246,36 @@ test_that("pdf2-58: Carriage return in label row works.", {
   res
   expect_equal(file.exists(fp), TRUE)
   
+  
+})
+
+test_that("pdf2-60: Spanning headers borders work as expected with no title border.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test60a.pdf")
+  
+  dat <- mtcars[1:15, ]
+  
+  tbl <- create_table(dat, borders = c("all")) %>%
+    spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
+    spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
+    spanning_header(qsec, vs, "Span 3", n = 10) %>%
+    spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>%
+    titles("Table 1.0", "My Nice Table", borders = "outside") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl)
+  
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 1)
   
 })
 

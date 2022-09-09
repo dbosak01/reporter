@@ -2683,3 +2683,35 @@ test_that("test80: Carriage return in label row works.", {
   
 })
 
+test_that("test81: Glue feature works.", {
+  
+  library(common)
+  
+  fp <- file.path(base_path, "output/test81.out")
+  
+  tbl <- create_table(mtcars[1:10, ], borders = "all") %>%
+    spanning_header(1, 4, label = "My span{subsc('4')}") %>%
+    define(mpg, label = "Mpg{subsc('3')}")
+  
+  myvar <- "23"
+  
+  rpt <- create_report(fp) %>%
+    page_header(c("Left {supsc('2')}really long left ",
+                       "cell text to put it{supsc('3')} and more and more"), 
+                "Right{supsc('x')}") %>%
+    add_content(tbl) %>%
+    page_footer(c("left1{supsc('5')}", "left2{supsc('6')}"), "", 
+                 "right{supsc('7')}") %>%
+     titles("Table 1.0{supsc('1')}", "IRIS Data Frame{{myvar}}",
+            blank_row = "below") %>%
+     footnotes("Here is a footnote{subsc('a')}", "And another{subsc('9')}")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+
+    
+})
+

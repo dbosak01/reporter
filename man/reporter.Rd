@@ -106,8 +106,7 @@ assumptions and limitations are as follows:
   support Base R plots.
   \item The package currently supports styling for HTML reports.  
   This styling allows setting background colors, font colors, border
-  colors, and some font sizing and bolding.  Styling for additional
-  output types will be available in future versions of the package.  
+  colors, and some font sizing and bolding.   
 }
 }
 

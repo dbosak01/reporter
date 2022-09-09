@@ -1373,3 +1373,43 @@ get_points <- function(left_bound, right_bound, widths, units, align) {
   return(ret)
 }
 
+
+gluev <- function(str) {
+ 
+  ret <- str
+  
+  if (!is.null(ret)) {
+    if (!all(is.na(ret))) {
+      if (typeof(ret) == "character") { 
+        ret <- glueint(str)
+      }
+    }
+  } 
+  
+  return(ret)
+}
+
+#' @import glue
+glueint <- Vectorize(function(str) {
+  
+  ret <- glue(str, .trim = FALSE)
+  
+  return(ret) 
+}, USE.NAMES = FALSE, SIMPLIFY = TRUE)
+
+
+#' @noRd
+has_glue <- function() {
+  
+ ret <- TRUE
+ 
+ opts <- options("reporter.glue")[[1]]
+ if (!is.null(opts)) {
+   if (opts == FALSE) {
+     ret <- FALSE 
+   }
+ }
+ 
+ return(ret)
+  
+}

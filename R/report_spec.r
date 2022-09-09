@@ -932,7 +932,8 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' # 
 #' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
-page_header <- function(x, left="", right="", blank_row = "none", width = NULL){
+page_header <- function(x, left="", right="", blank_row = "none", 
+                        width = NULL){
 
   if (!"report_spec" %in% class(x))
     stop("Page header can only be assigned to an object of class 'report_spec'")
@@ -952,8 +953,16 @@ page_header <- function(x, left="", right="", blank_row = "none", width = NULL){
   if (!is.null(x$title_hdr))
     stop("Cannot add both a page header and a title header.")
   
-  x$page_header_left <- left
-  x$page_header_right <- right
+  if (has_glue()) {
+    x$page_header_left <- gluev(left)
+    x$page_header_right <- gluev(right)
+
+  } else {
+    
+    x$page_header_left <- left
+    x$page_header_right <- right
+
+  }
   x$page_header_blank_row <- blank_row
   x$page_header_width <- width
 
@@ -1067,7 +1076,8 @@ page_header <- function(x, left="", right="", blank_row = "none", width = NULL){
 #' #     * In billions of dollars
 #' @export
 title_header <- function(x, ..., right = "", 
-                         blank_row = "below", borders = "none", width = NULL) {
+                         blank_row = "below", borders = "none", 
+                         width = NULL) {
   
 
   diff <- setdiff(class(x), c("list"))
@@ -1120,11 +1130,20 @@ title_header <- function(x, ..., right = "",
     
   }
   
+  ttls <- c(...)
+  
   # Assign attributes
-  ttl_hdr$titles <-  c(...)
+  if (has_glue()) {
+    ttl_hdr$titles <- gluev(ttls)
+    ttl_hdr$right <- gluev(right)
+  } else {
+    ttl_hdr$titles <-  ttls
+    ttl_hdr$right <- right
+  }
+  
   ttl_hdr$blank_row <- blank_row
   ttl_hdr$borders <- borders
-  ttl_hdr$right <- right
+
   ttl_hdr$width <- width
   
   x$title_hdr[[length(x$title_hdr) + 1]] <- ttl_hdr
@@ -1312,10 +1331,14 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     
   }
   
-      
+  ttls <- c(...)
   
   # Assign attributes
-  ttl$titles <-  c(...)
+  if (has_glue()) {
+    ttl$titles <- gluev(ttls)
+  } else {
+    ttl$titles <- ttls
+  }
   ttl$blank_row <- blank_row
   ttl$borders <- borders
   ttl$align <- align
@@ -1506,7 +1529,12 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     
   }
 
-  ftn$footnotes <- ft
+  if (has_glue()) {
+    ftn$footnotes <- gluev(ft)
+  } else {
+    ftn$footnotes <- ft
+  }
+  
   ftn$blank_row <- blank_row
   ftn$align <- align
   ftn$borders <- borders
@@ -1635,9 +1663,16 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
   if (!blank_row %in% c("none", "above"))
     stop("Invalid value for blank_row.  Valid values are 'above' or 'none'.")
   
-  x$page_footer_left <- left
-  x$page_footer_right <- right
-  x$page_footer_center <- center
+  if (has_glue()) {
+    x$page_footer_left <- gluev(left)
+    x$page_footer_right <- gluev(right)
+    x$page_footer_center <- gluev(center)
+    
+  } else {
+    x$page_footer_left <- left
+    x$page_footer_right <- right
+    x$page_footer_center <- center
+  }
   x$page_footer_blank_row <- blank_row
 
   return(x)

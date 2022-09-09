@@ -38,6 +38,7 @@ on the links below to navigate to the full question and answer content.
 * [Is there a way to control page breaks?](#breaks)
 * [Is there a way to control page wraps?](#wraps)
 * [Is there a way to set the width of a table?](#width)
+* [Why am I getting an error when using curly braces in my footnotes?](#curly)
 
 
 ## Content
@@ -299,6 +300,21 @@ function to set a width for the entire table. The width should be specified
 in the units identified on the `units` parameter on the `create_report()`
 function.  See the `create_table()` function documentation for more information
 on the `width` parameter.
+
+[top](#top)
+
+******
+
+### Why am I getting an error when using curly braces in my footnotes? {#curly}
+
+**Q:** I'm trying to use curly braces in my footnotes.  For some reason, I
+keep getting an error.  Why?
+
+**A:** The curly braces are delimiter characters for the glue function, which
+is automatically run on titles, footnotes, and labels. You can use the curly
+braces to reference a variable or run a function from within string. To avoid
+the error, you can escape the glue functionality by doubling the curly braces.
+In other words, use "{{mystring}}" instead of "{mystring}.
 
 [top](#top)
 

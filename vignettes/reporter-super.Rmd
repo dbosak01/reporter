@@ -1,8 +1,8 @@
 ---
-title: "Example 13: Superscripts and Subscripts"
+title: "Example 13: Superscripts, Subscripts, and Symbols"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example 13: Superscripts and Subscripts}
+  %\VignetteIndexEntry{Example 13: Superscripts, Subscripts, and Symbols}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,20 +14,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-### Adding Superscripts and Subscripts to a Report
+### Adding Superscripts, Subscripts, and Symbols to a Report
 
-It is very common to include superscripts and subscripts on a statistical report.
-These symbols clearly tie together footnotes with particular report elements. 
-
-The **reporter** package 
-supports superscripts and subscripts.  You may add superscripts and subscripts
-to your report by providing a Unicode superscript or subscript code.  In R, a
-Unicode character is indicated by a backslash (\\), the letter U, and 
-a four-digit number.  For example, a superscript number two (2) 
-is written as "\\U00B2".
-
-Here is an example of using Unicode superscripts in the title and footnote 
-of a report:
+It is very common to include superscripts, subscripts, and special symbols 
+on a statistical report. The **reporter** package 
+supports such features. You may add superscripts and subscripts
+to your titles, footnotes, page header, page footer, and labels for your
+column headers and spanning headers.  You can add them using a curly brace 
+delimiter and some useful functions from the **common** package.  The **common**
+package is loaded automatically with **reporter**.  Here is an example:
 
 ```{r eval=FALSE, echo=TRUE} 
 library(reporter)
@@ -41,13 +36,14 @@ dat <- airquality[sample(1:153, 15), ]
 dat$Month <-  as.Date(paste0("1973-", dat$Month, "-01"))
 
 # Define table
-tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", "Temp", "Ozone")) %>%
-  titles("Table 9.6", "Air Quality Sample Report\U00B9", 
+tbl <- create_table(dat, show_cols = c("Month", "Day", "Wind", 
+                                       "Temp", "Ozone")) %>%
+  titles("Table 9.6", "Air Quality Sample Report{supsc('1')}",   # Superscript 1
          borders = c("top", "bottom"), blank_row = "none") %>%
   column_defaults(width = .7) %>%
   define(Month, format = "%B", align = "left", width = 1) %>%
   define(Temp, format = "%.0f") %>%
-  footnotes("\U00B9 New York, May to September 1973", 
+  footnotes("{supsc('1')}New York, May to September 1973",       # Superscript 1
             borders = c("top", "bottom"), blank_row = "none") 
 
 # Define report
@@ -66,20 +62,61 @@ write_report(rpt)
 ```
 <img src="../man/images/super.png"/>
 
+
+### Superscript and Subscript Functions
+
+The `supsc()` function shown above is a superscript function. This function
+will translate a normal character into a superscript character.  It
+works by looking up a UTF-8 superscript character based on the passed parameter
+string.  The function will attempt to translate each character into a UTF-8 
+superscript equivalent.  All numbers and most Latin letters are available
+in a superscript version.
+
+The **common** package includes two more useful functions: `subsc()` and `symbol()`.
+The `subsc()` function is similar to the superscript function, except it looks
+up UTF-8 subscript characters. While UTF-8 subscript characters are more limited
+than the superscripts, the function will translate all numbers appropriately.
+
+Note that the `supsc()` and `subsc()` functions will translate the entire string.
+Translating the entire string means multiple characters can be combined
+to create complex superscript or subscript expressions.  Here is an
+example of such an expression:
+
+```{r eval=FALSE, echo=TRUE} 
+
+# Create complex superscript expression
+ex1 <- "x" %p% supsc("(n+4)")
+
+# View expression
+ex1
+# [1] "x⁽ⁿ⁺⁴⁾"
+
+```
+### Symbol Function
+
+Finally, the `symbol()` function will look up UTF-8 symbols.  The function
+uses HTML style keywords to identify the symbol to look up.  The function 
+supports keywords for trademarks, currencies, mathematical symbols, 
+logical symbols, Greek letters, and more. Here are a few 
+examples:
+
+<img src="../man/images/symbols.png"/>
+
+
 ### Superscripts and Subscripts in Table Cells
 
 To get superscripts or subscripts into table cells, they must
 be added to the table data prior to reporting.  Simply use the standard R 
 subset operators 
-to append the Unicode character to the desired cell value.
+to append the subscript or superscript to the desired cell value.
 
-Here is an example appending the superscript two into a cell in the second 
+Here is an example appending the superscript "two" into a cell in the second 
 row, column "A", using the MTCARS data frame from the previous example:
 
 ```{r eval=FALSE, echo=TRUE} 
 
 # Append superscript using paste0()
-df[2, "A"] <- paste0(df[2, "A"], "\U00B2")
+df[2, "A"] <- df[2, "A"] %p% supsc('2')
 
 # View data frame
 df
@@ -95,44 +132,24 @@ df
 
 ```
 
-### Unicode Superscript and Subscript Table
+### Additional Unicode Characters
 
-The below table shows all of the available numeric superscripts and subscripts.
-Note that in addition to superscript and subscript numbers, Unicode also 
-contains characters for common mathematical operators and some frequently 
-used letters.  
-
-<img src="../man/images/supertable.png"/>
-
-There are Unicode superscripts and subscripts available for
-most letters of the Latin alphabet, plus numerous special symbols.
-These codes may be discovered via an internet search, and can be used
-in the same way as the numbers shown above.
-
-### Complex Superscript and Subscript Expressions
-
-Multiple Unicode characters can be combined
-to create more complex superscript or subscript expressions.  Here is an
-example of such an expression:
-
-```{r eval=FALSE, echo=TRUE} 
-
-# Create complex unicode expression
-ex1 <- "x\U207D\U207F\U207A\U2074\U207E"
-
-# View expression
-ex1
-# [1] "x⁽ⁿ⁺⁴⁾"
-
-```
+The functions from the common package make it easy to add superscripts, 
+subscripts, and many symbols to your reports.  However, these functions
+do not include all possible special characters. If you need more characters, 
+you may add any UTF-8 character to a report using the Unicode escape "\\U".
+For example, the Unicode character for a superscript one (1) is "\\U00B9".
+There are millions of Unicode characters.
+These codes may be discovered via an internet search, and can be embedded
+in any string.
 
 ### Output Type Limitations
 
-The Unicode characters in the above table will work on all output types, with
-one exception.  The PDF output type only supports superscripts in the first
-row. In other words, it only supports superscripts for the numbers one, two, and 
-three.  PDF will render other Unicode superscript or subscript characters
-as a question mark.  If you need to output other superscripts or subscripts
+The Unicode characters will work on all output types, with
+one exception.  The PDF output type only supports superscripts for the numbers
+one, two, and three, and a few other special characters. 
+PDF will render unsupported characters
+as a question mark.  If you need to output an unsupported character
 with the PDF output type, it is recommended that you use parenthesis () or 
 the carrot ^ character to signify a superscript or subscript, or use a another
 supported symbol from the ASCII character set.

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Example 13: Superscripts and Subscripts • reporter</title>
+<title>Example 13: Superscripts, Subscripts, and Symbols • reporter</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="Example 13: Superscripts and Subscripts">
+<script src="../pkgdown.js"></script><script src="../extra.js"></script><meta property="og:title" content="Example 13: Superscripts, Subscripts, and Symbols">
 <meta property="og:description" content="reporter">
 <meta property="og:image" content="https://reporter.r-sassy.org/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -98,7 +98,7 @@
       <a href="../articles/reporter-styles.html">Example 12: Styles</a>
     </li>
     <li>
-      <a href="../articles/reporter-super.html">Example 13: Superscripts and Subscripts</a>
+      <a href="../articles/reporter-super.html">Example 13: Superscripts, Subscripts, and Symbols</a>
     </li>
     <li>
       <a href="../articles/reporter-more.html">More Examples</a>
@@ -133,7 +133,8 @@
       </header><script src="reporter-super_files/header-attrs-2.14/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Example 13: Superscripts and Subscripts</h1>
+      <h1 data-toc-skip>Example 13: Superscripts, Subscripts, and
+Symbols</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-super.Rmd"><code>vignettes/reporter-super.Rmd</code></a></small>
@@ -143,20 +144,17 @@
 
     
     
-<div id="adding-superscripts-and-subscripts-to-a-report" class="section level3">
+<div id="adding-superscripts-subscripts-and-symbols-to-a-report" class="section level3">
 <h3 class="hasAnchor">
-<a href="#adding-superscripts-and-subscripts-to-a-report" class="anchor"></a>Adding Superscripts and Subscripts to a Report</h3>
-<p>It is very common to include superscripts and subscripts on a
-statistical report. These symbols clearly tie together footnotes with
-particular report elements.</p>
-<p>The <strong>reporter</strong> package supports superscripts and
-subscripts. You may add superscripts and subscripts to your report by
-providing a Unicode superscript or subscript code. In R, a Unicode
-character is indicated by a backslash (\), the letter U, and a
-four-digit number. For example, a superscript number two (2) is written
-as “\U00B2”.</p>
-<p>Here is an example of using Unicode superscripts in the title and
-footnote of a report:</p>
+<a href="#adding-superscripts-subscripts-and-symbols-to-a-report" class="anchor"></a>Adding Superscripts, Subscripts, and Symbols to a Report</h3>
+<p>It is very common to include superscripts, subscripts, and special
+symbols on a statistical report. The <strong>reporter</strong> package
+supports such features. You may add superscripts and subscripts to your
+titles, footnotes, page header, page footer, and labels for your column
+headers and spanning headers. You can add them using a curly brace
+delimiter and some useful functions from the <strong>common</strong>
+package. The <strong>common</strong> package is loaded automatically
+with <strong>reporter</strong>. Here is an example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></span>
@@ -169,13 +167,14 @@ footnote of a report:</p>
 <span><span class="va">dat</span><span class="op">$</span><span class="va">Month</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"1973-"</span>, <span class="va">dat</span><span class="op">$</span><span class="va">Month</span>, <span class="st">"-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define table</span></span>
-<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">dat</span>, show_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Day"</span>, <span class="st">"Wind"</span>, <span class="st">"Temp"</span>, <span class="st">"Ozone"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 9.6"</span>, <span class="st">"Air Quality Sample Report\U00B9"</span>, </span>
+<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">dat</span>, show_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Day"</span>, <span class="st">"Wind"</span>, </span>
+<span>                                       <span class="st">"Temp"</span>, <span class="st">"Ozone"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 9.6"</span>, <span class="st">"Air Quality Sample Report{supsc('1')}"</span>,   <span class="co"># Superscript 1</span></span>
 <span>         borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"bottom"</span><span class="op">)</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">Month</span>, format <span class="op">=</span> <span class="st">"%B"</span>, align <span class="op">=</span> <span class="st">"left"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">Temp</span>, format <span class="op">=</span> <span class="st">"%.0f"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"\U00B9 New York, May to September 1973"</span>, </span>
+<span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"{supsc('1')}New York, May to September 1973"</span>,       <span class="co"># Superscript 1</span></span>
 <span>            borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"bottom"</span><span class="op">)</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Define report</span></span>
@@ -192,20 +191,59 @@ footnote of a report:</p>
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/super.png"></p>
 </div>
+<div id="superscript-and-subscript-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#superscript-and-subscript-functions" class="anchor"></a>Superscript and Subscript Functions</h3>
+<p>The <code><a href="https://rdrr.io/pkg/common/man/supsc.html">supsc()</a></code> function shown above is a superscript
+function. This function will translate a normal character into a
+superscript character. This function works by looking up a UTF-8
+superscript character based on the passed parameter string. The function
+will attempt to translate each character into a UTF-8 superscript
+equivalent. All numbers and most Latin letters are available in a
+superscript version.</p>
+<p>The <strong>common</strong> package includes two more useful
+functions: <code><a href="https://rdrr.io/pkg/common/man/subsc.html">subsc()</a></code> and <code><a href="https://rdrr.io/pkg/common/man/symbol.html">symbol()</a></code>. The
+<code><a href="https://rdrr.io/pkg/common/man/subsc.html">subsc()</a></code> function is similar to the superscript function,
+except it looks up UTF-8 subscript characters. While UTF-8 subscript
+characters are more limited than the superscripts, the function will
+translate all numbers appropriately.</p>
+<p>Note that the <code><a href="https://rdrr.io/pkg/common/man/supsc.html">supsc()</a></code> and <code><a href="https://rdrr.io/pkg/common/man/subsc.html">subsc()</a></code> functions
+will translate the entire string. Translating the entire string means
+multiple characters can be combined to create complex superscript or
+subscript expressions. Here is an example of such an expression:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Create complex superscript expression</span></span>
+<span><span class="va">ex1</span> <span class="op">&lt;-</span> <span class="st">"x"</span> <span class="op"><a href="https://rdrr.io/pkg/common/man/grapes-p-grapes.html">%p%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/common/man/supsc.html">supsc</a></span><span class="op">(</span><span class="st">"(n+4)"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># View expression</span></span>
+<span><span class="va">ex1</span></span>
+<span><span class="co"># [1] "x⁽ⁿ⁺⁴⁾"</span></span></code></pre></div>
+</div>
+<div id="symbol-function" class="section level3">
+<h3 class="hasAnchor">
+<a href="#symbol-function" class="anchor"></a>Symbol Function</h3>
+<p>Finally, the <code><a href="https://rdrr.io/pkg/common/man/symbol.html">symbol()</a></code> function will look up UTF-8
+symbols. The function uses HTML style keywords to identify the symbol to
+look up. The function supports keywords for trademarks, currencies,
+mathematical symbols, logical symbols, Greek letters, and more. Here are
+a few examples:</p>
+<p><img src="../man/images/symbols.png"></p>
+</div>
 <div id="superscripts-and-subscripts-in-table-cells" class="section level3">
 <h3 class="hasAnchor">
 <a href="#superscripts-and-subscripts-in-table-cells" class="anchor"></a>Superscripts and Subscripts in Table Cells</h3>
 <p>To get superscripts or subscripts into table cells, they must be
 added to the table data prior to reporting. Simply use the standard R
-subset operators to append the Unicode character to the desired cell
-value.</p>
-<p>Here is an example appending the superscript two into a cell in the
+subset operators to append the subscript or superscript to the desired
+cell value.</p>
+<p>Here is an example appending the superscript “two” into a cell in the
 second row, column “A”, using the MTCARS data frame from the previous
 example:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Append superscript using paste0()</span></span>
-<span><span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span>, <span class="st">"\U00B2"</span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/common/man/grapes-p-grapes.html">%p%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/common/man/supsc.html">supsc</a></span><span class="op">(</span><span class="st">'2'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># View data frame</span></span>
 <span><span class="va">df</span></span>
@@ -219,46 +257,29 @@ example:</p>
 <span><span class="co"># 7  cyl 6 Cylinder  4 ( 21.1%)  3 ( 23.1%)</span></span>
 <span><span class="co"># 8  cyl 4 Cylinder  5 ( 26.3%)  6 ( 46.2%)</span></span></code></pre></div>
 </div>
-<div id="unicode-superscript-and-subscript-table" class="section level3">
+<div id="additional-unicode-characters" class="section level3">
 <h3 class="hasAnchor">
-<a href="#unicode-superscript-and-subscript-table" class="anchor"></a>Unicode Superscript and Subscript Table</h3>
-<p>The below table shows all of the available numeric superscripts and
-subscripts. Note that in addition to superscript and subscript numbers,
-Unicode also contains characters for common mathematical operators and
-some frequently used letters.</p>
-<p><img src="../man/images/supertable.png"></p>
-<p>There are Unicode superscripts and subscripts available for most
-letters of the Latin alphabet, plus numerous special symbols. These
-codes may be discovered via an internet search, and can be used in the
-same way as the numbers shown above.</p>
-</div>
-<div id="complex-superscript-and-subscript-expressions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#complex-superscript-and-subscript-expressions" class="anchor"></a>Complex Superscript and Subscript Expressions</h3>
-<p>Multiple Unicode characters can be combined to create more complex
-superscript or subscript expressions. Here is an example of such an
-expression:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Create complex unicode expression</span></span>
-<span><span class="va">ex1</span> <span class="op">&lt;-</span> <span class="st">"x\U207D\U207F\U207A\U2074\U207E"</span></span>
-<span></span>
-<span><span class="co"># View expression</span></span>
-<span><span class="va">ex1</span></span>
-<span><span class="co"># [1] "x⁽ⁿ⁺⁴⁾"</span></span></code></pre></div>
+<a href="#additional-unicode-characters" class="anchor"></a>Additional Unicode Characters</h3>
+<p>The functions from the common package make it easy to add
+superscripts, subscripts, and many symbols to your reports. However,
+these functions do not include all possible special characters. If you
+need more characters, you may add any UTF-8 character to a report using
+the Unicode escape “\U”. For example, the Unicode character for a
+superscript one (1) is “\U00B9”. There are millions of Unicode
+characters. These codes may be discovered via an internet search, and
+can be embedded in any string.</p>
 </div>
 <div id="output-type-limitations" class="section level3">
 <h3 class="hasAnchor">
 <a href="#output-type-limitations" class="anchor"></a>Output Type Limitations</h3>
-<p>The Unicode characters in the above table will work on all output
-types, with one exception. The PDF output type only supports
-superscripts in the first row. In other words, it only supports
-superscripts for the numbers one, two, and three. PDF will render other
-Unicode superscript or subscript characters as a question mark. If you
-need to output other superscripts or subscripts with the PDF output
-type, it is recommended that you use parenthesis () or the carrot ^
-character to signify a superscript or subscript, or use a another
-supported symbol from the ASCII character set.</p>
+<p>The Unicode characters will work on all output types, with one
+exception. The PDF output type only supports superscripts for the
+numbers one, two, and three, and a few other special characters. PDF
+will render unsupported characters as a question mark. If you need to
+output an unsupported character with the PDF output type, it is
+recommended that you use parenthesis () or the carrot ^ character to
+signify a superscript or subscript, or use a another supported symbol
+from the ASCII character set.</p>
 <p>Next: <a href="reporter-more.html">More Examples</a></p>
 </div>
   </div>
