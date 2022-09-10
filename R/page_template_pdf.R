@@ -328,6 +328,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
   lh <- rs$line_height
 
 
+
   start_offset <- NULL
   
   yline <- ystart 
@@ -335,6 +336,8 @@ get_titles_pdf <- function(ttllst, content_width, rs,
   if (length(ttllst) > 0) {
 
     for (ttls in ttllst) {
+      
+      cols <- ttls$columns
 
       if (ttls$width == "page")
         width <- rs$content_size[["width"]]
