@@ -266,15 +266,20 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
     
     for (ttls in ttllst) {
       
+      cols <- ttls$columns
+      
       
       if (ttls$width == "page")
-        width <- rs$content_size[["width"]]
-      else if (ttls$width == "content")
-        width <- content_width
+        width <- rs$content_size[["width"]] 
+      else if (ttls$width == "content") 
+        width <- content_width 
       else if (is.numeric(ttls$width))
-        width <- ttls$width
+        width <- ttls$width 
         
       w <- round(width * conv)
+      
+      cwidth <- width / cols
+      cw <- round(w / cols)
       
 
       if (ttls$align == "center")
@@ -292,12 +297,209 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
       
+      
+      al <- ""
+      # Get blank row above
+      if (any(ttls$blank_row %in% c("above", "both"))) {
+        
+        alcnt <- 1
+        
+        tb <- get_cell_borders(1, 1, length(ttls$titles) + alcnt, 1, ttls$borders)
+        
+        al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
+                     algn, "\\cell\\row\n")
+        cnt <- cnt + 1 
+        
+      }
+      
+      bl <- ""
+      # Get blank row below
+      if (any(ttls$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        
+        tb <- get_cell_borders(length(ttls$titles) + alcnt + blcnt, 1, 
+                               length(ttls$titles) + alcnt + blcnt, 
+                               1, ttls$borders)
+        
+        sm <- get_spacing_multiplier(rs$font_size)
+        
+        bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
+                     algn, sm, "\\cell\\row\n")
+        cnt <- cnt + 1
+      }
+      
+      # Append blank row above
+      if (al != "")
+        ret <- append(ret, al)
+      
+      fz <- ""
+      fs <- ""
+      # Get font size
+      if (!is.null(ttls$font_size)) {
+        
+        fz <- paste0("\\fs", ttls$font_size * 2, 
+                     get_spacing_multiplier(ttls$font_size)) 
+        fs <- paste0("\\fs", rs$font_size * 2)
+      }
+      
+      # Reset column width accumulation
+      cwa <- 0
+      
+      # Calculate total number of rows in this block
+      rws <- ceiling(length(ttls$titles) / cols) + alcnt + blcnt
+
+      i <- 1
+      while (i <= length(ttls$titles)) {    
+        
+        mxlns <- 0
+        
+        # Calculate current row
+        rw <- ceiling(i / cols)
+
+        # Start row
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta))
+        
+        for (j in seq_len(cols)) {
+          
+          # Get border specs for this cell
+          b <- get_cell_borders(rw + alcnt, j, 
+                                rws, 
+                                cols, ttls$borders)
+          
+          # Not all cells have titles
+          if (i > length(ttls$titles))
+            vl <- ""
+          else 
+            vl <- ttls$titles[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+           if (j == 1)
+             calgn <- "\\ql"
+           else 
+             calgn <- "\\qr"
+          } else if (cols == 3) {
+           if (j == 1)
+             calgn <- "\\ql"
+           else if (j == 2)
+             calgn <- "\\qc"
+           else if (j == 3) 
+             calgn <- "\\qr"
+          }
+          
+          if (j == 1) 
+            cwa <- 0
+        
+          # RTF cell widths are absolute ending points
+          cwa <- cwa + cw
+          
+          # Split title strings if they exceed width
+          tmp <- split_string_rtf(vl, cwidth, rs$units)
+          
+          # Track max lines for counting
+          if (tmp$lines > mxlns)
+            mxlns <- tmp$lines
+
+          # Add bold if needed
+          tb <- tmp$rtf
+          if (ttls$bold)
+            tb <- paste0("\\b ", tmp$rtf, "\\b0")
+          
+          # Contruct cell from constituent parts
+          ret <- append(ret, paste0(b, "\\cellx", cwa, 
+                                    calgn, fz, " ", tb, fs, "\\cell"))
+          
+          i <- i + 1
+          
+        }
+        
+        # End row
+        ret <- append(ret, "\\row\n")
+
+        # Track lines
+        cnt <- cnt + mxlns
+      }
+      
+      # Append blank row below
+      if (bl != "")
+        ret <- append(ret, bl)
+      
+      if (any(ttls$borders %in% c("outside", "all", "bottom")))
+        border_flag <- TRUE
+      
+      dev.off()
+    
+    }
+    
+  }
+  
+  res <- list(rtf = paste0(ret, collapse = ""), 
+              lines = cnt, 
+              twips = cnt * lh,
+              border_flag = border_flag)
+  
+  return(res)
+}
+
+
+
+#' @import grDevices
+#' @noRd
+get_titles_rtf_back <- function(ttllst, content_width, rs, talgn = "center") {
+  
+  ret <- c()
+  cnt <- 0
+  twps <- 0
+  
+  conv <- rs$twip_conversion
+  lh <- rs$row_height
+  border_flag <- FALSE
+  
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
+  
+  if (length(ttllst) > 0) {
+    
+    for (ttls in ttllst) {
+      
+      
+      if (ttls$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttls$width == "content")
+        width <- content_width
+      else if (is.numeric(ttls$width))
+        width <- ttls$width
+      
+      w <- round(width * conv)
+      
+      
+      if (ttls$align == "center")
+        algn <- "\\qc"
+      else if (ttls$align == "right")
+        algn <- "\\qr"
+      else 
+        algn <- "\\ql"
+      
+      border_flag <- FALSE
+      alcnt <- 0
+      blcnt <- 0
+      
+      # Open device context
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
       for (i in seq_along(ttls$titles)) {
         
-
+        
         
         al <- ""
-
+        
         if (i == 1) {
           if (any(ttls$blank_row %in% c("above", "both"))) {
             
@@ -306,9 +508,9 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
             tb <- get_cell_borders(i, 1, length(ttls$titles) + alcnt, 1, ttls$borders)
             
             al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
-                                      algn, "\\cell\\row\n")
+                         algn, "\\cell\\row\n")
             cnt <- cnt + 1 
-
+            
           }
         }
         
@@ -360,11 +562,11 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
                                   algn, fz, " ", tb, fs, "\\cell\\row\n"))
         if (bl != "")
           ret <- append(ret, bl)
-
+        
         cnt <- cnt + tmp$lines
       }
       dev.off()
-    
+      
     }
     
   }

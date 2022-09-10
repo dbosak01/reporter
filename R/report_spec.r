@@ -1232,6 +1232,13 @@ title_header <- function(x, ..., right = "",
 #' and DOCX output types, and only applies to titles assigned 
 #' to the report object.  Titles in the page header will appear on every page, 
 #' and be the same throughout the report.
+#' @param columns The number of columns for the title block. Valid values
+#' are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the title
+#' block will be split into two columns, each aligned to the outside.  If 
+#' this parameter is set to 3, the title block will be split into 3 columns,
+#' with the outer columns aligned to the outside and the middle column
+#' aligned center.  Titles are assigned to cells from top left to bottom right.
+#' Currently only works with RTF and PDF.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1281,7 +1288,7 @@ title_header <- function(x, ..., right = "",
 #' @export
 titles <- function(x, ..., align = "center", blank_row = "below", 
                    borders = "none", width = NULL, bold = FALSE, 
-                   font_size = NULL, header = FALSE){
+                   font_size = NULL, header = FALSE, columns = 1){
 
   # Create title structure
   ttl <- structure(list(), class = c("title_spec", "list"))
@@ -1348,6 +1355,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   ttl$bold <- bold
   ttl$font_size <- font_size
   ttl$header <- header
+  ttl$columns <- columns
 
   if (header == TRUE)
     x$header_titles[[length(x$header_titles) + 1]] <- ttl

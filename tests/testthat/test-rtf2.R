@@ -1926,7 +1926,7 @@ test_that("rtf2-55: Titles and footnotes in header and footer works as expected"
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
     titles("Report 1.0", "Simple Report", 
-           blank_row = "none", header = TRUE) %>%
+           blank_row = "none", header = TRUE, columns = 1) %>%
     footnotes("My footnote", "Another footnote", "And another", 
               blank_row = "none", footer = TRUE) %>%
     page_footer("Left", "Center", "Right")
@@ -2242,6 +2242,101 @@ test_that("rtf2-63: Glue works.", {
   
   
 })
+
+
+test_that("rtf2-64: Title columns work 1 column.", {
+  
+  fp <- file.path(base_path, "rtf2/test64.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "left") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-65: Title columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "rtf2/test65.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", "Left", "Right",
+           blank_row = "below", columns =  2) %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-66: Title columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "rtf2/test66.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", "My right thing", "", "Center",
+           blank_row = "below", columns =  3) %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-67: Multiple title blocks work as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test67.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    titles("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
 
 
 # User Tests --------------------------------------------------------------

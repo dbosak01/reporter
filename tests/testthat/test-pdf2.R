@@ -2280,6 +2280,102 @@ test_that("pdf2-60: Spanning headers borders work as expected with no title bord
 })
 
 
+
+test_that("rtf2-61: Title columns work 1 column.", {
+  
+  fp <- file.path(base_path, "pdf2/test61.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "left") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-62: Title columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "pdf2/test62.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", "Left", "Right",
+           blank_row = "below", columns =  2) %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-63: Title columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "pdf2/test63.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", "My right thing", "", "Center",
+           blank_row = "below", columns =  3) %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-64: Multiple title blocks work as expected.", {
+  
+  fp <- file.path(base_path, "pdf2/test64.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    titles("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+
 # # User Tests --------------------------------------------------------------
 
 # Lots of special characters not working
