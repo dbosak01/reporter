@@ -66,18 +66,18 @@ site [here](https://reporter.r-sassy.org/articles/reporter.html).
 ### Getting Help
 
 If you need help, the first place 
-to turn to is the [reporter](https://reporter.r-sassy.org) web site. The web site
+to turn to is the [reporter](https://reporter.r-sassy.org/) web site. The web site
 has full documentation on all **reporter** functions.
 
 If you want to look at the code for the **reporter** package, visit the
-github page [here](https://github.com/dbosak01/reporter).
+github page [here](https://github.com/dbosak01/reporter/).
 
 If you encounter a bug or have a feature request, please submit an issue 
-[here](https://github.com/dbosak01/reporter/issues).
+[here](https://github.com/dbosak01/reporter/issues/).
 
 ### See Also
 
 The **reporter** package is part of the **sassy** meta-package. 
 The **sassy** meta-package includes several packages that help make R
 easier for SAS® programmers.  You can read more about the **sassy** package
-[here](https://sassy.r-sassy.org).
+[here](https://sassy.r-sassy.org/).

@@ -237,6 +237,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
     
     for (ttls in ttllst) {
       
+      cols <- ttls$columns
       
       if (ttls$width == "page")
         width <- rs$content_size[["width"]]
@@ -245,6 +246,211 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
       else if (is.numeric(ttls$width))
         width <- ttls$width
 
+      w <- round(width, 3)
+      
+      cwidth <- width / cols
+      cw <- w / cols
+      
+      if (ttls$align %in% c("centre", "center"))
+        algn <- "text-align: center;"
+      else if (ttls$align == "right")
+        algn <- "text-align: right;"
+      else
+        algn <- "text-align: left;"
+      
+      alcnt <- 0
+      blcnt <- 0
+      
+      # Open device context
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      ret[length(ret) + 1] <- paste0("<table ",
+                                     "style=\"width:", w, u, ";", 
+                                      sty,
+                                     "\">\n")
+      
+      al <- ""
+      if (any(ttls$blank_row %in% c("above", "both"))) {
+        
+        alcnt <- 1
+        
+        tb <- get_cell_borders_html(1, 1, length(ttls$titles) + alcnt, 
+                                    1, ttls$borders, 
+                                    border_color = get_style(rs, "border_color"))
+        
+        if (tb == "")
+          al <- paste0("<tr><td colspan=\"", cols, "\">&nbsp;</td></tr>\n")
+        else 
+          al <- paste0("<tr><td style=\"", tb, "\" colspan=\"", cols, 
+                       "\">&nbsp;</td></tr>\n")
+        
+        # Can append now, since it is first
+        ret[length(ret) + 1] <- al
+        
+        cnt <- cnt + 1
+      }
+      
+      bl <- ""
+      if (any(ttls$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        
+        tb <- get_cell_borders_html(length(ttls$titles) + alcnt + blcnt, 1,
+                                    length(ttls$titles) + alcnt + blcnt,
+                                    1, ttls$borders,
+                                    border_color = get_style(rs, "border_color"))
+        
+        if (tb == "")
+          bl <- paste0("<tr><td colspan=\"", cols, "\">&nbsp;</td></tr>\n")
+        else 
+          bl <- paste0("<tr><td style=\"", tb, "\" colspan=\"", cols, 
+                       "\">&nbsp;</td></tr>\n")
+        
+        # Wait to append until after title rows
+        
+        cnt <- cnt + 1
+      }
+        
+    
+      i <- 1
+      while (i <= length(ttls$titles)) {
+        
+        
+        # Calculate current row
+        rwnum <- ceiling(i / cols)
+        
+        mxlns <- 0
+        rw <- "<tr>"
+        
+        for (j in seq_len(cols)) {
+          
+          b <- get_cell_borders_html(rwnum + alcnt, j,
+                                length(ttls$titles) + alcnt + blcnt,
+                                cols, ttls$borders,
+                                border_color = get_style(rs, "border_color"))
+          
+          # Not all cells have titles
+          if (i > length(ttls$titles))
+            vl <- ""
+          else 
+            vl <- ttls$titles[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "text-align: left;"
+            else 
+              calgn <- "text-align: right;"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "text-align: left;"
+            else if (j == 2)
+              calgn <- "text-align: center;"
+            else if (j == 3) 
+              calgn <- "text-align: right;"
+          }
+          
+          cws <- paste0("width:", cw, u, ";")
+          valgn <- "vertical-align:text-top;"
+          
+          # Split title strings if they exceed width
+          tmp <- split_string_html(vl, cwidth, rs$units)
+          
+          # Track max lines for counting
+          if (tmp$lines > mxlns)
+            mxlns <- tmp$lines
+          
+          if (ttls$bold)
+            tstr <- paste0("<b>", encodeHTML(tmp$html), "</b>")
+          else 
+            tstr <- encodeHTML(tmp$html)
+          
+          fz <- ""
+          if (!is.null(ttls$font_size)){
+            
+            fz <- paste0("font-size:", ttls$font_size, "pt;") 
+          }
+          
+          # Concatenate title string
+          rw <- paste0(rw, paste0("<td style=\"", cws, b, fz, calgn, valgn, "\">",  
+                                  tstr, "</td>\n"))
+          
+          
+          i <- i + 1
+        }
+        
+        ret <- append(ret, paste0(rw, "</tr>\n"))
+
+        # Keep track of lines
+        cnt <- cnt + mxlns
+        
+        # A flag to indicate that this block has bottom borders.  
+        # Used to eliminate border duplication on subsequent blocks.
+        if ("bottom" %in% get_outer_borders(ttls$borders))
+          border_flag <- TRUE
+        
+
+      }
+      
+      # Append blank row at bottom
+      if (bl != "")
+        ret <- append(ret, bl)
+      
+      ret[length(ret) + 1] <- "</table>"
+      dev.off()
+      
+
+    }
+    
+  }
+  
+
+  
+  res <- list(html = paste0(ret, collapse = ""), 
+              lines = cnt,
+              border_flag = border_flag)
+  
+  return(res)
+}
+
+
+#' @import grDevices
+#' @noRd
+get_titles_html_back <- function(ttllst, content_width, rs, talgn = "center") {
+  
+  ret <- c()
+  cnt <- 0
+  border_flag <- FALSE
+  
+  # ta <- "align=\"left\" "
+  # if (talgn == "right")
+  #   ta <- "align=\"right\" "
+  # else if (talgn %in% c("center", "centre"))
+  #   ta <- "align=\"center\" "
+  
+  sty <- paste0(get_style_html(rs, "title_font_color"),
+                get_style_html(rs, "title_background"),
+                get_style_html(rs, "title_font_bold"),
+                get_style_html(rs, "title_font_size"))
+  
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+  
+  if (length(ttllst) > 0) {
+    
+    for (ttls in ttllst) {
+      
+      
+      if (ttls$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttls$width == "content")
+        width <- content_width
+      else if (is.numeric(ttls$width))
+        width <- ttls$width
+      
       w <- round(width, 3)
       
       if (ttls$align %in% c("centre", "center"))
@@ -273,12 +479,12 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
         al <- ""
         if (i == 1) {
           if (any(ttls$blank_row %in% c("above", "both"))) {
-
+            
             alcnt <- 1
-
+            
             tb <- get_cell_borders_html(i, 1, length(ttls$titles) + alcnt, 
-                                   1, ttls$borders, 
-                                   border_color = get_style(rs, "border_color"))
+                                        1, ttls$borders, 
+                                        border_color = get_style(rs, "border_color"))
             
             if (tb == "")
               al <- "<tr><td>&nbsp;</td></tr>\n"
@@ -295,10 +501,10 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
             blcnt <- 1
             
             tb <- get_cell_borders_html(i + alcnt + blcnt, 1,
-                                   length(ttls$titles) + alcnt + blcnt,
-                                   1, ttls$borders,
-                                   border_color = get_style(rs, "border_color"))
-
+                                        length(ttls$titles) + alcnt + blcnt,
+                                        1, ttls$borders,
+                                        border_color = get_style(rs, "border_color"))
+            
             if (tb == "")
               bl <- "<tr><td>&nbsp;</td></tr>\n"
             else 
@@ -306,13 +512,13 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
             
             cnt <- cnt + 1
           }
-
+          
         }
         
         b <- get_cell_borders_html(i + alcnt, 1,
-                              length(ttls$titles) + alcnt + blcnt,
-                              1, ttls$borders,
-                              border_color = get_style(rs, "border_color"))
+                                   length(ttls$titles) + alcnt + blcnt,
+                                   1, ttls$borders,
+                                   border_color = get_style(rs, "border_color"))
         
         # Split title strings if they exceed width
         tmp <- split_string_html(ttls$titles[[i]], width, rs$units)
@@ -342,7 +548,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
                                     tstr, 
                                     "</td></tr>\n"))
         }
-          
+        
         if (bl != "")
           ret <- append(ret, bl)
         
@@ -357,12 +563,12 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
       ret[length(ret) + 1] <- "</table>"
       dev.off()
       
-
+      
     }
     
   }
   
-
+  
   
   res <- list(html = paste0(ret, collapse = ""), 
               lines = cnt,
@@ -370,6 +576,7 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
   
   return(res)
 }
+
 
 #' @import grDevices
 #' @noRd
