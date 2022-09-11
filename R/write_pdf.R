@@ -426,8 +426,10 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   ret <- list()
   
   # Determined by trial and error
+  # Courier used to calculate incorrectly. 
+  # This was an adjustment.  Appears to be better now.
   if (tolower(fontname) == "courier")
-    fontscale <- 87
+    fontscale <- 100  # 87
   else 
     fontscale <- 100
   
@@ -507,7 +509,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                 ifelse(is.null(cnt$font_size), 
                                                       fontsize, cnt$font_size), 
                                 units,
-                                multiplier = 1.03) # to match split_strings
+                                multiplier = 1.03) # 1.03 to match split_strings
             if (cnt$align == "left")
               nx <- cnt$alignx * conversion
             else if (cnt$align == "right")

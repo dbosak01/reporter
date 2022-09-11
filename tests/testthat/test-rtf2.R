@@ -2341,7 +2341,7 @@ test_that("rtf2-67: Multiple title blocks work as expected.", {
 
 # User Tests --------------------------------------------------------------
 
-test_that("rtf2-user1: demo table works.", {
+test_that("user1: demo table works.", {
   
   if (dev) {
     library(tidyr)
@@ -2478,7 +2478,7 @@ test_that("rtf2-user1: demo table works.", {
   
 })
 
-test_that("rtf2-user2: demo table with stub works.", {
+test_that("user2: demo table with stub works.", {
   
   
   if (dev) {

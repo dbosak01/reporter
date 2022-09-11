@@ -305,6 +305,9 @@ test_that("utils16: get_width function works as expected.", {
   res4
   expect_equal(res3 == cin(res4), TRUE)
   
+  # get_text_width("This is cool and this is cooler and more an more.", 
+  #                "Courier", 10, multiplier = .5)
+  
 })
 
 test_that("utils17: has_bottom_footnotes works as expected.", {

@@ -2281,19 +2281,19 @@ test_that("pdf2-60: Spanning headers borders work as expected with no title bord
 
 
 
-test_that("rtf2-61: Title columns work 1 column.", {
+test_that("pdf2-61: Title columns work 1 column.", {
   
   fp <- file.path(base_path, "pdf2/test61.pdf")
   
-  tbl <- create_table(iris[1:15, ], borders = "all") %>%
-    define(Species, blank_after = TRUE, visible = FALSE)
+  tbl <- create_table(iris[1:15, ], borders = "all")  %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame2",
+           blank_row = "both", columns =  1, align = "center",
+           borders = "outside") 
   
   rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
-    titles("Table 1.0", "IRIS Data Frame",
-           blank_row = "below", columns =  1, align = "left") %>%
     footnotes("Here is a footnote", "And another")
   
   
@@ -2303,19 +2303,18 @@ test_that("rtf2-61: Title columns work 1 column.", {
   
 })
 
-test_that("rtf2-62: Title columns work 2 columns.", {
+test_that("pdf2-62: Title columns work 2 columns.", {
   
   fp <- file.path(base_path, "pdf2/test62.pdf")
   
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
-    define(Species, blank_after = TRUE, visible = FALSE)
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
+           blank_row = "below", columns =  3, borders = "all")
   
   rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
-    page_footer("left", "", "right") %>%
-    titles("Table 1.0", "IRIS Data Frame", "Left", "Right",
-           blank_row = "below", columns =  2) %>%
+    page_footer("left", "", "right")  %>%
     footnotes("Here is a footnote", "And another")
   
   
@@ -2325,29 +2324,38 @@ test_that("rtf2-62: Title columns work 2 columns.", {
   
 })
 
-test_that("rtf2-63: Title columns work 3 columns.", {
+test_that("pdf2-63: Title columns work 3 columns.", {
   
   fp <- file.path(base_path, "pdf2/test63.pdf")
   
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
   
-  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+  
+  rght <- paste("Here is a big long text string to see how the automatic", 
+                "wrapping is happing in a reduced size cell on the right.")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier", 
+                       font_size = 10) %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
-    titles("Table 1.0", "IRIS Data Frame", "My right thing", "", "Center",
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+           "      My right thing", "", "Center", rght,
            blank_row = "below", columns =  3) %>%
-    footnotes("Here is a footnote", "And another")
+    footnotes("Here is a footnote", "And another", "A",
+      "Here is a longer footnote to see if I can figure out the alignment pattern.",
+              align = "right")
   
   
   res <- write_report(rpt)
+  res
   
   expect_equal(file.exists(fp), TRUE)
   
 })
 
-test_that("rtf2-64: Multiple title blocks work as expected.", {
+test_that("pdf2-64: Multiple title blocks work as expected.", {
   
   fp <- file.path(base_path, "pdf2/test64.pdf")
   
@@ -2708,9 +2716,13 @@ test_that("user3: listings works.", {
       page_footer(left = "Time", right = "Page [pg] of [tpg]") %>%
       footnotes("My footnotes")
 
+    stm <- Sys.time()
     #Write out report
     res <- write_report(rpt, output_type = "PDF")
-
+    
+    etm <- Sys.time()
+    etm - stm
+    
     expect_equal(file.exists(fp), TRUE)
 
 
