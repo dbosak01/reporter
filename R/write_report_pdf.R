@@ -76,6 +76,7 @@ write_pdf_output <- function(rs, ls, pdf_path) {
                   margin_top = rs$margin_top,
                   margin_left = rs$margin_left,
                   fontsize = rs$font_size,
+                  fontname = rs$font,
                   page_height = rs$page_size[2],
                   page_width = rs$page_size[1],
                   orientation = rs$orientation,

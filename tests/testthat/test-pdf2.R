@@ -2256,14 +2256,14 @@ test_that("pdf2-60: Spanning headers borders work as expected with no title bord
   
   dat <- mtcars[1:15, ]
   
-  tbl <- create_table(dat, borders = c("all")) %>%
+  tbl <- create_table(dat, borders = c("top", "bottom")) %>%
     spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table", borders = c("all"), blank_row = "none", 
+    titles("Table 1.0", "My Nice Table", borders = c("none"), blank_row = "none", 
            columns = 2) %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "outside", blank_row = "none")
+    footnotes("My footnote 1", "My footnote 2", borders = "none", blank_row = "none")
   
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
@@ -2371,7 +2371,7 @@ test_that("pdf2-64: Multiple title blocks work as expected.", {
            blank_row = "below", columns =  1, align = "center", width = 7,
            borders = "all") %>%
     titles("Table 2.0", "IRIS Data Frame2", "Left", "Right",
-           blank_row = "below", columns =  2, borders = "all") %>%
+           blank_row = "below", columns =  2, borders = "none") %>%
     titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
            blank_row = "below", columns =  3, borders = "all") %>%
     footnotes("Here is a footnote", "And another")
