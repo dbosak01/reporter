@@ -290,12 +290,6 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   blnks <- c()
   
-  # Get row count by summing ..row variable
-  # if ("..row" %in% names(pi$data)) {
-  #   rcnt <- sum(pi$data$..row)
-  # } else {
-  #   rcnt <- nrow(pi$data) 
-  # }
   
   # Determine sum of all lines
   rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
@@ -309,50 +303,16 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
                                   colspan = ccnt, pi$col_width,
                                   content_brdrs = ts$borders)
   
-  # Deal with cell padding.  Don't count this in line count.
-  # cp <- paste0("\\li", rs$cell_padding, "\\ri", rs$cell_padding, rs$spacing_multiplier)
-  
-  # On LibreOffice, have to protect the table from the title width or
-  # the table row will inherit the title row width. Terrible problem.
-  # tpt <- "{\\pard\\fs1\\sl0\\par}"
-  # if (any(ts$borders %in% c("all", "top", "outside"))) {
-  #   if (ttls$border_flag | rs$page_template$titles$border_flag |  
-  #       rs$page_template$title_hdr$border_flag)
-  #     tpt <- ""
-  #   
-  #   if (length(pgby) > 0) {
-  #     if (pgby$border_flag)
-  #       tpt <- ""
-  #   }
-  # }
-  
-  # Same thing as above with titles.  If footnote block is contiguous
-  # with table and footnotes are wider than table, row width of footnotes
-  # will infect row width of table.  On libre only.  So this is to protect
-  # the table width.
-  # bpt <- "{\\pard\\fs1\\sl0\\par}"
-  # if (any(ts$borders %in% c("all", "top", "outside"))) {
-  #   if (!is.null(ftnts)) {
-  #     if (ftnts$border_flag)
-  #       bpt <- ""
-  #   }
-  #   
-  #   if (!is.null(rs$page_template$footnotes)) {
-  #     if (rs$page_template$footnotes$border_flag)
-  #       bpt <- ""
-  #   }
-  # }
 
+  # Get units
   u <- rs$units
   if (u == "inches")
     u <- "in"
 
+  # Table borders
   tb <- get_table_borders_docx(ts$borders)
   
-  # Added buffer to avoid header label wrapping, but it is making the table too wide
-  # tw <- sum(round(sum(pi$col_width, na.rm = TRUE) * conv),
-  #           round(length(pi$col_width[!is.na(pi$col_width)]) * .08 * conv))
-  #tw <- round(sum(sum(pi$col_width, na.rm = TRUE) * conv)) 
+  # Table width
   tw <- round(ls * conv)
  
   
@@ -360,7 +320,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   ta <- get_indent_docx(pi$table_align, rs$line_size, tw, 
                         rs$base_indent, ts$borders, conv)
   
-  
+  # Construct table 
   ts <- paste0("<w:tbl>", "<w:tblPr>",
                ta,
                '<w:tblStyle w:val="TableGrid"/>',

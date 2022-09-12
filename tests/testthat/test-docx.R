@@ -1121,6 +1121,108 @@ test_that("docx31: Titles and footnotes in header and footer no page header/foot
   
 })
 
+test_that("docx32: Title columns work 1 column.", {
+  
+  fp <- file.path(base_path, "docx/test32.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all")  %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame3",
+           blank_row = "both", columns =  1, align = "center",
+           borders = c("outside")) 
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx33: Title columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "docx/test33.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
+           blank_row = c("above", "below"), columns =  2, borders = "outside")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right")  %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx34: Title columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "docx/test34.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rght <- paste("Here is a big long text string to see how the automatic", 
+                "wrapping is happening in a reduced size cell on the right.")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier", 
+                       font_size = 10) %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+           "      My right thing", "", "Center", rght,
+           blank_row = "below", columns =  3, borders = "none") %>%
+    footnotes("Here is a footnote", "And another", "A",
+              "Here is a longer footnote to see if I can figure out the alignment pattern.",
+              align = "right")
+  
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx35: Multiple title blocks work as expected.", {
+  
+  fp <- file.path(base_path, "docx/test35.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    titles("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+
 # User Tests --------------------------------------------------------------
 
 

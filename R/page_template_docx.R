@@ -283,6 +283,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
     
     for (ttls in ttllst) {
       
+      cols <- ttls$columns
       
       if (ttls$width == "page")
         width <- rs$content_size[["width"]]
@@ -294,8 +295,15 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
 
       w <- round(width * conv)
       
+      # Calculate cell widths
+      cw <- round(w / cols)
+      cwidth <- width / cols
+      
+      cwdths <- rep(cwidth, cols)
+      names(cwdths) <- paste0("col", seq_len(cols))
+      
       # Get grid for title block
-      grd <- get_col_grid(c(title=width), conv)
+      grd <- get_col_grid(cwdths, conv)
       
       
       if (ttls$align %in% c("centre", "center"))
@@ -331,6 +339,222 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       ret[length(ret) + 1] <- paste0("<w:tbl>",
                                      "<w:tblPr>",
+                                     '<w:tblStyle w:val="TableGrid"/>',
+                                     rs$cell_margin,
+                                     "<w:tblW w:w=\"", w, "\"/>", ta, tb, 
+                                     "</w:tblPr>\n", grd)
+      
+      # Get spanning for blank rows
+      spn <- paste0('<w:gridSpan w:val="', cols , '"/>')
+      
+      al <- ""
+      if (any(ttls$blank_row %in% c("above", "both"))) {
+        
+        alcnt <- 1
+        
+        al <- paste0("<w:tr>", rht, 
+                     "<w:tc><w:tcPr>", spn, '</w:tcPr><w:p><w:r><w:t>', 
+                     "</w:t></w:r></w:p></w:tc></w:tr>\n")
+        
+        ret <- append(ret, al)
+        
+        cnt <- cnt + 1
+      }
+      
+      
+      bb <- ""
+      if (any(ttls$borders %in% c("bottom", "outside"))) {
+        
+        bb <- get_cell_borders_docx(2, 1, 2, 1, ttls$borders)
+        
+      }
+      
+      bl <- ""
+      if (any(ttls$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        
+
+        
+        bl <- paste0("<w:tr>", rht, 
+                     "<w:tc>'<w:tcPr>'", bb, spn, '</w:tcPr>',
+                     "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+        
+        bb <- ""  # needed?
+        
+        cnt <- cnt + 1
+      }
+      
+      
+      i <- 1
+      while (i <= length(ttls$titles)) {
+        
+        mxlns <- 0
+        
+        # Calculate current row
+        rwnum <- ceiling(i / cols)
+        
+        rw <- ""
+        
+        for (j in seq_len(cols)) {
+          
+          # Not all cells have titles
+          if (i > length(ttls$titles))
+            vl <- ""
+          else 
+            vl <- ttls$titles[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "left"
+            else 
+              calgn <- "right"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "left"
+            else if (j == 2)
+              calgn <- "center"
+            else if (j == 3) 
+              calgn <- "right"
+          }
+
+          # Split title strings if they exceed width
+          tmp <- split_string_html(vl, cwidth, rs$units)
+          
+          # Track max lines for counting
+          if (tmp$lines > mxlns)
+            mxlns <- tmp$lines
+          
+          # Get paragraph 
+          tstr <- para(tmp$html, calgn, ttls$font_size, ttls$bold)
+
+          cwdth <- paste0('<w:tcW w:w="', cw,'"/>')
+          
+          # Append cell
+          rw <- paste0(rw, "<w:tc><w:tcPr>", cwdth, "</w:tcPr>", tstr, "</w:tc>\n")
+          
+          
+          i <- i + 1
+        }
+        
+        # Row height has to be determined based on max number of lines in cell
+        if (is.null(ttls$font_size)) {
+          
+          srht <- get_row_height(round(rs$row_height * mxlns * conv))
+          
+        } else {
+          
+          srht <- get_row_height(round(get_rh(rs$font, ttls$font_size) * mxlns * conv))
+          
+        }
+        
+        # Construct row
+        ret <- append(ret, paste0("<w:tr>", srht, rw, "</w:tr>\n"))
+        
+        # Track lines
+        cnt <- cnt + mxlns
+
+      }
+      
+      if (bl != "")
+        ret <- append(ret, bl)
+      
+      if (cflag) {
+        ret[length(ret) + 1] <- paste0("</w:tbl>")
+      } else {
+        ret[length(ret) + 1] <- paste0("</w:tbl>", rs$table_break)
+      }
+      
+      # A flag to indicate that this block has bottom borders.  
+      # Used to eliminate border duplication on subsequent blocks.
+      if ("bottom" %in% get_outer_borders(ttls$borders))
+        border_flag <- TRUE
+      
+      dev.off()
+      
+
+    }
+    
+  }
+  
+
+  
+  res <- list(docx = paste0(ret, collapse = ""), 
+              lines = cnt,
+              border_flag = border_flag)
+  
+  return(res)
+}
+
+
+#' @import grDevices
+#' @noRd
+get_titles_docx_back <- function(ttllst, content_width, rs, talgn = "center", 
+                            colspan = 0, col_widths = NULL, 
+                            content_brdrs = NULL) {
+  
+  ret <- c()
+  cnt <- 0
+  border_flag <- FALSE
+  conv <- rs$twip_conversion
+  rht <- get_row_height(round(rs$row_height * conv))
+  cflag <- FALSE
+  
+  
+  if (length(ttllst) > 0) {
+    
+    for (ttls in ttllst) {
+      
+      
+      if (ttls$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ttls$width == "content") {
+        width <- content_width
+        cflag <- TRUE
+      } else if (is.numeric(ttls$width))
+        width <- ttls$width
+      
+      w <- round(width * conv)
+      
+      # Get grid for title block
+      grd <- get_col_grid(c(title=width), conv)
+      
+      
+      if (ttls$align %in% c("centre", "center"))
+        algn <- "center"
+      else if (ttls$align == "right")
+        algn <- "right"
+      else
+        algn <- "left"
+      
+      brd <- ttls$borders
+      # If content borders are on, align indent with content
+      if (!is.null(content_brdrs)) {
+        
+        if (any(content_brdrs %in% c("all", "outside", "body", "left")))
+          brd <- "outside"
+        
+      }
+      
+      # Get indent codes for alignment
+      ta <- get_indent_docx(talgn, rs$line_size, w, 
+                            rs$base_indent, brd, conv)
+      
+      
+      alcnt <- 0
+      blcnt <- 0
+      
+      # Open device context
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      
+      tb <- get_table_borders_docx(ttls$borders)
+      
+      ret[length(ret) + 1] <- paste0("<w:tbl>",
+                                     "<w:tblPr>",
                                      rs$cell_margin,
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb, 
                                      "</w:tblPr>\n", grd)
@@ -342,22 +566,22 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
         al <- ""
         if (i == 1) {
           if (any(ttls$blank_row %in% c("above", "both"))) {
-
+            
             alcnt <- 1
-
-
-              al <- paste0("<w:tr>", rht, 
-                    "<w:tc>", '<w:p><w:r><w:t>', 
-                    "</w:t></w:r></w:p></w:tc></w:tr>\n")
-
+            
+            
+            al <- paste0("<w:tr>", rht, 
+                         "<w:tc>", '<w:p><w:r><w:t>', 
+                         "</w:t></w:r></w:p></w:tc></w:tr>\n")
+            
             
             cnt <- cnt + 1
           }
         }
         
         bb <- ""
-
-    
+        
+        
         bl <- ""
         if (i == length(ttls$titles)) {
           
@@ -372,22 +596,22 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
           if (any(ttls$blank_row %in% c("below", "both"))) {
             blcnt <- 1
             
-              bl <- paste0("<w:tr>", rht, 
-                    "<w:tc>", bb,
-                    "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
-              
-              bb <- ""
+            bl <- paste0("<w:tr>", rht, 
+                         "<w:tc>", bb,
+                         "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+            
+            bb <- ""
             
             cnt <- cnt + 1
           }
-
+          
         }
         
         
         # Split title strings if they exceed width
         tmp <- split_string_html(ttls$titles[[i]], width, rs$units)
         
-
+        
         tstr <- para(tmp$html, algn, ttls$font_size, ttls$bold)
         
         
@@ -405,11 +629,11 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
         } else {
           
           srht <- get_row_height(round(get_rh(rs$font, ttls$font_size) * tmp$lines * conv))
-
+          
           ret <- append(ret, paste0("<w:tr>", srht, "<w:tc>", bb, tstr, 
                                     "</w:tc></w:tr>\n"))
         }
-          
+        
         if (bl != "")
           ret <- append(ret, bl)
         
@@ -430,12 +654,12 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       dev.off()
       
-
+      
     }
     
   }
   
-
+  
   
   res <- list(docx = paste0(ret, collapse = ""), 
               lines = cnt,

@@ -1299,7 +1299,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
   if (!is.null(x$title_hdr))
     stop("Cannot add both titles and a title header.")
   
-  if (!blank_row %in% c("above", "below", "both", "none"))
+  if (!all(blank_row %in% c("above", "below", "both", "none")))
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
@@ -1500,11 +1500,11 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
                "'center', and 'centre'"))
   
   if (!is.null(valign)) {
-    if (!valign %in% c("top", "bottom"))
+    if (!all(valign %in% c("top", "bottom")))
       stop(paste("Valign parameter invalid. Valid values are 'top' and 'bottom'"))
   }
   
-  if (!blank_row %in% c("above", "below", "both", "none"))
+  if (!all(blank_row %in% c("above", "below", "both", "none")))
     stop(paste("Blank row parameter invalid.  Valid values are", 
                "'above', 'below', 'both', or 'none'."))
   
