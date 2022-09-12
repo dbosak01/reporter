@@ -453,13 +453,7 @@ get_titles_pdf <- function(ttllst, content_width, rs,
           if (tmp$lines > mxlns)
             mxlns <- tmp$lines
           
-          # Inside borders
-          if (any(brdrs %in% c("all", "inside")) & i > 1) {
-            
-            ret[[length(ret) + 1]] <- page_hline(lb * conv, 
-                                                 yline + rwln - lh + bs + 1, 
-                                                 (rb - lb) * conv) 
-          }
+
           
           # Recalculate boundaries for cells
           clb <- lb + (cwidth * (j - 1))
@@ -482,11 +476,22 @@ get_titles_pdf <- function(ttllst, content_width, rs,
             rwln <- rwln + lh
           }
           
+
+          
           i <- i + 1
         }
         
+        
         yline <- yline + (lh * mxlns)
         pnts <- pnts + (lh * mxlns)
+        
+        # Inside borders
+        if (any(brdrs %in% c("all", "inside")) & i > 1) {
+          
+          ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                               yline - lh + bs + 1, 
+                                               (rb - lb) * conv) 
+        }
 
         cnt <- cnt + mxlns
 
@@ -565,6 +570,19 @@ get_titles_pdf <- function(ttllst, content_width, rs,
                                              (cnt * lh) + badj) 
         
       }
+      
+      if (any(brdrs %in% c("all", "inside")) & cols > 1) {
+        
+        
+        for (k in seq_len(cols - 1)) {
+        
+          ret[[length(ret) + 1]] <- page_vline((lb + (cwidth * k)) * conv, 
+                                               ypos, 
+                                               (cnt * lh) + badj) 
+        }
+        
+      }
+      
 
     }
     

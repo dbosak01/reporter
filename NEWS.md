@@ -9,6 +9,9 @@ page footer.
 * Fixed bug when trying to dedupe columns in stub.
 * Added glue functionality to titles, footnotes, page header, page footer, 
 and column labels.  
+* Added "columns" parameter on `titles()` function to allow the title
+block to have between 1 and 3 columns.  
+* Fixed some bugs on PDF borders.
 * Updated logo.
 
 # reporter 1.3.5

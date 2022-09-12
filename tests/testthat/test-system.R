@@ -2816,4 +2816,29 @@ test_that("test85: Multiple title blocks work as expected.", {
   
 })
 
+test_that("test86: Titles can be passed as a vector.", {
+  
+  fp <- file.path(base_path, "output/test86.out")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  ttl <- c("Title1", "Title2", "Title3")
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles(ttl,
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "none") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
 

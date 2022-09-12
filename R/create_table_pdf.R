@@ -751,7 +751,8 @@ get_table_header_pdf <- function(rs, ts, widths, lbls, halgns, talgn,
 #' @description Return a vector of pdf codes for the table spanning headers
 #' @details Basic idea of this function is to figure out which columns 
 #' the header spans, add widths, then call get_table_header.  Everything
-#' from there is the same.  
+#' from there is the same.  Border adjustments are the closest thing to spaghetti
+#' in this package. But it works.
 #' @import stats
 #' @noRd
 get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
@@ -811,11 +812,22 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   
   ret <- list()
   
-  lline <- ystart
-  if (brdr_flag) {
-    lline <- ystart + bs
-  } 
+  tbrdrs <- any(brdrs %in% c("top", "outside", "all"))
   
+  # Nightmare
+  lline <- ystart
+  if (brdr_flag & !tbrdrs) {
+    lline <- ystart + bs
+  } else if (brdr_flag & tbrdrs) {
+    if (all(brdrs %in% "outside"))
+      lline <- ystart + 1
+    else 
+      lline <- ystart + bs 
+  } else if (!brdr_flag & tbrdrs) {
+    lline <- ystart + bs + bs
+  }
+  
+  ybegin <- lline
   
   # Open device context
   pdf(NULL)
@@ -956,9 +968,9 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
   if (length(lvls) > 0) {
 
     
-    ypos <- ystart - rh + bs 
+    ypos <- ybegin - rh #+ bs 
     
-    if (any(brdrs %in% c("all", "outside", "top"))) {
+    if (any(brdrs %in% c("top", "outside"))) {
       
       ret[[length(ret) + 1]] <- page_hline(tlb * conv,
                                            ypos,
@@ -993,9 +1005,13 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
     }
   }
   
+  pnts <- cnts * rh
+  if (!brdr_flag & tbrdrs)
+    pnts <- pnts + bs
+  
   res <- list(pdf = ret, 
               lines = cnts, 
-              points = (cnts * rh),
+              points = pnts,
               border_flag = border_flag)
   
   return(res)

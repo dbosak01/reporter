@@ -2252,7 +2252,7 @@ test_that("pdf2-59: Carriage return in label row works.", {
 test_that("pdf2-60: Spanning headers borders work as expected with no title border.", {
   
   
-  fp <- file.path(base_path, "pdf2/test60a.pdf")
+  fp <- file.path(base_path, "pdf2/test60.pdf")
   
   dat <- mtcars[1:15, ]
   
@@ -2261,18 +2261,19 @@ test_that("pdf2-60: Spanning headers borders work as expected with no title bord
     spanning_header(hp, wt, "Span 2", underline = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table", borders = "outside") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "outside")
+    titles("Table 1.0", "My Nice Table", borders = c("all"), blank_row = "none", 
+           columns = 2) %>%
+    footnotes("My footnote 1", "My footnote 2", borders = "outside", blank_row = "none")
   
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
+    page_header("Left", "Right") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl)
   
   
   res <- write_report(rpt)
   res
-  res$column_widths
   
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
@@ -2307,9 +2308,9 @@ test_that("pdf2-62: Title columns work 2 columns.", {
   
   fp <- file.path(base_path, "pdf2/test62.pdf")
   
-  tbl <- create_table(iris[1:15, ], borders = "all") %>%
-    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
-           blank_row = "below", columns =  3, borders = "all")
+  tbl <- create_table(iris[1:15, ], borders = "none") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right", "mo\nre",
+           blank_row = "below", columns =  2, borders = "all")
   
   rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
     add_content(tbl) %>%
