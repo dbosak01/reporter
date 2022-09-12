@@ -107,6 +107,140 @@ get_titles <- function(titles, content_width, page_width, uchar, char_width) {
   
   ret <- c()
   
+
+  
+  if (!is.null(titles)) { 
+    
+    for (ttl in titles) {
+      
+      if (!any(class(ttl) == "title_spec")) {
+        stop("titles parameter value is not a title spec.")
+      }
+      
+      cols <- ttl$columns
+      
+      if (ttl$width == "page")
+        width <- page_width
+      else if (ttl$width == "content")
+        width <- content_width
+      else if (is.numeric(ttl$width))
+        width <- ceiling(ttl$width / char_width)
+      
+      cll <- round(width / cols)
+      
+      ll <- width 
+      
+      
+      algn <- ttl$align
+      if (algn == "centre")
+        algn <- "center"
+          
+      if (any(ttl$blank_row %in% c("above", "both")) & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <- ""
+      
+      if (any(ttl$borders %in% c("top", "all")) & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <-  paste0(rep(uchar, ll), 
+                                               collapse = "")
+      i <- 1
+      while (i <= length(ttl$titles)) {
+        
+        ln <- ""
+        
+        for (j in seq_len(cols)) {
+      
+          # Not all cells have titles
+          if (i > length(ttl$titles))
+            t <- ""
+          else 
+            t <- ttl$titles[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "left"
+            else 
+              calgn <- "right"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "left"
+            else if (j == 2)
+              calgn <- "center"
+            else if (j == 3) 
+              calgn <- "right"
+          }
+          
+          gp <- cll - nchar(t)
+          
+          #print("titles")
+          if (gp > 0) {
+            
+            if (calgn == "left")
+              ln <- paste0(ln, pad_right(t, cll))
+            else if (calgn == "right")
+              ln <- paste0(ln, pad_left(t, cll))
+            else if (calgn == "center")
+              ln <- paste0(ln, pad_both(t, cll))
+            
+          } else {
+            warning(paste0("Title exceeds available width.",
+                        "\nTitle: ", t,
+                        "\nTitle width: ", nchar(t),
+                        "\nLine length: ", cll))
+            
+            tgp <- cll - 3
+  
+            if (tgp >= 0) {
+              if (ttl$align == "left") {
+                ln <- paste0(substr(pad_right(t, cll), 1, tgp), "...")
+              } else if (ttl$align == "right") {
+                ln <- paste0("...", substr(pad_left(t, cll), 1, tgp))
+              } else if (ttl$align == "center" | ttl$align == "centre") {
+                ln <- paste0(substr(pad_both(t, cll), 1, tgp), "...")
+              }
+              
+            } else ln <- ""
+            
+          }
+          
+          i <- i + 1
+        
+        }
+        
+        ret[length(ret) + 1] <- ln
+      }
+      
+      if (any(ttl$borders %in% c("bottom", "all")) & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll ),  collapse = "")
+      
+      if (any(ttl$blank_row %in% c("below", "both")) & length(ttl$titles) > 0)
+        ret[length(ret) + 1] <- ""
+    }
+    
+  }
+  
+  
+  return(ret)
+}
+
+
+
+#' Get title text strings suitable for printing
+#' @import stringi
+#' @param titles A list of title objects
+#' @param width The width to set the title strings to
+#' @return A vector of strings
+#' @noRd
+get_titles_back <- function(titles, content_width, page_width, uchar, char_width) {
+  
+  if (is.null(content_width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  ret <- c()
+  
   if (!is.null(titles)) { 
     
     for (ttl in titles) {
@@ -123,16 +257,16 @@ get_titles <- function(titles, content_width, page_width, uchar, char_width) {
         width <- ceiling(ttl$width / char_width)
       
       ll <- width 
-          
+      
       if (ttl$blank_row %in% c("above", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
       
       if (any(ttl$borders %in% c("top", "all")) & length(ttl$titles) > 0)
         ret[length(ret) + 1] <-  paste0(rep(uchar, ll), 
-                                               collapse = "")
+                                        collapse = "")
       
       for (i in seq_along(ttl$titles)) {
-      
+        
         t <- ttl$titles[i]
         
         gp <- ll - nchar(t)
@@ -149,12 +283,12 @@ get_titles <- function(titles, content_width, page_width, uchar, char_width) {
           
         } else {
           warning(paste0("Title exceeds available width.",
-                      "\nTitle: ", t,
-                      "\nTitle width: ", nchar(t),
-                      "\nLine length: ", ll))
+                         "\nTitle: ", t,
+                         "\nTitle width: ", nchar(t),
+                         "\nLine length: ", ll))
           
           tgp <- ll - 3
-
+          
           if (tgp >= 0) {
             if (ttl$align == "left") {
               ln <- paste0(substr(pad_right(t, ll), 1, tgp), "...")
@@ -175,7 +309,7 @@ get_titles <- function(titles, content_width, page_width, uchar, char_width) {
       
       if (any(ttl$borders %in% c("bottom", "all")) & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- paste0(rep(uchar, ll ), 
-                                              collapse = "")
+                                       collapse = "")
       
       if (ttl$blank_row %in% c("below", "both") & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
@@ -186,7 +320,6 @@ get_titles <- function(titles, content_width, page_width, uchar, char_width) {
   
   return(ret)
 }
-
 
 #' Get page by text strings suitable for printing
 #' @import stringi
