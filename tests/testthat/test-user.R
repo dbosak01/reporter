@@ -1144,10 +1144,11 @@ test_that("user16: Label row does not create extra blank spaces.", {
   rpt <- create_report(fp, font = "Courier", font_size = 9) %>% 
     add_content(tbl) %>% 
     set_margins(top = 1, bottom = 1) %>% 
-    page_header(c("Program:" %p% Sys.path(), "Study: 0598-CL-0101"), 
-                right = c("Draft", "Source: ADAE, ADOT"), width = 7) %>% 
-    titles( "Appendix 10.2.6.1.2.1",
-            "TMP Complete Closure Response - Single Ascending Dose (SAD)",
+    page_header("Program:" %p% Sys.path(),  
+                right = "Draft", width = 7) %>% 
+    titles("Study: 0598-CL-0101", "Appendix 10.2.6.1.2.1", 
+           "Source: ADAE, ADOT", columns = 3, header = TRUE, blank_row = "none") %>%
+    titles( "TMP Complete Closure Response - Single Ascending Dose (SAD)",
             "All Randomized Patients", align = "center", header = TRUE, blank_row = "below") %>% 
     footnotes("# Time to First Complete Closure of TMP.",
               "Values flagged with '@' were excluded from the by-visit " %p% 
