@@ -903,7 +903,7 @@ test_that("user12: Complex table works as expected.", {
     res <- write_report(rpt)
     res
     
-    file.show(res$modified_path)
+    #file.show(res$modified_path)
     
     expect_equal(file.exists(res$modified_path), TRUE)
 
@@ -1169,3 +1169,4 @@ test_that("user16: Label row does not create extra blank spaces.", {
   
   
 })
+

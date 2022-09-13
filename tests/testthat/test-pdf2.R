@@ -571,8 +571,8 @@ test_that("pdf2-12: Table Borders work as expected.", {
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
-    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-    add_content(tbl) %>%
+    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "none") %>%
+    add_content(tbl, align = "right") %>%
     page_footer("Left1", "Center1", "Right1")
 
   res <- write_report(rpt)
@@ -921,7 +921,7 @@ test_that("pdf2-22: Page by works as expected.", {
   dat <- iris
 
   tbl <- create_table(dat, borders = "all") %>%
-    titles("Table 1.0", "My Nice Report with a Page By", borders = "all", 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "outside", 
            blank_row = "none") %>%
     page_by(Species, label = "Species", align = "center", borders = "all", 
             blank_row = "none")
@@ -1537,7 +1537,7 @@ test_that("pdf2-38: Title and Footnote specific widths work as expected.", {
 
   tbl <- create_table(dat, borders = "all") %>%
     titles("Table 1.0", "My Nice Report with Borders",
-           borders = c("top", "bottom", "left", "right"),
+           borders = c("outside"),
            width = 7, align = "left") %>%
     footnotes("My footnote 1", "My footnote 2", valign = "top",
               borders = c("top", "bottom", "left", "right"),
@@ -2288,7 +2288,7 @@ test_that("pdf2-61: Title columns work 1 column.", {
   
   tbl <- create_table(iris[1:15, ], borders = "all")  %>%
     titles("Table 1.0\nsecond row", "IRIS Data Frame2",
-           blank_row = "both", columns =  1, align = "center",
+           blank_row = "above", columns =  1, align = "center",
            borders = "outside") 
   
   rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
@@ -2308,7 +2308,7 @@ test_that("pdf2-62: Title columns work 2 columns.", {
   
   fp <- file.path(base_path, "pdf2/test62.pdf")
   
-  tbl <- create_table(iris[1:15, ], borders = "none") %>%
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
     titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right", "mo\nre",
            blank_row = "below", columns =  2, borders = "all")
   
@@ -2329,21 +2329,26 @@ test_that("pdf2-63: Title columns work 3 columns.", {
   
   fp <- file.path(base_path, "pdf2/test63.pdf")
   
-  tbl <- create_table(iris[1:15, ], borders = "all") %>%
-    define(Species, blank_after = TRUE, visible = FALSE)
-  
-  
   rght <- paste("Here is a big long text string to see how the automatic", 
                 "wrapping is happing in a reduced size cell on the right.")
+  
+  
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE) %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+           "      My right thing", "", "Center", rght,
+           blank_row = "below", columns =  3, borders = "all")
+  
+  
+
   
   rpt <- create_report(fp, output_type = "PDF", font = "Courier", 
                        font_size = 10) %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
-    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
-           "      My right thing", "", "Center", rght,
-           blank_row = "below", columns =  3) %>%
+
     footnotes("Here is a footnote", "And another", "A",
       "Here is a longer footnote to see if I can figure out the alignment pattern.",
               align = "right")
@@ -2361,19 +2366,18 @@ test_that("pdf2-64: Multiple title blocks work as expected.", {
   fp <- file.path(base_path, "pdf2/test64.pdf")
   
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
-    define(Species, blank_after = TRUE, visible = FALSE)
+    define(Species, blank_after = TRUE, visible = FALSE) %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "none", columns =  1, borders = "all") %>%
+    titles("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "none", columns =  2, borders = "all") %>%
+    titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "both", columns =  3, borders = "outside")
   
   rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
-    titles("Table 1.0", "IRIS Data Frame",
-           blank_row = "below", columns =  1, align = "center", width = 7,
-           borders = "all") %>%
-    titles("Table 2.0", "IRIS Data Frame2", "Left", "Right",
-           blank_row = "below", columns =  2, borders = "none") %>%
-    titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
-           blank_row = "below", columns =  3, borders = "all") %>%
     footnotes("Here is a footnote", "And another")
   
   
