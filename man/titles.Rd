@@ -68,8 +68,7 @@ are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the title
 block will be split into two columns, each aligned to the outside.  If 
 this parameter is set to 3, the title block will be split into 3 columns,
 with the outer columns aligned to the outside and the middle column
-aligned center.  Titles are assigned to cells from top left to bottom right.
-Currently only works with RTF and PDF.}
+aligned center.  Titles are assigned to cells from top left to bottom right.}
 }
 \value{
 The modified report.

@@ -1238,7 +1238,6 @@ title_header <- function(x, ..., right = "",
 #' this parameter is set to 3, the title block will be split into 3 columns,
 #' with the outer columns aligned to the outside and the middle column
 #' aligned center.  Titles are assigned to cells from top left to bottom right.
-#' Currently only works with RTF and PDF.
 #' @return The modified report.
 #' @family report
 #' @examples
