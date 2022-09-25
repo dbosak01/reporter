@@ -438,7 +438,10 @@ get_theme <- function(theme) {
                         table_body_background = "White",
                         table_stub_background = "#EDF2F9",
                         table_stub_font_bold = TRUE,
-                        table_stub_font_color = "MidnightBlue")
+                        table_stub_font_color = "MidnightBlue",
+                        footnote_background = "#EDF2F9",
+                        footnote_font_color = "MidnightBlue",
+                        footnote_font_bold = TRUE)
     
   } else if (tolower(theme) == "midnightblue") {
       
