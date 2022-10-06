@@ -952,9 +952,9 @@ render.pdf_info <- function(x) {
   
   # Get current time
   tm <- Sys.time()
-  cdt <- paste0(as.character(tm, "D:%Y%m%d%H%M%S"), 
-                stri_sub(as.character(tm, "%z"), 1, 3), "'",
-                stri_sub(as.character(tm, "%z"), 4, 5), "'")
+  cdt <- paste0(format(tm, format = "D:%Y%m%d%H%M%S"), 
+                stri_sub(format(tm, format = "%z"), 1, 3), "'",
+                stri_sub(format(tm, format = "%z"), 4, 5), "'")
   
   
   dict <- pdf_dictionary(Producer = paste0("(", x$producer, ")"),
