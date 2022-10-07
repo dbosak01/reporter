@@ -4,8 +4,9 @@ Title: Creates Statistical Reports
 Version: 1.3.7
 Authors@R: c( 
     person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
-    person("Kevin", "Kramer", role = "ctb"),
+    person("Kevin", "Kramer", email = "kkrame02@amgen.com", role = "ctb"),
     person("Duong", "Tran", email = "trand000@aol.com", role = "ctb"),
+    person("Raphael", "Huang", email = "chi-hua.huang@astellas.com", role = "ctb"),
     person("Archytas Clinical Solutions", role = "cph")
     )
 Maintainer: David Bosak <dbosak01@gmail.com>
