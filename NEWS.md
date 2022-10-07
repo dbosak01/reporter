@@ -1,3 +1,10 @@
+# reporter 1.3.7
+* Fix for error on R-devel identified by R Core team.
+* Added background color to footnotes in SASDefault theme.
+* Allowed user to pass a custom page size.
+* Removed break between titles, footnotes, and table body on RTF tables
+when widths are equal.
+
 # reporter 1.3.6
 
 * Added option to `write_report()` to turn off logging if desired.

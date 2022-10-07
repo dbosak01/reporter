@@ -39,7 +39,9 @@ printed.  The \code{paper_size} will determine how much text can fit on
 one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
 "letter".  For the HTML output type, a paper size of "none" is also valid. 
 That means the HTML will be generated in an unbounded manner as a typical
-web page.}
+web page.  For a custom page size, the parameter also accepts a double vector
+with the page width and height.  The width and height should be in the report
+units of measure, and assume a portrait orientation.}
 
 \item{missing}{How to display missing values in the report.  Default is
 to replace them with an empty string, which removes them from the report.

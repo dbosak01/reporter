@@ -314,6 +314,9 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
         tpt <- ""
     }
   }
+  if (titles_aligned(ts$titles, ts$title_hdr))
+    tpt <- ""
+
   
   # Same thing as above with titles.  If footnote block is contiguous
   # with table and footnotes are wider than table, row width of footnotes
@@ -331,6 +334,8 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
         bpt <- ""
     }
   }
+  if (footnotes_aligned(ts$footnotes)) 
+    bpt <- ""
   
   ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, tpt, cp, shdrs$rtf, 
                       hdrs$rtf, rws$rtf, bpt, cp, ftnts$rtf),
@@ -997,3 +1002,45 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
   
 }
 
+
+
+# Utility Functions -------------------------------------------------------
+
+titles_aligned <- function(ttls = NULL, ttlhdrs = NULL) {
+ 
+  lst <- ttlhdrs
+  if (!is.null(ttls)) 
+    lst <- ttls
+  
+  ret <- FALSE
+  
+  if (!is.null(lst)) {
+  
+    lastttl <- lst[[length(lst)]]
+  
+    if (lastttl$width == "content")
+      ret <- TRUE
+  }
+  
+  return(ret)
+  
+}
+
+
+footnotes_aligned <- function(ftnts = NULL) {
+  
+  lst <- ftnts
+  
+  ret <- FALSE
+  
+  if (!is.null(lst)) {
+    
+    lastfnt <- lst[[1]]
+    
+    if (lastfnt$width == "content" & lastfnt$valign == "top")
+      ret <- TRUE
+  }
+  
+  return(ret)
+  
+}

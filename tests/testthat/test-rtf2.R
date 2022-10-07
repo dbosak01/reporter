@@ -2337,6 +2337,88 @@ test_that("rtf2-67: Multiple title blocks work as expected.", {
   
 })
 
+test_that("rtf2-68: Custom page size works as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test68.rtf")
+  
+  tbl <- create_table(iris[1:15, ]) %>%
+    define(Species, visible = FALSE)
+  
+  ttl <- c("Title1", "Title2", "Title3")
+  
+  rpt <- create_report(fp, output_type = "RTF", 
+                       font = "Courier",
+                       paper_size = c(6.5, 7.5),
+                       orientation = "portrait") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles(ttl,
+           blank_row = "below", columns =  1, align = "center",
+           borders = "none") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("rtf2-69: Breaks removed after titles and footnotes.", {
+  
+  fp <- file.path(base_path, "rtf2/test69.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "outside") %>%
+    define(Species, visible = FALSE) %>%
+    titles("Here is a title") %>%
+    footnotes("Here is a footnote")
+  
+
+  rpt <- create_report(fp, output_type = "RTF", 
+                       font = "Courier",
+                       orientation = "landscape") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") 
+
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("rtf2-70: Breaks removed after 2 titles and footnotes.", {
+  
+  fp <- file.path(base_path, "rtf2/test70.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, visible = FALSE) %>%
+    titles("Here is a title") %>%
+    titles("There is a title") %>%
+    footnotes("Here is a footnote") %>%
+    footnotes("There is a footnote")
+  
+  
+  rpt <- create_report(fp, output_type = "RTF", 
+                       font = "Courier",
+                       orientation = "landscape") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") 
+  
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
 
 
 # User Tests --------------------------------------------------------------

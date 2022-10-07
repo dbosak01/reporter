@@ -1925,6 +1925,10 @@ test_that("pdf2-50: Spanning headers borders work as expected.", {
 
 
 
+
+
+
+
 # Basic Tests 51 > --------------------------------------------------------
 
 # Very good report for testing multiple content wraps
@@ -2388,6 +2392,34 @@ test_that("pdf2-64: Multiple title blocks work as expected.", {
 })
 
 
+
+test_that("pdf2-65: Custom page size works as expected.", {
+  
+  fp <- file.path(base_path, "pdf2/test65.pdf")
+  
+  tbl <- create_table(iris[1:15, ]) %>%
+    define(Species, visible = FALSE)
+  
+  ttl <- c("Title1", "Title2", "Title3")
+  
+  rpt <- create_report(fp, output_type = "PDF", 
+                       font = "Courier",
+                       paper_size = c(6.5, 7.5),
+                       orientation = "portrait") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles(ttl,
+           blank_row = "below", columns =  1, align = "center",
+           borders = "none") %>%
+    footnotes("Here is a footnote", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
 
 # # User Tests --------------------------------------------------------------
 

@@ -407,7 +407,7 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
           if (ttls$bold)
             tb <- paste0("\\b ", tmp$rtf, "\\b0")
           
-          # Contruct cell from constituent parts
+          # Construct cell from constituent parts
           ret <- append(ret, paste0(b, "\\cellx", cwa, 
                                     calgn, fz, " ", tb, fs, "\\cell"))
           

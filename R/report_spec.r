@@ -63,7 +63,9 @@
 #' one page.  Valid values are "letter", "legal", "A4", and "RD4".  Default is 
 #' "letter".  For the HTML output type, a paper size of "none" is also valid. 
 #' That means the HTML will be generated in an unbounded manner as a typical
-#' web page.
+#' web page.  For a custom page size, the parameter also accepts a double vector
+#' with the page width and height.  The width and height should be in the report
+#' units of measure, and assume a portrait orientation.
 #' @param missing How to display missing values in the report.  Default is
 #' to replace them with an empty string, which removes them from the report.
 #' To display missing values as is, set the missing parameter to NULL.  To
@@ -180,11 +182,19 @@ create_report <- function(file_path = "", output_type = "TXT",
   
   
   # Trap missing or invalid paper_size parameter.
-  if (!paper_size %in% c("letter", "legal", "A4", "RD4", "none")) {
-    
-    stop(paste0("paper_size parameter on ",
-                "create_report() function is invalid: '", paper_size,
-                "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4', 'none'."))
+  if (typeof(paper_size) == "character") {
+    if (!paper_size %in% c("letter", "legal", "A4", "RD4", "none")) {
+      
+      stop(paste0("paper_size parameter on ",
+                  "create_report() function is invalid: '", paper_size,
+                  "'\n\tValid values are: 'letter', 'legal', 'A4', 'RD4', 'none'."))
+    }
+  } else if (typeof(paper_size) == "double") {
+   if (length(paper_size) != 2) { 
+    stop("Invalid page_size parameter.")
+   }
+  } else {
+    stop("Invalid page_size parameter.") 
   }
   
   # Trap missing or invalid font parameter
@@ -209,15 +219,19 @@ create_report <- function(file_path = "", output_type = "TXT",
   x$orientation <- orientation
   x$content <- list()           # Initialize content list
   x$units <- units              # Unit of measure
-  x$paper_size <- paper_size
-  x$page_size <- get_page_size(paper_size, units)
+  if (typeof(paper_size) == "character") {
+    x$paper_size <- paper_size
+    x$page_size <- get_page_size(paper_size, units)
+  } else {
+    x$paper_size <- "custom"
+    x$page_size <- paper_size
+  }
   x$pages <- 0                  # Track # of pages in report
   x$column_widths <- list()      # Capture table column widths for reference
   x$missing <- missing
   x$font <- font      
   x$font_size <- font_size
 
-  
   # Not needed for DOCX and HTML because there is no text version
   if (output_type %in% c("TXT", "PDF", "RTF")) {
     
