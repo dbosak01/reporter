@@ -1,3 +1,9 @@
+# reporter 1.3.8
+
+* Fixed bug when logging plot with jpeg.
+* Removed table breaks on RTF plot and text content when titles/footnotes
+are aligned.
+
 # reporter 1.3.7
 * Fix for error on R-devel identified by R Core team.
 * Added background color to footnotes in SASDefault theme.

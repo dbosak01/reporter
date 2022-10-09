@@ -459,6 +459,9 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
           rs$page_template$title_hdr$border_flag)
         tpt <- ""
     }
+    if (titles_aligned(txt$titles, txt$title_hdr))
+      tpt <- ""
+    
     
     # Prevent infection of widths on LibreOffice.
     bpt <- "{\\pard\\fs1\\sl0\\par}"
@@ -473,6 +476,8 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
           bpt <- ""
       }
     }
+    if (footnotes_aligned(txt$footnotes)) 
+      bpt <- ""
     
     # Combine titles, blanks, body, and footnotes
     rws <- c(a, cp, ttls$rtf, ttl_hdr$rtf, tpt, cp, rwhd, s, rwft, bpt)

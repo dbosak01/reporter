@@ -1781,6 +1781,9 @@ test_that("rtf2-50: Spanning headers borders work as expected.", {
 })
 
 
+# Basic Tests 51-60 -------------------------------------------------------
+
+
 test_that("rtf2-51: RTF Image file works as expected.", {
   
   if (dev == TRUE) {
@@ -1874,11 +1877,13 @@ test_that("rtf2-53: Text with line feed works as expected.", {
   
   cnt2 <- paste0("Hello here \nis something ", cnt)
   
+  txt <- create_text(cnt2) %>%
+    titles("Report 1.0", "Simple Text Report") %>%
+    footnotes("My footnote")
+  
   rpt <- create_report(fp, orientation = "portrait",
                        output_type = "RTF", font = "Arial") %>%
-    titles("Report 1.0", "Simple Text Report") %>% 
-    add_content(create_text(cnt2)) %>%
-    footnotes("My footnote")
+    add_content(txt) 
   
   res <- write_report(rpt)
   
@@ -2115,6 +2120,9 @@ test_that("rtf2-60: Blank nested stub works as expected.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+
+# Basic Tests 61-70 -------------------------------------------------------
 
 
 
@@ -2418,6 +2426,53 @@ test_that("rtf2-70: Breaks removed after 2 titles and footnotes.", {
   expect_equal(file.exists(fp), TRUE)
   
 })
+
+
+# Basic Tests 71-80 -------------------------------------------------------
+
+
+test_that("rtf2-71: RTF Plot with path logs as expected.", {
+  
+  if (dev == TRUE) {
+    
+
+    fp <- file.path(base_path, "rtf2/test71.rtf")
+    
+    tmp <- file.path(base_path, "plot.jpg")
+    
+    jpeg(tmp, width = 600, height = 500)
+    
+    plot(mtcars$mpg)
+      
+      
+    dev.off()
+    
+    plt <- create_plot(tmp, height = 5, width = 6, borders = c("top", "bottom", "all")) %>% 
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none") 
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt) %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+})
+
+
 
 
 
