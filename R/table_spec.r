@@ -114,6 +114,12 @@
 #' specification means put borders around only the body of the table.
 #' @param header_bold Whether or not the column headers on the tables should
 #' be bolded.  Valid values are TRUE and FALSE.  The default is FALSE.
+#' @param continuous If a table crosses multiple pages, it is normally
+#' broken into a separate table for each page, and the titles and footnotes
+#' are repeated on each page. When the "continuous" parameter is TRUE, the
+#' table will instead be a single table, and the titles and footnotes will
+#' not be repeated on each page.  This parameter currently only works for RTF
+#' outputs.
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,
@@ -187,7 +193,8 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
                          width = NULL, 
                          first_row_blank=FALSE,
                          n_format = upcase_parens, headerless = FALSE,
-                         borders = "none", header_bold = FALSE) {
+                         borders = "none", header_bold = FALSE, 
+                         continuous = FALSE) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -237,6 +244,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
   ret$page_var <- NULL
   ret$borders <- borders
   ret$header_bold <- header_bold
+  ret$continuous <- continuous
   if (any(use_attributes == "all"))
     ret$use_attributes <- c("label", "width", "justify", "format")
   else if (all(use_attributes == "none"))

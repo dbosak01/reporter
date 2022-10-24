@@ -1356,3 +1356,68 @@ test_that("rtf41: Custom page size works as expected.", {
 })
 
 
+test_that("rtf42: Symbols are proper orientation on portrait.", {
+  
+  if (dev) {
+  
+    fp <- file.path(base_path, "rtf/test42.rtf")
+    
+    dat <- mtcars[1:10, ]
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My Table{symbol('dagger')}")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         orientation = "portrait") %>%
+      add_content(tbl)
+    
+    res <- write_report(rpt)
+    
+    
+    # file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf43: Symbols are proper orientation on landscape.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf/test43.rtf")
+    
+    dat <- mtcars[1:10, ]
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My Table{symbol('dagger')}")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         orientation = "landscape") %>%
+      add_content(tbl)
+    
+    res <- write_report(rpt)
+    
+    
+    file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+

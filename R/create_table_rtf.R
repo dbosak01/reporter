@@ -214,14 +214,22 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
       else 
         pgby <- NULL
       
+      pgind <- ""
+      if (counter == 1)
+        pgind <- "first"
+      else if (counter == tot_count)
+        pgind <- "last"
       
+      # Get page info for this page
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
                       col_width = widths_uom[pg], col_align = aligns[pg],
                       font_name = font_name, label_align = label_aligns[pg],
                       pgby, cntnt$align)
+      
+      # Get rtf for this page
       pg_lst[[length(pg_lst) + 1]] <- create_table_rtf(rs, ts, pi, 
                                                         blnk_ind, wrap_flag,
-                                                        lpg_rows)
+                                                        lpg_rows, pgind)
     }
   }
   
@@ -236,7 +244,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
 
 #' @noRd
 create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag, 
-                              lpg_rows) {
+                              lpg_rows, pgind) {
   rh <- rs$row_height
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
@@ -251,7 +259,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders, 
-                            ts$first_row_blank)
+                            ts$first_row_blank, ts$continuous)
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -337,9 +345,35 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   if (footnotes_aligned(ts$footnotes)) 
     bpt <- ""
   
-  ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, tpt, cp, shdrs$rtf, 
-                      hdrs$rtf, rws$rtf, bpt, cp, ftnts$rtf),
-              lines = rc  + ftnts$lines)
+  # Continuous tables are different
+  # Titles only on first page and footnotes only on last page
+  if (ts$continuous) {
+    
+    if (pgind == "first") {
+      ret <- list(rtf = c(a, cp, ttls$rtf, pgby$rtf, shdrs$rtf, 
+                          hdrs$rtf, rws$rtf),
+                  lines = rc )
+      
+    } else if (pgind == "last") {
+      ret <- list(rtf = c(pgby$rtf, 
+                          rws$rtf, ftnts$rtf),
+                  lines = rc  + ftnts$lines)
+      
+    } else {
+      
+      ret <- list(rtf = c( pgby$rtf,  
+                          rws$rtf),
+                  lines = rc)
+      
+    }
+    
+  } else {
+    
+    # By default, repeat titles and footnotes on every page
+    ret <- list(rtf = c(a, cp, ttls$rtf, cp, pgby$rtf, tpt, cp, shdrs$rtf, 
+                        hdrs$rtf, rws$rtf, bpt, cp, ftnts$rtf),
+                lines = rc  + ftnts$lines)
+  }
     
   return(ret) 
 }
@@ -580,7 +614,12 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
   }
   
   # Table Header
-  ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
+  # Request from Astellas
+  # Need to watch this for undesired side effects.
+  if (ts$continuous) 
+    ret[1] <-  paste0("\\trowd\\trkeep\\trhdr\\trgaph0", ta, "\\trrh", rh)  
+  else 
+    ret[1] <-  paste0("\\trowd\\trgaph0", ta, "\\trrh", rh)
   
   # Loop for cell definitions
   for(j in seq_along(nms)) {
@@ -827,7 +866,8 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
-get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
+get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
+                               frb, continuous = FALSE) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -897,7 +937,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
   for(i in seq_len(nrow(t))) {
     
     
-    if (i ==  1)
+    if (i ==  1 & continuous == FALSE)
       ret[i] <- paste0("{\\trowd\\trgaph0\\trrh", rh, ta)
     else 
       ret[i] <- paste0("\\trowd\\trgaph0\\trrh", rh, ta)
@@ -989,9 +1029,16 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, frb) {
   
   dev.off()
   
+  if (!continuous) {
 
-  ret[length(ret)] <- paste0(ret[length(ret)], "}\\pard",
-                             rs$font_rtf, rs$spacing_multiplier)
+    ret[length(ret)] <- paste0(ret[length(ret)], "}\\pard",
+                               rs$font_rtf, rs$spacing_multiplier)
+  
+  } else {
+    
+    ret[length(ret)] <- paste0(ret[length(ret)], "}")
+
+  }
   
   
   res <- list(rtf = ret,

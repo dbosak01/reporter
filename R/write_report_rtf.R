@@ -96,11 +96,12 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   # Prepare header
   hdr[length(hdr) + 1] <- "{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 Courier;}}"
   if (rs$orientation == "landscape") {
-    hdr[length(hdr) + 1] <- "\\landscape\\horzdoc"
+    #hdr[length(hdr) + 1] <- "\\landscape\\horzdoc"
+    hdr[length(hdr) + 1] <- "\\landscape"
     hdr[length(hdr) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
                                    "\\paperh", round(rs$page_size[1] * conv))
   } else {
-    hdr[length(hdr) + 1] <- "\\vertdoc"
+    #hdr[length(hdr) + 1] <- "\\vertdoc"
     hdr[length(hdr) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
                                    "\\paperh", round(rs$page_size[2] * conv))
   }

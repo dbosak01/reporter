@@ -3,6 +3,14 @@
 * Fixed bug when logging plot with jpeg.
 * Removed table breaks on RTF plot and text content when titles/footnotes
 are aligned.
+* Fixed bug when using symbols on portrait RTF output.  Symbols were being
+turned 90 degrees.
+* Fixed bug when logging patchwork objects.
+* Added "continuous" parameter to `create_table`. When true, table will
+be created a a continuous table spanning multiple pages, and not repeating
+titles and footnotes.
+* Added glue functionality to table body.
+* Removed table break after headerless table.
 
 # reporter 1.3.7
 * Fix for error on R-devel identified by R Core team.

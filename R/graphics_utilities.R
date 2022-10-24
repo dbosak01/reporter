@@ -14,8 +14,12 @@ get_image_rtf <- function(file_path, width, height, units) {
     conv <- 566.9291
   }
   
+  blp <- "\\pngblip"
+  if (grepl(".emf", file_path, fixed = TRUE))
+    blp <- "\\emfblip"
+  
   # Construct rtf codes
-  ret <- paste0("{\\pict\\pngblip\\picwgoal",round(width*conv),"\\pichgoal",round(height*conv)," \n")
+  ret <- paste0("{\\pict", blp, "\\picwgoal",round(width*conv),"\\pichgoal",round(height*conv)," \n")
   
   # Convert image to byte codes
   ret <- paste0(ret, get_image_bytes(file_path), "\n}")

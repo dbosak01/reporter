@@ -161,14 +161,16 @@ print.plot_spec <- function(x, ..., verbose = FALSE){
         
       } else {
       
-        if (!is.null(x$plot[["data"]])) {
-          dat <- x$plot[["data"]]
-    
-          cat("- data: ")
-          cat(paste0(nrow(dat), " rows, ", ncol(dat), " cols\n"))
-    
-          cat(paste0("- layers: ", length(x$plot[["layers"]]), "\n"))
-        
+        if ("ggplot" %in% class(x$plot) & !"patchwork" %in% class(x$plot)) {
+          if (!is.null(x$plot[["data"]])) {
+            dat <- x$plot[["data"]]
+      
+            cat("- data: ")
+            cat(paste0(nrow(dat), " rows, ", ncol(dat), " cols\n"))
+      
+            cat(paste0("- layers: ", length(x$plot[["layers"]]), "\n"))
+          
+          }
         }
       
       }
@@ -456,7 +458,11 @@ create_plot_pages_rtf <- function(rs, cntnt, lpg_rows, tmp_dir) {
   
   if (any(class(p) %in% c("character"))) {
     
-    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+    fx <- ".jpg"
+    if (grepl(".emf", p, fixed = TRUE))
+      fx <- ".emf"
+    
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = fx)
     
     file.copy(p, tmp_nm, overwrite = TRUE)
     

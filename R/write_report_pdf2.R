@@ -54,7 +54,6 @@ write_report_pdf2 <- function(rs) {
   
   # Write content to file system
   # Later we can just return the stream
-  #rs <- write_content_pdf(rs, hdr, bdy, rs$page_template)
   doc <- write_pdf(doc)
   rs$pages <- doc$pages
   
@@ -330,115 +329,6 @@ paginate_content_pdf <- function(rs, doc) {
   
 }
 
-
-
-#' @title Write out content
-#' @description This loop writes out pages created in paginate_content
-#' Page template items added to the report (titles/footnotes/title_header)
-#' are added in this step.  That means these items need to have been accounted
-#' for in the previous steps.
-#' @noRd
-write_content_pdf <- function(rs, hdr, body, pt) {
-  
-  # Kill existing file
-  if (file.exists(rs$modified_path))
-    file.remove(rs$modified_path)
-  
-  counter <- 0
-  page <- 0
-  last_object <- FALSE
-  last_page <- FALSE
-  page_open <- FALSE
-  
-  
-  f <- file(rs$modified_path, open="a", encoding = "native.enc")
-  
-  writeLines(hdr, con = f, useBytes = TRUE)
-  
-  
-  for (cont in body$pages) {
-    
-    
-    # Increment counter
-    counter <- counter + 1
-    page <- 0
-    
-    # Set last_object flag
-    if (counter == length(body$pages))
-      last_object <- TRUE
-    else 
-      last_object <- FALSE
-    
-    
-    for (pg in cont$pages) {
-      
-      page <- page + 1
-      
-      if (page == length(cont$pages))
-        last_page <- TRUE
-      else
-        last_page <- FALSE
-      
-      
-      #print(page_open)
-      if (page_open == FALSE) {
-        
-        
-        if (!is.null(rs$title_hdr) & !is.null(pt$title_hdr$rtf))
-          writeLines(pt$title_hdr$rtf, con = f, useBytes = TRUE)
-        
-        if (!is.null(rs$titles) & !is.null(pt$titles$rtf))
-          writeLines(pt$titles$rtf, con = f, useBytes = TRUE)
-        
-      }
-      
-      if (!is.null(pg)) {
-        
-        writeLines(pg, con = f, useBytes = TRUE)
-        
-      }
-      
-      # Set page_open flag based on status of page_break and current objects
-      if (last_object == FALSE & last_page == TRUE & cont$page_break == FALSE)
-        page_open <- TRUE
-      else 
-        page_open <- FALSE
-      
-      if (page_open == FALSE) {
-        
-        if (!is.null(rs$footnotes) & !is.null(pt$footnotes$rtf))
-          writeLines(pt$footnotes$rtf, con = f, useBytes = TRUE)
-        
-        
-        # Add form feed character for text page break
-        if (last_object == FALSE | last_page == FALSE) {
-          
-          if (is.null(rs$pages))
-            rs$pages <- 1
-          else 
-            rs$pages <- rs$pages + 1 
-          
-          writeLines(rs$page_break_rtf, con = f, useBytes = TRUE) 
-          
-        }
-      }
-      
-      if (last_object == TRUE & last_page == TRUE) {
-        
-        rs$pages <- rs$pages + 1 
-        
-      }
-    }
-    
-  }
-  
-  writeLines("{\\pard\\fs1\\sl0  \\par}}", con = f, useBytes = TRUE)
-  
-  close(f)
-  
-  return(rs)
-  
-}
 
 
 update_page_numbers_pdf <- function(path, tpg) {

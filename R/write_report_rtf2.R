@@ -72,11 +72,12 @@ get_rtf_document <- function(rs) {
   # Prepare header
   ret[length(ret) + 1] <- paste0("{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 ", fnt , ";}}")
   if (rs$orientation == "landscape") {
-    ret[length(ret) + 1] <- "\\landscape\\horzdoc"
+    #ret[length(ret) + 1] <- "\\landscape\\horzdoc"
+    ret[length(ret) + 1] <- "\\landscape"
     ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[2] * conv),
                                    "\\paperh", round(rs$page_size[1] * conv))
   } else {
-    ret[length(ret) + 1] <- "\\vertdoc"
+    #ret[length(ret) + 1] <- "\\vertdoc"
     ret[length(ret) + 1] <- paste0("\\paperw", round(rs$page_size[1] * conv),
                                    "\\paperh", round(rs$page_size[2] * conv))
   }
@@ -329,7 +330,11 @@ write_content_rtf <- function(rs, hdr, body, pt) {
           else 
             rs$pages <- rs$pages + 1 
           
-          writeLines(rs$page_break_rtf, con = f, useBytes = TRUE) 
+          if (is.null(cont$object$continuous) || cont$object$continuous == FALSE) {
+            
+            writeLines(rs$page_break_rtf, con = f, useBytes = TRUE) 
+            
+          }
           
         }
       }

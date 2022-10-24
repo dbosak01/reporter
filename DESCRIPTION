@@ -41,7 +41,9 @@ Suggests:
     utils,
     logr,
     covr,
-    libr
+    libr,
+    devEMF, 
+    patchwork
 Imports: fmtr,
          stringi,
          crayon,
@@ -51,5 +53,5 @@ Imports: fmtr,
          zip, 
          withr,
          glue
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr

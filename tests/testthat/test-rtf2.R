@@ -2474,6 +2474,189 @@ test_that("rtf2-71: RTF Plot with path logs as expected.", {
 
 
 
+test_that("rtf2-72: Symbols are proper orientation on portrait.", {
+  
+  if (dev) {
+  
+    fp <- file.path(base_path, "rtf2/test72.rtf")
+    
+    dat <- mtcars[1:10, ]
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My Table{symbol('dagger')}")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl)
+    
+    res <- write_report(rpt)
+    
+    
+    #file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+  
+  
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf2-73: Symbols are proper orientation on landscape.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test73.rtf")
+    
+    dat <- mtcars[1:10, ]
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My Table{symbol('dagger')}")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "landscape") %>%
+      add_content(tbl)
+    
+    res <- write_report(rpt)
+    
+    
+    #file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf2-74: Continuous tables work as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test74.rtf")
+    
+    dat <- iris
+    
+    
+    tbl <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl)
+    
+    res <- write_report(rpt)
+    
+    
+    file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+# Works!
+test_that("rtf2-75: Simplest EMF Plot works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    library(devEMF)
+    
+    fp <- file.path(base_path, "rtf2/test75.rtf")
+    
+    tmp <- file.path(base_path, "rtf2/plot.emf")
+    
+    emf(tmp)
+    
+    plot(1, 1)
+    
+    
+    dev.off()
+    
+    plt <- create_plot(tmp, height = 5, width = 6, borders = c("top", "bottom", "all")) %>% 
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none") 
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt) %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+})
+
+# Works!
+test_that("rtf2-76: Patchwork Plot works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    
+    library(ggplot2)
+    library(patchwork)
+    
+    fp <- file.path(base_path, "rtf2/test76.rtf")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    p2 <-  ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    ptch <- (p | p2)
+    
+    plt <- create_plot(ptch, height = 4, width = 8, borders = c("top", "bottom", "all")) %>% 
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none") 
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "right") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
+    
+    
+    write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+})
 
 
 # User Tests --------------------------------------------------------------

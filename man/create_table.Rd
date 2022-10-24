@@ -13,7 +13,8 @@ create_table(
   n_format = upcase_parens,
   headerless = FALSE,
   borders = "none",
-  header_bold = FALSE
+  header_bold = FALSE,
+  continuous = FALSE
 )
 }
 \arguments{
@@ -70,6 +71,13 @@ specification means put borders around only the body of the table.}
 
 \item{header_bold}{Whether or not the column headers on the tables should
 be bolded.  Valid values are TRUE and FALSE.  The default is FALSE.}
+
+\item{continuous}{If a table crosses multiple pages, it is normally
+broken into a separate table for each page, and the titles and footnotes
+are repeated on each page. When the "continuous" parameter is TRUE, the
+table will instead be a single table, and the titles and footnotes will
+not be repeated on each page.  This parameter currently only works for RTF
+outputs.}
 }
 \description{
 The \code{create_table} function creates a table object to which 
