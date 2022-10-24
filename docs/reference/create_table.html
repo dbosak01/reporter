@@ -203,7 +203,8 @@ S3 object of class 'table_spec'.</p>
 <span>  n_format <span class='op'>=</span> <span class='va'>upcase_parens</span>,</span>
 <span>  headerless <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
 <span>  borders <span class='op'>=</span> <span class='st'>"none"</span>,</span>
-<span>  header_bold <span class='op'>=</span> <span class='cn'>FALSE</span></span>
+<span>  header_bold <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span>  continuous <span class='op'>=</span> <span class='cn'>FALSE</span></span>
 <span><span class='op'>)</span></span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -280,6 +281,15 @@ specification means put borders around only the body of the table.</p></td>
       <th>header_bold</th>
       <td><p>Whether or not the column headers on the tables should
 be bolded.  Valid values are TRUE and FALSE.  The default is FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>continuous</th>
+      <td><p>If a table crosses multiple pages, it is normally
+broken into a separate table for each page, and the titles and footnotes
+are repeated on each page. When the "continuous" parameter is TRUE, the
+table will instead be a single table, and the titles and footnotes will
+not be repeated on each page.  This parameter currently only works for RTF
+outputs.</p></td>
     </tr>
     </table>
 

@@ -2656,6 +2656,7 @@ test_that("rtf2-76: Patchwork Plot works as expected.", {
     
   } else 
     expect_equal(TRUE, TRUE)
+  
 })
 
 
