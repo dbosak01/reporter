@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,19 +40,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.8</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"></ul>
 <ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/reporter.html">Get started</a>
 </li>
@@ -103,6 +99,9 @@
     <li>
       <a href="../articles/reporter-more.html">More Examples</a>
     </li>
+    <li>
+      <a href="../articles/reporter-faq.html">Frequently Asked Questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -115,7 +114,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
 <li>
-  <a href="https://github.com/dbosak01/reporter/">
+  <a href="https://github.com/dbosak01/reporter/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -130,28 +129,28 @@
 
       
 
-      </header><script src="reporter-styles_files/header-attrs-2.17/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example 12: Styles</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-styles.Rmd"><code>vignettes/reporter-styles.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/HEAD/vignettes/reporter-styles.Rmd" class="external-link"><code>vignettes/reporter-styles.Rmd</code></a></small>
       <div class="hidden name"><code>reporter-styles.Rmd</code></div>
 
     </div>
 
     
     
-<div id="styles-and-themes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#styles-and-themes" class="anchor"></a>Styles and Themes</h3>
+<div class="section level3">
+<h3 id="styles-and-themes">Styles and Themes<a class="anchor" aria-label="anchor" href="#styles-and-themes"></a>
+</h3>
 <p>The <strong>reporter</strong> package now supports styles and themes
 for HTML reports. Styling for more output types will be supported in
 future versions.</p>
-<div id="custom-style" class="section level4">
-<h4 class="hasAnchor">
-<a href="#custom-style" class="anchor"></a>Custom Style</h4>
+<div class="section level4">
+<h4 id="custom-style">Custom Style<a class="anchor" aria-label="anchor" href="#custom-style"></a>
+</h4>
 <p>To create a custom style, use the <code><a href="../reference/create_style.html">create_style()</a></code>
 function. This function allows you to control colors and bolding for
 many common elements of a report. The <code><a href="../reference/create_style.html">create_style()</a></code>
@@ -159,13 +158,13 @@ function returns a style object, which can then be passed to the style
 parameter of the <code><a href="../reference/add_style.html">add_style()</a></code> function. Here is an example
 of a custom style:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create temporary path</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example12a.html"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example12a.html"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Read in prepared data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'</span></span>
 <span><span class="st">    var     label        A             B          </span></span>
 <span><span class="st">    "ampg"   "N"          "19"          "13"         </span></span>
 <span><span class="st">    "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" </span></span>
@@ -195,21 +194,21 @@ of a custom style:</p>
 <span>                 <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create table</span></span>
-<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">TRUE</span>, borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">TRUE</span>, borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">var</span>, blank_after <span class="op">=</span> <span class="cn">TRUE</span>, label_row <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 1.0"</span>, <span class="st">"MTCARS Summary Table with Custom Style"</span>, </span>
-<span>         borders <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>         borders <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span>, borders <span class="op">=</span> <span class="st">"outside"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create report and add custom style</span></span>
-<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"HTML"</span>, font <span class="op">=</span> <span class="st">"Arial"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"HTML"</span>, font <span class="op">=</span> <span class="st">"Arial"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/add_style.html">add_style</a></span><span class="op">(</span><span class="va">sty</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Write out report</span></span>
@@ -219,22 +218,22 @@ of a custom style:</p>
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/example12a.png"></p>
 </div>
-<div id="themes" class="section level4">
-<h4 class="hasAnchor">
-<a href="#themes" class="anchor"></a>Themes</h4>
+<div class="section level4">
+<h4 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
+</h4>
 <p>A Theme may be applied to a report using the function
 <code><a href="../reference/add_style.html">add_style()</a></code> and passing a theme name to the theme
 parameter. Currently there are seven themes available: “MidnightBlue”,
 “SteelBlue”, “DarkRed”, “SeaGreen”, “SlateGrey”, “Plain”, and
 “SASDefault”. Here is an example using a named theme:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create temporary path</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example12b.html"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example12b.html"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Read in prepared data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'</span></span>
 <span><span class="st">      var     label        A             B          </span></span>
 <span><span class="st">      "ampg"   "N"          "19"          "13"         </span></span>
 <span><span class="st">      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" </span></span>
@@ -246,23 +245,23 @@ parameter. Currently there are seven themes available: “MidnightBlue”,
 <span><span class="st">      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create table</span></span>
-<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">FALSE</span>, borders <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">FALSE</span>, borders <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">var</span>, blank_after <span class="op">=</span> <span class="cn">TRUE</span>, label_row <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 1.0"</span>, <span class="st">"MTCARS Summary Table with SteelBlue Theme"</span>, </span>
-<span>         borders <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>         borders <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span>, borders <span class="op">=</span> <span class="st">"outside"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create report and add theme</span></span>
 <span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"HTML"</span>, font <span class="op">=</span> <span class="st">"Arial"</span>, </span>
-<span>                     font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>                     font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/add_style.html">add_style</a></span><span class="op">(</span>theme <span class="op">=</span> <span class="st">"SteelBlue"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Write out report</span></span>
@@ -272,9 +271,9 @@ parameter. Currently there are seven themes available: “MidnightBlue”,
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/example12b.png"></p>
 </div>
-<div id="viewmodify-a-theme" class="section level4">
-<h4 class="hasAnchor">
-<a href="#viewmodify-a-theme" class="anchor"></a>View/Modify a Theme</h4>
+<div class="section level4">
+<h4 id="viewmodify-a-theme">View/Modify a Theme<a class="anchor" aria-label="anchor" href="#viewmodify-a-theme"></a>
+</h4>
 <p>Sometimes you may want to look at or modify an existing theme. The
 function <code><a href="../reference/get_theme.html">get_theme()</a></code> allows you to do this. Simply pass the
 theme name to <code><a href="../reference/get_theme.html">get_theme()</a></code> and it will return the theme as a
@@ -282,12 +281,12 @@ style object. From there you can print the style object to see how it
 was defined. You can also modify it to suit your own preferences. Here
 is an example of how to view and modify a theme.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_theme.html">get_theme</a></span><span class="op">(</span><span class="st">"SteelBlue"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span>
 <span><span class="co"># # A style specification: </span></span>
 <span><span class="co"># - font_name: 'Arial'</span></span>
 <span><span class="co"># - font_size: 10</span></span>
@@ -310,10 +309,10 @@ is an example of how to view and modify a theme.</p>
 <span><span class="va">tm</span><span class="op">$</span><span class="va">table_stub_font_color</span> <span class="op">&lt;-</span> <span class="st">"White"</span></span>
 <span></span>
 <span><span class="co"># Create temporary path</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example12c.html"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example12c.html"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Read in prepared data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span>header <span class="op">=</span> <span class="cn">TRUE</span>, text <span class="op">=</span> <span class="st">'</span></span>
 <span><span class="st">      var     label        A             B          </span></span>
 <span><span class="st">      "ampg"   "N"          "19"          "13"         </span></span>
 <span><span class="st">      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" </span></span>
@@ -325,23 +324,23 @@ is an example of how to view and modify a theme.</p>
 <span><span class="st">      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create table</span></span>
-<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">FALSE</span>, borders <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">df</span>, first_row_blank <span class="op">=</span> <span class="cn">FALSE</span>, borders <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/stub.html">stub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">var</span>, blank_after <span class="op">=</span> <span class="cn">TRUE</span>, label_row <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>         format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ampg <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, cyl <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">label</span>, indent <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">A</span>, label <span class="op">=</span> <span class="st">"Group A"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">B</span>, label <span class="op">=</span> <span class="st">"Group B"</span>, align <span class="op">=</span> <span class="st">"center"</span>, n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 1.0"</span>, <span class="st">"MTCARS Summary Table with Modified Theme"</span>, </span>
-<span>         borders <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>         borders <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"* Motor Trend, 1974"</span>, borders <span class="op">=</span> <span class="st">"outside"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create report and add modified theme</span></span>
 <span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"HTML"</span>, font <span class="op">=</span> <span class="st">"Arial"</span>, </span>
-<span>                     font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>                     font_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/set_margins.html">set_margins</a></span><span class="op">(</span>top <span class="op">=</span> <span class="fl">1</span>, bottom <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/add_style.html">add_style</a></span><span class="op">(</span>style <span class="op">=</span> <span class="va">tm</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Write out report</span></span>
@@ -351,9 +350,9 @@ is an example of how to view and modify a theme.</p>
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/example12i.png"></p>
 </div>
-<div id="theme-gallery" class="section level4">
-<h4 class="hasAnchor">
-<a href="#theme-gallery" class="anchor"></a>Theme Gallery</h4>
+<div class="section level4">
+<h4 id="theme-gallery">Theme Gallery<a class="anchor" aria-label="anchor" href="#theme-gallery"></a>
+</h4>
 <p>In addition to the SteelBlue theme shown above, there are six more
 themes. Here is a sample of each:</p>
 <p><img src="../man/images/example12c.png"></p>
@@ -377,11 +376,13 @@ Subscripts</a></p>
 
 
       <footer><div class="copyright">
-  <p>Developed by David Bosak.</p>
+  <p></p>
+<p>Developed by David Bosak.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -389,6 +390,8 @@ Subscripts</a></p>
 
   
 
+
+  
 
   </body>
 </html>

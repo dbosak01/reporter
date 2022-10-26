@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,19 +40,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.8</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"></ul>
 <ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/reporter.html">Get started</a>
 </li>
@@ -103,6 +99,9 @@
     <li>
       <a href="../articles/reporter-more.html">More Examples</a>
     </li>
+    <li>
+      <a href="../articles/reporter-faq.html">Frequently Asked Questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -115,7 +114,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
 <li>
-  <a href="https://github.com/dbosak01/reporter/">
+  <a href="https://github.com/dbosak01/reporter/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -130,13 +129,13 @@
 
       
 
-      </header><script src="reporter-faq_files/header-attrs-2.17/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Frequently Asked Questions</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-faq.Rmd"><code>vignettes/reporter-faq.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/HEAD/vignettes/reporter-faq.Rmd" class="external-link"><code>vignettes/reporter-faq.Rmd</code></a></small>
       <div class="hidden name"><code>reporter-faq.Rmd</code></div>
 
     </div>
@@ -146,9 +145,9 @@
 <p>Below are some frequently asked questions about the
 <strong>reporter</strong> package. Click on the links below to navigate
 to the full question and answer content.</p>
-<div id="top" class="section level2">
-<h2 class="hasAnchor">
-<a href="#top" class="anchor"></a>Index</h2>
+<div class="section level2">
+<h2 id="top">Index<a class="anchor" aria-label="anchor" href="#top"></a>
+</h2>
 <ul>
 <li><a href="#types">What file formats does reporter support?</a></li>
 <li><a href="#fonts">What fonts does reporter support?</a></li>
@@ -180,12 +179,12 @@ table?</a></li>
 in my footnotes?</a></li>
 </ul>
 </div>
-<div id="content" class="section level2">
-<h2 class="hasAnchor">
-<a href="#content" class="anchor"></a>Content</h2>
-<div id="types" class="section level3">
-<h3 class="hasAnchor">
-<a href="#types" class="anchor"></a>What file formats does reporter support?</h3>
+<div class="section level2">
+<h2 id="content">Content<a class="anchor" aria-label="anchor" href="#content"></a>
+</h2>
+<div class="section level3">
+<h3 id="types">What file formats does reporter support?<a class="anchor" aria-label="anchor" href="#types"></a>
+</h3>
 <p><strong>Q:</strong> I can see from the examples that the
 <strong>reporter</strong> package can create text reports. Can it create
 any other types of reports? PDF? DOCX?</p>
@@ -194,9 +193,9 @@ TXT, RTF, PDF, HTML, and DOCX output types.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="fonts" class="section level3">
-<h3 class="hasAnchor">
-<a href="#fonts" class="anchor"></a>What fonts does reporter support?</h3>
+<div class="section level3">
+<h3 id="fonts">What fonts does reporter support?<a class="anchor" aria-label="anchor" href="#fonts"></a>
+</h3>
 <p><strong>Q:</strong> I see a lot of Courier font in the examples. Does
 <strong>reporter</strong> support any other fonts?</p>
 <p><strong>A:</strong> The supported fonts depend on the output type
@@ -206,9 +205,9 @@ Times New Roman.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="styles" class="section level3">
-<h3 class="hasAnchor">
-<a href="#styles" class="anchor"></a>What styling options are available in the reporter package?</h3>
+<div class="section level3">
+<h3 id="styles">What styling options are available in the reporter package?<a class="anchor" aria-label="anchor" href="#styles"></a>
+</h3>
 <p><strong>Q:</strong> The examples show little in the way of styling:
 fonts, colors, bolding, etc. What options are there for adding styles to
 the report?</p>
@@ -222,9 +221,9 @@ for other output types in the near future.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="orientation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#orientation" class="anchor"></a>Is there a way to control the page orientation?</h3>
+<div class="section level3">
+<h3 id="orientation">Is there a way to control the page orientation?<a class="anchor" aria-label="anchor" href="#orientation"></a>
+</h3>
 <p><strong>Q:</strong> All of the examples I saw show a landscape page
 orientation. Is there a way to have a portrait page orientation?</p>
 <p><strong>A:</strong> Yes. The <code>orientation</code> parameter on
@@ -233,9 +232,9 @@ the <code><a href="../reference/create_report.html">create_report()</a></code> f
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="units" class="section level3">
-<h3 class="hasAnchor">
-<a href="#units" class="anchor"></a>Is there a way to control the units of measure?</h3>
+<div class="section level3">
+<h3 id="units">Is there a way to control the units of measure?<a class="anchor" aria-label="anchor" href="#units"></a>
+</h3>
 <p><strong>Q:</strong> All of the examples I saw show column widths
 specified in inches. Is there a way to specify them in metric? What
 about by percentage?</p>
@@ -254,9 +253,9 @@ measurement systems on a report.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="statistics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#statistics" class="anchor"></a>Can I perform statistics with reporter?</h3>
+<div class="section level3">
+<h3 id="statistics">Can I perform statistics with reporter?<a class="anchor" aria-label="anchor" href="#statistics"></a>
+</h3>
 <p><strong>Q:</strong> With SAS® proc report, I can add statistics to my
 report. Does the <strong>reporter</strong> package have any statistical
 capabilities?</p>
@@ -268,9 +267,9 @@ data.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="grouping" class="section level3">
-<h3 class="hasAnchor">
-<a href="#grouping" class="anchor"></a>Can I perform grouping with reporter?</h3>
+<div class="section level3">
+<h3 id="grouping">Can I perform grouping with reporter?<a class="anchor" aria-label="anchor" href="#grouping"></a>
+</h3>
 <p><strong>Q:</strong> With SAS® proc report, I can group my data in the
 reporting procedure. Does the <strong>reporter</strong> package have
 grouping capabilities?</p>
@@ -284,9 +283,9 @@ demonstration on how to use these parameters.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="sort" class="section level3">
-<h3 class="hasAnchor">
-<a href="#sort" class="anchor"></a>Does reporter have a way to sort the report data?</h3>
+<div class="section level3">
+<h3 id="sort">Does reporter have a way to sort the report data?<a class="anchor" aria-label="anchor" href="#sort"></a>
+</h3>
 <p><strong>Q:</strong> I have some data to report on, but it is not
 sorted the way I want for reporting. Does <strong>reporter</strong> have
 any way to sort the data?</p>
@@ -300,9 +299,9 @@ format. Any data manipulation should be done prior to reporting.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="filter" class="section level3">
-<h3 class="hasAnchor">
-<a href="#filter" class="anchor"></a>Does reporter have a way to filter the report data?</h3>
+<div class="section level3">
+<h3 id="filter">Does reporter have a way to filter the report data?<a class="anchor" aria-label="anchor" href="#filter"></a>
+</h3>
 <p><strong>Q:</strong> I have some data to report on, but it is not
 filtered the way I want. Does <strong>reporter</strong> have any way to
 filter the data?</p>
@@ -312,9 +311,9 @@ is therefore recommended to filter the data before sending it into the
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="super" class="section level3">
-<h3 class="hasAnchor">
-<a href="#super" class="anchor"></a>Does reporter support superscripts and subscripts?</h3>
+<div class="section level3">
+<h3 id="super">Does reporter support superscripts and subscripts?<a class="anchor" aria-label="anchor" href="#super"></a>
+</h3>
 <p><strong>Q:</strong> I want to add some superscripts and subscripts to
 my report. Does reporter have a way to do that?</p>
 <p><strong>A:</strong> Yes. The reporting functions recognize Unicode
@@ -325,10 +324,10 @@ subscript vignette</a> for further explanation on this topic.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="visible" class="section level3">
-<h3 class="hasAnchor">
-<a href="#visible" class="anchor"></a>Do I have to include all the columns in my data on the final
-report?</h3>
+<div class="section level3">
+<h3 id="visible">Do I have to include all the columns in my data on the final
+report?<a class="anchor" aria-label="anchor" href="#visible"></a>
+</h3>
 <p><strong>Q:</strong> I have some data to report on, but it has more
 columns than I want to show in the report. Does
 <strong>reporter</strong> have any way to remove some columns from the
@@ -343,9 +342,9 @@ hide that variable on the report.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="order" class="section level3">
-<h3 class="hasAnchor">
-<a href="#order" class="anchor"></a>Is there a way to order the columns on my report?</h3>
+<div class="section level3">
+<h3 id="order">Is there a way to order the columns on my report?<a class="anchor" aria-label="anchor" href="#order"></a>
+</h3>
 <p><strong>Q:</strong> The variables in my data are not ordered exactly
 as I want them to appear on the report. Is there a way to control column
 order?</p>
@@ -362,25 +361,25 @@ report.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#format" class="anchor"></a>Is there a way to format a variable?</h3>
+<div class="section level3">
+<h3 id="format">Is there a way to format a variable?<a class="anchor" aria-label="anchor" href="#format"></a>
+</h3>
 <p><strong>Q:</strong> I have variable in my input data that is not
 formatted. I want to apply a format to it; say, round to 1 decimal place
 and add a percent sign. Is there a way to format a variable?</p>
 <p><strong>A:</strong> Yes. You can use the <code>format</code>
 parameter on the <code><a href="../reference/define.html">define()</a></code> function to identify a format for
 a variable. The format passed to this parameter should be a valid format
-for the <a href="https://fmtr.r-sassy.org/reference/fapply.html"><code>fapply()</code></a>
-function from the <a href="https://fmtr.r-sassy.org"><strong>fmtr</strong></a> package. See
-the <a href="https://fmtr.r-sassy.org/reference/fapply.html"><code>fapply()</code></a>
+for the <a href="https://fmtr.r-sassy.org/reference/fapply.html" class="external-link"><code>fapply()</code></a>
+function from the <a href="https://fmtr.r-sassy.org" class="external-link"><strong>fmtr</strong></a> package. See
+the <a href="https://fmtr.r-sassy.org/reference/fapply.html" class="external-link"><code>fapply()</code></a>
 documentation for additional information.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="breaks" class="section level3">
-<h3 class="hasAnchor">
-<a href="#breaks" class="anchor"></a>Is there a way to control page breaks?</h3>
+<div class="section level3">
+<h3 id="breaks">Is there a way to control page breaks?<a class="anchor" aria-label="anchor" href="#breaks"></a>
+</h3>
 <p><strong>Q:</strong> Overall, the <strong>reporter</strong> package
 does a good job of determining when to break to the next page. However,
 sometimes I want to control exactly when the page break occurs. Is there
@@ -399,9 +398,9 @@ automatically calculated value.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="wraps" class="section level3">
-<h3 class="hasAnchor">
-<a href="#wraps" class="anchor"></a>Is there a way to control page wraps?</h3>
+<div class="section level3">
+<h3 id="wraps">Is there a way to control page wraps?<a class="anchor" aria-label="anchor" href="#wraps"></a>
+</h3>
 <p><strong>Q:</strong> Overall, the <strong>reporter</strong> package
 does a good job of determining when to wrap a page when it is too wide.
 However, sometimes I want to control exactly when the page wrap occurs.
@@ -413,9 +412,9 @@ documentation for an illustration of how to wrap pages.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="width" class="section level3">
-<h3 class="hasAnchor">
-<a href="#width" class="anchor"></a>Is there a way to set the width of a table?</h3>
+<div class="section level3">
+<h3 id="width">Is there a way to set the width of a table?<a class="anchor" aria-label="anchor" href="#width"></a>
+</h3>
 <p><strong>Q:</strong> I see there are several ways to set column
 widths. However, I just want to set the width of the entire table, and
 have <strong>reporter</strong> figure out the column widths
@@ -429,10 +428,10 @@ more information on the <code>width</code> parameter.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
-<div id="curly" class="section level3">
-<h3 class="hasAnchor">
-<a href="#curly" class="anchor"></a>Why am I getting an error when using curly braces in my
-footnotes?</h3>
+<div class="section level3">
+<h3 id="curly">Why am I getting an error when using curly braces in my
+footnotes?<a class="anchor" aria-label="anchor" href="#curly"></a>
+</h3>
 <p><strong>Q:</strong> I’m trying to use curly braces in my footnotes.
 For some reason, I keep getting an error. Why?</p>
 <p><strong>A:</strong> The curly braces are delimiter characters for the
@@ -461,11 +460,13 @@ functionality by doubling the curly braces. In other words, use
 
 
       <footer><div class="copyright">
-  <p>Developed by David Bosak.</p>
+  <p></p>
+<p>Developed by David Bosak.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -473,6 +474,8 @@ functionality by doubling the curly braces. In other words, use
 
   
 
+
+  
 
   </body>
 </html>

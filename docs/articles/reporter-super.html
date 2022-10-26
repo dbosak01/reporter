@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,19 +40,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.8</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"></ul>
 <ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/reporter.html">Get started</a>
 </li>
@@ -103,6 +99,9 @@
     <li>
       <a href="../articles/reporter-more.html">More Examples</a>
     </li>
+    <li>
+      <a href="../articles/reporter-faq.html">Frequently Asked Questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -115,7 +114,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
 <li>
-  <a href="https://github.com/dbosak01/reporter/">
+  <a href="https://github.com/dbosak01/reporter/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -130,23 +129,23 @@
 
       
 
-      </header><script src="reporter-super_files/header-attrs-2.17/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example 13: Superscripts, Subscripts, and
 Symbols</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/master/vignettes/reporter-super.Rmd"><code>vignettes/reporter-super.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dbosak01/reporter/blob/HEAD/vignettes/reporter-super.Rmd" class="external-link"><code>vignettes/reporter-super.Rmd</code></a></small>
       <div class="hidden name"><code>reporter-super.Rmd</code></div>
 
     </div>
 
     
     
-<div id="adding-superscripts-subscripts-and-symbols-to-a-report" class="section level3">
-<h3 class="hasAnchor">
-<a href="#adding-superscripts-subscripts-and-symbols-to-a-report" class="anchor"></a>Adding Superscripts, Subscripts, and Symbols to a Report</h3>
+<div class="section level3">
+<h3 id="adding-superscripts-subscripts-and-symbols-to-a-report">Adding Superscripts, Subscripts, and Symbols to a Report<a class="anchor" aria-label="anchor" href="#adding-superscripts-subscripts-and-symbols-to-a-report"></a>
+</h3>
 <p>It is very common to include superscripts, subscripts, and special
 symbols on a statistical report. The <strong>reporter</strong> package
 supports such features. You may add superscripts and subscripts to your
@@ -156,33 +155,33 @@ delimiter and some useful functions from the <strong>common</strong>
 package. The <strong>common</strong> package is loaded automatically
 with <strong>reporter</strong>. Here is an example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://reporter.r-sassy.org">reporter</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create temp file path</span></span>
-<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example13.rtf"</span><span class="op">)</span></span>
+<span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example13.rtf"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Prepare Data</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">airquality</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">153</span>, <span class="fl">15</span><span class="op">)</span>, <span class="op">]</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">Month</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"1973-"</span>, <span class="va">dat</span><span class="op">$</span><span class="va">Month</span>, <span class="st">"-01"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">airquality</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">153</span>, <span class="fl">15</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="va">dat</span><span class="op">$</span><span class="va">Month</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"1973-"</span>, <span class="va">dat</span><span class="op">$</span><span class="va">Month</span>, <span class="st">"-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define table</span></span>
-<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">dat</span>, show_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Day"</span>, <span class="st">"Wind"</span>, </span>
-<span>                                       <span class="st">"Temp"</span>, <span class="st">"Ozone"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_table.html">create_table</a></span><span class="op">(</span><span class="va">dat</span>, show_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Day"</span>, <span class="st">"Wind"</span>, </span>
+<span>                                       <span class="st">"Temp"</span>, <span class="st">"Ozone"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/titles.html">titles</a></span><span class="op">(</span><span class="st">"Table 9.6"</span>, <span class="st">"Air Quality Sample Report{supsc('1')}"</span>,   <span class="co"># Superscript 1</span></span>
-<span>         borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"bottom"</span><span class="op">)</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">Month</span>, format <span class="op">=</span> <span class="st">"%B"</span>, align <span class="op">=</span> <span class="st">"left"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">Temp</span>, format <span class="op">=</span> <span class="st">"%.0f"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>         borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"bottom"</span><span class="op">)</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/column_defaults.html">column_defaults</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">Month</span>, format <span class="op">=</span> <span class="st">"%B"</span>, align <span class="op">=</span> <span class="st">"left"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">Temp</span>, format <span class="op">=</span> <span class="st">"%.0f"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"{supsc('1')}New York, May to September 1973"</span>,       <span class="co"># Superscript 1</span></span>
-<span>            borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"bottom"</span><span class="op">)</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> </span>
+<span>            borders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"top"</span>, <span class="st">"bottom"</span><span class="op">)</span>, blank_row <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Define report</span></span>
 <span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_report.html">create_report</a></span><span class="op">(</span><span class="va">tmp</span>, output_type <span class="op">=</span> <span class="st">"RTF"</span>, font <span class="op">=</span> <span class="st">"Arial"</span>, </span>
-<span>                     font_size <span class="op">=</span> <span class="fl">12</span>, missing <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span><span class="st">"Sponsor: EPA"</span>, <span class="st">"Study: B34958"</span>, blank_row <span class="op">=</span> <span class="st">"below"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span></span>
+<span>                     font_size <span class="op">=</span> <span class="fl">12</span>, missing <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/page_header.html">page_header</a></span><span class="op">(</span><span class="st">"Sponsor: EPA"</span>, <span class="st">"Study: B34958"</span>, blank_row <span class="op">=</span> <span class="st">"below"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/add_content.html">add_content</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, right <span class="op">=</span> <span class="st">"Page [pg] of [tpg]"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Write the report to the file system</span></span>
 <span><span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
@@ -191,10 +190,10 @@ with <strong>reporter</strong>. Here is an example:</p>
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/super.png"></p>
 </div>
-<div id="superscript-and-subscript-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#superscript-and-subscript-functions" class="anchor"></a>Superscript and Subscript Functions</h3>
-<p>The <code><a href="https://common.r-sassy.org/reference/supsc.html">supsc()</a></code> function shown above is a superscript
+<div class="section level3">
+<h3 id="superscript-and-subscript-functions">Superscript and Subscript Functions<a class="anchor" aria-label="anchor" href="#superscript-and-subscript-functions"></a>
+</h3>
+<p>The <code><a href="https://common.r-sassy.org/reference/supsc.html" class="external-link">supsc()</a></code> function shown above is a superscript
 function. This function will translate a normal character into a
 superscript character. It works by looking up a UTF-8 superscript
 character based on the passed parameter string. The function will
@@ -202,37 +201,37 @@ attempt to translate each character into a UTF-8 superscript equivalent.
 All numbers and most Latin letters are available in a superscript
 version.</p>
 <p>The <strong>common</strong> package includes two more useful
-functions: <code><a href="https://common.r-sassy.org/reference/subsc.html">subsc()</a></code> and <code><a href="https://common.r-sassy.org/reference/symbol.html">symbol()</a></code>. The
-<code><a href="https://common.r-sassy.org/reference/subsc.html">subsc()</a></code> function is similar to the superscript function,
+functions: <code><a href="https://common.r-sassy.org/reference/subsc.html" class="external-link">subsc()</a></code> and <code><a href="https://common.r-sassy.org/reference/symbol.html" class="external-link">symbol()</a></code>. The
+<code><a href="https://common.r-sassy.org/reference/subsc.html" class="external-link">subsc()</a></code> function is similar to the superscript function,
 except it looks up UTF-8 subscript characters. While UTF-8 subscript
 characters are more limited than the superscripts, the function will
 translate all numbers appropriately.</p>
-<p>Note that the <code><a href="https://common.r-sassy.org/reference/supsc.html">supsc()</a></code> and <code><a href="https://common.r-sassy.org/reference/subsc.html">subsc()</a></code> functions
+<p>Note that the <code><a href="https://common.r-sassy.org/reference/supsc.html" class="external-link">supsc()</a></code> and <code><a href="https://common.r-sassy.org/reference/subsc.html" class="external-link">subsc()</a></code> functions
 will translate the entire string. Translating the entire string means
 multiple characters can be combined to create complex superscript or
 subscript expressions. Here is an example of such an expression:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Create complex superscript expression</span></span>
-<span><span class="va">ex1</span> <span class="op">&lt;-</span> <span class="st">"x"</span> <span class="op"><a href="https://common.r-sassy.org/reference/grapes-p-grapes.html">%p%</a></span> <span class="fu"><a href="https://common.r-sassy.org/reference/supsc.html">supsc</a></span><span class="op">(</span><span class="st">"(n+4)"</span><span class="op">)</span></span>
+<span><span class="va">ex1</span> <span class="op">&lt;-</span> <span class="st">"x"</span> <span class="op"><a href="https://common.r-sassy.org/reference/grapes-p-grapes.html" class="external-link">%p%</a></span> <span class="fu"><a href="https://common.r-sassy.org/reference/supsc.html" class="external-link">supsc</a></span><span class="op">(</span><span class="st">"(n+4)"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># View expression</span></span>
 <span><span class="va">ex1</span></span>
 <span><span class="co"># [1] "x⁽ⁿ⁺⁴⁾"</span></span></code></pre></div>
 </div>
-<div id="symbol-function" class="section level3">
-<h3 class="hasAnchor">
-<a href="#symbol-function" class="anchor"></a>Symbol Function</h3>
-<p>Finally, the <code><a href="https://common.r-sassy.org/reference/symbol.html">symbol()</a></code> function will look up UTF-8
+<div class="section level3">
+<h3 id="symbol-function">Symbol Function<a class="anchor" aria-label="anchor" href="#symbol-function"></a>
+</h3>
+<p>Finally, the <code><a href="https://common.r-sassy.org/reference/symbol.html" class="external-link">symbol()</a></code> function will look up UTF-8
 symbols. The function uses HTML style keywords to identify the symbol to
 look up. The function supports keywords for trademarks, currencies,
 mathematical symbols, logical symbols, Greek letters, and more. Here are
 a few examples:</p>
 <p><img src="../man/images/symbols.png"></p>
 </div>
-<div id="superscripts-and-subscripts-in-table-cells" class="section level3">
-<h3 class="hasAnchor">
-<a href="#superscripts-and-subscripts-in-table-cells" class="anchor"></a>Superscripts and Subscripts in Table Cells</h3>
+<div class="section level3">
+<h3 id="superscripts-and-subscripts-in-table-cells">Superscripts and Subscripts in Table Cells<a class="anchor" aria-label="anchor" href="#superscripts-and-subscripts-in-table-cells"></a>
+</h3>
 <p>To get superscripts or subscripts into table cells, they must be
 added to the table data prior to reporting. Simply use the standard R
 subset operators to append the subscript or superscript to the desired
@@ -243,7 +242,7 @@ example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Append superscript using paste0()</span></span>
-<span><span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op"><a href="https://common.r-sassy.org/reference/grapes-p-grapes.html">%p%</a></span> <span class="fu"><a href="https://common.r-sassy.org/reference/supsc.html">supsc</a></span><span class="op">(</span><span class="st">'2'</span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span><span class="fl">2</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op"><a href="https://common.r-sassy.org/reference/grapes-p-grapes.html" class="external-link">%p%</a></span> <span class="fu"><a href="https://common.r-sassy.org/reference/supsc.html" class="external-link">supsc</a></span><span class="op">(</span><span class="st">'2'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># View data frame</span></span>
 <span><span class="va">df</span></span>
@@ -257,9 +256,9 @@ example:</p>
 <span><span class="co"># 7  cyl 6 Cylinder  4 ( 21.1%)  3 ( 23.1%)</span></span>
 <span><span class="co"># 8  cyl 4 Cylinder  5 ( 26.3%)  6 ( 46.2%)</span></span></code></pre></div>
 </div>
-<div id="additional-unicode-characters" class="section level3">
-<h3 class="hasAnchor">
-<a href="#additional-unicode-characters" class="anchor"></a>Additional Unicode Characters</h3>
+<div class="section level3">
+<h3 id="additional-unicode-characters">Additional Unicode Characters<a class="anchor" aria-label="anchor" href="#additional-unicode-characters"></a>
+</h3>
 <p>The functions from the common package make it easy to add
 superscripts, subscripts, and many symbols to your reports. However,
 these functions do not include all possible special characters. If you
@@ -269,9 +268,9 @@ superscript one (1) is “\U00B9”. There are millions of Unicode
 characters. These codes may be discovered via an internet search, and
 can be embedded in any string.</p>
 </div>
-<div id="output-type-limitations" class="section level3">
-<h3 class="hasAnchor">
-<a href="#output-type-limitations" class="anchor"></a>Output Type Limitations</h3>
+<div class="section level3">
+<h3 id="output-type-limitations">Output Type Limitations<a class="anchor" aria-label="anchor" href="#output-type-limitations"></a>
+</h3>
 <p>The Unicode characters will work on all output types, with one
 exception. The PDF output type only supports superscripts for the
 numbers one, two, and three, and a few other special characters. PDF
@@ -293,11 +292,13 @@ from the ASCII character set.</p>
 
 
       <footer><div class="copyright">
-  <p>Developed by David Bosak.</p>
+  <p></p>
+<p>Developed by David Bosak.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -305,6 +306,8 @@ from the ASCII character set.</p>
 
   
 
+
+  
 
   </body>
 </html>

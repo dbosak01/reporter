@@ -31,3 +31,4 @@ not be installed as part of the \strong{reporter} install.  This program must
 furthermore be added to the \code{path} environment variable on the system
 where \strong{reporter} will run, so that \strong{reporter} can find it.
 }
+\keyword{internal}

@@ -101,6 +101,7 @@
 #' 
 #' @docType package
 #' @import common
+#' @keywords internal
 #' @name reporter
 NULL
 
@@ -134,4 +135,5 @@ NULL
 #' where \strong{reporter} will run, so that \strong{reporter} can find it.
 #' 
 #' @name NotesOnPDF
+#' @keywords internal
 NULL

@@ -18,17 +18,17 @@ write_report_rtf <- function(rs) {
   
   # Create temp path for text output
   if (debug) {
-    
-    b_path <- file.path(getwd(), "tests/testthat")
-    
-    tmp_path <- file.path(b_path, "output/tmp.txt")
-    rtf_path <- file.path(b_path, "output/tmp.rtf")
-    if (file.exists(tmp_path))
-      file.remove(tmp_path)
-    if (file.exists(rtf_path))
-      file.remove(rtf_path)
-    if (file.exists(orig_path))
-      file.remove(orig_path)
+# 
+#     b_path <- file.path(getwd(), "tests/testthat")
+# 
+#     tmp_path <- file.path(b_path, "output/tmp.txt")
+#     rtf_path <- file.path(b_path, "output/tmp.rtf")
+#     if (file.exists(tmp_path))
+#       file.remove(tmp_path)
+#     if (file.exists(rtf_path))
+#       file.remove(rtf_path)
+#     if (file.exists(orig_path))
+#       file.remove(orig_path)
   } else {
     tmp_dir <- tempdir()
     if (!file.exists(tmp_dir))

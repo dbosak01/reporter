@@ -36,6 +36,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -48,19 +50,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.8</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"></ul>
 <ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/reporter.html">Get started</a>
 </li>
@@ -113,6 +109,9 @@
     <li>
       <a href="articles/reporter-more.html">More Examples</a>
     </li>
+    <li>
+      <a href="articles/reporter-faq.html">Frequently Asked Questions</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -125,7 +124,7 @@
   <a href="news/index.html">Changelog</a>
 </li>
 <li>
-  <a href="https://github.com/dbosak01/reporter/">
+  <a href="https://github.com/dbosak01/reporter/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -145,71 +144,39 @@
 
 
 <!-- badges: end -->
-<div id="introduction-to-reporter" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#introduction-to-reporter" class="anchor"></a>Introduction to <strong>reporter</strong>
+<div class="section level1">
+<div class="page-header"><h1 id="introduction-to-reporter">Introduction to <strong>reporter</strong>
+<a class="anchor" aria-label="anchor" href="#introduction-to-reporter"></a>
 </h1></div>
-<p><img src="man/images/reporter_new.png" align="left" height="138" style="margin-right:10px;"></p>
-<p>Historically, R has not been very strong on reporting. The
-<strong>reporter</strong> package aims to fill that gap.</p>
-<p>Using <strong>reporter</strong>, you can create a report in just a
-few lines of code. Not only is it easy to create a report, but the
-<strong>reporter</strong> package can handle all sorts of situations
-that other packages struggle with.</p>
-<p>For example, unlike other packages, the <strong>reporter</strong>
-package creates the <em>entire report</em>: page header and footer,
-titles, footnotes, tables - everything. The end result of a reporter
-call is a complete, printable report.</p>
-<p>In addition, <strong>reporter</strong> can handle page breaking, page
-wrapping, and automatic sizing of column widths. The package offers a
-choice of output file types. And it supports the inclusion of tables,
-text and graphics into a report.</p>
-<p>What is more, the package does not expect you to know R Markdown,
-knitr, or pandoc. You do not need to learn Latex, HTML, or any other
-intermediate language. With <strong>reporter</strong>, you send your
-data into a create function, assign titles and footnotes, and write the
-report. That’s it!</p>
-<p>If you are familiar with SAS® software, you may notice some
-similarity between <strong>reporter</strong> functions and
-<code>proc report</code>. This similarity, however, is only on the
-surface. The implementation of <strong>reporter</strong> is done
-entirely in R, and, internally, is modeled in a different way. However,
-SAS® users will find the <strong>reporter</strong> functions very
-convenient and easy to understand compared to the alternatives.</p>
-<div id="installation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h3>
-<p>The <strong>reporter</strong> package can be installed from the
-console. Simply run the following command:</p>
+<p><img src="man/images/reporter_new.png" align="left" height="138px" style="margin-right:10px;height:138px"></p>
+<p>Historically, R has not been very strong on reporting. The <strong>reporter</strong> package aims to fill that gap.</p>
+<p>Using <strong>reporter</strong>, you can create a report in just a few lines of code. Not only is it easy to create a report, but the <strong>reporter</strong> package can handle all sorts of situations that other packages struggle with.</p>
+<p>For example, unlike other packages, the <strong>reporter</strong> package creates the <em>entire report</em>: page header and footer, titles, footnotes, tables - everything. The end result of a reporter call is a complete, printable report.</p>
+<p>In addition, <strong>reporter</strong> can handle page breaking, page wrapping, and automatic sizing of column widths. The package offers a choice of output file types. And it supports the inclusion of tables, text and graphics into a report.</p>
+<p>What is more, the package does not expect you to know R Markdown, knitr, or pandoc. You do not need to learn Latex, HTML, or any other intermediate language. With <strong>reporter</strong>, you send your data into a create function, assign titles and footnotes, and write the report. That’s it!</p>
+<p>If you are familiar with SAS® software, you may notice some similarity between <strong>reporter</strong> functions and <code>proc report</code>. This similarity, however, is only on the surface. The implementation of <strong>reporter</strong> is done entirely in R, and, internally, is modeled in a different way. However, SAS® users will find the <strong>reporter</strong> functions very convenient and easy to understand compared to the alternatives.</p>
+<div class="section level3">
+<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
+<p>The <strong>reporter</strong> package can be installed from the console. Simply run the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"reporter"</span>)</span></code></pre></div>
-<p>Or if you want the latest development version, you can install it
-directly from github:</p>
+<p>Or if you want the latest development version, you can install it directly from github:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"https://github.com/dbosak01/reporter"</span>)</span></code></pre></div>
 <p>Then put the following line at the top of your program or script:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reporter)</span></code></pre></div>
-<p>The <strong>reporter</strong> package will give you access to a
-number of functions to help create, lay out, and write your report to
-the file system. For examples and usage information, visit the
-<strong>reporter</strong> documentation site <a href="https://reporter.r-sassy.org/articles/reporter.html">here</a>.</p>
+<p>The <strong>reporter</strong> package will give you access to a number of functions to help create, lay out, and write your report to the file system. For examples and usage information, visit the <strong>reporter</strong> documentation site <a href="https://reporter.r-sassy.org/articles/reporter.html">here</a>.</p>
 </div>
-<div id="getting-help" class="section level3">
-<h3 class="hasAnchor">
-<a href="#getting-help" class="anchor"></a>Getting Help</h3>
-<p>If you need help, the first place to turn to is the <a href="https://reporter.r-sassy.org/">reporter</a> web site. The web site
-has full documentation on all <strong>reporter</strong> functions.</p>
-<p>If you want to look at the code for the <strong>reporter</strong>
-package, visit the github page <a href="https://github.com/dbosak01/reporter/">here</a>.</p>
-<p>If you encounter a bug or have a feature request, please submit an
-issue <a href="https://github.com/dbosak01/reporter/issues/">here</a>.</p>
+<div class="section level3">
+<h3 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h3>
+<p>If you need help, the first place to turn to is the <a href="https://reporter.r-sassy.org/">reporter</a> web site. The web site has full documentation on all <strong>reporter</strong> functions.</p>
+<p>If you want to look at the code for the <strong>reporter</strong> package, visit the github page <a href="https://github.com/dbosak01/reporter/" class="external-link">here</a>.</p>
+<p>If you encounter a bug or have a feature request, please submit an issue <a href="https://github.com/dbosak01/reporter/issues/" class="external-link">here</a>.</p>
 </div>
-<div id="see-also" class="section level3">
-<h3 class="hasAnchor">
-<a href="#see-also" class="anchor"></a>See Also</h3>
-<p>The <strong>reporter</strong> package is part of the
-<strong>sassy</strong> meta-package. The <strong>sassy</strong>
-meta-package includes several packages that help make R easier for SAS®
-programmers. You can read more about the <strong>sassy</strong> package
-<a href="https://sassy.r-sassy.org/">here</a>.</p>
+<div class="section level3">
+<h3 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>
+</h3>
+<p>The <strong>reporter</strong> package is part of the <strong>sassy</strong> meta-package. The <strong>sassy</strong> meta-package includes several packages that help make R easier for SAS® programmers. You can read more about the <strong>sassy</strong> package <a href="https://sassy.r-sassy.org/" class="external-link">here</a>.</p>
 </div>
 </div>
 
@@ -217,51 +184,61 @@ programmers. You can read more about the <strong>sassy</strong> package
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=reporter">https://​cloud.r-project.org/​package=reporter</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/dbosak01/reporter/">https://​github.com/​dbosak01/​reporter/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/dbosak01/reporter/issues">https://​github.com/​dbosak01/​reporter/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li><a href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>David Bosak <br><small class="roles"> Author, maintainer </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://cloud.r-project.org/package=reporter" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/dbosak01/reporter/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/dbosak01/reporter/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=reporter"><img src="https://www.r-pkg.org/badges/version/reporter" alt="reporter version"></a></li>
-<li><a href="https://cran.r-project.org/package=reporter"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="reporter lifecycle"></a></li>
-<li><a href="https://cran.r-project.org/package=reporter"><img src="https://cranlogs.r-pkg.org/badges/reporter" alt="reporter downloads"></a></li>
-<li><a href="https://cran.r-project.org/package=reporter"><img src="https://cranlogs.r-pkg.org/badges/grand-total/reporter" alt="reporter total downloads"></a></li>
-<li><a href="https://github.com/dbosak01/reporter/actions"><img src="https://github.com/dbosak01/reporter/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/dbosak01/reporter?branch=master"><img src="https://codecov.io/gh/dbosak01/reporter/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://creativecommons.org/licenses/by-nc/4.0" class="external-link">CC BY-NC 4.0</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing reporter</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>David Bosak <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=reporter" class="external-link"><img src="https://www.r-pkg.org/badges/version/reporter" alt="reporter version"></a></li>
+<li><a href="https://cran.r-project.org/package=reporter" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="reporter lifecycle"></a></li>
+<li><a href="https://cran.r-project.org/package=reporter" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/reporter" alt="reporter downloads"></a></li>
+<li><a href="https://cran.r-project.org/package=reporter" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/reporter" alt="reporter total downloads"></a></li>
+<li><a href="https://github.com/dbosak01/reporter/actions" class="external-link"><img src="https://github.com/dbosak01/reporter/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/dbosak01/reporter?branch=master" class="external-link"><img src="https://codecov.io/gh/dbosak01/reporter/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by David Bosak.</p>
+  <p></p>
+<p>Developed by David Bosak.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -269,6 +246,8 @@ programmers. You can read more about the <strong>sassy</strong> package
 
   
 
+
+  
 
   </body>
 </html>

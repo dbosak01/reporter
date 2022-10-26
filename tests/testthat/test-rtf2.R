@@ -2557,7 +2557,8 @@ test_that("rtf2-74: Continuous tables work as expected.", {
     
     rpt <- create_report(fp, output_type = "RTF", 
                          font = "Arial", orientation = "portrait") %>%
-      add_content(tbl)
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
     
     res <- write_report(rpt)
     

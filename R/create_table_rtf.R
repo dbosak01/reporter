@@ -1036,7 +1036,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   } else {
     
-    ret[length(ret)] <- paste0(ret[length(ret)], "}")
+    ret[length(ret)] <- paste0(ret[length(ret)], "")  # Not needed
 
   }
   

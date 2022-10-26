@@ -18,6 +18,7 @@ articles:
   - reporter-styles
   - reporter-super
   - reporter-more
+  - reporter-faq
 
 reference:
 - title: Report Functions
@@ -72,12 +73,18 @@ reference:
   - ttl
   - ftn
   - span
-
+  
+news:
+  cran_dates: false
+  
 navbar:
   type: inverse
   structure:
     right: [home, intro, articles, reference, faq, news, github]
+    left: []
   components:
     faq:
       text: FAQ
       href: ./articles/reporter-faq.html
+      
+
