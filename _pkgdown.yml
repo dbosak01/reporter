@@ -74,9 +74,6 @@ reference:
   - ftn
   - span
   
-news:
-  cran_dates: false
-  
 navbar:
   type: inverse
   structure:

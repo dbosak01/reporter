@@ -1,6 +1,6 @@
 # reporter 1.3.8
 
-* Fixed bug when logging plot with jpeg.
+* Fixed bug when logging plot with jpeg file.
 * Removed table breaks on RTF plot and text content when titles/footnotes
 are aligned.
 * Fixed bug when using symbols on portrait RTF output.  Symbols were being
@@ -8,18 +8,20 @@ turned 90 degrees.
 * Fixed bug when logging patchwork objects.
 * Added "continuous" parameter to `create_table`. When true, table will
 be created a a continuous table spanning multiple pages, and not repeating
-titles and footnotes.
+titles and footnotes. Currently for RTF only.  
+* Allowed EMF files on `create_plot()` for RTF output.
 * Added glue functionality to table body.
-* Removed table break after headerless table.
+* Removed RTF table break after headerless table.
 
-# reporter 1.3.7
+
+# reporter 1.3.7 
 * Fix for error on R-devel identified by R Core team.
 * Added background color to footnotes in SASDefault theme.
 * Allowed user to pass a custom page size.
 * Removed break between titles, footnotes, and table body on RTF tables
 when widths are equal.
 
-# reporter 1.3.6
+# reporter 1.3.6 
 
 * Added option to `write_report()` to turn off logging if desired.
 * Added "header_bold" parameter to `create_table()` to bold the header.
@@ -35,7 +37,7 @@ block to have between 1 and 3 columns.
 * Fixed some bugs on PDF borders.
 * Updated logo.
 
-# reporter 1.3.5
+# reporter 1.3.5 
 
 * Fixed several borders-related bugs on RTF, DOCX, and PDF.
 * Fixed valign bug on footnote on RTF.
@@ -46,7 +48,7 @@ Used by other r-sassy packages to create reports.
 * Moved some examples to **sassy** package to reduce size.
 * Documentation fixes and updates.
 
-# reporter 1.3.3
+# reporter 1.3.3 
 
 * Fixed bug on DOCX that was causing R Studio to crash when using a relative path.
 * Fixed some DOCX spacing issues.
@@ -54,7 +56,7 @@ Used by other r-sassy packages to create reports.
 to add styling to a report.  Only HTML implemented in this release.
 * Documentation fixes and updates.
 
-# reporter 1.3.1
+# reporter 1.3.1 
 
 * Added DOCX output type.
 * Fixed bug on RTF and HTML which was preventing multiple contents 
@@ -64,19 +66,19 @@ from being added to the same report.
 * Fixed bug on spanning header underline on RTF and HTML.
 * Improved column width and page size estimates on RTF and HTML.
 
-# reporter 1.2.9
+# reporter 1.2.9 
 
 * Added all border options to PDF.
 * Allowed `create_plot()` to accept a JPG image path so that the user can embed
 plot images exported from other charting packages besides ggplot.
 
-# reporter 1.2.8
+# reporter 1.2.8 
 
 * Added Arial, Times, and Courier fonts to PDF output type.  
 * Fixed bug on RTF preventing _first_row_blank_ parameter from working properly.
 * Added FAQ and Complete Examples.
 
-# reporter 1.2.6
+# reporter 1.2.6 
 
 * Added 'HTML' output type to `create_report()` and `write_report()` functions.
 This was a major change that allows the user to output reports in HTML. 
@@ -93,7 +95,7 @@ so the user can get borders only on the table body.
 * Various bug fixes and documentation updates.
 
 
-# reporter 1.2.0
+# reporter 1.2.0 
 
 * Added Arial, Times, and Courier fonts to RTF output type.  This change required a
 significant rewrite to RTF report creation functions.  Font is controlled using
@@ -106,13 +108,13 @@ functions.
 * Added _borders_ parameter to `create_table()`, `create_text()`, and 
 `create_plot()` functions.
 
-# reporter 1.1.6
+# reporter 1.1.6 
 
 * Added support for covr and codecov.
 * Fixed overflow bug on RTF on Linux when using 12pt font.
 * Fixed line length/alignment issues on titles and footnotes.
 
-# reporter 1.1.3
+# reporter 1.1.3 
 
 * Made package compatible back to R 3.6.
 * Added GitHub Actions for prior R version checks.
@@ -130,7 +132,7 @@ no longer documented.
 * Fixed bug in RTF that was causing page overflows in LibreOffice Writer.
 * Various other bug fixes.
 
-# reporter 1.1.2
+# reporter 1.1.2 
 
 * Changed column width calculation to make sum of widths equal the total width of
 the table.  Previously it was excluding the column gutter from the calculation.
@@ -148,11 +150,11 @@ so that users could pass them as variables inside a function.
 * Fixed bug on deleting image files in the temp directory.
 * Various small bugs and documentation fixes/improvements
 
-# reporter 1.0.6
+# reporter 1.0.6 
 
 * Added support for **survminer** graphics in `create_plot()`.
 
-# reporter 1.0.5
+# reporter 1.0.5 
 
 A package to create statistical reports (TFLs). Contains the following features:
 

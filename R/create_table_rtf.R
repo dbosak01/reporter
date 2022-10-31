@@ -217,8 +217,9 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
       pgind <- ""
       if (counter == 1)
         pgind <- "first"
-      else if (counter == tot_count)
-        pgind <- "last"
+      if (counter == tot_count)
+        pgind[length(pgind) + 1] <- "last"
+
       
       # Get page info for this page
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
@@ -348,22 +349,28 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # Continuous tables are different
   # Titles only on first page and footnotes only on last page
   if (ts$continuous) {
-    
-    if (pgind == "first") {
+   
+    if ("first" %in% pgind & "last" %in% pgind) {
+      
+        ret <- list(rtf = c(a, cp, ttls$rtf, pgby$rtf, shdrs$rtf, 
+                            hdrs$rtf, rws$rtf, ftnts$rtf),
+                    lines = rc + ftnts$lines)
+        
+    } else if ("first" %in% pgind) {
       ret <- list(rtf = c(a, cp, ttls$rtf, pgby$rtf, shdrs$rtf, 
                           hdrs$rtf, rws$rtf),
                   lines = rc )
       
-    } else if (pgind == "last") {
+    } else if ("last" %in% pgind) {
       ret <- list(rtf = c(pgby$rtf, 
                           rws$rtf, ftnts$rtf),
-                  lines = rc  + ftnts$lines)
+                  lines = rc  + ftnts$lines - ttls$lines)
       
     } else {
       
       ret <- list(rtf = c( pgby$rtf,  
                           rws$rtf),
-                  lines = rc)
+                  lines = rc  - ttls$lines)
       
     }
     

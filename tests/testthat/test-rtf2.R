@@ -18,7 +18,7 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
 fnt <- "Arial"
 fsz <- 10
 
-dev <- FALSE
+dev <- TRUE
 
 
 # Basic Tests 1 - 10 ------------------------------------------------------
@@ -2542,7 +2542,7 @@ test_that("rtf2-73: Symbols are proper orientation on landscape.", {
 })
 
 
-test_that("rtf2-74: Continuous tables work as expected.", {
+test_that("rtf2-74: Multi-page continuous tables work as expected.", {
   
   if (dev) {
     
@@ -2552,6 +2552,7 @@ test_that("rtf2-74: Continuous tables work as expected.", {
     
     
     tbl <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My Title") %>%
       footnotes("My footnotes", blank_row = "none")
     
     
@@ -2563,9 +2564,10 @@ test_that("rtf2-74: Continuous tables work as expected.", {
     res <- write_report(rpt)
     
     
-    file.show(res$modified_path)
+   # file.show(res$modified_path)
     
     expect_equal(file.exists(fp), TRUE)
+   # expect_equal(res$pages, 3)
     
     
   } else {
@@ -2648,7 +2650,7 @@ test_that("rtf2-76: Patchwork Plot works as expected.", {
       page_footer("Time", "Confidential", "Page [pg] of [tpg]") 
     
     
-    write_report(rpt)
+    res <- write_report(rpt)
     
     #print(res)
     
@@ -2657,6 +2659,172 @@ test_that("rtf2-76: Patchwork Plot works as expected.", {
     
   } else 
     expect_equal(TRUE, TRUE)
+  
+})
+
+
+test_that("rtf2-77: One-page continuous tables work as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test77.rtf")
+    
+    dat <- iris[1:15, ]
+    
+    
+    tbl <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My title") %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+   # file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf2-78: Two one-page continuous tables work as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test78.rtf")
+    
+    dat <- iris[1:15, ]
+    
+    
+    tbl1 <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My title 1") %>%
+      footnotes("My footnotes 1", blank_row = "none")
+    
+    tbl2 <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My title 2") %>%
+      footnotes("My footnotes 2", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl1) %>%
+      add_content(tbl2) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+   # file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 2)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf2-79: Two multi-page continuous tables work as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test79.rtf")
+    
+    dat <- iris[1:125, ]
+    
+    
+    tbl1 <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My title 1") %>%
+      footnotes("My footnotes 1", blank_row = "none")
+    
+    tbl2 <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My title 2") %>%
+      footnotes("My footnotes 2", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl1) %>%
+      add_content(tbl2) %>%
+      footnotes("Here", footer = TRUE) %>%
+      page_header("Left", "Right") %>%
+      page_footer(right = "Page [pg] of [tpg]")
+    
+    res <- write_report(rpt)
+    
+    
+   # file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    #expect_equal(res$pages, 6)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+test_that("rtf2-80: Two tables one continuous works as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test80.rtf")
+    
+    dat <- iris[1:125, ]
+    
+    
+    tbl1 <- create_table(dat, continuous = TRUE, borders = "all") %>%
+      titles("My title 1") %>%
+      footnotes("My footnotes 1", blank_row = "none")
+    
+    tbl2 <- create_table(dat, continuous = FALSE, borders = "all") %>%
+      titles("My title 2") %>%
+      footnotes("My footnotes 2", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl1) %>%
+      add_content(tbl2) %>%
+      footnotes("Here", footer = TRUE) %>%
+      page_header("Left", "Right") %>%
+      page_footer(right = "Page [pg] of [tpg]")
+    
+    res <- write_report(rpt)
+    
+    
+ #   file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 7)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
   
 })
 
