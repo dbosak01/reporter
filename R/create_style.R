@@ -796,6 +796,7 @@ get_style_html <- function(rs, style_name, default = NULL) {
 #' meaning to apply the style to all rows.
 #' @param bold Whether to bold the text in the cell.  Valid values are TRUE and
 #' FALSE.  The default is FALSE.
+#' @export
 cell_style <- function(indicator = NULL, bold = FALSE) {
   
   ret <- structure(list(), class = c("cell_style", "list"))
