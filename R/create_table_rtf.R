@@ -95,6 +95,30 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   # print("col_defs:")
   # print(ts$col_defs)
   
+  # Deal with styles
+  styles <- get_styles(ts)
+  # if (!is.null(ts$col_defs)) {
+  #   for (def in ts$col_defs) {
+  #     
+  #     if (!is.null(def$style)) {
+  #       if (!is.null(def$style$indicator)) {
+  #         icol <- ts$col_defs[[def$style$indicator]] 
+  #         if (!is.null(icol)) {
+  #           if (icol$visible == FALSE) {
+  #             def$style$indicator <- paste0("..x.", def$style$indicator)
+  #           }
+  #         }
+  #       }
+  #       styles[[def$var_c]] <- def$style 
+  #     }
+  #     if (!is.null(ts$stub$style)) {
+  #       if (!"stub" %in% names(styles)) { 
+  #         styles[["stub"]] <- ts$stub$style
+  #       }
+  #     }
+  #   }
+  # }
+  
   # Get labels
   labels <- get_labels(dat, ts)
   # print("Labels:")
@@ -230,7 +254,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
       # Get rtf for this page
       pg_lst[[length(pg_lst) + 1]] <- create_table_rtf(rs, ts, pi, 
                                                         blnk_ind, wrap_flag,
-                                                        lpg_rows, pgind)
+                                                        lpg_rows, pgind, styles)
     }
   }
   
@@ -245,7 +269,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
 
 #' @noRd
 create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag, 
-                              lpg_rows, pgind) {
+                              lpg_rows, pgind, styles) {
   rh <- rs$row_height
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
@@ -260,7 +284,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders, 
-                            ts$first_row_blank, ts$continuous)
+                            ts$first_row_blank, ts$continuous, styles)
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -874,7 +898,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                               frb, continuous = FALSE) {
+                               frb, continuous = FALSE, styles) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -978,26 +1002,32 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     }
     
     mxrw <- 1
-    
-    
+  
+
     if (flgs[i] %in% c("B", "L")) {
       
       # Deal with label rows
       vl <- t[i, 1]
       
-      # # Strip out line feeds for label rows
-      # vl <- gsub("\\line", "", vl, fixed = TRUE)
-      # 
-      # # Recalculate based on total width of table
-      # tmp <- split_string_rtf(vl, sum(wdths), rs$units, rs$font)
+      # Deal with styles
+      if (nms[1] %in% names(styles)) {
+        stl <- styles[[nms[1]]]
+        if (stl$bold == TRUE) {
+          bflg <- FALSE
+          if (!is.null(stl$indicator)) {
+            if ("labelrow" %in% stl$indicator) {
+              if (flgs[i] %in% c("L"))
+                bflg <- TRUE
+            } 
+          }
+          if (bflg) {
+            vl <- paste0("\\b ", vl, "\\b0")
+          }
+        }
+      }
       
       ret[i] <- paste0(ret[i], ca[1], " ", vl, "\\cell")
       
-      # Construct rtf
-      #ret[i] <- paste0(ret[i], ca[1], " ", tmp$rtf, "\\cell")
-      
-      # if (length(tmp$lines) > mxrw)
-      #   mxrw <- length(cl)
       
       cl <- strsplit(vl, "\\line", fixed = TRUE)[[1]]
       if (length(cl) > mxrw)
@@ -1011,8 +1041,36 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
         if (!is.control(nms[j])) {
           
+          tb <- t[i, j]
+          if (nms[j] %in% names(styles)) {
+            stl <- styles[[nms[j]]]
+            if (stl$bold == TRUE) {
+              bflg <- TRUE
+              if (!is.null(stl$indicator)) {
+                if ("datarow" %in% stl$indicator) {
+                  if (flgs[i] %in% c("B", "L"))
+                    bflg <- FALSE
+                  
+                } else {
+                  bflg <- FALSE
+                  if (stl$indicator %in% names(tbl)) {
+                    if (!is.null(tbl[[i, stl$indicator]] )) {
+                      if (tbl[[i, stl$indicator]] == TRUE) {
+                        bflg <- TRUE   
+                      }
+                    }
+                  } 
+                  
+                }
+              } 
+              if (bflg) {
+                tb <- paste0("\\b ", tb, "\\b0")
+              }
+            }
+          }
+          
           # Construct rtf
-          ret[i] <- paste0(ret[i], ca[j], " ", t[i, j], "\\cell")
+          ret[i] <- paste0(ret[i], ca[j], " ", tb, "\\cell")
           
           vl <- t[i, j]
           if (all(class(vl) != "character"))

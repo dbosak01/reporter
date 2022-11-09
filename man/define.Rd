@@ -21,7 +21,8 @@ define(
   page_break = FALSE,
   indent = NULL,
   label_row = FALSE,
-  standard_eval = FALSE
+  standard_eval = FALSE,
+  style = NULL
 )
 }
 \arguments{
@@ -110,6 +111,10 @@ stub column.}
 use standard evaluation on the \code{vars} parameter value.  Default is
 FALSE.  Set this parameter to TRUE if you want to pass the \code{vars}
 value(s) using a variable.}
+
+\item{style}{A \code{\link{cell_style}} object that defines the desired
+style for this column.  The cell style object can be used to define 
+conditional styling.}
 }
 \value{
 The modified table spec.

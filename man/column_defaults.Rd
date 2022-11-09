@@ -15,7 +15,8 @@ column_defaults(
   label_align = NULL,
   width = NULL,
   n = NULL,
-  standard_eval = FALSE
+  standard_eval = FALSE,
+  style = NULL
 )
 }
 \arguments{
@@ -69,6 +70,9 @@ use standard or non-standard evaluation of the \code{vars}, \code{from},
 and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
 to pass the column names as variables. Default is FALSE, meaning it
 will use non-standard (unquoted) evaluation.}
+
+\item{style}{A \code{\link{cell_style}} object that defines a style 
+for all columns associated with the column defaults.}
 }
 \value{
 The modified table spec.

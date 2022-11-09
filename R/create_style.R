@@ -775,3 +775,43 @@ get_style_html <- function(rs, style_name, default = NULL) {
   
   return(ret)
 }
+
+
+
+#' @title A style specification for a table cell
+#' @description A class to define the style for a cell in a table.  This
+#' class can be assigned to the "style" parameter of a \code{\link{define}}
+#' function to apply styles to some or all of the cells in that column.  The 
+#' "lookup" parameter identifies a column in the table to trigger the style.
+#' Alternatively, the "labelrow", "blankrow", or "datarow" shortcuts may be used
+#' to identify cells for styling.
+#' @param indicator A keyword or column name to indicate which rows the cell
+#' style should be applied to. Valid keywords are "labelrow", "blankrow", or
+#' "datarow". To use an indicator column, create a column on the input dataset
+#' that has a TRUE value for each row that you want the cell style applied.
+#' Then pass the name of the column to the indicator parameter. If you do not
+#' want to see the indicator column on the report, set the "visible" property 
+#' on the \code{\link{define}} function to FALSE for that column. 
+#' The default value of the indicator parameter is NULL, 
+#' meaning to apply the style to all rows.
+#' @param bold Whether to bold the text in the cell.  Valid values are TRUE and
+#' FALSE.  The default is FALSE.
+cell_style <- function(indicator = NULL, bold = FALSE) {
+  
+  ret <- structure(list(), class = c("cell_style", "list"))
+  
+  
+  # Deal with single value unquoted parameter values
+  oindicator <- deparse(substitute(indicator, env = environment()))
+  indicator  <- tryCatch({if (typeof(indicator) %in% c("character", "NULL")) indicator else oindicator},
+                 error = function(cond) {oindicator})
+  
+  
+  ret$indicator <- indicator
+  ret$bold <- bold
+  
+  
+  return(ret)
+  
+}
+

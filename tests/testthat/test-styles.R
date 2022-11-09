@@ -548,3 +548,12 @@ test_that("style12: Label row is one cell and styles work.", {
   
 })
 
+test_that("style13: Label row is one cell and styles work.", {
+  
+  res <- cell_style(indicator = fork, bold = TRUE)
+  
+  expect_equal(res$indicator, "fork")
+  expect_equal(res$bold, TRUE)
+  
+})
+

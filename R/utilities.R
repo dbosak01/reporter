@@ -925,6 +925,8 @@ set_column_defaults <- function(ts, keys) {
           def$label_align <- dflt$label_align
         if (is.null(def$n))
           def$n <- dflt$n
+        if (is.null(def$style))
+          def$style <- dflt$style
         
         ret[[nm]] <- def
       }
@@ -936,6 +938,45 @@ set_column_defaults <- function(ts, keys) {
   
   return(ret)
 }
+
+# Create a list of style specs for all columns that have styles assigned.
+get_styles <- function(ts) {
+  
+  ret <- list()
+  if (!is.null(ts$col_defs)) {
+    for (def in ts$col_defs) {
+      
+      if (!is.null(def$style)) {
+        if (!is.null(def$style$indicator)) {
+          icol <- ts$col_defs[[def$style$indicator]] 
+          if (!is.null(icol)) {
+            if (icol$visible == FALSE) {
+              def$style$indicator <- paste0("..x.", def$style$indicator)
+            }
+          }
+        }
+        ret[[def$var_c]] <- def$style 
+      }
+      if (!is.null(ts$stub$style)) {
+        if (!"stub" %in% names(styles)) { 
+          if (!is.null(ts$stub$style$indicator)) {
+            icol <- ts$col_defs[[ts$stub$style$indicator]] 
+            if (!is.null(icol)) {
+              if (icol$visible == FALSE) {
+                ts$stub$style$indicator <- paste0("..x.", ts$stub$style$indicator)
+              }
+            }
+          }
+          
+          ret[["stub"]] <- ts$stub$style
+        }
+      }
+    }
+  } 
+  
+  return(ret)
+}
+
 
 #' @noRd
 getExtension <- function(file){ 

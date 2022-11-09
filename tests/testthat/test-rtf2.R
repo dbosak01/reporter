@@ -2552,7 +2552,7 @@ test_that("rtf2-74: Multi-page continuous tables work as expected.", {
     
     
     tbl <- create_table(dat, continuous = TRUE, borders = "all") %>%
-      titles("My Title") %>%
+     # titles("My Title") %>%
       footnotes("My footnotes", blank_row = "none")
     
     
@@ -2827,6 +2827,256 @@ test_that("rtf2-80: Two tables one continuous works as expected.", {
   }
   
 })
+
+# Can't reproduce Raphael's problem
+test_that("rtf2-81: Column widths work as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test81.rtf")
+    
+    dat <- mtcars[, 1:9]
+    
+    
+    tbl <- create_table(dat, width = 8.84) %>%
+      titles("My title") %>%
+      column_defaults(width = .75) %>%
+      define(mpg, width = 2.09) %>%
+      define(cyl, width = 1.5) %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait",
+                         paper_size = c(9.5, 11.5)) %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE) %>% 
+      set_margins(top = .25, bottom = .25, left = .25, right = .25)
+    
+    res <- write_report(rpt)
+    
+    
+    #file.show(res$modified_path)
+   
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf2-82: Basic cell style bold works as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test82.rtf")
+    
+    dat <- mtcars[, 1:5]
+    dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
+    
+    
+    tbl <- create_table(dat, width = 7) %>%
+      titles("My title") %>%
+      column_defaults(width = .75) %>%
+      define(mpg, width = 1, style = cell_style(bold = TRUE)) %>%
+      define(cyl, width = 1) %>%
+      define(disp, style = cell_style(bold = TRUE)) %>%
+      define(hp, style = cell_style(bold = TRUE, indicator = hpflg)) %>%
+      define(hpflg, visible = FALSE) %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+    # file.show(res$modified_path)
+    
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+test_that("rtf2-83: Bolding works with stub.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test83.rtf")
+  
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", TRUE, FALSE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    stub(c("var", "label"), 
+         style = cell_style(bold = TRUE, indicator = "labelrow")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center", n = 19,
+           style = cell_style(bold = TRUE, indicator = cylflg)) %>% 
+    define(B, label = "Group B", align = "center", n = 13, 
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                       font = "Times") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = "Left", 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  
+  
+  res <- write_report(rpt)
+  
+  # file.show(res$modified_path)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
+test_that("rtf2-84: Bold cell style with column defaults.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test84.rtf")
+    
+    dat <- mtcars[, 1:5]
+    dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My title") %>%
+      column_defaults(width = .75, vars = c("cyl", "disp", "hp"),
+                      style = cell_style(bold=TRUE, indicator = hpflg)) %>%
+      define(mpg) %>%
+      define(cyl) %>%
+      define(disp) %>%
+      define(hp) %>%
+      define(hpflg, visible = FALSE) %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+   # file.show(res$modified_path)
+    
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("rtf2-85: Bolding, column defaults, and stub works.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test85.rtf")
+  
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", FALSE, TRUE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    column_defaults(style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    stub(c("var", "label"), width = 2,
+         style = cell_style(bold = TRUE, indicator = cylflg)) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center", n = 19) %>% 
+    define(B, label = "Group B", align = "center", n = 13, 
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                       font = "Times") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = "Left", 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  res <- write_report(rpt)
+  
+  # file.show(res$modified_path)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
 
 
 # User Tests --------------------------------------------------------------

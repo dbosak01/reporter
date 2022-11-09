@@ -62,6 +62,7 @@ reference:
   - add_style
   - get_theme
   - print.style_spec
+  - cell_style
 - title: Other Functions
   desc: Here are some other functions included in the reporter package.
   contents:

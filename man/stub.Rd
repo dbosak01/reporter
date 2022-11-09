@@ -11,7 +11,8 @@ stub(
   label_align = NULL,
   align = "left",
   width = NULL,
-  standard_eval = FALSE
+  standard_eval = FALSE,
+  style = NULL
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ use standard or non-standard evaluation of the \code{vars}, \code{from},
 and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
 to pass the column names as variables. Default is FALSE, meaning it
 will use non-standard (unquoted) evaluation.}
+
+\item{style}{A \code{\link{cell_style}} object that contains the style
+specifications for the stub.}
 }
 \value{
 The modified table spec.
