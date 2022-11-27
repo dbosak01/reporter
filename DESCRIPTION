@@ -21,7 +21,7 @@ Description: Contains functions to create regulatory-style statistical reports.
     relying on other table packages.  The package supports titles, footnotes, 
     page header, page footers, spanning headers, page by variables, 
     and automatic page numbering.
-License: CC BY-NC 4.0
+License: CC0
 Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues

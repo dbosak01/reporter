@@ -132,7 +132,8 @@ function is to minimize redundancy in column definitions.</p>
 <span>  label_align <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  standard_eval <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  standard_eval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  style <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -209,6 +210,11 @@ use standard or non-standard evaluation of the <code>vars</code>, <code>from</co
 and <code>to</code> parameters.  Set <code>standard_eval</code> to TRUE if you want
 to pass the column names as variables. Default is FALSE, meaning it
 will use non-standard (unquoted) evaluation.</p></dd>
+
+
+<dt>style</dt>
+<dd><p>A <code><a href="cell_style.html">cell_style</a></code> object that defines a style 
+for all columns associated with the column defaults.</p></dd>
 
 </dl></div>
     <div id="value">

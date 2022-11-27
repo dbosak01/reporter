@@ -136,7 +136,8 @@ sophisticated options like page wrapping and page breaking.</p>
 <span>  page_break <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  indent <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label_row <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  standard_eval <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  standard_eval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  style <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -260,6 +261,12 @@ stub column.</p></dd>
 use standard evaluation on the <code>vars</code> parameter value.  Default is
 FALSE.  Set this parameter to TRUE if you want to pass the <code>vars</code>
 value(s) using a variable.</p></dd>
+
+
+<dt>style</dt>
+<dd><p>A <code><a href="cell_style.html">cell_style</a></code> object that defines the desired
+style for this column.  The cell style object can be used to define 
+conditional styling.</p></dd>
 
 </dl></div>
     <div id="value">

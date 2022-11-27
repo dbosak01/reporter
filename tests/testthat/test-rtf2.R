@@ -18,7 +18,7 @@ cnt <- paste0("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ",
 fnt <- "Arial"
 fsz <- 10
 
-dev <- TRUE
+dev <- FALSE
 
 
 # Basic Tests 1 - 10 ------------------------------------------------------

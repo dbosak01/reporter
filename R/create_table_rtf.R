@@ -1019,6 +1019,8 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
               if (flgs[i] %in% c("L"))
                 bflg <- TRUE
             } 
+          } else {
+            bflg <- TRUE 
           }
           if (bflg) {
             vl <- paste0("\\b ", vl, "\\b0")

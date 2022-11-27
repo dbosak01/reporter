@@ -30,11 +30,6 @@ The current version supports TXT, RTF, PDF, HTML, and DOCX output types. Note th
 unlike other packages, all outputs from the **reporter** package
 are paged by default.  
 
-The **reporter** package is distributed under a [Creative Commons non-commercial 
-license](https://creativecommons.org/licenses/by-nc/4.0).  It is freely available 
-for personal and organizational use, but cannot be used to create a commercial 
-product without permission of the license holder.
-
 ## Key Features
 
 The **reporter** package contains the following key features:

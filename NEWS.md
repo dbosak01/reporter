@@ -10,8 +10,7 @@ turned 90 degrees.
 be created a a continuous table spanning multiple pages, and not repeating
 titles and footnotes. Currently for RTF only.  
 * Allowed EMF files on `create_plot()` for RTF output.
-* Added glue functionality to table body.
-* Removed RTF table break after headerless table.
+* Changed license to CC0.
 
 
 # reporter 1.3.7 
