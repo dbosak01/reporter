@@ -10,6 +10,7 @@ turned 90 degrees.
 be created a a continuous table spanning multiple pages, and not repeating
 titles and footnotes. Currently for RTF only.  
 * Allowed EMF files on `create_plot()` for RTF output.
+* Added `cell_style()` object to apply styling to particular cells in a table.
 * Changed license to CC0.
 
 

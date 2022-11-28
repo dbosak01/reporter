@@ -33,7 +33,7 @@ test_that("get_table_body_pdf works as expected.", {
   
   
   res <- get_table_body_pdf(rpt, dat, wdth, algns,  
-                            "center", "none", 0, spwidths)
+                            "center", "none", 0, spwidths, styles = list())
   
   res  
   
@@ -163,7 +163,8 @@ test_that("create_table_pdf works as expected.", {
   pi <- list(keys = names(dat), col_width = wdth, label = nms, col_align = algns,
              label_align = algns, table_align = "center", data = dat)
   
-  res <- create_table_pdf(rpt, tbl, pi, "below", FALSE, 0, spwidths = spwidths)
+  res <- create_table_pdf(rpt, tbl, pi, "below", FALSE, 0, spwidths = spwidths, 
+                          styles = list())
   res
   
   # Doesn't seem right.  Come back to this.

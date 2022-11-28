@@ -95,6 +95,9 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   # print("col_defs:")
   # print(ts$col_defs)
   
+  # Deal with styles
+  styles <- get_styles(ts)
+  
   # Get labels
   labels <- get_labels(dat, ts)
   # print("Labels:")
@@ -221,7 +224,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
                       pgby, cntnt$align)
       pg_lst[[length(pg_lst) + 1]] <- create_table_docx(rs, ts, pi, 
                                                        blnk_ind, wrap_flag,
-                                                       lpg_rows)
+                                                       lpg_rows, styles)
     }
   }
   
@@ -236,7 +239,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
 
 #' @noRd
 create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag, 
-                             lpg_rows) {
+                             lpg_rows, styles) {
   rh <- rs$row_height
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
@@ -281,7 +284,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_docx(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, 
-                             exbrdr, ts$first_row_blank)
+                             exbrdr, ts$first_row_blank, styles)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -845,7 +848,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                                ex_brdr = FALSE, frb = FALSE) {
+                                ex_brdr = FALSE, frb = FALSE, styles) {
   
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
@@ -949,10 +952,19 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         #   
         # }
         
+        
+        stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+        
+        bflg <- FALSE
+        if ("bold" %in% stl) {
+          bflg <- TRUE
+        }
+        
+        
         if (!(tb[i] %in% c("B", "L") & j > 1)) {
           # Construct html
           ret[i] <- paste0(ret[i], "<w:tc>", b,
-                           para(vl, ca[j]), "</w:tc>")
+                           para(vl, ca[j], bold = bflg), "</w:tc>")
         }
 
         

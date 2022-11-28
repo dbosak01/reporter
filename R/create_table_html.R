@@ -95,6 +95,9 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # print("col_defs:")
   # print(ts$col_defs)
   
+  # Deal with styles
+  styles <- get_styles(ts)
+  
   # Get labels
   labels <- get_labels(dat, ts)
   # print("Labels:")
@@ -225,7 +228,7 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
                       pgby, cntnt$align)
       pg_lst[[length(pg_lst) + 1]] <- create_table_html(rs, ts, pi, 
                                                        blnk_ind, wrap_flag,
-                                                       lpg_rows)
+                                                       lpg_rows, styles)
     }
   }
   
@@ -240,7 +243,7 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
 
 #' @noRd
 create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag, 
-                             lpg_rows) {
+                             lpg_rows, styles) {
   rh <- rs$row_height
   shdrs <- list(lines = 0, twips = 0)
   hdrs <- list(lines = 0, twips = 0)
@@ -281,7 +284,7 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   rws <- get_table_body_html(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, 
                              !ts$headerless,
-                             ts$first_row_blank)
+                             ts$first_row_blank, styles)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -842,7 +845,7 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                                ex_brdr = FALSE, frb = FALSE) {
+                                ex_brdr = FALSE, frb = FALSE, styles) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -955,6 +958,8 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         vl <- t[i, j]
         if (all(class(vl) != "character"))
           vl <- as.character(vl)
+        else 
+          vl <- encodeHTML(vl)
         
         if (merge_label_row  & flgs[i] %in% c("B", "L")) {
           if (j == 1) {
@@ -966,34 +971,47 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
             # tmp <- split_string_html(vl, sum(wdths), rs$units)
             # 
             # vl <- tmp$html
+            
+            stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+            
+            if ("bold" %in% stl) {
+              vl <- paste0("<b>", vl, "</b>") 
+            }
+            
           
             if (b == "") {
               
               ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\"",
                                " colspan = \"", ncol(t), "\">", 
-                               encodeHTML(vl), "</td>")
+                               vl, "</td>")
             } else { 
               
               ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\"",
                                " colspan = \"", ncol(t), "\"",
                                " style=\"", b, "\">", 
-                               encodeHTML(vl), "</td>")
+                               vl, "</td>")
             }
           
           
           }
         } else {
           
+          stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+          
+          if ("bold" %in% stl) {
+            vl <- paste0("<b>", vl, "</b>") 
+          } 
+          
           # Construct html
           if (b == "") {
   
             ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\">", 
-                             encodeHTML(t[i, j]), "</td>")
+                             vl, "</td>")
           } else { 
             
             ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, 
                              "\" style=\"", b, "\">", 
-                             encodeHTML(t[i, j]), "</td>")
+                             vl, "</td>")
           }
         }
         

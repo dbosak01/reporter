@@ -24,7 +24,8 @@ test_that("get_table_body_html works as expected.", {
   names(algns) <- names(dat)
   
   
-  res <- get_table_body_html(rpt, dat, wdth, algns,  "center", "none")
+  res <- get_table_body_html(rpt, dat, wdth, algns,  "center", "none", 
+                             styles = list())
   
   res  
   
@@ -148,7 +149,7 @@ test_that("create_table_html works as expected.", {
   pi <- list(keys = names(dat), col_width = wdth, label = nms,
              label_align = algns, table_align = "center", data = dat)
   
-  res <- create_table_html(rpt, tbl, pi, "below", FALSE, 0)
+  res <- create_table_html(rpt, tbl, pi, "below", FALSE, 0, styles = list())
   res
   
   # Doesn't seem right.  Come back to this.

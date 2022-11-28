@@ -23,8 +23,46 @@ FALSE.  The default is FALSE.}
 \description{
 A class to define the style for a cell in a table.  This
 class can be assigned to the "style" parameter of a \code{\link{define}}
-function to apply styles to some or all of the cells in that column.  The 
-"lookup" parameter identifies a column in the table to trigger the style.
+function, a \code{\link{stub}} function, or a \code{\link{column_defaults}}  
+function.  When assigned, the cell style will apply to some or all of the cells 
+in the relevant columns.  The 
+"indicator" parameter identifies a column in the table to trigger the style.
 Alternatively, the "labelrow", "blankrow", or "datarow" shortcuts may be used
 to identify cells for styling.
+}
+\examples{
+library(reporter)
+library(magrittr)
+
+# Create temporary path
+tmp <- file.path(tempdir(), "table1.rtf")
+
+# Prepare data
+df <- data.frame(names = rownames(mtcars), mtcars[, 1:3])
+
+# Set indicator variable
+df$mpgind <- ifelse(df$mpg > 20, TRUE, FALSE)
+
+# Create table
+tbl <- create_table(df, first_row_blank = TRUE, 
+                    header_bold = TRUE, borders = c("top", "bottom")) \%>\% 
+  column_defaults(style = cell_style(bold = TRUE, indicator = "mpgind")) \%>\%
+  define(names, label = "Car Name") \%>\%
+  define(mpg, label = "Miles Per Gallon") \%>\% 
+  define(cyl, label = "Cylinders") \%>\% 
+  define(disp, label = "Displacement")  \%>\% 
+  define(mpgind, visible = FALSE) \%>\%
+  titles("Table 1.0", "MTCARS with Indicator Variable", 
+         borders = "none", bold = TRUE, font_size = 11) \%>\% 
+  footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
+
+# Create report and add custom style
+rpt <- create_report(tmp, output_type = "RTF", font = "Arial") \%>\% 
+  add_content(tbl) 
+
+# Write out report
+write_report(rpt)
+
+# View report
+# file.show(tmp)
 }

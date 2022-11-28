@@ -95,6 +95,9 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   # print("col_defs:")
   # print(ts$col_defs)
   
+  # Deal with styles
+  styles <- get_styles(ts)
+  
   # Get labels
   labels <- get_labels(dat, ts)
   # print("Labels:")
@@ -232,7 +235,7 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
                       pgby, cntnt$align)
       pg_lst[[length(pg_lst) + 1]] <- create_table_pdf(rs, ts, pi, 
                                                        blnk_ind, wrap_flag,
-                                                       fp_offset, spwidths)
+                                                       fp_offset, spwidths, styles)
       
       fp_offset <- 0
     }
@@ -251,7 +254,7 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
 
 #' @noRd
 create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag, 
-                             lpg_rows, spwidths) {
+                             lpg_rows, spwidths, styles) {
   rh <- rs$row_height
   ys <- lpg_rows * rh
   conv <- rs$point_conversion
@@ -323,7 +326,7 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   bdy <- get_table_body_pdf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders,
                             ystart = ys,
-                            spwidths, frb = ts$first_row_blank)
+                            spwidths, frb = ts$first_row_blank, styles = styles)
   ys <- ys + bdy$points
 
 
@@ -1023,7 +1026,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
 #' @noRd
 get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
                                ystart = 0, spwidths = list(), 
-                               brdr_flag = FALSE, frb = FALSE) {
+                               brdr_flag = FALSE, frb = FALSE, styles) {
   
   border_flag <- FALSE
   
@@ -1145,12 +1148,19 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       } else if (length(trimws(tmp)) == 0) {
         yline <- yline + rh
       } else {
+        
+        stl <- get_cell_styles(j, styles, flgs, i, tbl)
+        
+        bflg <- FALSE
+        if ("bold" %in% stl) {
+          bflg <- TRUE 
+        }
       
         # Loop for cell wraps
         for (ln in seq_len(length(tmp))) {
           
           ret[[length(ret) + 1]] <- page_text(tmp[ln], fs, 
-                                              bold = FALSE,
+                                              bold = bflg,
                                               xpos = get_points(lb, 
                                                                 rb,
                                                                 spwidths[[i]][[j]][ln],

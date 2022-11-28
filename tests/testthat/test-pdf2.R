@@ -2422,6 +2422,212 @@ test_that("pdf2-65: Custom page size works as expected.", {
 })
 
 
+test_that("pdf2-66: Basic cell style bold works as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "pdf2/test66.pdf")
+    
+    dat <- mtcars[, 1:5]
+    dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
+    
+    
+    tbl <- create_table(dat, width = 7) %>%
+      titles("My title") %>%
+      column_defaults(width = .75) %>%
+      define(mpg, width = 1, style = cell_style(bold = TRUE)) %>%
+      define(cyl, width = 1) %>%
+      define(disp, style = cell_style(bold = TRUE)) %>%
+      define(hp, style = cell_style(bold = TRUE, indicator = hpflg)) %>%
+      define(hpflg, visible = FALSE) %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "PDF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+    # file.show(res$modified_path)
+    
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+test_that("pdf2-67: Bolding works with stub.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test67.pdf")
+  
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", TRUE, FALSE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    column_defaults(vars = c("stub", "A"), 
+                    style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    stub(c("var", "label"), 
+         style = cell_style(bold = TRUE, indicator = "labelrow")) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center", n = 19,
+           style = cell_style(bold = TRUE, indicator = cylflg)) %>% 
+    define(B, label = "Group B", align = "center", n = 13, 
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "PDF",
+                       font = "Times") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = "Left", 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  
+  
+  res <- write_report(rpt)
+  
+  # file.show(res$modified_path)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
+test_that("pdf2-68: Bold cell style with column defaults.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "pdf2/test68.pdf")
+    
+    dat <- mtcars[, 1:5]
+    dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My title") %>%
+      column_defaults(width = .75, vars = c("cyl", "disp", "hp"),
+                      style = cell_style(bold=TRUE, indicator = hpflg)) %>%
+      define(mpg) %>%
+      define(cyl) %>%
+      define(disp) %>%
+      define(hp) %>%
+      define(hpflg, visible = FALSE) %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "PDF", 
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+    # file.show(res$modified_path)
+    
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+test_that("pdf2-69: Bolding, column defaults, and stub works.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test69.pdf")
+  
+  
+  # Read in prepared data
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B          
+      "ampg"   "N"          "19"          "13"         
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
+      "ampg"   "Median"     "16.4"        "21.4"       
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", FALSE, TRUE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    column_defaults(style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    stub(c("var", "label"), width = 2,
+         style = cell_style(bold = TRUE, indicator = cylflg)) %>% 
+    define(var, blank_after = TRUE, label_row = TRUE, 
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
+    define(label, indent = .25) %>% 
+    define(A, label = "Group A", align = "center", n = 19) %>% 
+    define(B, label = "Group B", align = "center", n = 13, 
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "PDF",
+                       font = "Times") %>% 
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
+    titles("Table 1.0", "MTCARS Summary Table") %>% 
+    add_content(tbl) %>% 
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = "Left", 
+                center = "Confidential", 
+                right = "Page [pg] of [tpg]")
+  
+  res <- write_report(rpt)
+  
+  # file.show(res$modified_path)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+
 
 # # User Tests --------------------------------------------------------------
 

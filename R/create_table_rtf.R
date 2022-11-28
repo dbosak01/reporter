@@ -97,27 +97,6 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   
   # Deal with styles
   styles <- get_styles(ts)
-  # if (!is.null(ts$col_defs)) {
-  #   for (def in ts$col_defs) {
-  #     
-  #     if (!is.null(def$style)) {
-  #       if (!is.null(def$style$indicator)) {
-  #         icol <- ts$col_defs[[def$style$indicator]] 
-  #         if (!is.null(icol)) {
-  #           if (icol$visible == FALSE) {
-  #             def$style$indicator <- paste0("..x.", def$style$indicator)
-  #           }
-  #         }
-  #       }
-  #       styles[[def$var_c]] <- def$style 
-  #     }
-  #     if (!is.null(ts$stub$style)) {
-  #       if (!"stub" %in% names(styles)) { 
-  #         styles[["stub"]] <- ts$stub$style
-  #       }
-  #     }
-  #   }
-  # }
   
   # Get labels
   labels <- get_labels(dat, ts)
@@ -1010,22 +989,35 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       vl <- t[i, 1]
       
       # Deal with styles
-      if (nms[1] %in% names(styles)) {
-        stl <- styles[[nms[1]]]
-        if (stl$bold == TRUE) {
-          bflg <- FALSE
-          if (!is.null(stl$indicator)) {
-            if ("labelrow" %in% stl$indicator) {
-              if (flgs[i] %in% c("L"))
-                bflg <- TRUE
-            } 
-          } else {
-            bflg <- TRUE 
-          }
-          if (bflg) {
-            vl <- paste0("\\b ", vl, "\\b0")
-          }
-        }
+      # if (nms[1] %in% names(styles)) {
+      #   stl <- styles[[nms[1]]]
+      #   if (stl$bold == TRUE) {
+      #     bflg <- FALSE
+      #     if (!is.null(stl$indicator)) {
+      #       if ("labelrow" %in% stl$indicator) {
+      #         if (flgs[i] %in% c("L"))
+      #           bflg <- TRUE
+      #       } 
+      #       if (stl$indicator %in% names(tbl)) {
+      #         if (!is.null(tbl[[i, stl$indicator]] )) {
+      #           if (tbl[[i, stl$indicator]] == TRUE) {
+      #             bflg <- TRUE   
+      #           }
+      #         }
+      #       } 
+      #     } else {
+      #       bflg <- TRUE 
+      #     }
+      #     if (bflg) {
+      #       vl <- paste0("\\b ", vl, "\\b0")
+      #     }
+      #   }
+      # }
+      
+      stl <- get_cell_styles(nms[1], styles, flgs, i, tbl)
+      
+      if ("bold" %in% stl) {
+        vl <- paste0("\\b ", vl, "\\b0")
       }
       
       ret[i] <- paste0(ret[i], ca[1], " ", vl, "\\cell")
@@ -1044,31 +1036,37 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (!is.control(nms[j])) {
           
           tb <- t[i, j]
-          if (nms[j] %in% names(styles)) {
-            stl <- styles[[nms[j]]]
-            if (stl$bold == TRUE) {
-              bflg <- TRUE
-              if (!is.null(stl$indicator)) {
-                if ("datarow" %in% stl$indicator) {
-                  if (flgs[i] %in% c("B", "L"))
-                    bflg <- FALSE
-                  
-                } else {
-                  bflg <- FALSE
-                  if (stl$indicator %in% names(tbl)) {
-                    if (!is.null(tbl[[i, stl$indicator]] )) {
-                      if (tbl[[i, stl$indicator]] == TRUE) {
-                        bflg <- TRUE   
-                      }
-                    }
-                  } 
-                  
-                }
-              } 
-              if (bflg) {
-                tb <- paste0("\\b ", tb, "\\b0")
-              }
-            }
+          # if (nms[j] %in% names(styles)) {
+          #   stl <- styles[[nms[j]]]
+          #   if (stl$bold == TRUE) {
+          #     bflg <- TRUE
+          #     if (!is.null(stl$indicator)) {
+          #       if ("datarow" %in% stl$indicator) {
+          #         if (flgs[i] %in% c("B", "L"))
+          #           bflg <- FALSE
+          #         
+          #       } else {
+          #         bflg <- FALSE
+          #         if (stl$indicator %in% names(tbl)) {
+          #           if (!is.null(tbl[[i, stl$indicator]] )) {
+          #             if (tbl[[i, stl$indicator]] == TRUE) {
+          #               bflg <- TRUE   
+          #             }
+          #           }
+          #         } 
+          #         
+          #       }
+          #     } 
+          #     if (bflg) {
+          #       tb <- paste0("\\b ", tb, "\\b0")
+          #     }
+          #   }
+          # }
+          
+          stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+          
+          if ("bold" %in% stl) {
+            tb <- paste0("\\b ", tb, "\\b0") 
           }
           
           # Construct rtf

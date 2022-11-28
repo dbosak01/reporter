@@ -2940,6 +2940,8 @@ test_that("rtf2-83: Bolding works with stub.", {
   
   # Create table
   tbl <- create_table(df, first_row_blank = TRUE) %>% 
+    column_defaults(vars = c("stub", "A"), 
+                    style = cell_style(bold = TRUE, indicator = cylflg)) %>%
     stub(c("var", "label"), 
          style = cell_style(bold = TRUE, indicator = "labelrow")) %>% 
     define(var, blank_after = TRUE, label_row = TRUE, 

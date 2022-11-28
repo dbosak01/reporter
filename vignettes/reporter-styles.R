@@ -181,3 +181,84 @@ knitr::opts_chunk$set(
 #  
 #  
 
+## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  library(reporter)
+#  
+#  # Create temporary path
+#  tmp <- file.path(tempdir(), "example12j.rtf")
+#  
+#  # Read in prepared data
+#  df <- read.table(header = TRUE, text = '
+#      var     label        A             B
+#      "ampg"   "N"          "19"          "13"
+#      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+#      "ampg"   "Median"     "16.4"        "21.4"
+#      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+#      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+#      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+#      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
+#      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+#  
+#  
+#  # Create table
+#  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all"),
+#                      header_bold = TRUE) %>%
+#    stub(c("var", "label"),
+#         style = cell_style(bold = TRUE, indicator = "labelrow")) %>%
+#    column_defaults(width = 1.25) %>%
+#    define(var, blank_after = TRUE, label_row = TRUE,
+#           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
+#    define(label, indent = .25) %>%
+#    define(A, label = "Group A", align = "center", n = 19) %>%
+#    define(B, label = "Group B", align = "center", n = 13)  %>%
+#    titles("Table 1.0", "MTCARS Summary Table with Cell Style",
+#           borders = "none", bold = TRUE, font_size = 11) %>%
+#    footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
+#  
+#  # Create report and add custom style
+#  rpt <- create_report(tmp, output_type = "RTF", font = "Arial") %>%
+#    add_content(tbl)
+#  
+#  # Write out report
+#  write_report(rpt)
+#  
+#  # View report
+#  # file.show(tmp)
+#  
+
+## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  library(reporter)
+#  
+#  # Create temporary path
+#  tmp <- file.path(tempdir(), "example12k.rtf")
+#  
+#  # Prepare data
+#  df <- data.frame(names = rownames(mtcars), mtcars[, 1:3])
+#  
+#  # Set style indicator variable
+#  df$mpgind <- ifelse(df$mpg > 20, TRUE, FALSE)
+#  
+#  # Create table
+#  tbl <- create_table(df, first_row_blank = TRUE,
+#                      header_bold = TRUE, borders = c("top", "bottom")) %>%
+#    define(names, label = "Car Name") %>%
+#    define(mpg, label = "Miles Per Gallon",
+#           style = cell_style(bold = TRUE, indicator = "mpgind")) %>%
+#    define(cyl, label = "Cylinders") %>%
+#    define(disp, label = "Displacement")  %>%
+#    define(mpgind, visible = FALSE) %>%
+#    titles("Table 1.0", "MTCARS with Indicator Variable",
+#           borders = "none", bold = TRUE, font_size = 11) %>%
+#    footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
+#  
+#  # Create report and add custom style
+#  rpt <- create_report(tmp, output_type = "RTF", font = "Arial") %>%
+#    add_content(tbl)
+#  
+#  # Write out report
+#  write_report(rpt)
+#  
+#  # View report
+#  # file.show(tmp)
+#  
+

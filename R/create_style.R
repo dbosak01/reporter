@@ -781,10 +781,12 @@ get_style_html <- function(rs, style_name, default = NULL) {
 #' @title A style specification for a table cell
 #' @description A class to define the style for a cell in a table.  This
 #' class can be assigned to the "style" parameter of a \code{\link{define}}
-#' function to apply styles to some or all of the cells in that column.  The 
-#' "lookup" parameter identifies a column in the table to trigger the style.
+#' function, a \code{\link{stub}} function, or a \code{\link{column_defaults}}  
+#' function.  When assigned, the cell style will apply to some or all of the cells 
+#' in the relevant columns.  The 
+#' "indicator" parameter identifies a column in the table to trigger the style.
 #' Alternatively, the "labelrow", "blankrow", or "datarow" shortcuts may be used
-#' to identify cells for styling.
+#' to identify cells for styling.  
 #' @param indicator A keyword or column name to indicate which rows the cell
 #' style should be applied to. Valid keywords are "labelrow", "blankrow", or
 #' "datarow". To use an indicator column, create a column on the input dataset
@@ -796,6 +798,41 @@ get_style_html <- function(rs, style_name, default = NULL) {
 #' meaning to apply the style to all rows.
 #' @param bold Whether to bold the text in the cell.  Valid values are TRUE and
 #' FALSE.  The default is FALSE.
+#' @examples 
+#' library(reporter)
+#' library(magrittr)
+#'
+#' # Create temporary path
+#' tmp <- file.path(tempdir(), "table1.rtf")
+#' 
+#' # Prepare data
+#' df <- data.frame(names = rownames(mtcars), mtcars[, 1:3])
+#' 
+#' # Set indicator variable
+#' df$mpgind <- ifelse(df$mpg > 20, TRUE, FALSE)
+#' 
+#' # Create table
+#' tbl <- create_table(df, first_row_blank = TRUE, 
+#'                     header_bold = TRUE, borders = c("top", "bottom")) %>% 
+#'   column_defaults(style = cell_style(bold = TRUE, indicator = "mpgind")) %>%
+#'   define(names, label = "Car Name") %>%
+#'   define(mpg, label = "Miles Per Gallon") %>% 
+#'   define(cyl, label = "Cylinders") %>% 
+#'   define(disp, label = "Displacement")  %>% 
+#'   define(mpgind, visible = FALSE) %>%
+#'   titles("Table 1.0", "MTCARS with Indicator Variable", 
+#'          borders = "none", bold = TRUE, font_size = 11) %>% 
+#'   footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
+#' 
+#' # Create report and add custom style
+#' rpt <- create_report(tmp, output_type = "RTF", font = "Arial") %>% 
+#'   add_content(tbl) 
+#' 
+#' # Write out report
+#' write_report(rpt)
+#' 
+#' # View report
+#' # file.show(tmp)
 #' @export
 cell_style <- function(indicator = NULL, bold = FALSE) {
   
@@ -811,6 +848,75 @@ cell_style <- function(indicator = NULL, bold = FALSE) {
   ret$indicator <- indicator
   ret$bold <- bold
   
+  
+  return(ret)
+  
+}
+
+
+has_cell_style <- function(colnm, styles) {
+  
+ ret <- FALSE  
+ if (colnm %in% names(styles)) {
+   
+   ret <- TRUE
+   
+ }
+  
+ return(ret)
+}
+
+
+get_cell_style <- function(colnm, styles) {
+  
+  ret <- NULL
+  if (has_cell_style(colnm, styles)) {
+    
+    ret <- styles[[colnm]]
+  }
+  
+  
+  return(ret)
+}
+
+
+# Return vector of strings saying which styles to apply to this cell
+get_cell_styles <- function(colnm, styles, flgs, rw, tbl) {
+  
+  ret <- ""
+  bflg <- FALSE
+  
+  if (has_cell_style(colnm, styles)) {
+    stl <- get_cell_style(colnm, styles)
+    if (stl$bold == TRUE) {
+      bflg <- TRUE
+      if (!is.null(stl$indicator)) {
+        if ("datarow" %in% stl$indicator &&
+            flgs[rw] %in% c("B", "L")) {
+          bflg <- FALSE
+        } else if ("labelrow" %in% stl$indicator &&
+                   !flgs[rw] %in% "L") {
+          bflg <- FALSE
+        } else if ("blankrow" %in% stl$indicator &&
+                   !flgs[rw] %in% "B") {
+          bflg <- FALSE
+        } else if (stl$indicator %in% names(tbl)) {
+          if (!is.null(tbl[[rw, stl$indicator]])) {
+            bflg <- FALSE 
+            if (!is.na(tbl[[rw, stl$indicator]])) {
+              if (tbl[[rw, stl$indicator]] == TRUE) {
+                bflg <- TRUE   
+              }
+            }
+          }
+        }
+      } 
+    }
+  }
+  
+  if (bflg) {
+    ret[length(ret) + 1] <- "bold" 
+  }
   
   return(ret)
   

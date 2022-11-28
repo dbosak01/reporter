@@ -120,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -347,10 +354,6 @@ focus on printable, file-based output formats. The current version
 supports TXT, RTF, PDF, HTML, and DOCX output types. Note that, unlike
 other packages, all outputs from the <strong>reporter</strong> package
 are paged by default.</p>
-<p>The <strong>reporter</strong> package is distributed under a <a href="https://creativecommons.org/licenses/by-nc/4.0">Creative Commons
-non-commercial license</a>. It is freely available for personal and
-organizational use, but cannot be used to create a commercial product
-without permission of the license holder.</p>
 <div id="key-features" class="section level2">
 <h2>Key Features</h2>
 <p>The <strong>reporter</strong> package contains the following key

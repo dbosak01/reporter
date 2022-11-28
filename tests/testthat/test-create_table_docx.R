@@ -24,7 +24,8 @@ test_that("get_table_body_docx works as expected.", {
   names(algns) <- names(dat)
 
 
-  res <- get_table_body_docx(rpt, dat, wdth, algns,  "center", "none")
+  res <- get_table_body_docx(rpt, dat, wdth, algns,  "center", "none", 
+                             styles = list())
 
   res
 
@@ -148,7 +149,7 @@ test_that("create_table_docx works as expected.", {
              col_align = algns,
              label_align = algns, table_align = "center", data = dat)
 
-  res <- create_table_docx(rpt, tbl, pi, "below", FALSE, 0)
+  res <- create_table_docx(rpt, tbl, pi, "below", FALSE, 0, styles = list())
   res
 
   # Doesn't seem right.  Come back to this.
