@@ -2150,3 +2150,4 @@ test_that("user9: Report with top and bottom borders stays on one page.", {
     expect_equal(TRUE, TRUE)
   
 })
+

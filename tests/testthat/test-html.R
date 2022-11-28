@@ -1088,7 +1088,7 @@ test_that("html33: Bold cell style with column defaults.", {
   
   if (dev) {
     
-    fp <- file.path(base_path, "rtf2/test33.html")
+    fp <- file.path(base_path, "html/test33.html")
     
     dat <- mtcars[, 1:5]
     dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
