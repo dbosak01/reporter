@@ -12,7 +12,8 @@ footnotes(
   borders = "none",
   valign = NULL,
   width = NULL,
-  footer = FALSE
+  footer = FALSE,
+  italics = FALSE
 )
 }
 \arguments{
@@ -57,6 +58,10 @@ values are TRUE and FALSE.  Default is FALSE.  This parameter only works
 with RTF and DOCX output types.  It also only applies to footnotes
 assigned to the report object.  Footnotes in the page footer will 
 appear on every page, and be the same throughout the report.}
+
+\item{italics}{A TRUE or FALSE value indicating whether the footnote 
+text shoud be in italics font.  If TRUE, the entire footnote will be 
+in italics.}
 }
 \value{
 The modified report.

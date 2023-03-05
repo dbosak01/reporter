@@ -1075,7 +1075,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
                                                           tmp[[i]]$widths[ln],
                                                           units = rs$units,
                                                           align = tmp[[i]]$align),
-                                              ypos = yline)
+                                              ypos = yline, 
+                                              italics = ftnts$italics)
           
           
 

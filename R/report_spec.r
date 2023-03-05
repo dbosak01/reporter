@@ -1447,6 +1447,9 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' with RTF and DOCX output types.  It also only applies to footnotes
 #' assigned to the report object.  Footnotes in the page footer will 
 #' appear on every page, and be the same throughout the report.
+#' @param italics A TRUE or FALSE value indicating whether the footnote 
+#' text shoud be in italics font.  If TRUE, the entire footnote will be 
+#' in italics.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1497,7 +1500,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
                       borders = "none", valign = NULL, width = NULL, 
-                      footer = FALSE){
+                      footer = FALSE, italics = FALSE){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1563,6 +1566,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   ftn$borders <- borders
   ftn$width <- width  
   ftn$footer <- footer
+  ftn$italics <- italics
 
   if (is.null(valign)) {
     if ("report_spec" %in% class(x))

@@ -799,7 +799,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
           trht <- get_row_height(round(rs$row_height * tmp$lines * conv))
         
           ret <- append(ret, paste0("<w:tr>", trht, 
-                                   "<w:tc>", bb, para(tmp$html, algn), 
+                                   "<w:tc>", bb, para(tmp$html, algn, 
+                                                      italics = ftnts$italics), 
                                     "</w:tc></w:tr>\n"))
 
 

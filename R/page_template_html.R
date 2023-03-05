@@ -685,13 +685,18 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
 
         if (al != "")
           ret <- append(ret, al)
+        
+        if (ftnts$italics)
+          txt <- paste0("<i>", encodeHTML(tmp$html), "</i>")
+        else
+          txt <- encodeHTML(tmp$html)
 
         if (b == "")
-          ret <- append(ret, paste0("<tr><td>", encodeHTML(tmp$html), 
+          ret <- append(ret, paste0("<tr><td>", txt, 
                                     "</td></tr>\n"))
         else {
           ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
-                                    encodeHTML(tmp$html), 
+                                    txt, 
                                     "</td></tr>\n"))
         }
 

@@ -1468,7 +1468,8 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
 
 
 #' @noRd
-para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
+para <- function(txt, align = "left", font_size = NULL, bold = FALSE, 
+                 italics = FALSE) {
   
   ret <- ""
   
@@ -1487,14 +1488,18 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE) {
       if (bold == TRUE)
         b <-  '<w:b/><w:bCs/>'
       
+      it <- ""
+      if (italics == TRUE)
+        it <- '<w:i/><w:iCs/>'
+      
       fs <- ""
       if (!is.null(font_size))
         fs <- paste0('<w:sz w:val="', font_size * 2, 
                '"/><w:szCs w:val="', font_size * 2, '"/>')
       
       rpr <- ""
-      if (!is.null(font_size) | bold == TRUE)
-        rpr <- paste0('<w:rPr>', b, fs, '</w:rPr>')
+      if (!is.null(font_size) | bold == TRUE | italics == TRUE)
+        rpr <- paste0('<w:rPr>', b, it, fs, '</w:rPr>')
             
             
       if (align == "centre")

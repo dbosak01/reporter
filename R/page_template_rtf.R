@@ -673,9 +673,14 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
         if (al != "")
           ret <- append(ret, al)
         
+        if (ftnts$italic)
+          txt <- paste0("\\i ", get_page_numbers_rtf(tmp$rtf, FALSE), "\\i0") 
+        else 
+          txt <- paste0(" ", get_page_numbers_rtf(tmp$rtf, FALSE))
+        
         # Concat footnote row
         ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
-                                  algn, " ", get_page_numbers_rtf(tmp$rtf, FALSE), 
+                                  algn, txt, 
                                   "\\cell\\row\n"))
         if (bl != "")
           ret <- append(ret, bl)
