@@ -850,7 +850,6 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
     names(lbls) <- s$name
     cs <- s$col_span
     
-    
     r <- ""
     cnt[length(cnt) + 1] <- 1 
   
@@ -903,7 +902,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
           
           # Get pdf text for label
           ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
-                                              bold = FALSE,
+                                              bold = s$bold[k],
                                               xpos = get_points(lb, 
                                                                 rb,
                                                                 tmp$widths[ln],

@@ -843,8 +843,13 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
       # Split label strings if they exceed column width
       tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font)
       
+      if (s$bold[k])
+        tb <- paste0("\\b ", tmp$rtf, "\\b0")
+      else 
+        tb <- paste0(" ", tmp$rtf)
+      
       # Concat label
-      r <- paste0(r, ha[k], " ", tmp$rtf, "\\cell")
+      r <- paste0(r, ha[k], tb, "\\cell")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap

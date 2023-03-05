@@ -808,11 +808,14 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
         
       }
       
-      
+      if (s$bold[k])
+        tstr <- paste0("<b>", encodeHTML(vl), "</b>")
+      else 
+        tstr <- encodeHTML(vl)
       
       r <- paste0(r, "<td class=\"shdr\" colspan=\"", cs[k], 
                   "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
-                  encodeHTML(vl), "</td>\n")
+                  tstr, "</td>\n")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap

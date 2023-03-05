@@ -1,3 +1,10 @@
+# reporter 1.3.9
+
+* Added italics font parameter to footnotes.
+* Added bold font parameter to spanning headers.
+* Fixed page count in PDF footnotes.
+
+
 # reporter 1.3.8
 
 * Fixed bug when logging plot with jpeg file.

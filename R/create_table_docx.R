@@ -815,7 +815,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
                   '<w:vAlign w:val="bottom"/>',
                   '<w:tcW w:w="', round(widths[k] * conv), '" w:type="dxa"/>',
                   '</w:tcPr>', 
-                  para(vl, ha[k]), "</w:tc>\n")
+                  para(vl, ha[k], bold = s$bold[k]), "</w:tc>\n")
       
       
       # Add in extra lines for labels that wrap

@@ -922,6 +922,8 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' parameter on the \code{\link{create_table}} function.
 #' @param underline A TRUE or FALSE value indicating whether the spanning
 #' header should be underlined.  Default is TRUE.  
+#' @param bold A TRUE or FALSE value indicating whether the spanning header
+#' label should be bold.  Default is FALSE.
 #' @param standard_eval A TRUE or FALSE value that indicates whether to
 #' use standard or non-standard evaluation of the \code{from},
 #' and \code{to} parameters.  Set \code{standard_eval} to TRUE if you want
@@ -998,7 +1000,7 @@ column_defaults <- function(x, vars = NULL, from = NULL, to = NULL, label = NULL
 #' @export
 spanning_header <- function(x, from, to, label = "",
                             label_align = "center", level = 1, n = NULL,
-                            underline = TRUE, standard_eval = FALSE) {
+                            underline = TRUE, bold = FALSE, standard_eval = FALSE) {
   
   if (standard_eval) {
     
@@ -1111,6 +1113,7 @@ spanning_header <- function(x, from, to, label = "",
   sh$level = level
   sh$n = n
   sh$underline = underline
+  sh$bold = bold
 
   x$col_spans[[length(x$col_spans) + 1]] <- sh
 

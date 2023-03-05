@@ -13,6 +13,7 @@ spanning_header(
   level = 1,
   n = NULL,
   underline = TRUE,
+  bold = FALSE,
   standard_eval = FALSE
 )
 }
@@ -49,6 +50,9 @@ parameter on the \code{\link{create_table}} function.}
 
 \item{underline}{A TRUE or FALSE value indicating whether the spanning
 header should be underlined.  Default is TRUE.}
+
+\item{bold}{A TRUE or FALSE value indicating whether the spanning header
+label should be bold.  Default is FALSE.}
 
 \item{standard_eval}{A TRUE or FALSE value that indicates whether to
 use standard or non-standard evaluation of the \code{from},

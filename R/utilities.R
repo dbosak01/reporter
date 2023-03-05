@@ -1160,6 +1160,7 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
     s$name <- ""
     s$underline <- TRUE
     s$col_span <- 1
+    s$bold <- FALSE
     
     # Populate data structure with labels, alignments, and n values from 
     # spanning column objects
@@ -1169,6 +1170,7 @@ get_spanning_info <- function(rs, ts, pi, widths, gutter = 1) {
         s$label[counter] <- slvl[[l]][[index]]["label"]
         s$align[counter] <- slvl[[l]][[index]]$label_align
         s$underline[counter] <- slvl[[l]][[index]]$underline
+        s$bold[counter] <- slvl[[l]][[index]]$bold
         if (!is.null(slvl[[l]][[index]]$n))
           s$n[counter] <- slvl[[l]][[index]]$n
         
