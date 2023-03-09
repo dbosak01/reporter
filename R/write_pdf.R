@@ -533,6 +533,29 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                               fontsize, cnt$font_size),
                                    fontscale, cnt$bold, cnt$italics)
             
+          } else if (cnt$has_page_numbers) {
+            
+            w1 <- get_text_width(cnt$text, fontname, 
+                                ifelse(is.null(cnt$font_size), 
+                                       fontsize, cnt$font_size), 
+                                units,
+                                multiplier = 1.03) 
+            
+            txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg)
+            
+            w2 <- get_text_width(txt, fontname, 
+                                ifelse(is.null(cnt$font_size), 
+                                       fontsize, cnt$font_size), 
+                                units,
+                                multiplier = 1.03) 
+            
+            nx <- (w1 - w2) * conversion
+            
+            tmp <- get_byte_stream(txt, 
+                                   stx + cnt$xpos + nx, sty - cnt$ypos, 
+                                   lh, ifelse(is.null(cnt$font_size), 
+                                              fontsize, cnt$font_size),
+                                   fontscale, cnt$bold, cnt$italics)
           } else {
             
             # For other PDF2
@@ -914,8 +937,9 @@ render.pdf_text_stream <- function(x) {
 # and error.  PDF has a lot of different way to render an image, and most
 # are very complicated.  This is the simplest one. Requires a JPEG.  
 #' @exportS3Method render pdf_image_stream
-render.pdf_image_stream <- function(x, view = FALSE) {
+render.pdf_image_stream <- function(x) {
   
+  view = FALSE
   
   if (length(x$contents) > 1) {
     cnts <- unlist(x$contents)

@@ -924,7 +924,8 @@ test_that("pdf2-22: Page by works as expected.", {
     titles("Table 1.0", "My Nice Report with a Page By", borders = "outside", 
            blank_row = "none") %>%
     page_by(Species, label = "Species", align = "center", borders = "all", 
-            blank_row = "none")
+            blank_row = "none") %>%
+    footnotes("My footnote 1", "Page [pg] of [tpg]", borders = "none", align = "right")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
@@ -933,8 +934,7 @@ test_that("pdf2-22: Page by works as expected.", {
     page_header("Page [pg] of [tpg]", "Page [pg] of [tpg]") %>%
     page_footer("Page [pg] of [tpg]", 
                 "Page [pg] of [tpg]", 
-                "Page [pg] of [tpg]") %>%
-    footnotes("My footnote 1", "My footnote 2", borders = "none")
+                "Page [pg] of [tpg]") 
 
   res <- write_report(rpt)
   res
@@ -2680,7 +2680,7 @@ test_that("pdf2-71: Italic footnotes work as expected.", {
            borders = c("top", "bottom")) %>%
     footnotes("My italic footnote1", "My italic footnote2", italics = TRUE, 
               blank_row = "none", borders = "top") %>%
-    footnotes("My italic footnote", "My footnote 2", 
+    footnotes("My italic footnote", "Page [pg] of [tpg]", 
               blank_row = "none", borders = c("bottom"))
   
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
