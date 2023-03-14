@@ -25,8 +25,8 @@ License: CC0
 Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues
-Depends: R (>= 4.0), 
-         common
+Depends: R (>= 4.1), 
+         common (>= 1.0.3)
 Suggests: 
     testthat,
     magrittr,
