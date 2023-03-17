@@ -3273,7 +3273,8 @@ test_that("user1: demo table works.", {
              "Specify Population Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%
       add_content(tbl) %>% 
       footnotes("Special symbols \U221e to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼 标题") %>%   
-      footnotes("Special symbols µ Ω £ there to mess things up: ", "Page [pg] of [tpg]") %>% 
+      footnotes("Special symbols µ Ω £ there to mess things up: ", "Page [pg] of [tpg]",
+                align = 'right', italics = TRUE) %>% 
       page_header("Left µ Ω £ ", "Right") %>% 
       page_footer("Time µ Ω £ ", right = "Page [pg] of [tpg]")
     

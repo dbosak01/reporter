@@ -2823,7 +2823,8 @@ test_that("pdf2-user1: demo table works.", {
              "Specify Population Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%
       add_content(tbl) %>%
       footnotes("Special symbols \U221e to mess things up: Ω µ β ¥ ∑ ≠ ≤ £ ∞ ؈ ლ  \Ub8a 鬼") %>%
-      footnotes("Special symbols µ Ω £ there to mess things up: ", "Page [pg] of [tpg]") %>%
+      footnotes("Special symbols µ Ω £ there to mess things up: ", "Page [pg] of [tpg]", 
+                align = "left", italics = TRUE) %>%
       page_header("Left µ Ω £ ", "Right") %>%
       page_footer("Time µ Ω £ ", right = "Page [pg] of [tpg]")
 
@@ -2982,7 +2983,7 @@ test_that("pdf2-user2: demo table with stub works.", {
 
 })
 
-test_that("user3: listings works.", {
+test_that("pdf2-user3: listings works.", {
   if (dev == TRUE) {
     # Data Filepath
     dir_data <- file.path(data_dir, "data")
@@ -3049,7 +3050,7 @@ test_that("user3: listings works.", {
 })
 
 
-test_that("user4: listing in cm and times works.", {
+test_that("pdf2-user4: listing in cm and times works.", {
   if (dev == TRUE) {
     # Data Filepath
     dir_data <- file.path(data_dir, "data")
@@ -3112,7 +3113,7 @@ test_that("user4: listing in cm and times works.", {
 
 })
 
-test_that("user5: Portrait in 12pt Arial works as expected.", {
+test_that("pdf2-user5: Portrait in 12pt Arial works as expected.", {
 
   if (dev == TRUE) {
 

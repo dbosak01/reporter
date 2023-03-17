@@ -106,7 +106,7 @@ add_info <- function(x,
 page_text <- function(text, font_size = NULL, 
                       xpos = NULL, ypos = NULL, bold = FALSE,
                       align = NULL, alignx = NULL, has_page_numbers = NULL,
-                      italics = FALSE) {
+                      italics = FALSE, footnotes = FALSE) {
   
   txt <- structure(list(), class = c("page_text", "page_content", "list"))
   
@@ -118,6 +118,7 @@ page_text <- function(text, font_size = NULL,
   txt$italics <- italics
   txt$align <- align
   txt$alignx <- alignx  # In units of measure
+  txt$footnotes <- footnotes
   
   res1 <- grepl("[pg]", text, fixed = TRUE)
   res2 <- grepl("[tpg]", text, fixed = TRUE)
@@ -507,7 +508,7 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
         } else {
           
           # For PDF2 with page number flag set
-          if (cnt$has_page_numbers & !is.null(cnt$align)) {
+          if (cnt$has_page_numbers & !is.null(cnt$align) & !cnt$footnotes) {
             
             # Need to adjust x position if there are page numbers,
             # because when the page number tokens are replaced, 
@@ -533,23 +534,36 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                               fontsize, cnt$font_size),
                                    fontscale, cnt$bold, cnt$italics)
             
-          } else if (cnt$has_page_numbers) {
+          } else if (cnt$has_page_numbers & cnt$footnotes) {
             
-            w1 <- get_text_width(cnt$text, fontname, 
-                                ifelse(is.null(cnt$font_size), 
-                                       fontsize, cnt$font_size), 
-                                units,
-                                multiplier = 1.03) 
+            nx <- 0
             
-            txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg)
+            if (cnt$align %in% c("right", "center", "centre")) {
+              w1 <- get_text_width(cnt$text, fontname, 
+                                  ifelse(is.null(cnt$font_size), 
+                                         fontsize, cnt$font_size), 
+                                  units,
+                                  multiplier = 1.03) 
+              
+              txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg)
+              
+              w2 <- get_text_width(txt, fontname, 
+                                  ifelse(is.null(cnt$font_size), 
+                                         fontsize, cnt$font_size), 
+                                  units,
+                                  multiplier = 1.03) 
+              
+              nx <- (w1 - w2) * conversion
+              
+              if (cnt$align %in% c("center", "centre")) {
+                
+                nx <- nx/2
+              }
             
-            w2 <- get_text_width(txt, fontname, 
-                                ifelse(is.null(cnt$font_size), 
-                                       fontsize, cnt$font_size), 
-                                units,
-                                multiplier = 1.03) 
-            
-            nx <- (w1 - w2) * conversion
+            } else {
+              
+              txt <- get_page_numbers_pdf(cnt$text, pgnum, tpg) 
+            }
             
             tmp <- get_byte_stream(txt, 
                                    stx + cnt$xpos + nx, sty - cnt$ypos, 
