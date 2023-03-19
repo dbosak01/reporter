@@ -208,7 +208,7 @@ paginate_content_docx <- function(rs, ls) {
       
     } else if (any(class(obj) == "plot_spec")) {
       
-      res <- create_plot_pages_docx(rs, cntnt, last_page_lines, tempdir())
+      res <- create_plot_pages_docx(rs, cntnt, last_page_lines, tempdir(), imgCnt)
       for (j in seq_len(length(res$docx))) {
         pgs[[length(pgs) + 1]] <- res$docx[[j]]
         lns[[length(lns) + 1]] <- res$lines[[j]]

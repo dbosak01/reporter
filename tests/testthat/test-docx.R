@@ -1526,6 +1526,47 @@ test_that("docx42: Italic footnotes work as expected.", {
   
 })
 
+test_that("docx43: Two plots on report works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "docx/test43.docx")
+    
+    p1 <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt1 <- create_plot(p1, height = 4, width = 8, borders = c("none"))
+    
+    
+    p2 <- ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point()
+    
+    plt2 <- create_plot(p2, height = 4, width = 8, borders = c("none"))
+    
+    
+    rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt1, align = "center") %>%
+      add_content(plt2, align = "center") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 2)
+    
+  } else 
+    expect_equal(TRUE, TRUE)
+  
+})
+
 # User Tests --------------------------------------------------------------
 
 

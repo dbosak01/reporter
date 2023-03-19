@@ -1,3 +1,8 @@
+# reporter 1.4.0
+
+* Fixed bug on DOCX when attempting to add multiple plots.
+
+
 # reporter 1.3.9
 
 * Added italics font parameter to footnotes.

@@ -1199,8 +1199,9 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
 #' @param rs The Report Spec
 #' @param cntnt The text content to output
 #' @param lpg_rows Last page rows.
+#' @param imgCnt The number of images in document.
 #' @noRd
-create_plot_pages_docx<- function(rs, cntnt, lpg_rows, tmp_dir) {
+create_plot_pages_docx<- function(rs, cntnt, lpg_rows, tmp_dir, imgCnt) {
   
   if (!"report_spec" %in% class(rs))
     stop("Report spec expected for parameter rs")
@@ -1212,7 +1213,7 @@ create_plot_pages_docx<- function(rs, cntnt, lpg_rows, tmp_dir) {
   cnts <- c()
   imgs <- list()
   
-  relIndex <- rs$relIndex
+  relIndex <- rs$relIndex + imgCnt
   
   # Get plot spec 
   plt <- cntnt$object
