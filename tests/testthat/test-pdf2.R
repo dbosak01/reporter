@@ -3195,7 +3195,7 @@ test_that("pdf2-user6: User program works as expected for PDF.", {
       footnotes("Data cutoff date: 07DEC2022. N = Number of subjects in the analysis set. n = Number of subjects with observed data. SD = Standard Deviation, Q1 = First Quartile, Q3 = Third Quartile. S = Step Dosing.",
                 "Safety analysis set includes all subjects that are enrolled and receive at least 1 dose of AMG 509.",
                 paste("Cohort 7a = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 0.3 mg, C1D22: 0.3 mg; Cohort 7b = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 7c =",
-                    #  "C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg; Cohort 8 = C1D1: 0.3 mg, C1D8: 1 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 9 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15:",
+                      "C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg; Cohort 8 = C1D1: 0.3 mg, C1D8: 1 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 9 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15:",
                       "0.75 mg, C1D22: 0.75 mg; Cohort 10 = C1D1: 0.1 mg, C1D8: 1 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 11 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg,",
                       "C1D22:1.5 mg; Cohort 12 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 0.75 mg, C1D22: 1.5 mg; Cohort 13 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg, C1D22: 2 mg."),
                 "Two subjects received reduced dose on C1D8 in Cohort 10.", blank_row = "none") |>
