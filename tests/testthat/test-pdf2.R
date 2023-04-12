@@ -3163,3 +3163,64 @@ test_that("pdf2-user5: Portrait in 12pt Arial works as expected.", {
 
 })
 
+
+test_that("pdf2-user6: User program works as expected for PDF.", {
+  
+  if (dev == TRUE) {
+    
+    fp <- file.path(base_path, "pdf2/user6.pdf")
+    dir_data <- file.path(data_dir, "data/S")
+    
+    dat <- readRDS(file.path(dir_data, "for_david_to_debug.RDS"))
+    
+    
+    
+    tbl <- create_table(dat, borders = "outside", first_row_blank = TRUE) |> 
+      titles("Table 14-2.2.1.2. Baseline Demographics", "(Safety Analysis Set)", 
+             bold = TRUE, font_size = 11) |> 
+      stub(c("row_label1", "row_label2"), width = 3.4) |> 
+      define(row_label1, label_row = TRUE, blank_after = TRUE) |> 
+      define(row_label2, indent = .25) |> 
+      define(var1_1, label = "Cohort 1\n0.001 mg\nQW\n(N=11)\nn(%)") |> 
+      define(var1_2, label = "Cohort 2\n0.003 mg\nQW\n(N=11)\nn(%)") |> 
+      define(var1_3, label = "Cohort 3\n0.001 mg\nQW\n(N=11)\nn(%)") |> 
+      define(var1_4, label = "Cohort 4\n0.003 mg\nQW\n(N=11)\nn(%)") |> 
+      define(var1_5, label = "Cohort 5\n0.1 mg\nQW\n(N=11)\nn(%)") |> 
+      define(var1_6, label = "Cohort 6\n0.3 mg\nQW\n(N=11)\nn(%)") |> 
+      define(var1_Total, label = "Part 1\nNo Step\nDosing\nTotal\n(N=46)\nn(%)") |> 
+      define(ord_layer_index, visible = FALSE) |> 
+      define(paging_column, page_break = TRUE, visible = FALSE) |> 
+      column_defaults(width = .825, align = "center") |> 
+      footnotes("Page [pg] of [tpg]", align = "right", blank_row = "none") |> 
+      footnotes("Data cutoff date: 07DEC2022. N = Number of subjects in the analysis set. n = Number of subjects with observed data. SD = Standard Deviation, Q1 = First Quartile, Q3 = Third Quartile. S = Step Dosing.",
+                "Safety analysis set includes all subjects that are enrolled and receive at least 1 dose of AMG 509.",
+                paste("Cohort 7a = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 0.3 mg, C1D22: 0.3 mg; Cohort 7b = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 7c =",
+                    #  "C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg; Cohort 8 = C1D1: 0.3 mg, C1D8: 1 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 9 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15:",
+                      "0.75 mg, C1D22: 0.75 mg; Cohort 10 = C1D1: 0.1 mg, C1D8: 1 mg, C1D15: 1 mg, C1D22: 1 mg; Cohort 11 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg,",
+                      "C1D22:1.5 mg; Cohort 12 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 0.75 mg, C1D22: 1.5 mg; Cohort 13 = C1D1: 0.1 mg, C1D8: 0.3 mg, C1D15: 1 mg, C1D22: 2 mg."),
+                "Two subjects received reduced dose on C1D8 in Cohort 10.", blank_row = "none") |>
+      footnotes("Program: /userdata/stat/amg509/onc/20180146/analysis/mantl_pilot/tables/sme_table_project/t-dm-base-demo-saf-sd.sas",
+                "Output: t14-02-002-001-002-dm-base-demo-saf-sd.rtf (Date Generated:31MAR23:13:37:59) Source: adam.adsl", blank_row = "above")
+    
+    
+    rpt <- create_report(fp, output_type = "PDF", 
+                         font = "Arial", font_size = 9) |> 
+      add_content(tbl, align = "left") |> 
+      set_margins(top = 1.5, bottom = 1, left = .7, right = 1)
+    
+    
+    res <- write_report(rpt)
+    
+   # file.show(res$modified_path)
+    
+    #res$column_widths
+    
+    expect_equal(file.exists(res$modified_path), TRUE)
+  
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  } 
+  
+})
