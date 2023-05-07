@@ -155,7 +155,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font,
-                               rs$font_size, rs$units, rs$output_type)$data
+                               rs$font_size, rs$units, rs$output_type, rs$char_width)$data
   # print("split_cells")
   # print(fdat)
   

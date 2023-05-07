@@ -537,7 +537,8 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
 #' width.  Lines are returned as a single rtf string separated by an rtf
 #' line ending.  
 #' @noRd
-split_string_rtf <- function(strng, width, units, font = "Arial") {
+split_string_rtf <- function(strng, width, units, font = "Arial", nm = "", 
+                             char_width = 1) {
   
   
   if (tolower(font) == "courier")
@@ -545,42 +546,95 @@ split_string_rtf <- function(strng, width, units, font = "Arial") {
   else 
     mp <- 1.02
   
-  res <- split_strings(strng, width, units, multiplier = mp)
+  # Deal with indents
+  blnks <- ""
+  indnt <- 0
+  cstrng <- strng
+  indntw <- 0
+  if (nm == "stub") {
+    
+    bpos <- regexpr("^\\s+", strng)
+    if (bpos > 0) {
+      
+      indnt <-  attr(bpos, "match.length")
+      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+      cstrng <- substr(strng, indnt + 1, nchar(strng))
+      #indntw <- indnt * char_width / mp
+    }
+  }
+  
+  res <- split_strings(cstrng, width - indntw, units, multiplier = mp)
+  
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
   # Doing it here handles for the entire report, as every piece runs
   # through here.
-  ret <- list(rtf = paste0(encodeRTF(res$text), collapse = "\\line "),
+  ret <- list(rtf = paste0(blnks, encodeRTF(res$text), collapse = "\\line "),
               lines = length(res$text),
-              widths = res$widths)
+              widths = res$widths + indntw)
   
   return(ret)
 }
 
 #' @noRd
-split_string_html <- function(strng, width, units) {
+split_string_html <- function(strng, width, units, nm = "", char_width = 1) {
   
   
-  res <- split_strings(strng, width, units, multiplier = 1)
+  # Deal with indents
+  blnks <- ""
+  indnt <- 0
+  cstrng <- strng
+  indntw <- 0
+  if (nm == "stub") {
+    
+    bpos <- regexpr("^\\s+", strng)
+    if (bpos > 0) {
+      
+      indnt <-  attr(bpos, "match.length")
+      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+      cstrng <- substr(strng, indnt + 1, nchar(strng))
+      indntw <- indnt * char_width 
+    }
+  }
   
-  ret <- list(html = paste0(res$text, collapse = "\n"),
+  
+  res <- split_strings(cstrng, width - indntw, units, multiplier = 1)
+  
+  ret <- list(html = paste0(blnks, res$text, collapse = "\n"),
               lines = length(res$text),
-              widths = res$widths)
+              widths = res$widths + indntw)
   
   return(ret)
 }
 
 
 #' @noRd
-split_string_text <- function(strng, width, units) {
+split_string_text <- function(strng, width, units, nm = "", char_width = 1) {
   
   
-  res <- split_strings(strng, width, units, multiplier = 1)
+  # Deal with indents
+  blnks <- ""
+  indnt <- 0
+  cstrng <- strng
+  indntw <- 0
+  if (nm == "stub") {
+    
+    bpos <- regexpr("^\\s+", strng)
+    if (bpos > 0) {
+      
+      indnt <-  attr(bpos, "match.length")
+      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+      cstrng <- substr(strng, indnt + 1, nchar(strng))
+      indntw <- indnt * char_width 
+    }
+  }
   
-  ret <- list(text = res$text,
+  res <- split_strings(cstrng, width - indntw, units, multiplier = 1)
+  
+  ret <- list(text = paste0(blnks, res$text),
               lines = length(res$text),
-              widths = res$widths)
+              widths = res$widths + indntw)
   
   return(ret)
 }
@@ -595,7 +649,7 @@ split_string_text <- function(strng, width, units) {
 #' @import grDevices
 #' @noRd
 split_cells_variable <- function(x, col_widths, font, font_size, units, 
-                                 output_type) {
+                                 output_type, char_width) {
   
   dat <- NULL           # Resulting data frame
   wdths <- list()       # Resulting list of widths
@@ -649,17 +703,17 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
         } else {
           
           if (output_type %in% c("HTML", "DOCX")) {
-            res <- split_string_html(x[[i, nm]], col_widths[[nm]], units)
+            res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
             
             cell <- res$html
           
           } else if (output_type == "RTF") {
-            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font)
+            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
           
             cell <- res$rtf
           } else if (output_type == "PDF") {
             
-            res <- split_string_text(x[[i, nm]], col_widths[[nm]], units)
+            res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
             
             cell <- paste0(res$text, collapse = "\n")
             

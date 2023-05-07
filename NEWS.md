@@ -3,7 +3,7 @@
 * Fixed bug on DOCX when attempting to add multiple plots.
 * Fixed bug on PDF when one blank row breaks to next page and messes 
 up column centering.
-
+* Added indent to stub rows that wrap.
 
 # reporter 1.3.9
 

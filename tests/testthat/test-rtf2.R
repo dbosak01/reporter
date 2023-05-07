@@ -2014,14 +2014,14 @@ test_that("rtf2-58: Label row is one cell.", {
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
       "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "6 Cylinder and more perhaps more" "4 ( 21.1%)"  "3 ( 23.1%)" 
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
   
   ll <- "Here is a super long label to see if it can span the entire table."
   
   # Create table
   tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
-    stub(c("var", "label")) %>% 
+    stub(c("var", "label"), width = .8) %>% 
     define(var, blank_after = TRUE, label_row = TRUE, 
            format = c(ampg = ll, cyl = "Cylinders")) %>% 
     define(label, indent = .25) %>% 
@@ -3317,7 +3317,7 @@ test_that("user2: demo table with stub works.", {
     sex_decode <- c("M" = "Male",
                     "F" = "Female")
     
-    race_decode <- c("WHITE" = "White",
+    race_decode <- c("WHITE" = "White more",
                      "BLACK OR AFRICAN AMERICAN" = "Black or African American",
                      "ASIAN" = "Asian or Pacific Islander",
                      "NATIVE AMERICAN" = "Native American",
@@ -3396,7 +3396,7 @@ test_that("user2: demo table with stub works.", {
     
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
-      stub(c("var", "label"), width = 2.5) %>% 
+      stub(c("var", "label"), width = 1.5) %>% 
       column_defaults(width = 1) %>% 
       define(var, blank_after = TRUE, 
              format = block_fmt, label = "", label_row = TRUE) %>%
