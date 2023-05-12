@@ -1863,7 +1863,7 @@ test_that("docx-user2: demo table with stub works.", {
 
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
-      stub(c("var", "label"), width = 2.5) %>%
+      stub(c("var", "label"), width = 1.5) %>%
       column_defaults(width = 1) %>%
       define(var, blank_after = TRUE,
              format = block_fmt, label = "", label_row = TRUE) %>%

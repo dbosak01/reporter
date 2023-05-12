@@ -2094,7 +2094,7 @@ test_that("pdf2-55: Label row is one cell.", {
   
   # Create table
   tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
-    stub(c("var", "label")) %>% 
+    stub(c("var", "label"), width = 1) %>% 
     define(var, blank_after = TRUE, label_row = TRUE, 
            format = c(ampg = ll, cyl = "Cylinders")) %>% 
     define(label, indent = .25) %>% 
@@ -2998,7 +2998,7 @@ test_that("pdf2-user2: demo table with stub works.", {
 
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
-      stub(c("var", "label"), width = 2.5) %>%
+      stub(c("var", "label"), width = 1.5) %>%
       column_defaults(width = 1) %>%
       spanning_header(`ARM B`, `ARM D`, "Treatments", n = 10) %>% 
       define(var, blank_after = TRUE,
