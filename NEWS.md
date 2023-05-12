@@ -1,4 +1,4 @@
-# reporter 1.4.0
+# reporter 1.4.1
 
 * Fixed bug on DOCX when attempting to add multiple plots.
 * Fixed bug on PDF when one blank row breaks to next page and messes 

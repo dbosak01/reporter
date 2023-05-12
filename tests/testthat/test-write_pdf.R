@@ -151,7 +151,7 @@ test_that("pdf_info works as expected.", {
 
 test_that("render.xref works as expected.", {
   
-  d <- render.xref(c(20, 68, 124, 224, 267, 334), 1, 10, 514)
+  d <- render_xref(c(20, 68, 124, 224, 267, 334), 1, 10, 514)
   
   #cat(d)
   

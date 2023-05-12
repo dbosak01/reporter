@@ -1065,7 +1065,7 @@ render.pdf_document <- function(x) {
   }
 
 
-  cnts[[length(cnts) + 1]] <- render.xref(xrefs, x[[1]]$id, infoid, chars(cnts)) 
+  cnts[[length(cnts) + 1]] <- render_xref(xrefs, x[[1]]$id, infoid, chars(cnts)) 
   cnts[[length(cnts) + 1]] <- "%%EOF"
   
   ret <- unlist(vraw(cnts))
@@ -1077,7 +1077,7 @@ render.pdf_document <- function(x) {
 
 #' Create cross-reference table
 #' @noRd
-render.xref <- function(xrefs, rootID, infoID, startpos) {
+render_xref <- function(xrefs, rootID, infoID, startpos) {
   
   
   # Create first entry of cross reference table
