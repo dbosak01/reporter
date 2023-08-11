@@ -119,7 +119,9 @@
 #' are repeated on each page. When the "continuous" parameter is TRUE, the
 #' table will instead be a single table, and the titles and footnotes will
 #' not be repeated on each page.  This parameter currently only works for RTF
-#' outputs.
+#' outputs.  Also, this parameter only works for titles and footnotes that
+#' are attached to the table body.  Titles and footnotes attached to the 
+#' report will still be shown on every page. 
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,

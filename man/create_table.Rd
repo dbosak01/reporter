@@ -77,7 +77,9 @@ broken into a separate table for each page, and the titles and footnotes
 are repeated on each page. When the "continuous" parameter is TRUE, the
 table will instead be a single table, and the titles and footnotes will
 not be repeated on each page.  This parameter currently only works for RTF
-outputs.}
+outputs.  Also, this parameter only works for titles and footnotes that
+are attached to the table body.  Titles and footnotes attached to the 
+report will still be shown on every page.}
 }
 \description{
 The \code{create_table} function creates a table object to which 
