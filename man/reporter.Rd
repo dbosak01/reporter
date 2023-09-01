@@ -3,6 +3,7 @@
 \docType{package}
 \name{reporter}
 \alias{reporter}
+\alias{reporter-package}
 \title{reporter: A package for creating statistical reports}
 \description{
 The \strong{reporter} package creates statistical reports in TXT, 

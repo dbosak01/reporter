@@ -101,6 +101,7 @@
 #' 
 #' @docType package
 #' @import common
+#' @aliases reporter-package
 #' @keywords internal
 #' @name reporter
 NULL
