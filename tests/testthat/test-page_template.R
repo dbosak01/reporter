@@ -212,3 +212,21 @@ test_that("page_by function works as expected.", {
   expect_equal(trimws(rws[1]), "Label:NULL")
   
 })
+
+
+test_that("page_by function with count works as expected.", {
+  
+  pb <- page_by(list(), mpg, "MPG: ",
+                align = "left",
+                blank_row = "both")
+  
+  
+  rws <- get_page_by(pb$page_by, 50, NULL, 2)
+  
+  expect_equal(length(rws), 4)
+  expect_equal(rws[1], "")
+  expect_equal(trimws(rws[2]), "MPG: x")
+  expect_equal(trimws(rws[3]), "x")
+  expect_equal(rws[4], "")
+  
+})

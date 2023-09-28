@@ -186,7 +186,7 @@ test_that("test5: Table with break between sections works as expected.", {
             "Smith, Shaileigh")
   sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
   age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
-  arm <- c(rep("A", 5), rep("B", 5))
+  arm <- c(rep("A", 5), rep("B", 3), "A", "A")
   
   # Create data frame
   df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
@@ -2867,4 +2867,181 @@ test_that("test87: Custom page size works as expected.", {
   
 })
 
+
+
+test_that("test88: Footnotes columns work 1 column.", {
+  
+  fp <- file.path(base_path, "output/test88.out")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all")  %>%
+    titles("Table 1.0 second row", "IRIS Data Frame3",
+           blank_row = "both", columns =  1, align = "center",
+           borders = c("outside")) 
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Here is a footnote", "And another", columns = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test89: Footnotes columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "output/test89.out")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    titles("Table 1.0", "IRIS Data Frame", "Left", "Right",
+           blank_row = c("below"), columns =  2, borders = "none") %>%
+    footnotes("Table left", "Table right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right")  %>%
+    footnotes("Here is a footnote", "And another", columns = 2)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test90: Footnotes columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "output/test90.out")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)
+  
+  rght <- paste("Here")
+  
+  rpt <- create_report(fp, output_type = "TXT", 
+                       font_size = 10) %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", 
+           "My right thing", "", "Center", rght,
+           blank_row = "below", columns =  3, borders = "top") %>%
+    footnotes("Here is a footnote", "And another", "A",
+              "Here is a longer footnote", "to see if I can figure out",  "the alignment pattern",
+              align = "right", columns = 3)
+  
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test91: Multiple footnotes blocks work as expected.", {
+  
+  fp <- file.path(base_path, "output/test91.out")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE) %>%
+    footnotes("Left", "right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Footnote1", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    footnotes("Footnotes2", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    footnotes("Footnotes3", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    titles("Table 1.0", "My little title")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("test92: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test92.out")
+  
+  dat <- iris
+  dat$Pgby <- as.character(dat$Species)
+  dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
+  
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "", borders = "none") %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "TXT", 
+                       orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("test93: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test93.out")
+  
+  fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
+  fmt2 <- value(condition(x == 1, "Setosa"),
+                condition(x == 2, "Versicolor"),
+                condition(x == 3, "Virginica"))
+  
+  dat <- iris
+  fmtval <- fmt1[dat$Species]
+  names(fmtval) <- NULL
+  dat$Pgby <- fmtval
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "Flower:", borders = "none", format = fmt2) %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "TXT", 
+                       orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
 

@@ -1929,7 +1929,7 @@ test_that("pdf2-50: Spanning headers borders work as expected.", {
 
 
 
-# Basic Tests 51 > --------------------------------------------------------
+# Basic Tests 51 - 60 ------------------------------------------------------
 
 # Very good report for testing multiple content wraps
 test_that("pdf2-51: Plot, Long Table and Long Text on same report works as expected.", {
@@ -2284,7 +2284,7 @@ test_that("pdf2-60: Spanning headers borders work as expected with no title bord
   
 })
 
-
+# Basic Tests 61 - 70 ------------------------------------------------------
 
 test_that("pdf2-61: Title columns work 1 column.", {
   
@@ -2662,6 +2662,7 @@ test_that("pdf2-70: Spanning header bold work as expected.", {
   
 })
 
+# Basic Tests 71 - 80 ------------------------------------------------------
 
 test_that("pdf2-71: Italic footnotes work as expected.", {
   
@@ -2748,6 +2749,201 @@ test_that("pdf2-72: Stub indent.", {
   
   
 })
+
+
+
+test_that("pdf2-73: Footnote columns work 1 column.", {
+  
+  fp <- file.path(base_path, "pdf2/test73.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all")  %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame2",
+           blank_row = "above", columns =  1, align = "center",
+           borders = "outside") %>%
+     footnotes("Table foot 1", "Table foot 2", 
+               borders = c("all"), columns = 1, align = "right") %>%
+     footnotes("Table foot 3", "Table foot 4", 
+              borders = c("all"), columns = 2)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Report foot 1", "Report foot 2", columns = 1, 
+              borders = c("all", "bottom"), blank_row = "both", align = "right")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("pdf2-74: Footnote columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "pdf2/test74.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right", "mo\nre",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    footnotes("Table footnote 1", "Table footnote 2", "Table footnote 3",
+              columns = 2, borders = "outside", blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right")  %>%
+    footnotes("Report footnote 1", "Report footnote 2", columns = 1,
+              borders = c("top", "bottom"))
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("pdf2-75: Footnote columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "pdf2/test75.pdf")
+  
+  rght <- paste("Here is a big long text string to see how the automatic", 
+                "wrapping is happing in a reduced size cell on the right.")
+  
+  
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE) %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+           "      My right thing", "", "Center", rght,
+           blank_row = "below", columns =  3, borders = "all") %>%
+    footnotes("Table foot 1", "Table foot 2", "Table foot 3",
+              borders = "all", columns = 3)
+  
+  
+  
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier", 
+                       font_size = 10) %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Report foot 1", "Report foot 2", "Report foot 3",
+              "Report foot 4",  "Report foot 5",  
+              columns = 3)
+  
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("pdf2-76: Multiple footnote blocks work as expected.", {
+  
+  fp <- file.path(base_path, "pdf2/test76.pdf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE) %>%
+    titles("Here is a title", "And another", borders = "all") %>%
+    footnotes("Footnote 1", "Footnote 2",
+           blank_row = "above", columns =  1, borders = "all") %>%
+    footnotes("Footnote 3 but make it really long so it wraps", 
+              "Footnote 4", "Foot Left", "Foot Right",
+           blank_row = "above", columns =  2, borders = "all") %>%
+    footnotes("Footnote 5", "Footnote 6", "Footnote 7", "", "Footnote 8",
+           blank_row = "both", columns =  3, borders = "all")
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Left 2 column footnote need to make it really long so it wraps",
+              "Right 2 column footnote", columns = 2, borders = "none") %>%
+    footnotes("Here is a report footnote", "And another report footnote", "more",
+              columns = 3, borders = "all")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("pdf2-77: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test77.pdf")
+  
+  dat <- iris
+  dat$Pgby <- as.character(dat$Species)
+  dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
+  
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, label = "Species: ", align = "left", borders = "none") %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+test_that("pdf2-78: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "pdf2/test78.pdf")
+  
+  fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
+  fmt2 <- value(condition(x == 1, "Setosa"),
+                condition(x == 2, "Versicolor"),
+                condition(x == 3, "Virginica"))
+  
+  dat <- iris
+  fmtval <- fmt1[dat$Species]
+  names(fmtval) <- NULL
+  dat$Pgby <- fmtval
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "Flower:", borders = "none", format = fmt2) %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "PDF", font = "Courier",
+                       orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
 
 
 
@@ -3153,7 +3349,7 @@ test_that("pdf2-user4: listing in cm and times works.", {
     #Write out report
     res <- write_report(rpt, output_type = "PDF")
 
-    print(res$column_widths)
+    #print(res$column_widths)
 
     expect_equal(file.exists(fp), TRUE)
 
@@ -3275,3 +3471,4 @@ test_that("pdf2-user6: User program works as expected for PDF.", {
   } 
   
 })
+

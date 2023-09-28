@@ -36,8 +36,9 @@ test_that("get_footnotes_html function works as expected.", {
   expect_equal(t$html,
                paste0("<table ",
                       "style=\"width:9in;text-align: left;\">", 
-                      "\n<tr><td>Goodbye</td></tr>\n",
-                      "<tr><td>&nbsp;</td></tr>\n</table>"))
+                      "\n<tr><td style=\"width:9in;text-align: left;", 
+                      "vertical-align:text-top;\">Goodbye</td>\n",
+                      "</tr>\n<tr><td colspan=\"1\">&nbsp;</td></tr>\n</table>"))
   expect_equal(t$lines, 2)
   
 })

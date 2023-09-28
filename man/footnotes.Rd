@@ -13,7 +13,8 @@ footnotes(
   valign = NULL,
   width = NULL,
   footer = FALSE,
-  italics = FALSE
+  italics = FALSE,
+  columns = 1
 )
 }
 \arguments{
@@ -62,6 +63,13 @@ appear on every page, and be the same throughout the report.}
 \item{italics}{A TRUE or FALSE value indicating whether the footnote 
 text shoud be in italics font.  If TRUE, the entire footnote will be 
 in italics.}
+
+\item{columns}{The number of columns for the foonote block. Valid values
+are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the footnote
+block will be split into two columns, each aligned to the outside.  If 
+this parameter is set to 3, the title block will be split into 3 columns,
+with the outer columns aligned to the outside and the middle column
+aligned center.  Footnotes are assigned to cells from top left to bottom right.}
 }
 \value{
 The modified report.

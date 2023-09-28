@@ -1,3 +1,13 @@
+# reporter 1.4.2
+
+* Added example for page breaking.
+* Added _columns_ parameter to `footnotes()` function.
+* Fixed column dedupe functionality to account for non-unique values.
+* Allow user to put new line in page-by column value.
+* Remove message on page-by sort.
+* Fixed character escape on DOCX.
+* Added "format" parameter to `page_by()` function.
+
 # reporter 1.4.1
 
 * Fixed bug on DOCX when attempting to add multiple plots.
@@ -20,7 +30,7 @@ are aligned.
 * Fixed bug when using symbols on portrait RTF output.  Symbols were being
 turned 90 degrees.
 * Fixed bug when logging patchwork objects.
-* Added "continuous" parameter to `create_table`. When true, table will
+* Added "continuous" parameter to `create_table()`. When true, table will
 be created a a continuous table spanning multiple pages, and not repeating
 titles and footnotes. Currently for RTF only.  
 * Allowed EMF files on `create_plot()` for RTF output.

@@ -289,3 +289,24 @@ test_that("stub_dedupe works as expected", {
   
 })
 
+
+test_that("get_pgby_cnt works as expected", {
+  
+  res1 <- get_pgby_cnt(NULL)
+  
+  expect_equal(res1, 0)
+  
+  res2 <- get_pgby_cnt(c("myval"))
+  
+  expect_equal(res2, 1)
+  
+  res3 <- get_pgby_cnt(c("myval", "my\nval"))
+  
+  expect_equal(res3, 2)
+  
+  res4 <- get_pgby_cnt(c("myval0", "myval1", "myval2"))
+  
+  expect_equal(res4, 1)
+  
+  
+})

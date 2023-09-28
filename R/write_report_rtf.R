@@ -223,6 +223,11 @@ encodeRTF <- Vectorize(function(x) {
   return(res)
 })
 
+
+# These are characters that will mess up the RTF.
+# Have to be translated to something else.
+# Using character codes because R doesn't like 
+# non-ascii characters in the code.
 #' @noRd
 encodeRTF_internal <- Vectorize(function(x) {
   
@@ -233,9 +238,9 @@ encodeRTF_internal <- Vectorize(function(x) {
     ret <- "\\'7b"
   else if (ret == "\\")
     ret <- "\\'5c"
-  else if (x == 175)
+  else if (x == 175)  # This is a macron used for underlines
     ret <- "\\u175\\u175"
-  else if (x > 127)
+  else if (x > 127)  # Any non-alphanumeric character
     ret <- paste0("\\u", x, "  ")
   
   return(ret)

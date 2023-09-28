@@ -1347,6 +1347,15 @@ titles <- function(x, ..., align = "center", blank_row = "below",
     }
   }
   
+  if (is.null(columns)) {
+    columns <- 1 
+  } else {
+    if (!columns %in% c(1, 2, 3)) {
+      stop("Columns paramter is invalid. Valid values are 1, 2, or 3.") 
+    }
+    
+  }
+  
   if (header == TRUE & !"report_spec" %in% class(x)) {
     
     stop("Header titles can only be assigned to a report.")
@@ -1450,6 +1459,12 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @param italics A TRUE or FALSE value indicating whether the footnote 
 #' text shoud be in italics font.  If TRUE, the entire footnote will be 
 #' in italics.
+#' @param columns The number of columns for the foonote block. Valid values
+#' are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the footnote
+#' block will be split into two columns, each aligned to the outside.  If 
+#' this parameter is set to 3, the title block will be split into 3 columns,
+#' with the outer columns aligned to the outside and the middle column
+#' aligned center.  Footnotes are assigned to cells from top left to bottom right.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1500,7 +1515,7 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
                       borders = "none", valign = NULL, width = NULL, 
-                      footer = FALSE, italics = FALSE){
+                      footer = FALSE, italics = FALSE, columns = 1){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1554,6 +1569,15 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     stop("Footer footnotes can only be assigned to a report.")
     
   }
+  
+  if (is.null(columns)) {
+    columns <- 1 
+  } else {
+    if (!columns %in% c(1, 2, 3)) {
+      stop("Columns paramter is invalid. Valid values are 1, 2, or 3.") 
+    }
+    
+  }
 
   if (has_glue()) {
     ftn$footnotes <- gluev(ft)
@@ -1561,12 +1585,14 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
     ftn$footnotes <- ft
   }
   
+  
   ftn$blank_row <- blank_row
   ftn$align <- align
   ftn$borders <- borders
   ftn$width <- width  
   ftn$footer <- footer
   ftn$italics <- italics
+  ftn$columns <- columns
 
   if (is.null(valign)) {
     if ("report_spec" %in% class(x))
@@ -1744,6 +1770,12 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
 #' The 'left' and 'right' border specifications only apply to RTF, HTML, PDF,
 #' and DOCX reports.
+#' @param format The format to use for the page by column data.  The format can 
+#' be a string format, a formatting function, a lookup list, a user-defined
+#' format, or a formatting list. 
+#' All formatting is performed by the \code{\link[fmtr]{fapply}} function from
+#' the \code{\link[fmtr]{fmtr}} package.  For 
+#' a list of common formatting codes, see \link[fmtr]{FormattingStrings}.
 #' @family report
 #' @seealso \code{\link{create_table}} to create a table, and 
 #' \code{\link{create_plot}} to create a plot.  
@@ -1860,7 +1892,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
 #' # 2020-10-25 19:33:35                                                Page 3 of 3 
 #' @export
 page_by <- function(x, var, label = NULL, align = "left",
-                    blank_row = "below", borders = "none") {
+                    blank_row = "below", borders = "none", format = NULL) {
   
   
   # Create page by structure
@@ -1892,6 +1924,7 @@ page_by <- function(x, var, label = NULL, align = "left",
   pb$align <- align
   pb$blank_row <- blank_row
   pb$borders <- borders
+  pb$format <- format
 
   x$page_by <- pb
   

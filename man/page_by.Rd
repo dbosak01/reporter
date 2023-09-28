@@ -10,7 +10,8 @@ page_by(
   label = NULL,
   align = "left",
   blank_row = "below",
-  borders = "none"
+  borders = "none",
+  format = NULL
 )
 }
 \arguments{
@@ -35,6 +36,13 @@ the page by.  Default value is 'none'.  Valid values are 'above', 'below',
 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
 The 'left' and 'right' border specifications only apply to RTF, HTML, PDF,
 and DOCX reports.}
+
+\item{format}{The format to use for the page by column data.  The format can 
+be a string format, a formatting function, a lookup list, a user-defined
+format, or a formatting list. 
+All formatting is performed by the \code{\link[fmtr]{fapply}} function from
+the \code{\link[fmtr]{fmtr}} package.  For 
+a list of common formatting codes, see \link[fmtr]{FormattingStrings}.}
 }
 \description{
 The \code{page_by} function adds a page by variable to a report, table,

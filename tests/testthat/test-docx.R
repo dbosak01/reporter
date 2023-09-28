@@ -119,7 +119,7 @@ test_that("docx3: Basic table with title header works as expected.", {
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
 
-  tbl <- create_table(dat, borders = c("body")) %>%
+  tbl <- create_table(dat, borders = c("outside")) %>%
     title_header("Table 1.0", "My Nice Table", right = "Right",
                  borders = c("top", "bottom"), blank_row = "none",
                  width = "content") %>%
@@ -1614,6 +1614,223 @@ test_that("docx44: Stub indent.", {
   res <- write_report(rpt)
   res
   expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+test_that("docx45: Footnote columns work 1 column.", {
+  
+  fp <- file.path(base_path, "docx/test45.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all")  %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame3",
+           blank_row = "both", columns =  1, align = "center",
+           borders = c("outside")) %>%
+    footnotes("Here is a footnote", "And another", columns = 1, borders = "all")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Here is a footnote", "And another", columns = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx46: Footnote columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "docx/test46.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
+           blank_row = c("above", "below"), columns =  2, 
+           borders = "outside") %>%
+    footnotes("Here is a footnote", "And another", columns = 2, borders = "all")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right")  %>%
+    footnotes("Here is a footnote", "And another", columns = 2)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx47: Footnote columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "docx/test47.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)  %>%
+    footnotes("Here is a footnote", "And another", "And more", "", "More",
+              columns = 3, borders = "all")
+  
+  rght <- paste("Here is a big long text string to see how the automatic", 
+                "wrapping is happening in a reduced size cell on the right.")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier", 
+                       font_size = 10) %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+           "      My right thing", "", "Center", rght,
+           blank_row = "below", columns =  3, borders = "none") %>%
+    footnotes("Here is a footnote", "And another", "A",
+              "Here is a longer footnote",  "to see if I can figure", 
+              "out the alignment pattern.",
+              columns = 3)
+  
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx48: Multiple footnote blocks work as expected.", {
+  
+  fp <- file.path(base_path, "docx/test48.docx")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE) %>%
+    footnotes("Here is a footnote", "And another", "And more", "", "More",
+              columns = 3, borders = "all", blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    footnotes("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    footnotes("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    titles("Here is a title", "And another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("docx49: Greater and Less characters are escaped as expected.", {
+  
+  fp <- file.path(base_path, "docx/test49.docx")
+  
+  dt <- iris[1:15, ]
+  dt$Species <- as.character(dt$Species)
+  dt[1, "Species"] <- "set > osa"
+  dt[2, "Species"] <- "set < osa"
+  dt[3, "Species"] <- "set & osa"
+  
+  tbl <- create_table(dt, borders = "all") %>%
+    define(Species, label = "Spe>ies") %>%
+    footnotes("Here is a > footnote", "And < another", "And & more", "", "More",
+              columns = 3, borders = "all", blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left<", "right&") %>%
+    page_footer("left>", "", "right<") %>%
+    footnotes("Table> 1.0", "IRIS Data Frame",
+              blank_row = "below", columns =  1, align = "center", width = 7,
+              borders = "all") %>%
+    footnotes("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+              blank_row = "below", columns =  2, borders = "all") %>%
+    footnotes("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+              blank_row = "below", columns =  3, borders = "all") %>%
+    titles("Here is>a title", "And<another")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("docx50: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "docx/test50.docx")
+  
+  dat <- iris
+  dat$Pgby <- as.character(dat$Species)
+  dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
+  
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 9)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+test_that("docx51: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "docx/test51.docx")
+  
+  fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
+  fmt2 <- value(condition(x == 1, "Setosa"),
+                condition(x == 2, "Versicolor"),
+                condition(x == 3, "Virginica"))
+  
+  dat <- iris
+  fmtval <- fmt1[dat$Species]
+  names(fmtval) <- NULL
+  dat$Pgby <- fmtval
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "Flower:", borders = "none", format = fmt2) %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "DOCX", 
+                       orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
   
   
 })

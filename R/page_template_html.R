@@ -601,6 +601,8 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
   if (length(ftnlst) > 0) {
 
     for (ftnts in ftnlst) {
+      
+      cols <- ftnts$columns
 
       if (ftnts$width == "page")
         width <- rs$content_size[["width"]]
@@ -610,6 +612,9 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
         width <- ftnts$width
 
       w <- round(width, 3)
+      
+      cwidth <- width / cols
+      cw <- w / cols
 
 
       if (ftnts$align %in% c("centre", "center"))
@@ -629,83 +634,136 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
                                      "style=\"width:", w, u, ";",
                                      algn, sty,
                                      "\">\n")
-
-      for (i in seq_along(ftnts$footnotes)) {
-
-
-        al <- ""
-        if (i == 1) {
-          if (any(ftnts$blank_row %in% c("above", "both"))) {
-
-            alcnt <- 1
-          
-            tb <- get_cell_borders_html(i, 1, length(ftnts$footnotes) + alcnt,
-                                   1, ftnts$borders, exclude = exclude_top,
-                                   border_color = get_style(rs, "border_color"))
-            
-            if (tb == "")
-              al <- "<tr><td>&nbsp;</td></tr>\n"
-            else 
-              al <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
-
-            cnt <- cnt + 1
-
-          }
-        }
-
-        bl <- ""
-        if (i == length(ftnts$footnotes)) {
-          if (any(ftnts$blank_row %in% c("below", "both"))) {
-            blcnt <- 1
-
-            tb <- get_cell_borders_html(i + alcnt + blcnt, 1,
-                                   length(ftnts$footnotes) + alcnt + blcnt,
-                                   1, ftnts$borders,
-                                   border_color = get_style(rs, "border_color"))
-            
-            if (tb == "")
-              bl <- "<tr><td>&nbsp;</td></tr>\n"
-            else 
-              bl <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
-            
-            cnt <- cnt + 1
-          }
-
-        }
-
-        b <- get_cell_borders_html(i + alcnt, 1,
-                              length(ftnts$footnotes) + alcnt + blcnt,
-                              1, ftnts$borders, exclude = exclude_top,
-                              border_color = get_style(rs, "border_color"))
-
-
-
-        # Split footnote strings if they exceed width
-        tmp <- split_string_html(ftnts$footnotes[[i]], width, rs$units)
-
-        if (al != "")
-          ret <- append(ret, al)
+      
+      al <- ""
+      if (any(ftnts$blank_row %in% c("above", "both"))) {
         
-        if (ftnts$italics)
-          txt <- paste0("<i>", encodeHTML(tmp$html), "</i>")
-        else
-          txt <- encodeHTML(tmp$html)
+        alcnt <- 1
+        
+        tb <- get_cell_borders_html(1, 1, length(ftnts$footnotes) + alcnt,
+                                    1, ftnts$borders, exclude = exclude_top,
+                                    border_color = get_style(rs, "border_color"))
 
-        if (b == "")
-          ret <- append(ret, paste0("<tr><td>", txt, 
-                                    "</td></tr>\n"))
-        else {
-          ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
-                                    txt, 
-                                    "</td></tr>\n"))
-        }
-
-
-        if (bl != "")
-          ret <- append(ret, bl)
-
-        cnt <- cnt + tmp$lines
+        
+        if (tb == "")
+          al <- paste0("<tr><td colspan=\"", cols, "\">&nbsp;</td></tr>\n")
+        else 
+          al <- paste0("<tr><td style=\"", tb, "\" colspan=\"", cols, 
+                       "\">&nbsp;</td></tr>\n")
+        
+        # Can append now, since it is first
+        ret[length(ret) + 1] <- al
+        
+        cnt <- cnt + 1
+        
       }
+
+      
+      bl <- ""
+      if (any(ftnts$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        
+        tb <- get_cell_borders_html(length(ftnts$footnotes) + alcnt + blcnt, 1,
+                                    length(ftnts$footnotes) + alcnt + blcnt,
+                                    1, ftnts$borders,
+                                    border_color = get_style(rs, "border_color"))
+        
+        if (tb == "")
+          bl <- paste0("<tr><td colspan=\"", cols, "\">&nbsp;</td></tr>\n")
+        else 
+          bl <- paste0("<tr><td style=\"", tb, "\" colspan=\"", cols, 
+                       "\">&nbsp;</td></tr>\n")
+        
+        cnt <- cnt + 1
+      }
+
+      i <- 1
+      while (i <= length(ftnts$footnotes)) {
+        
+        
+        # Calculate current row
+        rwnum <- ceiling(i / cols)
+        
+        mxlns <- 0
+        rw <- "<tr>"
+
+        for (j in seq_len(cols)) {
+  
+
+          b <- get_cell_borders_html(rwnum + alcnt, j,
+                                length(ftnts$footnotes) + alcnt + blcnt,
+                                cols, ftnts$borders, exclude = exclude_top,
+                                border_color = get_style(rs, "border_color"))
+  
+          # Not all cells have titles
+          if (i > length(ftnts$footnotes))
+            vl <- ""
+          else 
+            vl <- ftnts$footnotes[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "text-align: left;"
+            else 
+              calgn <- "text-align: right;"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "text-align: left;"
+            else if (j == 2)
+              calgn <- "text-align: center;"
+            else if (j == 3) 
+              calgn <- "text-align: right;"
+          }
+          
+          cws <- paste0("width:", cw, u, ";")
+          valgn <- "vertical-align:text-top;"
+  
+          # Split footnote strings if they exceed width
+          tmp <- split_string_html(vl, cwidth, rs$units)
+  
+          # Track max lines for counting
+          if (tmp$lines > mxlns)
+            mxlns <- tmp$lines
+          
+          
+          if (ftnts$italics)
+            txt <- paste0("<i>", encodeHTML(tmp$html), "</i>")
+          else
+            txt <- encodeHTML(tmp$html)
+  
+          # if (b == "")
+          #   ret <- append(ret, paste0("<tr><td>", txt, 
+          #                             "</td></tr>\n"))
+          # else {
+          #   ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
+          #                             txt, 
+          #                             "</td></tr>\n"))
+          #}
+          
+          # Concat tags and footnote content
+          rw <- paste0(rw, paste0("<td style=\"", cws, b, calgn, valgn, "\">",  
+                                  txt, "</td>\n"))
+  
+  
+          i <- i + 1
+
+        }
+        
+        ret <- append(ret, paste0(rw, "</tr>\n"))
+        
+        # Keep track of lines
+        cnt <- cnt + mxlns
+        
+        
+      }
+      
+      
+      if (bl != "")
+        ret <- append(ret, bl)
+      
       ret[length(ret) + 1] <- "</table>"
       dev.off()
 
@@ -714,6 +772,150 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
 
   }
 
+  
+  res <- list(html = paste0(ret, collapse = ""),
+              lines = cnt)
+  
+  return(res)
+}
+
+
+#' @import grDevices
+#' @noRd
+get_footnotes_html_back <- function(ftnlst, content_width, rs, talgn = "center", 
+                               ex_brdr = FALSE) {
+  
+  ret <- c()
+  cnt <- 0
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
+  
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+  
+  sty <- paste0(get_style_html(rs, "footnote_font_color"),
+                get_style_html(rs, "footnote_background"),
+                get_style_html(rs, "footnote_font_bold"))
+  
+  
+  if (length(ftnlst) > 0) {
+    
+    for (ftnts in ftnlst) {
+      
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+      
+      w <- round(width, 3)
+      
+      
+      if (ftnts$align %in% c("centre", "center"))
+        algn <- "text-align: center;"
+      else if (ftnts$align == "right")
+        algn <- "text-align: right;"
+      else
+        algn <- "text-align: left;"
+      
+      alcnt <- 0
+      blcnt <- 0
+      
+      
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      ret[length(ret) + 1] <- paste0("<table ",
+                                     "style=\"width:", w, u, ";",
+                                     algn, sty,
+                                     "\">\n")
+      
+      for (i in seq_along(ftnts$footnotes)) {
+        
+        
+        al <- ""
+        if (i == 1) {
+          if (any(ftnts$blank_row %in% c("above", "both"))) {
+            
+            alcnt <- 1
+            
+            tb <- get_cell_borders_html(i, 1, length(ftnts$footnotes) + alcnt,
+                                        1, ftnts$borders, exclude = exclude_top,
+                                        border_color = get_style(rs, "border_color"))
+            
+            if (tb == "")
+              al <- "<tr><td>&nbsp;</td></tr>\n"
+            else 
+              al <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
+            
+            cnt <- cnt + 1
+            
+          }
+        }
+        
+        bl <- ""
+        if (i == length(ftnts$footnotes)) {
+          if (any(ftnts$blank_row %in% c("below", "both"))) {
+            blcnt <- 1
+            
+            tb <- get_cell_borders_html(i + alcnt + blcnt, 1,
+                                        length(ftnts$footnotes) + alcnt + blcnt,
+                                        1, ftnts$borders,
+                                        border_color = get_style(rs, "border_color"))
+            
+            if (tb == "")
+              bl <- "<tr><td>&nbsp;</td></tr>\n"
+            else 
+              bl <- paste0("<tr><td style=\"", tb, "\">&nbsp;</td></tr>\n")
+            
+            cnt <- cnt + 1
+          }
+          
+        }
+        
+        b <- get_cell_borders_html(i + alcnt, 1,
+                                   length(ftnts$footnotes) + alcnt + blcnt,
+                                   1, ftnts$borders, exclude = exclude_top,
+                                   border_color = get_style(rs, "border_color"))
+        
+        
+        
+        # Split footnote strings if they exceed width
+        tmp <- split_string_html(ftnts$footnotes[[i]], width, rs$units)
+        
+        if (al != "")
+          ret <- append(ret, al)
+        
+        if (ftnts$italics)
+          txt <- paste0("<i>", encodeHTML(tmp$html), "</i>")
+        else
+          txt <- encodeHTML(tmp$html)
+        
+        if (b == "")
+          ret <- append(ret, paste0("<tr><td>", txt, 
+                                    "</td></tr>\n"))
+        else {
+          ret <- append(ret, paste0("<tr><td style=\"", b, "\">", 
+                                    txt, 
+                                    "</td></tr>\n"))
+        }
+        
+        
+        if (bl != "")
+          ret <- append(ret, bl)
+        
+        cnt <- cnt + tmp$lines
+      }
+      ret[length(ret) + 1] <- "</table>"
+      dev.off()
+      
+      
+    }
+    
+  }
+  
   
   res <- list(html = paste0(ret, collapse = ""),
               lines = cnt)
@@ -882,7 +1084,7 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
 #' @import stringi
 #' @return A vector of strings
 #' @noRd
-get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
+get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgby_cnt = NULL) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -890,7 +1092,7 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
   }
   
   if (is.null(value))
-    value <- ""
+    value <- get_pgby_value(value, pgby_cnt)
   
   ll <- width
   ret <- c()
@@ -940,10 +1142,16 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
     tb <- get_cell_borders_html(brow, 1 , trows, 1, pgby$borders, 
                                 exclude = exclude_top, 
                                 border_color = get_style(rs, "border_color"))
-
+    
+    # Account for multiple pgby lines
+    tmp <- split_string_html(value, width, rs$units)
+    vl <- tmp$html
+    cnt <- cnt + tmp$lines
+    
+    # Construct HTML for page by
     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
-                                   pgby$label, encodeHTML(value), "</td></tr>\n")
-    cnt <- cnt + 1
+                                   pgby$label, encodeHTML(vl), "</td></tr>\n")
+    #cnt <- cnt + 1
 
 
     if (pgby$blank_row %in% c("below", "both")) {

@@ -152,6 +152,10 @@ test_that("user1: demo table works.", {
       write_report(rpt, pdfpth, output_type = "PDF")
       expect_equal(file.exists(pdfpth), TRUE)
       
+      
+      docxpth <- file.path(base_path, "user/user1.docx")
+      write_report(rpt, docxpth, output_type = "DOCX")
+      expect_equal(file.exists(docxpth), TRUE)
     }
   
   } else 
@@ -483,7 +487,7 @@ test_that("user4: Adverse Events table works.", {
     rpt <- create_report(fp) %>% 
       options_fixed(font_size = 10) %>% 
       page_header("Client: Experis", "Study: BBC") %>% 
-      titles("Table 1.0", "Adverse Events by Severity", "Safety Population") %>% 
+      titles("Table 1.0", "Adverse Events by Severity", "Safety Population < 25") %>% 
       add_content(tbl) %>% 
       footnotes(paste("Date Produced:", "Time", ";  Program: Table3_0.R"),
                 paste("* Total Reporting is defined as number of subjects",
@@ -516,6 +520,10 @@ test_that("user4: Adverse Events table works.", {
     pdfpth <- file.path(base_path, "user/user4.pdf")
     res <- write_report(rpt, pdfpth, output_type = "PDF")
     expect_equal(file.exists(pdfpth), TRUE)
+    
+    docxpth <- file.path(base_path, "user/user4.docx")
+    res <- write_report(rpt, docxpth, output_type = "DOCX")
+    expect_equal(file.exists(docxpth), TRUE)
       #print(res)
     
   } else

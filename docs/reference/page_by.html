@@ -22,7 +22,7 @@ page by variable prior to reporting."><meta property="og:image" content="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.2</span>
       </span>
     </div>
 
@@ -130,7 +130,8 @@ page by variable prior to reporting.</p>
 <span>  label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  align <span class="op">=</span> <span class="st">"left"</span>,</span>
 <span>  blank_row <span class="op">=</span> <span class="st">"below"</span>,</span>
-<span>  borders <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  borders <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  format <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -168,6 +169,15 @@ the page by.  Default value is 'none'.  Valid values are 'above', 'below',
 'bottom', 'left', 'right', 'all', 'outside', or 'none'.  Default is "none".  
 The 'left' and 'right' border specifications only apply to RTF, HTML, PDF,
 and DOCX reports.</p></dd>
+
+
+<dt>format</dt>
+<dd><p>The format to use for the page by column data.  The format can 
+be a string format, a formatting function, a lookup list, a user-defined
+format, or a formatting list. 
+All formatting is performed by the <code><a href="https://fmtr.r-sassy.org/reference/fapply.html" class="external-link">fapply</a></code> function from
+the <code><a href="https://fmtr.r-sassy.org/reference/fmtr.html" class="external-link">fmtr</a></code> package.  For 
+a list of common formatting codes, see <a href="https://fmtr.r-sassy.org/reference/FormattingStrings.html" class="external-link">FormattingStrings</a>.</p></dd>
 
 </dl></div>
     <div id="details">

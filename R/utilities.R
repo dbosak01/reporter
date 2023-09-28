@@ -860,6 +860,7 @@ push_down <- function(x) {
 #' @details This function is performed in the page splitting routine
 #' so that groups which span multiple pages retain a label at the top 
 #' of the page.
+#' @import common
 #' @noRd
 dedupe_pages <- function(pgs, defs) {
   
@@ -880,7 +881,7 @@ dedupe_pages <- function(pgs, defs) {
           w <- min(nchar(dat[[def$var_c]])) # Take min to exclude label row
           v <- paste0(rep(" ", times = w), collapse = "")
           
-          dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 
+          dat[[def$var_c]] <- ifelse(changed(dat[[def$var_c]]), 
                                      dat[[def$var_c]], v) 
         }
       }

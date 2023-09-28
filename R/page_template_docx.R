@@ -691,6 +691,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
   if (length(ftnlst) > 0) {
 
     for (ftnts in ftnlst) {
+      
+      cols <- ftnts$columns
 
       if (ftnts$width == "page")
         width <- rs$content_size[["width"]]
@@ -701,9 +703,16 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
       w <- round(width * conv) + 2
       
+      # Calculate cell widths
+      cw <- round(w / cols)
+      cwidth <- width / cols
+      
+      cwdths <- rep(cwidth, cols)
+      names(cwdths) <- paste0("col", seq_len(cols))
   
-      grd <- get_col_grid(c(all=w), 1)
-
+      # Get grid for footnote block
+      # grd <- get_col_grid(c(all=w), 1)
+      grd <- get_col_grid(cwdths, conv)
       
       if (ftnts$align %in% c("centre", "center"))
         algn <- "center"
@@ -740,10 +749,236 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
                                      rs$cell_margin,
                                      "<w:tblW w:w=\"", w, "\"/>", ta, tb,
                                      "</w:tblPr>", grd)
+    
+      
+      # Get spanning for blank rows
+      spn <- paste0('<w:gridSpan w:val="', cols , '"/>')
+      
+      al <- ""
+      if (any(ftnts$blank_row %in% c("above", "both"))) {
+        
+        alcnt <- 1
+        
+        
+        # al <- paste0("<w:tr>", rht, 
+        #              "<w:tc>", bb, "<w:p><w:r><w:t>", 
+        #              "</w:t></w:r></w:p></w:tc></w:tr>\n")
+        al <- paste0("<w:tr>", rht, 
+                     "<w:tc><w:tcPr>", spn, '</w:tcPr><w:p><w:r><w:t>', 
+                     "</w:t></w:r></w:p></w:tc></w:tr>\n")
 
+        ret <- append(ret, al)
+        
+        cnt <- cnt + 1
+        bb <- ""
+        
+      }
+      
+      bb <- ""
+      if (any(ftnts$borders %in% c("top", "bottom", "outside"))) {
+        bb <- get_cell_borders_docx(1, 1, 2, 1, ftnts$borders)
+        
+        
+        bb <- paste0('<w:tcPr>', bb, '</w:tcPr>')
+        
+      }
+      
+      bl <- ""
+      if (any(ftnts$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        
+        
+        # bl <- paste0("<w:tr>", rht, 
+        #              "<w:tc>", "<w:p><w:r><w:t>", 
+        #              "</w:t></w:r></w:p></w:tc></w:tr>\n")
+        bl <- paste0("<w:tr>", rht, 
+                     "<w:tc>'<w:tcPr>'", bb, spn, '</w:tcPr>',
+                     "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+        
+        bb <- "" 
+        
+        cnt <- cnt + 1
+      }
+
+      i <- 1
+      while (i <= length(ftnts$footnotes)) {
+        
+        mxlns <- 0
+        
+        # Calculate current row
+        rwnum <- ceiling(i / cols)
+        
+        rw <- ""
+        
+
+        for (j in seq_len(cols)) {
+          
+          # Not all cells have titles
+          if (i > length(ftnts$footnotes))
+            vl <- ""
+          else 
+            vl <- ftnts$footnotes[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "left"
+            else 
+              calgn <- "right"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "left"
+            else if (j == 2)
+              calgn <- "center"
+            else if (j == 3) 
+              calgn <- "right"
+          }
+  
+          # Split footnote strings if they exceed width
+          tmp <- split_string_html(vl, cwidth, rs$units)
+          
+          # Track max lines for counting
+          if (tmp$lines > mxlns)
+            mxlns <- tmp$lines
+          
+          # Get paragraph 
+          tstr <- para(tmp$html, calgn, rs$font_size, italics = ftnts$italics)
+          
+          cwdth <- paste0('<w:tcW w:w="', cw,'"/>')
+          
+          # Append cell
+          rw <- paste0(rw, "<w:tc><w:tcPr>", cwdth, "</w:tcPr>", tstr, "</w:tc>\n")
+          
+          
+          i <- i + 1
+          
+
+        }
+        
+        srht <- get_row_height(round(rs$row_height * mxlns * conv))
+        
+        # Construct row
+        ret <- append(ret, paste0("<w:tr>", srht, rw, "</w:tr>\n"))
+        
+        # Track lines
+        cnt <- cnt + mxlns
+        
+        
+      }
+      
+
+      
+
+      
+      # ret <- append(ret, paste0("<w:tr>", trht, 
+      #                           "<w:tc>", bb, para(tmp$html, algn, 
+      #                                              italics = ftnts$italics), 
+      #                           "</w:tc></w:tr>\n"))
+      
+      
+      if (bl != "")
+        ret <- append(ret, bl)
+      
+      # Close table
+      ret[length(ret) + 1] <- "</w:tbl>\n"
+      
+      dev.off()
+
+    }
+    
+
+    
+    ret <- get_page_numbers_docx(ret)
+
+  }
+
+  
+  res <- list(docx = paste0(paste0(ret,  collapse = ""), rs$table_break),
+              lines = cnt)
+  
+  return(res)
+}
+
+
+
+#' @import grDevices
+#' @noRd
+get_footnotes_docx_back <- function(ftnlst, content_width, rs, talgn = "center", 
+                               ex_brdr = FALSE, colspan = 0, col_widths = NULL,
+                               content_brdrs = NULL) {
+  
+  ret <- c()
+  cnt <- 0
+  exclude_top <- NULL
+  if (ex_brdr)
+    exclude_top <- "top"
+  
+  conv <- rs$twip_conversion
+  rht <- get_row_height(round(rs$row_height * conv))
+  
+  u <- rs$units
+  if (rs$units == "inches")
+    u <- "in"
+  
+  
+  if (length(ftnlst) > 0) {
+    
+    for (ftnts in ftnlst) {
+      
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+      
+      w <- round(width * conv) + 2
+      
+      
+      grd <- get_col_grid(c(all=w), 1)
+      
+      
+      if (ftnts$align %in% c("centre", "center"))
+        algn <- "center"
+      else if (ftnts$align == "right")
+        algn <- "right"
+      else
+        algn <- "left"
+      
+      brd <- ftnts$borders
+      # If content borders are on, align indent with content
+      if (!is.null(content_brdrs)) {
+        
+        if (any(content_brdrs %in% c("all", "outside", "body", "left")))
+          brd <- "outside"
+        
+      }
+      
+      # Get indent codes for alignment
+      ta <- get_indent_docx(talgn, rs$line_size, w, 
+                            rs$base_indent, brd, conv)
+      
+      alcnt <- 0
+      blcnt <- 0
+      
+      
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      tb <- get_table_borders_docx(ftnts$borders)
+      
+      
+      ret[length(ret) + 1] <- paste0("<w:tbl>",
+                                     "<w:tblPr>",
+                                     rs$cell_margin,
+                                     "<w:tblW w:w=\"", w, "\"/>", ta, tb,
+                                     "</w:tblPr>", grd)
+      
       for (i in seq_along(ftnts$footnotes)) {
-
-
+        
+        
         al <- ""
         bb <- ""
         if (i == 1) {
@@ -757,69 +992,69 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
           }
           
           if (any(ftnts$blank_row %in% c("above", "both"))) {
-
+            
             alcnt <- 1
-          
-
-              al <- paste0("<w:tr>", rht, 
-                    "<w:tc>", bb, "<w:p><w:r><w:t>", 
-                    "</w:t></w:r></w:p></w:tc></w:tr>\n")
-
-
+            
+            
+            al <- paste0("<w:tr>", rht, 
+                         "<w:tc>", bb, "<w:p><w:r><w:t>", 
+                         "</w:t></w:r></w:p></w:tc></w:tr>\n")
+            
+            
             cnt <- cnt + 1
             bb <- ""
-
+            
           }
         }
-
+        
         bl <- ""
         if (i == length(ftnts$footnotes)) {
           if (any(ftnts$blank_row %in% c("below", "both"))) {
             blcnt <- 1
-
-
-              bl <- paste0("<w:tr>", rht, 
-                    "<w:tc>", "<w:p><w:r><w:t>", 
-                    "</w:t></w:r></w:p></w:tc></w:tr>\n")
-
+            
+            
+            bl <- paste0("<w:tr>", rht, 
+                         "<w:tc>", "<w:p><w:r><w:t>", 
+                         "</w:t></w:r></w:p></w:tc></w:tr>\n")
+            
             
             cnt <- cnt + 1
           }
-
+          
         }
-
-
+        
+        
         # Split footnote strings if they exceed width
         tmp <- split_string_html(ftnts$footnotes[[i]], width, rs$units)
-
+        
         if (al != "")
           ret <- append(ret, al)
-
         
-          trht <- get_row_height(round(rs$row_height * tmp$lines * conv))
         
-          ret <- append(ret, paste0("<w:tr>", trht, 
-                                   "<w:tc>", bb, para(tmp$html, algn, 
-                                                      italics = ftnts$italics), 
-                                    "</w:tc></w:tr>\n"))
-
-
-
+        trht <- get_row_height(round(rs$row_height * tmp$lines * conv))
+        
+        ret <- append(ret, paste0("<w:tr>", trht, 
+                                  "<w:tc>", bb, para(tmp$html, algn, 
+                                                     italics = ftnts$italics), 
+                                  "</w:tc></w:tr>\n"))
+        
+        
+        
         if (bl != "")
           ret <- append(ret, bl)
-
+        
         cnt <- cnt + tmp$lines
       }
       ret[length(ret) + 1] <- "</w:tbl>\n"
       dev.off()
-
-
+      
+      
     }
     
     ret <- get_page_numbers_docx(ret)
-
+    
   }
-
+  
   
   res <- list(docx = paste0(paste0(ret,  collapse = ""), rs$table_break),
               lines = cnt)
@@ -1020,7 +1255,8 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
 #' @param width The width to set the page by strings to
 #' @return A vector of strings
 #' @noRd
-get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
+get_page_by_docx <- function(pgby, width, value, rs, talgn, 
+                             ex_brdr = FALSE, pgby_cnt = NULL) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -1028,7 +1264,7 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
   }
   
   if (is.null(value))
-    value <- ""
+    value <- get_pgby_value(value, pgby_cnt)
   
   ll <- width
   conv <- rs$twip_conversion
@@ -1106,12 +1342,18 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE) {
     
     }
     
-    ret <- append(ret, paste0("<w:tr>", rht, 
-                              cell_abs(paste0(pgby$label, value), width = w, 
+    # Account for multiple pgby lines
+    tmp <- split_string_html(value, width, rs$units)
+    vl <- tmp$html
+    cnt <- cnt + tmp$lines
+    vrht <- get_row_height(round(rs$row_height * conv) * tmp$lines)
+    
+    ret <- append(ret, paste0("<w:tr>", vrht, 
+                              cell_abs(paste0(pgby$label, vl), width = w, 
                                        borders = vb), 
                               "</w:tr>\n"))
     
-    cnt <- cnt + 1
+    # cnt <- cnt + 1
 
 
     if (pgby$blank_row %in% c("below", "both")) {

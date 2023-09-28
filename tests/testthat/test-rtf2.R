@@ -2828,6 +2828,11 @@ test_that("rtf2-80: Two tables one continuous works as expected.", {
   
 })
 
+
+# Basic Tests 81-90 -------------------------------------------------------
+
+
+
 # Can't reproduce Raphael's problem
 test_that("rtf2-81: Column widths work as expected.", {
   
@@ -3150,6 +3155,192 @@ test_that("rtf2-87: Italic footnotes work as expected.", {
   expect_equal(res$pages, 1)
   
 })
+
+
+test_that("rtf2-88: Footnote columns work 1 column.", {
+  
+  fp <- file.path(base_path, "rtf2/test88.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE)  %>%
+    footnotes("Here is a footnote", "And another", 
+               borders = "all", columns = 1)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "left") %>%
+    footnotes("Here is a footnote", "And another", columns = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-89: Footnote columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "rtf2/test89.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = FALSE, visible = FALSE) %>%
+    footnotes("Here is a footnote", "And another", 
+              borders = "all", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", "Left", "Right",
+           blank_row = "below", columns =  2) %>%
+    footnotes("Here is a footnote that is really long and is going to wrap", 
+              "And another", 
+              "Another left", "Another right", columns = 2)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-90: Footnote columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "rtf2/test90.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = FALSE, visible = FALSE)  %>%
+    footnotes("Here is a footnote", "And another", "And more",
+              "", "centered",
+              borders = "all", columns = 3, blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0", "IRIS Data Frame", "My right thing", "", "Center",
+           blank_row = "below", columns =  3) %>%
+    footnotes("Here is a footnote that is really long an is going to wrap a few times", 
+              "And another", "and more", 
+              "", "Footnote Center", columns = 3)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+# Basic Tests 91-100 ------------------------------------------------------
+
+
+
+test_that("rtf2-91: Multiple footnote blocks work as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test91.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE) %>% 
+    footnotes("Footnote left", "Footnote right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    footnotes("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    footnotes("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    titles("Here is a title", "And another")
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("rtf2-92: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test92.rtf")
+  
+  dat <- iris
+  dat$Pgby <- as.character(dat$Species)
+  dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
+  
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 9)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("rtf2-93: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test93.rtf")
+  
+  fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
+  fmt2 <- value(condition(x == 1, "Setosa"),
+                condition(x == 2, "Versicolor"),
+                condition(x == 3, "Virginica"))
+  
+  dat <- iris
+  fmtval <- fmt1[dat$Species]
+  names(fmtval) <- NULL
+  dat$Pgby <- fmtval
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "Flower:", borders = "none", format = fmt2) %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "RTF", 
+                       orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
 
 # User Tests --------------------------------------------------------------
 

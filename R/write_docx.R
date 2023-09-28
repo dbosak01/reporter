@@ -1473,7 +1473,7 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
   
   ret <- ""
   
-  vl <- txt
+  vl <- encodeDOCX(txt)
   if (nchar(txt) == 0)
     vl <- " "
 
@@ -1520,7 +1520,7 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
 #' @noRd
 run <- function(txt) {
   
-  ret <- paste0('<w:r><w:t xml:space="preserve">', txt, '</w:t></w:r>', collapse = "")
+  ret <- paste0('<w:r><w:t xml:space="preserve">', encodeDOCX(txt), '</w:t></w:r>', collapse = "")
   
   return(ret)
   

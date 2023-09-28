@@ -17,10 +17,15 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   content_blank_row <- cntnt$blank_row
   
   pgby_var <- NA
-  if (!is.null(rs$page_by))
+  pgby_cnt <- 0
+  pgby_fmt <- NULL
+  if (!is.null(rs$page_by)) {
     pgby_var <- rs$page_by$var
-  else if (!is.null(ts$page_by))
+    pgby_fmt <- rs$page_by$format
+  } else if (!is.null(ts$page_by)) {
     pgby_var <- ts$page_by$var
+    pgby_fmt <- ts$page_by$format
+  }
   
   
   if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
@@ -49,9 +54,17 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   # If page by is defined, use it
   if (!is.na(pgby_var)) {
-    dat$..page_by <-  dat[[pgby_var]]
-    if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
-      message("Page by variable not sorted.")
+    
+    if (!is.null(pgby_fmt))
+      dat$..page_by <-  fapply(dat[[pgby_var]], pgby_fmt)
+    else 
+      dat$..page_by <-  dat[[pgby_var]]
+    
+    pgby_cnt <- get_pgby_cnt(dat$..page_by)
+    
+    # Commenting out for now
+    # if (is.unsorted(dat[[pgby_var]], strictly = FALSE))
+    #   message("Page by variable not sorted.")
   }
   
   # Deal with invisible columns
@@ -173,7 +186,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(tmp_pi)
   
   # Offsets are needed to calculate splits and page breaks
-  content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row)
+  content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row, pgby_cnt)
   
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
@@ -375,7 +388,7 @@ get_page_footnotes_text <- function(rs, spec, spec_width,
 #' Needed to calculate page breaks accurately.
 #' @return A vector of upper and lower offsets
 #' @noRd
-get_content_offsets <- function(rs, ts, pi, content_blank_row) {
+get_content_offsets <- function(rs, ts, pi, content_blank_row, pgby_cnt = NULL) {
   
   ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   
@@ -398,9 +411,9 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row) {
   
   pgb <- c()
   if (!is.null(ts$page_by))
-    pgb <- get_page_by(ts$page_by, rs$line_size, NULL)
+    pgb <- get_page_by(ts$page_by, rs$line_size, NULL, pgby_cnt)
   else if (!is.null(rs$page_by))
-    pgb <- get_page_by(rs$page_by, rs$line_size, NULL)
+    pgb <- get_page_by(rs$page_by, rs$line_size, NULL, pgby_cnt)
   
   #print(length(pgb))
   

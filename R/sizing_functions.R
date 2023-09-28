@@ -1189,8 +1189,46 @@ stub_dedupe <- function(stb, defs) {
 }
 
 
+#' @import stringi
+#' @noRd
+get_pgby_cnt <- function(pgby) {
+  
+  ret <- 0
+  
+  if (!is.null(pgby)) {
+    
+    upgby <- unique(pgby)
+  
+    for (pgb in upgby) {
+    
+      lns <- unlist(stri_split_fixed(pgb, "\n"))
+      
+      if (length(lns) > ret)
+        ret <- length(lns)
+    
+    }
+  
+  }
+  
+  return(ret)
+  
+}
 
+#' @noRd
+get_pgby_value <- function(value, pgby_cnt) {
+  
+  ret <- ""
+  if (is.null(value)) {
+    
+    if (!is.null(pgby_cnt)) {
+      
+      if (pgby_cnt > 0) {
+        ret <- rep("x", pgby_cnt)
+        ret <- paste0(ret, collapse = "\n")
+      } 
+    }
 
-
-
-
+  }
+  
+  return(ret)
+}

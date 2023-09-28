@@ -326,16 +326,20 @@ get_titles_back <- function(titles, content_width, page_width, uchar, char_width
 #' @param titles Page by object
 #' @param width The width to set the page by strings to
 #' @return A vector of strings
+#' @import stringi
 #' @noRd
-get_page_by <- function(pgby, width, value) {
+get_page_by <- function(pgby, width, value, pgby_cnt = NULL) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
     
   }
   
-  if (is.null(value))
-    value <- ""
+  # Set up fake values if there is no value yet.
+  # Needed for estimation of header line counts
+  if (is.null(value)) {
+    value <- get_pgby_value(value, pgby_cnt)
+  }
   
   ll <- width
   ret <- c()
@@ -347,27 +351,33 @@ get_page_by <- function(pgby, width, value) {
     
     if (pgby$blank_row %in% c("above", "both"))
       ret[length(ret) + 1] <- ""
-    
+  
 
     pb <- paste0(pgby$label, value)
     
-    gp <- ll - nchar(pb) 
+    lns <- unlist(stri_split_fixed(pb, "\n"))
     
-
-    if (gp > 0) {
+    for (pbln in lns) {
+    
+      gp <- ll - nchar(pbln) 
       
-      if (pgby$align == "left")
-        ln <- pad_right(pb, ll)
-      else if (pgby$align == "right")
-        ln <- pad_left(pb, ll)
-      else if (pgby$align == "center" | pgby$align == "centre")
-        ln <- pad_both(pb, ll)
+  
+      if (gp > 0) {
+        
+        if (pgby$align == "left")
+          ln <- pad_right(pbln, ll)
+        else if (pgby$align == "right")
+          ln <- pad_left(pbln, ll)
+        else if (pgby$align == "center" | pgby$align == "centre")
+          ln <- pad_both(pbln, ll)
+        
+      } else 
+        stop("Page by exceeds available width.")
       
-    } else 
-      stop("Page by exceeds available width.")
+      
+      ret[length(ret) + 1] <- ln
     
-    
-    ret[length(ret) + 1] <- ln
+    }
     
     
     if (pgby$blank_row %in% c("below", "both"))
@@ -510,6 +520,150 @@ get_footnotes <- function(footnotes, content_width, page_width,
       if (!any(class(ftn) == "footnote_spec"))
         stop("footnotes parameter value is not a footnote spec.")
       
+      cols <- ftn$columns
+      
+      if (ftn$width == "page")
+        width <- page_width
+      else if (ftn$width == "content")
+        width <- content_width
+      else if (is.numeric(ftn$width))
+        width <- ceiling(ftn$width / char_width)
+      
+      cll <- round(width / cols)
+      
+      ll <- width 
+      
+      algn <- ftn$align
+      if (algn == "centre")
+        algn <- "center"
+      
+      if (ftn$blank_row %in% c("above", "both") & length(ftn$footnotes) > 0)
+        ret[length(ret) + 1] <- ""
+      
+      if (any(ftn$borders %in% c("top", "all")) & length(ftn$footnotes) > 0) {
+        # ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll), 
+        #                                       collapse = ""), " ")
+        
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll), collapse = "")
+      }
+      
+      i <- 1
+      while (i <= length(ftn$footnotes)) {
+        
+        ln <- ""
+      
+        for (j in seq_len(cols)) {
+          
+          # Not all cells have footnotes
+          if (i > length(ftn$footnotes))
+            f <- ""
+          else 
+            f <- ftn$footnotes[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "left"
+            else 
+              calgn <- "right"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "left"
+            else if (j == 2)
+              calgn <- "center"
+            else if (j == 3) 
+              calgn <- "right"
+          }
+          
+          gp <- cll - nchar(f)
+          
+          #print("footnotes")
+          if (gp > 0) {
+            
+            # if (ftn$align == "left")
+            #   ln <- pad_right(paste0(f, " "), ll + 1)
+            # else if (ftn$align == "right")
+            #   ln <- pad_left(paste0(f, " "), ll + 1)
+            # else if (ftn$align == "center" | ftn$align == "centre")
+            #   ln <- pad_both(paste0(f, " "), ll + 1)
+            
+            # if (ftn$align == "left")
+            #   ln <- pad_right(f, ll)
+            # else if (ftn$align == "right")
+            #   ln <- pad_left(f, ll)
+            # else if (ftn$align == "center" | ftn$align == "centre")
+            #   ln <- pad_both(f, ll)
+            
+            if (calgn == "left")
+              ln <- paste0(ln, pad_right(f, cll))
+            else if (calgn == "right")
+              ln <- paste0(ln, pad_left(f, cll))
+            else if (calgn == "center")
+              ln <- paste0(ln, pad_both(f, cll))
+            
+          } else {
+            warning(paste0("Footnote exceeds available width.",
+                        "\nFootnote: ", f,
+                        "\nFootnote length: ", nchar(f), 
+                        "\nLine Length: ", ll))
+            
+            tln <- cll - 3
+            
+            if (tln >= 0) {
+              
+              if (ftn$align == "left") {
+                ln <- paste0(substr(pad_right(f , cll), 1, tln), "...")
+              } else if (ftn$align == "right") {
+                ln <- paste0("...", substr(pad_left(f, cll), 1, tln))
+              } else if (ftn$align == "center" | ftn$align == "centre") {
+                ln <- paste0(substr(pad_both(f, cll), 1, tln), "...")
+              }
+            } else ln <- "" 
+          }
+          
+          i <- i + 1
+        }
+        
+        ret[length(ret) + 1] <- ln
+      }
+      
+      if (any(ftn$borders %in% c("bottom", "all")) & length(ftn$footnotes) > 0) {
+        # ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll), 
+        #                                       collapse = ""), " ")
+        ret[length(ret) + 1] <- paste0(rep(uchar, ll), collapse = "")
+      }
+      
+      if (ftn$blank_row %in% c("below", "both") & length(ftn$footnotes) > 0)
+        ret[length(ret) + 1] <- ""
+    }
+  }
+  
+  return(ret)
+}
+
+
+#' Get footnote text strings suitable for printing
+#' @param rs The report spec
+#' @return A vector of strings
+#' @noRd
+get_footnotes_back <- function(footnotes, content_width, page_width, 
+                          uchar = "-", char_width) {
+  
+  if (is.null(char_width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  ret <- c()
+  
+  if (!is.null(footnotes)) {
+    for (ftn in footnotes) {
+      
+      if (!any(class(ftn) == "footnote_spec"))
+        stop("footnotes parameter value is not a footnote spec.")
+      
       if (ftn$width == "page")
         width <- page_width
       else if (ftn$width == "content")
@@ -554,9 +708,9 @@ get_footnotes <- function(footnotes, content_width, page_width,
           
         } else {
           warning(paste0("Footnote exceeds available width.",
-                      "\nFootnote: ", f,
-                      "\nFootnote length: ", nchar(f), 
-                      "\nLine Length: ", ll))
+                         "\nFootnote: ", f,
+                         "\nFootnote length: ", nchar(f), 
+                         "\nLine Length: ", ll))
           
           tln <- ll - 3
           

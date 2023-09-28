@@ -601,6 +601,216 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
     
     for (ftnts in ftnlst) {
       
+      cols <- ftnts$columns
+      
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+      
+      w <- round(width * conv)
+      
+      cwidth <- width / cols
+      cw <- round(w / cols)
+      
+      if (ftnts$align == "center")
+        algn <- "\\qc"
+      else if (ftnts$align == "right")
+        algn <- "\\qr"
+      else 
+        algn <- "\\ql"
+      
+      alcnt <- 0
+      blcnt <- 0
+      border_flag <- FALSE
+      
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      al <- ""
+      # Get blank row above
+      if (any(ftnts$blank_row %in% c("above", "both"))) {
+        
+        alcnt <- 1
+        
+        tb <- get_cell_borders(1, 1, length(ftnts$footnotes) + alcnt, 
+                               1, ftnts$borders)
+        
+        al <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
+                     algn, "\\cell\\row\n")
+        cnt <- cnt + 1 
+        
+      }
+      
+      
+      bl <- ""
+      # Get blank row below
+      if (any(ftnts$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        
+        tb <- get_cell_borders(length(ftnts$footnotes) + alcnt + blcnt, 1, 
+                               length(ftnts$footnotes) + alcnt + blcnt, 
+                               1, ftnts$borders)
+        
+        bl <- paste0("\\trowd\\trgaph0", ta, tb, "\\cellx", w, 
+                     algn, "\\cell\\row\n")
+        cnt <- cnt + 1
+      }
+      if (any(ftnts$borders %in% c("outside", "all", "top")))
+        border_flag <- TRUE
+      
+      # Append blank row above
+      if (al != "")
+        ret <- append(ret, al)
+      
+      fz <- ""
+      fs <- ""
+      # Get font size - Not used yet
+      if (!is.null(ftnts$font_size)) {
+        
+        fz <- paste0("\\fs", ftnts$font_size * 2, 
+                     get_spacing_multiplier(ftnts$font_size)) 
+        fs <- paste0("\\fs", rs$font_size * 2)
+      }
+      
+      # Reset column width accumulation
+      cwa <- 0
+      
+      # Calculate total number of rows in this block
+      rws <- ceiling(length(ftnts$footnotes) / cols) + alcnt + blcnt
+      
+      i <- 1
+      while (i <= length(ftnts$footnotes)) {    
+        
+        mxlns <- 0
+        
+        # Calculate current row
+        rw <- ceiling(i / cols)
+        
+        # Start row
+        ret <- append(ret, paste0("\\trowd\\trgaph0", ta))
+        
+        for (j in seq_len(cols)) {
+          
+          # Get border specs for this cell
+          # b <- get_cell_borders(i + alcnt, 1, 
+          #                       length(ftnts$footnotes) + alcnt + blcnt, 
+          #                       1, ftnts$borders)
+          b <- get_cell_borders(rw + alcnt, j, 
+                                rws, 
+                                cols, ftnts$borders)
+          
+          # Not all cells have titles
+          if (i > length(ftnts$footnotes))
+            vl <- ""
+          else 
+            vl <- ftnts$footnotes[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- algn 
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "\\ql"
+            else 
+              calgn <- "\\qr"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "\\ql"
+            else if (j == 2)
+              calgn <- "\\qc"
+            else if (j == 3) 
+              calgn <- "\\qr"
+          }
+          
+          if (j == 1) 
+            cwa <- 0
+          
+          # RTF cell widths are absolute ending points
+          cwa <- cwa + cw
+          
+          
+          # Split footnote strings if they exceed width
+          tmp <- split_string_rtf(vl, cwidth, rs$units)
+        
+          # Track max lines for counting
+          if (tmp$lines > mxlns)
+            mxlns <- tmp$lines
+          
+          # Add italics if requested
+          if (ftnts$italic)
+            txt <- paste0("\\i ", get_page_numbers_rtf(tmp$rtf, FALSE), "\\i0") 
+          else 
+            txt <- paste0(" ", get_page_numbers_rtf(tmp$rtf, FALSE))
+          
+          # Concat footnote row
+          # ret <- append(ret, paste0("\\trowd\\trgaph0", ta, b, "\\cellx", w, 
+          #                           algn, txt, 
+          #                           "\\cell\\row\n"))
+          
+          # Construct cell from constituent parts
+          ret <- append(ret, paste0(b, "\\cellx", cwa, 
+                                    calgn, fz, txt, fs, "\\cell"))
+          
+          i <- i + 1
+          
+        }
+        
+        # End row
+        ret <- append(ret, "\\row\n")
+        
+        # Track lines
+        cnt <- cnt + mxlns
+        
+      }
+      
+      if (bl != "")
+        ret <- append(ret, bl)
+      
+      # Do I need this?
+      # if (any(ftnts$borders %in% c("outside", "all", "bottom")))
+      #   border_flag <- TRUE
+      
+      dev.off()
+      
+      
+    }
+    
+  }
+  
+  
+  res <- list(rtf = paste0(ret, collapse = ""),
+              lines = cnt, 
+              twips = cnt * lh,
+              border_flag = border_flag)
+  
+  return(res)
+}
+
+#' @import grDevices
+#' @noRd
+get_footnotes_rtf_back <- function(ftnlst, content_width, rs, talgn = "center") {
+  
+  ret <- c()
+  cnt <- 0
+  twps <- 0
+  border_flag <- FALSE
+  
+  conv <- rs$twip_conversion
+  lh <- rs$row_height
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
+  
+  if (length(ftnlst) > 0) {
+    
+    for (ftnts in ftnlst) {
+      
       if (ftnts$width == "page")
         width <- rs$content_size[["width"]]
       else if (ftnts$width == "content")
@@ -846,7 +1056,7 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
 #' @param width The width to set the page by strings to
 #' @return A vector of strings
 #' @noRd
-get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
+get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -854,7 +1064,7 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
   }
   
   if (is.null(value))
-    value <- ""
+    value <- get_pgby_value(value, pgby_cnt)
   
   ll <- width
   ret <- c()
@@ -902,13 +1112,19 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
     
     tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
     
+    # Account for multiple pgby lines
+    tmp <- split_string_rtf(value, width, rs$units)
+    vl <- tmp$rtf
+    cnt <- cnt + tmp$lines
+    
+    # Construct RTF for pageby value
     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
                                    "\\cellx", w1, algn, " ",
-                              pgby$label, value, "\\cell\\row\n")
+                              pgby$label, vl, "\\cell\\row\n")
     
-    
-    cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
-                               rs$font, rs$font_size, rs$units)
+
+    # cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
+    #                            rs$font, rs$font_size, rs$units)
     
   
     if (pgby$blank_row %in% c("below", "both")) {
@@ -933,6 +1149,105 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn) {
   
   return(res)
 }
+
+
+
+#' Get page by text strings suitable for printing
+#' @import stringi
+#' @param titles Page by object
+#' @param width The width to set the page by strings to
+#' @return A vector of strings
+#' @noRd
+get_page_by_rtf_back <- function(pgby, width, value, rs, talgn) {
+  
+  if (is.null(width)) {
+    stop("width cannot be null.") 
+    
+  }
+  
+  if (is.null(value))
+    value <- ""
+  
+  ll <- width
+  ret <- c()
+  cnt <- 0
+  border_flag <- FALSE
+  
+  ta <- "\\trql"
+  if (talgn == "right")
+    ta <- "\\trqr"
+  else if (talgn %in% c("center", "centre"))
+    ta <- "\\trqc"
+  
+  if (!is.null(pgby)) { 
+    
+    if (!any(class(pgby) == "page_by"))
+      stop("pgby parameter value is not a page_by.")
+    
+    
+    w1 <- round(width * rs$twip_conversion)
+    
+    algn <- "\\ql"
+    if (pgby$align == "right")
+      algn <- "\\qr"
+    else if (pgby$align %in% c("center", "centre"))
+      algn <- "\\qc"
+    
+    trows <- 1
+    brow <- 1
+    if (pgby$blank_row %in% c("above", "both")) {
+      trows <- trows + 1
+      brow <- 2
+    }
+    if (pgby$blank_row %in% c("below", "both"))
+      trows <- trows + 1
+    
+    if (pgby$blank_row %in% c("above", "both")) {
+      
+      tb <- get_cell_borders(1, 1, trows, 1, pgby$borders)
+      
+      ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
+                                     "\\cellx", w1, algn, 
+                                     "\\cell\\row\n")
+      cnt <- cnt + 1 
+    }
+    
+    tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
+    
+    #tmp <- split_string_rtf(vl, cwidth, rs$units)
+    
+    ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
+                                   "\\cellx", w1, algn, " ",
+                                   pgby$label, value, "\\cell\\row\n")
+    
+    
+    cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,
+                               rs$font, rs$font_size, rs$units)
+    
+    
+    if (pgby$blank_row %in% c("below", "both")) {
+      
+      tb <- get_cell_borders(trows, 1, trows, 1, pgby$borders)
+      
+      ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
+                                     "\\cellx", w1, algn, 
+                                     "\\cell\\row\n")
+      cnt <- cnt + 1 
+    }
+    
+    if (any(pgby$borders %in% c("all", "outside", "bottom")))
+      border_flag <- TRUE
+    
+  }
+  
+  res <- list(rtf = paste0(ret, collapse = ""), 
+              lines = cnt, 
+              twips = cnt * rs$line_height,
+              border_flag = border_flag)
+  
+  return(res)
+}
+
 
 # Utilities ---------------------------------------------------------------
 

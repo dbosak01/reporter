@@ -1309,6 +1309,193 @@ test_that("html37: Stub indent.", {
 })
 
 
+
+test_that("html38: Footnotes columns work 1 column.", {
+  
+  fp <- file.path(base_path, "html/test38.html")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all")  %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame2",
+           blank_row = "both", columns =  1, align = "center",
+           borders = c("outside")) %>%
+    footnotes("Here is a footnote", "And another", 
+              borders = "all", columns = 1, blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Here is a footnote", "And another", columns = 1)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("html39: Footnote columns work 2 columns.", {
+  
+  fp <- file.path(base_path, "html/test39.html")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
+           blank_row = "both", columns =  2, borders = "all") %>%
+    footnotes("Here is a footnote", "And another", 
+              borders = "all", columns = 2, blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right")  %>%
+    footnotes("Here is a footnote", "And another", 
+              "footnote left", "footnote right", columns = 2)
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("html40: Footnote columns work 3 columns.", {
+  
+  fp <- file.path(base_path, "html/test40.html")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = FALSE, visible = FALSE) %>%
+    footnotes("Here is a footnote", "And another", "And more",
+              "",  "centered",
+              borders = "all", columns = 3, blank_row = "both")
+  
+  
+  rght <- paste("Here is a big long text string to see how the automatic", 
+                "wrapping is happening in a reduced size cell on the right.")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Courier", 
+                       font_size = 10) %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+           "      My right thing", "", "Center", rght,
+           blank_row = "below", columns =  3, borders = "none") %>%
+    footnotes("Here is a footnote", "And another", "A",
+              "Here is a longer footnote",  "to see if I can figure",  
+              "out the alignment pattern.", columns = 3)
+  
+  
+  res <- write_report(rpt)
+  res
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("html41: Multiple footnote blocks work as expected.", {
+  
+  fp <- file.path(base_path, "html/test41.html")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = FALSE, visible = FALSE)  %>%
+    footnotes("Here is a footnote", "And another", "And more",
+              "",  "centered",
+              borders = "all", columns = 3, blank_row = "both")
+  
+  rpt <- create_report(fp, output_type = "HTML", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Table 1.0", "IRIS Data Frame",
+           blank_row = "below", columns =  1, align = "center", width = 7,
+           borders = "all") %>%
+    footnotes("Table 2.0", "IRIS Data Frame2", "Left", "Right",
+           blank_row = "below", columns =  2, borders = "all") %>%
+    footnotes("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
+           blank_row = "below", columns =  3, borders = "all") %>%
+    titles("Here is a title", "And another", borders = "all")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("html42: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test42.html")
+  
+  dat <- iris
+  dat$Pgby <- as.character(dat$Species)
+  dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
+  
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "HTML", font = fnt,
+                       font_size = fsz, orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+test_that("html43: Page by with wrap works as expected.", {
+  
+  
+  fp <- file.path(base_path, "html/test43.html")
+  
+  fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
+  fmt2 <- value(condition(x == 1, "Setosa"),
+                condition(x == 2, "Versicolor"),
+                condition(x == 3, "Virginica"))
+  
+  dat <- iris
+  fmtval <- fmt1[dat$Species]
+  names(fmtval) <- NULL
+  dat$Pgby <- fmtval
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "Flower:", borders = "none", format = fmt2) %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "HTML", 
+                       orientation = "landscape") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
 # User Tests --------------------------------------------------------------
 
 

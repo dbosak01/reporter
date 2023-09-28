@@ -725,7 +725,7 @@ get_titles_pdf_back <- function(ttllst, content_width, rs,
   bh <- rs$border_height
   border_flag <- FALSE
   lh <- rs$line_height
-  
+
   
   start_offset <- NULL
   
@@ -954,6 +954,9 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
   bh <- rs$border_height
   pnts <- 0
   
+  # print(paste0("first ystart: ", ystart))
+  # print(paste0("footer lines: ", footer_lines))
+  
   if (!is.null(ystart)) {
     if (brdr_flag) {
       yline <- ystart + bh - 2
@@ -966,9 +969,19 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
 
   if (length(ftnlst) > 0) {
     
+    blocks <- list()
+    blockstates <- list()
+    
     for (ftnts in ftnlst) {
       
-      tmp <- list()
+      tmp <- list() # line values
+      blkst <- list() # block state
+
+      
+      cols <- ftnts$columns
+      blkst$startcnt <- cnt
+      blkst$cols <- cols
+
 
       if (ftnts$width == "page")
         width <- rs$content_size[["width"]]
@@ -976,6 +989,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
         width <- content_width
       else if (is.numeric(ftnts$width))
         width <- ftnts$width
+      
+      cwidth <- width / cols
       
       # Get content alignment codes
       if (talgn == "right") {
@@ -994,38 +1009,497 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
       border_flag <- FALSE
       brdrs <- strip_borders(ftnts$borders)
 
+      
+      if (any(brdrs %in% c("outside", "all", "top")))
+        border_flag <- TRUE
 
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      # If all borders on, change line height to account for extra points 
+      # needed for border
+      if (any(brdrs %in% c("all", "inside")))
+        lh <- olh + bs
+      else
+        lh <- olh
+      
+      al <- ""
 
+      if (any(ftnts$blank_row %in% c("above", "both"))) {
+        
+        alcnt <- 1
+        
+        #yline <- yline + lh
+        
+        cnt <- cnt + 1
+        #pnts <- pnts + lh
+        
+        tmp[[length(tmp) + 1]] <- list(text = "", lines = 1, widths = 0, 
+                                       align = ftnts$align,
+                                       line = cnt, italics = FALSE, 
+                                       col = 1, clb = lb, crb = rb)
+        
+      }
+      
+
+      
+      # b <- get_cell_borders(i + alcnt, 1,
+      #                       length(ftnts$footnotes) + alcnt + blcnt,
+      #                       1, ftnts$borders)
+      
+      i <- 1
+      
+      while (i <= length(ftnts$footnotes)) {
+        
+        # Max lines per row
+        mxlns <- 0
+        
+        # Calculate current row
+        rw <- ceiling(i / cols)
+
+        for (j in seq_len(cols)) {
+  
+  
+          # Not all cells have titles
+          if (i > length(ftnts$footnotes))
+            vl <- ""
+          else 
+            vl <- ftnts$footnotes[[i]]
+          
+          # Deal with column alignments
+          if (cols == 1) {
+            calgn <- ftnts$align
+          } else if (cols == 2) {
+            if (j == 1)
+              calgn <- "left"
+            else 
+              calgn <- "right"
+          } else if (cols == 3) {
+            if (j == 1)
+              calgn <- "left"
+            else if (j == 2)
+              calgn <- "center"
+            else if (j == 3) 
+              calgn <- "right"
+          }
+  
+  
+          # Split footnote strings if they exceed width
+          t <- split_string_text(vl, cwidth, rs$units)
+          
+          if (t$lines > mxlns)
+            mxlns <- t$lines
+          
+          # Recalculate boundaries for cells
+          t$clb <- lb + (cwidth * (j - 1))
+          t$crb <- t$clb + cwidth
+          t$col <- j
+          
+          # Capture alignment for this footnote block
+          t$align <- calgn
+          
+          # Italics setting for this footnote block
+          t$italics <- ftnts$italics
+          
+          # Get line offset from top of footnotes block
+          if (t$lines == 0) {
+            t$lines <- 1
+            t$line <- cnt + 1
+            
+          } else {
+            t$line <- seq(cnt + 1, cnt + t$lines)
+          }
+  
+  
+          # Assign strings to temp variable for now
+          tmp[[length(tmp) + 1]] <- t
+          
+          i <- i + 1
+    
+        }  # j cols
+        
+        
+        # Count number of lines
+        cnt <- cnt + mxlns
+        
+      } # i footnote strings
+        
+      
+      bl <- ""
+      
+      if (any(ftnts$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+
+        cnt <- cnt + 1
+        #pnts <- pnts + lh
+
+        tmp[[length(tmp) + 1]] <- list(text = "", lines = 1, widths = 0,
+                                       align = ftnts$align,
+                                       line = cnt, italics = FALSE,
+                                       col = 1, clb = lb, crb = rb)
+      }
+        
+      blocks[[length(blocks) + 1]] <- tmp
+      
+
+      # Save state on these variables so they 
+      # can be used to create borders
+      blkst$lb <- lb
+      blkst$rb <- rb
+      blkst$width <- width
+      blkst$cwidth <- cwidth
+      blkst$lh <- lh
+      blkst$brdrs <- brdrs
+      blkst$alcnt <- alcnt
+      blkst$blcnt <- blcnt
+      blkst$endcnt <- cnt
+      blockstates[[length(blockstates) + 1]] <- blkst
+      
+      dev.off()
+      
+    } # ftnts
+    
+
+    
+
+    
+    # Get starting point for report footnotes
+    if (is.null(ystart)) {
+      
+      yline <- (rs$content_size[["height"]] * rs$point_conversion) - 
+        ((cnt + footer_lines) * lh )
+    }
+    
+    
+    # Now get pdf text for each temp variable
+    # for (i in seq(1, length(tmp))) {
+    # 
+    #   
+    #   if (any(brdrs %in% c("all", "inside")) & i < length(tmp)) {
+    # 
+    # 
+    #     if (brdr_flag)
+    #       ypos <- yline - lh + bs
+    #     else
+    #       ypos <- yline + bh - lh + bs
+    # 
+    #     ret[[length(ret) + 1]] <- page_hline(lb * conv,
+    #                                          ypos,
+    #                                          (rb - lb) * conv)
+    #   }
+    #   
+    #   cnt <- cnt + mxlns
+    #   
+    # }
+    
+    # Now get pdf text for each temp variable
+    for (b in seq(1, length(blocks))) {
+      ftnts <- ftnlst[[b]]
+      blk <- blocks[[b]]
+      blkst <- blockstates[[b]]
+      
+      mxlns <- 0
+      rw <- 0
+      
+      for (i in seq(1, length(blk))) {
+        tmp <- blk[[i]]
+        
+        # Track max lines per footnote row
+        if (tmp$lines > mxlns | min(tmp$line) != rw) {
+          mxlns <- tmp$lines
+        } 
+        rw <- min(tmp$line)
+        
+        for (ln in seq(1, tmp$lines)) {
+          
+          # print(paste0("lh: ", lh))
+          # print(paste0("rwln: ", rwln))
+          # print(paste0("yline: ", yline))
+          
+          if (nchar(tmp$text[ln]) > 0) {
+          
+            ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+                                                xpos = get_points(tmp$clb, 
+                                                                  tmp$crb,
+                                                                  tmp$widths[ln],
+                                                                  units = rs$units,
+                                                                  align = tmp$align),
+                                                ypos = yline + ((tmp$line[[ln]] - 1) * lh), 
+                                                italics = ftnts$italics,
+                                                align = tmp$align,
+                                                footnotes = TRUE)
+          
+          }
+          
+        } # cell lines
+        
+        
+        # Inside borders
+        if (any(blkst$brdrs %in% c("all", "inside"))) {
+          
+          
+          if (brdr_flag)
+            ypos <- max((yline + (tmp$line * blkst$lh)) - blkst$lh + bs)
+          else 
+            ypos <- max((yline + (tmp$line * blkst$lh)) + bh - blkst$lh + bs)
+          
+          # print(paste0("line ", tmp$line))
+
+          # Horizontal inside lines
+          if (i < length(tmp) & tmp$col == 1 & max(tmp$line) < blkst$endcnt) {
+            
+            #print(paste0("H", i , " ", length(tmp)))
+            
+            ret[[length(ret) + 1]] <- page_hline(blkst$lb * conv, 
+                                                 ypos, 
+                                                 (blkst$rb - blkst$lb) * conv) 
+          
+          }
+          
+          # Vertical inside lines
+          if (tmp$col > 1) {
+            
+            #print(paste0("V", i , " ", length(tmp)))
+           # print(paste0("lines ", tmp$lines))
+        
+            ret[[length(ret) + 1]] <- page_vline(tmp$clb * conv,
+                                               ypos - blkst$lh,
+                                               mxlns * blkst$lh)
+          
+          }
+        
+          
+        }
+        
+        # if (any(brdrs %in% c("all", "outside", "top"))) {
+        #   
+        #   ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+        #                                        ypos, 
+        #                                        (rb - lb) * conv) 
+        # }
+        
+      } # tmp lines 
+      
+
+      
+      badj <- 0
+      if (!any(blkst$brdrs %in% c("all", "inside")))
+        badj <- bs
+      
+     # ypos <- yline  - blkst$lh # try it
+      
+      # Determine starting y position for borders
+      if (is.null(ystart)) {
+        
+        ypos <- (rs$content_size[["height"]] * rs$point_conversion) - 
+          ((cnt + footer_lines - blkst$alcnt) * blkst$lh ) - 
+          (blkst$alcnt * blkst$lh) - blkst$lh + bs + 1 - badj
+        
+      } else {
+        
+        
+        if (brdr_flag)
+          ypos <- ystart - olh  
+        else 
+          ypos <- ystart + bh - olh + bs 
+      }
+      
+      # Top border
+      if (any(blkst$brdrs %in% c("all", "outside", "top"))) {
+
+        ret[[length(ret) + 1]] <- page_hline(lb * conv,
+                                             ypos + (blkst$startcnt * blkst$lh),
+                                             (blkst$rb - blkst$lb) * conv)
+      }
+
+      # Bottom border
+      if (any(blkst$brdrs %in% c("all", "outside", "bottom"))) {
+
+        ret[[length(ret) + 1]] <- page_hline(blkst$lb * conv,
+                                             ypos + (blkst$endcnt * blkst$lh) + badj,
+                                             (blkst$rb - blkst$lb) * conv)
+
+        pnts <- pnts + badj
+      }
+    
+      # Left border
+      if (any(blkst$brdrs %in% c("all", "outside", "left"))) {
+
+        ret[[length(ret) + 1]] <- page_vline(blkst$lb * conv,
+                                             ypos + (blkst$startcnt * blkst$lh),
+                                             ((blkst$endcnt - blkst$startcnt) * blkst$lh) + badj )
+      }
+      
+      # Right border
+      if (any(blkst$brdrs %in% c("all", "outside", "right"))) {
+
+        ret[[length(ret) + 1]] <- page_vline(blkst$rb * conv,
+                                             ypos + (blkst$startcnt * blkst$lh),
+                                             ((blkst$endcnt - blkst$startcnt) * blkst$lh) + badj)
+      }
+      
+    } # blocks
+    
+    yline <- yline + (lh * cnt)
+    pnts <- pnts + (lh * cnt) 
+        
+        
+        # if (is.null(ystart)) {
+        #   
+        #   ypos <- (rs$content_size[["height"]] * rs$point_conversion) - 
+        #     ((cnt + footer_lines - alcnt) * lh ) - (alcnt * lh) - lh 
+        # } else {
+        # 
+        # 
+        #   if (brdr_flag)
+        #     ypos <- ystart - olh  
+        #   else 
+        #     ypos <- ystart + bh - olh + bs 
+        # }
+        # 
+        # badj <- 0
+        # if (!any(brdrs %in% c("all", "inside")))
+        #   badj <- bs
+        # 
+        # if (any(brdrs %in% c("all", "outside", "top"))) {
+        #   
+        #   ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+        #                                        ypos, 
+        #                                        (rb - lb) * conv) 
+        # }
+        # 
+        # if (any(brdrs %in% c("all", "outside", "bottom"))) {
+        #   
+        #   ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+        #                                        ypos + (cnt * lh) + badj, 
+        #                                        (rb - lb) * conv) 
+        #   
+        #   pnts <- pnts + badj
+        # }
+        
+        # if (any(brdrs %in% c("all", "outside", "left"))) {
+        #   
+        #   ret[[length(ret) + 1]] <- page_vline(lb * conv, 
+        #                                        ypos, 
+        #                                        (cnt * lh) + badj ) 
+        # }
+        
+        # if (any(brdrs %in% c("all", "outside", "right"))) {
+        # 
+        #   ret[[length(ret) + 1]] <- page_vline(rb * conv, 
+        #                                        ypos, 
+        #                                        (cnt * lh) + badj) 
+        # }
+      
+     
+
+      
+    
+    
+  } # length(ftnlst) > 0
+
+  res <- list(pdf = ret,
+              lines = pnts / olh,
+              points = pnts,
+              border_flag = border_flag)
+  
+  return(res)
+}
+
+
+#' @import grDevices
+#' @noRd
+get_footnotes_pdf_back <- function(ftnlst, content_width, rs, 
+                              talgn = "center", ystart = NULL, footer_lines = 0,
+                              brdr_flag = FALSE) {
+  
+  ret <- c()
+  cnt <- 0
+  pnts <- 0
+  border_flag <- FALSE
+  
+  olh <- rs$row_height
+  lh <- olh
+  conv <- rs$point_conversion
+  bs <- rs$border_spacing
+  bh <- rs$border_height
+  pnts <- 0
+  
+  print(paste0("first ystart: ", ystart))
+  print(paste0("footer lines: ", footer_lines))
+  
+  if (!is.null(ystart)) {
+    if (brdr_flag) {
+      yline <- ystart + bh - 2
+      pnts <- pnts + bh - 2
+    } else 
+      yline <- ystart
+  } else 
+    yline <- 0
+  
+  
+  if (length(ftnlst) > 0) {
+    
+    for (ftnts in ftnlst) {
+      
+      tmp <- list()
+      
+      if (ftnts$width == "page")
+        width <- rs$content_size[["width"]]
+      else if (ftnts$width == "content")
+        width <- content_width
+      else if (is.numeric(ftnts$width))
+        width <- ftnts$width
+      
+      # Get content alignment codes
+      if (talgn == "right") {
+        lb <- rs$content_size[["width"]] - width
+        rb <- rs$content_size[["width"]]
+      } else if (talgn %in% c("center", "centre")) {
+        lb <- (rs$content_size[["width"]] - width) / 2
+        rb <- width + lb
+      } else {
+        lb <- 0
+        rb <- width
+      }
+      
+      alcnt <- 0
+      blcnt <- 0
+      border_flag <- FALSE
+      brdrs <- strip_borders(ftnts$borders)
+      
+      
+      pdf(NULL)
+      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
       for (i in seq_along(ftnts$footnotes)) {
-
+        
         # If all borders on, change line height to account for extra points 
         # needed for border
         if (any(brdrs %in% c("all", "inside")))
           lh <- olh + bs
         else
           lh <- olh
-
+        
         al <- ""
         if (i == 1) {
           if (any(ftnts$blank_row %in% c("above", "both"))) {
-
+            
             alcnt <- 1
-
+            
             yline <- yline + lh
             
             cnt <- cnt + 1
             pnts <- pnts + lh
-
+            
           }
         }
-
+        
         bl <- ""
         if (i == length(ftnts$footnotes)) {
           if (any(ftnts$blank_row %in% c("below", "both"))) {
             blcnt <- 1
-
+            
             cnt <- cnt + 1
             pnts <- pnts + lh
           }
@@ -1034,29 +1508,29 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
             border_flag <- TRUE
           
         }
-
+        
         # b <- get_cell_borders(i + alcnt, 1,
         #                       length(ftnts$footnotes) + alcnt + blcnt,
         #                       1, ftnts$borders)
-
-
-
+        
+        
+        
         # Split footnote strings if they exceed width
         t <- split_string_text(ftnts$footnotes[[i]], width, rs$units)
         
         # Capture alignment for this footnote block
         t$align <- ftnts$align
-
+        
         # Count number of lines
         cnt <- cnt + t$lines
-
+        
         
         # Assign strings to temp variable for now
         tmp[[length(tmp) + 1]] <- t
       }
       
       dev.off()
-
+      
       if (is.null(ystart)) {
         
         yline <- (rs$content_size[["height"]] * rs$point_conversion) - 
@@ -1071,17 +1545,17 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
           
           ret[[length(ret) + 1]] <- page_text(tmp[[i]]$text[ln], rs$font_size, 
                                               xpos = get_points(lb, 
-                                                          rb,
-                                                          tmp[[i]]$widths[ln],
-                                                          units = rs$units,
-                                                          align = tmp[[i]]$align),
+                                                                rb,
+                                                                tmp[[i]]$widths[ln],
+                                                                units = rs$units,
+                                                                align = tmp[[i]]$align),
                                               ypos = yline, 
                                               italics = ftnts$italics,
                                               align = tmp[[i]]$align,
                                               footnotes = TRUE)
           
           
-
+          
           
           yline <- yline + lh
           pnts <- pnts + lh
@@ -1108,8 +1582,8 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
         ypos <- (rs$content_size[["height"]] * rs$point_conversion) - 
           ((cnt + footer_lines - alcnt) * lh ) - (alcnt * lh) - lh 
       } else {
-      
-      
+        
+        
         if (brdr_flag)
           ypos <- ystart - olh  
         else 
@@ -1144,7 +1618,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
       }
       
       if (any(brdrs %in% c("all", "outside", "right"))) {
-      
+        
         ret[[length(ret) + 1]] <- page_vline(rb * conv, 
                                              ypos, 
                                              (cnt * lh) + badj) 
@@ -1153,7 +1627,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
     }
     
   }
-
+  
   res <- list(pdf = ret,
               lines = pnts / olh,
               points = pnts,
@@ -1450,7 +1924,7 @@ get_title_header_pdf <- function(thdrlst, content_width, rs,
 #' @return A vector of strings
 #' @noRd
 get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0, 
-                            brdr_flag = FALSE) {
+                            brdr_flag = FALSE, pgby_cnt = NULL) {
   
   if (is.null(width)) {
     stop("width cannot be null.") 
@@ -1458,7 +1932,7 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0,
   }
   
   if (is.null(value))
-    value <- ""
+    value <-  get_pgby_value(value, pgby_cnt)
 
   ret <- c()
   cnt <- 0
