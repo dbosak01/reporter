@@ -6,7 +6,7 @@
 [![reporter total downloads](https://cranlogs.r-pkg.org/badges/grand-total/reporter)](https://cran.r-project.org/package=reporter)
 [![R-CMD-check](https://github.com/dbosak01/reporter/workflows/R-CMD-check/badge.svg)](https://github.com/dbosak01/reporter/actions)
 [![Codecov test coverage](https://codecov.io/gh/dbosak01/reporter/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dbosak01/reporter?branch=master)
-[![R-CMD-check](https://github.com/dbosak01/reporter/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dbosak01/reporter/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
 # Introduction to **reporter**
