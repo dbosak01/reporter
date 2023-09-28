@@ -2,7 +2,6 @@
 
 * Added example for page breaking.
 * Added _columns_ parameter to `footnotes()` function.
-* Fixed column dedupe functionality to account for non-unique values.
 * Allow user to put new line in page-by column value.
 * Remove message on page-by sort.
 * Fixed character escape on DOCX.
