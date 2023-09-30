@@ -3045,3 +3045,55 @@ test_that("test93: Page by with wrap works as expected.", {
   
 })
 
+
+test_that("test94: Label with invisible column works as expected.", {
+  
+  fp <- file.path(base_path, "output/test94.out")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE, label = "Fork") %>%
+    footnotes("Left", "right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Footnote1", "IRIS Data Frame",
+              blank_row = "below", columns =  1, align = "center", width = 7,
+              borders = "all") %>%
+    titles("Table 1.0", "My little title")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test95: Page break with blank row after works as expected.", {
+  
+  fp <- file.path(base_path, "output/test95.out")
+  
+  dat <- sort(iris, by = c("Species", "Petal.Width"))
+
+  
+  tbl <- create_table(dat, borders = "all") %>%
+    define(Petal.Width, blank_after = TRUE) %>%
+    define(Species, page_break = TRUE, visible = TRUE) %>%
+    footnotes("Left", "right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "TXT") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Footnote1", "IRIS Data Frame",
+              blank_row = "below", columns =  1, align = "center", width = 7,
+              borders = "all") %>%
+    titles("Table 1.0", "My little title")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})

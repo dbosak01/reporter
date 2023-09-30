@@ -19,8 +19,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
     pgby_var <- ts$page_by$var
     pgby_fmt <- ts$page_by$format
   }
-  
-  
+
   if (all(ts$show_cols == "none") & length(ts$col_defs) == 0) {
     
     stop("ERROR: At least one column must be defined if show_cols = \"none\".")
@@ -135,7 +134,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   fdat <- fdata(cdat)
   # print("fdata:")
   # print(fdat)
-  
+
   # Prep data for blank lines, indents, and stub columns
   fdat <- prep_data(fdat, ts, rs$char_width, rs$missing) # OK
   # print("prep_data")

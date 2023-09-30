@@ -1301,7 +1301,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
         if (brdr_flag)
           ypos <- ystart - olh  
         else 
-          ypos <- ystart + bh - olh + bs 
+          ypos <- ystart + bh - olh  #+ badj - 4 # + bs 
       }
       
       # Top border

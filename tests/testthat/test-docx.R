@@ -1835,6 +1835,49 @@ test_that("docx51: Page by with wrap works as expected.", {
   
 })
 
+test_that("docx52: Borders work as expected.", {
+  
+  
+  fp <- file.path(base_path, "docx/test52.docx")
+  
+  fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
+  fmt2 <- value(condition(x == 1, "Setosa"),
+                condition(x == 2, "Versicolor"),
+                condition(x == 3, "Virginica"))
+  
+  dat <- iris
+  fmtval <- fmt1[dat$Species]
+  names(fmtval) <- NULL
+  dat$Pgby <- fmtval
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "DOCX", 
+                       orientation = "landscape") %>%
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, align = "left", label = "Flower:", borders = c("top", "bottom"), 
+            format = fmt2, blank_row = "both") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = c("top", "bottom"), 
+              columns = 2, blank_row = "both") %>%
+    footnotes("hello", borders = "none", blank_row = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 9)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
 # User Tests --------------------------------------------------------------
 
 

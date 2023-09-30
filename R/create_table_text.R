@@ -474,9 +474,13 @@ get_table_header <- function(rs, ts, pi) {
     r <- ""
 
     for (nm in names(d)) {
-      if (!is.control(nm))
-        r <- paste0(r, pad_any(d[i, nm],  w[[nm]],
-                             get_justify(lbla[[nm]])), " ")
+      if (!is.control(nm)) {
+        if (nm %in% names(lbla)) {
+          r <- paste0(r, pad_any(d[i, nm],  w[[nm]],
+                               get_justify(lbla[[nm]])), " ")
+        }
+        
+      }
     }
     
     ln[[length(ln) + 1]] <- r 

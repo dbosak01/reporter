@@ -553,12 +553,14 @@ define_c <- function(var, label = NULL, format = NULL,
   
   def$var <- var
   def$var_c <- var
-  def$label <- label
-  def$format <- format
-  def$align <- align
-  def$label_align <- if (is.null(label_align) & !is.null(align))
-    align else label_align
-  def$width <- width
+  if (visible == TRUE) {
+    def$label <- label
+    def$format <- format
+    def$align <- align
+    def$label_align <- if (is.null(label_align) & !is.null(align))
+      align else label_align
+    def$width <- width
+  }
   def$visible <- visible
   def$n <- n
   def$blank_after <- blank_after

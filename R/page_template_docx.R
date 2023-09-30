@@ -775,8 +775,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
       }
       
       bb <- ""
-      if (any(ftnts$borders %in% c("top", "bottom", "outside"))) {
-        bb <- get_cell_borders_docx(1, 1, 2, 1, ftnts$borders)
+      if (any(ftnts$borders %in% c("bottom", "outside"))) {
+        bb <- get_cell_borders_docx(2, 1, 2, 1, ftnts$borders)
         
         
         bb <- paste0('<w:tcPr>', bb, '</w:tcPr>')
@@ -848,8 +848,20 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
           
           cwdth <- paste0('<w:tcW w:w="', cw,'"/>')
           
+          # Deal with bottom borders for when there is no blank row
+          cb <- ""
+          if (!any(ftnts$blank_row %in% c("below", "both"))) {
+            if (any(ftnts$borders %in% c("bottom", "outside"))) {
+              cb <- get_cell_borders_docx(2, 1, 2, 1, ftnts$borders)
+              
+              
+              cb <- paste0('<w:tcPr>', cb, '</w:tcPr>')
+              
+            }
+          }
+          
           # Append cell
-          rw <- paste0(rw, "<w:tc><w:tcPr>", cwdth, "</w:tcPr>", tstr, "</w:tc>\n")
+          rw <- paste0(rw, "<w:tc><w:tcPr>", cwdth, cb, "</w:tcPr>", tstr, "</w:tc>\n")
           
           
           i <- i + 1
@@ -857,6 +869,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
         }
         
+        # Need to change height depending on max lines
         srht <- get_row_height(round(rs$row_height * mxlns * conv))
         
         # Construct row
@@ -1292,9 +1305,8 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
       algn <- "right"
     else
       algn <- "left"
+  
     
-
-
     tb <- get_table_borders_docx(pgby$borders)
     
     
@@ -1335,11 +1347,17 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
     }
 
     
-    vb <- NULL
-    if (any(pgby$borders %in% c("outside", "top")) & 
+    vb <- c()
+    if (any(pgby$borders %in% c("outside", "top", "all")) & 
         !pgby$blank_row %in% c("above", "both")) {
       vb <- "top"
     
+    }
+    
+    if (any(pgby$borders %in% c("outside", "bottom", "all")) & 
+        !pgby$blank_row %in% c("below", "both")) {
+      vb <- append(vb, "bottom")
+      
     }
     
     # Account for multiple pgby lines
@@ -1355,16 +1373,33 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
     
     # cnt <- cnt + 1
 
-
     if (pgby$blank_row %in% c("below", "both")) {
-
+      
+      cb <- ""
+      if (any(pgby$borders %in% c("outside", "bottom"))) {
+        cb <- get_cell_borders_docx(2, 1, 2, 1, "bottom")
+        
+        if (cb != "")
+          cb <- paste0("<w:tcPr>", cb, "</w:tcPr>")
+      }
+      
       
       ret[length(ret) + 1] <- paste0("<w:tr>", rht, 
-                    "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
-      cnt <- cnt + 1
+                                     "<w:tc>", cb, 
+                                     "<w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
       
-
+      cnt <- cnt + 1
     }
+
+    # if (pgby$blank_row %in% c("below", "both")) {
+    # 
+    #   
+    #   ret[length(ret) + 1] <- paste0("<w:tr>", rht, 
+    #                 "<w:tc><w:p><w:r><w:t></w:t></w:r></w:p></w:tc></w:tr>\n")
+    #   cnt <- cnt + 1
+    #   
+    # 
+    # }
 
     ret[length(ret) + 1] <- paste0("</w:tbl>")
     

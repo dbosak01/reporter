@@ -3300,7 +3300,6 @@ test_that("rtf2-92: Page by with wrap works as expected.", {
   
 })
 
-
 test_that("rtf2-93: Page by with wrap works as expected.", {
   
   
@@ -3340,6 +3339,66 @@ test_that("rtf2-93: Page by with wrap works as expected.", {
   
 })
 
+test_that("test94: Label with invisible column works as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test94.rtf")
+  
+  tbl <- create_table(iris[1:15, ], borders = "all") %>%
+    define(Species, blank_after = TRUE, visible = FALSE, label = "Fork") %>%
+    footnotes("Left", "right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "RTF") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "right") %>%
+    footnotes("Footnote1", "IRIS Data Frame",
+              blank_row = "below", columns =  1, align = "center", width = 7,
+              borders = "all") %>%
+    titles("Table 1.0", "My little title")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+})
+
+
+test_that("test95: Page break with blank row after works as expected.", {
+  
+  fp <- file.path(base_path, "rtf2/test95.rtf")
+  
+  dat <- sort(iris, by = c("Species", "Petal.Width"))
+
+  PG <- c(rep(1, 25), rep(2, 25), 
+               rep(4, 25), rep(5, 25), 
+               rep(7, 25), rep(8, 25))
+  dat$PG <- PG
+  
+  
+  tbl <- create_table(dat, borders = "all") %>%
+    stub(c("Species", "Petal.Width"), label = "My stuff") %>%
+    define(Species, visible = TRUE, label_row = TRUE) %>%
+    define(Petal.Width, blank_after = TRUE, indent = .25) %>%
+    define(PG, page_break = TRUE, visible = TRUE) %>%
+    footnotes("Left", "right", columns = 2)
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Courier") %>%
+    add_content(tbl) %>%
+    page_header("left", "right") %>%
+    page_footer("left", "", "Page [pg] of [tpg]") %>%
+    footnotes("Footnote1", "IRIS Data Frame",
+              blank_row = "below", columns =  1, align = "center", width = 7,
+              borders = "all") %>%
+    titles("Table 1.0", "My little title")
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 11)
+  
+})
 
 
 # User Tests --------------------------------------------------------------

@@ -6,6 +6,8 @@
 * Remove message on page-by sort.
 * Fixed character escape on DOCX.
 * Added "format" parameter to `page_by()` function.
+* Fixed some border issues on DOCX and PDF.
+* Fixed problem with paging and blank lines.
 
 # reporter 1.4.1
 
