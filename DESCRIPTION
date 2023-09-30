@@ -26,7 +26,7 @@ Encoding: UTF-8
 URL: https://reporter.r-sassy.org
 BugReports: https://github.com/dbosak01/reporter/issues
 Depends: R (>= 3.6), 
-         common (>= 1.0.3)
+         common (>= 1.0.4)
 Suggests: 
     testthat,
     magrittr,
@@ -44,7 +44,7 @@ Suggests:
     libr,
     devEMF, 
     patchwork
-Imports: fmtr,
+Imports: fmtr(>= 1.5.8),
          stringi,
          crayon,
          jpeg,
