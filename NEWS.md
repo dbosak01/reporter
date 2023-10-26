@@ -1,3 +1,8 @@
+# reporter 1.4.3
+
+* Fix dedupe functionality on `define()` function when values are not unique. 
+* Fixes for CRAN.
+
 # reporter 1.4.2
 
 * Added example for page breaking.

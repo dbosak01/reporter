@@ -891,11 +891,11 @@ dedupe_pages <- function(pgs, defs) {
           w <- min(nchar(dat[[def$var_c]])) # Take min to exclude label row
           v <- paste0(rep(" ", times = w), collapse = "")
           
-          # dat[[def$var_c]] <- ifelse(changed(dat[[def$var_c]]), 
-          #                            dat[[def$var_c]], v) 
+          dat[[def$var_c]] <- ifelse(changed(dat[[def$var_c]]),
+                                     dat[[def$var_c]], v)
           
-          dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 
-                                     dat[[def$var_c]], v) 
+          # dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 
+          #                            dat[[def$var_c]], v) 
         }
       }
     }
