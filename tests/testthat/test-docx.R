@@ -1912,6 +1912,42 @@ test_that("docx53: Page by with wrap on report works as expected.", {
   
 })
 
+
+# Not right yet.  Can't reproduce problem.
+test_that("docx55: Top margin 1.5 works as expected.", {
+  
+  fp <- file.path(base_path, "docx/test55.docx")
+  
+  dat <- iris
+  dat$Pgby <- as.character(dat$Species)
+  dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
+  
+  
+  tbl <- create_table(dat, borders = "none") %>% 
+    titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
+    page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
+    define(Pgby, visible = FALSE)
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
+                       font_size = 9, orientation = "landscape") %>%
+    set_margins(top = 1.5, bottom = 1) %>%
+    add_content(tbl) %>%
+    page_header("Left", "Right") %>% 
+    page_footer("Left1", "Center1", "Right1") %>% 
+    footnotes("My footnote 1", "My footnote 2", borders = "none")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 6)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
 # User Tests --------------------------------------------------------------
 
 
