@@ -1143,8 +1143,15 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgb
                                 exclude = exclude_top, 
                                 border_color = get_style(rs, "border_color"))
     
+    
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
+    
     # Account for multiple pgby lines
     tmp <- split_string_html(value, width, rs$units)
+    
+    dev.off()
+    
     vl <- tmp$html
     cnt <- cnt + tmp$lines
     

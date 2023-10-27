@@ -1360,8 +1360,15 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
       
     }
     
+    
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
+    
     # Account for multiple pgby lines
     tmp <- split_string_html(value, width, rs$units)
+    
+    dev.off()
+    
     vl <- tmp$html
     cnt <- cnt + tmp$lines
     vrht <- get_row_height(round(rs$row_height * conv) * tmp$lines)

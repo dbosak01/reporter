@@ -25,54 +25,54 @@ dev <- FALSE
 
 
 test_that("docx0: Basic text works as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test0.docx")
 
-  
+
   txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) %>%
-    titles("Here is my first title", blank_row = "below", borders = "all", 
+    titles("Here is my first title", blank_row = "below", borders = "all",
            align = "center", font_size = 14) %>%
     footnotes("Here is a footnotey", blank_row = "both", borders = "all")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Times",
                        font_size = 10, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
-    #add_content(create_text("Goodbye")) %>% 
+    #add_content(create_text("Goodbye")) %>%
     page_header(c("Left1", "Left2"), "Right") %>%
     page_footer("Page [pg] of [tpg]", "Center", "Right")
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 test_that("docx1: Basic text with title header works as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test1.docx")
-  
-  
+
+
   txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) %>%
-    title_header("Here is my first title", right = "Right", blank_row = "none", 
+    title_header("Here is my first title", right = "Right", blank_row = "none",
                  borders = "all") %>%
     footnotes("Here is my footnote", blank_row = "both", borders = "all")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
                        font_size = 11, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
     page_header(c("Left1", "Left2"), "Right") %>%
     page_footer("Left", "Center", "Right")
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   #  expect_equal(res$pages, 1)
-  
+
 })
 
 test_that("docx2: Basic table works as expected.", {
@@ -88,7 +88,7 @@ test_that("docx2: Basic table works as expected.", {
   tbl <- create_table(dat, first_row_blank = TRUE, borders = "top")  %>%
      titles("Table 1.0", "My Nice Table", borders = c("top"),
             width = "content", align = "left") %>%
-     footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
+     footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]",
                borders = c( "top"),
                align = "left", width = "content", blank_row = "none") %>%
     define(wt, width = 2, label = "Weight", align = "center",
@@ -154,9 +154,9 @@ test_that("docx4: Spanning headers work as expected.", {
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span",
                     n = 11, level = 2) %>%
-    titles("Table 1.0", "My Nice Table", blank_row = "none", 
+    titles("Table 1.0", "My Nice Table", blank_row = "none",
            borders = c("top", "bottom")) %>%
-    footnotes("My footnote 1", "My footnote 2", 
+    footnotes("My footnote 1", "My footnote 2",
               blank_row = "none", borders = c("top", "bottom"))
 
   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
@@ -304,7 +304,7 @@ test_that("docx9: Page by on report works as expected.", {
 
   if (dev == TRUE) {
 
-  
+
   fp <- file.path(base_path, "docx/test9.docx")
 
   dat <- iris
@@ -329,8 +329,8 @@ test_that("docx9: Page by on report works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 9)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 
@@ -383,7 +383,7 @@ test_that("docx11: Basic plot with titles on report works as expected.", {
 
   if (dev == TRUE) {
 
-  
+
   library(ggplot2)
 
   fp <- file.path(base_path, "docx/test11.docx")
@@ -408,8 +408,8 @@ test_that("docx11: Basic plot with titles on report works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 })
@@ -419,7 +419,7 @@ test_that("docx12: Text with titles on report works as expected.", {
 
   if (dev == TRUE) {
 
-  
+
   fp <- file.path(base_path, "docx/test12")
 
   txt <- create_text(cnt, width = 6, borders = "none", align = "center")
@@ -437,8 +437,8 @@ test_that("docx12: Text with titles on report works as expected.", {
 
   expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 1)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 })
@@ -519,7 +519,7 @@ test_that("docx14: Plot with page by on plot works as expected.", {
            borders = "all",
            blank_row = "both") %>%
     page_by(cyl, "Cylinders: ", borders = "all", blank_row = "both") %>%
-    footnotes("* Motor Trend, 1974", borders = "all", valign = "top", 
+    footnotes("* Motor Trend, 1974", borders = "all", valign = "top",
               blank_row = "both")
 
   rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size = fsz) %>%
@@ -572,8 +572,8 @@ test_that("docx15: Title bold and font size works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 })
@@ -599,8 +599,8 @@ test_that("docx16: 9 pt font inches works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 
@@ -626,8 +626,8 @@ test_that("docx17: 9 pt font cm works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 
@@ -637,10 +637,10 @@ test_that("docx18: 11 pt font inches works as expected.", {
 
   if (dev == TRUE) {
 
-  
+
   fp <- file.path(base_path, "docx/test18.docx")
-  
-  tbl <- create_table(iris) %>% 
+
+  tbl <- create_table(iris) %>%
     define(Species, page_break = TRUE)
 
   rpt <- create_report(fp, output_type = "DOCX", font_size = 11,
@@ -657,8 +657,8 @@ test_that("docx18: 11 pt font inches works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 
@@ -684,8 +684,8 @@ test_that("docx19: 11 pt font cm works as expected.", {
   res <- write_report(rpt)
 
   expect_equal(file.exists(fp), TRUE)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 
@@ -696,7 +696,7 @@ test_that("docx20:  Image file works as expected.", {
 
   if (dev == TRUE) {
 
-  
+
   library(ggplot2)
 
   fp <- file.path(base_path, "docx/test20.docx")
@@ -726,8 +726,8 @@ test_that("docx20:  Image file works as expected.", {
 
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
 
 
@@ -735,40 +735,40 @@ test_that("docx20:  Image file works as expected.", {
 
 
 test_that("docx21: Check content blanks.", {
-  
+
   if (dev == TRUE) {
 
 
   library(ggplot2)
-  
+
   fp <- file.path(base_path, "docx/test21.docx")
-  
+
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
+
   plt <- create_plot(p, height = 4, width = 7, borders = c("all")) %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
            font_size = 12, align = "left", blank_row = "none") %>%
     footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
-  
+
   dat <- mtcars[1:5, ]
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
-  
+
   tbl <- create_table(dat, borders = c("all"), first_row_blank = TRUE)  %>%
     titles("Table 1.0", "My Nice Table", borders = c("none"),
            width = "content", align = "left", blank_row = "none") %>%
-    footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]", 
+    footnotes("My footnote 1", "My footnote 2 Page [pg] of [tpg]",
               borders = "none",
               align = "left", width = "content", blank_row = "none") %>%
     define(wt, width = .75, label = "Weight", align = "center",
            label_align = "right")
-  
+
   txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) %>%
-    titles("Here is my first title", blank_row = "none", borders = "all", 
+    titles("Here is my first title", blank_row = "none", borders = "all",
            align = "center", font_size = 14) %>%
     footnotes("Here is a footnotey", blank_row = "none", borders = "all")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Times",
                        font_size = 10, orientation = "portrait") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -780,41 +780,41 @@ test_that("docx21: Check content blanks.", {
     add_content(txt, align = "center", page_break = FALSE, blank_row = "none") %>%
     page_header(c("Left1", "Left2"), "Right") %>%
     page_footer("Page [pg] of [tpg]", "Center", "Right")
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 
 test_that("docx22: Check titles and footnotes on report.", {
-  
+
   if (dev == TRUE) {
 
-  
+
   library(ggplot2)
-  
+
   fp <- file.path(base_path, "docx/test22.docx")
-  
+
   p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-  
-  plt <- create_plot(p, height = 4, width = 7, borders = c("all")) 
-  
+
+  plt <- create_plot(p, height = 4, width = 7, borders = c("all"))
+
   dat <- mtcars[1:5, ]
   attr(dat[[2]], "label") <- "Cylin."
   attr(dat[[2]], "width") <- 1
   attr(dat[[2]], "justify") <- "center"
-  
+
   tbl <- create_table(dat, borders = c("all"), first_row_blank = TRUE) %>%
     define(wt, width = .75, label = "Weight", align = "center",
            label_align = "right")
-  
-  txt <- create_text(cnt, align = "left", width = 5, borders = c("all")) 
-  
+
+  txt <- create_text(cnt, align = "left", width = 5, borders = c("all"))
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Times",
                        font_size = 10, orientation = "portrait") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -826,126 +826,126 @@ test_that("docx22: Check titles and footnotes on report.", {
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none",
            font_size = 12, align = "left", blank_row = "none") %>%
     footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 3)
-  
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 
 
 test_that("docx23: Preview works as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test23.docx")
-  
+
   dat <- iris
-  
+
   tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Irises", "Another Title") %>%
     footnotes("My footnote 1", "My footnote 2")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
                        font_size = 12, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1")) %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
-  
+
   res <- write_report(rpt, preview = 2)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 2)
-  
-  
+
+
 })
 
 test_that("docx24: Header_bold works as expected", {
-  
+
   dat <- mtcars[1:10, 1:3]
-  
+
   fp <- file.path(base_path, "docx/test24.docx")
-  
+
   tbl <- create_table(dat, header_bold = TRUE, borders = "all") %>%
     column_defaults(width = 1) %>%
-    titles("Report 1.0", "Simple Report", borders = "outside", 
+    titles("Report 1.0", "Simple Report", borders = "outside",
            blank_row = "none", bold = TRUE) %>%
     footnotes("My footnote", blank_row = "none")
-  
+
   rpt <- create_report(fp, orientation = "portrait",
                        output_type = "DOCX", font = "Arial") %>%
     add_content(tbl) %>%
     set_margins(top = 1)
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 
 test_that("docs25: Label row is one cell.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test25.docx")
-  
-  
+
+
   # Read in prepared data
   df <- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
+      var     label        A             B
+      "ampg"   "N"          "19"          "13"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median"     "16.4"        "21.4"
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-  
+
   ll <- "Here is a super long label to see if it can span the entire table."
-  
+
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE, borders = "all") %>% 
-    stub(c("var", "label")) %>% 
-    define(var, blank_after = TRUE, label_row = TRUE, 
-           format = c(ampg = ll, cyl = "Cylinders")) %>% 
-    define(label, indent = .25) %>% 
-    define(A, label = "Group A", align = "center", n = 19) %>% 
+  tbl <- create_table(df, first_row_blank = TRUE, borders = "all") %>%
+    stub(c("var", "label")) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = ll, cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19) %>%
     define(B, label = "Group B", align = "center", n = 13)
-  
-  
+
+
   # Create report and add content
   rpt <- create_report(fp, orientation = "portrait", output_type = "DOCX",
-                       font = "Times") %>% 
-    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
-    titles("Table 1.0", "MTCARS Summary Table") %>% 
-    add_content(tbl) %>% 
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = Sys.time(), 
-                center = "Confidential", 
+    page_footer(left = Sys.time(),
+                center = "Confidential",
                 right = "Page [pg] of [tpg]")
-  
-  
-  
+
+
+
   res <- write_report(rpt)
   res
   expect_equal(file.exists(fp), TRUE)
-  
-  
+
+
 })
 
 test_that("docx26: Blank after on invisible column.", {
-  
+
   fp <- file.path(base_path, "docx/test26.docx")
-  
+
   tbl <- create_table(iris, borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
-  
+
   rpt <- create_report(fp, output_type = "DOCX") %>%
     page_header("Left", "Right") %>%
     add_content(tbl) %>%
@@ -953,127 +953,127 @@ test_that("docx26: Blank after on invisible column.", {
     titles("Table 1.0", "IRIS Data Frame",
            blank_row = "below") %>%
     footnotes("Here is a footnote", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 
 test_that("docx27: Page header width works.", {
-  
+
   fp <- file.path(base_path, "docx/test27.docx")
-  
+
   tbl <- create_table(iris[1:10, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
-    page_header("Left and here is a really long left cell text to put it", 
+    page_header("Left and here is a really long left cell text to put it",
                 "Right", width = 8) %>%
     add_content(tbl) %>%
     page_footer("left", "", "right") %>%
     titles("Table 1.0", "IRIS Data Frame",
            blank_row = "below") %>%
     footnotes("Here is a footnote", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 
 test_that("docx28: Carriage return in label row works.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test28.docx")
-  
-  
+
+
   # Read in prepared data
   df <- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
+      var     label        A             B
+      "ampg"   "N"          "19"          "13"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median"     "16.4"        "21.4"
       "ampg"   "Q1 - Q3"    "15.1 - \n21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-  
+
   ll <- "Here is a super long label to \nsee if it can span\nthe entire table."
-  
+
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
-    stub(c("var", "label")) %>% 
-    define(var, blank_after = TRUE, label_row = TRUE, 
-           format = c(ampg = ll, cyl = "Cylinders")) %>% 
-    define(label, indent = .25) %>% 
-    define(A, label = "Group A", align = "center", n = 19) %>% 
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>%
+    stub(c("var", "label")) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = ll, cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19) %>%
     define(B, label = "Group B", align = "center", n = 13)
-  
-  
+
+
   # Create report and add content
   rpt <- create_report(fp, orientation = "portrait", output_type = "DOCX",
-                       font = "Times") %>% 
-    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
-    titles("Table 1.0", "MTCARS Summary Table") %>% 
-    add_content(tbl) %>% 
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = "Left", 
-                center = "Confidential", 
+    page_footer(left = "Left",
+                center = "Confidential",
                 right = "Page [pg] of [tpg]")
-  
-  
-  
+
+
+
   res <- write_report(rpt)
   res
   expect_equal(file.exists(fp), TRUE)
-  
-  
+
+
 })
 
 
 
 test_that("docx29: Titles and footnotes in header and footer works as expected", {
-  
+
   dat <- mtcars[1:10, 1:3]
-  
+
   fp <- file.path(base_path, "docx/test29.docx")
-  
+
   tbl <- create_table(dat) %>%
-    column_defaults(width = 1) 
-  
+    column_defaults(width = 1)
+
   rpt <- create_report(fp, orientation = "landscape",
                        output_type = "DOCX", font = "Arial") %>%
     add_content(tbl) %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", "Right") %>%
-    titles("Report 1.0", "Simple Report", 
+    titles("Report 1.0", "Simple Report",
            blank_row = "none", header = TRUE, align = "left") %>%
-    footnotes("My footnote", "Another footnote", "And another", 
+    footnotes("My footnote", "Another footnote", "And another",
               blank_row = "none", footer = TRUE) %>%
     page_footer("Left", "Center", "Right")
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 test_that("docx30: Titles and footnotes variations in header and footer work as expected", {
-  
+
   dat <- mtcars[1:10, 1:3]
-  
+
   fp <- file.path(base_path, "docx/test30.docx")
-  
+
   tbl <- create_table(dat) %>%
-    column_defaults(width = 1) 
-  
+    column_defaults(width = 1)
+
   rpt <- create_report(fp, orientation = "landscape",
                        output_type = "DOCX", font = "Arial") %>%
     add_content(tbl) %>%
@@ -1087,23 +1087,23 @@ test_that("docx30: Titles and footnotes variations in header and footer work as 
     footnotes("My footnote2", blank_row = "none", footer = TRUE, align = "right") %>%
     footnotes("My footnote3", blank_row = "none", footer = TRUE, align = "center") %>%
     page_footer("Left", "Center", "Right")
-  
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 test_that("docx31: Titles and footnotes in header and footer no page header/footer works as expected", {
-  
+
   dat <- mtcars[1:10, 1:3]
-  
+
   fp <- file.path(base_path, "docx/test31.docx")
-  
+
   tbl <- create_table(dat) %>%
-    column_defaults(width = 1) 
-  
+    column_defaults(width = 1)
+
   rpt <- create_report(fp, orientation = "landscape",
                        output_type = "DOCX", font = "Arial") %>%
     add_content(tbl) %>%
@@ -1112,95 +1112,95 @@ test_that("docx31: Titles and footnotes in header and footer no page header/foot
            blank_row = "none", header = TRUE) %>%
     titles("Report 1.0", "Simple Report", align = "center", width = 6,
            blank_row = "below", header = TRUE) %>%
-    footnotes("My footnote1", "My footnote2", blank_row = "none", footer = TRUE) 
-  
+    footnotes("My footnote1", "My footnote2", blank_row = "none", footer = TRUE)
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 test_that("docx32: Title columns work 1 column.", {
-  
+
   fp <- file.path(base_path, "docx/test32.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all")  %>%
     titles("Table 1.0\nsecond row", "IRIS Data Frame3",
            blank_row = "both", columns =  1, align = "center",
-           borders = c("outside")) 
-  
+           borders = c("outside"))
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
     footnotes("Here is a footnote", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx33: Title columns work 2 columns.", {
-  
+
   fp <- file.path(base_path, "docx/test33.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
            blank_row = c("above", "below"), columns =  2, borders = "outside")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right")  %>%
     footnotes("Here is a footnote", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx34: Title columns work 3 columns.", {
-  
+
   fp <- file.path(base_path, "docx/test34.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
-  
-  rght <- paste("Here is a big long text string to see how the automatic", 
+
+  rght <- paste("Here is a big long text string to see how the automatic",
                 "wrapping is happening in a reduced size cell on the right.")
-  
-  rpt <- create_report(fp, output_type = "DOCX", font = "Courier", 
+
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
                        font_size = 10) %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
-    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+    titles("Table 1.0\nsecond row", "IRIS Data Frame",
            "      My right thing", "", "Center", rght,
            blank_row = "below", columns =  3, borders = "none") %>%
     footnotes("Here is a footnote", "And another", "A",
               "Here is a longer footnote to see if I can figure out the alignment pattern.",
               align = "right")
-  
-  
+
+
   res <- write_report(rpt)
   res
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx35: Multiple title blocks work as expected.", {
-  
+
   fp <- file.path(base_path, "docx/test35.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
@@ -1213,24 +1213,24 @@ test_that("docx35: Multiple title blocks work as expected.", {
     titles("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
            blank_row = "below", columns =  3, borders = "all") %>%
     footnotes("Here is a footnote", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx36: Custom page size works as expected.", {
-  
+
   fp <- file.path(base_path, "docx/test36.docx")
-  
+
   tbl <- create_table(iris[1:15, ]) %>%
     define(Species, visible = FALSE)
-  
+
   ttl <- c("Title1", "Title2", "Title3")
-  
-  rpt <- create_report(fp, output_type = "DOCX", 
+
+  rpt <- create_report(fp, output_type = "DOCX",
                        font = "Courier",
                        paper_size = c(6.5, 7.5),
                        orientation = "portrait") %>%
@@ -1241,25 +1241,25 @@ test_that("docx36: Custom page size works as expected.", {
            blank_row = "below", columns =  1, align = "center",
            borders = "none") %>%
     footnotes("Here is a footnote", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 
 test_that("docx37: Basic cell style bold works as expected.", {
-  
+
   if (dev) {
-    
+
     fp <- file.path(base_path, "docx/test37.docx")
-    
+
     dat <- mtcars[, 1:5]
     dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
-    
-    
+
+
     tbl <- create_table(dat, width = 7) %>%
       titles("My title") %>%
       column_defaults(width = .75) %>%
@@ -1269,101 +1269,101 @@ test_that("docx37: Basic cell style bold works as expected.", {
       define(hp, style = cell_style(bold = TRUE, indicator = hpflg)) %>%
       define(hpflg, visible = FALSE) %>%
       footnotes("My footnotes", blank_row = "none")
-    
-    
-    rpt <- create_report(fp, output_type = "DOCX", 
+
+
+    rpt <- create_report(fp, output_type = "DOCX",
                          font = "Arial", orientation = "portrait") %>%
       add_content(tbl) %>%
       footnotes("Here", footer = TRUE)
-    
+
     res <- write_report(rpt)
-    
-    
+
+
     # file.show(res$modified_path)
-    
+
     res$column_widths
-    
+
     expect_equal(file.exists(fp), TRUE)
     expect_equal(res$pages, 1)
-    
-    
+
+
   } else {
-    
+
     expect_equal(TRUE, TRUE)
-    
+
   }
-  
+
 })
 
 test_that("docx38: Bolding works with stub.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test38.docx")
-  
-  
+
+
   # Read in prepared data
   df <- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
+      var     label        A             B
+      "ampg"   "N"          "19"          "13"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median"     "16.4"        "21.4"
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-  
+
   df$cylflg <- ifelse(df$var == "cyl", TRUE, FALSE)
-  
+
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE) %>% 
-    column_defaults(vars = c("stub", "A"), 
+  tbl <- create_table(df, first_row_blank = TRUE) %>%
+    column_defaults(vars = c("stub", "A"),
                     style = cell_style(bold = TRUE, indicator = cylflg)) %>%
-    stub(c("var", "label"), 
-         style = cell_style(bold = TRUE, indicator = "labelrow")) %>% 
-    define(var, blank_after = TRUE, label_row = TRUE, 
-           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
-    define(label, indent = .25) %>% 
+    stub(c("var", "label"),
+         style = cell_style(bold = TRUE, indicator = "labelrow")) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
     define(A, label = "Group A", align = "center", n = 19,
-           style = cell_style(bold = TRUE, indicator = cylflg)) %>% 
-    define(B, label = "Group B", align = "center", n = 13, 
+           style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    define(B, label = "Group B", align = "center", n = 13,
            style = cell_style(bold = TRUE, indicator = "datarow")) %>%
     define(cylflg, visible = FALSE)
-  
-  
+
+
   # Create report and add content
   rpt <- create_report(fp, orientation = "portrait", output_type = "DOCX",
-                       font = "Times") %>% 
-    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
-    titles("Table 1.0", "MTCARS Summary Table") %>% 
-    add_content(tbl) %>% 
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = "Left", 
-                center = "Confidential", 
+    page_footer(left = "Left",
+                center = "Confidential",
                 right = "Page [pg] of [tpg]")
-  
-  
-  
+
+
+
   res <- write_report(rpt)
-  
+
   # file.show(res$modified_path)
   res
   expect_equal(file.exists(fp), TRUE)
-  
-  
+
+
 })
 
 
 test_that("docx39: Bold cell style with column defaults.", {
-  
+
   if (dev) {
-    
+
     fp <- file.path(base_path, "docx/test39.docx")
-    
+
     dat <- mtcars[, 1:5]
     dat$hpflg <- ifelse(dat$hp > 100, TRUE, FALSE)
-    
-    
+
+
     tbl <- create_table(dat) %>%
       titles("My title") %>%
       column_defaults(width = .75, vars = c("cyl", "disp", "hp"),
@@ -1374,177 +1374,177 @@ test_that("docx39: Bold cell style with column defaults.", {
       define(hp) %>%
       define(hpflg, visible = FALSE) %>%
       footnotes("My footnotes", blank_row = "none")
-    
-    
-    rpt <- create_report(fp, output_type = "DOCX", 
+
+
+    rpt <- create_report(fp, output_type = "DOCX",
                          font = "Arial", orientation = "portrait") %>%
       add_content(tbl) %>%
       footnotes("Here", footer = TRUE)
-    
+
     res <- write_report(rpt)
-    
-    
+
+
     # file.show(res$modified_path)
-    
+
     res$column_widths
-    
+
     expect_equal(file.exists(fp), TRUE)
     expect_equal(res$pages, 1)
-    
-    
+
+
   } else {
-    
+
     expect_equal(TRUE, TRUE)
-    
+
   }
-  
+
 })
 
 
 test_that("docx40: Bolding, column defaults, and stub works.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test40.docx")
-  
-  
+
+
   # Read in prepared data
   df <- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
+      var     label        A             B
+      "ampg"   "N"          "19"          "13"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median"     "16.4"        "21.4"
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder" "4 ( 21.1%)"  "3 ( 23.1%)"
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-  
+
   df$cylflg <- ifelse(df$var == "cyl", FALSE, TRUE)
-  
+
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE) %>% 
+  tbl <- create_table(df, first_row_blank = TRUE) %>%
     column_defaults(style = cell_style(bold = TRUE, indicator = cylflg)) %>%
     stub(c("var", "label"), width = 2,
-         style = cell_style(bold = TRUE, indicator = cylflg)) %>% 
-    define(var, blank_after = TRUE, label_row = TRUE, 
-           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>% 
-    define(label, indent = .25) %>% 
-    define(A, label = "Group A", align = "center", n = 19) %>% 
-    define(B, label = "Group B", align = "center", n = 13, 
+         style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19) %>%
+    define(B, label = "Group B", align = "center", n = 13,
            style = cell_style(bold = TRUE, indicator = "datarow")) %>%
     define(cylflg, visible = FALSE)
-  
-  
+
+
   # Create report and add content
   rpt <- create_report(fp, orientation = "portrait", output_type = "DOCX",
-                       font = "Times") %>% 
-    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
-    titles("Table 1.0", "MTCARS Summary Table") %>% 
-    add_content(tbl) %>% 
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = "Left", 
-                center = "Confidential", 
+    page_footer(left = "Left",
+                center = "Confidential",
                 right = "Page [pg] of [tpg]")
-  
+
   res <- write_report(rpt)
-  
+
   # file.show(res$modified_path)
   res
   expect_equal(file.exists(fp), TRUE)
-  
-  
+
+
 })
 
 test_that("docx41: Spanning header bold work as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test41")
-  
+
   dat <- mtcars[1:15, ]
-  
+
   tbl <- create_table(dat, borders = c( "none")) %>%
     spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
     spanning_header(hp, wt, "Span 2", underline = FALSE, bold = TRUE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span",
                     n = 11, level = 2, bold = TRUE) %>%
-    titles("Table 1.0", "My Nice Table", blank_row = "none", 
+    titles("Table 1.0", "My Nice Table", blank_row = "none",
            borders = c("top", "bottom")) %>%
-    footnotes("My footnote 1", "My footnote 2", 
+    footnotes("My footnote 1", "My footnote 2",
               blank_row = "none", borders = c("top", "bottom"))
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 
 test_that("docx42: Italic footnotes work as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test42.docx")
-  
+
   dat <- mtcars[1:15, ]
-  
+
   tbl <- create_table(dat, borders = c( "none")) %>%
     spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
     spanning_header(hp, wt, "Span 2", underline = FALSE, bold = FALSE) %>%
     spanning_header(qsec, vs, "Span 3", n = 10) %>%
     spanning_header(drat, gear, "Super Duper\nWrapped Span",
                     n = 11, level = 2, bold = FALSE) %>%
-    titles("Table 1.0", "My Nice Table", blank_row = "none", 
+    titles("Table 1.0", "My Nice Table", blank_row = "none",
            borders = c("top", "bottom")) %>%
-    footnotes("My italic footnote1", "My italic footnote2", italics = TRUE, 
+    footnotes("My italic footnote1", "My italic footnote2", italics = TRUE,
               blank_row = "none", borders = "top") %>%
-    footnotes("My italic footnote", "My footnote 2", 
+    footnotes("My italic footnote", "My footnote 2",
               blank_row = "none", borders = c("bottom"))
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
     add_content(tbl) %>%
     page_footer("Left1", "Center1", "Right1")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(res$modified_path), TRUE)
   expect_equal(res$pages, 1)
-  
+
 })
 
 test_that("docx43: Two plots on report works as expected.", {
-  
+
   if (dev == TRUE) {
-    
-    
+
+
     library(ggplot2)
-    
+
     fp <- file.path(base_path, "docx/test43.docx")
-    
+
     p1 <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
-    
+
     plt1 <- create_plot(p1, height = 4, width = 8, borders = c("none"))
-    
-    
+
+
     p2 <- ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point()
-    
+
     plt2 <- create_plot(p2, height = 4, width = 8, borders = c("none"))
-    
-    
+
+
     rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
       page_header("Client", "Study: XYZ") %>%
       set_margins(top = 1, bottom = 1) %>%
@@ -1553,159 +1553,159 @@ test_that("docx43: Two plots on report works as expected.", {
       page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>%
       titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
       footnotes("* Motor Trend, 1974", borders = "none")
-    
-    
+
+
     res <- write_report(rpt)
-    
+
     #print(res)
-    
+
     expect_equal(file.exists(fp), TRUE)
     expect_equal(res$pages, 2)
-    
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 
 
 test_that("docx44: Stub indent.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test44.docx")
-  
-  
+
+
   # Read in prepared data
   df <- read.table(header = TRUE, text = '
-      var     label        A             B          
-      "ampg"   "N"          "19"          "13"         
-      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      "ampg"   "Median"     "16.4"        "21.4"       
+      var     label        A             B
+      "ampg"   "N"          "19"          "13"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median"     "16.4"        "21.4"
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
-      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)" 
-      "cyl"    "6 Cylinder and more perhaps more" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more perhaps more" "4 ( 21.1%)"  "3 ( 23.1%)"
       "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
-  
+
   ll <- "Here is a super long label to see if it can span the entire table."
-  
+
   # Create table
-  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>% 
-    stub(c("var", "label"), width = .9) %>% 
-    define(var, blank_after = TRUE, label_row = TRUE, 
-           format = c(ampg = ll, cyl = "Cylinders")) %>% 
-    define(label, indent = .25) %>% 
-    define(A, label = "Group A", align = "center", n = 19) %>% 
+  tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>%
+    stub(c("var", "label"), width = .9) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = ll, cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19) %>%
     define(B, label = "Group B", align = "center", n = 13)
-  
-  
+
+
   # Create report and add content
   rpt <- create_report(fp, orientation = "portrait", output_type = "DOCX",
-                       font = "Times") %>% 
-    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>% 
-    titles("Table 1.0", "MTCARS Summary Table") %>% 
-    add_content(tbl) %>% 
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
     footnotes("* Motor Trend, 1974") %>%
-    page_footer(left = "Left", 
-                center = "Confidential", 
+    page_footer(left = "Left",
+                center = "Confidential",
                 right = "Page [pg] of [tpg]")
-  
-  
-  
+
+
+
   res <- write_report(rpt)
   res
   expect_equal(file.exists(fp), TRUE)
-  
-  
+
+
 })
 
 test_that("docx45: Footnote columns work 1 column.", {
-  
+
   fp <- file.path(base_path, "docx/test45.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all")  %>%
     titles("Table 1.0\nsecond row", "IRIS Data Frame3",
            blank_row = "both", columns =  1, align = "center",
            borders = c("outside")) %>%
     footnotes("Here is a footnote", "And another", columns = 1, borders = "all")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
     footnotes("Here is a footnote", "And another", columns = 1)
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx46: Footnote columns work 2 columns.", {
-  
+
   fp <- file.path(base_path, "docx/test46.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     titles("Table 1.0\nsecond row", "IRIS Data Frame", "Left", "Right",
-           blank_row = c("above", "below"), columns =  2, 
+           blank_row = c("above", "below"), columns =  2,
            borders = "outside") %>%
     footnotes("Here is a footnote", "And another", columns = 2, borders = "all")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right")  %>%
     footnotes("Here is a footnote", "And another", columns = 2)
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx47: Footnote columns work 3 columns.", {
-  
+
   fp <- file.path(base_path, "docx/test47.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)  %>%
     footnotes("Here is a footnote", "And another", "And more", "", "More",
               columns = 3, borders = "all")
-  
-  rght <- paste("Here is a big long text string to see how the automatic", 
+
+  rght <- paste("Here is a big long text string to see how the automatic",
                 "wrapping is happening in a reduced size cell on the right.")
-  
-  rpt <- create_report(fp, output_type = "DOCX", font = "Courier", 
+
+  rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
                        font_size = 10) %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
-    titles("Table 1.0\nsecond row", "IRIS Data Frame", 
+    titles("Table 1.0\nsecond row", "IRIS Data Frame",
            "      My right thing", "", "Center", rght,
            blank_row = "below", columns =  3, borders = "none") %>%
     footnotes("Here is a footnote", "And another", "A",
-              "Here is a longer footnote",  "to see if I can figure", 
+              "Here is a longer footnote",  "to see if I can figure",
               "out the alignment pattern.",
               columns = 3)
-  
-  
+
+
   res <- write_report(rpt)
   res
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx48: Multiple footnote blocks work as expected.", {
-  
+
   fp <- file.path(base_path, "docx/test48.docx")
-  
+
   tbl <- create_table(iris[1:15, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE) %>%
     footnotes("Here is a footnote", "And another", "And more", "", "More",
               columns = 3, borders = "all", blank_row = "both")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
@@ -1718,30 +1718,30 @@ test_that("docx48: Multiple footnote blocks work as expected.", {
     footnotes("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
            blank_row = "below", columns =  3, borders = "all") %>%
     titles("Here is a title", "And another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 
 test_that("docx49: Greater and Less characters are escaped as expected.", {
-  
+
   fp <- file.path(base_path, "docx/test49.docx")
-  
+
   dt <- iris[1:15, ]
   dt$Species <- as.character(dt$Species)
   dt[1, "Species"] <- "set > osa"
   dt[2, "Species"] <- "set < osa"
   dt[3, "Species"] <- "set & osa"
-  
+
   tbl <- create_table(dt, borders = "all") %>%
     define(Species, label = "Spe>ies") %>%
     footnotes("Here is a > footnote", "And < another", "And & more", "", "More",
               columns = 3, borders = "all", blank_row = "both")
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier") %>%
     add_content(tbl) %>%
     page_header("left<", "right&") %>%
@@ -1754,197 +1754,197 @@ test_that("docx49: Greater and Less characters are escaped as expected.", {
     footnotes("Table 3.0", "IRIS Data Frame3", "My right thing", "", "Center",
               blank_row = "below", columns =  3, borders = "all") %>%
     titles("Here is>a title", "And<another")
-  
-  
+
+
   res <- write_report(rpt)
-  
+
   expect_equal(file.exists(fp), TRUE)
-  
+
 })
 
 test_that("docx50: Page by with wrap works as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test50.docx")
-  
+
   dat <- iris
   dat$Pgby <- as.character(dat$Species)
   dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
-  
-  
-  tbl <- create_table(dat, borders = "none") %>% 
+
+
+  tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
     page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
     define(Pgby, visible = FALSE)
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
-    page_header("Left", "Right") %>% 
-    page_footer("Left1", "Center1", "Right1") %>% 
+    page_header("Left", "Right") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "none")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 9)
   expect_equal(length(res$column_widths[[1]]), 5)
-  
-  
+
+
 })
 
 test_that("docx51: Page by with format works as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test51.docx")
-  
+
   fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
   fmt2 <- value(condition(x == 1, "Setosa"),
                 condition(x == 2, "Versicolor"),
                 condition(x == 3, "Virginica"))
-  
+
   dat <- iris
   fmtval <- fmt1[dat$Species]
   names(fmtval) <- NULL
   dat$Pgby <- fmtval
-  
-  tbl <- create_table(dat, borders = "none") %>% 
+
+  tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
     page_by(Pgby, align = "left", label = "Flower:", borders = "none", format = fmt2) %>%
     define(Pgby, visible = FALSE)
-  
-  rpt <- create_report(fp, output_type = "DOCX", 
+
+  rpt <- create_report(fp, output_type = "DOCX",
                        orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
-    page_header("Left", "Right") %>% 
-    page_footer("Left1", "Center1", "Right1") %>% 
+    page_header("Left", "Right") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "none")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 6)
   expect_equal(length(res$column_widths[[1]]), 5)
-  
-  
+
+
 })
 
 test_that("docx52: Borders work as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test52.docx")
-  
+
   fmt1 <- c(setosa = 1, versicolor = 2, virginica = 3)
   fmt2 <- value(condition(x == 1, "Setosa"),
                 condition(x == 2, "Versicolor"),
                 condition(x == 3, "Virginica"))
-  
+
   dat <- iris
   fmtval <- fmt1[dat$Species]
   names(fmtval) <- NULL
   dat$Pgby <- fmtval
-  
-  tbl <- create_table(dat, borders = "none") %>% 
+
+  tbl <- create_table(dat, borders = "none") %>%
     define(Pgby, visible = FALSE)
-  
-  rpt <- create_report(fp, output_type = "DOCX", 
+
+  rpt <- create_report(fp, output_type = "DOCX",
                        orientation = "landscape") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
-    page_by(Pgby, align = "left", label = "Flower:", borders = c("top", "bottom"), 
+    page_by(Pgby, align = "left", label = "Flower:", borders = c("top", "bottom"),
             format = fmt2, blank_row = "both") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
-    page_header("Left", "Right") %>% 
-    page_footer("Left1", "Center1", "Right1") %>% 
-    footnotes("My footnote 1", "My footnote 2", borders = c("top", "bottom"), 
+    page_header("Left", "Right") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
+    footnotes("My footnote 1", "My footnote 2", borders = c("top", "bottom"),
               columns = 2, blank_row = "both") %>%
     footnotes("hello", borders = "none", blank_row = "none")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 9)
   expect_equal(length(res$column_widths[[1]]), 5)
-  
-  
+
+
 })
 
 
 test_that("docx53: Page by with wrap on report works as expected.", {
-  
-  
+
+
   fp <- file.path(base_path, "docx/test53.docx")
-  
+
   dat <- iris
   dat$Pgby <- as.character(dat$Species)
   dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
-  
-  
-  tbl <- create_table(dat, borders = "none") %>% 
+
+
+  tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
     define(Pgby, visible = FALSE)
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = fnt,
                        font_size = fsz, orientation = "landscape") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
     page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
-    page_header("Left", "Right") %>% 
-    page_footer("Left1", "Center1", "Right1") %>% 
+    page_header("Left", "Right") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "none")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 9)
   expect_equal(length(res$column_widths[[1]]), 5)
-  
-  
+
+
 })
 
 
 # Not right yet.  Can't reproduce problem.
 test_that("docx55: Top margin 1.5 works as expected.", {
-  
+
   fp <- file.path(base_path, "docx/test55.docx")
-  
+
   dat <- iris
   dat$Pgby <- as.character(dat$Species)
   dat$Pgby <- paste0("Flower Type\n", dat$Pgby)
-  
-  
-  tbl <- create_table(dat, borders = "none") %>% 
+
+
+  tbl <- create_table(dat, borders = "none") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "none") %>%
     page_by(Pgby, label = "Species: ", align = "right", borders = "none") %>%
     define(Pgby, visible = FALSE)
-  
+
   rpt <- create_report(fp, output_type = "DOCX", font = "Courier",
                        font_size = 9, orientation = "landscape") %>%
     set_margins(top = 1.5, bottom = 1) %>%
     add_content(tbl) %>%
-    page_header("Left", "Right") %>% 
-    page_footer("Left1", "Center1", "Right1") %>% 
+    page_header("Left", "Right") %>%
+    page_footer("Left1", "Center1", "Right1") %>%
     footnotes("My footnote 1", "My footnote 2", borders = "none")
-  
+
   res <- write_report(rpt)
   res
   res$column_widths
-  
+
   expect_equal(file.exists(fp), TRUE)
   expect_equal(res$pages, 6)
   expect_equal(length(res$column_widths[[1]]), 5)
-  
-  
+
+
 })
 
 
@@ -2417,228 +2417,228 @@ test_that("docx-user5: Portrait in 12pt Arial works as expected.", {
 
 
 test_that("docx-user6: Check wrapping.", {
-  
+
   if (dev == TRUE) {
-    
+
     dir_data <- file.path(data_dir, "data")
-    
+
     fp <- file.path(base_path, "docx/user6.docx")
-    
-    
+
+
     # Load Data
     data_demo   <- file.path(dir_data, "dm.csv") %>%
       read.csv()
-    
-    
+
+
     dt <- data_demo[ , c("USUBJID", "BRTHDTC", "AGE", "SEX", "RACE", "ARM")]
-    
+
     attr(dt$USUBJID, "label") <- "Universal Subject ID"
     attr(dt$BRTHDTC, "label") <- "Subject Birth Date"
     attr(dt$AGE, "label") <- "Subject Age in Years"
     attr(dt$SEX, "label") <- "Subject Biological Sex at Birth"
     attr(dt$RACE, "label") <- "Subject Race Category"
     attr(dt$ARM, "label") <- "Treatment Group"
-    
+
 
     # Create table
     tbl <- create_table(dt)
-    
+
     # Create report
     rpt <- create_report(fp, orientation = "portrait", font_size = 12,
-                         output_type = "DOCX", font = "Times") %>% 
-      titles("Our first SASSY report", bold = TRUE) %>% 
+                         output_type = "DOCX", font = "Times") %>%
+      titles("Our first SASSY report", bold = TRUE) %>%
       add_content(tbl)
-    
+
     # write out the report
     res <- write_report(rpt)
-    
+
     expect_equal(file.exists(fp), TRUE)
-    
-    
+
+
   } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 
 
 
 test_that("user7: Borders with spanning headers work as expected.", {
-  
+
   if (dev == TRUE) {
-    
+
     df <- read.table(header = TRUE, text = '
-        var     label           A             B             C            
-        "AGE"   "n"             "19"          "13"          "32"         
-        "AGE"   "Mean"          "18.8 (6.5)"  "22.0 (4.9)"  "20.0 (5.9)" 
-        "AGE"   "Median"        "16.4"        "21.4"        "20.1"       
+        var     label           A             B             C
+        "AGE"   "n"             "19"          "13"          "32"
+        "AGE"   "Mean"          "18.8 (6.5)"  "22.0 (4.9)"  "20.0 (5.9)"
+        "AGE"   "Median"        "16.4"        "21.4"        "20.1"
         "AGE"   "Q1 - Q3"       "15.1 - 21.2" "19.2 - 22.8" "15.2 - 21.8"
-        "RACE"  "White"         "10 (52.6)"   "4 (30.8)"    "14 (43.8)" 
-        "RACE"  "Black"         "4 (21.1)"    "3 (23.1)"    "7 (21.9)" 
+        "RACE"  "White"         "10 (52.6)"   "4 (30.8)"    "14 (43.8)"
+        "RACE"  "Black"         "4 (21.1)"    "3 (23.1)"    "7 (21.9)"
         "RACE"  "Others\U1D47"  "5 (26.3)"    "6 (46.2)"    "11 (34.4.2)"
         ')
-    
+
     var_fmt <- c(AGE = "Age (yrs)", RACE = "Race - n (%)")
-    
-    
+
+
     fp <- file.path(base_path, "docx/user7.docx")
-    
-    tbl <- create_table(df, first_row_blank = TRUE, borders = c("outside")) %>% 
-      stub(vars = c("var", "label"), " ", width = 2.5) %>% 
+
+    tbl <- create_table(df, first_row_blank = TRUE, borders = c("outside")) %>%
+      stub(vars = c("var", "label"), " ", width = 2.5) %>%
       spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%
-      define(var, blank_after = TRUE, format = var_fmt, label_row = TRUE) %>% 
-      define(label, indent=0.25) %>% 
-      define(A,  align = "center", label = "Placebo\n(N = 19)") %>% 
+      define(var, blank_after = TRUE, format = var_fmt, label_row = TRUE) %>%
+      define(label, indent=0.25) %>%
+      define(A,  align = "center", label = "Placebo\n(N = 19)") %>%
       define(B,  align = "center", label = "Drug\n(N = 13)") %>%
       define(C,  align = "center", label = "Total\n(N = 32)") %>%
       footnotes("\U1D43 study drug", blank_row="none" ) %>%
-      footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none") 
-    
-    rpt <- create_report(fp, output_type = "DOCX", 
-                         font = "Arial") %>% 
-      set_margins(top = 1, bottom = 1) %>% 
+      footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none")
+
+    rpt <- create_report(fp, output_type = "DOCX",
+                         font = "Arial") %>%
+      set_margins(top = 1, bottom = 1) %>%
       add_content(tbl) %>%
       page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
-      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above") 
-    
+      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above")
+
     res <- write_report(rpt)
-    
+
     expect_equal(file.exists(fp), TRUE)
     expect_equal(res$pages, 1)
-    
+
     # file.show(fp)
-  
-  
+
+
   } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 
 
 # This is good
 test_that("user8: Check footnotes on page by.", {
-  
+
   if (dev == TRUE) {
-    
+
     fp <- file.path(base_path, "docx/user8")
-    
-    
+
+
     df <- read.table(header = TRUE, text = '
-      var     stat        A             B          
-      "Age (yrs)"   "n"          "19"          "13"         
-      " "   "Mean"       "18.8 (6.5)"  "22.0 (4.9)" 
-      " "   "Median"     "16.4"        "21.4"       
+      var     stat        A             B
+      "Age (yrs)"   "n"          "19"          "13"
+      " "   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      " "   "Median"     "16.4"        "21.4"
       " "   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
       " "   " "          " "           " "
-      "Race"  "White" "10 ( 52.6%)" "4 ( 30.8%)" 
-      " "     "Black" "4 ( 21.1%)"  "3 ( 23.1%)" 
+      "Race"  "White" "10 ( 52.6%)" "4 ( 30.8%)"
+      " "     "Black" "4 ( 21.1%)"  "3 ( 23.1%)"
       " "     "Others\U1D47" "5 ( 26.3%)"  "6 ( 46.2%)"')
-    
+
     df1 <- df
     df2 <- df
     df3 <- df
-    
+
     df1$SEX <- 'Female'
     df2$SEX <- 'Male'
     df3$SEX <- 'Other'
-    
+
     df <- rbind(df1, df2, df3)
-    
+
     # Create table
-    tbl <- create_table(df, first_row_blank = TRUE, borders=c("top")) %>% 
-      page_by(SEX, "Sex: ", align = "left", blank_row="none") %>% 
-      #stub(c("var", "label")) %>% 
-      column_defaults(width = 1.25) %>% 
-      
+    tbl <- create_table(df, first_row_blank = TRUE, borders=c("top")) %>%
+      page_by(SEX, "Sex: ", align = "left", blank_row="none") %>%
+      #stub(c("var", "label")) %>%
+      column_defaults(width = 1.25) %>%
+
       spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%
-      
+
       define(SEX, visible = FALSE) %>%
-      define(var, label = " ", align = "left") %>% 
-      define(stat,label = " ", align = "left") %>% 
-      define(A,   label = "Treament A", align = "center", n = 19) %>% 
-      
+      define(var, label = " ", align = "left") %>%
+      define(stat,label = " ", align = "left") %>%
+      define(A,   label = "Treament A", align = "center", n = 19) %>%
+
       define(B,   label = "Treament B", align = "center", n = 13)  %>%
-      titles("Table 1.1 Demographics", "Randomised Population", font_size = 10) %>% 
-      
-      footnotes("Page [pg] of [tpg]", align = "right", blank_row="none", borders=c("top")) %>% 
+      titles("Table 1.1 Demographics", "Randomised Population", font_size = 10) %>%
+
+      footnotes("Page [pg] of [tpg]", align = "right", blank_row="none", borders=c("top")) %>%
       footnotes("\U1D43 study drug treatments", blank_row="none", borders=c("top")  ) %>%
       footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none", borders = "bottom")
-    
-    rpt <- create_report(fp, output_type = "DOCX", font = "Arial", font_size = 10) %>% 
-      
+
+    rpt <- create_report(fp, output_type = "DOCX", font = "Arial", font_size = 10) %>%
+
       #This is page header and it goes into the header of the table
-      page_header("Protocol: 9999") %>% 
-      
+      page_header("Protocol: 9999") %>%
+
       add_content(tbl) %>%
-      
+
       page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
-      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above", valign = "bottom") 
-    
-    
-    
+      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above", valign = "bottom")
+
+
+
     res <- write_report(rpt)
-    
+
     expect_equal(file.exists(res$modified_path), TRUE)
     expect_equal(res$pages, 3)
-    
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 
 # Custom line count.  Needed because something is wrong. But I can't figure it out.
 test_that("user9: Report with top and bottom borders stays on one page.", {
-  
+
   if (dev) {
-    
+
     fp <- file.path(base_path, "docx/user9")
-    
+
     df <- read.table(header = TRUE, text = '
-        var     label           A             B             C            
-        "AGE"   "n"             "19"          "13"          "32"         
-        "AGE"   "Mean"          "18.8 (6.5)"  "22.0 (4.9)"  "20.0 (5.9)" 
-        "AGE"   "Median"        "16.4"        "21.4"        "20.1"       
+        var     label           A             B             C
+        "AGE"   "n"             "19"          "13"          "32"
+        "AGE"   "Mean"          "18.8 (6.5)"  "22.0 (4.9)"  "20.0 (5.9)"
+        "AGE"   "Median"        "16.4"        "21.4"        "20.1"
         "AGE"   "Q1 - Q3"       "15.1 - 21.2" "19.2 - 22.8" "15.2 - 21.8"
-        "RACE"  "White"         "10 (52.6)"   "4 (30.8)"    "14 (43.8)" 
-        "RACE"  "Black"         "4 (21.1)"    "3 (23.1)"    "7 (21.9)" 
+        "RACE"  "White"         "10 (52.6)"   "4 (30.8)"    "14 (43.8)"
+        "RACE"  "Black"         "4 (21.1)"    "3 (23.1)"    "7 (21.9)"
         "RACE"  "Others\U1D47"  "5 (26.3)"    "6 (46.2)"    "11 (34.4.2)"
         ')
-    
+
     var_fmt <- c(AGE = "Age (yrs)", RACE = "Race - n (%)")
-    
-    
-    tbl <- create_table(df, first_row_blank = TRUE, borders = c("top", "bottom")) %>% 
-      stub(vars = c("var", "label"), " ", width = 2.5) %>% 
-      # define(var, blank_after = TRUE, dedupe = TRUE, label = "Variable", format = var_fmt,label_row = TRUE) %>% 
+
+
+    tbl <- create_table(df, first_row_blank = TRUE, borders = c("top", "bottom")) %>%
+      stub(vars = c("var", "label"), " ", width = 2.5) %>%
+      # define(var, blank_after = TRUE, dedupe = TRUE, label = "Variable", format = var_fmt,label_row = TRUE) %>%
       spanning_header(from = "A", to = "B", label = "Treatments\U1D43") %>%
-      define(var, blank_after = TRUE, format = var_fmt, label_row = TRUE) %>% 
-      define(label, indent=0.25) %>% 
-      # define(A,  align = "center", label = "Placebo\n(N = 19)", n = 19) %>% 
+      define(var, blank_after = TRUE, format = var_fmt, label_row = TRUE) %>%
+      define(label, indent=0.25) %>%
+      # define(A,  align = "center", label = "Placebo\n(N = 19)", n = 19) %>%
       # define(B,  align = "center", label = "Drug\n(N = 13)", n = 13) %>%
       # define(C,  align = "center", label = "Total\n(N = 32)", n = 32) %>%
-      define(A,  align = "center", label = "Placebo", n = 19) %>% 
+      define(A,  align = "center", label = "Placebo", n = 19) %>%
       define(B,  align = "center", label = "Drug", n = 13) %>%
       define(C,  align = "center", label = "Total", n = 32) %>%
       footnotes("\U1D43 study drug", blank_row="none" ) %>%
-      footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none") %>% 
+      footnotes("\U1D47 Asian, Japanese and Chinese", blank_row="none") %>%
       titles("My title", "My title 2")
-    
-    rpt <- create_report(fp, output_type = "DOCX", 
-                         font = "Arial", font_size = 11) %>% 
-      set_margins(top = 1, bottom = 1) %>% 
+
+    rpt <- create_report(fp, output_type = "DOCX",
+                         font = "Arial", font_size = 11) %>%
+      set_margins(top = 1, bottom = 1) %>%
       options_fixed(line_count = 32) %>%
       add_content(tbl) %>%
       # page_header("Help") %>%
       #page_footer(left = paste("Date:", Sys.time()), right = "Page [pg] of [tpg]", blank_row="none") %>%
-      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above") 
-    
+      footnotes("Program: C:/Users/Home/AppData/Local/Temp/tdemo.R", blank_row="above")
+
     res <- write_report(rpt)
-    
+
     #file.show(res$modified_path)
     expect_equal(file.exists(res$modified_path), TRUE)
     expect_equal(res$pages, 1)
-    
-  } else 
+
+  } else
     expect_equal(TRUE, TRUE)
-  
+
 })
 

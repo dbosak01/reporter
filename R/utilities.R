@@ -472,8 +472,17 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
       
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
       
-      lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
-                   suppressWarnings(strwidth(" ", units = un))) * multiplier
+      lngths <- c()
+      # trycatch({
+        lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
+                     suppressWarnings(strwidth(" ", units = un))) * multiplier
+      
+      # }, err = {
+      #   
+      #   lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
+      #                suppressWarnings(strwidth(" ", units = un))) * multiplier
+      #   
+      # })
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {

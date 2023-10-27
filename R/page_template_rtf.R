@@ -1112,10 +1112,15 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
     
     tb <- get_cell_borders(brow, 1 , trows, 1, pgby$borders)
     
+    pdf(NULL)
+    par(family = get_font_family(rs$font), ps = rs$font_size)
+    
     # Account for multiple pgby lines
     tmp <- split_string_rtf(value, width, rs$units)
     vl <- tmp$rtf
     cnt <- cnt + tmp$lines
+    
+    dev.off()
     
     # Construct RTF for pageby value
     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
