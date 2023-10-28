@@ -2202,7 +2202,7 @@ test_that("rtf2-62: Carriage return in label row works.", {
 
 test_that("rtf2-63: Glue works.", {
 
-  if (dev) {
+  # if (dev) {
 
     fp <- file.path(base_path, "rtf2/test63.rtf")
 
@@ -2249,11 +2249,11 @@ test_that("rtf2-63: Glue works.", {
     res
     expect_equal(file.exists(fp), TRUE)
 
-  } else {
-
-    expect_equal(TRUE, TRUE)
-
-  }
+  # } else {
+  # 
+  #   expect_equal(TRUE, TRUE)
+  # 
+  # }
 
 
 })
