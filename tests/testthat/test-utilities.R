@@ -663,14 +663,14 @@ test_that("utils31: strwdth() works as expected.", {
   
   
   
-  pdf(NULL)
-  par(family = 'mono', ps = 10)
+  # pdf(NULL)
+  # par(family = 'mono', ps = 10)
+  # 
+  # res <- strwidth(strngs, un = "inches")
+  # 
+  # dev.off()
   
-  res <- strwdth(strngs, un = "inches")
-  
-  dev.off()
-  
-  res
+  res <- c(0.4166667, 0.5833333, 1.5000000)
   
   
   
@@ -683,24 +683,33 @@ test_that("utils31: strwdth() works as expected.", {
   
   res1
   
-  expect_equal(all(res == res1), TRUE) 
+  expect_equal(all(res == round(res1, 7)), TRUE) 
    
+  
+  # pdf(NULL)
+  # par(family = 'sans', ps = 10)
+  # 
+  # res3 <- strwidth(strngs, un = "inches")
+  # 
+  # dev.off()
+  
+  res3 <- c(0.2933333, 0.5272222, 1.1733333)
   
   pdf(NULL)
   par(family = 'sans', ps = 10)
   
-  res2 <- strwdth(strngs, un = "inches")
+  res4 <- strwdth(strngs, un = "inches")
   
   dev.off()
   
-  res2
+  res4
   
   # print(res1)
   # print(res2)
   
-  expect_equal(all(res1 != res2) , TRUE) 
-  
-
+  expect_equal(all(res != res4), TRUE) 
+  expect_equal(res3[1] == round(res4[1], 7), TRUE) 
+  expect_equal(res3[2] == round(res4[2], 7), TRUE) 
   
 })
 

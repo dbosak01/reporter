@@ -550,22 +550,22 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
 
 strwdth <- Vectorize(function(wrd, un) {
   
-    if (is.na(wrd)) {
-      ret <- 0 
-    } else {
-    
-      ret <- strwidth("a", units = un) * nchar(wrd)
-    
-    }
+  if (is.na(wrd)) {
+    ret <- 0 
+  } else {
 
-    tryCatch({
+    ret <- tryCatch({
     
-      ret <- suppressWarnings(strwidth(wrd, units = un))
+      suppressWarnings(strwidth(wrd, units = un))
+      
+      
     
     }, error = function(cond) {
       
-
+      suppressWarnings(strwidth("a", units = un)) * nchar(wrd)
+        
     })
+  }
   
   return(ret)
 }, USE.NAMES = FALSE, SIMPLIFY = TRUE)
