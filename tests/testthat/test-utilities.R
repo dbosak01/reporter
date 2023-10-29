@@ -683,7 +683,8 @@ test_that("utils31: strwdth() works as expected.", {
   
   res1
   
-  expect_equal(all(res == round(res1, 7)), TRUE) 
+  expect_equal(res[1] == round(res1[1], 7), TRUE) 
+  expect_equal(res[2] == round(res1[2], 7), TRUE) 
    
   
   # pdf(NULL)
