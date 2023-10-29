@@ -656,3 +656,53 @@ test_that("utils30: has_glue() works as expected.", {
   expect_equal(res3, TRUE)
   
 })
+
+test_that("utils31: strwdth() works as expected.", {
+  
+  strngs <- c("hello", "goodbye", paste0("here is something", supsc('6')))
+  
+  
+  
+  pdf(NULL)
+  par(family = 'mono', ps = 10)
+  
+  res <- strwidth(strngs, un = "inches")
+  
+  dev.off()
+  
+  res
+  
+  
+  
+  pdf(NULL)
+  par(family = 'mono', ps = 10)
+  
+  res1 <- strwdth(strngs, un = "inches")
+  
+  dev.off()
+  
+  res1
+  
+  expect_equal(all(res == res1), TRUE) 
+   
+  
+  pdf(NULL)
+  par(family = 'sans', ps = 10)
+  
+  res2 <- strwdth(strngs, un = "inches")
+  
+  dev.off()
+  
+  res2
+  
+  # print(res1)
+  # print(res2)
+  
+  expect_equal(all(res1 != res2) , TRUE) 
+  
+
+  
+})
+
+
+

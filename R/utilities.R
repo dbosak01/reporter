@@ -472,17 +472,13 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
       
       wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
       
-      lngths <- c()
-      # trycatch({
-        lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
-                     suppressWarnings(strwidth(" ", units = un))) * multiplier
-      
-      # }, err = {
-      #   
-      #   lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
-      #                suppressWarnings(strwidth(" ", units = un))) * multiplier
-      #   
-      # })
+      # Old code
+      # lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
+      #              suppressWarnings(strwidth(" ", units = un))) * multiplier
+
+      if (length(wrds) > 0) {
+        lngths <- (strwdth(wrds, un) + strwdth(" ", un)) * multiplier
+      } 
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {
@@ -549,6 +545,36 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
   
   return(ret)
 }
+
+
+
+strwdth <- Vectorize(function(wrd, un) {
+  
+
+    tryCatch({
+    
+      if (is.na(wrd)) 
+        nwrd <- " "
+      else 
+        nwrd <- wrd
+      
+      ret <- suppressWarnings(strwidth(nwrd, units = un))
+    
+    }, error = function(cond) {
+      
+      if (is.na(wrd)) {
+        nwrd <- " "
+      } else {
+        
+        nwrd <- rep("a", nchar(wrd)) 
+      }
+  
+      ret <- suppressWarnings(strwidth(nwrd, units = un)) 
+  
+    })
+  
+  return(ret)
+}, USE.NAMES = FALSE, SIMPLIFY = TRUE)
 
 #' @description Calling function is responsible for opening the 
 #' device context and assigning the font.  This function will use 

@@ -24,7 +24,7 @@ dev <- FALSE
 # Basic Tests 1 - 10 ------------------------------------------------------
 
 
-test_that("docx0: Basic text works as expected.", {
+test_that("docx0: Basic docx works as expected.", {
 
 
   fp <- file.path(base_path, "docx/test0.docx")
