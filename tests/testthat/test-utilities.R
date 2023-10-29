@@ -666,7 +666,7 @@ test_that("utils31: strwdth() works as expected.", {
   pdf(NULL)
   par(family = 'mono', ps = 10)
   
-  res <- strwidth(strngs, un = "inches")
+  res <- strwdth(strngs, un = "inches")
   
   dev.off()
   

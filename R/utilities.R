@@ -566,7 +566,7 @@ strwdth <- Vectorize(function(wrd, un) {
         nwrd <- " "
       } else {
         
-        nwrd <- rep("a", nchar(wrd)) 
+        nwrd <- paste0(rep("a", nchar(wrd)), collapse = "") 
       }
   
       ret <- suppressWarnings(strwidth(nwrd, units = un)) 
@@ -1462,7 +1462,13 @@ get_text_width <- function(txt, font, font_size = 10, units = "inches",
   #R.devices::devEval("nulldev", {
     pdf(NULL)
     par(family = f, ps = font_size)
-    ret <- suppressWarnings(strwidth(txt, units = un)) * multiplier 
+    if (length(txt) > 0) {
+      #ret <- suppressWarnings(strwidth(txt, units = un)) * multiplier 
+      ret <- strwdth(txt, un) * multiplier 
+    } else {
+      
+      ret <- 0 
+    }
     dev.off()
   #})
   
