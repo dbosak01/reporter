@@ -1,3 +1,7 @@
+# reporter 1.4.4
+
+* Bug fix on dedupe functionality. 
+
 # reporter 1.4.3
 
 * Fix dedupe functionality on `define()` function when values are not unique. 
