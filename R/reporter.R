@@ -99,12 +99,11 @@
 #'   colors, and some font sizing and bolding.   
 #' }
 #' 
-#' @docType package
 #' @import common
 #' @aliases reporter-package
 #' @keywords internal
 #' @name reporter
-NULL
+"_PACKAGE"
 
 #' @title Notes on PDF output type
 #' @description 

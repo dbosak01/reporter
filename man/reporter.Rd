@@ -111,4 +111,25 @@ assumptions and limitations are as follows:
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://reporter.r-sassy.org}
+  \item \url{https://github.com/dbosak01/reporter}
+  \item Report bugs at \url{https://github.com/dbosak01/reporter/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: David Bosak \email{dbosak01@gmail.com}
+
+Other contributors:
+\itemize{
+  \item Kevin Kramer \email{kkrame02@amgen.com} [contributor]
+  \item Duong Tran \email{trand000@aol.com} [contributor]
+  \item Raphael Huang \email{chi-hua.huang@astellas.com} [contributor]
+  \item Archytas Clinical Solutions [copyright holder]
+}
+
+}
 \keyword{internal}

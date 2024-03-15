@@ -85,7 +85,7 @@ test_that("test3: Simple table with formats works as expected.", {
     define(subjid, align = "left") %>% 
     define(sex, width = 1, format = sfmt2) %>%
     define(age, width = .5) %>% 
-    define(arm, format = afmt, width = 1.5, align = "right")
+    define(arm, format = afmt, width = 1.5, align = "right", dedupe = TRUE)
   
 
   

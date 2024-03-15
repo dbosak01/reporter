@@ -397,7 +397,7 @@ paginate_content <- function(rs, ls) {
     if (length(pgs) > 1)
       last_page_lines <- length(last_page)
     
-    #print(paste("Last page lines:", last_page_lines))
+    # print(paste("Last page lines:", last_page_lines))
     
     # If there is a requested page break, or it is the last object/last page,
     # then fill up the remaining page with blanks.
@@ -412,6 +412,9 @@ paginate_content <- function(rs, ls) {
       last_page_lines <- 0  # Needed for requested page breaks
       #print(paste("Last Page Line Count:", length(last_page)))
     } 
+    
+    if (ls[[i]]$page_break == TRUE | last_page_lines >= rs$body_line_count)
+      last_page_lines <- 0
 
     # Replace last page with any modifications
     ls[[i]]$pages[[length(pgs)]] <- last_page

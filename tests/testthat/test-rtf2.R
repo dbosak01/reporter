@@ -3407,6 +3407,43 @@ test_that("test95: Page break with blank row after works as expected.", {
 
 })
 
+test_that("rtf2-96: Outside borders on continuous tables work as expected.", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf2/test96.rtf")
+    
+    dat <- iris
+    
+    
+    tbl <- create_table(dat, continuous = TRUE, borders = "outside") %>%
+      # titles("My Title") %>%
+      footnotes("My footnotes", blank_row = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF",
+                         font = "Arial", orientation = "portrait") %>%
+      add_content(tbl) %>%
+      footnotes("Here", footer = TRUE)
+    
+    res <- write_report(rpt)
+    
+    
+    # file.show(res$modified_path)
+    
+    expect_equal(file.exists(fp), TRUE)
+    # expect_equal(res$pages, 3)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
 
 # User Tests --------------------------------------------------------------
 

@@ -272,6 +272,9 @@ paginate_content_docx <- function(rs, ls) {
 
       } 
     }
+    
+    if (cntnt$page_break == TRUE | last_page_lines >= rs$body_line_count)
+      last_page_lines <- 0
 
     ls[[i]]$pages[[length(pgs)]] <- last_page
     

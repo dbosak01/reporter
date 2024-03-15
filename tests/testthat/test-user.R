@@ -1179,3 +1179,170 @@ test_that("user16: Label row does not create extra blank spaces.", {
   
 })
 
+
+
+test_that("user17: Dedupe works as expected on hemo table", {
+  
+  if (dev) {
+  # Sample Data
+  hemo <- read.table(header = TRUE, sep = ",", text = '
+labtest,tmtnc,tmtn,swmgrade,variable,c0,c1,c2,c3,c4,c7,pagebrk
+HEMO-HIGH,ARM A,1,7,NG,76  98.7%,75  98.7%,0,0,0,1   1.3%,1
+HEMO-HIGH,ARM A,1,8,Missing,1   1.3%,1 100.0%,0,0,0,0,1
+HEMO-HIGH,ARM A,1,9,Total,77 100.0%,76  98.7%,0,0,0,1   1.3%,1
+HEMO-HIGH,ARM B,2,7,NG,84  96.6%,82  97.6%,0,0,0,2   2.4%,1
+HEMO-HIGH,ARM B,2,8,Missing,3   3.4%,3 100.0%,0,0,0,0,1
+HEMO-HIGH,ARM B,2,9,Total,87 100.0%,85  97.7%,0,0,0,2   2.3%,1
+HEMO-HIGH,ARM C,3,7,NG,45 100.0%,41  91.1%,0,0,0,4   8.9%,2
+HEMO-HIGH,ARM C,3,8,Missing,0,0,0,0,0,0,2
+HEMO-HIGH,ARM C,3,9,Total,45 100.0%,41  91.1%,0,0,0,4   8.9%,2
+HEMO-LOW,ARM A,1,1,Grade 0,22  28.6%,2   9.1%,7  31.8%,6  27.3%,7  31.8%,0,1
+HEMO-LOW,ARM A,1,3,Grade 1,38  49.4%,0,14  36.8%,14  36.8%,10  26.3%,0,1
+HEMO-LOW,ARM A,1,4,Grade 2,13  16.9%,0,1   7.7%,0,11  84.6%,1   7.7%,1
+HEMO-LOW,ARM A,1,5,Grade 3,3   3.9%,0,0,1  33.3%,2  66.7%,0,1
+HEMO-LOW,ARM A,1,8,Missing,1   1.3%,0,0,1 100.0%,0,0,1
+HEMO-LOW,ARM A,1,9,Total,77 100.0%,2   2.6%,22  28.6%,22  28.6%,30  39.0%,1   1.3%,1
+HEMO-LOW,ARM B,2,1,Grade 0,23  26.4%,2   8.7%,3  13.0%,11  47.8%,7  30.4%,0,1
+HEMO-LOW,ARM B,2,3,Grade 1,41  47.1%,0,4   9.8%,18  43.9%,18  43.9%,1   2.4%,1
+HEMO-LOW,ARM B,2,4,Grade 2,17  19.5%,0,1   5.9%,2  11.8%,13  76.5%,1   5.9%,1
+HEMO-LOW,ARM B,2,5,Grade 3,3   3.4%,0,0,0,3 100.0%,0,1
+HEMO-LOW,ARM B,2,8,Missing,3   3.4%,0,1  33.3%,0,2  66.7%,0,1
+HEMO-LOW,ARM B,2,9,Total,87 100.0%,2   2.3%,9  10.3%,31  35.6%,43  49.4%,2   2.3%,1
+HEMO-LOW,ARM C,3,1,Grade 0,14  31.1%,2  14.3%,4  28.6%,4  28.6%,2  14.3%,2  14.3%,2
+HEMO-LOW,ARM C,3,3,Grade 1,21  46.7%,1   4.8%,5  23.8%,4  19.0%,10  47.6%,1   4.8%,2
+HEMO-LOW,ARM C,3,4,Grade 2,6  13.3%,0,0,1  16.7%,4  66.7%,1  16.7%,2
+HEMO-LOW,ARM C,3,5,Grade 3,4   8.9%,0,0,1  25.0%,3  75.0%,0,2
+HEMO-LOW,ARM C,3,8,Missing,0,0,0,0,0,0,2
+HEMO-LOW,ARM C,3,9,Total,45 100.0%,3   6.7%,9  20.0%,10  22.2%,19  42.2%,4   8.9%,2')
+  
+
+  library(dplyr)
+  library(fmtr)
+  
+  # Set variables
+  program.name <- "t_ctcshift_hem"
+  program.output <- "user17"
+  program.timestamp <- "2001-01-01 12:00"
+  program.dir <- base_path
+
+  
+  # Change column names to lower case
+  colnames(hemo) <- tolower(colnames(hemo)) 
+  
+
+  
+  fmt1 <- value(condition(x == "HEMO-HIGH", "Hemoglobin (G/L) - HIGH DIRECTION"),
+                condition(x == "HEMO-LOW", "Hemoglobin (g/L) - LOW DIRECTION"),
+                condition(x == "LEUK-HIGH", "Leukocytes (GI/L) - HIGH DIRECTION"),
+                condition(x == "LEUK-LOW", "Leukocytes (GI/L) - LOW DIRECTION"))
+  
+  
+  fmt2 <- value(condition(x == "ARM A", "Ruxolitinib 15 mg BID (N=77)"),
+                condition(x == "ARM B", "Ruxolitinib 5 mg BID (N=87)"),
+                condition(x == "ARM C", "Placebo (N=45)"))
+  
+
+  ftnts <- list()
+  
+  base_ftnt <-
+    c("[1] The percentages were calculated using the baseline total as the denominator.",                                      
+      paste("[2] For each row, the percentages were calculated using the number of participants",
+            "with given grade at baseline as the denominator; worst value on study is the worst",
+            "grade observed post-baseline for a given participant."))
+  
+  ftnts[["HEMO-HIGH"]] <- 
+    c(base_ftnt,              
+      "-  Grade 0 = Below Grade 1 and any grade in the other direction.",                                                     
+      "-  For baseline NG means that grade does not apply at baseline.",                                                     
+      "-  Grade 1 = Greater than ULN and increase from baseline of  >0 - 2 g/dL;",                                           
+      "Grade 2 = Greater than ULN and increase from baseline of  >2 - 4 g/dL;",                                            
+      "Grade 3 = Greater than ULN and increase from baseline of  >4 g/dL. ")
+  
+  
+  ftnts[["HEMO-LOW"]] <-   
+    c(base_ftnt,           
+      "-  Grade 0 = Below Grade 1 and any grade in the other direction.")
+  
+
+
+  pth <- file.path(program.dir, "user", program.output)  
+  
+
+  rpt <- create_report(pth, font = "Courier", font_size = 9)  %>% 
+    set_margins(top = 1.0, left = 1, right = 1, bottom = .5) %>%
+    options_fixed(line_count = 51) %>% 
+    
+    titles("Table 3.3.3.1", 
+           paste("Shift Summary of Hematology Laboratory Values", 
+                 "in CTC Grade - to the Worst Abnormal Value"),
+           "(Safety Population)", bold = TRUE, font_size = 9) %>%
+    page_header(left = c("PROTOCOL: DIDA 00001-123", 
+                         "DRUG/INDICATION: DIDA00001/COMPOUND-ASSOCIATED STUDY", 
+                         "TLF Version: Final Database Lock (21APR2021)"),
+                right = c("Page [pg] of [tpg]",  "DATABASE VERSION: 10MAY2023", 
+                          "TASK: Primary Analysis")) %>% 
+    footnotes(paste0("Program: ", program.name, sep=""), 
+              "DATE(TIME): 2001-12-01",
+              blank_row = "none", borders = "top", columns = 2, footer = TRUE)  %>%
+    footnotes("Laboratory grading is based on CTCAE Version 5.",
+              "Reference: Listing 2.8.1.1, 2.8.1.2", footer = TRUE )
+  
+  labtests <- names(table(hemo$labtest))
+  
+
+  for (i in seq_len(length(labtests))) {
+    
+
+    lb <- labtests[i] 
+    
+
+    ftnt <- ftnts[[lb]]
+    
+
+    table_hemo <- hemo %>% 
+      dplyr::filter(labtest==lb) %>%
+      mutate(labtest = fapply(labtest, fmt1),
+             tmtnc = fapply(tmtnc, fmt2)) %>%
+      select(labtest, tmtnc, tmtn, swmgrade,variable, c0,c1,c2,c3,c4,c7, pagebrk) %>% 
+      arrange(labtest, tmtn, swmgrade) 
+    
+    tbl <- create_table(table_hemo,
+                        show_cols = c("none"), 
+                        borders = "top",
+                        width = 9) %>%
+      # page_by(labtest, label = "Laboratory Test (unit):", borders = "none", 
+      #         blank_row = "none") %>% 
+    #  footnotes (ftnt, blank_row ="above" ) %>% 
+      column_defaults(width=.1) %>%
+      # spanning_header(variable, c0, label="Baseline [1]") %>%
+      # spanning_header(c1, c7, label="Worst Post-Baseline Value [2]") %>%
+      define(tmtnc, dedupe = TRUE, align = "left", label = "Treatment Group", 
+             width=3) %>%
+      define(tmtn, blank_after = TRUE, visible = FALSE) %>%
+      define(variable, align="left", label="Grade", width=.8) %>%
+      define(c0, align="left", label="n  (%)", width=1)# %>%
+      #define(c1,   align = "left", label = "Grade 0\n n  (%)", width=1)  %>%
+     # define(c2,   align = "left", label = "Grade 1\n n  (%)", width=1) # %>%
+     # define(c3,   align = "left", label = "Grade 2\n n  (%)", width=1) # %>%
+      #define(c4,   align = "left", label = "Grade 3\n n  (%)", width=1) # %>%
+      #define(c7,   align = "left", label = "Missing\n n  (%)", width=1)
+    
+    rpt <- rpt |> add_content(tbl, blank_row = "none", page_break = TRUE) 
+    
+  }
+  
+
+  res <- write_report(rpt, output_type = "TXT")
+  
+  expect_equal(file.exists(res$modified_path), TRUE)
+  # View the report
+  # file.show(res$modified_path)
+  # file.show(logpth)
+  
+  } else {
+    
+    
+    expect_equal(TRUE, TRUE) 
+  }
+  
+})

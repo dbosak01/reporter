@@ -273,7 +273,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders, 
-                            ts$first_row_blank, ts$continuous, styles)
+                            ts$first_row_blank, ts$continuous, styles, pgind)
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -892,7 +892,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                               frb, continuous = FALSE, styles) {
+                               frb, continuous = FALSE, styles, pgind) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -916,6 +916,17 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   brdrs <- tbrdrs
   if (all(tbrdrs == "body"))
     brdrs <- c("top", "bottom", "left", "right")
+  
+  # Deal with outside borders on continuous tables
+  if (continuous & "outside" %in% brdrs) {
+    if ("first" %in% pgind & !"last" %in% pgind) {
+      brdrs <- c("top", "left", "right") 
+    } else if (!"first" %in% pgind & "last" %in% pgind) {
+      brdrs <- c("bottom", "left", "right") 
+    } else if (!"first" %in% pgind & !"last" %in% pgind) {
+      brdrs <- c("left", "right") 
+    }
+  }
   
   # Get line height.  Don't want to leave editor default.
   rh <- rs$row_height
