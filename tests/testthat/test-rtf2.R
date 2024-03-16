@@ -978,6 +978,9 @@ test_that("rtf2-27: Plot with page by on plot works as expected.", {
 
   fp <- file.path(base_path, "rtf2/test27.rtf")
 
+  fmt <- value(condition(x == 4, "4 Cylinder"),
+               condition(x == 6, "6 Cylinder"),
+               condition(x == 8, "8 Cylinder"))
 
   dat <- mtcars[order(mtcars$cyl), ]
 
@@ -989,7 +992,7 @@ test_that("rtf2-27: Plot with page by on plot works as expected.", {
 
   plt <- create_plot(p, height = 4, width = 8) %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
-    page_by(cyl, "Cylinders: ") %>%
+    page_by(cyl, "Cylinders: ", format = fmt) %>%
     footnotes("* Motor Trend, 1974")
 
   rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size = fsz) %>%

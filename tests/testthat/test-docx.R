@@ -504,6 +504,9 @@ test_that("docx14: Plot with page by on plot works as expected.", {
 
   fp <- file.path(base_path, "docx/test14.docx")
 
+  fmt <- value(condition(x == 4, "4 Cylinder"),
+               condition(x == 6, "6 Cylinder"),
+               condition(x == 8, "8 Cylinder"))
 
   dat <- mtcars[order(mtcars$cyl), ]
 
@@ -518,7 +521,8 @@ test_that("docx14: Plot with page by on plot works as expected.", {
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot",
            borders = "all",
            blank_row = "both") %>%
-    page_by(cyl, "Cylinders: ", borders = "all", blank_row = "both") %>%
+    page_by(cyl, "Cylinders: ", borders = "all", blank_row = "both",
+            format = fmt) %>%
     footnotes("* Motor Trend, 1974", borders = "all", valign = "top",
               blank_row = "both")
 

@@ -919,12 +919,19 @@ test_that("pdf2-22: Page by works as expected.", {
   fp <- file.path(base_path, "pdf2/test22.pdf")
 
   dat <- iris
+  dat$Species <- as.character(dat$Species)
+  
+  library(fmtr)
+  
+  fmt <- value(condition(x == "setosa", "Setosa"),
+               condition(x == "versicolor", "Versicolor"),
+               condition(x == "virginica", "Virginica"))
 
   tbl <- create_table(dat, borders = "all") %>%
     titles("Table 1.0", "My Nice Report with a Page By", borders = "outside", 
            blank_row = "none") %>%
     page_by(Species, label = "Species", align = "center", borders = "all", 
-            blank_row = "none") %>%
+            blank_row = "none", format = fmt) %>%
     footnotes("My footnote 1", "Page [pg] of [tpg]", borders = "none", align = "right")
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt,
@@ -1097,6 +1104,11 @@ test_that("pdf2-27: Plot with page by on plot works as expected.", {
   
   if (dev) {
     library(ggplot2)
+    library(fmtr)
+    
+    fmt <- value(condition(x == 4, "4 Cylinder"),
+                 condition(x == 6, "6 Cylinder"),
+                 condition(x == 8, "8 Cylinder"))
   
     fp <- file.path(base_path, "pdf2/test27.pdf")
   
@@ -1112,7 +1124,8 @@ test_that("pdf2-27: Plot with page by on plot works as expected.", {
     plt <- create_plot(p, height = 4, width = 8, borders = "all") %>%
       titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none",
              borders = "all") %>%
-      page_by(cyl, "Cylinders2: ", blank_row = "below", borders = "all") %>%
+      page_by(cyl, "Cylinders2: ", blank_row = "below", 
+              borders = "all", format = fmt) %>%
       footnotes("* Motor Trend, 1974", borders = "all")
   
     rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%

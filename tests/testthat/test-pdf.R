@@ -639,7 +639,10 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
 
     fp <- file.path(base_path, "pdf/test19.pdf")
 
-
+    fmt <- value(condition(x == 4, "4 Cylinder"),
+                 condition(x == 6, "6 Cylinder"),
+                 condition(x == 8, "8 Cylinder"))
+    
     dat <- mtcars[order(mtcars$cyl), ]
 
     p <- ggplot(dat, aes(x=disp, y=mpg)) + geom_point()
@@ -650,7 +653,8 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
 
     plt <- create_plot(p, height = 4, width = 8) %>%
       titles("Figure 1.0", "MTCARS Mileage By Displacement", blank_row = "none") %>%
-      page_by(cyl, "Cylinders: ", align = "left", blank_row = "none") %>%
+      page_by(cyl, "Cylinders: ", align = "left", 
+              blank_row = "none", format = fmt) %>%
       footnotes("* Motor Trend, 1974")
 
     rpt <- create_report(fp, output_type = "PDF") %>%
