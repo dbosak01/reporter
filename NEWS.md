@@ -1,6 +1,9 @@
 # reporter 1.4.4
 
-* Bug fix on dedupe functionality. 
+* Fixed bug on dedupe functionality. 
+* Fixed bug on plot page by format.
+* Fixed bug on continuous table outside borders.
+* Fixed bug with early page break when appending content dynamically.
 
 # reporter 1.4.3
 

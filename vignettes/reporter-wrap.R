@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 #    define(cyl, label = "Cylinders", format = "%.1f") %>%
 #    define(disp, label = "Displacement") %>%
 #    define(hp, label = "Horsepower", page_wrap = TRUE) %>%
-#    define(drat, visible = FALSE) %>%
+#    define(drat) %>%
 #    define(wt, label = "Weight") %>%
 #    define(qsec, label = "Quarter Mile Time", width = 1.5)
 #  
