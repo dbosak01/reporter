@@ -3482,6 +3482,78 @@ test_that("rtf2-97: Page X of Y works as expected.", {
     expect_equal(TRUE, TRUE)
 })
 
+test_that("rtf2-98: Title header blank rows work as expected.", {
+  
+  
+  fp <- file.path(base_path, "rtf2/test98.rtf")
+  
+  dat <- iris
+  
+  tbl <- create_table(dat, width = 8.9, borders = "all") %>%
+    title_header("Table 1.0", "My Nice Table",
+                 right = c("Right1",
+                           "Right2", "Page [pg] of [tpg]"),
+                 blank_row = "both", borders = "all") 
+
+  
+  rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                       font_size = 10, orientation = "landscape") %>%
+    page_header("Left", "Right", blank_row = "below") %>%
+    set_margins(top = 1, bottom = 1) %>%
+    add_content(tbl) %>%
+    footnotes("My footnote 1", "My footnote 2") %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  res <- write_report(rpt)
+  res
+  res$column_widths
+  
+  expect_equal(file.exists(fp), TRUE)
+  expect_equal(res$pages, 7)
+  expect_equal(length(res$column_widths[[1]]), 5)
+  
+  
+})
+
+
+test_that("rtf2-99: Multi page table removes blank spaces.", {
+  
+  if (dev == TRUE) {
+    
+    
+    fp <- file.path(base_path, "rtf2/test99.rtf")
+    
+    dat1 <- iris[1:10, ]
+    dat2 <- iris[11:20, ]
+    dat3 <- iris[21:30, ]
+    
+    
+    tbl1 <- create_table(dat1, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises1") 
+    
+    tbl2 <- create_table(dat2, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises2")
+
+    tbl3 <- create_table(dat3, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises3")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = 12, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl1, blank_row = "none") |> 
+      add_content(tbl2, blank_row = "none") |> 
+      add_content(tbl3, blank_row = "none") 
+      
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 3)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+})
+
 
 # User Tests --------------------------------------------------------------
 

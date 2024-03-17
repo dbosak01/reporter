@@ -1499,6 +1499,44 @@ test_that("html43: Page by with wrap works as expected.", {
   
 })
 
+test_that("html-44: Multi page table removes blank spaces.", {
+  
+  if (dev == TRUE) {
+    
+    
+    fp <- file.path(base_path, "html/test44.html")
+    
+    dat1 <- iris[1:10, ]
+    dat2 <- iris[11:20, ]
+    dat3 <- iris[21:30, ]
+    
+    
+    tbl1 <- create_table(dat1, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises1") 
+    
+    tbl2 <- create_table(dat2, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises2")
+    
+    tbl3 <- create_table(dat3, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises3")
+    
+    rpt <- create_report(fp, output_type = "HTML", font = fnt,
+                         font_size = 12, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl1, blank_row = "none") |> 
+      add_content(tbl2, blank_row = "none") |> 
+      add_content(tbl3, blank_row = "none") 
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 3)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+})
+
 
 # User Tests --------------------------------------------------------------
 
