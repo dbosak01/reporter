@@ -3410,6 +3410,7 @@ test_that("test95: Page break with blank row after works as expected.", {
 
 })
 
+
 test_that("rtf2-96: Outside borders on continuous tables work as expected.", {
   
   if (dev) {
@@ -3446,6 +3447,40 @@ test_that("rtf2-96: Outside borders on continuous tables work as expected.", {
   
 })
 
+test_that("rtf2-97: Page X of Y works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    
+    fp <- file.path(base_path, "rtf2/test97.rtf")
+    
+    dat <- iris
+    
+    
+    tbl <- create_table(dat, borders = "none") %>%
+      titles("Table 1.0", "My Nice Irises", "Another Title", "Page [pg] of [tpg]") %>%
+      define(Sepal.Length, label = "Sepal Length", width = 1, align = "center") %>%
+      define(Sepal.Width, label = "Sepal Width", width = 1, align = "centre") %>%
+      define(Species, blank_after = TRUE) %>%
+      footnotes("Table footnote Page [pg] of [tpg]")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = 12, orientation = "landscape") %>%
+      titles("Report Title", "Page [pg] of [tpg]") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Page [pg] of [tpg]")) %>%
+      add_content(tbl, blank_row = "none") %>%
+      page_footer("Left1", "Center1", "Page [pg] of [tpg]") %>%
+      footnotes("My footnote 1", "My footnote 2", "Page [pg] of [tpg]")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 8)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+})
 
 
 # User Tests --------------------------------------------------------------

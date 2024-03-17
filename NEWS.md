@@ -1,9 +1,10 @@
 # reporter 1.4.4
 
 * Fixed bug on dedupe functionality. 
-* Fixed bug on plot page by format.
+* Fixed bug on `page_by()` format for `create_plot()`.
 * Fixed bug on continuous table outside borders.
 * Fixed bug with early page break when appending content dynamically.
+* Fixed bug on page numbers in title for RTF.
 
 # reporter 1.4.3
 

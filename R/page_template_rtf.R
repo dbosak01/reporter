@@ -403,9 +403,9 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
             mxlns <- tmp$lines
 
           # Add bold if needed
-          tb <- tmp$rtf
+          tb <- get_page_numbers_rtf(tmp$rtf, FALSE)
           if (ttls$bold)
-            tb <- paste0("\\b ", tmp$rtf, "\\b0")
+            tb <- paste0("\\b ", get_page_numbers_rtf(tmp$rtf, FALSE), "\\b0")
           
           # Construct cell from constituent parts
           ret <- append(ret, paste0(b, "\\cellx", cwa, 
