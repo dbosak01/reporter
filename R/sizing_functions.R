@@ -993,8 +993,12 @@ get_table_cols <- function(x, control_cols) {
       
       if (show_all == FALSE & def$visible)
         ret[length(ret) + 1] <- def$var_c
-      else if (show_all == TRUE & def$visible == FALSE)
-        ret <- ret[!ret %in% def$var_c]
+      #else if (show_all == TRUE & def$visible == FALSE)
+      else if (def$visible == FALSE) {
+        if (def$var_c %in% ret) {
+          ret <- ret[!ret %in% def$var_c]
+        }
+      }
     }
     
     ret <- unique(ret)

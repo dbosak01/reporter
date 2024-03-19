@@ -5,6 +5,7 @@
 * Fixed bug on continuous table outside borders.
 * Fixed bug with early page break when appending content dynamically.
 * Fixed bug on page numbers in title for RTF.
+* Fixed bug where show_cols was overriding `define()` visible = FALSE. 
 
 # reporter 1.4.3
 

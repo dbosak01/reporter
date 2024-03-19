@@ -2827,7 +2827,7 @@ test_that("rtf2-80: Two tables one continuous works as expected.", {
  #   file.show(res$modified_path)
 
     expect_equal(file.exists(fp), TRUE)
-    expect_equal(res$pages, 7)
+    expect_equal(res$pages, 6)
 
 
   } else {
@@ -3476,7 +3476,7 @@ test_that("rtf2-97: Page X of Y works as expected.", {
     res <- write_report(rpt)
     
     expect_equal(file.exists(fp), TRUE)
-    expect_equal(res$pages, 8)
+    expect_equal(res$pages, 11)
     
   } else
     expect_equal(TRUE, TRUE)

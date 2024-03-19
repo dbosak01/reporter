@@ -726,7 +726,8 @@ test_that("test19: show_cols 'none' parameter on table works as expected.", {
   tbl <- create_table(mtcars[1:10, ], show_cols = "none") %>%
     define(mpg) %>% 
     define(cyl) %>% 
-    define(vs)
+    define(vs) %>%
+    define(drat, visible = FALSE)
   
   rpt <- create_report(fp) %>% 
     titles("MTCARS Data Frame", align = "left") %>% 
@@ -750,9 +751,10 @@ test_that("test20: show_cols 'some' parameter on table works as expected.", {
   fp <- file.path(base_path, "output/test20.out")
 
   tbl <- create_table(mtcars[1:10, ], 
-                      show_cols = c("vs", "mpg", "cyl", "disp")) %>% 
+                      show_cols = c("vs", "mpg", "cyl", "disp", "drat")) %>% 
     define(mpg, label = "Miles Per Gallon") %>% 
-    define(vs, label = "")
+    define(vs, label = "") %>%
+    define(drat, visible = FALSE)
   
   
   rpt <- create_report(fp) %>% 

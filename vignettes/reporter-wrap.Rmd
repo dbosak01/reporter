@@ -39,7 +39,7 @@ tbl <- create_table(dat, show_cols = 1:8) %>%
   define(cyl, label = "Cylinders", format = "%.1f") %>% 
   define(disp, label = "Displacement") %>% 
   define(hp, label = "Horsepower", page_wrap = TRUE) %>% 
-  define(drat) %>% 
+  define(drat, visible = FALSE) %>% 
   define(wt, label = "Weight") %>% 
   define(qsec, label = "Quarter Mile Time", width = 1.5) 
 
