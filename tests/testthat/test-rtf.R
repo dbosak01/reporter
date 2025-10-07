@@ -21,7 +21,7 @@ test_that("rtf1: Simplest table works as expected.", {
     
   fp <- file.path(base_path, "rtf/test1.rtf")
   
-  rpt <- create_report(fp, output_type = "RTF") %>% 
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>% 
     add_content(create_table(mtcars[1:10, ]), align = "left")
   
   res <- write_report(rpt)
@@ -43,7 +43,7 @@ test_that("rtf2: Simplest table with title works as expected.", {
   tbl <- create_table(mtcars[1:10, ]) %>% 
     define(vs, visible = FALSE)
   
-  rpt <- create_report(fp, output_type = "RTF") %>% 
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>% 
     options_fixed(font_size = 10) %>% 
     titles("MTCARS Data Frame", align = "left") %>% 
     add_content(tbl)
@@ -90,7 +90,7 @@ test_that("rtf3: Table with break between sections works as expected.", {
            align = "right")
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     options_fixed(font_size = 10) %>% 
     page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
     titles("Table 1.0", "Analysis Data Subject Listing", 
@@ -158,7 +158,7 @@ test_that("rtf5: Table with long cell and label values wraps as expected.", {
            dedupe = TRUE)
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     titles("Table 1.0", align = "center") %>%
     
     add_content(tbl1)
@@ -195,7 +195,7 @@ test_that("rtf6: Table with spanning headers works as expected.", {
     define(vehicle, label = "Vehicle") %>% 
     define(mpg, format = "%.1f")
   
-  rpt <- create_report(fp, output_type = "RTF") %>% 
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>% 
     add_content(tbl) %>% 
     titles("Table 1.0", "MTCARS Subset Test")
   
@@ -219,7 +219,7 @@ test_that("rtf7: Simplest RTF report with 1 in margins works as expected.", {
     column_defaults(width = .5) %>%
     define(vs, visible = FALSE)
 
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study") %>%
     titles("MTCARS Data Frame") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -321,7 +321,7 @@ test_that("rtf9: Simplest RTF Plot works as expected.", {
   plt <- create_plot(p, height = 4, width = 8)
 
 
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -357,7 +357,7 @@ test_that("rtf10: RTF Table with Plot works as expected.", {
   tbl <- create_table(mtcars[1:10, ])
 
 
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -392,7 +392,7 @@ test_that("rtf11: RTF Table with Plot on same page works as expected.", {
   tbl <- create_table(mtcars[1:3, ])
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", blank_row = "none") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -421,7 +421,8 @@ test_that("rtf12: Table and Text output works as expected.", {
   tbl1 <- mtcars[1:10, ]
   tbl2 <- mtcars[11:20, ]
   
-  rpt <- create_report(fp, orientation = "portrait", output_type = "RTF") %>%
+  rpt <- create_report(fp, orientation = "portrait", output_type = "RTF", 
+                       font = "fixed") %>%
     titles("Report 5.0", "Table and Text Report") %>% 
     page_header(left = "Client: ABC", right = "Study: 123") %>% 
     add_content(create_table(tbl1), page_break = FALSE) %>% 
@@ -451,7 +452,8 @@ test_that("rtf13: Very Long text output works as expected.", {
     
     l <- paste(rep(cnt, 1000), collapse = "\n\n")
     
-    rpt <- create_report(fp, orientation = "portrait", output_type = "RTF") %>%
+    rpt <- create_report(fp, orientation = "portrait", output_type = "RTF", 
+                         font = "fixed") %>%
       titles("Report 6.0", "Very long Text Report") %>% 
       page_header(left = "Client: ABC", right = "Study: 123") %>% 
       add_content(create_text(l)) %>% 
@@ -478,7 +480,8 @@ test_that("rtf14: Simplest portrait table works as expected.", {
   
   fp <- file.path(base_path, "rtf/test14.rtf")
   
-  rpt <- create_report(fp, output_type = "RTF", orientation = "portrait") %>% 
+  rpt <- create_report(fp, output_type = "RTF", orientation = "portrait", 
+                       font = "fixed") %>% 
     page_header("left", "right") %>% 
     titles("Table 1.0", "MTCARS Data Frame", borders = "all") %>% 
     add_content(create_table(mtcars)) %>% 
@@ -501,7 +504,8 @@ test_that("rtf15: Simplest landscape table works as expected.", {
   
   fp <- file.path(base_path, "rtf/test15.rtf")
   
-  rpt <- create_report(fp, output_type = "RTF", orientation = "landscape") %>% 
+  rpt <- create_report(fp, output_type = "RTF", orientation = "landscape", 
+                       font = "fixed") %>% 
     page_header("left", "right") %>% 
     titles("Table 1.0", "MTCARS Data Frame", borders = "all") %>% 
     add_content(create_table(mtcars)) %>% 
@@ -524,7 +528,8 @@ test_that("test16: 10 pt report with units in cm works as expected.", {
   fp <- file.path(base_path, "rtf/test16.rtf")
   
   
-  rpt <- create_report(fp, units = "cm", output_type = "RTF") %>%
+  rpt <- create_report(fp, units = "cm", output_type = "RTF", 
+                       font = "fixed") %>%
     page_header("Client: Experis", "Study: ABC") %>% 
     titles("IRIS Data Frame") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
@@ -549,7 +554,8 @@ test_that("test17: 12 pt report with units in cm works as expected.", {
   fp <- file.path(base_path, "rtf/test17.rtf")
   
   
-  rpt <- create_report(fp, units = "cm", output_type = "RTF") %>%
+  rpt <- create_report(fp, units = "cm", output_type = "RTF", 
+                       font = "fixed") %>%
     options_fixed(font_size = 12) %>% 
     page_header("Client: Experis", "Study: ABC") %>% 
     titles("IRIS Data Frame") %>%
@@ -587,7 +593,7 @@ test_that("rtf18: Plot with page by on report works as expected.", {
   plt <- create_plot(p, height = 4, width = 8)
   
 
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", 
            blank_row = "none", borders = "all") %>%
@@ -636,7 +642,7 @@ test_that("rtf19: Plot with page by on plot works as expected.", {
     page_by(cyl, "Cylinders: ", format = fmt) %>% 
     footnotes("* Motor Trend, 1974") 
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt) %>%
@@ -669,7 +675,8 @@ test_that("test20: Title Header on Plot works as expected.", {
                  right = c("Client", "Page", "More"), borders = "all") %>% 
     footnotes("* Motor Trend, 1974", borders = "all")
   
-  rpt <- create_report(fp, units = "inches", output_type = "RTF") %>%
+  rpt <- create_report(fp, units = "inches", output_type = "RTF", 
+                       font = "fixed") %>%
     options_fixed(font_size = 12) %>% 
     add_content(plt) 
   
@@ -734,7 +741,8 @@ test_that("test21: 8 pt report with units in inches works as expected.", {
   
   tbl <- create_table(iris) 
   
-  rpt <- create_report(fp, units = "inches", output_type = "RTF") %>%
+  rpt <- create_report(fp, units = "inches", output_type = "RTF", 
+                       font = "fixed") %>%
     page_header("Client: Experis", "Study: ABC") %>% 
     titles("IRIS Data Frame") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
@@ -759,7 +767,8 @@ test_that("test22: 8 pt report with units in cm works as expected.", {
   fp <- file.path(base_path, "rtf/test22.rtf")
   
   
-  rpt <- create_report(fp, units = "cm", output_type = "RTF") %>%
+  rpt <- create_report(fp, units = "cm", output_type = "RTF", 
+                       font = "fixed") %>%
     page_header("Client: Experis", "Study: ABC") %>% 
     titles("IRIS Data Frame") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]") %>% 
@@ -796,7 +805,7 @@ test_that("rtf23: RTF Table with Plot and borders works as expected.", {
   tbl <- create_table(mtcars[1:10, ])
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "all") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -838,7 +847,7 @@ test_that("rtf24: RTF Table with Plot and borders works as expected.", {
     footnotes("My table footnotes", borders = "all", align = "right")
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
@@ -872,7 +881,7 @@ test_that("rtf25: RTF Table with custom options works as expected.", {
     footnotes("My table footnotes", borders = "all", align = "right")
   
   
-  rpt <- create_report(fp) %>%
+  rpt <- create_report(fp, font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(tbl) %>%
@@ -900,7 +909,7 @@ test_that("rtf26: line_size and line_count overrides work as expected.", {
   fp <- file.path(base_path, "rtf/test26.rtf")
   
   
-  rpt <- create_report(fp) %>%
+  rpt <- create_report(fp, font = "fixed") %>%
     options_fixed(line_size = 40, line_count = 30) %>% 
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) 
@@ -932,7 +941,7 @@ test_that("rtf27: Plot Borders work as expected.", {
     titles("My plot", borders = "none") %>% 
     footnotes("My plot footnotes", borders = "none")
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(plt, align = "right") %>%
@@ -954,7 +963,7 @@ test_that("rtf28: Table Borders that spans multiple pages work as expected.", {
   
   fp <- file.path(base_path, "rtf/test28.rtf")
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris, borders = "all")) %>% 
     footnotes("Here is a footnote")
@@ -980,7 +989,7 @@ test_that("rtf29: Simplest RTF Plot with valign top works as expected.", {
   plt <- create_plot(p, height = 4, width = 8)
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -1016,7 +1025,7 @@ test_that("rtf30: Simplest RTF Plot with valign bottom works as expected.", {
     footnotes("* Motor Trend, 1974", valign = "bottom")
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -1046,7 +1055,7 @@ test_that("rtf31: Simplest RTF Text with valign top works as expected.", {
   txt <- create_text(cnt, width = 6)
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Text 1.0", "MTCARS Miles per Cylinder Text") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -1077,7 +1086,7 @@ test_that("rtf32: Simplest RTF Text with valign bottom works as expected.", {
   txt <- create_text(cnt, width = 6) %>%
     footnotes("* Motor Trend, 1974", valign = "bottom")
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -1161,7 +1170,7 @@ test_that("rtf34: 9 pt font inches works as expected.", {
   fp <- file.path(base_path, "rtf/test34.rtf")
   
   rpt <- create_report(fp, output_type = "RTF", font_size = 9, 
-                       orientation = "portrait") %>%
+                       orientation = "portrait", font = "fixed") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) %>%
@@ -1184,7 +1193,7 @@ test_that("rtf35: 9 pt font cm works as expected.", {
   fp <- file.path(base_path, "rtf/test35.rtf")
   
   rpt <- create_report(fp, output_type = "RTF", font_size = 9, 
-                       orientation = "portrait") %>%
+                       orientation = "portrait", font = "fixed") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) %>%
@@ -1207,7 +1216,7 @@ test_that("rtf36: 11 pt font inches works as expected.", {
   fp <- file.path(base_path, "rtf/test36.rtf")
   
   rpt <- create_report(fp, output_type = "RTF", font_size = 11, 
-                       orientation = "portrait") %>%
+                       orientation = "portrait", font = "fixed") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) %>%
@@ -1230,7 +1239,7 @@ test_that("rtf37: 11 pt font cm works as expected.", {
   fp <- file.path(base_path, "rtf/test37.rtf")
   
   rpt <- create_report(fp, output_type = "RTF", font_size = 11, 
-                       orientation = "portrait") %>%
+                       orientation = "portrait", font = "fixed") %>%
     page_header("left", "right") %>%
     titles("IRIS Data Frame") %>%
     add_content(create_table(iris)) %>%
@@ -1265,7 +1274,7 @@ test_that("rtf38: RTF Image file works as expected.", {
   plt <- create_plot(pltpath, height = 4, width = 8)
   
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
@@ -1292,7 +1301,7 @@ test_that("rtf39: Blank after on invisible column.", {
   tbl <- create_table(iris, borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Left", "Right") %>%
     add_content(tbl) %>%
     page_footer("left", "", "right") %>%
@@ -1315,7 +1324,7 @@ test_that("rtf40: Page header width works as expected.", {
   tbl <- create_table(iris[1:10, ], borders = "all") %>%
     define(Species, blank_after = TRUE, visible = FALSE)
   
-  rpt <- create_report(fp, output_type = "RTF") %>%
+  rpt <- create_report(fp, output_type = "RTF", font = "fixed") %>%
     page_header("Left here is some stuff and more stuff trying to get out in the middle", 
                 "Right", width = 8) %>%
     add_content(tbl) %>%
@@ -1344,7 +1353,7 @@ test_that("rtf41: Custom page size works as expected.", {
   
   rpt <- create_report(fp, output_type = "RTF", 
                        paper_size = c(6.5, 7.5),
-                       orientation = "portrait") %>%
+                       orientation = "portrait", font = "fixed") %>%
     add_content(tbl) %>%
     page_header("left", "right") %>%
     page_footer("left", "", "right") %>%
@@ -1375,7 +1384,7 @@ test_that("rtf42: Symbols are proper orientation on portrait.", {
     
     
     rpt <- create_report(fp, output_type = "RTF", 
-                         orientation = "portrait") %>%
+                         orientation = "portrait", font = "fixed") %>%
       add_content(tbl)
     
     res <- write_report(rpt)
@@ -1407,7 +1416,7 @@ test_that("rtf43: Symbols are proper orientation on landscape.", {
     
     
     rpt <- create_report(fp, output_type = "RTF", 
-                         orientation = "landscape") %>%
+                         orientation = "landscape", font = "fixed") %>%
       add_content(tbl)
     
     res <- write_report(rpt)

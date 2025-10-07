@@ -68,6 +68,6 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e3.png"/>
+<img src="../man/images/e3.png" alt="Stub example image"/>
 
 Next: [Example 4: Table and Text](reporter-text.html)

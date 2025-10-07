@@ -25,24 +25,28 @@
 #' \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 #' details.
 #' 
-#' As of \strong{reporter} version 1.2.9, the \code{create_plot} function 
-#' also accepts a path to a JPEG stored on the file system instead of a 
+#' The function 
+#' also accepts a path to an image file stored on the file system instead of a 
 #' plot object.  This
 #' functionality was added to allow the user to create figures from other
 #' plotting packages.  If you pass an image path, the image will be inserted
-#' into the report at the location specified.  
+#' into the report at the location specified. The system supports JPEG images 
+#' for all output types that support graphics. EMF images are also supported for
+#' DOCX and RTF outputs. Note that EMF format may not render properly in 
+#' all operating environments, and JPEG is the preferred image type.
 #' 
 #' @param x The plot to create.  Specifically, this parameter should be 
 #' set to an object returned from a call to \code{\link[ggplot2]{ggplot}}
 #' or \code{\link[survminer]{ggsurvplot}}.  This parameter also accepts 
 #' a path to a JPEG file.  If a path is specified, the image will be appended
-#' to the report at the point the content object is added.
+#' to the report at the point the content object is added. For RTF and DOCX files, 
+#' the function additionally accepts a path to an EMF file.
 #' @param height The height of the plot in the specified units of measure. 
 #' @param width The width of the plot in the specified units of measure. 
 #' @param borders Whether and where to place a border. Valid values are 'top',
 #' 'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
 #' Default is 'none'.  The 'left', 'right', and 'outside' 
-#' border specifications only apply to RTF reports.
+#' border specifications do not apply to TXT reports.
 #' @return The plot specification.
 #' @family plot
 #' @seealso 
@@ -63,7 +67,7 @@
 #' # Create plot object
 #' plt <- create_plot(p, height = 4, width = 8)
 #'
-#' rpt <- create_report(tmp, output_type = "RTF") %>%
+#' rpt <- create_report(tmp, font = "Arial", output_type = "RTF") %>%
 #'   page_header("Client", "Study: XYZ") %>% 
 #'   titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
 #'   set_margins(top = 1, bottom = 1) %>%
@@ -1239,11 +1243,15 @@ create_plot_pages_docx<- function(rs, cntnt, lpg_rows, tmp_dir, imgCnt) {
   
   if (any(class(p) %in% c("character"))) {
     
-    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = ".jpg")
+    fx <- ".jpg"
+    if (grepl(".emf", p, fixed = TRUE))
+      fx <- ".emf"
+    
+    tmp_nm <- tempfile(tmpdir = tmp_dir, fileext = fx)
     
     file.copy(p, tmp_nm, overwrite = TRUE)
     
-    # Get rtf page bodies
+    # Get docx page bodies
     res <- get_plot_body_docx(plt, tmp_nm, cntnt$align, rs,
                               lpg_rows, cntnt$blank_row, NULL, NULL, 
                               FALSE, relIndex)
@@ -1395,7 +1403,7 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
     
   }
   
-  # Get image RTF codes
+  # Get image DOCX codes
   img <- get_image_docx(rID, algn, hgth, wdth)
   
   
@@ -1429,7 +1437,7 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
   ft <- paste0("</w:tc></w:tr></w:tbl>\n")
   
   
-  # Concat RTF codes for image
+  # Concat DOCX codes for image
   img <- paste0(hd, img, ft)
   
   # ** Do something with this **

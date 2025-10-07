@@ -60,7 +60,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/super.png"/>
+<img src="../man/images/super.png" alt="Superscript example image"/>
 
 
 ### Superscript and Subscript Functions
@@ -100,7 +100,7 @@ supports keywords for trademarks, currencies, mathematical symbols,
 logical symbols, Greek letters, and more. Here are a few 
 examples:
 
-<img src="../man/images/symbols.png"/>
+<img src="../man/images/symbols.png" alt="Symbols example image"/>
 
 
 ### Superscripts and Subscripts in Table Cells

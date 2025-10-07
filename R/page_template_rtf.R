@@ -703,10 +703,11 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
                                 cols, ftnts$borders)
           
           # Not all cells have titles
-          if (i > length(ftnts$footnotes))
+          if (i > length(ftnts$footnotes)) {
             vl <- ""
-          else 
+          } else { 
             vl <- ftnts$footnotes[[i]]
+          }
           
           # Deal with column alignments
           if (cols == 1) {

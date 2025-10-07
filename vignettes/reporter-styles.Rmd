@@ -87,7 +87,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/example12a.png"/>
+<img src="../man/images/example12a.png" alt="Styles example image A"/>
 
 ## Themes
 A Theme may be applied to a report using the function `add_style()` 
@@ -141,7 +141,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/example12b.png"/>
+<img src="../man/images/example12b.png" alt="Styles example image B"/>
 
 ## View/Modify a Theme
 Sometimes you may want to look at or modify an existing theme.  The function
@@ -222,23 +222,23 @@ write_report(rpt)
 
 
 ```
-<img src="../man/images/example12i.png"/>
+<img src="../man/images/example12i.png" alt="Styles example image I"/>
 
 #### Theme Gallery
 In addition to the SteelBlue theme shown above, there are six more themes.
 Here is a sample of each:
 
-<img src="../man/images/example12c.png"/>
+<img src="../man/images/example12c.png" alt="Styles example image C"/>
 
-<img src="../man/images/example12d.png"/>
+<img src="../man/images/example12d.png" alt="Styles example image D"/>
 
-<img src="../man/images/example12e.png"/>
+<img src="../man/images/example12e.png" alt="Styles example image E"/>
 
-<img src="../man/images/example12f.png"/>
+<img src="../man/images/example12f.png" alt="Styles example image F"/>
 
-<img src="../man/images/example12g.png"/>
+<img src="../man/images/example12g.png" alt="Styles example image G"/>
 
-<img src="../man/images/example12h.png"/>
+<img src="../man/images/example12h.png" alt="Styles example image H"/>
 
 ## Cell Styles
 
@@ -301,7 +301,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/example12j.png"/>
+<img src="../man/images/example12j.png" alt="Styles example image J"/>
 
 When a variable name is passed as the indicator value, this variable should 
 exist on the input dataset.  The indicator column should have TRUE or FALSE
@@ -346,7 +346,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/example12k.png"/>
+<img src="../man/images/example12k.png" alt="Styles example image K"/>
 
 Note that cell styling is available for all output types except TXT.
 Also note that the `cell_style()` object currently only supports "bold" styling.

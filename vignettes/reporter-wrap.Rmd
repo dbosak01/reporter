@@ -58,7 +58,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e6a.png"/>
-<img src="../man/images/e6b.png"/>
+<img src="../man/images/e6a.png"  alt="Page wrap example image 1"/>
+<img src="../man/images/e6b.png"  alt="Page wrap example image 2"/>
 
 Next: [Example 7: Page By](reporter-pageby.html)

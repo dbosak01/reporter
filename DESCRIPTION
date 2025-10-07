@@ -1,7 +1,7 @@
 Package: reporter
 Type: Package
 Title: Creates Statistical Reports 
-Version: 1.4.4
+Version: 1.4.5
 Authors@R: c( 
     person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
     person("Kevin", "Kramer", email = "kkrame02@amgen.com", role = "ctb"),
@@ -43,7 +43,8 @@ Suggests:
     covr,
     libr,
     devEMF, 
-    patchwork
+    patchwork, 
+    tools
 Imports: fmtr(>= 1.5.8),
          stringi,
          crayon,
@@ -53,5 +54,5 @@ Imports: fmtr(>= 1.5.8),
          zip, 
          withr,
          glue
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr

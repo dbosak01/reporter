@@ -43,8 +43,8 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e1a.png"/>
-<img src="../man/images/e1b.png"/>
-<img src="../man/images/e1c.png"/>
+<img src="../man/images/e1a.png" alt="Listing example page 1"/>
+<img src="../man/images/e1b.png" alt="Listing example page 2"/>
+<img src="../man/images/e1c.png" alt="Listing example page 3"/>
 
 Next: [Example 2: Table](reporter-table.html)

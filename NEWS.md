@@ -1,3 +1,9 @@
+# reporter 1.4.5
+
+* Added ability to import EMF files to RTF and DOCX outputs.
+* Changed default font on `create_report()` to "Courier" instead of "fixed".
+If you want a fixed-width report, set `font = "fixed"` explicitly.
+
 # reporter 1.4.4
 
 * Fixed bug on dedupe functionality. 

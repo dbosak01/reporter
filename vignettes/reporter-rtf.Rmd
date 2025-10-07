@@ -55,7 +55,7 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/rtf.png"/>
+<img src="../man/images/rtf.png" alt="RTF example image"/>
 
 
 Next: [Example 10: Fonts and Borders](reporter-fonts.html)

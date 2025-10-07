@@ -39,10 +39,6 @@
 #' The report family of functions are pipe-friendly.  After creating the 
 #' report, you may pipe the object to any of the above functions to append
 #' additional options.
-#' 
-#' Note that PDF output currently only supports a fixed-width style report.
-#' A variable-width report with a choice of fonts will be available in future
-#' versions of the \strong{reporter} package.
 #'
 #' @param file_path The output path of the desired report. Either a full path or
 #' a relative path is acceptable.  This parameter is not required to create the
@@ -75,7 +71,7 @@
 #' used for the entire report.  Valid values are "Courier", "Arial", "Times",
 #' and "fixed".  The value of "fixed" will create a fixed-width, text style
 #' report in Courier font.  The \code{font} parameter only applies to 
-#' RTF, HTML, PDF, and DOCX reports.  The default value is "fixed".
+#' RTF, HTML, PDF, and DOCX reports.  The default value is "Courier".
 #' @param font_size The size of the font to use on the report. The \code{font_size}
 #' specified will be used for the entire report.  Valid values are 8, 9, 10, 11,
 #' and 12.  The \code{font_size} parameter only applies to RTF, PDF, HTML, and  
@@ -140,7 +136,7 @@
 create_report <- function(file_path = "", output_type = "TXT", 
                           orientation ="landscape", units = "inches",
                           paper_size = "letter", missing = "",
-                          font = "fixed", font_size = NULL) {
+                          font = "Courier", font_size = NULL) {
   # font = "fixed"
   # font_size = NULL
 

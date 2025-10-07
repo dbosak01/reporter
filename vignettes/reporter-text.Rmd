@@ -64,6 +64,6 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e4.png"/>
+<img src="../man/images/e4.png"  alt="Text example image"/>
 
 Next: [Example 5: Spanning Headers](reporter-spanning.html)

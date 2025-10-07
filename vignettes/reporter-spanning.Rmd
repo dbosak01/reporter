@@ -60,6 +60,6 @@ res <- write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e5.png"/>
+<img src="../man/images/e5.png" alt="Spanning header example image"/>
 
 Next: [Example 6: Page Wrap](reporter-wrap.html)

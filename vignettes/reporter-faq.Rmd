@@ -39,6 +39,7 @@ on the links below to navigate to the full question and answer content.
 * [Is there a way to control page wraps?](#wraps)
 * [Is there a way to set the width of a table?](#width)
 * [Why am I getting an error when using curly braces in my footnotes?](#curly)
+* [How can I get reporter to break/wrap long words?](#wordbreak)
 
 
 ## Content
@@ -323,6 +324,21 @@ You can also turn off the glue functionality globally by setting
 
 ******
 
+### How can I get reporter to break/wrap long words? {#wordbreak}
+
+**Q:** I have some very long words in my data.  I want **reporter** to break them,
+and wrap to the next line.  Is there a way to do that? 
+
+**A:** No.  The **reporter** package will not break words.
+What you should do is pre-process the column with the long words, 
+and break it yourself.  You can use the `nchar()` function to check the character
+length of the words.  Then insert a new line or blank space at the point where
+you want to break. Once the words are broken where you want, send the data
+into **reporter**.
+
+[top](#top)
+
+******
 
 <!-- ### Question 1? {#q1} -->
 

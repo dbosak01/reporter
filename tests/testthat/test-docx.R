@@ -696,7 +696,7 @@ test_that("docx19: 11 pt font cm works as expected.", {
 })
 
 
-test_that("docx20:  Image file works as expected.", {
+test_that("docx20:  JPG Image file works as expected.", {
 
   if (dev == TRUE) {
 
@@ -1988,6 +1988,43 @@ test_that("docx-56: Multi page table removes blank spaces.", {
   } else
     expect_equal(TRUE, TRUE)
 })
+
+
+# No errors, but Word converts the EMG to JPG automatically.
+# Even if you just insert in manually.
+test_that("docx-57:  EMF Image file works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    fp <- file.path(base_path, "docx/test57.docx")
+    
+    pltpath <- file.path(base_path, "docx/example10.emf")
+    
+    plt <- create_plot(pltpath, height = 4, width = 8)
+    
+    
+    rpt <- create_report(fp, output_type = "DOCX", font = "Arial") %>%
+      page_header("Client", "Study: XYZ") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    #print(res)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+  
+  
+})
+
 
 
 # User Tests --------------------------------------------------------------

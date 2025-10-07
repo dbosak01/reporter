@@ -60,7 +60,7 @@ write_docx <- function(src, pth) {
 # Create DOCX --------------------------------------------------------------
 
 #' @noRd
-create_new_docx <- function(font, font_size, imageCount) {
+create_new_docx <- function(font, font_size, imageCount, imagePaths) {
   
   tdd <- file.path(tempdir(), stri_rand_strings(1, length = 6))
   
@@ -79,7 +79,7 @@ create_new_docx <- function(font, font_size, imageCount) {
   create_core(tdd)
   create_endnotes(tdd)
   create_footnotes(tdd)
-  create_document_rels(tdd, imageCount)
+  create_document_rels(tdd, imageCount, imagePaths)
   create_rels(tdd)
   
   # Temporary
@@ -1186,12 +1186,17 @@ create_footer <- function(pth, cnt = "") {
 }
 
 
-create_document_rels <- function(pth, imgCnt) {
+create_document_rels <- function(pth, imgCnt, imagePaths) {
   
   imgs <- ""
   
   for (i in seq_len(imgCnt)) {
-    imgs <- paste0(imgs, '<Relationship Target="media/image', i, '.jpeg"', 
+    ext <- tools::file_ext(imagePaths[[i]])
+    if (ext == "jpg") {
+      ext <- "jpeg" 
+    }
+      
+    imgs <- paste0(imgs, '<Relationship Target="media/image', i, '.', ext, '"', 
 ' Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"',
  ' Id="rId', 8 + i, '"/>\n')
     

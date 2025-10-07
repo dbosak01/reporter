@@ -94,8 +94,8 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e14a.png"/>
-<img src="../man/images/e14b.png"/>
-<img src="../man/images/e14c.png"/>
+<img src="../man/images/e14a.png" alt="Page break pg 1"/>
+<img src="../man/images/e14b.png" alt="Page break pg 2"/>
+<img src="../man/images/e14c.png" alt="Page break pg 3"/>
   
 Next: [More Examples](reporter-more.html)

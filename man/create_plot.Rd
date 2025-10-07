@@ -11,7 +11,8 @@ create_plot(x, height, width, borders = "none")
 set to an object returned from a call to \code{\link[ggplot2]{ggplot}}
 or \code{\link[survminer]{ggsurvplot}}.  This parameter also accepts 
 a path to a JPEG file.  If a path is specified, the image will be appended
-to the report at the point the content object is added.}
+to the report at the point the content object is added. For RTF and DOCX files, 
+the function additionally accepts a path to an EMF file.}
 
 \item{height}{The height of the plot in the specified units of measure.}
 
@@ -20,7 +21,7 @@ to the report at the point the content object is added.}
 \item{borders}{Whether and where to place a border. Valid values are 'top',
 'bottom', 'left', 'right', 'all', 'none', and 'outside'.  
 Default is 'none'.  The 'left', 'right', and 'outside' 
-border specifications only apply to RTF reports.}
+border specifications do not apply to TXT reports.}
 }
 \value{
 The plot specification.
@@ -49,12 +50,15 @@ The plot specification also accepts titles and footnotes.  See the
 \code{\link{titles}} and \code{\link{footnotes}} functions for further 
 details.
 
-As of \strong{reporter} version 1.2.9, the \code{create_plot} function 
-also accepts a path to a JPEG stored on the file system instead of a 
+The function 
+also accepts a path to an image file stored on the file system instead of a 
 plot object.  This
 functionality was added to allow the user to create figures from other
 plotting packages.  If you pass an image path, the image will be inserted
-into the report at the location specified.
+into the report at the location specified. The system supports JPEG images 
+for all output types that support graphics. EMF images are also supported for
+DOCX and RTF outputs. Note that EMF format may not render properly in 
+all operating environments, and JPEG is the preferred image type.
 }
 \examples{
 library(reporter)
@@ -70,7 +74,7 @@ p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
 # Create plot object
 plt <- create_plot(p, height = 4, width = 8)
 
-rpt <- create_report(tmp, output_type = "RTF") \%>\%
+rpt <- create_report(tmp, font = "Arial", output_type = "RTF") \%>\%
   page_header("Client", "Study: XYZ") \%>\% 
   titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") \%>\%
   set_margins(top = 1, bottom = 1) \%>\%

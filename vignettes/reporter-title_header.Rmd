@@ -49,6 +49,6 @@ write_report(rpt)
 
 # file.show(tmp)
 ```
-<img src="../man/images/e8.png"/>
+<img src="../man/images/e8.png" alt="Title Header example image"/>
 
 Next: [Example 9: RTF, PDF, HTML, and DOCX](reporter-rtf.html)

@@ -54,9 +54,9 @@ write_report(rpt)
 # file.show(tmp)
 
 ```
-<img src="../man/images/e7a.png"/>
-<img src="../man/images/e7b.png"/>
-<img src="../man/images/e7c.png"/>
+<img src="../man/images/e7a.png" alt="Page by example page 1"/>
+<img src="../man/images/e7b.png" alt="Page by example page 2"/>
+<img src="../man/images/e7c.png" alt="Page by example page 3"/>
 
 
 Next: [Example 8: Title Header](reporter-title_header.html)

@@ -83,7 +83,7 @@ write_report(rpt)
 # Un-comment to view report
 # file.show(tmp)
 ```
-<img src="../man/images/reporter1.png"/>
+<img src="../man/images/reporter1.png" alt="Reporter example image 1"/>
 
 As you can see, using the **reporter** package, you can 
 create a useful report with just a few lines of code.  By default, 

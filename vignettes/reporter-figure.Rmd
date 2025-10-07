@@ -59,7 +59,7 @@ res <- write_report(rpt)
 # View report
 # file.show(tmp)
 ```
-<img src="../man/images/plot.png"/>
+<img src="../man/images/plot.png" alt="Plot example image"/>
 
 
 Next: [Example 12: Styles and Themes](reporter-styles.html)
