@@ -2353,7 +2353,13 @@ print.report_spec <- function(x, ..., verbose = FALSE){
     
     # Print key attributes
     cat("\n")
-    cat(paste0("- file_path: '", x$modified_path, "'\n"))
+    if (is.null(x$modified_path)) {
+      cat(paste0("- file_path: '", x$file_path, "'\n"))
+    } else if (x$modified_path == "") {
+      cat(paste0("- file_path: '", x$file_path, "'\n"))
+    } else {
+      cat(paste0("- file_path: '", x$modified_path, "'\n"))
+    }
     cat(paste0("- output_type: ", x$output_type, "\n"))
     cat(paste0("- units: ", x$units, "\n"))
     cat(paste0("- orientation: ", x$orientation, "\n"))
