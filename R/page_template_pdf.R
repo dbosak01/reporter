@@ -1012,9 +1012,16 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
       
       if (any(brdrs %in% c("outside", "all", "top")))
         border_flag <- TRUE
-
+      
+      fs <- rs$font_size
+      if (!is.null(ftnts$font_size)) {
+        fs <- ftnts$font_size
+      } else {
+        fs <- rs$font_size
+      }
+        
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      par(family = get_font_family(rs$font), ps = fs)
       
       # If all borders on, change line height to account for extra points 
       # needed for border
@@ -1218,7 +1225,7 @@ get_footnotes_pdf <- function(ftnlst, content_width, rs,
           
           if (nchar(tmp$text[ln]) > 0) {
           
-            ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+            ret[[length(ret) + 1]] <- page_text(tmp$text[ln], fs, 
                                                 xpos = get_points(tmp$clb, 
                                                                   tmp$crb,
                                                                   tmp$widths[ln],
