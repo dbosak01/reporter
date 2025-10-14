@@ -1455,12 +1455,16 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @param italics A TRUE or FALSE value indicating whether the footnote 
 #' text shoud be in italics font.  If TRUE, the entire footnote will be 
 #' in italics.
-#' @param columns The number of columns for the foonote block. Valid values
+#' @param columns The number of columns for the footnote block. Valid values
 #' are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the footnote
 #' block will be split into two columns, each aligned to the outside.  If 
 #' this parameter is set to 3, the title block will be split into 3 columns,
 #' with the outer columns aligned to the outside and the middle column
 #' aligned center.  Footnotes are assigned to cells from top left to bottom right.
+#' @param font_size The font size to use for the footnote block.  The font size
+#' of the report will be used by default.  Valid values are 8, 9, 10, 11, 12
+#' This parameter only applies to variable-width RTF, HTML, PDF, and DOCX 
+#' output types.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1511,7 +1515,8 @@ titles <- function(x, ..., align = "center", blank_row = "below",
 #' @export
 footnotes <- function(x, ..., align = "left", blank_row = "above", 
                       borders = "none", valign = NULL, width = NULL, 
-                      footer = FALSE, italics = FALSE, columns = 1){
+                      footer = FALSE, italics = FALSE, columns = 1,
+                      font_size = NULL){
 
   # Create footnote structure
   ftn <- structure(list(), class = c("footnote_spec", "list"))
@@ -1539,6 +1544,14 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
                           "outside", "inside", "none")))
     stop(paste("Borders parameter invalid.  Valid values are", 
       "'top', 'bottom', 'left', 'right', 'outside', 'inside', 'all', or 'none'."))
+  
+  # Trap invalid font_size parameter
+  if (!is.null(font_size)) {
+    if (!font_size %in% 8:12) {
+      stop(paste0("Footnote font_size parameter invalid.  ", 
+                  "Valid values are 8, 9, 10, 11 and 12."))
+    }
+  }
   
   if (is.null(width)) {
     if (any(class(x) %in% c("report_spec"))) 
@@ -1588,6 +1601,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
   ftn$width <- width  
   ftn$footer <- footer
   ftn$italics <- italics
+  ftn$font_size <- font_size
   ftn$columns <- columns
 
   if (is.null(valign)) {

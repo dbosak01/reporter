@@ -14,6 +14,7 @@ footnotes(
   width = NULL,
   footer = FALSE,
   italics = FALSE,
+  font_size = NULL,
   columns = 1
 )
 }
@@ -63,6 +64,11 @@ appear on every page, and be the same throughout the report.}
 \item{italics}{A TRUE or FALSE value indicating whether the footnote 
 text shoud be in italics font.  If TRUE, the entire footnote will be 
 in italics.}
+
+\item{font_size}{The font size to use for the footnote block.  The font size
+of the report will be used by default.  Valid values are 8, 9, 10, 11, 12
+This parameter only applies to variable-width RTF, HTML, PDF, and DOCX 
+output types.}
 
 \item{columns}{The number of columns for the foonote block. Valid values
 are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the footnote
