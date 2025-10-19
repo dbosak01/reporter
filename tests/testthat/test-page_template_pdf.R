@@ -222,7 +222,34 @@ test_that("get_footnotes_pdf function works as expected.", {
   f
 
   expect_equal(f$lines, 2)
+})
 
+test_that("get_titles_footnote function works as expected with font_size.", {
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    footnotes("a a a a a a a a a a",
+              width = 1)
+  rpt <- page_setup_pdf(rpt)
+  f12 <- rpt$page_template$footnotes
+  
+  rh <- get_line_height_pdf(12)
+  
+  expect_equal(f12$lines, 3)
+  expect_equal(f12$lines, 
+               f12$points / rpt$row_height) 
+  expect_equal(f12$points, rh * 3)
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    footnotes("a a a a a a a a a a",
+              width = 1, font_size = 8)
+  rpt <- page_setup_pdf(rpt)
+  f8 <- rpt$page_template$footnotes
+  
+  expect_equal(f8$lines, 2)
+  expect_equal(f8$lines, 
+               f8$points / rpt$row_height) 
+  expect_equal(f8$points, rh * 2)
+  
 })
 
 test_that("get_title_header_pdf function works as expected.", {

@@ -496,7 +496,8 @@ test_that("user4: Adverse Events table works.", {
                 paste("# Episodes is defined as the total number of occurances",
                       "of adverse events"),
                 paste("% is defined as Number of Subjects divided by Total Reporting"),
-                "Note: Adverse events were coded using MedDRA Version 9.1") %>%
+                "Note: Adverse events were coded using MedDRA Version 9.1",
+                font_size = 9) %>%
       page_footer("Time", "Confidential", "Page [pg] of [tpg]")
     
     res <- write_report(rpt)

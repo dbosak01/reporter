@@ -16,7 +16,32 @@ test_that("get_titles_html function works as expected.", {
   t
   expect_equal(length(t$html), 1)
   expect_equal(t$lines, 4)
+
+})
+
+test_that("get_titles_html function works as expected with font_size.", {
   
+  #Different title font size will change title lines
+  rpt <- create_report("", output_type = "HTML", font = "Arial", 
+                       font_size = 9) %>%
+    titles("a a a a a a a a a",
+           width = 1)
+  
+  rpt <- page_setup_html(rpt)
+  t9 <- get_titles_html(rpt$titles, 1, rpt)
+  expect_equal(length(t9$html), 1)
+  expect_equal(t9$lines, 2)
+  
+  rpt <- create_report("", output_type = "HTML", font = "Arial", 
+                       font_size = 9) %>%
+    titles("a a a a a a a a a",
+           font_size = 14,
+           width = 1)
+  
+  rpt <- page_setup_html(rpt)
+  t14 <- get_titles_html(rpt$titles, 1, rpt)
+  expect_equal(length(t14$html), 1)
+  expect_equal(t14$lines, 3)
 })
 
 
@@ -43,6 +68,45 @@ test_that("get_footnotes_html function works as expected.", {
   
 })
 
+test_that("get_footnotes_html function works as expected with font_size.", {
+  
+  rpt <- create_report("", output_type = "HTML", font = "Arial", 
+                       font_size = 12) %>%
+    footnotes("a a a a a a a a a",
+              width = 1)
+  
+  rpt <- page_setup_html(rpt)
+  f12 <- rpt$page_template$footnotes
+  
+  expect_equal(f12$lines, 3)
+  expect_equal(f12$html,
+               paste0("<table style=\"width:1in;text-align: left;",
+                      "\">\n<tr><td colspan=\"1\">&nbsp;",
+                      "</td></tr>\n<tr><td style=\"width:1in;",
+                      "text-align: left;vertical-align:text-top;",
+                      "\">a&nbsp;a&nbsp;a&nbsp;a&nbsp;a&nbsp;a&nbsp;",
+                      "a<br>a&nbsp;a</td>\n</tr>\n</table>")
+               )
+  
+  rpt <- create_report("", output_type = "HTML", font = "Arial", 
+                       font_size = 12) %>%
+    footnotes("a a a a a a a a a",
+              width = 1, font_size = 8)
+  
+  rpt <- page_setup_html(rpt)
+  f8 <- rpt$page_template$footnotes
+  
+  expect_equal(f8$lines, 2)
+  expect_equal(f8$html,
+               paste0("<table style=\"width:1in;text-align: left;",
+                      "\">\n<tr><td colspan=\"1\">&nbsp;",
+                      "</td></tr>\n<tr><td style=\"width:1in;",
+                      "font-size:8pt;text-align: left;vertical-align:text-top;",
+                      "\">a&nbsp;a&nbsp;a&nbsp;a&nbsp;a&nbsp;a&nbsp;a&nbsp;",
+                      "a&nbsp;a</td>\n</tr>\n</table>")
+               )
+  
+})
 
 
 test_that("get_title_header_html function works as expected.", {

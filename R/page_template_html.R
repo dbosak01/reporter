@@ -263,7 +263,12 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
       
       # Open device context
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      if (!is.null(ttls$font_size)) {
+        ttlfs <- ttls$font_size
+      } else {
+        ttlfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ttlfs)
       
       ret[length(ret) + 1] <- paste0("<table ",
                                      "style=\"width:", w, u, ";", 
@@ -629,7 +634,12 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
 
 
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      if (!is.null(ftnts$font_size)) {
+        ftntfs <- ftnts$font_size
+      } else {
+        ftntfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ftntfs)
       ret[length(ret) + 1] <- paste0("<table ",
                                      "style=\"width:", w, u, ";",
                                      algn, sty,
@@ -743,8 +753,14 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
           #                             "</td></tr>\n"))
           #}
           
+          fz <- ""
+          if (!is.null(ftnts$font_size)){
+            
+            fz <- paste0("font-size:", ftnts$font_size, "pt;") 
+          }
+          
           # Concat tags and footnote content
-          rw <- paste0(rw, paste0("<td style=\"", cws, b, calgn, valgn, "\">",  
+          rw <- paste0(rw, paste0("<td style=\"", cws, b, fz, calgn, valgn, "\">",  
                                   txt, "</td>\n"))
   
   

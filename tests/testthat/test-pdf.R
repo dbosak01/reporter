@@ -1062,8 +1062,7 @@ test_that("pdf33: PDF Image file works as expected.", {
   plt <- create_plot(pltpath, height = 4, width = 8)
   
   
-  rpt <- create_report(fp, output_type = "PDF", font = "fixed", 
-                       font = "fixed") %>%
+  rpt <- create_report(fp, output_type = "PDF", font = "fixed") %>%
     page_header("Client", "Study: XYZ") %>%
     titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%

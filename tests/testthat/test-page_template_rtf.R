@@ -20,6 +20,41 @@ test_that("get_titles_rtf function works as expected.", {
   
 })
 
+test_that("get_titles_rtf function works as expected with font_size.", {
+  
+  # Different title font size will change the title lines
+  rpt <- create_report("", font = "Arial", font_size = 9) %>%
+    titles("a a a a a a a a a", 
+           width = 1)
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  t9 <- get_titles_rtf(rpt$titles, 1, rpt)
+  expect_equal(t9$lines, 2)
+  expect_equal(t9$rtf,
+               paste0("\\trowd\\trgaph0\\trqc\\cellx1440\\qc a a a a a a a a a",
+                      "\\cell\\row\n\\trowd\\trgaph0\\trqc\\cellx1440\\qc",
+                      "\\sl-244\\slmult0\\cell\\row\n")
+  )
+  
+  rpt <- create_report("", font = "Arial", font_size = 9) %>%
+    titles("a a a a a a a a a", 
+           width = 1,
+           font_size = 14)
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  t14 <- get_titles_rtf(rpt$titles, 1, rpt)
+  expect_equal(t14$lines, 3)
+  expect_equal(t14$rtf,
+               paste0("\\trowd\\trgaph0\\trqc\\cellx1440\\qc\\fs28\\sl-325",
+                      "\\slmult0 a a a a a a\\line a a a\\fs18\\cell\\row\n",
+                      "\\trowd\\trgaph0\\trqc\\cellx1440\\qc\\sl-244\\slmult0",
+                      "\\cell\\row\n")
+  )
+  
+})
+
 
 test_that("get_footnotes_rtf function works as expected.", {
   
@@ -35,6 +70,40 @@ test_that("get_footnotes_rtf function works as expected.", {
       paste0("\\trowd\\trgaph0\\trqc\\cellx12960\\ql\\cell\\row\n", 
              "\\trowd\\trgaph0\\trqc\\cellx12960\\ql Goodbye\\cell\\row\n"))
   expect_equal(f$lines, 2)
+  
+})
+
+test_that("get_footnotes_rtf function works as expected with font_size.", {
+  
+  # Different footnote font size will change the footnote lines
+  rpt <- create_report("", font = "Arial", font_size = 9) %>%
+    footnotes("a a a a a a a a a",
+              width = 1)
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  f9 <- get_footnotes_rtf(rpt$footnotes, 1, rpt)
+  expect_equal(f9$lines, 2)
+  expect_equal(f9$rtf,
+               paste0("\\trowd\\trgaph0\\trqc\\cellx1440\\ql\\cell\\row\n",
+                      "\\trowd\\trgaph0\\trqc\\cellx1440\\ql a a a a a a a a a",
+                      "\\cell\\row\n")
+  )
+  
+  rpt <- create_report("", font = "Arial", font_size = 9) %>%
+    footnotes("a a a a a a a a a", 
+              width = 1,
+              font_size = 10)
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  f10 <- get_footnotes_rtf(rpt$footnotes, 1, rpt)
+  expect_equal(f10$lines, 3)
+  expect_equal(f10$rtf,
+               paste0("\\trowd\\trgaph0\\trqc\\cellx1440\\ql\\cell\\row\n",
+                      "\\trowd\\trgaph0\\trqc\\cellx1440\\ql\\fs20\\sl-250\\",
+                      "slmult0 a a a a a a a a\\line a\\fs18\\cell\\row\n")
+  )
   
 })
 

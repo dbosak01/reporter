@@ -332,7 +332,14 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
       
       # Open device context
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      # Set point size (ps) for strwidth to calculate string width
+      if (!is.null(ttls$font_size)) {
+        ttlfs <- ttls$font_size
+      } else {
+        ttlfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ttlfs)
       
       
       tb <- get_table_borders_docx(ttls$borders)
@@ -428,7 +435,7 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
             mxlns <- tmp$lines
           
           # Get paragraph 
-          tstr <- para(tmp$html, calgn, ttls$font_size, ttls$bold)
+          tstr <- para(tmp$html, calgn, ttlfs, ttls$bold)
 
           cwdth <- paste0('<w:tcW w:w="', cw,'"/>')
           
@@ -739,7 +746,14 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
 
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      # Set point size (ps) for strwidth to calculate string width
+      if (!is.null(ftnts$font_size)) {
+        ftntfs <- ftnts$font_size
+      } else {
+        ftntfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ftntfs)
       
       tb <- get_table_borders_docx(ftnts$borders)
     
@@ -844,7 +858,7 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
             mxlns <- tmp$lines
           
           # Get paragraph 
-          tstr <- para(tmp$html, calgn, rs$font_size, italics = ftnts$italics)
+          tstr <- para(tmp$html, calgn, ftntfs, italics = ftnts$italics)
           
           cwdth <- paste0('<w:tcW w:w="', cw,'"/>')
           
@@ -869,8 +883,19 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
 
         }
         
+        # Row height has to be determined based on max number of lines in cell
+        if (is.null(ftnts$font_size)) {
+          
+          srht <- get_row_height(round(rs$row_height * mxlns * conv))
+          
+        } else {
+          
+          srht <- get_row_height(round(get_rh(rs$font, ftnts$font_size) * mxlns * conv))
+          
+        }
+        
         # Need to change height depending on max lines
-        srht <- get_row_height(round(rs$row_height * mxlns * conv))
+        # srht <- get_row_height(round(rs$row_height * mxlns * conv))
         
         # Construct row
         ret <- append(ret, paste0("<w:tr>", srht, rw, "</w:tr>\n"))

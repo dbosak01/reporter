@@ -295,7 +295,14 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
       
       # Open device context
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      # Set point size (ps) for strwidth to calculate string width
+      if (!is.null(ttls$font_size)) {
+        ttlfs <- ttls$font_size
+      } else {
+        ttlfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ttlfs)
       
       
       al <- ""
@@ -627,7 +634,14 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
       border_flag <- FALSE
       
       pdf(NULL)
-      par(family = get_font_family(rs$font), ps = rs$font_size)
+      
+      # Set point size (ps) for strwidth to calculate string width
+      if (!is.null(ftnts$font_size)) {
+        ftntfs <- ftnts$font_size
+      } else {
+        ftntfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ftntfs)
       
       al <- ""
       # Get blank row above
