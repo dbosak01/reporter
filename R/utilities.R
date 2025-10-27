@@ -590,17 +590,17 @@ split_string_rtf <- function(strng, width, units, font = "Arial", nm = "",
   indnt <- 0
   cstrng <- strng
   indntw <- 0
-  if (nm == "stub") {
-    
-    bpos <- regexpr("^\\s+", strng)
-    if (bpos > 0) {
-      
-      indnt <-  attr(bpos, "match.length")
-      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
-      cstrng <- substr(strng, indnt + 1, nchar(strng))
-      #indntw <- indnt * char_width / mp
-    }
-  }
+  # if (nm == "stub") {
+  #   
+  #   bpos <- regexpr("^\\s+", strng)
+  #   if (bpos > 0) {
+  #     
+  #     indnt <-  attr(bpos, "match.length")
+  #     blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+  #     cstrng <- substr(strng, indnt + 1, nchar(strng))
+  #     #indntw <- indnt * char_width / mp
+  #   }
+  # }
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = mp)
   
