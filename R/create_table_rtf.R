@@ -141,6 +141,11 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   # str(fdat)
   
+  # Add stub_var into control_cols for adding indentation
+  if ("..stub_var" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..stub_var")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -159,6 +164,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   widths_uom <- get_col_widths_variable(fdat, ts, labels, 
                                         rs$font, rs$font_size, rs$units, 
                                         rs$gutter_width) 
+  
   # print("Widths UOM")
   # print(widths_uom)
   
@@ -168,7 +174,6 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
                                 rs$font_size, rs$units, rs$output_type, rs$char_width)$data 
   # print("split_cells")
   # print(fdat)
-  
   
   # Break columns into pages
   wraps <- get_page_wraps(rs$line_size, ts, 
@@ -269,6 +274,9 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
     hdrs <- get_table_header_rtf(rs, ts, pi$col_width, 
                                  pi$label, pi$label_align, pi$table_align)  
   }
+  
+  # Add indent RTF code
+  pi$data <- add_indent_rtf(pi$data, ts, rs$units)
   
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
@@ -1096,7 +1104,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           }
           
           # Construct rtf
-          ret[i] <- paste0(ret[i], ca[j], " ", tb, "\\cell")
+          ret[i] <- paste0(ret[i], ca[j], " ", tb, "\\cell\\li", rs$cell_padding)
           
           vl <- t[i, j]
           if (all(class(vl) != "character"))
@@ -1140,7 +1148,46 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
 }
 
+#' @description This function adds indenting RTF code as requested
+#' @noRd
+add_indent_rtf <- function(dat, ts, unit){
+  # Process indentation after getting raw column width
+  if(unit == "inches"){
+    conv_twips <- 1440
+  }else if(unit == "cm"){
+    conv_twips <- 567
+  }
+  
+  defs <- ts$col_defs
+  
+  # Indent as requested
+  # Do this after adding blanks
+  # So any group values in blank rows are removed
+  for (def in defs) {
+    if (!is.null(def$indent)) {
+      
+      ind <- floor(def$indent*conv_twips)
+      rtf_ind <- paste0("\\li", ind, " ")
 
+      if (def$var_c %in% names(dat)) {
+        # Convert to character if necessary
+        if (all(class(dat[[def$var_c]]) != "character")) {
+          dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+        }
+        
+        # Perform Indenting of requested variables
+        dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(rtf_ind, dat[[def$var_c]]))
+        
+      } else if (def$var_c %in% ts$stub$vars) {
+        # Handle the stub situation
+        stub_idx <- dat$..stub_var == def$var_c & !is.na(dat$stub) & dat$stub != ""
+        dat[stub_idx, "stub"] <- paste0(rtf_ind, dat[stub_idx, "stub"])
+      }
+    }
+  }
+  
+  return(dat)
+}
 
 # Utility Functions -------------------------------------------------------
 
