@@ -688,7 +688,7 @@ split_string_text <- function(strng, width, units, nm = "", char_width = 1) {
 #' @import grDevices
 #' @noRd
 split_cells_variable <- function(x, col_widths, font, font_size, units, 
-                                 output_type, char_width) {
+                                 output_type, char_width, ts) {
   
   dat <- NULL           # Resulting data frame
   wdths <- list()       # Resulting list of widths
@@ -702,6 +702,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
   else if (tolower(font) == "times")
     fnt <- "serif"
   
+  defs <- ts$col_defs
   
   pdf(NULL)
   par(family = fnt, ps = font_size)
@@ -747,7 +748,21 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             cell <- res$html
           
           } else if (output_type == "RTF") {
-            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+            # For indenting values, the width should be (col_widths - indentation)
+            if (!is.null(defs[[nm]]$indent)) {
+              res <- split_string_rtf(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
+                                      units, font, nm, char_width)
+            } else if (nm == "stub" & !is.null(ts$stub)) {
+              stub_var <- x$..stub_var[i]
+              if (!is.null(defs[[stub_var]]$indent)) {
+                res <- split_string_rtf(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
+                                        units, font, nm, char_width)
+              } else {
+                res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+              }
+            } else {
+              res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+            }
           
             cell <- res$rtf
           } else if (output_type == "PDF") {
