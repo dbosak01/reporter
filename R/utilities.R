@@ -657,17 +657,17 @@ split_string_text <- function(strng, width, units, nm = "", char_width = 1) {
   indnt <- 0
   cstrng <- strng
   indntw <- 0
-  if (nm == "stub") {
-    
-    bpos <- regexpr("^\\s+", strng)
-    if (bpos > 0) {
-      
-      indnt <-  attr(bpos, "match.length")
-      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
-      cstrng <- substr(strng, indnt + 1, nchar(strng))
-      indntw <- indnt * char_width 
-    }
-  }
+  # if (nm == "stub") {
+  #   
+  #   bpos <- regexpr("^\\s+", strng)
+  #   if (bpos > 0) {
+  #     
+  #     indnt <-  attr(bpos, "match.length")
+  #     blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+  #     cstrng <- substr(strng, indnt + 1, nchar(strng))
+  #     indntw <- indnt * char_width 
+  #   }
+  # }
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = 1)
   
@@ -766,8 +766,21 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
           
             cell <- res$rtf
           } else if (output_type == "PDF") {
-            
-            res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            # For indenting values, the width should be (col_widths - indentation)
+            if (!is.null(defs[[nm]]$indent)) {
+              res <- split_string_text(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
+                                       units, nm, char_width)
+            } else if (nm == "stub" & !is.null(ts$stub)) {
+              stub_var <- x$..stub_var[i]
+              if (!is.null(defs[[stub_var]]$indent)) {
+                res <- split_string_text(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
+                                         units, nm, char_width)
+              } else {
+                res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+              }
+            } else {
+              res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            }
             
             cell <- paste0(res$text, collapse = "\n")
             
