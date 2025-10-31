@@ -1168,6 +1168,11 @@ add_indent_rtf <- function(dat, ts, unit){
       
       ind <- floor(def$indent*conv_twips)
       rtf_ind <- paste0("\\li", ind, " ")
+      
+      blank_idx <- rep(F, nrow(dat))
+      if ("..blank" %in% names(dat)) {
+        blank_idx <- dat$..blank %in% c("B", "A")
+      }
 
       if (def$var_c %in% names(dat)) {
         # Convert to character if necessary
@@ -1176,11 +1181,12 @@ add_indent_rtf <- function(dat, ts, unit){
         }
         
         # Perform Indenting of requested variables
-        dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(rtf_ind, dat[[def$var_c]]))
-        
+        idx <- !is.na(dat[[def$var_c]]) & dat[[def$var_c]] != "" & !blank_idx
+        dat[[def$var_c]][idx] <- paste0(rtf_ind, dat[[def$var_c]][idx])
+
       } else if (def$var_c %in% ts$stub$vars) {
         # Handle the stub situation
-        stub_idx <- dat$..stub_var == def$var_c & !is.na(dat$stub) & dat$stub != ""
+        stub_idx <- dat$..stub_var == def$var_c & !is.na(dat$stub) & dat$stub != "" & !blank_idx
         dat[stub_idx, "stub"] <- paste0(rtf_ind, dat[stub_idx, "stub"])
       }
     }
