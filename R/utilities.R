@@ -743,7 +743,21 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
         } else {
           
           if (output_type %in% c("HTML", "DOCX")) {
-            res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            # For indenting values, the width should be (col_widths - indentation)
+            if (!is.null(defs[[nm]]$indent)) {
+              res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
+                                       units, nm, char_width)
+            } else if (nm == "stub" & !is.null(ts$stub)) {
+              stub_var <- x$..stub_var[i]
+              if (!is.null(defs[[stub_var]]$indent)) {
+                res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
+                                         units, nm, char_width)
+              } else {
+                res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+              }
+            } else {
+              res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            }
             
             cell <- res$html
           
