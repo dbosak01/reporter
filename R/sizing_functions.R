@@ -207,7 +207,7 @@ get_page_wraps <- function(content_width, ts, widths, gutter, control_cols) {
 #' options on the variable define function.  These include blank_after, 
 #' label_row, indenting, and creating stub columns. 
 #' @noRd
-prep_data <- function(dat, ts, char_width, missing_val) {
+prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
   
   defs <- ts$col_defs
   # print("Before prep data")
@@ -256,26 +256,27 @@ prep_data <- function(dat, ts, char_width, missing_val) {
   # Indent and Dedupe variables as requested
   # Do this after adding blanks
   # So any group values in blank rows are removed
-  # for (def in defs) {
-  #   if (!is.null(def$indent) | def$dedupe) {
-  #     
-  #     # Convert to character if necessary
-  #     if (all(class(dat[[def$var_c]]) != "character"))
-  #       dat[[def$var_c]] <- as.character(dat[[def$var_c]])
-  #         
-  #     # Actual deduping now takes place in get_splits_text, so 
-  #     # label appears at top of each page
-  # 
-  #   }
-  #   
-  #   # Perform Indenting of requested variables
-  #   if (!is.null(def$indent)) {
-  #     ind <- floor(def$indent / char_width)
-  #     blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
-  #     dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
-  #   }
-  # }
-  
+  if (blank_indent) {
+    for (def in defs) {
+      if (!is.null(def$indent) | def$dedupe) {
+        
+        # Convert to character if necessary
+        if (all(class(dat[[def$var_c]]) != "character"))
+          dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+        
+        # Actual deduping now takes place in get_splits_text, so
+        # label appears at top of each page
+        
+      }
+      
+      # Perform Indenting of requested variables
+      if (!is.null(def$indent)) {
+        ind <- floor(def$indent / char_width)
+        blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
+        dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
+      }
+    }
+  }
    # print("Before stub")
    # print(dat)
 
