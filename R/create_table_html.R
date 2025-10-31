@@ -143,6 +143,10 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   # str(fdat)
   
+  if ("..stub_var" %in% names(fdat)){
+    control_cols <- c(control_cols, "..stub_var")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -172,7 +176,7 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font,
                                rs$font_size, rs$units, rs$output_type, 
-                               rs$char_width)$data
+                               rs$char_width, ts)$data
   # print("split_cells")
   # print(fdat)
   
@@ -298,7 +302,7 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   rws <- get_table_body_html(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, 
                              !ts$headerless,
-                             ts$first_row_blank, styles)
+                             ts$first_row_blank, styles, ts)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -862,7 +866,8 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                                ex_brdr = FALSE, frb = FALSE, styles) {
+                                ex_brdr = FALSE, frb = FALSE, styles,
+                                ts) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -955,11 +960,38 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         
         sflg <- nms[j] == "stub" &  has_style(rs, "table_stub_background")
         
-        
         b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
                                    exclude = exclude_top, 
                                    border_color = get_style(rs, "border_color"),
                                     stub_flag = sflg)
+        
+        # Put indent information into style
+        if (rs$units == "inches") {
+          ind_unit <- "in"
+        } else if (rs$units == "cm") {
+          ind_unit <- "cm"
+        }
+        pad <- ""
+        
+        defs <- ts$col_defs
+        if (!is.null(defs[[nms[j]]]$indent)) {
+          
+          pad <- sprintf("padding-left: %s%s;",
+                          defs[[nms[j]]]$indent,
+                          ind_unit)
+          
+        } else if (nms[j] == "stub" & !is.null(ts$stub)) {
+          
+          stub_var <- tbl$..stub_var[i]
+          if (!is.null(defs[[stub_var]]$indent)) {
+            pad <- sprintf("padding-left: %s%s;",
+                           defs[[stub_var]]$indent,
+                           ind_unit)
+          }
+        }
+        
+        b <- paste0(b, pad)
+        
         
         lrflg <- ""
         if ( nms[j] == "stub" & flgs[i] == "L")
