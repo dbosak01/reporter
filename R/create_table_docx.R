@@ -142,6 +142,10 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   # str(fdat)
   
+  if ("..stub_var" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..stub_var")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -166,7 +170,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font,
-                               rs$font_size, rs$units, rs$output_type, rs$char_width)$data
+                               rs$font_size, rs$units, rs$output_type, rs$char_width, ts)$data
   # print("split_cells")
   # print(fdat)
   
@@ -296,7 +300,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_docx(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, 
-                             exbrdr, ts$first_row_blank, styles)
+                             exbrdr, ts$first_row_blank, styles, ts)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -860,7 +864,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                                ex_brdr = FALSE, frb = FALSE, styles) {
+                                ex_brdr = FALSE, frb = FALSE, styles, ts) {
   
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
@@ -975,8 +979,32 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         
         if (!(tb[i] %in% c("B", "L") & j > 1)) {
           # Construct html
+          
+          # Put indent information into paragraph properties
+          if (rs$units == "inches") {
+            twips_conv <- 1440 
+          } else if (rs$units == "cm") {
+            twips_conv <- 1440/2.54
+          }
+          ind_twips <- NA
+          
+          defs <- ts$col_defs
+          if (!is.null(defs[[nms[j]]]$indent)) {
+            
+            ind_twips <- defs[[nms[j]]]$indent * twips_conv
+            
+          } else if (nms[j] == "stub" & !is.null(ts$stub)) {
+            
+            stub_var <- tbl$..stub_var[i]
+            if (!is.null(defs[[stub_var]]$indent)) {
+              
+              ind_twips <- defs[[stub_var]]$indent * twips_conv
+              
+            }
+          }
+          
           ret[i] <- paste0(ret[i], "<w:tc>", b,
-                           para(vl, ca[j], bold = bflg), "</w:tc>")
+                           para(vl, ca[j], bold = bflg, indent = ind_twips), "</w:tc>")
         }
 
         
