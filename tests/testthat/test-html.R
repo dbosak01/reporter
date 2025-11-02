@@ -1,6 +1,6 @@
 context("HTML Tests")
 
-base_path <- "c:/packages/reporter/tests/testthat"
+base_path <- paste0(getwd(),"/tests/testthat")
 data_dir <- base_path
 
 base_path <- tempdir()
