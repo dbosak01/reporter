@@ -275,13 +275,10 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
                                  pi$label, pi$label_align, pi$table_align)  
   }
   
-  # Add indent RTF code
-  pi$data <- add_indent_rtf(pi$data, ts, rs$units)
-  
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_rtf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders, 
-                            ts$first_row_blank, ts$continuous, styles, pgind)
+                            ts$first_row_blank, ts$continuous, styles, pgind, ts)
   
   # Default to content width
   ls <- rs$content_size[["width"]]
@@ -900,7 +897,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' of lines on this particular page.
 #' @noRd
 get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                               frb, continuous = FALSE, styles, pgind) {
+                               frb, continuous = FALSE, styles, pgind, ts) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -1015,7 +1012,15 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     }
     
     mxrw <- 1
+    
+    # Prepare indenting convert
+    if(rs$units == "inches"){
+      conv_twips <- 1440
+    }else if(rs$units == "cm"){
+      conv_twips <- 567
+    }
   
+    defs <- ts$col_defs
 
     if (flgs[i] %in% c("B", "L")) {
       
@@ -1050,11 +1055,29 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       stl <- get_cell_styles(nms[1], styles, flgs, i, tbl)
       
+      # Get indenting information
+      rtf_ind <- ""
+      if (!is.null(defs[[nms[1]]]$indent)) {
+        
+        ind <- floor(defs[[nms[1]]]$indent*conv_twips)
+        rtf_ind <- paste0("\\li", ind, " ")
+        
+      } else if (nms[1] == "stub" & !is.null(ts$stub)) {
+        
+        stub_var <- tbl$..stub_var[i]
+        if (!is.null(defs[[stub_var]]$indent)) {
+          ind <- floor(defs[[stub_var]]$indent*conv_twips)
+          rtf_ind <- paste0("\\li", ind, " ")
+        }
+      }
+      
+      vl <- paste0(rtf_ind, vl)
+      
       if ("bold" %in% stl) {
         vl <- paste0("\\b ", vl, "\\b0")
       }
       
-      ret[i] <- paste0(ret[i], ca[1], " ", vl, "\\cell")
+      ret[i] <- paste0(ret[i], ca[1], " ", vl, "\\cell\\li", rs$cell_padding)
       
       
       cl <- strsplit(vl, "\\line", fixed = TRUE)[[1]]
@@ -1098,6 +1121,23 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           # }
           
           stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+          
+          # Get indenting information
+          rtf_ind <- ""
+          if (!is.null(defs[[nms[j]]]$indent)) {
+            
+            ind <- floor(defs[[nms[j]]]$indent*conv_twips)
+            rtf_ind <- paste0("\\li", ind, " ")
+            
+          } else if (nms[j] == "stub" & !is.null(ts$stub)) {
+            
+            stub_var <- tbl$..stub_var[i]
+            if (!is.null(defs[[stub_var]]$indent)) {
+              ind <- floor(defs[[stub_var]]$indent*conv_twips)
+              rtf_ind <- paste0("\\li", ind, " ")
+            }
+          }
+          tb <- paste0(rtf_ind, tb)
           
           if ("bold" %in% stl) {
             tb <- paste0("\\b ", tb, "\\b0") 
@@ -1146,53 +1186,6 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   return(res)
   
   
-}
-
-#' @description This function adds indenting RTF code as requested
-#' @noRd
-add_indent_rtf <- function(dat, ts, unit){
-  # Process indentation after getting raw column width
-  if(unit == "inches"){
-    conv_twips <- 1440
-  }else if(unit == "cm"){
-    conv_twips <- 567
-  }
-  
-  defs <- ts$col_defs
-  
-  # Indent as requested
-  # Do this after adding blanks
-  # So any group values in blank rows are removed
-  for (def in defs) {
-    if (!is.null(def$indent)) {
-      
-      ind <- floor(def$indent*conv_twips)
-      rtf_ind <- paste0("\\li", ind, " ")
-      
-      blank_idx <- rep(F, nrow(dat))
-      if ("..blank" %in% names(dat)) {
-        blank_idx <- dat$..blank %in% c("B", "A")
-      }
-
-      if (def$var_c %in% names(dat)) {
-        # Convert to character if necessary
-        if (all(class(dat[[def$var_c]]) != "character")) {
-          dat[[def$var_c]] <- as.character(dat[[def$var_c]])
-        }
-        
-        # Perform Indenting of requested variables
-        idx <- !is.na(dat[[def$var_c]]) & dat[[def$var_c]] != "" & !blank_idx
-        dat[[def$var_c]][idx] <- paste0(rtf_ind, dat[[def$var_c]][idx])
-
-      } else if (def$var_c %in% ts$stub$vars) {
-        # Handle the stub situation
-        stub_idx <- dat$..stub_var == def$var_c & !is.na(dat$stub) & dat$stub != "" & !blank_idx
-        dat[stub_idx, "stub"] <- paste0(rtf_ind, dat[stub_idx, "stub"])
-      }
-    }
-  }
-  
-  return(dat)
 }
 
 # Utility Functions -------------------------------------------------------
