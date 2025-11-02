@@ -6,7 +6,8 @@ test_that("get_table_body_rtf works as expected.", {
   
   dat <- mtcars[1:10, 1:5]
   
-  tbl <- create_table(dat) 
+  tbl <- create_table(dat) %>%
+    define("mpg", indent = 0.25)
   
   rpt <- create_report(fp, output_type = "RTF", font = "Arial",
                        font_size = 12) %>%
@@ -25,9 +26,15 @@ test_that("get_table_body_rtf works as expected.", {
   
   
   res <- get_table_body_rtf(rpt, dat, wdth, algns,  "center", 
-                            "none", FALSE, styles = list())
+                            "none", FALSE, styles = list(), ts = tbl)
 
   res  
+  
+  # Check if indenting code is added
+  expect_true(any(grepl("\\li360 22.8", res$rtf)))
+  
+  # Check cell padding is added
+  expect_true(any(grepl("\\li40", res$rtf)))
   
   expect_equal(length(res$rtf), 10)
   expect_equal(res$lines, 10)
@@ -121,6 +128,7 @@ test_that("create_table_rtf works as expected.", {
   dat <- mtcars[1:10, 1:5]
   
   tbl <- create_table(dat) %>% 
+    define("mpg", indent = 0.25) %>%
     titles("Table 1.0", "My Nice Table") %>% 
     footnotes("Here is a footnote")
   
@@ -144,10 +152,13 @@ test_that("create_table_rtf works as expected.", {
   nms[1] <- "Miles/Gallon"
   
   pi <- list(keys = names(dat), col_width = wdth, label = nms,
-             label_align = algns, table_align = "center", data = dat)
+             label_align = algns, table_align = "center", data = dat, ts = tbl)
   
   res <- create_table_rtf(rpt, tbl, pi, "below", FALSE, 0, styles = list())
   res
+  
+  # Check if indenting RTF code is added
+  expect_true(any(grepl("\\li360 21", res$rtf)))
   
   # Doesn't seem right.  Come back to this.
   expect_equal(length(res$rtf), 20)

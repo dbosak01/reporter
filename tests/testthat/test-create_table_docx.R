@@ -6,7 +6,8 @@ test_that("get_table_body_docx works as expected.", {
 
   dat <- mtcars[1:10, 1:5]
 
-  tbl <- create_table(dat)
+  tbl <- create_table(dat) %>%
+    define("mpg", indent = 0.25)
 
   rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
                        font_size = 12) %>%
@@ -25,9 +26,15 @@ test_that("get_table_body_docx works as expected.", {
 
 
   res <- get_table_body_docx(rpt, dat, wdth, algns,  "center", "none", 
-                             styles = list())
+                             styles = list(), ts = tbl)
 
   res
+  
+  # Check if indenting code is added
+  expect_true(
+    any(grepl("<w:ind w:left=\"360\"/></w:pPr><w:r><w:t xml:space=\"preserve\">21",
+              res$docx))
+  )
 
   expect_equal(length(res$docx), 10)
   expect_equal(res$lines, 10)
