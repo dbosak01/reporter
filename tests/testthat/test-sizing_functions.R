@@ -97,7 +97,7 @@ test_that("prep_data works as expected", {
     define(Species, blank_after = TRUE, dedupe = TRUE, indent = .25)
 
   
-  d <- prep_data(iris, tbl, .0833333, "")
+  d <- prep_data(iris, tbl, .0833333, "", blank_indent = T)
 
   
   expect_equal(sum(d$..blank != ""), 3)
@@ -259,6 +259,81 @@ test_that("get_col_widths_rtf works as expected.", {
   expect_equal(res[["disp"]], 2)
   expect_equal(res[["hp"]] < .5, TRUE)
   
+  
+})
+
+test_that("get_col_widths_rtf works with indentation as expected.", {
+  
+  # dat, ts, labels, font, 
+  # font_size, uom, gutter_width
+  
+  df <- mtcars
+  
+  tbl <- create_table(df) %>% 
+    define(mpg, label = "Miles Per Gallon", indent = 1) %>% 
+    define(cyl, width = 1.5) %>% 
+    define(disp, width = 2) 
+  
+  lbls <- get_labels(df, tbl)
+  
+  res <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
+  res
+  
+  expect_equal(res[["mpg"]] > 1, TRUE)
+  expect_equal(res[["cyl"]], 1.5)
+  expect_equal(res[["disp"]], 2)
+  expect_equal(res[["hp"]] < .5, TRUE)
+  
+  
+})
+
+test_that("get_col_widths_rtf works with stub as expected.", {
+  
+  # dat, ts, labels, font, 
+  # font_size, uom, gutter_width
+  
+  df <- mtcars[, c("mpg", "cyl", "disp")]
+  
+  tbl <- create_table(df) %>% 
+    stub(c("mpg", "cyl")) %>%
+    define(mpg, label = "", label_row = TRUE) %>% 
+    define(cyl, label = "") %>% 
+    define(disp, width = 2) 
+  
+  lbls <- get_labels(df, tbl)
+  
+  fdat <- prep_data(df, tbl, 0.11, "")
+  
+  res <- get_col_widths_variable(fdat, tbl, lbls, "Arial", 12, "inches", .2)
+  res
+  
+  expect_equal(res[["stub"]] < 1, TRUE)
+  expect_equal(res[["disp"]], 2)
+  
+})
+
+test_that("get_col_widths_rtf works with stub and indentation as expected.", {
+  
+  # dat, ts, labels, font, 
+  # font_size, uom, gutter_width
+  
+  df <- mtcars[, c("mpg", "cyl", "disp")]
+  
+  tbl <- create_table(df) %>% 
+    stub(c("mpg", "cyl")) %>%
+    define(mpg, label = "", label_row = TRUE) %>% 
+    define(cyl, label = "", indent = 1) %>% 
+    define(disp, width = 2) 
+  
+  lbls <- get_labels(df, tbl)
+  
+  fdat <- prep_data(df, tbl, 0.11, "")
+  
+  res <- get_col_widths_variable(fdat, tbl, lbls, "Arial", 12, "inches", .2)
+  res
+  
+  expect_equal(res[["stub"]] > 1, TRUE)
+  expect_equal(res[["disp"]], 2)
   
 })
 
