@@ -347,7 +347,7 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
                             pi$col_align, pi$table_align, ts$borders,
                             ystart = ys,
                             spwidths, frb = ts$first_row_blank, styles = styles,
-                            defs = ts$col_defs)
+                            ts = ts)
   ys <- ys + bdy$points
 
 
@@ -1046,7 +1046,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
 #' @noRd
 get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
                                ystart = 0, spwidths = list(), 
-                               brdr_flag = FALSE, frb = FALSE, styles, defs = NULL) {
+                               brdr_flag = FALSE, frb = FALSE, styles, ts) {
   
   border_flag <- FALSE
   
@@ -1114,8 +1114,9 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   rline <- ystart + 1
   
   ret <- c()
-  
   fs <- rs$font_size
+  
+  defs <- ts$col_defs
   
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = fs)
@@ -1186,7 +1187,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           # Indenting with lb
           if (!is.null(defs[[j]]$indent)) {
             lb_cell <- lb_cell + defs[[j]]$indent
-          } else if (j == "stub") {
+          } else if (j == "stub" & !is.null(ts$stub)) {
             stub_var <- tbl$..stub_var[i]
             if (!is.null(defs[[stub_var]]$indent)) {
               lb_cell <- lb_cell + defs[[stub_var]]$indent
