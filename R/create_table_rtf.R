@@ -734,6 +734,11 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
   
   conv <- rs$twip_conversion
   talgn <- pi$table_align
+  
+  # Detect continuous underline and insert gap, adjust widths
+  if (length(wlvl) > 0) {
+    wlvl <- get_spanning_gap_rtf(wlvl, conv)
+  }
 
   # Table alignment
   ta <- "\\trql"
@@ -892,6 +897,130 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
   return(res)
 }
 
+#' @description Check gap and insert blank for RTF
+#' @details Check gap and insert blank for RTF
+#' @noRd
+get_spanning_gap_rtf <- function(wlvl, conv, gap_twips = 50){
+  
+  ret <- list()
+  
+  for (k in 1:length(wlvl)) {
+    
+    df <- wlvl[[k]]
+    
+    # Extract spanning and underline only for detection
+    df_span <- df[df$span > 0 & df$underline == TRUE,] 
+    
+    if (nrow(df_span) < 2) {
+      ret[[k]] <- df
+    } else {
+      gap_width <- gap_twips/conv
+      
+      df_span$order <- as.numeric(stri_extract_first_regex(df_span$name, "\\d+"))
+      
+      # Empty template for gap data
+      df_gap <- na.omit(
+        data.frame(
+          span = NA_integer_,
+          width = NA,
+          label = NA_character_,
+          align = NA_character_,
+          n = NA_integer_,
+          name = NA_character_,
+          underline = NA,
+          col_span = NA_integer_,
+          bold = NA,
+          order = NA_integer_
+        )
+      )
+      
+      for (i in 1:nrow(df_span)) {
+        
+        # Temporary gap data for stacking
+        df_gap_temp <- data.frame(
+          span = -1,
+          width = NA,
+          label = "",
+          align = "",
+          n = NA_integer_,
+          name = NA_character_,
+          underline = TRUE,
+          col_span = 1,
+          bold = FALSE,
+          order = NA_integer_
+        )
+        
+        cur_order <- df_span$order[i]
+        
+        # Process by first, last, and others
+        if (i == 1){
+          next_order <- df_span$order[i + 1]
+          
+          # Continuous underline detection
+          if (next_order - cur_order== 1) {
+            
+            # Create the gap data after this spanning cell
+            df_gap_temp$width <- gap_width
+            df_gap_temp$order <- cur_order + 0.5
+            df_gap_temp$name <- paste0("Span", df_gap_temp$order)
+            df_gap <- rbind(df_gap, df_gap_temp)
+            
+            # Reduce the gap width for spanning cell
+            df_span$width[i] <- df_span$width[i] - (gap_width/2)
+          }
+        } else if (i == nrow(df_span)){
+          pre_order <- df_span$order[i - 1]
+          
+          # Continuous underline detection
+          if (cur_order - pre_order == 1) {
+            
+            # Reduce the gap width for spanning cell
+            df_span$width[i] <- df_span$width[i] - (gap_width/2)
+          }
+          
+        } else {
+          pre_order <- df_span$order[i - 1]
+          next_order <- df_span$order[i + 1]
+          
+          # Continuous underline detection
+          if (next_order - cur_order == 1 |
+              cur_order - pre_order == 1) {
+            
+            # Create the gap data after this spanning cell
+            if (next_order - cur_order == 1) {
+              df_gap_temp$width <- gap_width
+              df_gap_temp$order <- cur_order + 0.5
+              df_gap_temp$name <- paste0("Span", df_gap_temp$order)
+              df_gap <- rbind(df_gap, df_gap_temp)
+              
+              # Reduce the gap width for spanning cell
+              df_span$width[i] <- df_span$width[i] - (gap_width/2)
+            }
+            
+            if (cur_order - pre_order == 1) {
+              # Reduce the gap width for spanning cell
+              df_span$width[i] <- df_span$width[i] - (gap_width/2)
+            }
+          }
+        }
+      } # End of data row loop
+      
+      # Drop order
+      df_span <- df_span[, setdiff(names(df_span), "order")]
+      df_gap <- df_gap[, setdiff(names(df_gap), "order")]
+      
+      # Stack together and sort
+      df_ret <- rbind(df_span, df_gap, df[!(df$span > 0 & df$underline == TRUE),])
+      df_ret <- df_ret[order(df_ret$name),]
+      
+      ret[[k]] <- df_ret
+      
+    } # End of gap process
+  }
+  
+  return(ret)
+}
+
 #' @description This function counts lines per row independently because
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
@@ -1014,11 +1143,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     mxrw <- 1
     
     # Prepare indenting convert
-    if(rs$units == "inches"){
-      conv_twips <- 1440
-    }else if(rs$units == "cm"){
-      conv_twips <- 567
-    }
+    conv_twips <- rs$twip_conversion
   
     defs <- ts$col_defs
 
