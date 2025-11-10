@@ -710,6 +710,10 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
+  # Add indenting information for gap
+  if (length(wlvl) > 0) {
+    wlvl <- get_spanning_gap_docx(wlvl) 
+  }
   
   # Get borders
   brdrs <- ts$borders
@@ -764,6 +768,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       # Add colspans
       vl <- tmp$html
+      tb <- ""
       bb <- ""
       
       # Special handling of cell borders for different situations.  
@@ -813,25 +818,37 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
         }
         
         # If borders are off, add an underline if requested
+        indent <- ""
         if (cs[k] > 1 | vl != "") {
             
           if (s$underline[k]) {
             b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-                
           }
-        } 
+        }
         
         
-        bb <- paste0('<w:tcBorders>', t, b, '</w:tcBorders>\n')
+        tb <- paste0('<w:tcBorders>', t, '</w:tcBorders>\n')
+        bb <- paste0('<w:pBdr>', b, '</w:pBdr>')
       }
       
       
+      # r <- paste0(r, "<w:tc>", 
+      #             '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', bb,
+      #             '<w:vAlign w:val="bottom"/>',
+      #             '<w:tcW w:w="', round(widths[k] * conv), '" w:type="dxa"/>',
+      #             '</w:tcPr>', 
+      #             para(vl, ha[k], bold = s$bold[k]), "</w:tc>\n")
+      
       r <- paste0(r, "<w:tc>", 
-                  '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', bb,
+                  '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', tb,
                   '<w:vAlign w:val="bottom"/>',
                   '<w:tcW w:w="', round(widths[k] * conv), '" w:type="dxa"/>',
                   '</w:tcPr>', 
-                  para(vl, ha[k], bold = s$bold[k]), "</w:tc>\n")
+                  para(vl, ha[k], bold = s$bold[k],
+                       indent_left = s$indent_left[k],
+                       indent_right = s$indent_right[k],
+                       borders = bb), 
+                  "</w:tc>\n")
       
       
       # Add in extra lines for labels that wrap
@@ -857,6 +874,96 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
               lines = sum(cnt))
   
   return(res)
+}
+
+#' @description Check gap and insert indent variables for DOCX
+#' @details Check gap and insert indent variables for DOCX
+#' @noRd
+get_spanning_gap_docx <- function(wlvl, gap_twips = 100){
+  
+  ret <- list()
+  
+  for (k in 1:length(wlvl)) {
+    
+    df <- wlvl[[k]]
+    
+    # Prepare indent variables
+    df$indent_left <- rep(NA, nrow(df))
+    df$indent_right <- rep(NA, nrow(df))
+    
+    
+    # Extract spanning and underline only for detection
+    df_span <- df[df$span > 0 & df$underline == TRUE,] 
+    
+    if (nrow(df_span) < 2) {
+      ret[[k]] <- df
+    } else {
+      # This would be used directly in w:ind, to need to convert
+      gap_width <- gap_twips
+      
+      df_span$order <- as.numeric(stri_extract_first_regex(df_span$name, "\\d+"))
+
+      for (i in 1:nrow(df_span)) {
+        
+        cur_order <- df_span$order[i]
+        
+        # Process by first, last, and others
+        if (i == 1){
+          next_order <- df_span$order[i + 1]
+          
+          # Continuous underline detection
+          if (next_order - cur_order == 1) {
+            
+            # Add indenting information for reducing underline
+            df_span$indent_right[i] <- gap_width/2
+          }
+        } else if (i == nrow(df_span)){
+          pre_order <- df_span$order[i - 1]
+          
+          # Continuous underline detection
+          if (cur_order - pre_order == 1) {
+            
+            # Add indenting information for reducing underline
+            df_span$indent_left[i] <- gap_width/2
+          }
+          
+        } else {
+          pre_order <- df_span$order[i - 1]
+          next_order <- df_span$order[i + 1]
+          
+          # Continuous underline detection
+          if (next_order - cur_order == 1 |
+              cur_order - pre_order == 1) {
+            
+            # Create the gap data after this spanning cell
+            if (next_order - cur_order == 1) {
+              
+              # Add indenting information for reducing underline
+              df_span$indent_right[i] <- gap_width/2
+            }
+            
+            if (cur_order - pre_order == 1) {
+              
+              # Add indenting information for reducing underline
+              df_span$indent_left[i] <- gap_width/2
+            }
+          }
+        }
+      } # End of data row loop
+      
+      # Drop order
+      df_span <- df_span[, setdiff(names(df_span), "order")]
+
+      # Stack together and sort
+      df_ret <- rbind(df_span, df[!(df$span > 0 & df$underline == TRUE),])
+      df_ret <- df_ret[order(df_ret$name),]
+      
+      ret[[k]] <- df_ret
+      
+    } # End of gap process
+  }
+  
+  return(ret)
 }
 
 #' @description This function counts lines per row independently because
@@ -1004,7 +1111,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           }
           
           ret[i] <- paste0(ret[i], "<w:tc>", b,
-                           para(vl, ca[j], bold = bflg, indent = ind_twips), "</w:tc>")
+                           para(vl, ca[j], bold = bflg, indent_left = ind_twips), "</w:tc>")
         }
 
         
