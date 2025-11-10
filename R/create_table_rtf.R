@@ -900,7 +900,7 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
 #' @description Check gap and insert blank for RTF
 #' @details Check gap and insert blank for RTF
 #' @noRd
-get_spanning_gap_rtf <- function(wlvl, conv, gap_twips = 50){
+get_spanning_gap_rtf <- function(wlvl, conv, gap_twips = 100){
   
   ret <- list()
   
