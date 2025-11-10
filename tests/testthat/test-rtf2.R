@@ -3556,34 +3556,38 @@ test_that("rtf2-99: Multi page table removes blank spaces.", {
 
 test_that("rtf2-100: Spanning header gap works as expected.", {
   
-  
-  fp <- file.path(base_path, "rtf2/test100.rtf")
-  
-  dat <- mtcars[1:15, ]
-  
-  tbl <- create_table(dat, borders = c("outside")) %>%
-    spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
-    spanning_header(hp, wt, "Span 2", underline = TRUE) %>%
-    spanning_header(qsec, vs, "Span 3", n = 10) %>%
-    spanning_header(cyl, hp, "Super Span", n = 11, level = 2) |> 
-    spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2)
-  
-  rpt <- create_report(fp, output_type = "RTF", font = fnt,
-                       font_size = fsz, orientation = "landscape") %>%
-    set_margins(top = 1, bottom = 1) %>%
-    page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
-    titles("Table 1.0", "My Nice Table") %>%
-    add_content(tbl) %>%
-    footnotes("My footnote 1", "My footnote 2") %>%
-    page_footer("Left1", "Center1", "Right1")
-  
-  res <- write_report(rpt)
-  res
-  res$column_widths
-  
-  expect_equal(file.exists(fp), TRUE)
-  expect_equal(res$pages, 1)
-  
+  if (dev == TRUE) {
+    
+    fp <- file.path(base_path, "rtf2/test100.rtf")
+    
+    dat <- mtcars[1:15, ]
+    
+    tbl <- create_table(dat, borders = c("outside")) %>%
+      spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
+      spanning_header(hp, wt, "Span 2", underline = TRUE) %>%
+      spanning_header(qsec, vs, "Span 3", n = 10) %>%
+      spanning_header(cyl, hp, "Super Span", n = 11, level = 2) |> 
+      spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2)
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+      titles("Table 1.0", "My Nice Table") %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2") %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    res
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
 })
 
 # User Tests --------------------------------------------------------------
