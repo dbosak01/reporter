@@ -1474,7 +1474,7 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
 
 #' @noRd
 para <- function(txt, align = "left", font_size = NULL, bold = FALSE, 
-                 italics = FALSE, indent = NA) {
+                 italics = FALSE, indent_left = NA, indent_right = NA, borders = "") {
   
   ret <- ""
   
@@ -1511,14 +1511,18 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
         align <- "center"
       
       indent_c <- ""
-      if (!is.na(indent)) {
-        indent_c <- sprintf('<w:ind w:left="%s"/>', indent)
+      if (!is.na(indent_left) | !is.na(indent_right)) {
+        indent_left <- ifelse(is.na(indent_left), 0, indent_left)
+        indent_right <- ifelse(is.na(indent_right),0,indent_right)
+        
+        indent_c <- sprintf('<w:ind w:left="%s" w:right="%s"/>', indent_left, indent_right)
       }
       
      ret <- paste0(ret, '<w:p>',
                    '<w:pPr><w:jc w:val="', align, '"/>',
                    '<w:spacing w:after="0"/>',
                    indent_c,
+                   borders,
                    '</w:pPr>',
                    '<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
                    '</w:t></w:r></w:p>\n')
