@@ -729,6 +729,10 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
+  # Add information for gap
+  if (length(wlvl) > 0) {
+    wlvl <- get_spanning_gap_html(wlvl) 
+  }
   
   # Get borders
   brdrs <- ts$borders
@@ -831,9 +835,22 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       else 
         tstr <- encodeHTML(vl)
       
+      # Check gap information
+      gap <- ""
+      if (!is.na(s$gap_width[k])){
+        # This div appears to create a small white gap in the black bottom border of the cell
+        gap <- sprintf(
+          "<div style=\"position:absolute;left:0px;width:%sin;height:1px;bottom:-1px;background-color:white;\"></div>",
+          s$gap_width[k]
+        )
+        
+        #  Sets the positioning context for absolute positioning within the cell
+        bb <- paste0(bb, ";position:relative;")
+      }
+      
       r <- paste0(r, "<td class=\"shdr\" colspan=\"", cs[k], 
-                  "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
-                  tstr, "</td>\n")
+                  "\" style=\"vertical-align:bottom;", ha[k], bb, "\">",
+                  gap, tstr, "</td>\n")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
@@ -859,6 +876,62 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
               lines = sum(cnt))
   
   return(res)
+}
+
+#' @description Check gap and insert gap information for HTML
+#' @details Check gap and insert gap information for HTML
+#' @noRd
+get_spanning_gap_html <- function(wlvl, gap_twips = 100){
+  
+  ret <- list()
+  
+  for (k in 1:length(wlvl)) {
+    
+    df <- wlvl[[k]]
+    
+    # Prepare gap variables
+    df$gap_width <- rep(NA, nrow(df))
+    
+    # Extract spanning and underline only for detection
+    df_span <- df[df$span > 0 & df$underline == TRUE,] 
+    
+    if (nrow(df_span) < 2) {
+      ret[[k]] <- df
+    } else {
+      # Convert twips to inch (Default 100 twips for consistency)
+      gap_width <- gap_twips/1440
+      
+      df_span$order <- as.numeric(stri_extract_first_regex(df_span$name, "\\d+"))
+      
+      for (i in 2:nrow(df_span)) {
+        
+        cur_order <- df_span$order[i]
+        
+        # Gap is processed only for next cell
+        pre_order <- df_span$order[i - 1]
+        
+        # Continuous underline detection
+        if (cur_order - pre_order == 1) {
+          
+          # Add indenting information for gap
+          df_span$gap_width[i] <- gap_width
+        }
+        
+      } # End of data row loop
+      
+      # Drop order
+      df_span <- df_span[, setdiff(names(df_span), "order")]
+      
+      # Stack together and sort
+      df_ret <- rbind(df_span, df[!(df$span > 0 & df$underline == TRUE),])
+      df_ret <- df_ret[order(df_ret$name),]
+      
+      ret[[k]] <- df_ret
+      
+    } # End of gap process
+  }
+  
+  return(ret)
 }
 
 #' @description This function counts lines per row independently because
