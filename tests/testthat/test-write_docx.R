@@ -102,7 +102,7 @@ test_that("para() function works as expected with indentation.", {
   txt <- "here is \n a nice text string."
   
   
-  res <- para(txt, indent = 360)
+  res <- para(txt, indent_left = 360)
   
   res
   
