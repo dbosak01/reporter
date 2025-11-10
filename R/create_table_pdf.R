@@ -1138,7 +1138,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       else 
         vl <- tbl[i, j]
       
-      if (flgs[i] %in% c("B", "L")) {
+      if (flgs[i] %in% c("B", "A", "L")) {
         
         # Strip out line feeds for label rows
         #vl <- gsub("\n", " ", vl, fixed = TRUE)
@@ -1219,7 +1219,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       # Applies inside vertical borders
       if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] 
-          & !blnks[i] %in% c("B", "L")) {
+          & !blnks[i] %in% c("B", "A", "L")) {
         
         if (j == nms[1]) {
           lb <- tlb

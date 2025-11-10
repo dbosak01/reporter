@@ -3695,7 +3695,7 @@ test_that("user1: demo table works.", {
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE, borders = c("outside")) %>%
       column_defaults(from = "ARM A", to = "ARM D", width = 1.25) %>%
-      define(var, blank_after = TRUE, dedupe = TRUE,
+      define(var, blank_after = TRUE, dedupe = TRUE, blank_before = T,
              format = block_fmt, label = "") %>%
       define(label, label = "") %>%
       define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%

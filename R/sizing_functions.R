@@ -214,23 +214,43 @@ prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
   # print(dat)
   
   # Get vector of columns for blank rows
-  ls <- c()
+  ls_after <- c()
+  ls_before <- c()
   for (def in defs) {
 
-    if (def$blank_after)
-      ls[length(ls) + 1] <- translate_invisible(def$var_c, names(dat))
+    if (def$blank_after) {
+      ls_after[length(ls_after) + 1] <- translate_invisible(def$var_c, names(dat))
+    }
+    
+    if (def$blank_before) {
+      ls_before[length(ls_before) + 1] <- translate_invisible(def$var_c, names(dat))
+    }
   }
 
-  # Add blanks on requested columns
-  if (!is.null(ls)) {
-    if (length(ls) > 0) {
+  # Add after blanks on requested columns
+  if (!is.null(ls_after)) {
+    if (length(ls_after) > 0) {
       
       # Reverse order so groups turn out correct
-      ls <- ls[order(ls, decreasing = TRUE)]
+      ls_after <- ls_after[order(ls_after, decreasing = TRUE)]
       
       # Add blanks
-      if (length(ls) > 0) {
-        dat <- add_blank_rows(dat, location = "below", vars = ls)
+      if (length(ls_after) > 0) {
+        dat <- add_blank_rows(dat, location = "below", vars = ls_after)
+      }
+    }
+  }
+  
+  # Add before blanks on requested columns
+  if (!is.null(ls_before)) {
+    if (length(ls_before) > 0) {
+      
+      # Reverse order so groups turn out correct
+      ls_before <- ls_before[order(ls_before, decreasing = TRUE)]
+      
+      # Add blanks
+      if (length(ls_before) > 0) {
+        dat <- add_blank_rows(dat, location = "above", vars = ls_before)
       }
     }
   }
@@ -388,7 +408,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom,
       # Label row widths are dealt with later.
       if ("..blank" %in% names(dat) & merge_label_row) {
         colattr <- attributes(dat[[nm]])
-        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
+        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B", "A"), " ", dat[[nm]])
         attributes(dat[[nm]]) <- colattr
       }
       
@@ -593,8 +613,8 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       # Label row widths are dealt with later.
       blank_idx <- rep(F, dim(dat)[1])
       if ("..blank" %in% names(dat) & merge_label_row) {
-        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
-        blank_idx <- dat[["..blank"]] %in% c("L", "B")
+        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B", "A"), " ", dat[[nm]])
+        blank_idx <- dat[["..blank"]] %in% c("L", "B", "A")
       }
       
       # --------------------------------- #

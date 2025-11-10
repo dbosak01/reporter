@@ -1114,7 +1114,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     
     
 
-    if (flgs[i] %in% c("B", "L")) {
+    if (flgs[i] %in% c("B", "A", "L")) {
       
       # Deal with blank and label rows
       radj <- 0
@@ -1147,7 +1147,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
     defs <- ts$col_defs
 
-    if (flgs[i] %in% c("B", "L")) {
+    if (flgs[i] %in% c("B", "A", "L")) {
       
       # Deal with label rows
       vl <- t[i, 1]

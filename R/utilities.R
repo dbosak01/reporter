@@ -304,7 +304,8 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
   for (i in seq_along(lst)) {
     
     # Don't append line for blank rows
-    if ("..blank" %in% names(lst[[i]]) & all(lst[[i]][["..blank"]] == "B")) {
+    if ("..blank" %in% names(lst[[i]]) & 
+        (all(lst[[i]][["..blank"]] == "B") | all(lst[[i]][["..blank"]] == "A"))) {
       
       ret[[i]] <- lst[[i]]
     } else {
@@ -392,7 +393,7 @@ split_cells <- function(x, col_widths) {
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
 
-        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] %in% c("B", "A")) {
           
           cell <- substr(x[[i, nm]], 1, col_widths[[nm]])
           
@@ -717,7 +718,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
         
-        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] %in% c("B", "A")) {
           
           cell <- ""
           

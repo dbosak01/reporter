@@ -335,6 +335,8 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' \code{n_format} parameter on \code{\link{create_table}}.
 #' @param blank_after Whether to place a blank row after unique values of this
 #' variable.  Valid values are TRUE or FALSE.  Default is FALSE.
+#' @param blank_before Whether to place a blank row before unique values of this
+#' variable.  Valid values are TRUE or FALSE.  Default is FALSE.
 #' @param dedupe Whether to dedupe the values for this variable.  Variables
 #' that are deduped only show the value on the first row of each group.  This 
 #' option is commonly used for grouping variables.
@@ -449,7 +451,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @export
 define <- function(x, vars, label = NULL, format = NULL, 
                    align=NULL, label_align=NULL, width=NULL,
-                   visible=TRUE, n = NULL, blank_after=FALSE,
+                   visible=TRUE, n = NULL, blank_after=FALSE, blank_before=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
                    page_break = FALSE, indent = NULL, label_row = FALSE,
                    standard_eval = FALSE, style = NULL) {
@@ -518,6 +520,7 @@ define <- function(x, vars, label = NULL, format = NULL,
    def <- define_c(nm, label = lbl, format = format, 
                    align=align, label_align=label_align, width=width,
                    visible=visible, n = n, blank_after=blank_after,
+                   blank_before = blank_before,
                    dedupe=dedupe, id_var = id_var, page_wrap = page_wrap,
                    page_break = page_break, indent = indent, 
                    label_row = label_row, style = style)
@@ -541,6 +544,7 @@ define <- function(x, vars, label = NULL, format = NULL,
 define_c <- function(var, label = NULL, format = NULL, 
                    align=NULL, label_align=NULL, width=NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE,
+                   blank_before = FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
                    page_break = FALSE, indent = NULL, label_row = FALSE,
                    style = NULL) {
@@ -564,6 +568,7 @@ define_c <- function(var, label = NULL, format = NULL,
   def$visible <- visible
   def$n <- n
   def$blank_after <- blank_after
+  def$blank_before <- blank_before
   def$dedupe <- dedupe
   def$id_var <- id_var
   def$page_wrap <- page_wrap

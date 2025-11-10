@@ -1083,7 +1083,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         else 
           vl <- encodeHTML(vl)
         
-        if (merge_label_row  & flgs[i] %in% c("B", "L")) {
+        if (merge_label_row  & flgs[i] %in% c("B", "A", "L")) {
           if (j == 1) {
             
             # # Strip out line feeds for label rows

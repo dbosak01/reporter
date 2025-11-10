@@ -892,13 +892,13 @@ get_cell_styles <- function(colnm, styles, flgs, rw, tbl) {
       bflg <- TRUE
       if (!is.null(stl$indicator)) {
         if ("datarow" %in% stl$indicator &&
-            flgs[rw] %in% c("B", "L")) {
+            flgs[rw] %in% c("B", "L", "A")) {
           bflg <- FALSE
         } else if ("labelrow" %in% stl$indicator &&
                    !flgs[rw] %in% "L") {
           bflg <- FALSE
         } else if ("blankrow" %in% stl$indicator &&
-                   !flgs[rw] %in% "B") {
+                   !flgs[rw] %in% c("B", "A")) {
           bflg <- FALSE
         } else if (stl$indicator %in% names(tbl)) {
           if (!is.null(tbl[[rw, stl$indicator]])) {

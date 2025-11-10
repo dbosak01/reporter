@@ -94,13 +94,14 @@ test_that("prep_data works as expected", {
   
   
   tbl <- create_table(iris) %>% 
-    define(Species, blank_after = TRUE, dedupe = TRUE, indent = .25)
+    define(Species, blank_after = TRUE, blank_before = TRUE,
+           dedupe = TRUE, indent = .25)
 
   
   d <- prep_data(iris, tbl, .0833333, "", blank_indent = T)
 
   
-  expect_equal(sum(d$..blank != ""), 3)
+  expect_equal(sum(d$..blank != ""), 6)
   expect_equal(max(nchar(d$Species)) > mw, TRUE)
   
 })

@@ -1052,7 +1052,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         }
         
         
-        if (tb[i] %in% c("B", "L")) {
+        if (tb[i] %in% c("B", "A", "L")) {
           cs <-  paste0('<w:gridSpan w:val="', length(nms) , '"/>')
         }
         
@@ -1084,7 +1084,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         }
         
         
-        if (!(tb[i] %in% c("B", "L") & j > 1)) {
+        if (!(tb[i] %in% c("B", "A", "L") & j > 1)) {
           # Construct html
           
           # Put indent information into paragraph properties

@@ -1570,7 +1570,7 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
     }
     
     if (!is.null(flg)) {
-      if (flg %in% c("L", "B")) {
+      if (flg %in% c("L", "B", "A")) {
         if (col == 1 & any(brdrs %in% c("right", "body"))) {
           r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
         }
