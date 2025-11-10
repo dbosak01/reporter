@@ -240,20 +240,6 @@ prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
       }
     }
   }
-  
-  # Add before blanks on requested columns
-  if (!is.null(ls_before)) {
-    if (length(ls_before) > 0) {
-      
-      # Reverse order so groups turn out correct
-      ls_before <- ls_before[order(ls_before, decreasing = TRUE)]
-      
-      # Add blanks
-      if (length(ls_before) > 0) {
-        dat <- add_blank_rows(dat, location = "above", vars = ls_before)
-      }
-    }
-  }
 
    # print("Blanks")
     #print(dat)
@@ -267,6 +253,21 @@ prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
         dat[[def$var_c]] <- as.character(dat[[def$var_c]])
       
       dat <- add_blank_rows(dat, "label", vars = def$var_c)
+    }
+  }
+  
+  # Add before blanks on requested columns
+  # This step should be after label rows so that the blank rows' order are correct 
+  if (!is.null(ls_before)) {
+    if (length(ls_before) > 0) {
+      
+      # Reverse order so groups turn out correct
+      ls_before <- ls_before[order(ls_before, decreasing = TRUE)]
+      
+      # Add blanks
+      if (length(ls_before) > 0) {
+        dat <- add_blank_rows(dat, location = "above", vars = ls_before)
+      }
     }
   }
 

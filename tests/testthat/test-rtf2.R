@@ -3837,7 +3837,7 @@ test_that("user2: demo table with stub works.", {
     tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
       stub(c("var", "label"), width = 1.5) %>%
       column_defaults(width = 1) %>%
-      define(var, blank_after = TRUE,
+      define(var, blank_after = TRUE, blank_before = TRUE,
              format = block_fmt, label = "", label_row = TRUE) %>%
       define(label, label = "", indent = .25) %>%
       define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
