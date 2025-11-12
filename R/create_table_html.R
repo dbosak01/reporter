@@ -840,7 +840,7 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       if (!is.na(s$gap_width[k])){
         # This div appears to create a small white gap in the black bottom border of the cell
         gap <- sprintf(
-          "<div style=\"position:absolute;left:0px;width:%sin;height:1px;bottom:-1px;background-color:white;\"></div>",
+          "<div style=\"position:absolute;left:-3px;width:%sin;height:1px;bottom:-1px;background-color:white;\"></div>",
           s$gap_width[k]
         )
         
