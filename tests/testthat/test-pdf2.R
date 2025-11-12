@@ -3061,7 +3061,42 @@ test_that("pdf2-80: spanning header works on show_cols none and defined cols", {
   
 })
 
-
+test_that("pdf2-81: Plot outside border works as expected.", {
+  
+  if (dev) {
+    
+    # Import plot
+    plt <- readRDS(paste0(base_path, "/data/pdf2_81_input.rds"))
+    
+    # Create temp file name
+    fp <- file.path(base_path, "pdf2/test81.pdf")
+    
+    page1 <- create_plot(plt1, 4.5, 7, borders = "outside") |> 
+      titles("Figure 1.1", "Distribution of Subjects by Treatment Group", 
+             bold = TRUE, font_size = 11)
+    
+    
+    rpt <- create_report(fp, output_type = "PDF", font = "Arial") |> 
+      set_margins(top = 1, bottom = 1) |> 
+      page_header("Sponsor: Company", "Study: ABC") |> 
+      add_content(page1) |> 
+      footnotes("Program: DM_Figure.R") |> 
+      page_footer(paste0("Date Produced: ", fapply(Sys.time(), "%d%b%y %H:%M")), 
+                  right = "Page [pg] of [tpg]")
+    
+    
+    # Write the report
+    res <- write_report(rpt)
+    
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+  } else {
+    
+    expect_equal(TRUE, TRUE) 
+  }
+  
+})
 
 
 # # User Tests --------------------------------------------------------------
@@ -3170,7 +3205,7 @@ test_that("pdf2-user1: demo table works.", {
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE) %>%
       column_defaults(from = "ARM A", to = "ARM D", width = 1.25) %>%
-      define(var, blank_after = TRUE, dedupe = TRUE,
+      define(var, blank_after = TRUE, dedupe = TRUE, blank_before = TRUE,
              format = block_fmt, label = "") %>%
       define(label, label = "") %>%
       define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
