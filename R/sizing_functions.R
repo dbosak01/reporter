@@ -622,12 +622,12 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       #   Maximum width of a column
       # --------------------------------- #
       w_each <-  get_text_width(dat[[nm]], units=uom, font=font, font_size = font_size)
-      
+
       # Add indention width
-      if (nm %in% names(defs)) {
-        if (!is.null(defs[[nm]]$indent)) {
-          w_each <- w_each + defs[[nm]]$indent
-        }
+      if (!is.null(defs[[nm]]$indent)) {
+        
+        w_each <- w_each + defs[[nm]]$indent
+        
       } else if (!is.null(ts$stub) & nm == "stub") {
         stub_var <- ts$stub$vars
         
