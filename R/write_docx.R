@@ -23,6 +23,10 @@ write_docx <- function(src, pth) {
     
     npth <- suppressWarnings(normalizePath(pth))
     
+    if (grepl("^\\./", npth)) {
+      npth <- file.path(getwd(), sub("./", "", npth, fixed = TRUE))
+    }
+    
     if (file.exists(npth))
       file.remove(npth)
     
