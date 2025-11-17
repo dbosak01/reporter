@@ -107,7 +107,7 @@ test_that("para() function works as expected with indentation.", {
   res
   
   expect_true(
-    any(grepl("<w:ind w:left=\"360\"/></w:pPr><w:r><w:t xml:space=\"preserve\">here is ",
+    any(grepl("<w:ind w:left=\"360\" w:right=\"0\"/></w:pPr><w:r><w:t xml:space=\"preserve\">here is ",
               res))
   )
   

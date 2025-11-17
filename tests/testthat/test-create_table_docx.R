@@ -32,7 +32,7 @@ test_that("get_table_body_docx works as expected.", {
   
   # Check if indenting code is added
   expect_true(
-    any(grepl("<w:ind w:left=\"360\"/></w:pPr><w:r><w:t xml:space=\"preserve\">21",
+    any(grepl("<w:ind w:left=\"360\" w:right=\"0\"/></w:pPr><w:r><w:t xml:space=\"preserve\">21",
               res$docx))
   )
 
