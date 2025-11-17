@@ -15,6 +15,7 @@ define(
   visible = TRUE,
   n = NULL,
   blank_after = FALSE,
+  blank_before = FALSE,
   dedupe = FALSE,
   id_var = FALSE,
   page_wrap = FALSE,
@@ -71,6 +72,9 @@ the n value will be performed by the formatting function assigned to the
 \code{n_format} parameter on \code{\link{create_table}}.}
 
 \item{blank_after}{Whether to place a blank row after unique values of this
+variable.  Valid values are TRUE or FALSE.  Default is FALSE.}
+
+\item{blank_before}{Whether to place a blank row before unique values of this
 variable.  Valid values are TRUE or FALSE.  Default is FALSE.}
 
 \item{dedupe}{Whether to dedupe the values for this variable.  Variables
