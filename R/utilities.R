@@ -304,7 +304,8 @@ add_blank_rows <- function(x, location = "below", vars = NULL) {
   for (i in seq_along(lst)) {
     
     # Don't append line for blank rows
-    if ("..blank" %in% names(lst[[i]]) & all(lst[[i]][["..blank"]] == "B")) {
+    if ("..blank" %in% names(lst[[i]]) & 
+        (all(lst[[i]][["..blank"]] == "B") | all(lst[[i]][["..blank"]] == "A"))) {
       
       ret[[i]] <- lst[[i]]
     } else {
@@ -392,7 +393,7 @@ split_cells <- function(x, col_widths) {
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
 
-        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] %in% c("B", "A")) {
           
           cell <- substr(x[[i, nm]], 1, col_widths[[nm]])
           
@@ -590,17 +591,17 @@ split_string_rtf <- function(strng, width, units, font = "Arial", nm = "",
   indnt <- 0
   cstrng <- strng
   indntw <- 0
-  if (nm == "stub") {
-    
-    bpos <- regexpr("^\\s+", strng)
-    if (bpos > 0) {
-      
-      indnt <-  attr(bpos, "match.length")
-      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
-      cstrng <- substr(strng, indnt + 1, nchar(strng))
-      #indntw <- indnt * char_width / mp
-    }
-  }
+  # if (nm == "stub") {
+  #   
+  #   bpos <- regexpr("^\\s+", strng)
+  #   if (bpos > 0) {
+  #     
+  #     indnt <-  attr(bpos, "match.length")
+  #     blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+  #     cstrng <- substr(strng, indnt + 1, nchar(strng))
+  #     #indntw <- indnt * char_width / mp
+  #   }
+  # }
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = mp)
   
@@ -657,17 +658,17 @@ split_string_text <- function(strng, width, units, nm = "", char_width = 1) {
   indnt <- 0
   cstrng <- strng
   indntw <- 0
-  if (nm == "stub") {
-    
-    bpos <- regexpr("^\\s+", strng)
-    if (bpos > 0) {
-      
-      indnt <-  attr(bpos, "match.length")
-      blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
-      cstrng <- substr(strng, indnt + 1, nchar(strng))
-      indntw <- indnt * char_width 
-    }
-  }
+  # if (nm == "stub") {
+  #   
+  #   bpos <- regexpr("^\\s+", strng)
+  #   if (bpos > 0) {
+  #     
+  #     indnt <-  attr(bpos, "match.length")
+  #     blnks <- paste0(rep(" ", indnt), sep = "", collapse = "")
+  #     cstrng <- substr(strng, indnt + 1, nchar(strng))
+  #     indntw <- indnt * char_width 
+  #   }
+  # }
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = 1)
   
@@ -688,7 +689,7 @@ split_string_text <- function(strng, width, units, nm = "", char_width = 1) {
 #' @import grDevices
 #' @noRd
 split_cells_variable <- function(x, col_widths, font, font_size, units, 
-                                 output_type, char_width) {
+                                 output_type, char_width, ts) {
   
   dat <- NULL           # Resulting data frame
   wdths <- list()       # Resulting list of widths
@@ -702,6 +703,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
   else if (tolower(font) == "times")
     fnt <- "serif"
   
+  defs <- ts$col_defs
   
   pdf(NULL)
   par(family = fnt, ps = font_size)
@@ -716,7 +718,7 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
         
-        if ("..blank" %in% names(x) && x[[i, "..blank"]] == "B") {
+        if ("..blank" %in% names(x) && x[[i, "..blank"]] %in% c("B", "A")) {
           
           cell <- ""
           
@@ -742,17 +744,58 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
         } else {
           
           if (output_type %in% c("HTML", "DOCX")) {
-            res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            # For indenting values, the width should be (col_widths - indentation)
+            if (!is.null(defs[[nm]]$indent)) {
+              res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
+                                       units, nm, char_width)
+            } else if (nm == "stub" & !is.null(ts$stub)) {
+              stub_var <- x$..stub_var[i]
+              if (!is.null(defs[[stub_var]]$indent)) {
+                res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
+                                         units, nm, char_width)
+              } else {
+                res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+              }
+            } else {
+              res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            }
             
             cell <- res$html
           
           } else if (output_type == "RTF") {
-            res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+            # For indenting values, the width should be (col_widths - indentation)
+            if (!is.null(defs[[nm]]$indent)) {
+              res <- split_string_rtf(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
+                                      units, font, nm, char_width)
+            } else if (nm == "stub" & !is.null(ts$stub)) {
+              stub_var <- x$..stub_var[i]
+              if (!is.null(defs[[stub_var]]$indent)) {
+                res <- split_string_rtf(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
+                                        units, font, nm, char_width)
+              } else {
+                res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+              }
+            } else {
+              res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+            }
           
             cell <- res$rtf
           } else if (output_type == "PDF") {
-            
-            res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            # For indenting values, the width should be (col_widths - indentation)
+            if (!is.null(defs[[nm]]$indent)) {
+              res <- split_string_text(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
+                                       units, nm, char_width)
+            } else if (nm == "stub" & !is.null(ts$stub)) {
+              stub_var <- x$..stub_var[i]
+              if (!is.null(defs[[stub_var]]$indent)) {
+                res <- split_string_text(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
+                                         units, nm, char_width)
+              } else {
+                res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+              }
+            } else {
+              res <- split_string_text(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+            }
             
             cell <- paste0(res$text, collapse = "\n")
             

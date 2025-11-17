@@ -148,7 +148,7 @@ test_that("utils9: create_stub works as expected.", {
   d <- create_stub(x, tbl)
   
   expect_equal(d$stub, c("a", "b", "c", "a", "b", "c"))
-  
+  expect_equal(d$..stub_var, c("a1", "a1", "c1", "a1", "a1", "c1"))
 })
 
 
@@ -275,12 +275,42 @@ test_that("utils15: split_cells_variable works as expected.", {
   cw <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
   cw
   
-  res <- split_cells_variable(df, cw, "Arial", 12, "inches", "RTF")
+  res <- split_cells_variable(df, cw, "Arial", 12, "inches", "RTF", ts = tbl)
   res$widths
   
   expect_equal(any(class(res$data) == "data.frame"), TRUE)
   expect_equal(res$data[1, "..row"], 2)  
   expect_equal(res$data[3, "..row"], 3) 
+  
+})
+
+test_that("utils15: split_cells_variable works with indentation as expected.", {
+  
+  # split_cells_variable <- function(x, col_widths, font, font_size, units)
+  
+  df <- data.frame(car = c("Dart", "Bart", "Here is another car name"),
+                   cyl = c(8, 3, 4),
+                   disp = c("My lovely disp and it gets longer", 
+                            "Here is a big long string value to exceed 2 inches",
+                            "Short"), stringsAsFactors = FALSE)
+  
+  tbl <- create_table(df) %>% 
+    define(car, label = "Cars", width = 1, indent = 0.8) %>% 
+    define(cyl, width = 1.5, indent = 1) %>% 
+    define(disp, width = 2, indent = 1.5) 
+  
+  lbls <- get_labels(df, tbl)
+  
+  cw <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
+  cw
+  
+  res <- split_cells_variable(df, cw, "Arial", 12, "inches", "RTF", ts = tbl)
+  res$widths
+  
+  expect_equal(any(class(res$data) == "data.frame"), TRUE)
+  expect_equal(res$data[1, "..row"], 5)
+  expect_equal(res$data[2, "..row"], 7)
+  expect_equal(res$data[3, "..row"], 4) 
   
 })
 
@@ -480,8 +510,10 @@ test_that("utils22: split_cells_variable() works as expected.", {
                     col3 = c("my big string I want to wrap", "fork", "bork"),
                     ..row = c(NA, NA, NA), stringsAsFactors = FALSE)
   
+  ts <- create_table(dat)
+  
   res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1), 
-                              "Arial", 12, "inches", "RTF")
+                              "Arial", 12, "inches", "RTF", ts = ts)
   res
   
   expect_equal(nrow(res$data), 3)

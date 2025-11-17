@@ -6,7 +6,7 @@ test_that("get_table_body_pdf works as expected.", {
   
   dat <- mtcars[1:10, 1:5]
   
-  tbl <- create_table(dat) 
+  tbl <- create_table(dat)
   
   rpt <- create_report(fp, output_type = "PDF", font = "Arial",
                        font_size = 12) %>%
@@ -33,12 +33,35 @@ test_that("get_table_body_pdf works as expected.", {
   
   
   res <- get_table_body_pdf(rpt, dat, wdth, algns,  
-                            "center", "none", 0, spwidths, styles = list())
+                            "center", "none", 0, spwidths, styles = list(),
+                            ts = tbl)
   
   res  
   
   expect_equal(length(res$pdf), 50)
   expect_equal(round(res$lines, 1), 10.4)
+  
+  # ------------------- #
+  # Indentation case
+  # ------------------- #
+  tbl2 <- create_table(dat) %>%
+    define("mpg", indent = 0.25)
+  
+  rpt2 <- create_report(fp, output_type = "PDF", font = "Arial",
+                       font_size = 12) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  rpt2 <- page_setup_pdf(rpt2)
+  
+  res2 <- get_table_body_pdf(rpt2, dat, wdth, algns,  
+                            "center", "none", 0, spwidths, styles = list(),
+                            ts = tbl2)
+  
+  # Check if indenting cell has bigger xpos
+  expect_true(res2$pdf[[1]]$xpos > res$pdf[[1]]$xpos)
   
 })
 

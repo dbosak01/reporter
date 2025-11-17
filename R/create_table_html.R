@@ -143,6 +143,10 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   # str(fdat)
   
+  if ("..stub_var" %in% names(fdat)){
+    control_cols <- c(control_cols, "..stub_var")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -172,7 +176,7 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font,
                                rs$font_size, rs$units, rs$output_type, 
-                               rs$char_width)$data
+                               rs$char_width, ts)$data
   # print("split_cells")
   # print(fdat)
   
@@ -298,7 +302,7 @@ create_table_html <- function(rs, ts, pi, content_blank_row, wrap_flag,
   rws <- get_table_body_html(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, 
                              !ts$headerless,
-                             ts$first_row_blank, styles)
+                             ts$first_row_blank, styles, ts)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -725,6 +729,10 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
+  # Add information for gap
+  if (length(wlvl) > 0) {
+    wlvl <- get_spanning_gap_html(wlvl) 
+  }
   
   # Get borders
   brdrs <- ts$borders
@@ -827,9 +835,22 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       else 
         tstr <- encodeHTML(vl)
       
+      # Check gap information
+      gap <- ""
+      if (!is.na(s$gap_width[k])){
+        # This div appears to create a small white gap in the black bottom border of the cell
+        gap <- sprintf(
+          "<div style=\"position:absolute;left:-3px;width:%sin;height:1px;bottom:-1px;background-color:white;\"></div>",
+          s$gap_width[k]
+        )
+        
+        #  Sets the positioning context for absolute positioning within the cell
+        bb <- paste0(bb, ";position:relative;")
+      }
+      
       r <- paste0(r, "<td class=\"shdr\" colspan=\"", cs[k], 
-                  "\" style=\"vertical-align:bottom;", ha[k], bb, "\">", 
-                  tstr, "</td>\n")
+                  "\" style=\"vertical-align:bottom;", ha[k], bb, "\">",
+                  gap, tstr, "</td>\n")
       # print(lbls[k])
       # print(widths[k])
       # Add in extra lines for labels that wrap
@@ -857,12 +878,69 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
   return(res)
 }
 
+#' @description Check gap and insert gap information for HTML
+#' @details Check gap and insert gap information for HTML
+#' @noRd
+get_spanning_gap_html <- function(wlvl, gap_twips = 100){
+  
+  ret <- list()
+  
+  for (k in 1:length(wlvl)) {
+    
+    df <- wlvl[[k]]
+    
+    # Prepare gap variables
+    df$gap_width <- rep(NA, nrow(df))
+    
+    # Extract spanning and underline only for detection
+    df_span <- df[df$span > 0 & df$underline == TRUE,] 
+    
+    if (nrow(df_span) < 2) {
+      ret[[k]] <- df
+    } else {
+      # Convert twips to inch (Default 100 twips for consistency)
+      gap_width <- gap_twips/1440
+      
+      df_span$order <- as.numeric(stri_extract_first_regex(df_span$name, "\\d+"))
+      
+      for (i in 2:nrow(df_span)) {
+        
+        cur_order <- df_span$order[i]
+        
+        # Gap is processed only for next cell
+        pre_order <- df_span$order[i - 1]
+        
+        # Continuous underline detection
+        if (cur_order - pre_order == 1) {
+          
+          # Add indenting information for gap
+          df_span$gap_width[i] <- gap_width
+        }
+        
+      } # End of data row loop
+      
+      # Drop order
+      df_span <- df_span[, setdiff(names(df_span), "order")]
+      
+      # Stack together and sort
+      df_ret <- rbind(df_span, df[!(df$span > 0 & df$underline == TRUE),])
+      df_ret <- df_ret[order(df_ret$name),]
+      
+      ret[[k]] <- df_ret
+      
+    } # End of gap process
+  }
+  
+  return(ret)
+}
+
 #' @description This function counts lines per row independently because
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
 get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                                ex_brdr = FALSE, frb = FALSE, styles) {
+                                ex_brdr = FALSE, frb = FALSE, styles,
+                                ts) {
   
   if ("..blank" %in% names(tbl))
     flgs <- tbl$..blank
@@ -955,11 +1033,38 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         
         sflg <- nms[j] == "stub" &  has_style(rs, "table_stub_background")
         
-        
         b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
                                    exclude = exclude_top, 
                                    border_color = get_style(rs, "border_color"),
                                     stub_flag = sflg)
+        
+        # Put indent information into style
+        if (rs$units == "inches") {
+          ind_unit <- "in"
+        } else if (rs$units == "cm") {
+          ind_unit <- "cm"
+        }
+        pad <- ""
+        
+        defs <- ts$col_defs
+        if (!is.null(defs[[nms[j]]]$indent)) {
+          
+          pad <- sprintf("padding-left: %s%s;",
+                          defs[[nms[j]]]$indent,
+                          ind_unit)
+          
+        } else if (nms[j] == "stub" & !is.null(ts$stub)) {
+          
+          stub_var <- tbl$..stub_var[i]
+          if (!is.null(defs[[stub_var]]$indent)) {
+            pad <- sprintf("padding-left: %s%s;",
+                           defs[[stub_var]]$indent,
+                           ind_unit)
+          }
+        }
+        
+        b <- paste0(b, pad)
+        
         
         lrflg <- ""
         if ( nms[j] == "stub" & flgs[i] == "L")
@@ -978,7 +1083,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         else 
           vl <- encodeHTML(vl)
         
-        if (merge_label_row  & flgs[i] %in% c("B", "L")) {
+        if (merge_label_row  & flgs[i] %in% c("B", "A", "L")) {
           if (j == 1) {
             
             # # Strip out line feeds for label rows

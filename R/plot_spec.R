@@ -1138,7 +1138,7 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
   if (any(brdrs %in% c("all", "outside", "bottom"))) {
     
     rws[[length(rws) + 1]] <- page_hline(lb * conv, 
-                                         ylpos, 
+                                         ylpos + (yline - ypos), 
                                          (rb - lb) * conv) 
     
   }

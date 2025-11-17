@@ -1,7 +1,7 @@
 
 context("RTF2 Tests")
 
-base_path <- "c:/packages/reporter/tests/testthat"
+base_path <- paste0(getwd(),"/tests/testthat")
 data_dir <- base_path
 
 base_path <- tempdir()
@@ -3554,6 +3554,41 @@ test_that("rtf2-99: Multi page table removes blank spaces.", {
     expect_equal(TRUE, TRUE)
 })
 
+test_that("rtf2-100: Spanning header gap works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    fp <- file.path(base_path, "rtf2/test100.rtf")
+    
+    dat <- mtcars[1:15, ]
+    
+    tbl <- create_table(dat, borders = c("outside")) %>%
+      spanning_header(cyl, disp, "Span 1", label_align = "left") %>%
+      spanning_header(hp, wt, "Span 2", underline = TRUE) %>%
+      spanning_header(qsec, vs, "Span 3", n = 10) %>%
+      spanning_header(cyl, hp, "Super Span", n = 11, level = 2) |> 
+      spanning_header(drat, gear, "Super Duper\nWrapped Span", n = 11, level = 2)
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+      titles("Table 1.0", "My Nice Table") %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2") %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    res
+    res$column_widths
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 1)
+    
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
 
 # User Tests --------------------------------------------------------------
 
@@ -3660,7 +3695,7 @@ test_that("user1: demo table works.", {
     # Define table
     tbl <- create_table(demo, first_row_blank = TRUE, borders = c("outside")) %>%
       column_defaults(from = "ARM A", to = "ARM D", width = 1.25) %>%
-      define(var, blank_after = TRUE, dedupe = TRUE,
+      define(var, blank_after = TRUE, dedupe = TRUE, blank_before = T,
              format = block_fmt, label = "") %>%
       define(label, label = "") %>%
       define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%
@@ -3802,7 +3837,7 @@ test_that("user2: demo table with stub works.", {
     tbl <- create_table(demo, first_row_blank = TRUE, borders = "all") %>%
       stub(c("var", "label"), width = 1.5) %>%
       column_defaults(width = 1) %>%
-      define(var, blank_after = TRUE,
+      define(var, blank_after = TRUE, blank_before = TRUE,
              format = block_fmt, label = "", label_row = TRUE) %>%
       define(label, label = "", indent = .25) %>%
       define(`ARM A`, align = "center", label = "Placebo", n = 36) %>%

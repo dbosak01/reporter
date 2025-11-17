@@ -1324,7 +1324,7 @@ get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "", exclude = N
   
   # Deal with flag
   if (!is.na(flag)) {
-    if (flag %in% c("L", "B")) {
+    if (flag %in% c("L", "B", "A")) {
       
       if (col == 1 & any(brdrs %in% c("outside", "right", "all")))
         r <- "\\clbrdrr\\brdrs"

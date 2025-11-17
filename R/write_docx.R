@@ -23,6 +23,10 @@ write_docx <- function(src, pth) {
     
     npth <- suppressWarnings(normalizePath(pth))
     
+    if (grepl("^\\./", npth)) {
+      npth <- file.path(getwd(), sub("./", "", npth, fixed = TRUE))
+    }
+    
     if (file.exists(npth))
       file.remove(npth)
     
@@ -1474,7 +1478,7 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
 
 #' @noRd
 para <- function(txt, align = "left", font_size = NULL, bold = FALSE, 
-                 italics = FALSE) {
+                 italics = FALSE, indent_left = NA, indent_right = NA, borders = "") {
   
   ret <- ""
   
@@ -1510,9 +1514,26 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
       if (align == "centre")
         align <- "center"
       
+      indent_c <- ""
+      if (!is.na(indent_left) | !is.na(indent_right)) {
+        indent_left <- ifelse(is.na(indent_left), 0, indent_left)
+        indent_right <- ifelse(is.na(indent_right),0,indent_right)
+        
+        indent_c <- sprintf('<w:ind w:left="%s" w:right="%s"/>', indent_left, indent_right)
+      }
+      
+      # Underline only added in last line
+      borders_j <- ""
+      if (grepl("w:bottom", borders)) {
+        borders_j <- ifelse(j == length(splt[[i]]), borders, "")
+      }
+      
      ret <- paste0(ret, '<w:p>',
                    '<w:pPr><w:jc w:val="', align, '"/>',
-                   '<w:spacing w:after="0"/>', '</w:pPr>',
+                   '<w:spacing w:after="0"/>',
+                   indent_c,
+                   borders_j,
+                   '</w:pPr>',
                    '<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
                    '</w:t></w:r></w:p>\n')
     }
@@ -1559,7 +1580,7 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
     }
     
     if (!is.null(flg)) {
-      if (flg %in% c("L", "B")) {
+      if (flg %in% c("L", "B", "A")) {
         if (col == 1 & any(brdrs %in% c("right", "body"))) {
           r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
         }

@@ -691,6 +691,10 @@ page_setup_docx <- function(rs) {
   # Include all the rows associated with the page template
   rs$page_template_header_count <- sum(pt$page_header$lines, pt$titles$lines,
                                        pt$title_hdr$lines, pt$page_by$lines)
+  
+  # DOCX would still have one blank row on top even no page headers
+  rs$page_template_header_count <- max(c(1, rs$page_template_header_count))
+  
   if (debug)
     print(paste("Page Template Header Count:", rs$page_template_header_count))
 

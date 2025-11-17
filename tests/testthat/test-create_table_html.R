@@ -6,7 +6,8 @@ test_that("get_table_body_html works as expected.", {
   
   dat <- mtcars[1:10, 1:5]
   
-  tbl <- create_table(dat) 
+  tbl <- create_table(dat) %>%
+    define("mpg", indent = 0.25)
   
   rpt <- create_report(fp, output_type = "HTML", font = "Arial",
                        font_size = 12) %>%
@@ -25,9 +26,12 @@ test_that("get_table_body_html works as expected.", {
   
   
   res <- get_table_body_html(rpt, dat, wdth, algns,  "center", "none", 
-                             styles = list())
+                             styles = list(), ts = tbl)
   
   res  
+  
+  # Check indenting code is added
+  expect_true(any(grepl("<td class=\"tc tdc \" style=\"padding-left: 0.25in;\">21</td>", res$html)))
   
   expect_equal(length(res$html), 10)
   expect_equal(res$lines, 10)

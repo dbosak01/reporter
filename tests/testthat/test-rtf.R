@@ -1,7 +1,7 @@
 
 context("RTF Tests")
 
-base_path <- "c:/packages/reporter/tests/testthat"
+base_path <- paste0(getwd(),"/tests/testthat")
 
 base_path <- tempdir()
 

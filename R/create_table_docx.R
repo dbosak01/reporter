@@ -142,6 +142,10 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   # str(fdat)
   
+  if ("..stub_var" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..stub_var")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -166,7 +170,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font,
-                               rs$font_size, rs$units, rs$output_type, rs$char_width)$data
+                               rs$font_size, rs$units, rs$output_type, rs$char_width, ts)$data
   # print("split_cells")
   # print(fdat)
   
@@ -296,7 +300,7 @@ create_table_docx <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # rs, ts, widths,  algns, halgns, talgn
   rws <- get_table_body_docx(rs, pi$data, pi$col_width, 
                              pi$col_align, pi$table_align, ts$borders, 
-                             exbrdr, ts$first_row_blank, styles)
+                             exbrdr, ts$first_row_blank, styles, ts)
   
   a <- NULL
   if (content_blank_row %in% c("above", "both"))
@@ -706,6 +710,10 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   # column widths, and are ready to create spanning header rows
   #print(wlvl)
   
+  # Add indenting information for gap
+  if (length(wlvl) > 0) {
+    wlvl <- get_spanning_gap_docx(wlvl) 
+  }
   
   # Get borders
   brdrs <- ts$borders
@@ -760,6 +768,7 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       # Add colspans
       vl <- tmp$html
+      tb <- ""
       bb <- ""
       
       # Special handling of cell borders for different situations.  
@@ -809,25 +818,37 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
         }
         
         # If borders are off, add an underline if requested
+        indent <- ""
         if (cs[k] > 1 | vl != "") {
             
           if (s$underline[k]) {
             b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-                
           }
-        } 
+        }
         
         
-        bb <- paste0('<w:tcBorders>', t, b, '</w:tcBorders>\n')
+        tb <- paste0('<w:tcBorders>', t, '</w:tcBorders>\n')
+        bb <- paste0('<w:pBdr>', b, '</w:pBdr>')
       }
       
       
+      # r <- paste0(r, "<w:tc>", 
+      #             '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', bb,
+      #             '<w:vAlign w:val="bottom"/>',
+      #             '<w:tcW w:w="', round(widths[k] * conv), '" w:type="dxa"/>',
+      #             '</w:tcPr>', 
+      #             para(vl, ha[k], bold = s$bold[k]), "</w:tc>\n")
+      
       r <- paste0(r, "<w:tc>", 
-                  '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', bb,
+                  '<w:tcPr>', '<w:gridSpan w:val="', cs[k] , '"/>', tb,
                   '<w:vAlign w:val="bottom"/>',
                   '<w:tcW w:w="', round(widths[k] * conv), '" w:type="dxa"/>',
                   '</w:tcPr>', 
-                  para(vl, ha[k], bold = s$bold[k]), "</w:tc>\n")
+                  para(vl, ha[k], bold = s$bold[k],
+                       indent_left = s$indent_left[k],
+                       indent_right = s$indent_right[k],
+                       borders = bb), 
+                  "</w:tc>\n")
       
       
       # Add in extra lines for labels that wrap
@@ -855,12 +876,102 @@ get_spanning_header_docx <- function(rs, ts, pi, ex_brdr = FALSE) {
   return(res)
 }
 
+#' @description Check gap and insert indent variables for DOCX
+#' @details Check gap and insert indent variables for DOCX
+#' @noRd
+get_spanning_gap_docx <- function(wlvl, gap_twips = 100){
+  
+  ret <- list()
+  
+  for (k in 1:length(wlvl)) {
+    
+    df <- wlvl[[k]]
+    
+    # Prepare indent variables
+    df$indent_left <- rep(NA, nrow(df))
+    df$indent_right <- rep(NA, nrow(df))
+    
+    
+    # Extract spanning and underline only for detection
+    df_span <- df[df$span > 0 & df$underline == TRUE,] 
+    
+    if (nrow(df_span) < 2) {
+      ret[[k]] <- df
+    } else {
+      # This would be used directly in w:ind, to need to convert
+      gap_width <- gap_twips
+      
+      df_span$order <- as.numeric(stri_extract_first_regex(df_span$name, "\\d+"))
+
+      for (i in 1:nrow(df_span)) {
+        
+        cur_order <- df_span$order[i]
+        
+        # Process by first, last, and others
+        if (i == 1){
+          next_order <- df_span$order[i + 1]
+          
+          # Continuous underline detection
+          if (next_order - cur_order == 1) {
+            
+            # Add indenting information for reducing underline
+            df_span$indent_right[i] <- gap_width/2
+          }
+        } else if (i == nrow(df_span)){
+          pre_order <- df_span$order[i - 1]
+          
+          # Continuous underline detection
+          if (cur_order - pre_order == 1) {
+            
+            # Add indenting information for reducing underline
+            df_span$indent_left[i] <- gap_width/2
+          }
+          
+        } else {
+          pre_order <- df_span$order[i - 1]
+          next_order <- df_span$order[i + 1]
+          
+          # Continuous underline detection
+          if (next_order - cur_order == 1 |
+              cur_order - pre_order == 1) {
+            
+            # Create the gap data after this spanning cell
+            if (next_order - cur_order == 1) {
+              
+              # Add indenting information for reducing underline
+              df_span$indent_right[i] <- gap_width/2
+            }
+            
+            if (cur_order - pre_order == 1) {
+              
+              # Add indenting information for reducing underline
+              df_span$indent_left[i] <- gap_width/2
+            }
+          }
+        }
+      } # End of data row loop
+      
+      # Drop order
+      df_span <- df_span[, setdiff(names(df_span), "order")]
+
+      # Stack together and sort
+      df_ret <- rbind(df_span, df[!(df$span > 0 & df$underline == TRUE),])
+      df_ret <- df_ret[order(df_ret$name),]
+      
+      ret[[k]] <- df_ret
+      
+    } # End of gap process
+  }
+  
+  return(ret)
+}
+
 #' @description This function counts lines per row independently because
 #' the ..row field does not account for page wrapping.  Need number
 #' of lines on this particular page.
 #' @noRd
 get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
-                                ex_brdr = FALSE, frb = FALSE, styles) {
+                                ex_brdr = FALSE, frb = FALSE, styles, ts) {
   
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
@@ -941,7 +1052,7 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         }
         
         
-        if (tb[i] %in% c("B", "L")) {
+        if (tb[i] %in% c("B", "A", "L")) {
           cs <-  paste0('<w:gridSpan w:val="', length(nms) , '"/>')
         }
         
@@ -973,10 +1084,34 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         }
         
         
-        if (!(tb[i] %in% c("B", "L") & j > 1)) {
+        if (!(tb[i] %in% c("B", "A", "L") & j > 1)) {
           # Construct html
+          
+          # Put indent information into paragraph properties
+          if (rs$units == "inches") {
+            twips_conv <- 1440 
+          } else if (rs$units == "cm") {
+            twips_conv <- 1440/2.54
+          }
+          ind_twips <- NA
+          
+          defs <- ts$col_defs
+          if (!is.null(defs[[nms[j]]]$indent)) {
+            
+            ind_twips <- defs[[nms[j]]]$indent * twips_conv
+            
+          } else if (nms[j] == "stub" & !is.null(ts$stub)) {
+            
+            stub_var <- tbl$..stub_var[i]
+            if (!is.null(defs[[stub_var]]$indent)) {
+              
+              ind_twips <- defs[[stub_var]]$indent * twips_conv
+              
+            }
+          }
+          
           ret[i] <- paste0(ret[i], "<w:tc>", b,
-                           para(vl, ca[j], bold = bflg), "</w:tc>")
+                           para(vl, ca[j], bold = bflg, indent_left = ind_twips), "</w:tc>")
         }
 
         

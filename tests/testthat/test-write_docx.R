@@ -96,5 +96,23 @@ test_that("para() function works as expected.", {
   expect_equal(nchar(res) > 100, TRUE)
   
 })
+
+test_that("para() function works as expected with indentation.", {
+  
+  txt <- "here is \n a nice text string."
+  
+  
+  res <- para(txt, indent_left = 360)
+  
+  res
+  
+  expect_true(
+    any(grepl("<w:ind w:left=\"360\" w:right=\"0\"/></w:pPr><w:r><w:t xml:space=\"preserve\">here is ",
+              res))
+  )
+  
+  expect_equal(nchar(res) > 100, TRUE)
+  
+})
   
 

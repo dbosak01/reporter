@@ -126,7 +126,7 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   
   # Prep data for blank lines, indents, and stub columns
-  fdat <- prep_data(fdat, ts, rs$char_width, rs$missing)
+  fdat <- prep_data(fdat, ts, rs$char_width, rs$missing, blank_indent = TRUE)
   # print("prep_data")
   # print(fdat)
   # str(fdat)

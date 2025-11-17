@@ -207,30 +207,36 @@ get_page_wraps <- function(content_width, ts, widths, gutter, control_cols) {
 #' options on the variable define function.  These include blank_after, 
 #' label_row, indenting, and creating stub columns. 
 #' @noRd
-prep_data <- function(dat, ts, char_width, missing_val) {
+prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
   
   defs <- ts$col_defs
   # print("Before prep data")
   # print(dat)
   
   # Get vector of columns for blank rows
-  ls <- c()
+  ls_after <- c()
+  ls_before <- c()
   for (def in defs) {
 
-    if (def$blank_after)
-      ls[length(ls) + 1] <- translate_invisible(def$var_c, names(dat))
+    if (def$blank_after) {
+      ls_after[length(ls_after) + 1] <- translate_invisible(def$var_c, names(dat))
+    }
+    
+    if (def$blank_before) {
+      ls_before[length(ls_before) + 1] <- translate_invisible(def$var_c, names(dat))
+    }
   }
 
-  # Add blanks on requested columns
-  if (!is.null(ls)) {
-    if (length(ls) > 0) {
+  # Add after blanks on requested columns
+  if (!is.null(ls_after)) {
+    if (length(ls_after) > 0) {
       
       # Reverse order so groups turn out correct
-      ls <- ls[order(ls, decreasing = TRUE)]
+      ls_after <- ls_after[order(ls_after, decreasing = TRUE)]
       
       # Add blanks
-      if (length(ls) > 0) {
-        dat <- add_blank_rows(dat, location = "below", vars = ls)
+      if (length(ls_after) > 0) {
+        dat <- add_blank_rows(dat, location = "below", vars = ls_after)
       }
     }
   }
@@ -249,6 +255,21 @@ prep_data <- function(dat, ts, char_width, missing_val) {
       dat <- add_blank_rows(dat, "label", vars = def$var_c)
     }
   }
+  
+  # Add before blanks on requested columns
+  # This step should be after label rows so that the blank rows' order are correct 
+  if (!is.null(ls_before)) {
+    if (length(ls_before) > 0) {
+      
+      # Reverse order so groups turn out correct
+      ls_before <- ls_before[order(ls_before, decreasing = TRUE)]
+      
+      # Add blanks
+      if (length(ls_before) > 0) {
+        dat <- add_blank_rows(dat, location = "above", vars = ls_before)
+      }
+    }
+  }
 
    # print("Labels")
    # print(dat)
@@ -256,26 +277,27 @@ prep_data <- function(dat, ts, char_width, missing_val) {
   # Indent and Dedupe variables as requested
   # Do this after adding blanks
   # So any group values in blank rows are removed
-  for (def in defs) {
-    if (!is.null(def$indent) | def$dedupe) {
+  if (blank_indent) {
+    for (def in defs) {
+      if (!is.null(def$indent) | def$dedupe) {
+        
+        # Convert to character if necessary
+        if (all(class(dat[[def$var_c]]) != "character"))
+          dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+        
+        # Actual deduping now takes place in get_splits_text, so
+        # label appears at top of each page
+        
+      }
       
-      # Convert to character if necessary
-      if (all(class(dat[[def$var_c]]) != "character"))
-        dat[[def$var_c]] <- as.character(dat[[def$var_c]])
-          
-      # Actual deduping now takes place in get_splits_text, so 
-      # label appears at top of each page
-
-    }
-    
-    # Perform Indenting of requested variables
-    if (!is.null(def$indent)) {
-      ind <- floor(def$indent / char_width)
-      blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
-      dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
+      # Perform Indenting of requested variables
+      if (!is.null(def$indent)) {
+        ind <- floor(def$indent / char_width)
+        blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
+        dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
+      }
     }
   }
-  
    # print("Before stub")
    # print(dat)
 
@@ -313,15 +335,21 @@ create_stub <- function(dat, ts) {
       
       if ("..blank" %in% nms) {
         st <- ifelse(is.na(dat[[v[i]]]) | (trimws(dat[[v[i]]]) == "" & dat[["..blank"]] == "L"), 
-                   st, dat[[v[i]]])   
+                   st, dat[[v[i]]])
+        # stub var to indicate the value source
+        stv <- ifelse(is.na(dat[[v[i]]]) | (trimws(dat[[v[i]]]) == "" & dat[["..blank"]] == "L"), 
+                      v[1], v[i])
       } else {
         st <- ifelse(is.na(dat[[v[i]]]), st, dat[[v[i]]])  
+        stv <- ifelse(is.na(dat[[v[i]]]), v[1], v[i])  
       }
       
       # Allow empty to remain.  Sure I put this in for a reason.  Need to test.
       #st <- ifelse(is.na(dat[[v[i]]]) | trimws(dat[[v[i]]]) == "", st, dat[[v[i]]])    
       
     }
+    
+    dat$..stub_var <- stv
 
     # Remove stub variables from data frame
     d <-   dat[ , -which(names(dat) %in% v)]
@@ -381,7 +409,7 @@ get_col_widths <- function(dat, ts, labels, char_width, uom,
       # Label row widths are dealt with later.
       if ("..blank" %in% names(dat) & merge_label_row) {
         colattr <- attributes(dat[[nm]])
-        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
+        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B", "A"), " ", dat[[nm]])
         attributes(dat[[nm]]) <- colattr
       }
       
@@ -584,17 +612,66 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       
       # Clear out label rows, as these can mess up column width calculations.
       # Label row widths are dealt with later.
+      blank_idx <- rep(F, dim(dat)[1])
       if ("..blank" %in% names(dat) & merge_label_row) {
-        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B"), " ", dat[[nm]])
+        dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B", "A"), " ", dat[[nm]])
+        blank_idx <- dat[["..blank"]] %in% c("L", "B", "A")
       }
       
-      w <-  max(get_text_width(dat[[nm]], units=uom, font=font, font_size = font_size))
+      # --------------------------------- #
+      #   Maximum width of a column
+      # --------------------------------- #
+      w_each <-  get_text_width(dat[[nm]], units=uom, font=font, font_size = font_size)
+
+      # Add indention width
+      if (!is.null(defs[[nm]]$indent)) {
+        
+        w_each <- w_each + defs[[nm]]$indent
+        
+      } else if (!is.null(ts$stub) & nm == "stub") {
+        stub_var <- ts$stub$vars
+        
+        for (v in stub_var) {
+          if (!is.null(defs[[v]]$indent)) {
+            idx <- dat$..stub_var == v & !is.na(dat$stub) & blank_idx == F
+            w_each[idx] <- w_each[idx] + defs[[v]]$indent
+          }
+        }
+      }
       
-      sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
+      w <-  max(w_each)
       
-      # Would prefer to not calculate this again.  w and mwidths seem redundant.
-      mwidths[[nm]]  <- max(get_text_width(as.character(sd), units=uom, 
-                            font=font, font_size = font_size))
+      # --------------------------------- #
+      #   Minimum width of a column
+      # --------------------------------- #
+      if (!is.null(ts$stub) & nm == "stub") {
+        mwidths[[nm]] <- 0
+        
+        # For stub column, derive maximum word width by ..stub_var because each
+        # stub var may have different indenting width
+        stub_var <- ts$stub$vars
+        for (v in stub_var) {
+          idx <- dat$..stub_var == v & !is.na(dat$stub) & blank_idx == F
+          sd <- stri_split(as.character(dat[[nm]][idx]), regex=" |\n|\r|\t", simplify = TRUE)
+          mwidth <- max(get_text_width(as.character(sd), units=uom, font=font, font_size = font_size))
+          
+          if (!is.null(defs[[v]]$indent)) {
+            mwidth <- mwidth + defs[[v]]$indent
+          }
+          
+          mwidths[[nm]] <- max(mwidths[[nm]], mwidth)
+        }
+      } else {
+        sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
+
+        # Would prefer to not calculate this again.  w and mwidths seem redundant.
+        mwidths[[nm]]  <- max(get_text_width(as.character(sd), units=uom,
+                              font=font, font_size = font_size))
+        
+        if (!is.null(defs[[nm]]$indent)) {
+          mwidths[[nm]] <- mwidths[[nm]] + defs[[nm]]$indent
+        }
+      }
       
     }
     
@@ -644,10 +721,12 @@ get_col_widths_variable <- function(dat, ts, labels, font,
   for (def in defs) {
     
     if (def$var_c %in% names(dat) & !is.null(def$width) && def$width > 0) {
-      if (def$width >= mwidths[[def$var_c]])
+      if (def$width >= mwidths[[def$var_c]]) {
         ret[[def$var_c]] <- def$width
-      else 
+      }
+      else {
         ret[[def$var_c]] <- mwidths[[def$var_c]] + gutter_width
+      }
       
       defnms[length(defnms) + 1] <- def$var_c
     }
@@ -659,7 +738,11 @@ get_col_widths_variable <- function(dat, ts, labels, font,
     
     # Add stub width if exists   
     if (!is.null(ts$stub$width)) {
-      ret[["stub"]] <- ts$stub$width
+      if (ts$stub$width >= mwidths[["stub"]]) {
+        ret[["stub"]] <- ts$stub$width
+      } else {
+        ret[["stub"]] <- mwidths[["stub"]] + gutter_width
+      }
       defnms[length(defnms) + 1] <- "stub"
     }
     
@@ -874,6 +957,9 @@ get_aligns <- function(dat, ts) {
     # Assign alignment from stub definition
     ret[["stub"]] <- ts$stub$align 
     
+    # Assign stub indicator to let it not be NA
+    ret[["..stub_var"]] <- ts$stub$align
+    
   }
   
   return(ret)
@@ -950,6 +1036,9 @@ get_labels <- function(dat, ts){
     
     # Assign label from stub definition
     ls <- c(stub = ts$stub$label, ls)
+    
+    # Assign label for stub indicator
+    ls <- c(ls, ..stub_var = "..stub_var")
     
   }
   

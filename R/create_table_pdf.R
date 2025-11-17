@@ -142,6 +142,11 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   # print(fdat)
   # str(fdat)
   
+  # Add stub_var into control_cols for adding indentation
+  if ("..stub_var" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..stub_var")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -166,7 +171,7 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
   sp <- split_cells_variable(fdat, widths_uom, rs$font, 
-                               rs$font_size, rs$units, rs$output_type, rs$char_width) 
+                               rs$font_size, rs$units, rs$output_type, rs$char_width, ts) 
   fdat <- sp$data
   wdat <- sp$widths
   
@@ -341,7 +346,8 @@ create_table_pdf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   bdy <- get_table_body_pdf(rs, pi$data, pi$col_width, 
                             pi$col_align, pi$table_align, ts$borders,
                             ystart = ys,
-                            spwidths, frb = ts$first_row_blank, styles = styles)
+                            spwidths, frb = ts$first_row_blank, styles = styles,
+                            ts = ts)
   ys <- ys + bdy$points
 
 
@@ -1040,7 +1046,7 @@ get_spanning_header_pdf <- function(rs, ts, pi, ystart = 0, brdr_flag = FALSE) {
 #' @noRd
 get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs, 
                                ystart = 0, spwidths = list(), 
-                               brdr_flag = FALSE, frb = FALSE, styles) {
+                               brdr_flag = FALSE, frb = FALSE, styles, ts) {
   
   border_flag <- FALSE
   
@@ -1108,8 +1114,9 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   rline <- ystart + 1
   
   ret <- c()
-  
   fs <- rs$font_size
+  
+  defs <- ts$col_defs
   
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = fs)
@@ -1131,7 +1138,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       else 
         vl <- tbl[i, j]
       
-      if (flgs[i] %in% c("B", "L")) {
+      if (flgs[i] %in% c("B", "A", "L")) {
         
         # Strip out line feeds for label rows
         #vl <- gsub("\n", " ", vl, fixed = TRUE)
@@ -1175,9 +1182,21 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         # Loop for cell wraps
         for (ln in seq_len(length(tmp))) {
           
+          lb_cell <- lb
+          
+          # Indenting with lb
+          if (!is.null(defs[[j]]$indent)) {
+            lb_cell <- lb_cell + defs[[j]]$indent
+          } else if (j == "stub" & !is.null(ts$stub)) {
+            stub_var <- tbl$..stub_var[i]
+            if (!is.null(defs[[stub_var]]$indent)) {
+              lb_cell <- lb_cell + defs[[stub_var]]$indent
+            }
+          }
+          
           ret[[length(ret) + 1]] <- page_text(tmp[ln], fs, 
                                               bold = bflg,
-                                              xpos = get_points(lb, 
+                                              xpos = get_points(lb_cell, 
                                                                 rb,
                                                                 spwidths[[i]][[j]][ln],
                                                                 units = unts,
@@ -1200,7 +1219,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       # Applies inside vertical borders
       if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] 
-          & !blnks[i] %in% c("B", "L")) {
+          & !blnks[i] %in% c("B", "A", "L")) {
         
         if (j == nms[1]) {
           lb <- tlb
