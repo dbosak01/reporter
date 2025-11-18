@@ -2193,7 +2193,8 @@ test_that("pdf2-58: Glue feature works.", {
       spanning_header(1, 4, label = "My span{subsc('4')}") %>%
       define(mpg, label = "Mpg{subsc('3')}")
     
-    myvar <- "23"
+    #myvar <- "23"
+    assign("myvar", "23", envir = .GlobalEnv)
     
     rpt <- create_report(fp, output_type = "PDF", font = "Courier") %>%
       page_header(c("Left {supsc('2')}really long left ",
@@ -2202,7 +2203,7 @@ test_that("pdf2-58: Glue feature works.", {
       add_content(tbl) %>%
       page_footer(c("left1{supsc('5')}", "left2{supsc('6')}"), "", 
                   "right{supsc('7')}") %>%
-      titles("Table 1.0{supsc('1')}", "IRIS Data Frame{{myvar}}",
+      titles("Table 1.0{supsc('1')}", "IRIS Data Frame{myvar}",
              blank_row = "below") %>%
       footnotes("Here is a footnote{subsc('a')}", "And another{subsc('9')}")
     
@@ -3071,7 +3072,7 @@ test_that("pdf2-81: Plot outside border works as expected.", {
     # Create temp file name
     fp <- file.path(base_path, "pdf2/test81.pdf")
     
-    page1 <- create_plot(plt1, 4.5, 7, borders = "outside") |> 
+    page1 <- create_plot(plt, 4.5, 7, borders = "outside") |> 
       titles("Figure 1.1", "Distribution of Subjects by Treatment Group", 
              bold = TRUE, font_size = 11)
     
