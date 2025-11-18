@@ -400,9 +400,16 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         
         if (any(brdrs %in% c("all", "outside", "top"))) {
           
-          ret[[length(ret) + 1]] <- page_hline(lb * conv,
-                                               yline - lh + bs + 1,
-                                               (rb - lb) * conv)
+          if (any(brdrs %in% c("top")) & !any(brdrs %in% c("outside", "all"))){
+            # Move y start up with bh to prevent from title and top border stick together
+            ret[[length(ret) + 1]] <- page_hline(lb * conv,
+                                                 yline - lh - bh + bs + 1,
+                                                 (rb - lb) * conv)
+          } else {
+            ret[[length(ret) + 1]] <- page_hline(lb * conv,
+                                                 yline - lh + bs + 1,
+                                                 (rb - lb) * conv)
+          }
           
           if (blkcnt == 1 & any(brdrs %in% c("outside")))
             pnts <- pnts + bs
@@ -435,10 +442,18 @@ get_titles_pdf <- function(ttllst, content_width, rs,
 
         }
       } else if (any(brdrs %in% c("all", "outside", "top")) ) {
+        
+          if (any(brdrs %in% c("top")) & !any(brdrs %in% c("outside", "all"))) {
+            # Move y start up with bh to prevent from title and top border stick together
+            ret[[length(ret) + 1]] <- page_hline(lb * conv,
+                                                 yline - lh - bh + bs + 1,
+                                                 (rb - lb) * conv)
+          } else {
+            ret[[length(ret) + 1]] <- page_hline(lb * conv,
+                                                 yline - lh + bs + 1,
+                                                 (rb - lb) * conv)
+          }
 
-          ret[[length(ret) + 1]] <- page_hline(lb * conv,
-                                               yline - lh + bs + 1,
-                                               (rb - lb) * conv)
           if (blkcnt == 1)
             pnts <- pnts + bs
 
@@ -531,23 +546,32 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         # Left border
         if (any(brdrs %in% c("all", "outside", "left"))) {
 
-
-          ret[[length(ret) + 1]] <- page_vline(lb * conv,
-                                               yline - lh + bs + 1,
-                                               (mxlns * lh) )
-
+          if (any(brdrs %in% c("top")) & !any(brdrs %in% c("outside", "all")) & cnt==0) {
+            # For top instead of all and outside, bh is considered to connect the top border
+            ret[[length(ret) + 1]] <- page_vline(lb * conv,
+                                                 yline - lh - bh + bs + 1,
+                                                 (mxlns * lh) + bh )
+          } else {
+            ret[[length(ret) + 1]] <- page_vline(lb * conv,
+                                                 yline - lh + bs + 1,
+                                                 (mxlns * lh) )
+          }
         }
 
         # Right border
         if (any(brdrs %in% c("all", "outside", "right"))) {
 
-
-          ret[[length(ret) + 1]] <- page_vline(rb * conv,
-                                               yline - lh + bs + 1,
-                                               (mxlns * lh))
-
+          if (any(brdrs %in% c("top")) & !any(brdrs %in% c("outside", "all")) & cnt==0) {
+            # For top instead of all and outside, bh is considered to connect the top border
+            ret[[length(ret) + 1]] <- page_vline(rb * conv,
+                                                 yline - lh - bh + bs + 1,
+                                                 (mxlns * lh) + bh )
+          } else {
+            ret[[length(ret) + 1]] <- page_vline(rb * conv,
+                                                 yline - lh + bs + 1,
+                                                 (mxlns * lh))
+          }
         }
-        
         
         yline <- yline + (lh * mxlns)
         pnts <- pnts + (lh * mxlns)
@@ -601,6 +625,12 @@ get_titles_pdf <- function(ttllst, content_width, rs,
         pnts <- pnts + lh
       } else {
         #pnts <- pnts + .5 # no idea why
+        if (any(brdrs %in% c("outside", "bottom"))) {
+          
+          ret[[length(ret) + 1]] <- page_hline(lb * conv, 
+                                               yline - lh + bs + 1, 
+                                               (rb - lb) * conv) 
+        }
       }
       
       if (any(brdrs %in% c("outside", "all", "bottom")))
