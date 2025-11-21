@@ -812,11 +812,13 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
           bb <- b
       } else if (all(brdrs == "outside")) {
         
-        if (vl == "")
+        if (vl == "") {
           bb <- b
-        else 
+        } else if (s$underline[k] == TRUE) {
           bb <- paste0(b, "border-bottom:thin solid ", brdrcolor)
-        
+        } else {
+          bb <- b
+        }
       } else {
         
         if (vl == "") {
@@ -825,9 +827,11 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
                                                       flag = "",
                                                       exclude = c("bottom", exclude_top),
                                       border_color = get_style(rs, "border_color"))
-        } else 
+        } else if (s$underline[k] == TRUE) {
           bb <- paste0(b, "border-bottom:thin solid ", brdrcolor)
-        
+        } else {
+          bb <- b
+        }
       }
       
       if (s$bold[k])
