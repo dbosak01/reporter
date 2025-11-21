@@ -112,6 +112,12 @@
 <h2 class="page-header" data-toc-text="1.4.5" id="reporter-145">reporter 1.4.5<a class="anchor" aria-label="anchor" href="#reporter-145"></a></h2>
 <ul><li>Added ability to import EMF files to RTF and DOCX outputs.</li>
 <li>Changed default font on <code><a href="../reference/create_report.html">create_report()</a></code> to “Courier” instead of “fixed”. If you want a fixed-width report, set <code>font = "fixed"</code> explicitly.</li>
+<li>Added gap between spanning header lines for RTF, DOCX, and HTML.</li>
+<li>Improved indenting on the stub so wrapped lines are indented properly.</li>
+<li>Fixed several problems with PDF borders.</li>
+<li>Fixed problem with HTML spanning underlines.<br></li>
+<li>Added option for “blank_above” on <code><a href="../reference/define.html">define()</a></code> function for all output types.</li>
+<li>Increased max column width to 5 inches.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.4" id="reporter-144">reporter 1.4.4<small>2024-03-19</small><a class="anchor" aria-label="anchor" href="#reporter-144"></a></h2>
@@ -290,7 +296,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by David Bosak.</p>
+  <p></p><p>Developed by David Bosak, Bill Huang.</p>
 </div>
 
 <div class="pkgdown">

@@ -133,6 +133,7 @@ sophisticated options like page wrapping and page breaking.</p>
 <span>  visible <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  blank_after <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  blank_before <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  dedupe <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  id_var <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  page_wrap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -212,6 +213,11 @@ the n value will be performed by the formatting function assigned to the
 
 <dt id="arg-blank-after">blank_after<a class="anchor" aria-label="anchor" href="#arg-blank-after"></a></dt>
 <dd><p>Whether to place a blank row after unique values of this
+variable.  Valid values are TRUE or FALSE.  Default is FALSE.</p></dd>
+
+
+<dt id="arg-blank-before">blank_before<a class="anchor" aria-label="anchor" href="#arg-blank-before"></a></dt>
+<dd><p>Whether to place a blank row before unique values of this
 variable.  Valid values are TRUE or FALSE.  Default is FALSE.</p></dd>
 
 
@@ -399,7 +405,7 @@ once per report, and cannot be shared across multiple variables.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by David Bosak.</p>
+  <p></p><p>Developed by David Bosak, Bill Huang.</p>
 </div>
 
 <div class="pkgdown">

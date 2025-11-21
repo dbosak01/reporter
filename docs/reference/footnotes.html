@@ -130,7 +130,8 @@ Footnotes may also be added directly to table, text, or plot content.</p>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  footer <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  italics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  columns <span class="op">=</span> <span class="fl">1</span></span>
+<span>  columns <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  font_size <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -203,12 +204,19 @@ in italics.</p></dd>
 
 
 <dt id="arg-columns">columns<a class="anchor" aria-label="anchor" href="#arg-columns"></a></dt>
-<dd><p>The number of columns for the foonote block. Valid values
+<dd><p>The number of columns for the footnote block. Valid values
 are 1, 2, and 3.  Default is 1.  If this parameter is set to 2, the footnote
 block will be split into two columns, each aligned to the outside.  If
 this parameter is set to 3, the title block will be split into 3 columns,
 with the outer columns aligned to the outside and the middle column
 aligned center.  Footnotes are assigned to cells from top left to bottom right.</p></dd>
+
+
+<dt id="arg-font-size">font_size<a class="anchor" aria-label="anchor" href="#arg-font-size"></a></dt>
+<dd><p>The font size to use for the footnote block.  The font size
+of the report will be used by default.  Valid values are 8, 9, 10, 11, 12
+This parameter only applies to variable-width RTF, HTML, PDF, and DOCX
+output types.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -307,7 +315,7 @@ the available space.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by David Bosak.</p>
+  <p></p><p>Developed by David Bosak, Bill Huang.</p>
 </div>
 
 <div class="pkgdown">
