@@ -92,6 +92,37 @@ test_that("utils5: split_cells works as expected.", {
   
 })
 
+test_that("utils5-2: split_cells with indentation works as expected.", {
+  
+  
+  a1 <- c("one", "two", "three")
+  b1 <- c("here is a\n long value", "Some sort of value", 
+          "Another value that goes on and on")
+  c1 <- c("here is a longer value", "Really", "Medium value")
+  ..blank <- ""
+  ..page <- NA
+  ..row <- NA
+  
+  df <- data.frame(a1, b1, c1, ..blank, ..page, ..row, stringsAsFactors = FALSE)
+  
+  w <- c(a1 = .5, b1 = 1.5, c1 = 1.25)
+  
+  conversion_factor <- .083333 
+  
+  wc <- floor(w / conversion_factor)
+  
+  tbl <- create_table(df) %>%
+    define("b1", indent = 0.25)
+  
+  res1 <- split_cells(df, wc, ts = tbl, char_width = 0.11)
+  res1
+  
+  expect_equal(nrow(res1), 7) 
+  expect_equal(res1$b1, c("  here is a", "   long value", "  Some sort of", 
+                          "  value", "  Another value", "  that goes on and", "  on"))
+  
+})
+
 test_that("utils6: align_cells works as expected.", {
   
   

@@ -98,11 +98,12 @@ test_that("prep_data works as expected", {
            dedupe = TRUE, indent = .25)
 
   
-  d <- prep_data(iris, tbl, .0833333, "", blank_indent = T)
+  d <- prep_data(iris, tbl, .0833333, "")
 
   
   expect_equal(sum(d$..blank != ""), 6)
-  expect_equal(max(nchar(d$Species)) > mw, TRUE)
+  # Indendation is now processed after prep_data
+  expect_equal(max(nchar(d$Species)) == mw, TRUE)
   
 })
 
