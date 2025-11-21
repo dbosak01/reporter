@@ -1167,7 +1167,15 @@ get_plot_body_pdf <- function(plt, plot_path, talign, rs,
 
   
   # Get footnotes, filler, and content blank line
-  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, yline - bh - 1,
+  
+  # The y position of plot footnote should consider plot bottom border height
+  if (any(brdrs %in% c("all", "outside", "bottom"))) {
+    ft_ystart <- yline - 1
+  } else {
+    ft_ystart <- yline - bh - 1
+  }
+  
+  ftnts <- get_page_footnotes_pdf(rs, plt, wth, lpg_rows, ft_ystart,
                                   wrap_flag, content_blank_row, talign)
   
   bln <- 0
