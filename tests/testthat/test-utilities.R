@@ -179,7 +179,7 @@ test_that("utils9: create_stub works as expected.", {
   d <- create_stub(x, tbl)
   
   expect_equal(d$stub, c("a", "b", "c", "a", "b", "c"))
-  expect_equal(d$..stub_var, c("a1", "a1", "c1", "a1", "a1", "c1"))
+  expect_equal(d$..stub_var, c("a1", "b1", "c1", "a1", "b1", "c1"))
 })
 
 
