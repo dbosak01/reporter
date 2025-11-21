@@ -207,7 +207,7 @@ get_page_wraps <- function(content_width, ts, widths, gutter, control_cols) {
 #' options on the variable define function.  These include blank_after, 
 #' label_row, indenting, and creating stub columns. 
 #' @noRd
-prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
+prep_data <- function(dat, ts, char_width, missing_val) {
   
   defs <- ts$col_defs
   # print("Before prep data")
@@ -277,27 +277,27 @@ prep_data <- function(dat, ts, char_width, missing_val, blank_indent = FALSE) {
   # Indent and Dedupe variables as requested
   # Do this after adding blanks
   # So any group values in blank rows are removed
-  if (blank_indent) {
-    for (def in defs) {
-      if (!is.null(def$indent) | def$dedupe) {
-        
-        # Convert to character if necessary
-        if (all(class(dat[[def$var_c]]) != "character"))
-          dat[[def$var_c]] <- as.character(dat[[def$var_c]])
-        
-        # Actual deduping now takes place in get_splits_text, so
-        # label appears at top of each page
-        
-      }
-      
-      # Perform Indenting of requested variables
-      if (!is.null(def$indent)) {
-        ind <- floor(def$indent / char_width)
-        blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
-        dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
-      }
-    }
-  }
+  # if (blank_indent) {
+  #   for (def in defs) {
+  #     if (!is.null(def$indent) | def$dedupe) {
+  #       
+  #       # Convert to character if necessary
+  #       if (all(class(dat[[def$var_c]]) != "character"))
+  #         dat[[def$var_c]] <- as.character(dat[[def$var_c]])
+  #       
+  #       # Actual deduping now takes place in get_splits_text, so
+  #       # label appears at top of each page
+  #       
+  #     }
+  #     
+  #     # Perform Indenting of requested variables
+  #     if (!is.null(def$indent)) {
+  #       ind <- floor(def$indent / char_width)
+  #       blnks <- paste0(rep(" ", ind), sep = "", collapse = "")
+  #       dat[[def$var_c]] <- ifelse(is.na(dat[[def$var_c]]), NA, paste0(blnks, dat[[def$var_c]]))
+  #     }
+  #   }
+  # }
    # print("Before stub")
    # print(dat)
 
@@ -325,6 +325,7 @@ create_stub <- function(dat, ts) {
     
     # Initialize with first column 
     st <- dat[[v[1]]]
+    stv <- rep(names(dat)[1], nrow(dat))
     #print(st)
     
     nms <- names(dat)
@@ -338,10 +339,10 @@ create_stub <- function(dat, ts) {
                    st, dat[[v[i]]])
         # stub var to indicate the value source
         stv <- ifelse(is.na(dat[[v[i]]]) | (trimws(dat[[v[i]]]) == "" & dat[["..blank"]] == "L"), 
-                      v[1], v[i])
+                      stv, v[i])
       } else {
         st <- ifelse(is.na(dat[[v[i]]]), st, dat[[v[i]]])  
-        stv <- ifelse(is.na(dat[[v[i]]]), v[1], v[i])  
+        stv <- ifelse(is.na(dat[[v[i]]]), stv, v[i])  
       }
       
       # Allow empty to remain.  Sure I put this in for a reason.  Need to test.
