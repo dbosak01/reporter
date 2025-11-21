@@ -123,6 +123,11 @@ Useful links:
 \author{
 \strong{Maintainer}: David Bosak \email{dbosak01@gmail.com}
 
+Authors:
+\itemize{
+  \item Bill Huang \email{Bill.Huang@Toastmasters.org.tw}
+}
+
 Other contributors:
 \itemize{
   \item Kevin Kramer \email{kkrame02@amgen.com} [contributor]

@@ -1535,3 +1535,41 @@ test_that("rtf45: Three level stub and indentation work as expected.", {
     expect_equal(TRUE, TRUE)
   }
 })
+
+
+test_that("rtf46: Path variable is returned properly from write_report().", {
+  
+  if (dev) {
+    
+    fp <- file.path(base_path, "rtf/test46")
+    
+    dat <- mtcars[1:10, ]
+    
+    
+    tbl <- create_table(dat) %>%
+      titles("My Table{symbol('dagger')}")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", 
+                         orientation = "landscape", font = "fixed") %>%
+      add_content(tbl)
+    
+    res <- write_report(rpt)
+    
+    
+    # file.show(res$path)
+    
+    expect_equal(file.exists(res$modified_path), TRUE)
+    expect_equal(is.null(res$path), FALSE)
+    
+    
+  } else {
+    
+    expect_equal(TRUE, TRUE)
+    
+  }
+  
+})
+
+
+

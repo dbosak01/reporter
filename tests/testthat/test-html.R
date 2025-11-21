@@ -1593,13 +1593,13 @@ test_that("html-46: Table with blank_before works as expected.", {
     df <- data.frame(subjid, name, sex, age, arm)
     
     
-    tbl1 <- create_table(df, first_row_blank = TRUE) %>%
+    tbl1 <- create_table(df, first_row_blank = FALSE) %>%
       define(subjid, label = "Subject ID", align = "left", width = 1) %>% 
       define(name, label = "Subject Name", width = 1) %>% 
       define(sex, label = "Sex") %>% 
       define(age, label = "Age") %>% 
       define(arm, label = "Arm", 
-             blank_after = FALSE, 
+             blank_before = TRUE, 
              dedupe = TRUE, 
              align = "right") #%>% 
     # spanning_header(sex, arm, label = "Here is a spanning header")

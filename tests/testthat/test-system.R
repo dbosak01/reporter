@@ -3156,3 +3156,56 @@ test_that("test96: Table with blank_before works as expected.", {
   expect_equal(length(lns), res$pages * res$line_count)
   
 })
+
+
+test_that("test97: Increase max column width to 5 inches.", {
+  
+  
+  fp <- file.path(base_path, "output/test97.out")
+  
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 3), "A", "A")
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = FALSE) %>%
+    define(subjid, label = "Subject ID", align = "left", width = 5) %>% 
+    define(name, label = "Subject Name") %>% 
+    define(sex, label = "Sex") %>% 
+    define(age, label = "Age") %>% 
+    define(arm, label = "Arm", 
+           blank_before = TRUE, 
+           dedupe = TRUE, 
+           align = "right")
+  
+  
+  rpt <- create_report(fp) %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", 
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R") %>%
+    page_footer(left = "Time", center = "Confidential", 
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
+  
+})
+

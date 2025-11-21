@@ -4,6 +4,7 @@ Title: Creates Statistical Reports
 Version: 1.4.5
 Authors@R: c( 
     person("David", "Bosak", email = "dbosak01@gmail.com", role = c("aut", "cre")),
+    person("Bill", "Huang", email = "Bill.Huang@Toastmasters.org.tw", role = c("aut")),
     person("Kevin", "Kramer", email = "kkrame02@amgen.com", role = "ctb"),
     person("Duong", "Tran", email = "trand000@aol.com", role = "ctb"),
     person("Raphael", "Huang", email = "chi-hua.huang@astellas.com", role = "ctb"),

@@ -3,6 +3,12 @@
 * Added ability to import EMF files to RTF and DOCX outputs.
 * Changed default font on `create_report()` to "Courier" instead of "fixed".
 If you want a fixed-width report, set `font = "fixed"` explicitly.
+* Added gap between spanning header lines for RTF, DOCX, and HTML.
+* Improved indenting on the stub so wrapped lines are indented properly.
+* Fixed several problems with PDF borders.
+* Fixed problem with HTML spanning underlines.  
+* Added option for "blank_above" on `define()` function for all output types.
+* Increased max column width to 5 inches.
 
 # reporter 1.4.4
 

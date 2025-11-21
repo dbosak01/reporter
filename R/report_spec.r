@@ -2191,8 +2191,11 @@ write_report <- function(x, file_path = NULL,
 
   if (nchar(x$file_path) > 0 & length(getExtension(x$file_path)) == 0) {
       x$modified_path <- paste0(x$file_path, ".", tolower(x$output_type))
-  } else 
+      x$path <- paste0(x$file_path, ".", tolower(x$output_type))
+  } else {
     x$modified_path <- x$file_path
+    x$path <- x$file_path
+  }
   
   #print(x$modified_path)
   
