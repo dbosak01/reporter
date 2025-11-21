@@ -380,18 +380,37 @@ get_page_size <- function(paper_size, units) {
 #' @return The data frame with long values split and added to their own
 #' rows.
 #' @noRd
-split_cells <- function(x, col_widths) {
+split_cells <- function(x, col_widths, ts = NULL, char_width = NULL) {
   
   dat <- NULL           # Resulting data frame
   row_values <- list()  # A list to hold cell values for one row 
   max_length <- 0       # The maximum number of splits of a cell in that row
   wdths <- col_widths[!is.controlv(names(x))]
-
+  defs <- ts$col_defs
   for (i in seq_len(nrow(x))) {
     for (nm in names(x)) {
 
       if (any(typeof(x[[nm]]) == "character") & 
           !is.control(nm) ) {
+        
+        ind_blank_num <- 0
+        
+        if (!is.null(defs)) {
+          def <- defs[[nm]]
+          if (!is.null(def$indent)) {
+            
+            ind_blank_num <- floor(def$indent / char_width)
+            
+          } else if (nm == "stub" & !is.null(ts$stub)) {
+            
+            stub_var <- x$..stub_var[i]
+            if (!is.null(defs[[stub_var]]$indent)) {
+              
+              ind_blank_num <- floor(defs[[stub_var]]$indent / char_width)
+              
+            }
+          }
+        }
 
         if ("..blank" %in% names(x) && x[[i, "..blank"]] %in% c("B", "A")) {
           
@@ -401,13 +420,13 @@ split_cells <- function(x, col_widths) {
           
           cell <- stri_wrap(unlist(
             strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
-            width = sum(wdths), normalize = FALSE)
+            width = sum(wdths), normalize = FALSE, indent = ind_blank_num, exdent = ind_blank_num)
           
         } else {
           
           cell <- stri_wrap(unlist(
             strsplit(x[[i, nm]], split = "\n", fixed = TRUE)), 
-            width = col_widths[[nm]], normalize = FALSE)
+            width = col_widths[[nm]], normalize = FALSE, indent = ind_blank_num, exdent = ind_blank_num)
         }
         
       
@@ -965,8 +984,15 @@ dedupe_pages <- function(pgs, defs) {
           
           if (length(dat[[def$var_c]]) > 1) {
       
-            dat[[def$var_c]] <- ifelse(changed(dat[[def$var_c]]),
-                                       dat[[def$var_c]], v)
+            if ("..blank" %in% names(dat)) {
+              non_blank_idx <- dat[["..blank"]] == ""
+              dat[[def$var_c]][non_blank_idx] <- ifelse(changed(dat[[def$var_c]][non_blank_idx]),
+                                                        dat[[def$var_c]][non_blank_idx], v)
+            } else {
+              dat[[def$var_c]] <- ifelse(changed(dat[[def$var_c]]),
+                                         dat[[def$var_c]], v)
+              
+            }
           }
           
           # dat[[def$var_c]] <- ifelse(!duplicated(dat[[def$var_c]]), 

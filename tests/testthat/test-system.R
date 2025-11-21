@@ -1,7 +1,7 @@
 
 context("System Tests")
 
-base_path <- "c:/packages/reporter/tests/testthat"
+base_path <- paste0(getwd(),"/tests/testthat")
 
 base_path <- tempdir()
 
@@ -1519,7 +1519,7 @@ test_that("test47: CM Table with long cell and label values wraps as expected.",
 
 
 
-test_that("test48: Three level stub works as expected.", {
+test_that("test48: Three level stub and indentation work as expected.", {
   
   
   fp <- file.path(base_path, "output/test48.out")
@@ -1547,7 +1547,7 @@ test_that("test48: Three level stub works as expected.", {
 
   tbl1 <- create_table(df) %>%
     stub(c(cat, grp, ci), "Estimates", width = 2.5) %>% 
-    define(cat, label_row = TRUE, blank_after = TRUE) %>%
+    define(cat, label_row = TRUE, blank_after = TRUE, indent = 0.15) %>%
     define(grp, indent = .25) %>%
     define(ci, indent = .5) %>%
     define(values, label = "Values")
@@ -1629,7 +1629,7 @@ test_that("test49: Stub and width settings works as expected.", {
 })
 
 # This is still messed up, but not going to fix it for now.
-test_that("test50: Table with long numeric values sizes as expected.", {
+test_that("test50: Table with long numeric values sizes and ident works as expected.", {
   
   fp <- file.path(base_path, "output/test50.out")
   
@@ -1654,7 +1654,7 @@ test_that("test50: Table with long numeric values sizes as expected.", {
   
   tbl1 <- create_table(df, first_row_blank = TRUE) %>%
     define(subjid, label = "Subject ID for a patient", n = 10) %>%
-    define(name, label = "Subject Name", width = 1) %>%
+    define(name, label = "Subject Name", width = 1, indent = 0.15) %>%
     define(sex, label = "Sex", n = 10, align = "left") %>%
     define(age, label = "Age", n = 10) %>%
     define(arm, label = "Arm",
@@ -3103,5 +3103,56 @@ test_that("test95: Page break with blank row after works as expected.", {
   res <- write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
+  
+})
+
+test_that("test96: Table with blank_before works as expected.", {
+  
+  
+  fp <- file.path(base_path, "output/test96.out")
+  
+  
+  # Setup
+  subjid <- 100:109
+  name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+            "al-Kazemi, Najwa", "Schaffer, Ashley", "Laner, Tahma", 
+            "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon", 
+            "Smith, Shaileigh")
+  sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+  age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+  arm <- c(rep("A", 5), rep("B", 3), "A", "A")
+  
+  # Create data frame
+  df <- data.frame(subjid, name, sex, age, arm, stringsAsFactors = FALSE)
+  
+  
+  tbl1 <- create_table(df, first_row_blank = FALSE) %>%
+    define(subjid, label = "Subject ID", align = "left") %>% 
+    define(name, label = "Subject Name") %>% 
+    define(sex, label = "Sex") %>% 
+    define(age, label = "Age") %>% 
+    define(arm, label = "Arm", 
+           blank_before = TRUE, 
+           dedupe = TRUE, 
+           align = "right")
+  
+  
+  rpt <- create_report(fp) %>%
+    page_header(left = "Experis", right = c("Study ABC", "Status: Closed")) %>%
+    titles("Table 1.0", "Analysis Data Subject Listing", 
+           "Safety Population", align = "center") %>%
+    footnotes("Program Name: table1_0.R") %>%
+    page_footer(left = "Time", center = "Confidential", 
+                right = "Page [pg] of [tpg]") %>%
+    add_content(tbl1) 
+  
+  
+  res <- write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
+  
+  lns <- readLines(fp)
+  
+  expect_equal(length(lns), res$pages * res$line_count)
   
 })
