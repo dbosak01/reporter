@@ -7,7 +7,7 @@ If you want a fixed-width report, set `font = "fixed"` explicitly.
 * Improved indenting on the stub so wrapped lines are indented properly.
 * Fixed several problems with PDF borders.
 * Fixed problem with HTML spanning underlines.  
-* Added option for "blank_above" on `define()` function for all output types.
+* Added option for "blank_before" on `define()` function for all output types.
 * Increased max column width to 5 inches.
 
 # reporter 1.4.4

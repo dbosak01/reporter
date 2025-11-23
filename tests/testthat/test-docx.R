@@ -2161,7 +2161,7 @@ test_that("docx-60: Three level stub and indentation work as expected.", {
   }
 })
 
-test_that("docx-61: Table with blank_before works as expected.", {
+test_that("docx-61: Test 5 inch stub works as expected.", {
   
   if (dev) {
   fp <- file.path(base_path, "docx/test61.docx")
