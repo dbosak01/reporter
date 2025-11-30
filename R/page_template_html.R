@@ -141,12 +141,36 @@ get_page_footer_html <- function(rs) {
   maxf <- max(length(fl), length(fc), length(fr))
 
   if (maxf > 0) {
+    
+    width <- rs$page_footer_width
+    
+    total_width <- sum(width, na.rm = T)
+    if (total_width > rs$content_size[["width"]]) {
+      
+      stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                   total_width,
+                   rs$units,
+                   rs$content_size[["width"]],
+                   rs$units))
+      
+    } else {
+      na_num <- sum(is.na(width))
+      imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+      
+      left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+      center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+      right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+      
+      left_pct <- 100 * left_width/rs$content_size[["width"]]
+      center_pct <- 100 * center_width/rs$content_size[["width"]]
+      right_pct <- 100 * right_width/rs$content_size[["width"]]
+    }
 
     ret <- paste0("<br>\n<table ",
                   "style=\"width:100%\">\n",
-                  "<colgroup>\n<col style=\"width:33.3%\">\n",
-                  "<col style=\"width:33.3%\">\n",
-                  "<col style=\"width:33.3%\">\n</colgroup>\n")
+                  paste0("<colgroup>\n<col style=\"width:", left_pct,"%\">\n"),
+                  paste0("<col style=\"width:", center_pct,"%\">\n"),
+                  paste0("<col style=\"width:", right_pct,"%\">\n</colgroup>\n"))
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -158,7 +182,7 @@ get_page_footer_html <- function(rs) {
       if (length(fl) >= i) {
 
         # Split strings if they exceed width
-        tmp1 <- split_string_html(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp1 <- split_string_html(fl[[i]], left_width, rs$units)
         
         ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp1$html),
                            "</td>")
@@ -171,7 +195,7 @@ get_page_footer_html <- function(rs) {
       if (length(fc) >= i) {
 
         # Split strings if they exceed width
-        tmp2 <- split_string_html(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp2 <- split_string_html(fc[[i]], center_width, rs$units)
         
         ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp2$html),
                            "</td>")
@@ -183,7 +207,7 @@ get_page_footer_html <- function(rs) {
 
       if (length(fr) >= i) {
 
-        tmp3 <- split_string_html(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp3 <- split_string_html(fr[[i]], right_width, rs$units)
         
         ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp3$html),
                       "</td>")
