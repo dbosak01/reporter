@@ -1666,6 +1666,9 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' of strings.
 #' @param blank_row Whether to create a blank row above the page footer.
 #' Valid values are 'above' and 'none'.  Default is 'above'.
+#' @param width Widths for left, center, and right. It should be a vector with
+#' three numeric or NA values. NA means let system automatically adjust.
+#' Default is `c(NA, NA, NA)`.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1711,13 +1714,18 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' # 
 #' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
-page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
+page_footer <- function(x, left="",  center="", right="", blank_row = "above",
+                        width = c(NA, NA, NA)){
 
   if (!"report_spec" %in% class(x))
     stop("Page header can only be assigned to an object of class 'report_spec'")
   
   if (length(left) > 5 | length(right) > 5 | length(center) > 5){
     stop("Footer string count exceeds limit of 5 strings per section.")
+  }
+  
+  if (length(width) != 3){
+    stop("Width should be a vector with three numeric/NA values.")
   }
   
   if (is.null(blank_row))
@@ -1737,6 +1745,9 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above"){
     x$page_footer_center <- center
   }
   x$page_footer_blank_row <- blank_row
+  
+  # Assign width for left, center, and right
+  x$page_footer_width <- width
 
   return(x)
 }
