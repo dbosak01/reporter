@@ -162,9 +162,30 @@ get_page_footer_rtf <- function(rs) {
     
     fs <- rs$font_size * 2
     
-    c3 <- round(rs$content_size[["width"]] * conv)
-    c1 <- round(c3 / 3)
-    c2 <- round(c1 * 2)
+    width <- rs$page_footer_width
+    
+    total_width <- sum(width, na.rm = T)
+    if (total_width > rs$content_size[["width"]]) {
+      
+      stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                   total_width,
+                   rs$units,
+                   rs$content_size[["width"]],
+                   rs$units))
+      
+    } else {
+      na_num <- sum(is.na(width))
+      imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+      
+      left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+      center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+      right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+      
+      c1 <- left_width * conv
+      c2 <- (left_width + center_width) * conv
+      c3 <- (left_width + center_width + right_width) * conv
+    }
+    
     
     ret <- paste0("{\\footer \\f0\\fs", fs, "[ff]")
     
@@ -180,7 +201,7 @@ get_page_footer_rtf <- function(rs) {
         if (length(fl) >= i) {
           
           # Split strings if they exceed width
-          tmp1 <- split_string_rtf(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+          tmp1 <- split_string_rtf(fl[[i]], left_width, rs$units)
           
           ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
           lcnt <- tmp1$lines
@@ -192,7 +213,7 @@ get_page_footer_rtf <- function(rs) {
         if (length(fc) >= i) {
           
           # Split strings if they exceed width
-          tmp2 <- split_string_rtf(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+          tmp2 <- split_string_rtf(fc[[i]], center_width, rs$units)
           
           ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
           ccnt <- tmp2$lines
@@ -203,7 +224,7 @@ get_page_footer_rtf <- function(rs) {
         
         if (length(fr) >= i) {
           
-          tmp3 <- split_string_rtf(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+          tmp3 <- split_string_rtf(fr[[i]], right_width, rs$units)
           
           ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
           rcnt <- tmp3$lines
