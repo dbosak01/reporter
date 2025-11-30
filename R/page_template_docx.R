@@ -191,6 +191,40 @@ get_page_footer_docx <- function(rs) {
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
+    
+    width <- rs$page_footer_width
+    
+    total_width <- sum(width, na.rm = T)
+    if (total_width > rs$content_size[["width"]]) {
+      
+      stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                   total_width,
+                   rs$units,
+                   rs$content_size[["width"]],
+                   rs$units))
+      
+    } else {
+      na_num <- sum(is.na(width))
+      imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+      
+      left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+      center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+      right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+      
+      left_pct <- floor(5000 * left_width/rs$content_size[["width"]])
+      center_pct <- floor(5000 * center_width/rs$content_size[["width"]])
+      right_pct <- floor(5000 * right_width/rs$content_size[["width"]])
+      
+      # Make sure the total is 5000 exactly
+      pct_lst <- c(left_pct, center_pct, right_pct)
+      rest_pct <- 5000 - sum(pct_lst)
+      
+      if (rest_pct >= 1){
+        for (i in 1:rest_pct) {
+          pct_lst[i%%3] <- pct_lst[i%%3] + 1
+        }
+      }
+    }
 
     for (i in seq(1, maxf)) {
 
@@ -199,38 +233,41 @@ get_page_footer_docx <- function(rs) {
       if (length(fl) >= i) {
 
         # Split strings if they exceed width
-        tmp1 <- split_string_html(fl[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp1 <- split_string_html(fl[[i]], left_width, rs$units)
         
         
-        tret <- paste0(tret, cell_pct(tmp1$html, "left", 1667))
+        # tret <- paste0(tret, cell_pct(tmp1$html, "left", 1667))
+        tret <- paste0(tret, cell_pct(tmp1$html, "left", left_pct))
         
         lcnt <- tmp1$lines
       } else {
-        tret <- paste0(tret, cell_pct(" ", "left", 1667))
+        tret <- paste0(tret, cell_pct(" ", "left", left_pct))
         lcnt <- 1
       }
 
       if (length(fc) >= i) {
 
         # Split strings if they exceed width
-        tmp2 <- split_string_html(fc[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp2 <- split_string_html(fc[[i]], center_width, rs$units)
         
-        tret <- paste0(tret,  cell_pct(tmp2$html, "center", 1666))
+        # tret <- paste0(tret,  cell_pct(tmp2$html, "center", 1666))
+        tret <- paste0(tret,  cell_pct(tmp2$html, "center", center_pct))
         ccnt <- tmp2$lines
       } else {
-        tret <- paste0(tret,  cell_pct(" ", "center", 1666))
+        tret <- paste0(tret,  cell_pct(" ", "center", center_pct))
         ccnt <- 1
       }
 
       if (length(fr) >= i) {
 
-        tmp3 <- split_string_html(fr[[i]], rs$content_size[["width"]]/3, rs$units)
+        tmp3 <- split_string_html(fr[[i]], right_width, rs$units)
         
-        tret <- paste0(tret, cell_pct(tmp3$html, "right", 1667))
+        # tret <- paste0(tret, cell_pct(tmp3$html, "right", 1667))
+        tret <- paste0(tret, cell_pct(tmp3$html, "right", right_pct))
         
         rcnt <- tmp3$lines
       } else {
-        tret <- paste0(tret,  cell_pct(" ", "right", 1667))
+        tret <- paste0(tret,  cell_pct(" ", "right", right_pct))
         rcnt <- 1
       }
 
