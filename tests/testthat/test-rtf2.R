@@ -3686,6 +3686,34 @@ test_that("rtf2-102: Three level stub and indentation work as expected.", {
   }
 })
 
+
+test_that("rtf2-103: Page footers with custom widths work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test103.rtf")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "Center footer", right = "Right footer",
+                  width = c(5.5, NA, NA))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
 # User Tests --------------------------------------------------------------
 
 test_that("user1: demo table works.", {
