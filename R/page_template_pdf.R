@@ -177,10 +177,30 @@ get_page_footer_pdf <- function(rs) {
   maxf <- max(length(fl), length(fc), length(fr))
 
   if (maxf > 0) {
-
-    rb3 <- rs$content_size[["width"]]
-    rb1 <- round(rb3 / 3)
-    rb2 <- round(rb1 * 2)
+    
+    width <- rs$page_footer_width
+    
+    total_width <- sum(width, na.rm = T)
+    if (total_width > rs$content_size[["width"]]) {
+      
+      stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                   total_width,
+                   rs$units,
+                   rs$content_size[["width"]],
+                   rs$units))
+      
+    } else {
+      na_num <- sum(is.na(width))
+      imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+      
+      left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+      center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+      right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+      
+      rb1 <- left_width
+      rb2 <- (left_width + center_width)
+      rb3 <- (left_width + center_width + right_width)
+    }
     
     tmp1 <- list()
     tmp2 <- list()
@@ -197,8 +217,7 @@ get_page_footer_pdf <- function(rs) {
       if (length(fl) >= i) {
 
         # Split strings if they exceed width
-        tmp1[[length(tmp1) + 1]] <- split_string_text(fl[[i]], 
-                                    rs$content_size[["width"]]/3, rs$units)
+        tmp1[[length(tmp1) + 1]] <- split_string_text(fl[[i]], left_width, rs$units)
         
         lcnt <- tmp1[[length(tmp1)]]$lines
         
@@ -210,8 +229,7 @@ get_page_footer_pdf <- function(rs) {
       if (length(fc) >= i) {
 
         # Split strings if they exceed width
-        tmp2[[length(tmp2) + 1]] <- split_string_text(fc[[i]], 
-                                    rs$content_size[["width"]]/3, rs$units)
+        tmp2[[length(tmp2) + 1]] <- split_string_text(fc[[i]], center_width, rs$units)
         
         ccnt <- tmp2[[length(tmp2)]]$lines
       } else {
@@ -221,8 +239,7 @@ get_page_footer_pdf <- function(rs) {
 
       if (length(fr) >= i) {
 
-        tmp3[[length(tmp3) + 1]] <- split_string_text(fr[[i]], 
-                                 rs$content_size[["width"]]/3, rs$units)
+        tmp3[[length(tmp3) + 1]] <- split_string_text(fr[[i]], right_width, rs$units)
         
         rcnt <- tmp3[[length(tmp3)]]$lines
       } else {
