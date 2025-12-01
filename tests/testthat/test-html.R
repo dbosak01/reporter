@@ -1674,7 +1674,7 @@ test_that("html-47: Three level stub and indentation work as expected.", {
   }
 })
 
-test_that("html-48: Page footers with custom widths work as expected.",{
+test_that("html-48: Page footers with one assigned width work as expected.",{
   if (dev) {
     fp <- file.path(base_path, "html/test48.html")
     
@@ -1683,14 +1683,41 @@ test_that("html-48: Page footers with custom widths work as expected.",{
     tbl <- create_table(dat, borders = "outside") %>%
       footnotes("This is testing footnote", blank_row = "none")
     
-    rpt <- create_report(fp, output_type = "HTML", font = fnt,
+    rpt <- create_report(fp, output_type = "html", font = fnt,
                          font_size = fsz) %>%
       set_margins(top = 1, bottom = 1) %>%
       titles("Table 1.0") %>%
       add_content(tbl) %>%
       page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
                   center = "Center footer", right = "Right footer",
-                  width = c(5.5, NA, NA))
+                  width = c(5.5))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
+test_that("html-49: Page footers with multiple assigned widths work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "html/test49.html")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "", right = "Right Footer",
+                  width = c(5.5, 0 , 2))
     
     res <- write_report(rpt)
     

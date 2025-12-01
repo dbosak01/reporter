@@ -1715,7 +1715,7 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
 page_footer <- function(x, left="",  center="", right="", blank_row = "above",
-                        width = c(NA, NA, NA)){
+                        width = NULL){
 
   if (!"report_spec" %in% class(x))
     stop("Page header can only be assigned to an object of class 'report_spec'")
@@ -1724,8 +1724,8 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above",
     stop("Footer string count exceeds limit of 5 strings per section.")
   }
   
-  if (length(width) != 3){
-    stop("Width should be a vector with three numeric/NA values.")
+  if (length(width) > 3){
+    stop("Width should be a vector with maximum three numeric values.")
   }
   
   if (is.null(blank_row))
@@ -1794,6 +1794,10 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above",
 #' @param format The format to use for the page by column data.  The format can 
 #' be a string format, a formatting function, a lookup list, a user-defined
 #' format, or a formatting list. 
+#' @param bold A parameter to bold the page by text. Valid values are FALSE, 
+#' TRUE, 'label' or 'value'. Default is FALSE. TRUE to bold both label and value,
+#' 'label' to bold only label, 'value' to bold only value. This parameter only
+#' applies to variable-width RTF, HTML, PDF, and DOCX output types.
 #' All formatting is performed by the \code{\link[fmtr]{fapply}} function from
 #' the \code{\link[fmtr]{fmtr}} package.  For 
 #' a list of common formatting codes, see \link[fmtr]{FormattingStrings}.
@@ -1913,7 +1917,8 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above",
 #' # 2020-10-25 19:33:35                                                Page 3 of 3 
 #' @export
 page_by <- function(x, var, label = NULL, align = "left",
-                    blank_row = "below", borders = "none", format = NULL) {
+                    blank_row = "below", borders = "none", format = NULL,
+                    bold = FALSE) {
   
   
   # Create page by structure
@@ -1934,6 +1939,10 @@ page_by <- function(x, var, label = NULL, align = "left",
     stop(paste("Borders parameter invalid.  Valid values are", 
                "'top', 'bottom', 'left', 'right', 'all', 'outside', or 'none'."))
   
+  if (!bold %in% c(TRUE, FALSE, "label", "value")) {
+    stop("Bold parameter invalid. Valid values are TRUE, FALSE, 'label', or 'value'.")
+  }
+  
   var_c <- as.character(substitute(var, env = environment()))
   
   pb$var <- var_c
@@ -1946,6 +1955,7 @@ page_by <- function(x, var, label = NULL, align = "left",
   pb$blank_row <- blank_row
   pb$borders <- borders
   pb$format <- format
+  pb$bold <- bold
 
   x$page_by <- pb
   

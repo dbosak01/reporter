@@ -144,6 +144,9 @@ get_page_footer_html <- function(rs) {
     
     width <- rs$page_footer_width
     
+    # Make sure the length is 3, NA will be imputed later.
+    width <- c(width, rep(NA, 3 - length(width)))
+    
     total_width <- sum(width, na.rm = T)
     if (total_width > rs$content_size[["width"]]) {
       

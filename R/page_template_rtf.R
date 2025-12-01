@@ -164,6 +164,9 @@ get_page_footer_rtf <- function(rs) {
     
     width <- rs$page_footer_width
     
+    # Make sure the length is 3, NA will be imputed later.
+    width <- c(width, rep(NA, 3 - length(width)))
+    
     total_width <- sum(width, na.rm = T)
     if (total_width > rs$content_size[["width"]]) {
       
@@ -1156,12 +1159,21 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
     vl <- tmp$rtf
     cnt <- cnt + tmp$lines
     
+    # Add bold
+    if (pgby$bold == TRUE) {
+      page_by_text <- paste0("\\b ", pgby$label, vl, "\\b0")
+    } else if (pgby$bold == "value") {
+      page_by_text <- paste0(pgby$label, "\\b ", vl, "\\b0")
+    } else if (pgby$bold == "label"){
+      page_by_text <- paste0("\\b ", pgby$label, "\\b0", vl)
+    }
+    
     dev.off()
     
     # Construct RTF for pageby value
     ret[length(ret) + 1] <- paste0("\\trowd\\trgaph0", ta, tb, 
                                    "\\cellx", w1, algn, " ",
-                              pgby$label, vl, "\\cell\\row\n")
+                                   page_by_text, "\\cell\\row\n")
     
 
     # cnt <- cnt + get_lines_rtf(paste0( pgby$label, ": ", value), width,

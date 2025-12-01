@@ -3216,7 +3216,7 @@ test_that("pdf2-83: Three level stub and indentation work as expected.", {
   }
 })
 
-test_that("pdf2-84: Page footers with custom widths work as expected.",{
+test_that("pdf2-84: Page footers with one assigned width work as expected.",{
   if (dev) {
     fp <- file.path(base_path, "pdf2/test84.pdf")
     
@@ -3232,7 +3232,34 @@ test_that("pdf2-84: Page footers with custom widths work as expected.",{
       add_content(tbl) %>%
       page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
                   center = "Center footer", right = "Right footer",
-                  width = c(5.5, NA, NA))
+                  width = c(5.5))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
+test_that("pdf2-85: Page footers with multiple assigned widths work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test85.pdf")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "PDF", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "", right = "Right Footer",
+                  width = c(5.5, 0 , 2))
     
     res <- write_report(rpt)
     
