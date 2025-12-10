@@ -64,6 +64,14 @@ to help create, lay out, and write your report to the file system.
 For examples and usage information, visit the **reporter** documentation
 site [here](https://reporter.r-sassy.org/articles/reporter.html).
 
+
+### Introductory Video
+
+Here is a YouTube video that gives a brief introduction to the main features
+of the **reporter** package:
+
+[![Reporter Package Introduction](https://img.youtube.com/vi/PuqQFqOrFXQ/0.jpg)](https://www.youtube.com/watch?v=PuqQFqOrFXQ)
+
 ### Getting Help
 
 If you need help, the first place 
