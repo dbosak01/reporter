@@ -3270,6 +3270,462 @@ test_that("pdf2-85: Page footers with multiple assigned widths work as expected.
 }
 )
 
+test_that("pdf2-86: Page by with bold label and value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test86.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-87: Page by with bold label works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test87_notrim.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-88: Page by with bold value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test88_notrim.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-89: Page by with bold label and value at right works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test89.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = TRUE, blank_row = "none",
+              align = "right") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-90: Page by with bold label at right works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test90.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "label", blank_row = "none",
+              align = "right") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-91: Page by with bold value at right works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test91.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none",
+              align = "right") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-92: Page by with bold label and value at center works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test92.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = TRUE, blank_row = "none",
+              align = "center") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-93: Page by with bold label at center works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test93.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "label", blank_row = "none",
+              align = "center") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-94: Page by with bold value at center works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test94.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none",
+              align = "center") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-95: Page by with bold long label and value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test95.pdf")
+    
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-96: Page by with bold long label works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test96.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-97: Page by with bold long value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test97.pdf")
+    
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence:"
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-98: Page by with bold long label and value at center worksas expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test98.pdf")
+    
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none", align = "center") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-99: Page by with bold long label at center works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test99.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none", align = "center") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-100: Page by with bold long value at center works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test100.pdf")
+    
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence:"
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none", align = "center") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf2-101: Page by with bold long label filling first line works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf2/test101.pdf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
 # # User Tests --------------------------------------------------------------
 
 # Lots of special characters not working

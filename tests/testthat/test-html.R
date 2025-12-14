@@ -1728,6 +1728,207 @@ test_that("html-49: Page footers with multiple assigned widths work as expected.
 }
 )
 
+test_that("html-50: Page by with bold label and value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "html/test50.html")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-51: Page by with bold label as expected.", {
+  
+  if (dev) {
+    # Label and Value are bold
+    fp <- file.path(base_path, "html/test51.html")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-52: Page by with bold value as expected.", {
+  
+  if (dev) {
+    # Label and Value are bold
+    fp <- file.path(base_path, "html/test52.html")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-53: Page by with bold long label and value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "html/test53.html")
+    
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-54: Page by with bold long label works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "html/test54.html")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-55: Page by with bold long value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "html/test55.html")
+    
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more than one sentence:"
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-56: Page by with bold long label filling one line works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "html/test56.html")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more- "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
 # User Tests --------------------------------------------------------------
 
 
