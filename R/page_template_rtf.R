@@ -1155,17 +1155,67 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
     par(family = get_font_family(rs$font), ps = rs$font_size)
     
     # Account for multiple pgby lines
-    tmp <- split_string_rtf(value, width, rs$units)
-    vl <- tmp$rtf
-    cnt <- cnt + tmp$lines
+    # tmp <- split_string_rtf(value, width, rs$units)
+    # vl <- tmp$rtf
+    # cnt <- cnt + tmp$lines
     
     # Add bold
-    if (pgby$bold == TRUE) {
-      page_by_text <- paste0("\\b ", pgby$label, vl, "\\b0")
-    } else if (pgby$bold == "value") {
-      page_by_text <- paste0(pgby$label, "\\b ", vl, "\\b0")
-    } else if (pgby$bold == "label"){
-      page_by_text <- paste0("\\b ", pgby$label, "\\b0", vl)
+    if (pgby$bold %in% c(TRUE, FALSE)) {
+      
+      if (substr(pgby$label, nchar(pgby$label), nchar(pgby$label)) != " "){
+        sep <- " "
+      } else {
+        sep <- ""
+      }
+      
+      tmp <- split_string_rtf(paste0(pgby$label, sep, value), width, rs$units)
+      vl <- tmp$rtf
+      cnt <- cnt + tmp$lines
+      
+      if (pgby$bold ) {
+        page_by_text <- paste0("\\b ", vl, "\\b0")
+      } else {
+        page_by_text <- vl
+      }
+      
+    } else if (pgby$bold %in% c("value", "label")) {
+      
+      # Split label
+      label_split <- split_string_rtf(pgby$label, width, rs$units)
+      cnt <- cnt + label_split$lines
+      
+      # Use remain width to split value
+      remain_width <- width - label_split$widths[length(label_split$widths)]
+      value_split <- split_string_rtf(value, remain_width, rs$units)
+      
+      if (value_split$widths[1] > remain_width) {
+        
+        # If first width is bigger than remaining width, it means value starts a new line
+        value_split <- split_string_rtf(value, width, rs$units)
+        cnt <- cnt + value_split$lines
+        value_split_txt <- value_split$rtf
+        
+      } else {
+        
+        # Otherwise, split with full width if there is a second line
+        splt <- strsplit(value_split$rtf, split = "\n", fixed = TRUE)
+        
+        if (length(splt[[1]]) > 1) {
+          remain_value <- trimws(sub(splt[[1]][1], "", value), which = "left")
+          remain_value_split <- split_string_html(remain_value, width, rs$units)
+          cnt <- cnt + remain_value_split$lines
+          value_split_txt <- paste0(splt[[1]][1], "\n", remain_value_split$rtf)
+        } else {
+          value_split_txt <- value_split$rtf
+        }
+        
+      }
+      
+      if (pgby$bold == "label") {
+        page_by_text <- paste0("\\b ", label_split$rtf, " \\b0", value_split_txt)
+      } else {
+        page_by_text <- paste0(label_split$rtf, " \\b ", value_split_txt, "\\b0")
+      }
     }
     
     dev.off()
@@ -1305,7 +1355,8 @@ get_page_by_rtf_back <- function(pgby, width, value, rs, talgn) {
 # Utilities ---------------------------------------------------------------
 
 
-get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "", exclude = NULL) {
+get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "", 
+                             exclude = NULL, cell_border = NULL) {
   
   t <- ""
   b <- ""
@@ -1341,18 +1392,31 @@ get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "", exclude = N
       
     }
     
-    if (row == 1 & any(brdrs %in% c("outside", "top")))
+    # Cell border is border indicator from group_line or cell_style
+    if ((row == 1 & any(brdrs %in% c("outside", "top"))) |
+        any(cell_border %in% c("outside", "top"))
+        ) {
       t <- "\\clbrdrt\\brdrs"
+    }
     
-    if (row == nrow & any(brdrs %in% c("bottom", "outside")))
+    if ((row == nrow & any(brdrs %in% c("bottom", "outside"))) |
+        any(cell_border %in% c("bottom", "outside"))
+        ) {
       b <- "\\clbrdrb\\brdrs"
+    }
     
-    if (col == 1 & any(brdrs %in% c("outside", "left")))
+    if ((col == 1 & any(brdrs %in% c("outside", "left"))) |
+        any(cell_border %in% c("outside", "left"))
+        ) {
       l <- "\\clbrdrl\\brdrs"
+    }
     
-    if (col == ncol & any(brdrs %in% c("outside", "right")))
+    if ((col == ncol & any(brdrs %in% c("outside", "right"))) |
+        any(cell_border %in% c("outside", "right"))
+        ) {
       r <- "\\clbrdrr\\brdrs"
-    
+    }
+
   }
   
   # Deal with flag

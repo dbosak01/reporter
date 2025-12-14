@@ -1190,19 +1190,84 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgb
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
     
-    # Account for multiple pgby lines
-    tmp <- split_string_html(value, width, rs$units)
+    # # Account for multiple pgby lines
+    # tmp <- split_string_html(value, width, rs$units)
+    # 
+    # dev.off()
+    # 
+    # vl <- tmp$html
+    # cnt <- cnt + tmp$lines
+    # 
+    # # Construct HTML for page by
+    # ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
+    #                                pgby$label, encodeHTML(vl), "</td></tr>\n")
+    # #cnt <- cnt + 1
+    
+    # Add bold
+    if (pgby$bold %in% c(TRUE, FALSE)) {
+      
+      if (substr(pgby$label, nchar(pgby$label), nchar(pgby$label)) != " "){
+        sep <- " "
+      } else {
+        sep <- ""
+      }
+      
+      tmp <- split_string_html(paste0(pgby$label, sep, value), width, rs$units)
+      vl <- tmp$html
+      cnt <- cnt + tmp$lines
+      
+      if (pgby$bold ) {
+        page_by_text <- paste0("<b>", encodeHTML(vl), "</b>")
+      } else {
+        page_by_text <- encodeHTML(vl)
+      }
+      
+    } else if (pgby$bold %in% c("value", "label")) {
+      
+      # Split label
+      label_split <- split_string_html(pgby$label, width, rs$units)
+      cnt <- cnt + label_split$lines
+      
+      # Use remain width to split value
+      remain_width <- width - label_split$widths[length(label_split$widths)]
+      value_split <- split_string_html(value, remain_width, rs$units)
+      
+      if (value_split$widths[1] > remain_width) {
+        
+        # If first width is bigger than remaining width, it means value starts a new line
+        value_split <- split_string_html(value, width, rs$units)
+        cnt <- cnt + value_split$lines
+        value_split_txt <- value_split$html
+        
+      } else {
+        
+        # Otherwise, split with full width if there is a second line
+        splt <- strsplit(value_split$html, split = "\n", fixed = TRUE)
+        
+        if (length(splt[[1]]) > 1) {
+          remain_value <- trimws(sub(splt[[1]][1], "", value), which = "left")
+          remain_value_split <- split_string_html(remain_value, width, rs$units)
+          cnt <- cnt + remain_value_split$lines
+          value_split_txt <- paste0(splt[[1]][1], "\n", remain_value_split$html)
+        } else {
+          value_split_txt <- value_split$html
+        }
+        
+      }
+      
+      if (pgby$bold == "label") {
+        page_by_text <- paste0("<b>", encodeHTML(paste0(label_split$html, " ")), "</b>", encodeHTML(value_split_txt))
+      } else {
+        page_by_text <- paste0(encodeHTML(paste0(label_split$html, " ")), "<b>", encodeHTML(value_split_txt), "</b>")
+      }
+    }
     
     dev.off()
     
-    vl <- tmp$html
-    cnt <- cnt + tmp$lines
-    
     # Construct HTML for page by
     ret[length(ret) + 1] <- paste0("<tr><td style=\"", tb, "\">",
-                                   pgby$label, encodeHTML(vl), "</td></tr>\n")
-    #cnt <- cnt + 1
-
+                                   page_by_text, "</td></tr>\n")
+  
 
     if (pgby$blank_row %in% c("below", "both")) {
 
