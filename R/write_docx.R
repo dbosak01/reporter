@@ -1440,7 +1440,8 @@ cell_pct <- function(txt, align = "left", width = NULL) {
 
 #' Bottom border means it is a header row
 #' @noRd
-cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL, bold = FALSE) {
+cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL, bold = FALSE,
+                     multiple = FALSE) {
   
   al <- ""
   bb <- ""
@@ -1460,17 +1461,31 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
     }
   }
   
-  
-  if (is.null(width)) {
-    ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
-                  para(txt, align),
-                  "</w:tc>\n", collapse = "")
-    
+  # If multiple is TRUE, use para_wp to separate different text with different styles
+  if (multiple == FALSE) {
+    if (is.null(width)) {
+      ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
+                    para(txt, align),
+                    "</w:tc>\n", collapse = "")
+      
+    } else {
+      ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
+                    para(txt, align, bold = bold),
+                    "</w:tc>\n", collapse = "")
+    }
   } else {
-    ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
-                  para(txt, align, bold = bold),
-                  "</w:tc>\n", collapse = "")
+    if (is.null(width)) {
+      ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
+                    para_wp(txt, align),
+                    "</w:tc>\n", collapse = "")
+      
+    } else {
+      ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
+                    para_wp(txt, align, bold = bold),
+                    "</w:tc>\n", collapse = "")
+    }
   }
+
   
   return(ret)
 }
@@ -1541,6 +1556,119 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
  
  return(ret)
   
+}
+
+#' @noRd
+para_wp <- function(txt, align = "left", font_size = NULL, bold = FALSE, 
+                    italics = FALSE, indent_left = NA, indent_right = NA, borders = "") {
+  
+  ret <- ""
+  
+  if (align == "centre") {
+    align <- "center"
+  }
+  
+  indent_c <- ""
+  if (!is.na(indent_left) | !is.na(indent_right)) {
+    indent_left <- ifelse(is.na(indent_left), 0, indent_left)
+    indent_right <- ifelse(is.na(indent_right),0,indent_right)
+    
+    indent_c <- sprintf('<w:ind w:left="%s" w:right="%s"/>', indent_left, indent_right)
+  }
+  
+  # Process multiple <wr> tags
+  wr <- para_wr(txt, font_size, bold, italics)
+  
+  ret <- paste0(ret, '<w:p>',
+                '<w:pPr><w:jc w:val="', align, '"/>',
+                '<w:spacing w:after="0"/>',
+                indent_c,
+                borders,
+                '</w:pPr>',
+                wr,
+                "</w:p>\n")
+  
+  return(ret)
+  
+}
+
+#' @noRd
+para_wr <- function(txt, font_size, bold, italics){
+  vl <- encodeDOCX(txt)
+  
+  if (all(nchar(txt) == 0)) {
+    vl <- " "
+  }
+  
+  splt <- strsplit(vl, split = "\n", fixed = TRUE)
+  
+  ret <- ""
+  
+  # 1st loop is for different text
+  for (i in seq_len(length(splt))) {
+    b <- ""
+    if (length(bold) > 1){
+      if (bold[i] == TRUE) {
+        b <-  '<w:b/><w:bCs/>'
+      }
+    } else {
+      if (bold == TRUE) {
+        b <-  '<w:b/><w:bCs/>'
+      }
+    }
+    
+    it <- ""
+    if (length(italics) > 1) {
+      if (italics[i] == TRUE) {
+        it <- '<w:i/><w:iCs/>'
+      }
+    } else {
+      if (italics == TRUE) {
+        it <- '<w:i/><w:iCs/>'
+      }
+    }
+    
+    
+    fs <- ""
+    if (length(font_size) > 1){
+      if (!is.na(font_size[i])) {
+        fs <- paste0('<w:sz w:val="', font_size[i] * 2, 
+                     '"/><w:szCs w:val="', font_size[i] * 2, '"/>')
+      }
+    } else {
+      if (!is.null(font_size)) {
+        fs <- paste0('<w:sz w:val="', font_size[i] * 2, 
+                     '"/><w:szCs w:val="', font_size[i] * 2, '"/>')
+      }
+    }
+    
+    
+    rpr <- ""
+    if (any(!is.na(font_size)) | any(bold == TRUE) | any(italics == TRUE)) {
+      rpr <- paste0('<w:rPr>', b, it, fs, '</w:rPr>')
+    }
+    
+    # 2nd loop is for multiple line in same text
+    for (j in seq_len(length(splt[[i]]))) {
+      if (j == 1){
+        wr <- paste0('<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
+                     '</w:t></w:r>')
+      } else {
+        line_break <- "<w:r><w:br/></w:r>"
+        wr <- paste0(wr, line_break, '<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
+                     '</w:t></w:r>')
+      }
+    }
+    
+    if (substr(wr, 1, 1) != " " & substr(ret, nchar(ret), nchar(ret)) != " ") {
+      sep <- " "
+    } else {
+      sep <- ""
+    }
+    ret <- paste0(ret, sep, wr)
+  }
+  
+  return(ret)
 }
 
 #' @noRd
