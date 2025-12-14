@@ -221,10 +221,11 @@ get_page_footer_docx <- function(rs) {
       # Make sure the total is 5000 exactly
       pct_lst <- c(left_pct, center_pct, right_pct)
       rest_pct <- 5000 - sum(pct_lst)
+      add_pos <- c(1, 3 ,2)
       
       if (rest_pct >= 1){
         for (i in 1:rest_pct) {
-          pct_lst[i%%3] <- pct_lst[i%%3] + 1
+          pct_lst[add_pos[i%%3]] <- pct_lst[i%%3] + 1
         }
       }
     }
@@ -1429,19 +1430,118 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
     
-    # Account for multiple pgby lines
-    tmp <- split_string_html(value, width, rs$units)
+    # Bold has two scenarios
+    #   (1) All TRUE, FALSE -> Directly output as all bold or not bold
+    #   (2) Only label or value is bold -> Specially process the line with label and value
+    
+    # if (pgby$bold %in% c(T, F)) {
+    #   # Account for multiple pgby lines
+    #   tmp <- split_string_html(paste0(pgby$label, value), width, rs$units)
+    #   
+    #   vl <- tmp$html
+    #   cnt <- cnt + tmp$lines
+    #   vrht <- get_row_height(round(rs$row_height * conv) * tmp$lines)
+    #   
+    #   ret <- append(ret, paste0("<w:tr>", vrht, 
+    #                             cell_abs(vl, width = w, 
+    #                                      borders = vb, bold = pgby$bold), 
+    #                             "</w:tr>\n"))
+    #   
+    # } else if (pgby$bold %in% c("value", "label", T, F)) {
+    if (pgby$bold %in% c("value", "label", T, F)) {
+      
+      # -----  This is for test ------- #
+      # pgby <- list("label" = paste0(
+      #   "This is a very long\nlabel with intentionally line change and also",
+      #   " long text which should take at least three lines: "
+      # ),
+      #              "bold" = "label")
+      # # value <- "serota"
+      # 
+      # # pgby <- list("label" = "Flower Type: ",
+      # # "bold" = "value")
+      # value <- paste0(
+      #   "This is a very long value without intentionally line change and also",
+      #   " long text which should take at least three lines: ",
+      #   "serota"
+      # )
+      # width <- 5
+      # rs <- list("units" = "inches")
+      # conv <- 1440
+      # vb <- c()
+      # w <- round(width * conv)
+      # cnt <- 0
+      tmp_cnt <- 0
+      # ------------------------------- #
+      if (pgby$bold == "value") {
+        bold <- c(FALSE, TRUE)
+      } else if (pgby$bold == "label") {
+        bold <- c(TRUE, FALSE)
+      } else if (pgby$bold == TRUE) {
+        bold <- c(TRUE, TRUE)
+      } else if (pgby$bold == FALSE) {
+        bold <- c(FALSE, FALSE)
+      }
+      
+      # Split label
+      label_buffer <- ifelse(bold[1] == TRUE, 0.5, 0.2)
+      label_split <- split_string_html(pgby$label, width - label_buffer, rs$units)
+      cnt <- cnt + label_split$lines
+      tmp_cnt <- tmp_cnt + label_split$lines # To be deleted
+
+      # Split value
+      value_buffer <- ifelse(bold[2] == TRUE, 0.5, 0.2)
+      label_last_width <- label_split$widths[length(label_split$widths)]
+      remain_width <- width - label_last_width - value_buffer
+      value_split <- split_string_html(value, remain_width, rs$units)
+
+      remain_value_lines <- 0
+      if (value_split$widths[1] > remain_width) {
+        # If the first width is greater than remain width, it means value start a new line
+        value_split <- split_string_html(value, width, rs$units)
+        cnt <- cnt + value_split$lines
+        remain_value_lines <- value_split$lines
+        tmp_cnt <- tmp_cnt + value_split$lines # To be deleted
+        value_split_txt <- value_split$html
+      } else {
+        # If not, calculate from second line with full width
+        splt <- strsplit(value_split$html, split = "\n", fixed = TRUE)
+        if (length(splt[[1]]) > 1) {
+          remain_value <- trimws(sub(splt[[1]][1], "", value), which = "left")
+          remain_value_split <- split_string_html(remain_value, width - value_buffer, rs$units)
+          cnt <- cnt + remain_value_split$lines
+          tmp_cnt <- tmp_cnt + remain_value_split$lines # To be deleted
+          remain_value_lines <- remain_value_split$lines
+          
+          value_split_txt <- paste0(splt[[1]][1], "\n", remain_value_split$html)
+        } else {
+          value_split_txt <- value_split$html
+        }
+      }
+      
+      vrht <- get_row_height(round(rs$row_height * conv) * (label_split$lines + remain_value_lines))
+      
+      # Make sure there is blank between label and value
+      label_nchar <- nchar(label_split$html)
+      value_nchar <- nchar(value_split_txt)
+      if (substr(label_split$html, label_nchar, label_nchar) != " "
+          & substr(value_split_txt, value_nchar, value_nchar) != " "){
+        value_split_txt <- paste0(" ", value_split_txt)
+      }
+      
+      # print(paste0("w is ", w))
+      # print(paste0("line is ", tmp_cnt))
+      # print(paste0("label is ", label_split$html))
+      # print(paste0("value is ", value_split_txt))
+      
+      ret <- append(ret, paste0("<w:tr>", vrht, 
+                                cell_abs(c(label_split$html, value_split_txt), width = w, 
+                                         borders = vb, bold = bold, multiple = TRUE), 
+                                "</w:tr>\n"))
+    }
     
     dev.off()
     
-    vl <- tmp$html
-    cnt <- cnt + tmp$lines
-    vrht <- get_row_height(round(rs$row_height * conv) * tmp$lines)
-    
-    ret <- append(ret, paste0("<w:tr>", vrht, 
-                              cell_abs(paste0(pgby$label, vl), width = w, 
-                                       borders = vb), 
-                              "</w:tr>\n"))
     
     # cnt <- cnt + 1
 
