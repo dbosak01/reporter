@@ -2048,31 +2048,212 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0,
       cnt <- cnt + 1
       pnts <- pnts + lh
     }
-
-
-    vl <- paste0( pgby$label, " ", value)
-
-    tmp <- split_string_text(vl, width, rs$units)
     
-    dev.off()
-    
-    for (ln in seq_len(tmp$lines)) {
+    if (pgby$bold %in% c(TRUE, FALSE)) {
       
-      ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
-                                          bold = FALSE,
-                                          xpos = get_points(lb, 
-                                                            rb,
-                                                            tmp$widths[ln],
-                                                            units = rs$units,
-                                                            align = pgby$align),
-                                          ypos = yline)
-      yline <- yline + lh
-      cnt <- cnt + 1
-      pnts <- pnts + lh
+      if (substr(pgby$label, nchar(pgby$label), nchar(pgby$label)) != " "){
+        sep <- " "
+      } else {
+        sep <- ""
+      }
+      
+      vl <- paste0( pgby$label, sep, value)
+      
+      tmp <- split_string_text(vl, width, rs$units)
+      
+      
+      for (ln in seq_len(tmp$lines)) {
+        
+        x_adjust <- 0
+        
+        if (pgby$bold == TRUE & pgby$align == "right") {
+          x_adjust <- -3
+        }
+        
+        ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+                                            bold = pgby$bold,
+                                            xpos = get_points(lb, 
+                                                              rb,
+                                                              tmp$widths[ln],
+                                                              units = rs$units,
+                                                              align = pgby$align) + x_adjust,
+                                            ypos = yline)
+        yline <- yline + lh
+        cnt <- cnt + 1
+        pnts <- pnts + lh
+      }
+    } else if (pgby$bold %in% c("label", "value")) {
+      
+      label_bold <- ifelse(pgby$bold == "label", TRUE, FALSE)
+      value_bold <- ifelse(pgby$bold == "value", TRUE, FALSE)
+      
+      # Process label first
+      tmp_label <- split_string_text(pgby$label, width, rs$units)
+      last_label_width <- tmp_label$widths[length(tmp_label$widths)]
+      
+      # First value split with remaining width
+      tmp_value <- split_string_text(value, width - last_label_width, rs$units)
+      
+      # If the first part is less than remaining with, it means value will 
+      # be concatenated to label in a line; otherwise, the value will start a new line
+      if (tmp_value$widths[1] <= width - last_label_width) {
+        first_value_width <- tmp_value$widths[1]
+        
+        for (ln in seq_len(tmp_label$lines)) {
+          
+          if (ln < tmp_label$lines) {
+            ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                bold = label_bold,
+                                                xpos = get_points(lb, 
+                                                                  rb,
+                                                                  tmp_label$widths[ln],
+                                                                  units = rs$units,
+                                                                  align = pgby$align),
+                                                ypos = yline)
+          } else {
+            # ----------------------------------------------------------- #
+            # Last label and first value are processed together
+            # ----------------------------------------------------------- #
+            
+            # Adjust xpos of value for some scenarios
+            x_value_adjust <- 0
+            
+            # The second label and value are too close
+            # And center label and value are too close
+            if ( (ln > 1) |
+                 (label_bold & pgby$align %in% c("center", "centre"))
+                 ) {
+              x_value_adjust <- 6
+            }
+            
+            if (pgby$align == "left") {
+              # ---- Label ---- # 
+              ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                  bold = label_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_label$widths[ln],
+                                                                    units = rs$units,
+                                                                    align = pgby$align),
+                                                  ypos = yline)
+              
+              # ---- Value ---- #
+              ret[[length(ret) + 1]] <- page_text(tmp_value$text[1], rs$font_size, 
+                                                  bold = value_bold,
+                                                  xpos = get_points(lb + last_label_width, 
+                                                                    rb,
+                                                                    tmp_value$widths[1],
+                                                                    units = rs$units,
+                                                                    align = pgby$align) + x_value_adjust,
+                                                  ypos = yline)
+              
+            } else if (pgby$align == c("right")) {
+              # ---- Label ---- # 
+              x_label_right_adjust <- ifelse(label_bold, 4, 0)
+              ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                  bold = label_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_label$widths[ln] + first_value_width,
+                                                                    units = rs$units,
+                                                                    align = pgby$align) - x_label_right_adjust,
+                                                  ypos = yline)
+              # ---- Value ---- #
+              ret[[length(ret) + 1]] <- page_text(tmp_value$text[1], rs$font_size, 
+                                                  bold = value_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_value$widths[1],
+                                                                    units = rs$units,
+                                                                    align = pgby$align) + x_value_adjust,
+                                                  ypos = yline)
+              
+            } else if (pgby$align  %in% c("center", "centre")) {
+              # ---- Label ---- # 
+              ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                  bold = label_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_label$widths[ln] + first_value_width,
+                                                                    units = rs$units,
+                                                                    align = pgby$align),
+                                                  ypos = yline)
+              # ---- Value ---- #
+              label_value_width <- tmp_label$widths[ln] + first_value_width
+              xpos_value <- cpoints(lb + ((rb - lb)/ 2) - (label_value_width/ 2) + tmp_label$widths[ln], rs$units) + 1
+              
+              ret[[length(ret) + 1]] <- page_text(tmp_value$text[1], rs$font_size, 
+                                                  bold = value_bold,
+                                                  xpos = xpos_value + x_value_adjust,
+                                                  ypos = yline)
+            }
+          }
+          yline <- yline + lh
+          cnt <- cnt + 1
+          pnts <- pnts + lh
+        }
+        
+        # Second value split with whole width
+        remain_value <- trimws(sub(tmp_value$text[1], "", value), which = "left")
+        if (nchar(remain_value) > 0) {
+          tmp_value2 <- split_string_text(remain_value, width, rs$units)
+          
+          tmp_value$text <- c(tmp_value$text[1], tmp_value2$text)
+          tmp_value$lines <- 1 + tmp_value2$lines
+          
+          for (ln in 2:tmp_value$lines) {
+            
+            ret[[length(ret) + 1]] <- page_text(tmp_value$text[ln], rs$font_size,
+                                                bold = value_bold,
+                                                xpos = get_points(lb, 
+                                                                  rb,
+                                                                  tmp_value$widths[ln],
+                                                                  units = rs$units,
+                                                                  align = pgby$align),
+                                                ypos = yline)
+            
+            yline <- yline + lh
+            cnt <- cnt + 1
+            pnts <- pnts + lh
+          }
+        }
+        
+      } else {
+        # Case when Value starts a new line in beginning
+        for (ln in seq_len(tmp_label$lines)) {
+          ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                              bold = label_bold,
+                                              xpos = get_points(lb, 
+                                                                rb,
+                                                                tmp_label$widths[ln],
+                                                                units = rs$units,
+                                                                align = pgby$align),
+                                              ypos = yline)
+          yline <- yline + lh
+          cnt <- cnt + 1
+          pnts <- pnts + lh
+        }
+        
+        tmp_value <- split_string_text(value, width, rs$units)
+        for (ln in seq_len(tmp_value$lines)) {
+          ret[[length(ret) + 1]] <- page_text(tmp_value$text[ln], rs$font_size,
+                                              bold = value_bold,
+                                              xpos = get_points(lb, 
+                                                                rb,
+                                                                tmp_value$widths[ln],
+                                                                units = rs$units,
+                                                                align = pgby$align),
+                                              ypos = yline)
+          
+          yline <- yline + lh
+          cnt <- cnt + 1
+          pnts <- pnts + lh
+        }
+      }
     }
     
+    dev.off()
 
-    
     if (pgby$blank_row %in% c("below", "both")) {
       
       
