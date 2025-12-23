@@ -270,6 +270,17 @@ prep_data <- function(dat, ts, char_width, missing_val) {
       }
     }
   }
+  
+  # Add cell border indicator
+  group_border_vars <- c()
+  for (def in defs) {
+    if (def$group_border) {
+      group_border_vars <- c(group_border_vars, def$var_c)
+    }
+  }
+  if (length(group_border_vars) > 0) {
+    dat <- add_group_border_ind(dat, group_border_vars)
+  }
 
    # print("Labels")
    # print(dat)
@@ -869,10 +880,21 @@ get_label_aligns <- function(ts, aligns) {
   ret <- aligns
 
   # Let any defined value override the default
+  has_cell_border <- FALSE
   for (d in defs) {
     if (!is.null(d$label_align) & d$var_c %in% names(aligns))
       ret[[d$var_c]] <-  d$label_align
     
+    if (!is.null(d[["group_border"]])) {
+      if (d[["group_border"]] == TRUE) {
+        has_cell_border <- TRUE
+      }
+    }
+  }
+  
+  # Set a value so that it won't be NA in pi
+  if (has_cell_border) {
+    ret[["..group_border"]] <- "left"
   }
   
   # Deal with stub
@@ -944,9 +966,21 @@ get_aligns <- function(dat, ts) {
   }
   
   # Assign alignments from column definitions
+  has_cell_border <- FALSE
   for (d in defs) {
     if (!is.null(d$align) & d$var_c %in% nms)
       ret[d$var_c] <- d$align
+    
+    if (!is.null(d[["group_border"]])) {
+      if (d[["group_border"]] == TRUE) {
+        has_cell_border <- TRUE
+      }
+    }
+  }
+  
+  # Assign cell border to let it not be NA in pi
+  if (has_cell_border) {
+    ret[["..group_border"]] <- "left"
   }
   
   # Deal with stub
@@ -1019,6 +1053,7 @@ get_labels <- function(dat, ts){
   #print(ls)
   
   # Let any defined labels override any attribute labels
+  has_cell_border <- FALSE
   for (def in defs) {
 
     if (!is.null(def[["label"]]))
@@ -1027,6 +1062,16 @@ get_labels <- function(dat, ts){
     if (!is.null(def$n) ) {
       ls[[def$var]] <- paste0(ls[[def$var]],  nfmt(def$n))
     }
+    
+    if (!is.null(def[["group_border"]])) {
+      if (def[["group_border"]] == TRUE) {
+        has_cell_border <- TRUE
+      }
+    }
+  }
+  
+  if (has_cell_border) {
+    ls <- c(ls, ..group_border = "..group_border")
   }
   
   # Deal with stub
@@ -1231,6 +1276,12 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       }
     }
     
+    # print("--------------------------------------")
+    # print(paste0("row: ", i))
+    # print(paste0("counter: ", counter))
+    # print(paste0("Capacity: ", page_size  - offset - ttfl))
+    # print(paste0("Page before: ", pg))
+    
     # If line count is greater than page size, start a new page
     if ((counter > (page_size  - offset - ttfl)) | userForce) {
       
@@ -1243,12 +1294,20 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       pg <- pg + 1
       
       # Reset line counter
-      counter <- 0
+      # counter <- 1
+      if (is.na(x$..row[i])) {
+        counter <- 1
+      } else {
+        counter <- x$..row[i]
+      }
       
       # Set offset to zero on first page
       offset <- 0
 
     }
+    
+    # print(paste0("Page after: ", pg))
+    # print("--------------------------------------")
   
     x$..page[i] <- pg
     # print(pg)
