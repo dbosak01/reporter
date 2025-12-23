@@ -1681,7 +1681,8 @@ run <- function(txt) {
 }
 
 #' @noRd
-get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
+get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL,
+                                  cell_border = NULL) {
   
   ret <- ""
   r <- ""
@@ -1689,37 +1690,75 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
   b <- ""
   t <- ""
   
-  if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left", "top"))) {
-    
-    if (row == 1 & any(brdrs %in% c("top", "outside", "body"))) {
-      t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (row == trow & any(brdrs %in% c("bottom", "outside", "body"))) {
-      b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (col == 1 & any(brdrs %in% c("left", "body"))) {
-      l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (col == tcol & any(brdrs %in% c("right", "body"))) {
-      r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (!is.null(flg)) {
-      if (flg %in% c("L", "B", "A")) {
-        if (col == 1 & any(brdrs %in% c("right", "body"))) {
-          r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-        }
+  # if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left", "top"))) {
+  #   
+  #   if (row == 1 & any(brdrs %in% c("top", "outside", "body"))) {
+  #     t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (row == trow & any(brdrs %in% c("bottom", "outside", "body"))) {
+  #     b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (col == 1 & any(brdrs %in% c("left", "body"))) {
+  #     l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (col == tcol & any(brdrs %in% c("right", "body"))) {
+  #     r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (!is.null(flg)) {
+  #     if (flg %in% c("L", "B", "A")) {
+  #       if (col == 1 & any(brdrs %in% c("right", "body"))) {
+  #         r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #       }
+  #     }
+  #   }
+  #   
+  #   if (b != "" | l != "" | r != "" | t!= "") {
+  #             
+  #     ret <-  paste0('<w:tcBorders>', r, l, t, b,
+  #                    '</w:tcBorders>')
+  #   }
+  # }
+  
+  if ((row == 1 & any(brdrs %in% c("top", "outside", "body"))) |
+      any(cell_border %in% c("top", "outside", "body"))
+      ) {
+    t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (row == trow & any(brdrs %in% c("bottom", "outside", "body")) |
+      any(cell_border %in% c("bottom", "outside", "body"))
+      ) {
+    b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (col == 1 & any(brdrs %in% c("left", "body")) |
+      any(cell_border %in% c("left", "body"))
+      ) {
+    l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (col == tcol & any(brdrs %in% c("right", "body")) |
+      any(cell_border %in% c("right", "body"))
+      ) {
+    r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (!is.null(flg)) {
+    if (flg %in% c("L", "B", "A")) {
+      if (col == 1 & any(brdrs %in% c("right", "body"))) {
+        r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
       }
     }
+  }
+  
+  if (b != "" | l != "" | r != "" | t!= "") {
     
-    if (b != "" | l != "" | r != "" | t!= "") {
-              
-      ret <-  paste0('<w:tcBorders>', r, l, t, b,
-                     '</w:tcBorders>')
-    }
+    ret <-  paste0('<w:tcBorders>', r, l, t, b,
+                   '</w:tcBorders>')
   }
 
   

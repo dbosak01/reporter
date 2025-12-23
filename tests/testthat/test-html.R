@@ -1929,6 +1929,104 @@ test_that("html-56: Page by with bold long label filling one line works as expec
   }
 })
 
+test_that("html-57: Group border works as as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "html/test57.html")
+    
+    # Setup
+    arm <- c(rep("A", 3), rep("B", 2), rep("C", 3), rep("D", 2))
+    subjid <- 100:109
+    name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+              "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+              "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+              "Smith, Shaileigh")
+    sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+    age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+    
+    
+    # Create data frame
+    df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+    df <- rbind(df, df, df, df)
+    
+    tbl1 <- create_table(df, first_row_blank = FALSE, borders = "outside") %>%
+      define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+             width = 1) %>%
+      define(name, label = "Subject Name", width = 1) %>%
+      define(sex, label = "Sex", n = 10, align = "center") %>%
+      define(age, label = "Age", n = 10) %>%
+      define(arm, label = "Arm",
+             dedupe = TRUE,
+             group_border = TRUE) %>%
+      footnotes("This is the footnote")
+    
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz) %>%
+      titles(c("Table 1.0", "This is a table with group border"), align = "center") %>%
+      add_content(tbl1) %>%
+      footnotes(c("This is the footnote 1")) %>%
+      page_header(left = "Test header", right = "Test header") %>%
+      page_footer(left = "Test footer", right = "Test footer") %>%
+      set_margins(top = 1, bottom = 1)
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-58: Group border with blank after works as as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "html/test58.html")
+    
+    # Setup
+    arm <- c(rep("A", 3), rep("B", 2), rep("C", 3), rep("D", 2))
+    subjid <- 100:109
+    name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+              "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+              "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+              "Smith, Shaileigh")
+    sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+    age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)    
+    
+    # Create data frame
+    df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+    df <- rbind(df, df, df, df)
+    
+    tbl1 <- create_table(df, first_row_blank = FALSE, borders = "outside") %>%
+      define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+             width = 1) %>%
+      define(name, label = "Subject Name", width = 1) %>%
+      define(sex, label = "Sex", n = 10, align = "center") %>%
+      define(age, label = "Age", n = 10) %>%
+      define(arm, label = "Arm",
+             dedupe = TRUE,
+             blank_after = TRUE,
+             group_border = TRUE) %>%
+      footnotes("This is the footnote")
+    
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz) %>%
+      titles(c("Table 1.0", "This is a table with group border"), align = "center") %>%
+      add_content(tbl1) %>%
+      footnotes(c("This is the footnote 1")) %>%
+      page_header(left = "Test header", right = "Test header") %>%
+      page_footer(left = "Test footer", right = "Test footer") %>%
+      set_margins(top = 1, bottom = 1)
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
 # User Tests --------------------------------------------------------------
 
 

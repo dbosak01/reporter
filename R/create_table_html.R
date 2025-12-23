@@ -147,6 +147,10 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
     control_cols <- c(control_cols, "..stub_var")
   }
   
+  if ("..group_border" %in% names(fdat)){
+    control_cols <- c(control_cols, "..group_border")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -1037,10 +1041,20 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         
         sflg <- nms[j] == "stub" &  has_style(rs, "table_stub_background")
         
+        cell_border <- NULL
+        if ("..group_border" %in% names(tbl)) {
+          cell_border <- tbl[["..group_border"]][i]
+        }
+        
+        # Don't draw group line for first blank row
+        if (flgs[i] %in% c("B", "A") & i == 1){
+          cell_border <- NULL
+        }
+        
         b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
                                    exclude = exclude_top, 
                                    border_color = get_style(rs, "border_color"),
-                                    stub_flag = sflg)
+                                    stub_flag = sflg, cell_border = cell_border)
         
         # Put indent information into style
         if (rs$units == "inches") {

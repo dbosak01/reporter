@@ -147,6 +147,10 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
     control_cols <- c(control_cols, "..stub_var")
   }
   
+  if ("..group_border" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..group_border")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -1258,10 +1262,25 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
     }
 
+    group_border <- ""
+    if ("..group_border" %in% names(tbl)) {
+      group_border <- tbl[["..group_border"]][i]
+    }
     
+    # Don't draw group line for first blank row
+    if (blnks[i] %in% c("B", "A") & i == 1){
+      group_border <- ""
+    }
+    
+    # Don't draw group line for last record when table border is all, bottom, outside
+    if (i == nrow(t) & any(brdrs %in% c("all", "outside", "bottom"))) {
+      group_border <- ""
+    }
     
     # Applies inside horizontal borders
-    if (any(brdrs %in% c("all", "inside")) & i < nrow(t)) {
+    if ((any(brdrs %in% c("all", "inside")) & i < nrow(t)) |
+        group_border == "bottom"
+        ) {
     
       ret[[length(ret) + 1]] <- page_hline(tlb * conv, mxrw -rh + bs, 
                                            (trb - tlb) * conv)
@@ -1269,7 +1288,11 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     }
     
     rline <- mxrw
-  
+    
+    # Add border height if the line is drawn by group border
+    if (!any(brdrs %in% c("all", "inside")) & group_border == "bottom") {
+      rline <- rline + bh
+    }
   }
   
   dev.off()

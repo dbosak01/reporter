@@ -1303,10 +1303,11 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgb
 #' and this function will return the correct border codes.  System works 
 #' great.
 #' @noRd
- get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, 
+get_cell_borders_html <- function(row, col, nrow, ncol, brdrs, 
                                   flag = "", exclude = NULL, 
                                   border_color = "",
-                                  stub_flag = FALSE) {
+                                  stub_flag = FALSE,
+                                  cell_border = NULL) {
   
   t <- ""
   b <- ""
@@ -1353,17 +1354,29 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgb
       
     }
     
-    if (row == 1 & any(brdrs %in% c("outside", "top")))
+    if (row == 1 & any(brdrs %in% c("outside", "top")) |
+        any(cell_border %in% c("outside", "top"))
+        ) {
       t <- paste0("border-top:thin solid ", border_color, ";")
-    
-    if (row == nrow & any(brdrs %in% c("bottom", "outside")))
+    }
+      
+    if (row == nrow & any(brdrs %in% c("bottom", "outside")) |
+        any(cell_border %in% c("bottom", "outside"))
+        ) {
       b <- paste0("border-bottom:thin solid ", border_color, ";")
+    }
     
-    if (col == 1 & any(brdrs %in% c("outside", "left")))
+    if (col == 1 & any(brdrs %in% c("outside", "left")) |
+        any(cell_border %in% c("outside", "left"))
+        ) {
       l <- paste0("border-left:thin solid ", border_color, ";")
+    }
     
-    if (col == ncol & any(brdrs %in% c("outside", "right")))
+    if (col == ncol & any(brdrs %in% c("outside", "right")) |
+        any(cell_border %in% c("outside", "right"))
+        ) {
       r <- paste0("border-right:thin solid ", border_color, ";")
+    }
     
   }
   

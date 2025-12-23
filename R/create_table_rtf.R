@@ -146,6 +146,11 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
     control_cols <- c(control_cols, "..stub_var")
   }
   
+  # Add cell_border into control_cols for adding cell border
+  if ("..group_border" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..group_border")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -1121,7 +1126,18 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       if (frb == TRUE) 
         radj <- 1
       
-      b <- get_cell_borders(i + radj, 1, nrow(t) + radj, ncol(t), brdrs, flgs[i])
+      cell_border <- NULL
+      if ("..group_border" %in% names(tbl)) {
+        cell_border <- tbl[["..group_border"]][i]
+      }
+      
+      # Don't draw group line for first blank row
+      if (flgs[i] %in% c("B", "A") & i == 1){
+        cell_border <- NULL
+      }
+      
+      b <- get_cell_borders(i + radj, 1, nrow(t) + radj, ncol(t), brdrs, flgs[i],
+                            cell_border = cell_border)
       ret[i] <- paste0(ret[i], b, "\\cellx", max(sz))
       
       
@@ -1134,7 +1150,13 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           if (frb == TRUE) 
             radj <- 1
           
-          b <- get_cell_borders(i + radj, j, nrow(t) + radj, ncol(t), brdrs, flgs[i])
+          cell_border <- NULL
+          if ("..group_border" %in% names(tbl)) {
+            cell_border <- tbl[["..group_border"]][i]
+          }
+          
+          b <- get_cell_borders(i + radj, j, nrow(t) + radj, ncol(t), brdrs, flgs[i],
+                                cell_border = cell_border)
           ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
         }
       }

@@ -146,6 +146,10 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
     control_cols <- c(control_cols, "..stub_var")
   }
   
+  if ("..group_border" %in% names(fdat)){
+    control_cols <- c(control_cols, "..group_border")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -1042,14 +1046,29 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         b <- ""
         cs <- ""
 
-        if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
-
-          b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
-                                     length(nms), brdrs, tb[i])
-          
-
-          
+        # if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
+        # 
+        #   b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
+        #                              length(nms), brdrs, tb[i])
+        #   
+        # 
+        #   
+        # }
+        
+        cell_border <- NULL
+        if ("..group_border" %in% names(tbl)) {
+          cell_border <- tbl[["..group_border"]][i]
         }
+        
+        # Don't draw group line for first blank row
+        if (tb[i] %in% c("B", "A") & i == 1){
+          cell_border <- NULL
+        }
+        
+        b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
+                                   length(nms), brdrs, tb[i],
+                                   cell_border = cell_border)
+        
         
         
         if (tb[i] %in% c("B", "A", "L")) {
