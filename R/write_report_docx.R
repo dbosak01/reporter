@@ -267,7 +267,7 @@ paginate_content_docx <- function(rs, ls) {
         blnks <- c()
         bl <- rs$body_line_count - last_page_lines - boff
         if (bl > 0)
-          blnks <- rep(rs$blank_row, bl)
+          blnks <- rep(rs$blank_row_below, bl)
 
         last_page <- append(last_page, blnks)
         last_page_lines <- 0
@@ -586,6 +586,17 @@ page_setup_docx <- function(rs) {
   rs$blank_row <- paste0('<w:p><w:pPr>
               				<w:spacing w:after="8" w:line="', round(rh * conv) + radj,
               				'" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="', rs$font_size * 2, '"/>
+              				</w:rPr>
+              			</w:pPr></w:p>\n')
+  
+  # This is for adding extra blanks after the table, left more buffer to prevent from
+  # unexpected page break
+  rs$blank_row_below <- paste0('<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="', round(rh * conv) + radj - 3,
+                         '" w:lineRule="auto"/>
               				<w:contextualSpacing/>
               				<w:rPr>
               					<w:sz w:val="', rs$font_size * 2, '"/>

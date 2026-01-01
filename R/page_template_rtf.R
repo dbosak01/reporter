@@ -1198,13 +1198,13 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
       } else {
         
         # Otherwise, split with full width if there is a second line
-        splt <- strsplit(value_split$rtf, split = "\n", fixed = TRUE)
+        splt <- strsplit(value_split$rtf, split = "\\line", fixed = TRUE)
         
         if (length(splt[[1]]) > 1) {
           remain_value <- trimws(sub(splt[[1]][1], "", value), which = "left")
-          remain_value_split <- split_string_html(remain_value, width, rs$units)
+          remain_value_split <- split_string_rtf(remain_value, width, rs$units)
           cnt <- cnt + remain_value_split$lines
-          value_split_txt <- paste0(splt[[1]][1], "\n", remain_value_split$rtf)
+          value_split_txt <- paste0(splt[[1]][1], "\\line", remain_value_split$rtf)
         } else {
           value_split_txt <- value_split$rtf
         }

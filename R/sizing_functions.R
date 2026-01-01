@@ -1177,6 +1177,11 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
   non_blank_pages <- unique(sb$..page)
   sbst <- subset(pgs, pgs$..page %in% non_blank_pages)
   
+  # If the first blank row is from blank after, then remove it
+  first_page_pos <- get_first_pos(sbst$..page)
+  rm_blank <- first_page_pos & sbst$..blank == "B"
+  sbst <- sbst[!rm_blank,]
+  
   # Split the data frame at the page indicators
   ret <- split(sbst, sbst$..page)
   
@@ -1208,8 +1213,16 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   
   pg <- 1
   counter <- 0
-  offset <- lpg_rows + content_offsets["blank_upper"]
-  ttfl <- content_offsets["upper"] + content_offsets["lower"]
+  offset <- lpg_rows + content_offsets[["blank_upper"]]
+  
+  # If the upper line has name, it means using page_by
+  using_pgby <- F
+  if (is.null(names(content_offsets[["upper"]]))) {
+    ttfl <- content_offsets["upper"] + content_offsets["lower"]
+  } else {
+    using_pgby <- T
+  }
+  
   
   # User Paging variable
   currentPage <- NA
@@ -1224,6 +1237,10 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   
   for (i in seq_len(nrow(x))){
     
+    if (using_pgby) {
+      ttfl <- content_offsets[["lower"]] + content_offsets[["upper"]][[x$..page_by[i]]]
+    }
+    
     if (count_row_var) {
       if (is.na(x$..row[i])) {
         counter <- counter + 1
@@ -1237,7 +1254,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       # Exception where last line is equal to number of available lines
       # Don't put the blank row in this case.
       if (counter < (page_size - ttfl)) {  
-        offset <- offset + content_offsets["blank_lower"]
+        offset <- offset + content_offsets[["blank_lower"]]
         #print(paste("Lower Blank:", offset))
       }
     }
@@ -1279,6 +1296,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
     # print("--------------------------------------")
     # print(paste0("row: ", i))
     # print(paste0("counter: ", counter))
+    # print(paste0("ttfl: ", ttfl))
     # print(paste0("Capacity: ", page_size  - offset - ttfl))
     # print(paste0("Page before: ", pg))
     

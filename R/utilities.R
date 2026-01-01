@@ -1454,6 +1454,21 @@ get_last_pos <- function(x) {
   return(result)
 }
 
+#' @noRd
+#' Return the first position logical value of a group
+get_first_pos <- function(x){
+  # Initialize all as FALSE
+  result <- logical(length(x))
+  
+  # Mark TRUE where the next value is different
+  result <- x[-length(x)] != x[-1]
+  
+  # The first one is always TRUE
+  result <- c(TRUE, result)
+  
+  return(result)
+}
+
 # Sizing utilities --------------------------------------------------------
 
 #' @noRd

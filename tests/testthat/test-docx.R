@@ -2492,151 +2492,151 @@ test_that("docx-70: Page by with long label filling one line works as expected."
 # Because multi-line page by is rare, hold this issue and see if it's really
 # necessary to fix in the future.
 
-# test_that("docx-71: Page by with long non-bold value works as expected.", {
-# 
-#   if (dev) {
-#     fp <- file.path(base_path, "docx/test71.docx")
-# 
-#     dat <- iris
-# 
-#     long_value <- paste0(
-#       "This is a very long value without manual line change and more text, "
-#     )
-# 
-#     dat$Pgby <- paste0(long_value, as.character(dat$Species))
-#     dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
-# 
-#     tbl <- create_table(dat, borders = "outside") %>%
-#       titles("Table 1.0", "My Nice Report with a Page By") %>%
-#       page_by(Pgby, label = "Flower Type: ", bold = "label", blank_row = "none") %>%
-#       define(Pgby, visible = FALSE)
-# 
-#     rpt <- create_report(fp, output_type = "docx", font = fnt,
-#                          font_size = fsz, orientation = "landscape") %>%
-#       set_margins(top = 1, bottom = 1) %>%
-#       add_content(tbl) %>%
-#       footnotes("My footnote 1", "My footnote 2", borders = "none")
-# 
-#     res <- write_report(rpt)
-#     expect_equal(file.exists(fp), TRUE)
-#   } else {
-#     expect_equal(TRUE, TRUE)
-#   }
-# })
-# 
-# test_that("docx-71: Page by with very long non-bold value and long bold label works as expected.", {
-#   
-#   if (dev) {
-#     fp <- file.path(base_path, "docx/test71.docx")
-#     
-#     dat <- iris
-#     
-#     long_value <- paste0(
-#       "This is a very long value without intentionally line change and also",
-#       " long text which should take at least three lines, "
-#     )
-#     
-#     dat$Pgby <- paste0(long_value, as.character(dat$Species))
-#     dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
-#     
-#     long_label <- paste0(
-#       "This is a very long\nlabel with intentionally line change and also",
-#       " long text which should take at least three lines: "
-#     )
-#     
-#     tbl <- create_table(dat, borders = "outside") %>%
-#       titles("Table 1.0", "My Nice Report with a Page By") %>%
-#       page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
-#       define(Pgby, visible = FALSE)
-#     
-#     rpt <- create_report(fp, output_type = "docx", font = fnt,
-#                          font_size = fsz, orientation = "landscape") %>%
-#       set_margins(top = 1, bottom = 1) %>%
-#       add_content(tbl) %>%
-#       footnotes("My footnote 1", "My footnote 2", borders = "none")
-#     
-#     res <- write_report(rpt)
-#     expect_equal(file.exists(fp), TRUE)
-#   } else {
-#     expect_equal(TRUE, TRUE)
-#   }
-# })
-# 
-# test_that("docx-72: Page by with very long bold value and long non-bold label works as expected.", {
-#   
-#   if (dev) {
-#     fp <- file.path(base_path, "docx/test72.docx")
-#     
-#     dat <- iris
-#     
-#     long_value <- paste0(
-#       "This is a very long value without intentionally line change and also",
-#       " long text which should take at least three lines, "
-#     )
-#     
-#     dat$Pgby <- paste0(long_value, as.character(dat$Species))
-#     dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
-#     
-#     long_label <- paste0(
-#       "This is a very long\nlabel with intentionally line change and also",
-#       " long text which should take at least three lines: "
-#     )
-#     
-#     tbl <- create_table(dat, borders = "outside") %>%
-#       titles("Table 1.0", "My Nice Report with a Page By") %>%
-#       page_by(Pgby, label = long_label, bold = "value", blank_row = "none") %>%
-#       define(Pgby, visible = FALSE)
-#     
-#     rpt <- create_report(fp, output_type = "docx", font = fnt,
-#                          font_size = fsz, orientation = "landscape") %>%
-#       set_margins(top = 1, bottom = 1) %>%
-#       add_content(tbl) %>%
-#       footnotes("My footnote 1", "My footnote 2", borders = "none")
-#     
-#     res <- write_report(rpt)
-#     expect_equal(file.exists(fp), TRUE)
-#   } else {
-#     expect_equal(TRUE, TRUE)
-#   }
-# })
-# 
-# test_that("docx-73: Page by with very long bold value and long bold label works as expected.", {
-#   
-#   if (dev) {
-#     fp <- file.path(base_path, "docx/test73.docx")
-#     
-#     dat <- iris
-#     
-#     long_value <- paste0(
-#       "This is a very long value without intentionally line change and also",
-#       " long text which should take at least three lines, "
-#     )
-#     
-#     dat$Pgby <- paste0(long_value, as.character(dat$Species))
-#     dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
-#     
-#     long_label <- paste0(
-#       "This is a very long\nlabel with intentionally line change and also",
-#       " long text which should take at least three lines: "
-#     )
-#     
-#     tbl <- create_table(dat, borders = "outside") %>%
-#       titles("Table 1.0", "My Nice Report with a Page By") %>%
-#       page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none") %>%
-#       define(Pgby, visible = FALSE)
-#     
-#     rpt <- create_report(fp, output_type = "docx", font = fnt,
-#                          font_size = fsz, orientation = "landscape") %>%
-#       set_margins(top = 1, bottom = 1) %>%
-#       add_content(tbl) %>%
-#       footnotes("My footnote 1", "My footnote 2", borders = "none")
-#     
-#     res <- write_report(rpt)
-#     expect_equal(file.exists(fp), TRUE)
-#   } else {
-#     expect_equal(TRUE, TRUE)
-#   }
-# })
+test_that("docx-71: Page by with long non-bold value works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test71.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without manual line change and more text, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-72: Page by with very long non-bold value and long bold label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test72.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without intentionally line change and also",
+      " long text which should take at least three lines, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- paste0(
+      "This is a very long\nlabel with intentionally line change and also",
+      " long text which should take at least three lines: "
+    )
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-73: Page by with very long bold value and long non-bold label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test73.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without intentionally line change and also",
+      " long text which should take at least three lines, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- paste0(
+      "This is a very long\nlabel with intentionally line change and also",
+      " long text which should take at least three lines: "
+    )
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-74: Page by with very long bold value and long bold label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test74.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without intentionally line change and also",
+      " long text which should take at least three lines, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- paste0(
+      "This is a very long\nlabel with intentionally line change and also",
+      " long text which should take at least three lines: "
+    )
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
 
 test_that("docx-75: Group border works as as expected.", {
   if (dev == TRUE) {
