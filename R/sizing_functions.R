@@ -1305,20 +1305,23 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       
       # Don't understand why this adjustment is needed.  But it is.
       # Have to figure it out, because it seems wrong.
-      if (pg == 1)
-        page_size <- page_size - 1
+      # if (pg == 1)
+      #   page_size <- page_size - 1
       
       # Increment page count
       pg <- pg + 1
       
       # Reset line counter
-      # counter <- 1
-      if (is.na(x$..row[i])) {
-        counter <- 1
+      if (count_row_var) {
+        if (is.na(x$..row[i])) {
+          counter <- 1
+        } else {
+          counter <- x$..row[i]
+        }
       } else {
-        counter <- x$..row[i]
+        counter <- 1
       }
-      
+
       # Set offset to zero on first page
       offset <- 0
 
