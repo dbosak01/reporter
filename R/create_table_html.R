@@ -194,7 +194,7 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   
   # Create a temporary page info to pass into get_content_offsets
   tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
-                 label_align = label_aligns, table_align = cntnt$align)
+                 label_align = label_aligns, table_align = cntnt$align, data = fdat)
   # print("Temp PI")
   # print(tmp_pi)
   
@@ -232,17 +232,16 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
         wrap_flag <- FALSE
       
       #print(s)
-      # Ensure content blank rows are added only to the first and last pages
-      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
-                                      rs$body_line_count, content_offset$lines, 
-                                      nrow(s))
-      #print(blnk_ind)
-      
       if (!is.na(pgby_var))
         pgby <- trimws(s[1, "..page_by"])
       else 
         pgby <- NULL
       
+      # Ensure content blank rows are added only to the first and last pages
+      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
+                                      rs$body_line_count, content_offset$lines, 
+                                      nrow(s), pgby)
+      #print(blnk_ind)
       
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
                       col_width = widths_uom[pg], col_align = aligns[pg],
@@ -472,14 +471,45 @@ get_content_offsets_html <- function(rs, ts, pi, content_blank_row, pgby_cnt = N
     ttls <- get_title_header_html(ts$title_hdr, wdth, rs)
   
   # Get page by if it exists
-  pgb <- list(lines = 0, twips = 0)
-  if (!is.null(ts$page_by))
-    pgb <- get_page_by_html(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
-  else if (!is.null(rs$page_by))
-    pgb <- get_page_by_html(rs$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+  # pgb <- list(lines = 0, twips = 0)
+  # if (!is.null(ts$page_by))
+  #   pgb <- get_page_by_html(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+  # else if (!is.null(rs$page_by))
+  #   pgb <- get_page_by_html(rs$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+  page_by_info <- NULL
+  if (!is.null(ts$page_by)) {
+    page_by_info <- ts$page_by
+  } else if (!is.null(rs$page_by)) {
+    page_by_info <- rs$page_by
+  }
+  
+  # Get lines for each page by value
+  if (!is.null(page_by_info)) {
+    cnt <- c(upper = list(), lower = 0, blank_upper = 0, blank_lower = 0)
+    
+    pgby_unique <- unique(pi$data$..page_by)
+    
+    for (i in 1:length(pgby_unique)) {
+      pgby_temp <- get_page_by_html(page_by_info, wdth, pgby_unique[i], rs, pi$table_align, pgby_cnt = pgby_cnt)
+      
+      # Add everything up
+      cnt[["upper"]][[i]] <- shdrs$lines + hdrs$lines + ttls$lines + pgby_temp$lines
+    }
+    
+    names(cnt[["upper"]]) <- pgby_unique
+    
+  } else {
+    pgb <- list(lines = 0)
+    pgb <- get_page_by_html(page_by_info, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+    cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+    
+    # Add everything up
+    cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+    
+  }
   
   # Add everything up
-  cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+  # cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
   
   if (content_blank_row %in% c("above", "both")) {
     #ret[["blank_upper"]] <- rs$line_height

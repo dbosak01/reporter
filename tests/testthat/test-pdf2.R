@@ -3300,7 +3300,7 @@ test_that("pdf2-86: Page by with bold label and value works as expected.", {
 test_that("pdf2-87: Page by with bold label works as expected.", {
   
   if (dev) {
-    fp <- file.path(base_path, "pdf2/test87_notrim.pdf")
+    fp <- file.path(base_path, "pdf2/test87.pdf")
     
     dat <- iris
     dat$Pgby <- as.character(dat$Species)
@@ -3327,7 +3327,7 @@ test_that("pdf2-87: Page by with bold label works as expected.", {
 test_that("pdf2-88: Page by with bold value works as expected.", {
   
   if (dev) {
-    fp <- file.path(base_path, "pdf2/test88_notrim.pdf")
+    fp <- file.path(base_path, "pdf2/test88.pdf")
     
     dat <- iris
     dat$Pgby <- as.character(dat$Species)

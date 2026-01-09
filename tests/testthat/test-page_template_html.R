@@ -186,7 +186,7 @@ test_that("get_pageby_html works as expected.", {
   expect_equal(res$lines, 2)
   expect_equal(res$html,
                paste0("<table style=\"text-align: left;width:6in;\">\n",
-                      "<tr><td style=\"\">Cylinders:fork</td></tr>\n", 
+                      "<tr><td style=\"\">Cylinders:&nbsp;fork</td></tr>\n", 
                       "<tr><td style=\"\">&nbsp;</td></tr>\n</table>"))
 
 })

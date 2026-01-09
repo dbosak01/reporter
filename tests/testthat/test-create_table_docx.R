@@ -123,6 +123,57 @@ test_that("get_content_offsets_docx works as expected.", {
 
 })
 
+test_that("get_content_offsets_docx with page by works as expected.", {
+  
+  fp <- ""
+  
+  dat <- iris[1:60,]
+  dat$Pgby <- as.character(dat$Species)
+  dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+  
+  tbl <- create_table(dat) %>%
+    titles("Table 1.0", "My Nice Table") %>%
+    page_by(Pgby, label = "Flower: ", blank_row = "none") %>%
+    footnotes("Here is a footnote")
+  
+  rpt <- create_report(fp, output_type = "DOCX", font = "Arial",
+                       font_size = 12) %>%
+    set_margins(top = 1, bottom = 1) %>%
+    page_header("Left", "Right") %>%
+    add_content(tbl) %>%
+    page_footer("Left1", "Center1", "Right1")
+  
+  rpt <- page_setup_docx(rpt)
+  
+  varname <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")
+  wdth <- rep(1, 5)
+  names(wdth) <- names(dat)
+  
+  algns <- rep("center", 5)
+  names(algns) <- names(dat)
+  
+  nms <- names(dat)
+  names(nms) <- nms
+  
+  dat$..page_by <- dat$Pgby
+  
+  pgby_cnt <- get_pgby_cnt(dat$..page_by)
+  
+
+  pi <- list(keys = names(dat), col_width = wdth, label = nms,
+             label_align = algns, table_align = "center", data = dat)
+  
+  res <- get_content_offsets_docx(rpt, tbl, pi, "both", pgby_cnt)
+  res
+  
+  expect_equal(res$lines[["upper"]]$setosa, 5)
+  expect_equal(res$lines[["upper"]]$versicolor, 5)
+  expect_equal(res$lines[["lower"]], 2)
+  expect_equal(res$lines[["blank_upper"]], 1)
+  expect_equal(res$lines[["blank_lower"]], 1)
+  
+})
+
 test_that("create_table_docx works as expected.", {
 
   fp <- ""

@@ -2121,7 +2121,8 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0,
             # The second label and value are too close
             # And center label and value are too close
             if ( (ln > 1) |
-                 (label_bold & pgby$align %in% c("center", "centre"))
+                 (label_bold & pgby$align %in% c("center", "centre")) |
+                 (ln == 1 & label_bold & pgby$align == "left")
                  ) {
               x_value_adjust <- 6
             }

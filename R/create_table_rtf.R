@@ -534,7 +534,6 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NU
     ttls <- get_title_header_rtf(ts$title_hdr, wdth, rs)
   
   # Get page by if it exists
-  pgb <- list(lines = 0, twips = 0)
   # if (!is.null(ts$page_by))
   #   pgb <- get_page_by_rtf(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt)
   # else if (!is.null(rs$page_by))
@@ -555,7 +554,7 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NU
     pgby_unique <- unique(pi$data$..page_by)
 
     for (i in 1:length(pgby_unique)) {
-      pgby_temp <- get_page_by_rtf(page_by_info, wdth, pgby_unique[i], rs, pi$table_align, pgby_cnt)
+      pgby_temp <- get_page_by_rtf(page_by_info, wdth, pgby_unique[i], rs, pi$table_align, pgby_cnt = pgby_cnt)
       
       # Add everything up
       ret[["upper"]][[i]] <- shdrs$twips + hdrs$twips + ttls$twips + pgby_temp$twips
@@ -566,6 +565,9 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NU
     names(cnt[["upper"]]) <- pgby_unique
     
   } else {
+    pgb <- list(lines = 0, twips = 0)
+    pgb <- get_page_by_rtf(page_by_info, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+    
     ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
     cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
     
