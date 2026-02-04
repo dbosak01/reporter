@@ -798,7 +798,7 @@ test_that("pdf2-19: Title and Footnote borders work as expected.", {
   dat <- iris[1:20, ]
 
   tbl <- create_table(dat, borders = c("all"), first_row_blank = FALSE) %>%
-    titles("Tableg 1.0", "My Nice Report with Borders", 
+    titles("Table 1.0", "My Nice Report with Borders", 
           # "A third titleg what happens when it wraps around I want to know what happens will it work",
            borders = "outside", #c("top", "bottom"), #c("top", "bottom", "left", "right"),
            blank_row = "both", align = "left", font_size = 10) %>%
@@ -1266,7 +1266,7 @@ test_that("pdf2-30: Simplest PDF Plot with valign bottom works as expected.", {
 
 # # Basic Tests 31 - 40 ------------------------------------------------------
 
-test_that("pdf2-31: Simplest PDF with valign top works as expected.", {
+test_that("pdf2-31: Simplest Text with valign top works as expected.", {
 
   if (dev == TRUE) {
 
@@ -1313,7 +1313,7 @@ test_that("pdf2-32: Simplest Text with valign bottom works as expected.", {
 
   rpt <- create_report(fp, output_type = "PDF", font = fnt, font_size = fsz) %>%
     page_header("Client", "Study: XYZ") %>%
-    titles("Figure 1.0", "MTCARS Miles per Cylinder Plot") %>%
+    titles("Text 1.0", "MTCARS Miles per Cylinder Plot") %>%
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
     page_footer("Time", "Confidential", "Page [pg] of [tpg]")
@@ -2926,7 +2926,7 @@ test_that("pdf2-77: Page by with wrap works as expected.", {
   
 })
 
-test_that("pdf2-78: Page by with wrap works as expected.", {
+test_that("pdf2-78: Page by with format works as expected.", {
   
   
   fp <- file.path(base_path, "pdf2/test78.pdf")
@@ -3062,6 +3062,8 @@ test_that("pdf2-80: spanning header works on show_cols none and defined cols", {
   
 })
 
+# Basic Tests 81 - 90 ------------------------------------------------------
+
 test_that("pdf2-81: Plot outside border works as expected.", {
   
   if (dev) {
@@ -3148,7 +3150,7 @@ test_that("pdf2-82: Table with blank_before as expected.", {
              blank_before = TRUE,
              dedupe = TRUE) %>% 
       titles("Table 1.0", align = "center", borders = "all") %>%
-      footnotes("Here", borders = "all") 
+      footnotes("Here", borders = "all", blank_row = "none") 
     
     
     rpt <- create_report(fp, output_type = "PDF", font = "Arial",
@@ -3406,6 +3408,8 @@ test_that("pdf2-90: Page by with bold label at right works as expected.", {
     expect_equal(TRUE, TRUE)
   }
 })
+
+# Basic Tests 91 - 100 ------------------------------------------------------
 
 test_that("pdf2-91: Page by with bold value at right works as expected.", {
   
@@ -3696,6 +3700,7 @@ test_that("pdf2-100: Page by with bold long value at center works as expected.",
     expect_equal(TRUE, TRUE)
   }
 })
+# Basic Tests 101 - 110 ------------------------------------------------------
 
 test_that("pdf2-101: Page by with bold long label filling first line works as expected.", {
   
@@ -3885,8 +3890,8 @@ test_that("pdf2-105: Center page header works as expected.", {
       set_margins(top = 1, bottom = 1) %>%
       add_content(tbl) %>%
       footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
-      page_header(left = "", center = "center", right = "right",
-                  width = c(0, 5, 4)) %>%
+      page_header(left = "Left", center = "center", right = "right",
+                  width = c(1, 4, 4)) %>%
       page_footer(left = "Left", center = "center", right = "right",
                   width = c(3, 4, 2))
     

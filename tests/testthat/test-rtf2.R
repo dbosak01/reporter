@@ -2441,7 +2441,7 @@ test_that("rtf2-70: Breaks removed after 2 titles and footnotes.", {
 # Basic Tests 71-80 -------------------------------------------------------
 
 
-test_that("rtf2-71: RTF Plot with path logs as expected.", {
+test_that("rtf2-71: RTF Plot with path works as expected.", {
 
   if (dev == TRUE) {
 
@@ -3310,7 +3310,7 @@ test_that("rtf2-92: Page by with wrap works as expected.", {
 
 })
 
-test_that("rtf2-93: Page by with wrap works as expected.", {
+test_that("rtf2-93: Page by with format works as expected.", {
 
 
   fp <- file.path(base_path, "rtf2/test93.rtf")
@@ -3349,7 +3349,7 @@ test_that("rtf2-93: Page by with wrap works as expected.", {
 
 })
 
-test_that("test94: Label with invisible column works as expected.", {
+test_that("rtf2-94: Label with invisible column works as expected.", {
 
   fp <- file.path(base_path, "rtf2/test94.rtf")
 
@@ -3374,7 +3374,7 @@ test_that("test94: Label with invisible column works as expected.", {
 })
 
 
-test_that("test95: Page break with blank row after works as expected.", {
+test_that("rtf2-95: Page break with blank row after works as expected.", {
 
   fp <- file.path(base_path, "rtf2/test95.rtf")
 
@@ -3589,6 +3589,9 @@ test_that("rtf2-100: Spanning header gap works as expected.", {
     expect_equal(TRUE, TRUE)
   }
 })
+
+# Basic Tests 101-110 ------------------------------------------------------
+
 
 test_that("rtf2-101: Table with blank_before as expected.", {
   
@@ -3912,6 +3915,9 @@ test_that("rtf2-110: Page by with bold long value works as expected.", {
     expect_equal(TRUE, TRUE)
   }
 })
+
+# Basic Tests 111-120 ------------------------------------------------------
+
 
 test_that("rtf2-111: Page by with bold long label filling one line works as expected.", {
   

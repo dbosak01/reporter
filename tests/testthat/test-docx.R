@@ -41,7 +41,7 @@ test_that("docx0: Basic docx works as expected.", {
     add_content(txt, align = "center") %>%
     #add_content(create_text("Goodbye")) %>%
     page_header(c("Left1", "Left2"), "Right") %>%
-    page_footer("Page [pg] of [tpg]", "Center", "Right")
+    page_footer(c("Page [pg] of [tpg]", "Left"), "Center", "Right")
 
   res <- write_report(rpt)
 

@@ -641,7 +641,7 @@ test_that("html19: 11 pt font cm works as expected.", {
 })
 
 
-test_that("html20: RTF Image file works as expected.", {
+test_that("html20: JPG Image file works as expected.", {
   
   library(ggplot2)
   
@@ -1460,7 +1460,7 @@ test_that("html42: Page by with wrap works as expected.", {
   
 })
 
-test_that("html43: Page by with wrap works as expected.", {
+test_that("html43: Page by with format works as expected.", {
   
   
   fp <- file.path(base_path, "html/test43.html")
