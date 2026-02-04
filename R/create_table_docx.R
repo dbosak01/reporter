@@ -401,8 +401,13 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
                                      content_brdrs) 
         } else {
           
-          if (wrap_flag)
-            vflag <- "bottom" 
+          if (wrap_flag) {
+            vflag <- "bottom"
+          } else {
+            # If not wrapping, assign original valign for inserting table_break
+            # for report footnotes
+            vflag <- rs$footnotes[[1]]$valign
+          }
         }
       }
     }
@@ -450,7 +455,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
       }
     }
   }
-  
+
   tbr <- NULL
   if (vflag == "bottom") {
     if (length(ublnks) == 0) {
