@@ -64,7 +64,8 @@ write_docx <- function(src, pth) {
 # Create DOCX --------------------------------------------------------------
 
 #' @noRd
-create_new_docx <- function(font, font_size, imageCount, imagePaths) {
+create_new_docx <- function(font, font_size, imageCount, imagePaths,
+                            footer_imagePath = NULL, header_imagePath = NULL) {
   
   tdd <- file.path(tempdir(), stri_rand_strings(1, length = 6))
   
@@ -84,6 +85,15 @@ create_new_docx <- function(font, font_size, imageCount, imagePaths) {
   create_endnotes(tdd)
   create_footnotes(tdd)
   create_document_rels(tdd, imageCount, imagePaths)
+  
+  if (!is.null(footer_imagePath)) {
+    create_footer_rels(tdd, length(footer_imagePath), footer_imagePath)
+  }
+  
+  if (!is.null(header_imagePath)) {
+    create_header_rels(tdd, length(header_imagePath), header_imagePath)
+  }
+  
   create_rels(tdd)
   
   # Temporary
@@ -104,6 +114,8 @@ cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types
 	xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
 	<Default Extension="jpeg" ContentType="image/jpeg"/>
+	<Default Extension="png" ContentType="image/png"/>
+	<Default Extension="emf" ContentType="image/emf"/>
 	<Default Extension="rels" 
 	ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
 	<Default Extension="xml" 
@@ -1237,6 +1249,68 @@ create_document_rels <- function(pth, imgCnt, imagePaths) {
   
   
   nm <- file.path(pth, "word/_rels/document.xml.rels")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}
+
+create_footer_rels <- function(pth, imgCnt, imagePaths) {
+  
+  imgs <- ""
+  
+  for (i in seq_len(imgCnt)) {
+    ext <- tools::file_ext(imagePaths[[i]])
+    if (ext == "jpg") {
+      ext <- "jpeg" 
+    }
+    
+    imgs <- paste0(imgs, '<Relationship Target="media/imagef', i, '.', ext, '"', 
+                   ' Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"',
+                   ' Id="rIdf', i, '"/>\n')
+    
+  }
+  
+  
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<Relationships
+	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">', imgs, '</Relationships>')
+  
+  
+  nm <- file.path(pth, "word/_rels/footer1.xml.rels")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}
+
+create_header_rels <- function(pth, imgCnt, imagePaths) {
+  
+  imgs <- ""
+  
+  for (i in seq_len(imgCnt)) {
+    ext <- tools::file_ext(imagePaths[[i]])
+    if (ext == "jpg") {
+      ext <- "jpeg" 
+    }
+    
+    imgs <- paste0(imgs, '<Relationship Target="media/imageh', i, '.', ext, '"', 
+                   ' Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"',
+                   ' Id="rIdh', i, '"/>\n')
+    
+  }
+  
+  
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<Relationships
+	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">', imgs, '</Relationships>')
+  
+  
+  nm <- file.path(pth, "word/_rels/header1.xml.rels")
   
   f <- file(nm, open="w", encoding = "native.enc")
   

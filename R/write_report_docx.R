@@ -313,7 +313,8 @@ write_content_docx <- function(rs, hdr, body, pt) {
   
   
   # Create new document in temp location
-  tf <- create_new_docx(rs$font, rs$font_size, body$imageCount, body$imagePaths)
+  tf <- create_new_docx(rs$font, rs$font_size, body$imageCount, body$imagePaths, 
+                        rs$page_template$page_footer$image_path, rs$page_template$page_header$image_path)
   
   # Write out header
   create_header(tf, rs$page_template$page_header$docx)
@@ -330,6 +331,34 @@ write_content_docx <- function(rs, hdr, body, pt) {
   
   
  # writeLines(body, con = f, useBytes = TRUE)
+  
+  # Copy images to document folder for footer
+  f_imgCnt <- 0
+  if (!is.null(rs$page_template$page_footer$image_path)) {
+    for (im in rs$page_template$page_footer$image_path) { 
+      f_imgCnt <- f_imgCnt + 1
+      ext <- tools::file_ext(im)
+      if (ext == "jpg") {
+        ext <- "jpeg"
+      }
+      ifp <- file.path(tf, paste0("word/media/imagef", f_imgCnt, ".", ext))
+      file.copy(im, ifp)   
+    }
+  }
+  
+  # Copy images to document folder for header
+  h_imgCnt <- 0
+  if (!is.null(rs$page_template$page_header$image_path)) {
+    for (im in rs$page_template$page_header$image_path) { 
+      h_imgCnt <- h_imgCnt + 1
+      ext <- tools::file_ext(im)
+      if (ext == "jpg") {
+        ext <- "jpeg"
+      }
+      ifp <- file.path(tf, paste0("word/media/imageh", h_imgCnt, ".", ext))
+      file.copy(im, ifp)   
+    }
+  }
   
   for (cont in body$pages) {
     

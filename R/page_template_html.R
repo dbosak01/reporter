@@ -41,79 +41,221 @@ get_page_header_html <- function(rs) {
   ret <- ""
   cnt <- 0
   
-  hl <- rs$page_header_left
-  hr <- rs$page_header_right
-  maxh <- max(length(hl), length(hr))
+  # hl <- rs$page_header_left
+  # hr <- rs$page_header_right
+  # maxh <- max(length(hl), length(hr))
   
-  # User controlled width of left column
-  lwdth <- rs$page_header_width
-  if (is.null(lwdth))
-    lwdth <- rs$content_size[["width"]]/2
+  # # User controlled width of left column
+  # lwdth <- rs$page_header_width
+  # if (is.null(lwdth))
+  #   lwdth <- rs$content_size[["width"]]/2
+  # 
+  # # Calculate right column width
+  # rwdth <- rs$content_size[["width"]] - lwdth
+  # lpct <- round(lwdth / rs$content_size[["width"]] * 100)
+  # rpct <- round(rwdth / rs$content_size[["width"]] * 100)
   
-  # Calculate right column width
-  rwdth <- rs$content_size[["width"]] - lwdth
-  lpct <- round(lwdth / rs$content_size[["width"]] * 100)
-  rpct <- round(rwdth / rs$content_size[["width"]] * 100)
+  if ((!is.null(rs$header_image_left) & is.null(rs$page_header_left)) |
+      (!is.null(rs$header_image_center) & is.null(rs$page_header_center)) |
+      (!is.null(rs$header_image_right) & is.null(rs$page_header_right))) {
+    
+    stop("`page_header` must be used when using `header_image`.")
+  }
   
-  u <- rs$units
-  if (rs$units == "inches")
-    u <- "in"
+  # Make sure the length is 3, NA will be imputed later.
+  width <- c(rs$page_header_width, rep(NA, 3 - length(rs$page_header_width)))
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$header_image_left)) {
+    image_left <- TRUE
+    hl <- rs$header_image_left
+  } else{
+    hl <- rs$page_header_left
+  }
+  
+  if (!is.null(rs$header_image_right)) {
+    image_right <- TRUE
+    hr <- rs$header_image_right
+  } else {
+    hr <- rs$page_header_right
+  }
+  
+  if (!is.null(rs$header_image_center)) {
+    image_center <- TRUE
+    hc <- rs$header_image_center
+    
+    # Default center cell is not displayed, open it when picture exists
+    if (width[2] == 0) {
+      width[2] <- NA
+    }
+  } else {
+    hc <- rs$page_header_center
+  }
+  
+  hl_num <- ifelse(image_left, length(hl$image_path), length(hl))
+  hc_num <- ifelse(image_center, length(hc$image_path), length(hc))
+  hr_num <- ifelse(image_right, length(hr$image_path) , length(hr))
+  
+  maxh <- max(hl_num, hc_num, hr_num)
+  
+  # Calculate the widths
+  total_width <- sum(width, na.rm = T)
+  if (total_width > rs$content_size[["width"]]) {
+    
+    stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                 total_width,
+                 rs$units,
+                 rs$content_size[["width"]],
+                 rs$units))
+    
+  } else {
+    na_num <- sum(is.na(width))
+    imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+    
+    left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+    center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+    right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+    
+    left_pct <- 100 * left_width/rs$content_size[["width"]]
+    center_pct <- 100 * center_width/rs$content_size[["width"]]
+    right_pct <- 100 * right_width/rs$content_size[["width"]]
+  }
 
   if (maxh > 0) {
 
-
+    # ret <- paste0("<table ",
+    #               "style=\"width:100%\">",
+    #               "<colgroup>\n<col style=\"width:", left_pct, "%\">\n",
+    #               "<col style=\"width:", right_pct,"%\">\n</colgroup>\n")
+    
     ret <- paste0("<table ",
                   "style=\"width:100%\">",
-                  "<colgroup>\n<col style=\"width:", lpct, "%\">\n",
-                  "<col style=\"width:", rpct,"%\">\n</colgroup>\n")
+                  "<colgroup>\n",
+                  ifelse(left_pct > 0, paste0("<col style=\"width:", left_pct, "%\">\n"), ""),
+                  ifelse(center_pct > 0, paste0("<col style=\"width:", center_pct, "%\">\n"), ""),
+                  ifelse(right_pct > 0, paste0("<col style=\"width:", right_pct,"%\">\n"), ""),
+                  "</colgroup>\n")
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
-
+    u <- rs$units
+    if (rs$units == "inches") {
+      u <- "in"
+    }
+    
+    lcnt <- 0
+    ccnt <- 0
+    rcnt <- 0
+    
+    lheight <- 0
+    cheight <- 0
+    rheight <- 0
+    
+    max_height <- 0
+    
     for (i in seq(1, maxh)) {
       ret <- paste0(ret, "<tr>")
 
-      if (length(hl) >= i) {
-
-        # Split strings if they exceed width
-        tmp <- split_string_html(hl[[i]], lwdth, rs$units)
-        
-        ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp$html),
-                           "</td>\n")
-        
-        lcnt <- tmp$lines  
-
-      } else {
-        ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp</td>\n")
-        lcnt <- 1
+      if (left_width > 0) {
+        if (hl_num >= i) {
+          
+          if (image_left == FALSE) {
+            # Split strings if they exceed width
+            tmp <- split_string_html(hl[[i]], left_width, rs$units)
+            
+            ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp$html),
+                          "</td>\n")
+            
+            lcnt <- tmp$lines
+          } else {
+            # Get image code
+            tmp_nm <- tempfile(tmpdir = tempdir(), fileext = ".jpg")
+            file.copy(hl$image_path[i], tmp_nm, overwrite = TRUE)
+            
+            hl$width <- min(hl$width, left_width)
+            img <- get_image_html(tmp_nm, rs$modified_path, hl, rs$units)
+            ret <- paste0(ret, "<td style=\"text-align:left\">", img, "</td>")
+            lheight <- hl$height
+          }
+        } else {
+          ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp</td>\n")
+          lcnt <- 1
+        }
+      }
+      
+      if (center_width > 0) {
+        if (hc_num >= i) {
+          
+          if (image_center == FALSE) {
+            # Split strings if they exceed width
+            tmp3 <- split_string_html(hc[[i]], center_width, rs$units)
+            
+            ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp3$html),
+                          "</td>\n")
+            
+            ccnt <- tmp3$lines
+          } else {
+            # Get image code
+            tmp_nm <- tempfile(tmpdir = tempdir(), fileext = ".jpg")
+            file.copy(hc$image_path[i], tmp_nm, overwrite = TRUE)
+            
+            hc$width <- min(hc$width, center_width)
+            img <- get_image_html(tmp_nm, rs$modified_path, hc, rs$units)
+            ret <- paste0(ret, "<td style=\"text-align:center\">", img, "</td>")
+            cheight <- hc$height
+          }
+        } else {
+          ret <- paste0(ret, "<td style=\"text-align:center\">&nbsp</td>\n")
+          ccnt <- 1
+        }
       }
 
-      if (length(hr) >= i) {
-
-        # Split strings if they exceed width
-        tmp2 <- split_string_html(hr[[i]], rwdth, rs$units)
-
-        
-        ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp2$html), 
-                           "</td></tr>\n")
-        
-        rcnt <- tmp2$lines 
-
-      } else {
-        ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp</td></tr>\n")
-        rcnt <- 1
+      if (right_width) {
+        if (hr_num >= i) {
+          
+          if (image_right == FALSE) {
+            # Split strings if they exceed width
+            tmp2 <- split_string_html(hr[[i]], right_width, rs$units)
+            
+            ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp2$html), 
+                          "</td></tr>\n")
+            
+            rcnt <- tmp2$lines 
+          } else {
+            # Get image code
+            tmp_nm <- tempfile(tmpdir = tempdir(), fileext = ".jpg")
+            file.copy(hr$image_path[i], tmp_nm, overwrite = TRUE)
+            
+            hr$width <- min(hr$width, right_width)
+            img <- get_image_html(tmp_nm, rs$modified_path, hr, rs$units)
+            ret <- paste0(ret, "<td style=\"text-align:right\">", img, "</td>")
+            rheight <- hr$height
+          }
+        } else {
+          ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp</td></tr>\n")
+          rcnt <- 1
+        }
       }
 
-      if (lcnt > rcnt)
-        cnt <- cnt + lcnt
-      else
-        cnt <- cnt + rcnt
+      # if (lcnt > rcnt)
+      #   cnt <- cnt + lcnt
+      # else
+      #   cnt <- cnt + rcnt
+      cnt <- cnt + max(lcnt, ccnt, rcnt)
+      max_height <- max_height + max(lheight, cheight, rheight)
     }
     
     ret <- paste0(ret, "</table>")
 
     dev.off()
+    
+    if (max_height > 0) {
+      cnt <- max(cnt, round(max_height/ rs$line_height))
+    }
 
     if (rs$page_header_blank_row == "below") {
       ret <- paste0(ret, "<br>")
@@ -134,11 +276,49 @@ get_page_footer_html <- function(rs) {
   ret <- ""
   cnt <- 1
 
-  fl <- rs$page_footer_left
-  fc <- rs$page_footer_center
-  fr <- rs$page_footer_right
-
-  maxf <- max(length(fl), length(fc), length(fr))
+  # fl <- rs$page_footer_left
+  # fc <- rs$page_footer_center
+  # fr <- rs$page_footer_right
+  # 
+  # maxf <- max(length(fl), length(fc), length(fr))
+  
+  if ((!is.null(rs$footer_image_left) & is.null(rs$page_footer_left)) |
+      (!is.null(rs$footer_image_right) & is.null(rs$page_footer_right)) |
+      (!is.null(rs$footer_image_center) & is.null(rs$page_footer_center))) {
+    
+    stop("`page_footer` must be used when using `footer_image`.")
+  }
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$footer_image_left)) {
+    fl <- rs$footer_image_left
+    image_left <- TRUE
+  } else {
+    fl <- rs$page_footer_left
+  }
+  
+  if (!is.null(rs$footer_image_center)) {
+    fc <- rs$footer_image_center
+    image_center <- TRUE
+  } else {
+    fc <- rs$page_footer_center
+  }
+  
+  if (!is.null(rs$footer_image_right)) {
+    fr <- rs$footer_image_right
+    image_right <- TRUE
+  } else {
+    fr <- rs$page_footer_right
+  }
+  
+  fl_num <- ifelse(image_left, length(fl$image_path), length(fl))
+  fc_num <- ifelse(image_center, length(fc$image_path), length(fc))
+  fr_num <- ifelse(image_right, length(fr$image_path) , length(fr))
+  
+  maxf <- max(fl_num, fc_num, fr_num)
 
   if (maxf > 0) {
     
@@ -169,63 +349,130 @@ get_page_footer_html <- function(rs) {
       right_pct <- 100 * right_width/rs$content_size[["width"]]
     }
 
+    # ret <- paste0("<br>\n<table ",
+    #               "style=\"width:100%\">\n",
+    #               paste0("<colgroup>\n<col style=\"width:", left_pct,"%\">\n"),
+    #               paste0("<col style=\"width:", center_pct,"%\">\n"),
+    #               paste0("<col style=\"width:", right_pct,"%\">\n</colgroup>\n"))
+    
     ret <- paste0("<br>\n<table ",
                   "style=\"width:100%\">\n",
-                  paste0("<colgroup>\n<col style=\"width:", left_pct,"%\">\n"),
-                  paste0("<col style=\"width:", center_pct,"%\">\n"),
-                  paste0("<col style=\"width:", right_pct,"%\">\n</colgroup>\n"))
+                  "<colgroup>\n",
+                  ifelse(left_pct > 0, paste0("<col style=\"width:", left_pct,"%\">\n"), ""),
+                  ifelse(center_pct > 0, paste0("<col style=\"width:", center_pct,"%\">\n"), ""),
+                  ifelse(right_pct > 0, paste0("<col style=\"width:", right_pct,"%\">\n"), ""),
+                  "</colgroup>\n")
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
+    u <- rs$units
+    if (u == "inches") {
+      u <- "in"
+    }
+    
+    lcnt <- 0
+    ccnt <- 0
+    rcnt <- 0
+    
+    lheight <- 0
+    cheight <- 0
+    rheight <- 0
+    
+    max_height <- 0
+    
     for (i in seq(1, maxf)) {
 
       ret <- paste0(ret, "<tr>")
 
-      if (length(fl) >= i) {
-
-        # Split strings if they exceed width
-        tmp1 <- split_string_html(fl[[i]], left_width, rs$units)
-        
-        ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp1$html),
-                           "</td>")
-        lcnt <- tmp1$lines
-      } else {
-        ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp;</td>")
-        lcnt <- 1
+      if (left_width > 0) {
+        if (fl_num >= i) {
+          
+          if (image_left == FALSE) {
+            # Split strings if they exceed width
+            tmp1 <- split_string_html(fl[[i]], left_width, rs$units)
+            
+            ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp1$html),
+                          "</td>")
+            lcnt <- tmp1$lines
+          } else {
+            # Get image code
+            tmp_nm <- tempfile(tmpdir = tempdir(), fileext = ".jpg")
+            file.copy(fl$image_path[i], tmp_nm, overwrite = TRUE)
+            
+            fl$width <- min(fl$width, left_width)
+            img <- get_image_html(tmp_nm, rs$modified_path, fl, rs$units)
+            ret <- paste0(ret, "<td style=\"text-align:left\">", img, "</td>")
+            lheight <- fl$height
+          }
+        } else {
+          ret <- paste0(ret, "<td style=\"text-align:left\">&nbsp;</td>")
+          lcnt <- 1
+        }
       }
 
-      if (length(fc) >= i) {
-
-        # Split strings if they exceed width
-        tmp2 <- split_string_html(fc[[i]], center_width, rs$units)
-        
-        ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp2$html),
-                           "</td>")
-        ccnt <- tmp2$lines
-      } else {
-        ret <- paste0(ret, "<td style=\"text-align:center\">&nbsp;</td>")
-        ccnt <- 1
+      if (center_width > 0) {
+        if (fc_num >= i) {
+          
+          if (image_center == FALSE) {
+            # Split strings if they exceed width
+            tmp2 <- split_string_html(fc[[i]], center_width, rs$units)
+            
+            ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp2$html),
+                          "</td>")
+            ccnt <- tmp2$lines
+          } else {
+            # Get image code
+            tmp_nm <- tempfile(tmpdir = tempdir(), fileext = ".jpg")
+            file.copy(fc$image_path[i], tmp_nm, overwrite = TRUE)
+            
+            fc$width <- min(fc$width, center_width)
+            img <- get_image_html(tmp_nm, rs$modified_path, fc, rs$units)
+            ret <- paste0(ret, "<td style=\"text-align:center\">", img, "</td>")
+            cheight <- fc$height
+          }
+        } else {
+          ret <- paste0(ret, "<td style=\"text-align:center\">&nbsp;</td>")
+          ccnt <- 1
+        }
       }
 
-      if (length(fr) >= i) {
-
-        tmp3 <- split_string_html(fr[[i]], right_width, rs$units)
-        
-        ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp3$html),
-                      "</td>")
-        
-        rcnt <- tmp3$lines
-      } else {
-        ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp;</td>")
-        rcnt <- 1
+      if (right_width > 0) {
+        if (fr_num >= i) {
+          
+          if (image_right == FALSE) {
+            tmp3 <- split_string_html(fr[[i]], right_width, rs$units)
+            
+            ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp3$html),
+                          "</td>")
+            
+            rcnt <- tmp3$lines
+          } else {
+            # Get image code
+            tmp_nm <- tempfile(tmpdir = tempdir(), fileext = ".jpg")
+            file.copy(fr$image_path[i], tmp_nm, overwrite = TRUE)
+            
+            fr$width <- min(fr$width, right_width)
+            img <- get_image_html(tmp_nm, rs$modified_path, fr, rs$units)
+            ret <- paste0(ret, "<td style=\"text-align:right\">", img, "</td>")
+            rheight <- fr$height
+          }
+        } else {
+          ret <- paste0(ret, "<td style=\"text-align:right\">&nbsp;</td>")
+          rcnt <- 1
+        }
       }
 
       cnt <- cnt + max(lcnt, ccnt, rcnt)
+      max_height <- max_height + max(lheight, cheight, rheight)
 
     }
     dev.off()
 
+    if (max_height > 0) {
+      cnt <- max(cnt, round(max_height/ rs$line_height))
+    }
+    
     ret <- paste0(ret, "</tr>\n")
   }
 

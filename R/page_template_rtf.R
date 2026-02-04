@@ -44,28 +44,105 @@ get_page_header_rtf <- function(rs) {
   cnt <- 0
   twps <- 0
   
-  hl <- rs$page_header_left
-  hr <- rs$page_header_right
-
+  if ((!is.null(rs$header_image_left) & is.null(rs$page_header_left)) |
+      (!is.null(rs$header_image_center) & is.null(rs$page_header_center)) |
+      (!is.null(rs$header_image_right) & is.null(rs$page_header_right))) {
+    
+    stop("`page_header` must be used when using `header_image`.")
+  }
+  
+  # Make sure the length is 3, NA will be imputed later.
+  width <- c(rs$page_header_width, rep(NA, 3 - length(rs$page_header_width)))
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$header_image_left)) {
+    image_left <- TRUE
+    hl <- rs$header_image_left
+  } else{
+    hl <- rs$page_header_left
+  }
+  
+  if (!is.null(rs$header_image_right)) {
+    image_right <- TRUE
+    hr <- rs$header_image_right
+  } else {
+    hr <- rs$page_header_right
+  }
+  
+  if (!is.null(rs$header_image_center)) {
+    image_center <- TRUE
+    hc <- rs$header_image_center
+    
+    # Default center cell is not displayed, open it when picture exists
+    if (width[2] == 0) {
+      width[2] <- NA
+    }
+  } else {
+    hc <- rs$page_header_center
+  }
+  
   conv <- rs$twip_conversion
   lh <- rs$row_height
   
-  # User controlled width of left column
-  lwdth <- rs$page_header_width
-  if (is.null(lwdth))
-    lwdth <- rs$content_size[["width"]]/2
+  # # User controlled width of left column
+  # lwdth <- rs$page_header_width
+  # if (is.null(lwdth)) {
+  #   lwdth <- rs$content_size[["width"]]/2
+  # } else if (lwdth > rs$content_size[["width"]]) {
+  #   stop(sprintf(
+  #     "Total width of page header %s cannot be greater than content width %s.",
+  #     lwdth,
+  #     rs$content_size[["width"]]
+  #   ))
+  # }
+  # 
+  # # Calculate right column width
+  # rwdth <- rs$content_size[["width"]] - lwdth
   
-  # Calculate right column width
-  rwdth <- rs$content_size[["width"]] - lwdth
   
-  maxh <- max(length(hl), length(hr))
+  # Calculate the widths
+  total_width <- sum(width, na.rm = T)
+  if (total_width > rs$content_size[["width"]]) {
+    
+    stop(sprintf("Total width of page header %s %s cannot be greater than content width %s %s.",
+                 total_width,
+                 rs$units,
+                 rs$content_size[["width"]],
+                 rs$units))
+    
+  } else {
+    na_num <- sum(is.na(width))
+    imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+    
+    left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+    center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+    right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+    
+    width <- c(left_width, center_width, right_width)
+    
+    # cellx must be an integer
+    c1 <- round(left_width * conv)
+    c2 <- round((left_width + center_width) * conv)
+    c3 <- round((left_width + center_width + right_width) * conv)
+    
+    c_lst <- c(c1, c2, c3)
+  }
   
+  hl_num <- ifelse(image_left, length(hl$image_path), length(hl))
+  hc_num <- ifelse(image_center, length(hc$image_path), length(hc))
+  hr_num <- ifelse(image_right, length(hr$image_path) , length(hr))
+  
+  maxh <- max(hl_num, hc_num, hr_num)
+
   if (maxh > 0 | length(rs$header_titles) > 0) {
     
     fs <- rs$font_size * 2
     
-    c1 <- round(lwdth * conv) 
-    c2 <- round(rwdth * conv) + c1
+    # c1 <- round(lwdth * conv) 
+    # c2 <- round(rwdth * conv) + c1
     
     ret <- paste0("{\\header \\f0\\fs", fs)
     
@@ -73,44 +150,128 @@ get_page_header_rtf <- function(rs) {
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
       
+      max_twips <- 0
       for (i in seq(1, maxh)) {
-        ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
-                      "\\cellx", c1, "\\cellx", c2)
+        # ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh, 
+        #               "\\cellx", c1, "\\cellx", c2, "\\cellx", c3)
         
-        if (length(hl) >= i) {
-          
-          # Split strings if they exceed width
-          tmp <- split_string_rtf(hl[[i]], lwdth, rs$units)
-          
-          ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
-          lcnt <- tmp$lines
-          
-        } else {
-          ret <- paste0(ret, "\\ql \\cell")
-          lcnt <- 1 
+        ret <- paste0(ret, "\\trowd\\trgaph0\\trrh", lh)
+        for (j in 1:length(width)){
+          if (width[j] > 0) {
+            ret <- paste0(ret, "\\cellx", c_lst[j])
+          }
         }
         
-        if (length(hr) >= i) {
-          
-          # Split strings if they exceed width
-          tmp2 <- split_string_rtf(hr[[i]], rwdth, rs$units)
-          
-          ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell\\row\n")
-          rcnt <- tmp2$lines
-          
-        } else {
-          ret <- paste0(ret, "\\qr \\cell\\row\n")
-          rcnt <- 1
+        lcnt <- 0
+        ccnt <- 0
+        rcnt <- 0
+        
+        ltwips <- 0
+        ctwips <- 0
+        rtwips <- 0
+        
+        if (left_width > 0) {
+          if (hl_num >= i) {
+            
+            # If header image is assigned, the header text will be ignored
+            if (image_left == FALSE) {
+              
+              # Split strings if they exceed width
+              tmp <- split_string_rtf(hl[[i]], left_width, rs$units)
+              
+              ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
+              lcnt <- tmp$lines
+              
+            } else {
+              
+              # Get image RTF codes
+              img <- get_image_rtf(hl$image_path[i], min(hl$width, left_width), hl$height, rs$units)
+              
+              ret <- paste0(ret, "\\ql ", img, "\\cell")
+              
+              # Calculate the total lines of image after summarize all twips to
+              # prevent from rounding bias
+              ltwips <- hl$height * rs$twip_conversion
+            }
+            
+          } else {
+            ret <- paste0(ret, "\\ql \\cell")
+            lcnt <- 1 
+          }
         }
         
-        if (lcnt > rcnt)
-          cnt <- cnt + lcnt
-        else 
-          cnt <- cnt + rcnt
+        if (center_width > 0) {
+          if (hc_num >= i) {
+            
+            # If header image is assigned, the header text will be ignored
+            if (image_center == FALSE) {
+              
+              # Split strings if they exceed width
+              tmp <- split_string_rtf(hc[[i]], center_width, rs$units)
+              
+              ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp$rtf), "\\cell")
+              ccnt <- tmp$lines
+              
+            } else {
+              
+              # Get image RTF codes
+              img <- get_image_rtf(hc$image_path[i], min(hc$width, center_width), hc$height, rs$units)
+              
+              ret <- paste0(ret, "\\qc ", img, "\\cell")
+              
+              ctwips <- hc$height * rs$twip_conversion
+            }
+            
+          } else {
+            ret <- paste0(ret, "\\qc \\cell")
+            ccnt <- 1 
+          }
+        }
+        
+        if (right_width > 0) {
+          if (hr_num >= i) {
+            
+            # If header image is assigned, the header text will be ignored
+            if (image_right == FALSE) {
+              
+              # Split strings if they exceed width
+              tmp2 <- split_string_rtf(hr[[i]], right_width, rs$units)
+              
+              ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
+              rcnt <- tmp2$lines
+              
+            } else {
+              
+              # Get image RTF codes
+              img <- get_image_rtf(hr$image_path[i], min(hr$width, right_width), hr$height, rs$units)
+              
+              ret <- paste0(ret, "\\qr ", img, "\\cell")
+              
+              rtwips <- hr$height * rs$twip_conversion
+            }
+            
+          } else {
+            ret <- paste0(ret, "\\qr \\cell")
+            rcnt <- 1
+          }
+        }
+        
+        ret <- paste0(ret, "\\row\n")
+        
+        # if (lcnt > rcnt)
+        #   cnt <- cnt + lcnt
+        # else 
+        #   cnt <- cnt + rcnt
+        max_twips <- max_twips + max(ltwips, ctwips, rtwips)
+        cnt <- cnt + max(lcnt, ccnt, rcnt)
       }
       
       dev.off()
 
+      # Calculate total lines of pictures
+      if (max_twips > 0) {
+        cnt <- max(cnt, round(max_twips/lh))
+      }
     
       if (rs$page_header_blank_row == "below") {
         ret <- paste0(ret, "\\par\\pard", rs$font_rtf, rs$spacing_multiplier)
@@ -150,13 +311,46 @@ get_page_footer_rtf <- function(rs) {
   cnt <- 0
   twps <- 0
   
-  fl <- rs$page_footer_left
-  fc <- rs$page_footer_center
-  fr <- rs$page_footer_right
+  if ((!is.null(rs$footer_image_left) & is.null(rs$page_footer_left)) |
+      (!is.null(rs$footer_image_right) & is.null(rs$page_footer_right)) |
+      (!is.null(rs$footer_image_center) & is.null(rs$page_footer_center))) {
+    
+    stop("`page_footer` must be used when using `footer_image`.")
+  }
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$footer_image_left)) {
+    fl <- rs$footer_image_left
+    image_left <- TRUE
+  } else {
+    fl <- rs$page_footer_left
+  }
+  
+  if (!is.null(rs$footer_image_center)) {
+    fc <- rs$footer_image_center
+    image_center <- TRUE
+  } else {
+    fc <- rs$page_footer_center
+  }
+  
+  if (!is.null(rs$footer_image_right)) {
+    fr <- rs$footer_image_right
+    image_right <- TRUE
+  } else {
+    fr <- rs$page_footer_right
+  }
+  
   conv <- rs$twip_conversion
   lh <- rs$row_height
   
-  maxf <- max(length(fl), length(fc), length(fr))
+  fl_num <- ifelse(image_left, length(fl$image_path), length(fl))
+  fc_num <- ifelse(image_center, length(fc$image_path), length(fc))
+  fr_num <- ifelse(image_right, length(fr$image_path) , length(fr))
+  
+  maxf <- max(fl_num, fc_num, fr_num)
   
   if (maxf > 0 | length(rs$footer_footnotes) > 0) {
     
@@ -184,9 +378,14 @@ get_page_footer_rtf <- function(rs) {
       center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
       right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
       
-      c1 <- left_width * conv
-      c2 <- (left_width + center_width) * conv
-      c3 <- (left_width + center_width + right_width) * conv
+      width <- c(left_width, center_width, right_width)
+      
+      # cellx must be an integer
+      c1 <- round(left_width * conv)
+      c2 <- round((left_width + center_width) * conv)
+      c3 <- round((left_width + center_width + right_width) * conv)
+      
+      c_lst <- c(c1, c2, c3)
     }
     
     
@@ -196,50 +395,119 @@ get_page_footer_rtf <- function(rs) {
       pdf(NULL)
       par(family = get_font_family(rs$font), ps = rs$font_size)
       
+      max_twips <- 0
       for (i in seq(1, maxf)) {
         
-        ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
-                      "\\cellx", c2 , "\\cellx", c3)
-        
-        if (length(fl) >= i) {
-          
-          # Split strings if they exceed width
-          tmp1 <- split_string_rtf(fl[[i]], left_width, rs$units)
-          
-          ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
-          lcnt <- tmp1$lines
-        } else {
-          ret <- paste0(ret, "\\ql \\cell")
-          lcnt <- 1
+        # ret <- paste0(ret, "\\trowd\\trgaph0\\cellx", c1, 
+        #               "\\cellx", c2 , "\\cellx", c3)
+        ret <- paste0(ret, "\\trowd\\trgaph0")
+        for (j in 1:length(width)){
+          if (width[j] > 0) {
+            ret <- paste0(ret, "\\cellx", c_lst[j])
+          }
         }
         
-        if (length(fc) >= i) {
-          
-          # Split strings if they exceed width
-          tmp2 <- split_string_rtf(fc[[i]], center_width, rs$units)
-          
-          ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
-          ccnt <- tmp2$lines
-        } else {
-          ret <- paste0(ret, "\\qc \\cell")
-          ccnt <- 1
+        lcnt <- 0
+        ccnt <- 0
+        rcnt <- 0
+        
+        ltwips <- 0
+        ctwips <- 0
+        rtwips <- 0
+        
+        if (left_width > 0) {
+          if (fl_num >= i) {
+            
+            # If header image is assigned, the header text will be ignored
+            if (image_left == FALSE) {
+              
+              # Split strings if they exceed width
+              tmp1 <- split_string_rtf(fl[[i]], left_width, rs$units)
+              
+              ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
+              lcnt <- tmp1$lines
+              
+            } else {
+              
+              # Get image RTF codes
+              img <- get_image_rtf(fl$image_path[i], min(fl$width, left_width), fl$height, rs$units)
+              
+              ret <- paste0(ret, "\\ql ", img, "\\cell")
+              
+              # Calculate the total lines of image after summarize all twips to
+              # prevent from rounding bias
+              ltwips <- fl$height * rs$twip_conversion
+            }
+          } else {
+            ret <- paste0(ret, "\\ql \\cell")
+            lcnt <- 1
+          }
         }
         
-        if (length(fr) >= i) {
-          
-          tmp3 <- split_string_rtf(fr[[i]], right_width, rs$units)
-          
-          ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell\\row\n")
-          rcnt <- tmp3$lines
-        } else {
-          ret <- paste0(ret, "\\qr \\cell\\row\n")
-          rcnt <- 1
+        if (center_width > 0) {
+          if (fc_num >= i) {
+            
+            # If header image is assigned, the header text will be ignored
+            if (image_center == FALSE) {
+              
+              # Split strings if they exceed width
+              tmp2 <- split_string_rtf(fc[[i]], center_width, rs$units)
+              
+              ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
+              ccnt <- tmp2$lines
+              
+            } else {
+              
+              # Get image RTF codes
+              img <- get_image_rtf(fc$image_path[i], min(fc$width, center_width), fc$height, rs$units)
+              
+              ret <- paste0(ret, "\\qc ", img, "\\cell")
+              
+              ctwips <- fc$height * rs$twip_conversion
+            }
+          } else {
+            ret <- paste0(ret, "\\qc \\cell")
+            ccnt <- 1
+          }
         }
         
+        if (right_width > 0) {
+          if (fr_num >= i) {
+            
+            # If header image is assigned, the header text will be ignored
+            if (image_right == FALSE) {
+              
+              # Split strings if they exceed width
+              tmp3 <- split_string_rtf(fr[[i]], right_width, rs$units)
+              
+              ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell")
+              rcnt <- tmp3$lines
+              
+            } else {
+              
+              # Get image RTF codes
+              img <- get_image_rtf(fr$image_path[i], min(fr$width, right_width), fr$height, rs$units)
+              
+              ret <- paste0(ret, "\\qr ", img, "\\cell")
+              
+              rtwips <- fr$height * rs$twip_conversion
+            }
+          } else {
+            ret <- paste0(ret, "\\qr \\cell")
+            rcnt <- 1
+          }
+        }
+        
+        ret <- paste0(ret, "\\row\n")
+        max_twips <- max_twips + max(ltwips, ctwips, rtwips)
         cnt <- cnt + max(lcnt, ccnt, rcnt)
         
       }
       dev.off()
+      
+      if (max_twips > 0) {
+        cnt <- max(cnt, round(max_twips/lh))
+      }
     }
     
     

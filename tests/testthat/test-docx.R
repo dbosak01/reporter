@@ -66,7 +66,7 @@ test_that("docx1: Basic text with title header works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
     page_header(c("Left1", "Left2"), "Right") %>%
-    page_footer("Left", "Center", "Right")
+    page_footer(c("Left", "Left2"), "Center", "Right")
 
   res <- write_report(rpt)
 
@@ -1998,7 +1998,7 @@ test_that("docx-57:  EMF Image file works as expected.", {
     
     fp <- file.path(base_path, "docx/test57.docx")
     
-    pltpath <- file.path(base_path, "docx/example10.emf")
+    pltpath <- file.path(base_path, "data/example10.emf")
     
     plt <- create_plot(pltpath, height = 4, width = 8)
     
@@ -2736,6 +2736,178 @@ test_that("docx-76: Group border with blank after works as as expected.", {
   }
 })
 
+test_that("docx-77: Center page header works as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test77.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a center header", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header(left = "", center = "center", right = "right",
+                  width = c(0, 5, 4)) %>%
+      page_footer(left = "Left", center = "center", right = "right",
+                  width = c(3, 4, 2))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-78: Images in page header/footer work as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test78.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/logo.jpg")
+    image_path2 <- file.path(base_path, "data/logo.png")
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture")
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header() %>%
+      header_image(image_path, height = 0.5, width = 0.8, align = "left") %>%
+      header_image(image_path, height = 0.6, width = 0.85, align = "right") %>%
+      header_image(c(image_path, image_path2), height = 0.38, width = 0.7, align = "center") %>%
+      page_footer() %>%
+      footer_image(c(image_path2, image_path), height = 0.38, width = 0.7, align = "left") %>%
+      footer_image(image_path, height = 0.5, width = 0.8, align = "right") %>%
+      footer_image(image_path, height = 0.6, width = 0.85, align = "center")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-79: Spanned images in page header/footer work as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test79.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/span_logo.jpg")
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header(width = c(0, 9, 0), left = "No display because width is 0") %>%
+      header_image(image_path, height = 1, width = 7.5, align = "centre") %>%
+      page_footer(width = c(0, 0, 9), center = "No display because width is 0") %>%
+      footer_image(image_path, height = 0.8, width = 7, align = "right")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-80: Plot with header/footer images works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "docx/test80.docx")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt <- create_plot(p, height = 4, width = 8, borders = c("none"))
+    
+    
+    rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      page_header(left = "left Header") %>%
+      header_image(image_path, height = 0.5, width = 0.8, align = "right") %>%
+      page_footer(right = "Page [pg] of [tpg]") %>%
+      footer_image(image_path, height = 0.38, width = 0.7, align = "left") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none")
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    # expect_equal(res$pages, 1)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+  
+})
+
+test_that("docx-81: Return error when header_image/footer_image is used without page_header/page_footer.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test81.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/span_logo.png")
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    # page_header is not set
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      header_image(image_path, height = 1, width = 7.5, align = "centre")
+    
+    expect_error(
+      res <- write_report(rpt),
+      "`page_header` must be used when using `header_image`."
+    )
+    
+    # page_footer is not set
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      footer_image(image_path, height = 0.8, width = 7, align = "right")
+    
+    expect_error(
+      res <- write_report(rpt),
+      "`page_footer` must be used when using `footer_image`."
+    )
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
 # User Tests --------------------------------------------------------------
 
 

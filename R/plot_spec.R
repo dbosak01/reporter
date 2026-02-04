@@ -1489,7 +1489,7 @@ get_plot_body_docx <- function(plt, plot_path, talign, rs,
 }
 
 
-get_image_docx <- function(id, algn, hgth, wdth) {
+get_image_docx <- function(id, algn, hgth, wdth, type = "") {
  
   
  ret <- paste0('<w:p>',
@@ -1518,7 +1518,7 @@ get_image_docx <- function(id, algn, hgth, wdth) {
             <pic:cNvPicPr/>
             </pic:nvPicPr>
             <pic:blipFill>
-            <a:blip r:embed="rId', id, '" cstate="print">
+            <a:blip r:embed="rId', type, id, '" cstate="print">
             <a:extLst>
             <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
             <a14:useLocalDpi

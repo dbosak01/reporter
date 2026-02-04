@@ -895,9 +895,13 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' of strings.
 #' @param blank_row Whether to create a blank row below the page header.
 #' Valid values are 'below' and 'none'.  Default is 'none'.
-#' @param width The width of the left column of the page header, in 
-#' report units of measure.  The right column will adjust automatically
-#' to equal the page width.
+#' @param width Widths for left, center, and right. If only one value is assigned,
+#' it would be set as left width, if only two values are assigned, they would be
+#' set as left and center by order. The rest empty width would be imputed as the
+#' average of the rest of page width. If a width is set to 0, then the cell won't
+#' be created.
+#' @param center The center page header text.  May be a single string or a vector
+#' of strings. Default is not display.
 #' @return The modified report specification.
 #' @family report
 #' @examples
@@ -943,12 +947,12 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' # 2020-10-17 11:53:51                                                Page 1 of 1
 #' @export
 page_header <- function(x, left="", right="", blank_row = "none", 
-                        width = NULL){
+                        width = NULL, center = ""){
 
   if (!"report_spec" %in% class(x))
     stop("Page header can only be assigned to an object of class 'report_spec'")
   
-  if (length(left) > 5 | length(right) > 5){
+  if (length(left) > 5 | length(right) > 5 | length(center) > 5){
     stop("Header string count exceeds limit of 5 strings per side.")
   }
   
@@ -966,14 +970,25 @@ page_header <- function(x, left="", right="", blank_row = "none",
   if (has_glue()) {
     x$page_header_left <- gluev(left)
     x$page_header_right <- gluev(right)
+    x$page_header_center <- gluev(center)
 
   } else {
     
     x$page_header_left <- left
     x$page_header_right <- right
+    x$page_header_right <- center
 
   }
   x$page_header_blank_row <- blank_row
+  
+  
+  if (is.null(width)) {
+    # If no length is assigned, set center as 0 for not displaying
+    width <- c(NA, 0, NA)
+  } else if (length(width) == 1) {
+    # If only left length is assigned, set center as 0 for not displaying
+    width <- c(width, 0, NA)
+  }
   x$page_header_width <- width
 
   return(x)
@@ -1666,9 +1681,11 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' of strings.
 #' @param blank_row Whether to create a blank row above the page footer.
 #' Valid values are 'above' and 'none'.  Default is 'above'.
-#' @param width Widths for left, center, and right. It should be a vector with
-#' three numeric or NA values. NA means let system automatically adjust.
-#' Default is `c(NA, NA, NA)`.
+#' @param width Widths for left, center, and right. If only one value is assigned,
+#' it would be set as left width, if only two values are assigned, they would be
+#' set as left and center by order. The rest empty width would be imputed as the
+#' average of the rest of page width. If a width is set to 0, the cell won't be 
+#' created.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1961,6 +1978,100 @@ page_by <- function(x, var, label = NULL, align = "left",
   
   return(x)
   
+}
+
+#' @title
+#' Add an image in page header
+#'
+#' @description
+#' This function adds an image in page header to the report.  The image will appear
+#' at the top of each page of the report. It only works when page_header is used.
+#'
+#' @details
+#' This function adds an image in page header to the report.  The image will appear
+#' at the top of each page of the report. It only works when page_header is used.
+#' If the text is also defined in page header, the text will be ignored. 
+#' 
+#' @param x The report object.
+#' @param image_path The path of image
+#' @param height Height of the image
+#' @param width Width of the image
+#' @param align Alignment of the image. Should be "left", "right", "center", or "centre". 
+#' Default is "left"
+#' @return The modified report specification.
+#' @family report
+#' @export
+header_image <- function(x, image_path, height, width, align = "left") {
+  
+  
+  if (!any(class(image_path) %in% c("character"))) {
+    stop("image_path object must an image file path.")
+  }
+  
+  if (!align %in% c("left", "right", "center", "centre")) {
+    stop("align must be left or right.")
+  }
+  
+  header_image <- list()
+  header_image$image_path <- image_path
+  header_image$height <- height
+  header_image$width <- width
+  header_image$align <- align
+  
+  if (align == "left") {
+    x$header_image_left <- header_image
+  } else if (align == "right") {
+    x$header_image_right <- header_image
+  } else {
+    x$header_image_center <- header_image
+  }
+  
+  return(x)
+}
+
+#' @title
+#' Add an image in page footer
+#'
+#' @description
+#' This function adds an image in page footer to the report.  The image will appear
+#' at the bottom of each page of the report.  
+#'
+#' @details
+#' If the text is also defined in page footer, the text will be ignored. 
+#' 
+#' @param x The report object.
+#' @param image_path The path of image
+#' @param height Height of the image
+#' @param width Width of the image
+#' @param align Alignment of the image. Should be "left", "right", "center",
+#' or "centre". Default is "left"
+#' @return The modified report specification.
+#' @family report
+#' @export
+footer_image <- function(x, image_path, height, width, align = "left") {
+  if (!any(class(image_path) %in% c("character"))) {
+    stop("image_path object must an image file path.")
+  }
+  
+  if (!align %in% c("left", "right", "center", "centre")) {
+    stop("align must be left, right, center, or centre.")
+  }
+  
+  footer_image <- list()
+  footer_image$image_path <- image_path
+  footer_image$height <- height
+  footer_image$width <- width
+  footer_image$align <- align
+  
+  if (align == "left") {
+    x$footer_image_left <- footer_image
+  } else if (align == "right") {
+    x$footer_image_right <- footer_image
+  } else {
+    x$footer_image_center <- footer_image
+  }
+  
+  return(x)
 }
 
 # Functions ---------------------------------------------------------------

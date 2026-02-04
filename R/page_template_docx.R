@@ -40,22 +40,70 @@ get_page_header_docx <- function(rs) {
   
   ret <- ""
   cnt <- 0
+  image_path <- c()
   
-  hl <- rs$page_header_left
-  hr <- rs$page_header_right
-  maxh <- max(length(hl), length(hr))
+  if ((!is.null(rs$header_image_left) & is.null(rs$page_header_left)) |
+      (!is.null(rs$header_image_center) & is.null(rs$page_header_center)) |
+      (!is.null(rs$header_image_right) & is.null(rs$page_header_right))) {
+    
+    stop("`page_header` must be used when using `header_image`.")
+  }
+  
+  # Make sure the length is 3, NA will be imputed later.
+  width <- c(rs$page_header_width, rep(NA, 3 - length(rs$page_header_width)))
+  
+  # hl <- rs$page_header_left
+  # hr <- rs$page_header_right
+  # maxh <- max(length(hl), length(hr))
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$header_image_left)) {
+    image_left <- TRUE
+    hl <- rs$header_image_left
+  } else{
+    hl <- rs$page_header_left
+  }
+  
+  if (!is.null(rs$header_image_right)) {
+    image_right <- TRUE
+    hr <- rs$header_image_right
+  } else {
+    hr <- rs$page_header_right
+  }
+  
+  if (!is.null(rs$header_image_center)) {
+    image_center <- TRUE
+    hc <- rs$header_image_center
+    
+    # Default center cell is not displayed, open it when picture exists
+    if (width[2] == 0) {
+      width[2] <- NA
+    }
+  } else {
+    hc <- rs$page_header_center
+  }
+  
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
   
-  # User controlled width of left column
-  lwdth <- rs$page_header_width
-  if (is.null(lwdth))
-    lwdth <- rs$content_size[["width"]]/2
+  hl_num <- ifelse(image_left, length(hl$image_path), length(hl))
+  hc_num <- ifelse(image_center, length(hc$image_path), length(hc))
+  hr_num <- ifelse(image_right, length(hr$image_path) , length(hr))
   
-  # Calculate right column width
-  rwdth <- rs$content_size[["width"]] - lwdth
-  lpct <- round(5000 * lwdth / rs$content_size[["width"]])
-  rpct <- round(5000 * rwdth / rs$content_size[["width"]])
+  maxh <- max(hl_num, hc_num, hr_num)
+  
+  # # User controlled width of left column
+  # lwdth <- rs$page_header_width
+  # if (is.null(lwdth))
+  #   lwdth <- rs$content_size[["width"]]/2
+  # 
+  # # Calculate right column width
+  # rwdth <- rs$content_size[["width"]] - lwdth
+  # lpct <- round(5000 * lwdth / rs$content_size[["width"]])
+  # rpct <- round(5000 * rwdth / rs$content_size[["width"]])
   
   u <- rs$units
   if (rs$units == "inches")
@@ -63,72 +111,249 @@ get_page_header_docx <- function(rs) {
 
   if (maxh > 0) {
     
-    ret <- paste0("<w:tbl> ",
-                  "<w:tblPr>",
-                  '<w:tblStyle w:val="TableGrid"/>',
-                  '<w:tblW w:w="5000"',
-                  ' w:type="pct"/>',
-                  "</w:tblPr>",
-                  "<w:tblGrid>",
-                  '<w:gridCol w:w="', lpct, '" w:type="pct"/>',
-                  '<w:gridCol w:w="', rpct, '" w:type="pct"/>',
-                  "</w:tblGrid>", collapse = "")
+    # ret <- paste0("<w:tbl> ",
+    #               "<w:tblPr>",
+    #               '<w:tblStyle w:val="TableGrid"/>',
+    #               '<w:tblW w:w="5000"',
+    #               ' w:type="pct"/>',
+    #               "</w:tblPr>",
+    #               "<w:tblGrid>",
+    #               '<w:gridCol w:w="', lpct, '" w:type="pct"/>',
+    #               '<w:gridCol w:w="', rpct, '" w:type="pct"/>',
+    #               "</w:tblGrid>", collapse = "")
+    
+    total_width <- sum(width, na.rm = T)
+    if (total_width > rs$content_size[["width"]]) {
+      
+      stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                   total_width,
+                   rs$units,
+                   rs$content_size[["width"]],
+                   rs$units))
+      
+    } else {
+      na_num <- sum(is.na(width))
+      imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+      
+      left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+      center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+      right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+      
+      left_pct <- floor(5000 * left_width/rs$content_size[["width"]])
+      center_pct <- floor(5000 * center_width/rs$content_size[["width"]])
+      right_pct <- floor(5000 * right_width/rs$content_size[["width"]])
+      
+      # Make sure the total is 5000 exactly
+      pct_lst <- c(left_pct, center_pct, right_pct)
+      rest_pct <- 5000 - sum(pct_lst)
+      add_pos <- c(1, 3 ,2)
+      
+      if (rest_pct >= 1){
+        for (i in 1:rest_pct) {
+          pct_lst[add_pos[i%%3]] <- pct_lst[i%%3] + 1
+        }
+      }
+    }
+    
+    width <- c(left_width, center_width, right_width)
+    
+    if (sum(width > 0) == 3) {
+      ret <- paste0("<w:tbl> ",
+                    "<w:tblPr>",
+                    '<w:tblStyle w:val="TableGrid"/>',
+                    '<w:tblW w:w="5000"',
+                    ' w:type="pct"/>',
+                    "</w:tblPr>",
+                    "<w:tblGrid>",
+                    '<w:gridCol w:w="1667" w:type="pct"/>',
+                    '<w:gridCol w:w="1666" w:type="pct"/>',
+                    '<w:gridCol w:w="1667" w:type="pct"/>',
+                    "</w:tblGrid>", collapse = "")
+    } else if (sum(width > 0) == 2) {
+      ret <- paste0("<w:tbl> ",
+                    "<w:tblPr>",
+                    '<w:tblStyle w:val="TableGrid"/>',
+                    '<w:tblW w:w="5000"',
+                    ' w:type="pct"/>',
+                    "</w:tblPr>",
+                    "<w:tblGrid>",
+                    '<w:gridCol w:w="2500" w:type="pct"/>',
+                    '<w:gridCol w:w="2500" w:type="pct"/>',
+                    "</w:tblGrid>", collapse = "")
+    } else {
+      ret <- paste0("<w:tbl> ",
+                    "<w:tblPr>",
+                    '<w:tblStyle w:val="TableGrid"/>',
+                    '<w:tblW w:w="5000"',
+                    ' w:type="pct"/>',
+                    "</w:tblPr>",
+                    "<w:tblGrid>",
+                    '<w:gridCol w:w="5000" w:type="pct"/>',
+                    "</w:tblGrid>", collapse = "")
+    }
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
-
+    # index for images in footer
+    rID <- 0
+    iconv <- 914400  # 1 inch = 914,400 EMUs (English Metric Units)
+    
+    lcnt <- 0
+    ccnt <- 0
+    rcnt <- 0
+    
+    lheight <- 0
+    cheight <- 0
+    rheight <- 0
+    max_height <- 0
+    
     for (i in seq(1, maxh)) {
 
       cret <- ""
 
-      if (length(hl) >= i) {
-
-        # Split strings if they exceed width
-        tmp <- split_string_html(hl[[i]], lwdth, rs$units)
-        
-        cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="', lpct, '" w:type="pct"/></w:tcPr>', 
-                      get_page_numbers_docx(para(tmp$html)),
+      if (left_width > 0) {
+        if (hl_num >= i) {
+          
+          if (image_left == FALSE) {
+            # Split strings if they exceed width
+            tmp <- split_string_html(hl[[i]], left_width, rs$units)
+            
+            cret <- paste0(cret, 
+                           '<w:tc><w:tcPr><w:tcW w:w="', left_pct, '" w:type="pct"/></w:tcPr>', 
+                           get_page_numbers_docx(para(tmp$html)),
                            "</w:tc>\n")
-        
-        lcnt <- tmp$lines  
-
-      } else {
-        cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="', lpct, '" w:type="pct"/></w:tcPr>', 
-                      para(" "), "</w:tc>\n")
-        lcnt <- 1
+            
+            lcnt <- tmp$lines
+          } else {
+            # Calculate image height & width
+            if (rs$units == "inches") {
+              hgth <- (hl$height) * iconv 
+              wdth <- (min(hl$width, left_width)) * iconv 
+              
+            } else {
+              hgth <- (cin(hl$height)) * iconv 
+              wdth <- (cin(min(hl$width, left_width))) * iconv
+              
+            }
+            
+            # Get image DOCX codes
+            rID <- rID + 1
+            image_path <- c(image_path, hl$image_path[i])
+            
+            img <- get_image_docx(rID, "left", hgth, wdth, type = "h")
+            cret <- paste0(cret, "<w:tc>", img, "</w:tc>")
+            
+            lheight <- hl$height
+          }
+        } else {
+          cret <- paste0(cret, 
+                         '<w:tc><w:tcPr><w:tcW w:w="', left_pct, '" w:type="pct"/></w:tcPr>', 
+                         para(" "), "</w:tc>\n")
+          lcnt <- 1
+        }
+      }
+      
+      if (center_width > 0) {
+        if (hc_num >= i) {
+          
+          if (image_center == FALSE) {
+            # Split strings if they exceed width
+            tmp2 <- split_string_html(hc[[i]], center_width, rs$units)
+            
+            cret <- paste0(cret, 
+                           '<w:tc><w:tcPr><w:tcW w:w="', center_pct, '" w:type="pct"/></w:tcPr>', 
+                           get_page_numbers_docx(para(tmp2$html)),
+                           "</w:tc>\n")
+            
+            ccnt <- tmp2$lines
+          } else {
+            # Calculate image height & width
+            if (rs$units == "inches") {
+              hgth <- (hc$height) * iconv 
+              wdth <- (min(hc$width, center_width)) * iconv 
+              
+            } else {
+              hgth <- (cin(hc$height)) * iconv 
+              wdth <- (cin(min(hc$width, center_width))) * iconv
+              
+            }
+            
+            # Get image DOCX codes
+            rID <- rID + 1
+            image_path <- c(image_path, hc$image_path[i])
+            
+            img <- get_image_docx(rID, "center", hgth, wdth, type = "h")
+            cret <- paste0(cret, "<w:tc>", img, "</w:tc>")
+            
+            cheight <- hc$height
+          }
+        } else {
+          cret <- paste0(cret, 
+                         '<w:tc><w:tcPr><w:tcW w:w="', center_pct, '" w:type="pct"/></w:tcPr>', 
+                         para(" ", "center"), "</w:tc>")
+          ccnt <- 1
+        }
       }
 
-      if (length(hr) >= i) {
-
-        # Split strings if they exceed width
-        tmp2 <- split_string_html(hr[[i]], rwdth, rs$units)
-
-        
-        cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="', rpct, '" w:type="pct"/></w:tcPr>', 
-                      get_page_numbers_docx(para(tmp2$html, "right")), 
-                      "</w:tc></w:tr>\n")
-        
-        rcnt <- tmp2$lines 
-
-      } else {
-        cret <- paste0(cret, 
-                      '<w:tc><w:tcPr><w:tcW w:w="', rpct, '" w:type="pct"/></w:tcPr>', 
-                      para(" ", "right"), "</w:tc></w:tr>\n")
-        rcnt <- 1
+      if (right_width > 0) {
+        if (hr_num >= i) {
+          
+          if (image_right == FALSE) {
+            # Split strings if they exceed width
+            tmp3 <- split_string_html(hr[[i]], right_width, rs$units)
+            
+            
+            cret <- paste0(cret, 
+                           '<w:tc><w:tcPr><w:tcW w:w="', right_pct, '" w:type="pct"/></w:tcPr>', 
+                           get_page_numbers_docx(para(tmp3$html, "right")), 
+                           "</w:tc>")
+            
+            rcnt <- tmp3$lines 
+          } else {
+            # Calculate image height & width
+            if (rs$units == "inches") {
+              hgth <- (hr$height) * iconv 
+              wdth <- (min(hr$width, right_width)) * iconv 
+              
+            } else {
+              hgth <- (cin(hr$height)) * iconv 
+              wdth <- (cin(min(hr$width, right_width))) * iconv
+              
+            }
+            
+            # Get image DOCX codes
+            rID <- rID + 1
+            image_path <- c(image_path, hr$image_path[i])
+            
+            img <- get_image_docx(rID, "right", hgth, wdth, type = "h")
+            cret <- paste0(cret, "<w:tc>", img, "</w:tc>")
+            
+            rheight <- hr$height
+          }
+        } else {
+          cret <- paste0(cret, 
+                         '<w:tc><w:tcPr><w:tcW w:w="', right_pct, '" w:type="pct"/></w:tcPr>', 
+                         para(" ", "right"), "</w:tc>")
+          rcnt <- 1
+        } 
       }
+      
+      cret <- paste0(cret, "</w:tr>\n")
 
-      if (lcnt > rcnt) {
-        trht <- get_row_height(round(rs$row_height * lcnt * conv))
-        cnt <- cnt + lcnt
-
-      } else {
-        trht <- get_row_height(round(rs$row_height * rcnt * conv))
-        cnt <- cnt + rcnt
-      }
+      # if (lcnt > rcnt) {
+      #   trht <- get_row_height(round(rs$row_height * lcnt * conv))
+      #   cnt <- cnt + lcnt
+      # 
+      # } else {
+      #   trht <- get_row_height(round(rs$row_height * rcnt * conv))
+      #   cnt <- cnt + rcnt
+      # }
+      
+      cnt <- cnt + max(lcnt, ccnt, rcnt)
+      max_height <- max_height + max(lheight, cheight, rheight)
+      
+      trht <- get_row_height(round(max(rs$row_height * max(lcnt, ccnt, rcnt), max(lheight, cheight, rheight)) * conv)) 
       
       
       ret <- paste0(ret, '<w:tr>', trht, cret)
@@ -138,6 +363,10 @@ get_page_header_docx <- function(rs) {
     ret <- paste0(ret, "</w:tbl>")
 
     dev.off()
+    
+    if (max_height > 0) {
+      cnt <- max(cnt, ceiling(max_height/rs$line_height))
+    }
     
     if (rs$page_header_blank_row == "below") {
       ret <- paste0(ret, rs$blank_row)
@@ -154,7 +383,7 @@ get_page_header_docx <- function(rs) {
     
   }
 
-  res <- list(docx = ret, lines = cnt)
+  res <- list(docx = ret, lines = cnt, image_path = image_path)
   
   return(res)
 }
@@ -165,29 +394,56 @@ get_page_footer_docx <- function(rs) {
   
   ret <- ""
   cnt <- 0
-
-  fl <- rs$page_footer_left
-  fc <- rs$page_footer_center
-  fr <- rs$page_footer_right
+  image_path <- c()
+  
+  # fl <- rs$page_footer_left
+  # fc <- rs$page_footer_center
+  # fr <- rs$page_footer_right
+  if ((!is.null(rs$footer_image_left) & is.null(rs$page_footer_left)) |
+      (!is.null(rs$footer_image_right) & is.null(rs$page_footer_right)) |
+      (!is.null(rs$footer_image_center) & is.null(rs$page_footer_center))) {
+    
+    stop("`page_footer` must be used when using `footer_image`.")
+  }
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$footer_image_left)) {
+    fl <- rs$footer_image_left
+    image_left <- TRUE
+  } else {
+    fl <- rs$page_footer_left
+  }
+  
+  if (!is.null(rs$footer_image_center)) {
+    fc <- rs$footer_image_center
+    image_center <- TRUE
+  } else {
+    fc <- rs$page_footer_center
+  }
+  
+  if (!is.null(rs$footer_image_right)) {
+    fr <- rs$footer_image_right
+    image_right <- TRUE
+  } else {
+    fr <- rs$page_footer_right
+  }
+  
   conv <- rs$twip_conversion
   rht <- get_row_height(round(rs$row_height * conv))
   
 
-  maxf <- max(length(fl), length(fc), length(fr))
+  # maxf <- max(length(fl), length(fc), length(fr))
+  fl_num <- ifelse(image_left, length(fl$image_path), length(fl))
+  fc_num <- ifelse(image_center, length(fc$image_path), length(fc))
+  fr_num <- ifelse(image_right, length(fr$image_path) , length(fr))
+  
+  maxf <- max(fl_num, fc_num, fr_num)
+  
 
   if (maxf > 0) {
-
-    ret <- paste0("<w:tbl> ",
-                  "<w:tblPr>",
-                  '<w:tblStyle w:val="TableGrid"/>',
-                  '<w:tblW w:w="5000"',
-                  ' w:type="pct"/>',
-                  "</w:tblPr>",
-                  "<w:tblGrid>",
-                  '<w:gridCol w:w="1667" w:type="pct"/>',
-                  '<w:gridCol w:w="1666" w:type="pct"/>',
-                  '<w:gridCol w:w="1667" w:type="pct"/>',
-                  "</w:tblGrid>", collapse = "")
 
     pdf(NULL)
     par(family = get_font_family(rs$font), ps = rs$font_size)
@@ -229,64 +485,192 @@ get_page_footer_docx <- function(rs) {
         }
       }
     }
+    
+    width <- c(left_width, center_width, right_width)
 
+    if (sum(width > 0) == 3) {
+      ret <- paste0("<w:tbl> ",
+                    "<w:tblPr>",
+                    '<w:tblStyle w:val="TableGrid"/>',
+                    '<w:tblW w:w="5000"',
+                    ' w:type="pct"/>',
+                    "</w:tblPr>",
+                    "<w:tblGrid>",
+                    '<w:gridCol w:w="1667" w:type="pct"/>',
+                    '<w:gridCol w:w="1666" w:type="pct"/>',
+                    '<w:gridCol w:w="1667" w:type="pct"/>',
+                    "</w:tblGrid>", collapse = "")
+    } else if (sum(width > 0) == 2) {
+      ret <- paste0("<w:tbl> ",
+                    "<w:tblPr>",
+                    '<w:tblStyle w:val="TableGrid"/>',
+                    '<w:tblW w:w="5000"',
+                    ' w:type="pct"/>',
+                    "</w:tblPr>",
+                    "<w:tblGrid>",
+                    '<w:gridCol w:w="2500" w:type="pct"/>',
+                    '<w:gridCol w:w="2500" w:type="pct"/>',
+                    "</w:tblGrid>", collapse = "")
+    } else {
+      ret <- paste0("<w:tbl> ",
+                    "<w:tblPr>",
+                    '<w:tblStyle w:val="TableGrid"/>',
+                    '<w:tblW w:w="5000"',
+                    ' w:type="pct"/>',
+                    "</w:tblPr>",
+                    "<w:tblGrid>",
+                    '<w:gridCol w:w="5000" w:type="pct"/>',
+                    "</w:tblGrid>", collapse = "")
+    }
+
+    # index for images in footer
+    rID <- 0
+    iconv <- 914400  # 1 inch = 914,400 EMUs (English Metric Units)
+    
+    lcnt <- 0
+    ccnt <- 0
+    rcnt <- 0
+    
+    lheight <- 0
+    cheight <- 0
+    rheight <- 0
+    max_height <- 0
+    
     for (i in seq(1, maxf)) {
 
       tret <- ""
 
-      if (length(fl) >= i) {
-
-        # Split strings if they exceed width
-        tmp1 <- split_string_html(fl[[i]], left_width, rs$units)
-        
-        
-        # tret <- paste0(tret, cell_pct(tmp1$html, "left", 1667))
-        tret <- paste0(tret, cell_pct(tmp1$html, "left", left_pct))
-        
-        lcnt <- tmp1$lines
-      } else {
-        tret <- paste0(tret, cell_pct(" ", "left", left_pct))
-        lcnt <- 1
+      if (left_width > 0) {
+        if (fl_num >= i) {
+          
+          if (image_left == FALSE) {
+            # Split strings if they exceed width
+            tmp1 <- split_string_html(fl[[i]], left_width, rs$units)
+            
+            
+            # tret <- paste0(tret, cell_pct(tmp1$html, "left", 1667))
+            tret <- paste0(tret, cell_pct(tmp1$html, "left", left_pct))
+            
+            lcnt <- tmp1$lines
+          } else {
+            # Calculate image height & width
+            if (rs$units == "inches") {
+              hgth <- (fl$height) * iconv 
+              wdth <- (min(fl$width, left_width)) * iconv 
+              
+            } else {
+              hgth <- (cin(fl$height)) * iconv 
+              wdth <- (cin(min(fl$width, left_width))) * iconv
+              
+            }
+            
+            # Get image DOCX codes
+            rID <- rID + 1
+            image_path <- c(image_path, fl$image_path[i])
+            
+            img <- get_image_docx(rID, "left", hgth, wdth, type = "f")
+            tret <- paste0(tret, "<w:tc>", img, "</w:tc>")
+            
+            lheight <- fl$height
+          }
+        } else {
+          tret <- paste0(tret, cell_pct(" ", "left", left_pct))
+          lcnt <- 1
+        }
       }
-
-      if (length(fc) >= i) {
-
-        # Split strings if they exceed width
-        tmp2 <- split_string_html(fc[[i]], center_width, rs$units)
-        
-        # tret <- paste0(tret,  cell_pct(tmp2$html, "center", 1666))
-        tret <- paste0(tret,  cell_pct(tmp2$html, "center", center_pct))
-        ccnt <- tmp2$lines
-      } else {
-        tret <- paste0(tret,  cell_pct(" ", "center", center_pct))
-        ccnt <- 1
+      
+      if (center_width > 0) {
+        if (fc_num >= i) {
+          
+          if (image_center == FALSE) {
+            # Split strings if they exceed width
+            tmp2 <- split_string_html(fc[[i]], center_width, rs$units)
+            
+            # tret <- paste0(tret,  cell_pct(tmp2$html, "center", 1666))
+            tret <- paste0(tret,  cell_pct(tmp2$html, "center", center_pct))
+            ccnt <- tmp2$lines
+          } else {
+            # Calculate image height & width
+            if (rs$units == "inches") {
+              hgth <- (fc$height) * iconv 
+              wdth <- (min(fc$width, center_width)) * iconv 
+              
+            } else {
+              hgth <- (cin(fc$height)) * iconv 
+              wdth <- (cin(min(fc$width, center_width))) * iconv
+              
+            }
+            
+            # Get image DOCX codes
+            rID <- rID + 1
+            image_path <- c(image_path, fc$image_path[i])
+            
+            img <- get_image_docx(rID, "center", hgth, wdth, type = "f")
+            tret <- paste0(tret, "<w:tc>", img, "</w:tc>")
+            
+            cheight <- fc$height
+          }
+        } else {
+          tret <- paste0(tret,  cell_pct(" ", "center", center_pct))
+          ccnt <- 1
+        }
       }
-
-      if (length(fr) >= i) {
-
-        tmp3 <- split_string_html(fr[[i]], right_width, rs$units)
-        
-        # tret <- paste0(tret, cell_pct(tmp3$html, "right", 1667))
-        tret <- paste0(tret, cell_pct(tmp3$html, "right", right_pct))
-        
-        rcnt <- tmp3$lines
-      } else {
-        tret <- paste0(tret,  cell_pct(" ", "right", right_pct))
-        rcnt <- 1
+      
+      if (right_width > 0) {
+        if (fr_num >= i) {
+          
+          if (image_right == FALSE) {
+            tmp3 <- split_string_html(fr[[i]], right_width, rs$units)
+            
+            # tret <- paste0(tret, cell_pct(tmp3$html, "right", 1667))
+            tret <- paste0(tret, cell_pct(tmp3$html, "right", right_pct))
+            
+            rcnt <- tmp3$lines
+          } else {
+            # Calculate image height & width
+            if (rs$units == "inches") {
+              hgth <- (fr$height) * iconv 
+              wdth <- (min(fr$width, right_width)) * iconv 
+              
+            } else {
+              hgth <- (cin(fr$height)) * iconv 
+              wdth <- (cin(min(fr$width, right_width))) * iconv
+              
+            }
+            
+            # Get image DOCX codes
+            rID <- rID + 1
+            image_path <- c(image_path, fr$image_path[i])
+            
+            img <- get_image_docx(rID, "right", hgth, wdth, type = "f")
+            tret <- paste0(tret, "<w:tc>", img, "</w:tc>")
+            
+            rheight <- fr$height
+          }
+        } else {
+          tret <- paste0(tret,  cell_pct(" ", "right", right_pct))
+          rcnt <- 1
+        }
       }
 
       cnt <- cnt + max(lcnt, ccnt, rcnt)
+      max_height <- max_height + max(lheight, cheight, rheight)
       
       
-      trht <- get_row_height(round(rs$row_height * max(lcnt, ccnt, rcnt) * conv)) 
+      trht <- get_row_height(max(round(rs$row_height * max(lcnt, ccnt, rcnt), max(lheight, cheight, rheight)) * conv)) 
       
-      
-      ret <- paste0(ret, '<w:tr>', trht, tret)
+      # <w:tr> should end here for each row
+      ret <- paste0(ret, '<w:tr>', trht, tret, "</w:tr>\n")
 
     }
     dev.off()
+    
+    if (max_height > 0) {
+      cnt <- max(cnt, ceiling(max_height/rs$line_height))
+    }
 
-    ret <- paste0(get_page_numbers_docx(ret), "</w:tr>\n")
+    # ret <- paste0(get_page_numbers_docx(ret), "</w:tr>\n")
+    ret <- paste0(get_page_numbers_docx(ret))
     ret <- paste0(ret, "</w:tbl>\n")
   }
   
@@ -301,7 +685,8 @@ get_page_footer_docx <- function(rs) {
 
   
   res <- list(docx = paste0(ret, collapse = ""),
-              lines = cnt)
+              lines = cnt,
+              image_path = image_path)
   
   return(res)
 }
