@@ -598,9 +598,29 @@ get_content_offsets_pdf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NU
   # Not perfect but good enough
   brdrs <- strip_borders(ts$borders )
   if (any(brdrs %in% c("all", "inside"))) {
-    epnts <- floor(rs$body_line_count - cnt[["lower"]] - cnt[["upper"]]) * rs$border_height 
-    ret[["lower"]] <- ret[["lower"]] + epnts - rs$line_height
-    cnt[["lower"]] <- cnt[["lower"]] + floor(epnts / rs$row_height) - 1
+    if (is.null(page_by_info)) {
+      
+      epnts <- floor(rs$body_line_count - cnt[["lower"]] - cnt[["upper"]]) * rs$border_height 
+      ret[["lower"]] <- ret[["lower"]] + epnts - rs$line_height
+      cnt[["lower"]] <- cnt[["lower"]] + floor(epnts / rs$row_height) - 1
+      
+    } else {
+      
+      # Convert lower to list because of different upper
+      ret_lower <- ret[["lower"]]
+      cnt_lower <- cnt[["lower"]]
+      ret[["lower"]] <- list()
+      cnt[["lower"]] <- list()
+      
+      for (i in 1:length(pgby_unique)) {
+        epnts <- floor(rs$body_line_count - cnt_lower - cnt[["upper"]][[i]]) * rs$border_height 
+        ret[["lower"]][[i]] <- ret_lower + epnts - rs$line_height
+        cnt[["lower"]][[i]] <- cnt_lower + floor(epnts / rs$row_height) - 1
+      }
+      
+      names(ret[["lower"]]) <- pgby_unique
+      names(cnt[["lower"]]) <- pgby_unique
+    }
   }
   
   if (content_blank_row %in% c("both", "below")) {

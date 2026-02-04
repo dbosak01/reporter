@@ -832,12 +832,18 @@ get_blank_indicator <- function(pg_num, tot_pg, content_blanks,
     content_offset_up <- content_offset[["upper"]][[pgby]]
   }
   
+  if (is.null(names(content_offset[["lower"]]))) {
+    content_offset_low <- content_offset[["lower"]]
+  } else {
+    content_offset_low <- content_offset[["lower"]][[pgby]]
+  }
+  
   if (pg_num == 1 & pg_num == tot_pg & content_blanks == "both")
     blnk_ind <- "both"
   else if (pg_num == 1 & content_blanks %in% c("both", "above"))
     blnk_ind <- "above"
   else if ((pg_num == tot_pg & content_blanks %in% c("both", "below")) &
-           (num_rows < page_size - content_offset_up - content_offset[["lower"]])) {
+           (num_rows < page_size - content_offset_up - content_offset_low)) {
     # Exception when number of rows exactly equals available space.
     # Then don't put a blank row below.
     # print(num_rows)

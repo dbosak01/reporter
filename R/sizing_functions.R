@@ -1216,11 +1216,16 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   offset <- lpg_rows + content_offsets[["blank_upper"]]
   
   # If the upper line has name, it means using page_by
-  using_pgby <- F
+  using_pgby_up <- F
+  using_pgby_low <- F
   if (is.null(names(content_offsets[["upper"]]))) {
     ttfl <- content_offsets["upper"] + content_offsets["lower"]
   } else {
-    using_pgby <- T
+    using_pgby_up <- T
+    
+    if (!is.null(names(content_offsets[["lower"]]))) {
+      using_pgby_low <- T
+    }
   }
   
   
@@ -1237,8 +1242,10 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   
   for (i in seq_len(nrow(x))){
     
-    if (using_pgby) {
+    if (using_pgby_up & !using_pgby_low) {
       ttfl <- content_offsets[["lower"]] + content_offsets[["upper"]][[x$..page_by[i]]]
+    } else if (using_pgby_up & using_pgby_low) {
+      ttfl <- content_offsets[["lower"]][[x$..page_by[i]]] + content_offsets[["upper"]][[x$..page_by[i]]]
     }
     
     if (count_row_var) {
