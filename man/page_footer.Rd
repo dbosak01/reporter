@@ -4,7 +4,14 @@
 \alias{page_footer}
 \title{Adds a page footer}
 \usage{
-page_footer(x, left = "", center = "", right = "", blank_row = "above")
+page_footer(
+  x,
+  left = "",
+  center = "",
+  right = "",
+  blank_row = "above",
+  width = NULL
+)
 }
 \arguments{
 \item{x}{The report spec object.}
@@ -20,6 +27,12 @@ of strings.}
 
 \item{blank_row}{Whether to create a blank row above the page footer.
 Valid values are 'above' and 'none'.  Default is 'above'.}
+
+\item{width}{Widths for left, center, and right. If only one value is assigned,
+it would be set as left width, if only two values are assigned, they would be
+set as left and center by order. The rest empty width would be imputed as the
+average of the rest of page width. If a width is set to 0, the cell won't be 
+created.}
 }
 \value{
 The modified report.
@@ -102,7 +115,9 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 Other report: 
 \code{\link{add_content}()},
 \code{\link{create_report}()},
+\code{\link{footer_image}()},
 \code{\link{footnotes}()},
+\code{\link{header_image}()},
 \code{\link{options_fixed}()},
 \code{\link{page_by}()},
 \code{\link{page_header}()},

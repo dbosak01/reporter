@@ -777,5 +777,30 @@ test_that("utils31: strwdth() works as expected.", {
   
 })
 
+test_that("utils32: get_first_pos works as expected.", {
+  
+  arm <- c(rep("A",3), rep("B",5), rep("C",1), rep("D",3))
+  first_arm <- get_first_pos(arm)
+  
+  expect_equal(first_arm, c(T,F,F,T,F,F,F,F,T,T,F,F)) 
+})
 
+test_that("utils33: get_last_pos works as expected.", {
+  
+  arm <- c(rep("A",3), rep("B",5), rep("C",1), rep("D",3))
+  last_arm <- get_last_pos(arm)
+  
+  expect_equal(last_arm, c(F,F,T,F,F,F,F,T,T,F,F,T)) 
+})
 
+test_that("utils34: add_group_border_ind works as expected.", {
+  
+  arm <- c(rep("A",3), rep("B",5), rep("C",1), rep("D",3))
+  df <- data.frame("arm" = arm)
+  df <- add_group_border_ind(df, "arm")
+  
+  df_expect <- data.frame("arm" = arm,
+                          "..group_border" = c("", "", "bottom", "","","","",
+                                               "bottom","bottom","","","bottom"))
+  expect_equal(df, df_expect) 
+})

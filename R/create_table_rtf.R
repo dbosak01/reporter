@@ -146,6 +146,11 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
     control_cols <- c(control_cols, "..stub_var")
   }
   
+  # Add cell_border into control_cols for adding cell border
+  if ("..group_border" %in% names(fdat)) {
+    control_cols <- c(control_cols, "..group_border")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -184,7 +189,7 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   
   # Create a temporary page info to pass into get_content_offsets
   tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
-                 label_align = label_aligns, table_align = cntnt$align)
+                 label_align = label_aligns, table_align = cntnt$align, data = fdat)
   # print("Temp PI")
   # print(tmp_pi)
   
@@ -220,17 +225,17 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
       else 
         wrap_flag <- FALSE
       
-      #print(s)
-      # Ensure content blank rows are added only to the first and last pages
-      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
-                                      rs$body_line_count, content_offset$lines, 
-                                      nrow(s))
-      #print(blnk_ind)
-      
       if (!is.na(pgby_var))
         pgby <- trimws(s[1, "..page_by"])
       else 
         pgby <- NULL
+      
+      #print(s)
+      # Ensure content blank rows are added only to the first and last pages
+      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
+                                      rs$body_line_count, content_offset$lines, 
+                                      nrow(s), pgby)
+      #print(blnk_ind)
       
       pgind <- ""
       if (counter == 1)
@@ -502,8 +507,8 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
 #' @noRd
 get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NULL) {
   
-  ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
-  cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+  # ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+  # cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
   
   # Width is normally the width of the table, not the page
   wdth <- rs$content_size[["width"]]
@@ -529,20 +534,56 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NU
     ttls <- get_title_header_rtf(ts$title_hdr, wdth, rs)
   
   # Get page by if it exists
-  pgb <- list(lines = 0, twips = 0)
-  if (!is.null(ts$page_by))
-    pgb <- get_page_by_rtf(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt)
-  else if (!is.null(rs$page_by))
-    pgb <- get_page_by_rtf(rs$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt)
+  # if (!is.null(ts$page_by))
+  #   pgb <- get_page_by_rtf(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt)
+  # else if (!is.null(rs$page_by))
+  #   pgb <- get_page_by_rtf(rs$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt)
 
+  page_by_info <- NULL
+  if (!is.null(ts$page_by)) {
+    page_by_info <- ts$page_by
+  } else if (!is.null(rs$page_by)) {
+    page_by_info <- rs$page_by
+  }
+  
+  # Get lines for each page by value
+  if (!is.null(page_by_info)) {
+    ret <- c(upper = list(), lower = 0, blank_upper = 0, blank_lower = 0)
+    cnt <- c(upper = list(), lower = 0, blank_upper = 0, blank_lower = 0)
+    
+    pgby_unique <- unique(pi$data$..page_by)
+
+    for (i in 1:length(pgby_unique)) {
+      pgby_temp <- get_page_by_rtf(page_by_info, wdth, pgby_unique[i], rs, pi$table_align, pgby_cnt = pgby_cnt)
+      
+      # Add everything up
+      ret[["upper"]][[i]] <- shdrs$twips + hdrs$twips + ttls$twips + pgby_temp$twips
+      cnt[["upper"]][[i]] <- shdrs$lines + hdrs$lines + ttls$lines + pgby_temp$lines
+    }
+    
+    names(ret[["upper"]]) <- pgby_unique
+    names(cnt[["upper"]]) <- pgby_unique
+    
+  } else {
+    pgb <- list(lines = 0, twips = 0)
+    pgb <- get_page_by_rtf(page_by_info, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+    
+    ret <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+    cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+    
+    # Add everything up
+    ret[["upper"]] <- shdrs$twips + hdrs$twips + ttls$twips + pgb$twips
+    cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+    
+  }
   
   #print(length(pgb))
   
   # print(paste("Table titles:", ttls))
   
   # Add everything up
-  ret[["upper"]] <- shdrs$twips + hdrs$twips + ttls$twips + pgb$twips
-  cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+  # ret[["upper"]] <- shdrs$twips + hdrs$twips + ttls$twips + pgb$twips
+  # cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
   
   if (content_blank_row %in% c("above", "both")) {
     ret[["blank_upper"]] <- rs$line_height
@@ -1121,7 +1162,18 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       if (frb == TRUE) 
         radj <- 1
       
-      b <- get_cell_borders(i + radj, 1, nrow(t) + radj, ncol(t), brdrs, flgs[i])
+      cell_border <- NULL
+      if ("..group_border" %in% names(tbl)) {
+        cell_border <- tbl[["..group_border"]][i]
+      }
+      
+      # Don't draw group line for first blank row
+      if (flgs[i] %in% c("B", "A") & i == 1){
+        cell_border <- NULL
+      }
+      
+      b <- get_cell_borders(i + radj, 1, nrow(t) + radj, ncol(t), brdrs, flgs[i],
+                            cell_border = cell_border)
       ret[i] <- paste0(ret[i], b, "\\cellx", max(sz))
       
       
@@ -1134,7 +1186,13 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           if (frb == TRUE) 
             radj <- 1
           
-          b <- get_cell_borders(i + radj, j, nrow(t) + radj, ncol(t), brdrs, flgs[i])
+          cell_border <- NULL
+          if ("..group_border" %in% names(tbl)) {
+            cell_border <- tbl[["..group_border"]][i]
+          }
+          
+          b <- get_cell_borders(i + radj, j, nrow(t) + radj, ncol(t), brdrs, flgs[i],
+                                cell_border = cell_border)
           ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
         }
       }

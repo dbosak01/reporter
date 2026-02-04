@@ -66,7 +66,7 @@ test_that("docx1: Basic text with title header works as expected.", {
     set_margins(top = 1, bottom = 1) %>%
     add_content(txt, align = "center") %>%
     page_header(c("Left1", "Left2"), "Right") %>%
-    page_footer("Left", "Center", "Right")
+    page_footer(c("Left", "Left2"), "Center", "Right")
 
   res <- write_report(rpt)
 
@@ -1998,7 +1998,7 @@ test_that("docx-57:  EMF Image file works as expected.", {
     
     fp <- file.path(base_path, "docx/test57.docx")
     
-    pltpath <- file.path(base_path, "docx/example10.emf")
+    pltpath <- file.path(base_path, "data/example10.emf")
     
     plt <- create_plot(pltpath, height = 4, width = 8)
     
@@ -2218,6 +2218,696 @@ test_that("docx-61: Test 5 inch stub works as expected.", {
   
 })
 
+test_that("docx-62: Page footers with one assigned width work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "docx/test62.docx")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "DOCX", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "Center footer", right = "Right footer",
+                  width = c(5.5))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
+test_that("docx-63: Page footers with multiple assigned widths work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "docx/test63.docx")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "DOCX", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "", right = "Right Footer",
+                  width = c(5.5, 0 , 2))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
+test_that("docx-64: Page by with bold label and value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test64.docx")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-65: Page by with only bold label works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test65.docx")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-66: Page by with only bold value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test66.docx")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-67: Page by with long bold label works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test67.docx")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- paste0(
+      "This is a very long label with\nmanual line break: "
+    )
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE) 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    # There is a unknown problem for rs footnote when label takes three lines
+    # In get_page_footnotes_docx, when len_diff is 0, rs$table_break isn't inserted
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-68: Page by with long non-bold label works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test68.docx")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- paste0(
+      "This is a very long label without manual line change and more text: "
+    )
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE) 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-69: Page by with long bold value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test69.docx")
+    
+    dat <- iris
+    
+    long_value <- paste0(
+      "This is a very long\nvalue with manual line change and, "
+    )
+    
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    # When value takes three lines, the footnote will exceed a page because
+    # get_content_offsets_docx only consider label lines
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-70: Page by with long label filling one line works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "docx/test70.docx")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- paste0(
+      "This is a very long label without manual line change: "
+    )
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE) 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+# Below unit tests are commented out because two reasons:
+#   (1) When page_by takes too many lines, it causes len_diff is 0 in get_page_footnotes_docx, 
+#       so rs$table_break isn't inserted, which let page footer disable.
+#   (2) When value takes multi-lines, the footnote will exceed a page because
+#       get_content_offsets_docx only consider label lines
+# Because multi-line page by is rare, hold this issue and see if it's really
+# necessary to fix in the future.
+
+test_that("docx-71: Page by with long non-bold value works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test71.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without manual line change and more text, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-72: Page by with very long non-bold value and long bold label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test72.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without intentionally line change and also",
+      " long text which should take at least three lines, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- paste0(
+      "This is a very long\nlabel with intentionally line change and also",
+      " long text which should take at least three lines: "
+    )
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-73: Page by with very long bold value and long non-bold label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test73.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without intentionally line change and also",
+      " long text which should take at least three lines, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- paste0(
+      "This is a very long\nlabel with intentionally line change and also",
+      " long text which should take at least three lines: "
+    )
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-74: Page by with very long bold value and long bold label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "docx/test74.docx")
+
+    dat <- iris
+
+    long_value <- paste0(
+      "This is a very long value without intentionally line change and also",
+      " long text which should take at least three lines, "
+    )
+
+    dat$Pgby <- paste0(long_value, as.character(dat$Species))
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- paste0(
+      "This is a very long\nlabel with intentionally line change and also",
+      " long text which should take at least three lines: "
+    )
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-75: Group border works as as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test75.docx")
+    
+    # Setup
+    arm <- c(rep("A", 3), rep("B", 2), rep("C", 3), rep("D", 2))
+    subjid <- 100:109
+    name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+              "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+              "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+              "Smith, Shaileigh")
+    sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+    age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+    
+    
+    # Create data frame
+    df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+    df <- rbind(df, df, df, df)
+    
+    tbl1 <- create_table(df, first_row_blank = FALSE, borders = "outside") %>%
+      define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+             width = 1) %>%
+      define(name, label = "Subject Name", width = 1) %>%
+      define(sex, label = "Sex", n = 10, align = "center") %>%
+      define(age, label = "Age", n = 10) %>%
+      define(arm, label = "Arm",
+             dedupe = TRUE,
+             group_border = TRUE) %>%
+      footnotes("This is the footnote")
+    
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz) %>%
+      titles(c("Table 1.0", "This is a table with group border"), align = "center") %>%
+      add_content(tbl1) %>%
+      footnotes(c("This is the footnote 1")) %>%
+      page_header(left = "Test header", right = "Test header") %>%
+      page_footer(left = "Test footer", right = "Test footer") %>%
+      set_margins(top = 1, bottom = 1)
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-76: Group border with blank after works as as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test76.docx")
+    
+    # Setup
+    arm <- c(rep("A", 3), rep("B", 2), rep("C", 3), rep("D", 2))
+    subjid <- 100:109
+    name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+              "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+              "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+              "Smith, Shaileigh")
+    sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+    age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)    
+    
+    # Create data frame
+    df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+    df <- rbind(df, df, df, df)
+    
+    tbl1 <- create_table(df, first_row_blank = FALSE, borders = "outside") %>%
+      define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+             width = 1) %>%
+      define(name, label = "Subject Name", width = 1) %>%
+      define(sex, label = "Sex", n = 10, align = "center") %>%
+      define(age, label = "Age", n = 10) %>%
+      define(arm, label = "Arm",
+             dedupe = TRUE,
+             blank_after = TRUE,
+             group_border = TRUE) %>%
+      footnotes("This is the footnote")
+    
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz) %>%
+      titles(c("Table 1.0", "This is a table with group border"), align = "center") %>%
+      add_content(tbl1) %>%
+      footnotes(c("This is the footnote 1")) %>%
+      page_header(left = "Test header", right = "Test header") %>%
+      page_footer(left = "Test footer", right = "Test footer") %>%
+      set_margins(top = 1, bottom = 1)
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-77: Center page header works as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test77.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a center header", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header(left = "", center = "center", right = "right",
+                  width = c(0, 5, 4)) %>%
+      page_footer(left = "Left", center = "center", right = "right",
+                  width = c(3, 4, 2))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-78: Images in page header/footer work as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test78.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/logo.jpg")
+    image_path2 <- file.path(base_path, "data/logo.png")
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture")
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header() %>%
+      header_image(image_path, height = 0.5, width = 0.8, align = "left") %>%
+      header_image(image_path, height = 0.6, width = 0.85, align = "right") %>%
+      header_image(c(image_path, image_path2), height = 0.38, width = 0.7, align = "center") %>%
+      page_footer() %>%
+      footer_image(c(image_path2, image_path), height = 0.38, width = 0.7, align = "left") %>%
+      footer_image(image_path, height = 0.5, width = 0.8, align = "right") %>%
+      footer_image(image_path, height = 0.6, width = 0.85, align = "center")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-79: Spanned images in page header/footer work as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test79.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/span_logo.jpg")
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header(width = c(0, 9, 0), left = "No display because width is 0") %>%
+      header_image(image_path, height = 1, width = 7.5, align = "centre") %>%
+      page_footer(width = c(0, 0, 9), center = "No display because width is 0") %>%
+      footer_image(image_path, height = 0.8, width = 7, align = "right")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-80: Plot with header/footer images works as expected.", {
+  
+  if (dev == TRUE) {
+    
+    
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "docx/test80.docx")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt <- create_plot(p, height = 4, width = 8, borders = c("none"))
+    
+    
+    rpt <- create_report(fp, output_type = "DOCX", font = fnt, font_size =fsz) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt, align = "center") %>%
+      page_header(left = "left Header") %>%
+      header_image(image_path, height = 0.5, width = 0.8, align = "right") %>%
+      page_footer(right = "Page [pg] of [tpg]") %>%
+      footer_image(image_path, height = 0.38, width = 0.7, align = "left") %>%
+      titles("Figure 1.0", "MTCARS Miles per Cylinder Plot", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none")
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    # expect_equal(res$pages, 1)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+  
+})
+
+test_that("docx-81: Return error when header_image/footer_image is used without page_header/page_footer.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test81.docx")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/span_logo.png")
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    # page_header is not set
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      header_image(image_path, height = 1, width = 7.5, align = "centre")
+    
+    expect_error(
+      res <- write_report(rpt),
+      "`page_header` must be used when using `header_image`."
+    )
+    
+    # page_footer is not set
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      footer_image(image_path, height = 0.8, width = 7, align = "right")
+    
+    expect_error(
+      res <- write_report(rpt),
+      "`page_footer` must be used when using `footer_image`."
+    )
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
 # User Tests --------------------------------------------------------------
 
 

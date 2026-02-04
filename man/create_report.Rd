@@ -158,7 +158,9 @@ to create content for the report.
 
 Other report: 
 \code{\link{add_content}()},
+\code{\link{footer_image}()},
 \code{\link{footnotes}()},
+\code{\link{header_image}()},
 \code{\link{options_fixed}()},
 \code{\link{page_by}()},
 \code{\link{page_footer}()},

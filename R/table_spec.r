@@ -372,6 +372,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @param style A \code{\link{cell_style}} object that defines the desired
 #' style for this column.  The cell style object can be used to define 
 #' conditional styling.
+#' @param group_border Add bottom border in the end of a group. Default is FALSE.
 #' @return The modified table spec.
 #' @family table
 #' @examples
@@ -454,7 +455,7 @@ define <- function(x, vars, label = NULL, format = NULL,
                    visible=TRUE, n = NULL, blank_after=FALSE, blank_before=FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
                    page_break = FALSE, indent = NULL, label_row = FALSE,
-                   standard_eval = FALSE, style = NULL) {
+                   standard_eval = FALSE, style = NULL, group_border = FALSE) {
   
   if (standard_eval) {
     if (!typeof(vars) %in% c("character", "numeric")) {
@@ -523,7 +524,7 @@ define <- function(x, vars, label = NULL, format = NULL,
                    blank_before = blank_before,
                    dedupe=dedupe, id_var = id_var, page_wrap = page_wrap,
                    page_break = page_break, indent = indent, 
-                   label_row = label_row, style = style)
+                   label_row = label_row, style = style, group_border = group_border)
    
    x$col_defs[[nm]] <- def
    
@@ -547,7 +548,7 @@ define_c <- function(var, label = NULL, format = NULL,
                    blank_before = FALSE,
                    dedupe=FALSE, id_var = FALSE, page_wrap = FALSE,
                    page_break = FALSE, indent = NULL, label_row = FALSE,
-                   style = NULL) {
+                   style = NULL, group_border = FALSE) {
   
   
   if (!typeof(var) %in% c("character", "numeric"))
@@ -578,7 +579,7 @@ define_c <- function(var, label = NULL, format = NULL,
   if (label_row == TRUE)
     def$dedupe <- TRUE
   def$style <- style
-  
+  def$group_border <- group_border
   
   return(def)
 }

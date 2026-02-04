@@ -146,6 +146,10 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
     control_cols <- c(control_cols, "..stub_var")
   }
   
+  if ("..group_border" %in% names(fdat)){
+    control_cols <- c(control_cols, "..group_border")
+  }
+  
   # Reset keys, since prep_data can add/remove columns for stub
   keys <- names(fdat)
   # print("Keys")
@@ -184,7 +188,7 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   
   # Create a temporary page info to pass into get_content_offsets
   tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
-                 label_align = label_aligns, table_align = cntnt$align)
+                 label_align = label_aligns, table_align = cntnt$align, data = fdat)
   # print("Temp PI")
   # print(tmp_pi)
   
@@ -222,16 +226,17 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
         wrap_flag <- FALSE
       
       #print(s)
-      # Ensure content blank rows are added only to the first and last pages
-      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
-                                      rs$body_line_count, content_offset$lines, 
-                                      nrow(s))
-      #print(blnk_ind)
       
       if (!is.na(pgby_var))
         pgby <- trimws(s[1, "..page_by"])
       else 
         pgby <- NULL
+      
+      # Ensure content blank rows are added only to the first and last pages
+      blnk_ind <- get_blank_indicator(counter, tot_count, content_blank_row,
+                                      rs$body_line_count, content_offset$lines, 
+                                      nrow(s), pgby)
+      #print(blnk_ind)
       
       
       pi <- page_info(data= s[, pg], keys = pg, label=labels[pg],
@@ -396,8 +401,13 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
                                      content_brdrs) 
         } else {
           
-          if (wrap_flag)
-            vflag <- "bottom" 
+          if (wrap_flag) {
+            vflag <- "bottom"
+          } else {
+            # If not wrapping, assign original valign for inserting table_break
+            # for report footnotes
+            vflag <- rs$footnotes[[1]]$valign
+          }
         }
       }
     }
@@ -406,7 +416,7 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
   b <- NULL
   blen <- 0
   if (content_blank_row %in% c("below", "both")) {
-    b <- rs$blank_row
+    b <- rs$blank_row_below
     blen <- 1
   }
   
@@ -433,26 +443,25 @@ get_page_footnotes_docx <- function(rs, spec, spec_width, lpg_rows, row_count,
     
     if (vflag == "bottom" & len_diff > 0) {
   
-      ublnks <- c(b, rep(rs$blank_row, len_diff))
+      ublnks <- c(b, rep(rs$blank_row_below, len_diff))
   
     } else {
   
       if ((wrap_flag & len_diff > 0)) {
         if (vflag == "bottom" | has_bottom_footnotes(rs))
-          lblnks <- c(rep(rs$blank_row, len_diff), b)
+          lblnks <- c(rep(rs$blank_row_below, len_diff), b)
       } else {
         lblnks <- b
       }
     }
   }
-  
+
   tbr <- NULL
   if (vflag == "bottom") {
     if (length(ublnks) == 0) {
       tbr <- rs$table_break
     }
   }
-  
   
   tlns <- sum(ftnts$lines, length(ublnks), length(lblnks))
   ret <- list(docx = c(ublnks, tbr, ftnts$docx, lblnks),
@@ -496,14 +505,45 @@ get_content_offsets_docx <- function(rs, ts, pi, content_blank_row, pgby_cnt = N
     ttls <- get_title_header_docx(ts$title_hdr, wdth, rs)
   
   # Get page by if it exists
-  pgb <- list(lines = 0, twips = 0)
-  if (!is.null(ts$page_by))
-    pgb <- get_page_by_docx(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
-  else if (!is.null(rs$page_by))
-    pgb <- get_page_by_docx(rs$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+  # if (!is.null(ts$page_by))
+  #   pgb <- get_page_by_docx(ts$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+  # else if (!is.null(rs$page_by))
+  #   pgb <- get_page_by_docx(rs$page_by, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
   
   # Add everything up
-  cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+  # cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+  
+  page_by_info <- NULL
+  if (!is.null(ts$page_by)) {
+    page_by_info <- ts$page_by
+  } else if (!is.null(rs$page_by)) {
+    page_by_info <- rs$page_by
+  }
+  
+  # Get lines for each page by value
+  if (!is.null(page_by_info)) {
+    cnt <- c(upper = list(), lower = 0, blank_upper = 0, blank_lower = 0)
+    
+    pgby_unique <- unique(pi$data$..page_by)
+    
+    for (i in 1:length(pgby_unique)) {
+      pgby_temp <- get_page_by_docx(page_by_info, wdth, pgby_unique[i], rs, pi$table_align, pgby_cnt = pgby_cnt)
+      
+      # Add everything up
+      cnt[["upper"]][[i]] <- shdrs$lines + hdrs$lines + ttls$lines + pgby_temp$lines
+    }
+    
+    names(cnt[["upper"]]) <- pgby_unique
+    
+  } else {
+    pgb <- list(lines = 0)
+    pgb <- get_page_by_docx(page_by_info, wdth, NULL, rs, pi$table_align, pgby_cnt = pgby_cnt)
+    cnt <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+    
+    # Add everything up
+    cnt[["upper"]] <- shdrs$lines + hdrs$lines + ttls$lines + pgb$lines
+    
+  }
   
   if (content_blank_row %in% c("above", "both")) {
     #ret[["blank_upper"]] <- rs$line_height
@@ -1042,14 +1082,29 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         b <- ""
         cs <- ""
 
-        if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
-
-          b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
-                                     length(nms), brdrs, tb[i])
-          
-
-          
+        # if (any(brdrs %in% c("bottom", "left", "right", "outside", "body"))) {
+        # 
+        #   b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
+        #                              length(nms), brdrs, tb[i])
+        #   
+        # 
+        #   
+        # }
+        
+        cell_border <- NULL
+        if ("..group_border" %in% names(tbl)) {
+          cell_border <- tbl[["..group_border"]][i]
         }
+        
+        # Don't draw group line for first blank row
+        if (tb[i] %in% c("B", "A") & i == 1){
+          cell_border <- NULL
+        }
+        
+        b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
+                                   length(nms), brdrs, tb[i],
+                                   cell_border = cell_border)
+        
         
         
         if (tb[i] %in% c("B", "A", "L")) {

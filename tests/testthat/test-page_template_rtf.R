@@ -184,7 +184,7 @@ test_that("get_pageby_rtf works as expected.", {
   
   expect_equal(res$lines, 2)
   expect_equal(res$rtf, 
-    paste0("\\trowd\\trgaph0\\trql\\cellx8640\\ql Cylinders:fork\\cell\\row\n", 
+    paste0("\\trowd\\trgaph0\\trql\\cellx8640\\ql Cylinders: fork\\cell\\row\n", 
            "\\trowd\\trgaph0\\trql\\cellx8640\\ql\\cell\\row\n"))
   
 })

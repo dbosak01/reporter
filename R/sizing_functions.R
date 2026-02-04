@@ -270,6 +270,17 @@ prep_data <- function(dat, ts, char_width, missing_val) {
       }
     }
   }
+  
+  # Add cell border indicator
+  group_border_vars <- c()
+  for (def in defs) {
+    if (def$group_border) {
+      group_border_vars <- c(group_border_vars, def$var_c)
+    }
+  }
+  if (length(group_border_vars) > 0) {
+    dat <- add_group_border_ind(dat, group_border_vars)
+  }
 
    # print("Labels")
    # print(dat)
@@ -869,10 +880,21 @@ get_label_aligns <- function(ts, aligns) {
   ret <- aligns
 
   # Let any defined value override the default
+  has_cell_border <- FALSE
   for (d in defs) {
     if (!is.null(d$label_align) & d$var_c %in% names(aligns))
       ret[[d$var_c]] <-  d$label_align
     
+    if (!is.null(d[["group_border"]])) {
+      if (d[["group_border"]] == TRUE) {
+        has_cell_border <- TRUE
+      }
+    }
+  }
+  
+  # Set a value so that it won't be NA in pi
+  if (has_cell_border) {
+    ret[["..group_border"]] <- "left"
   }
   
   # Deal with stub
@@ -944,9 +966,21 @@ get_aligns <- function(dat, ts) {
   }
   
   # Assign alignments from column definitions
+  has_cell_border <- FALSE
   for (d in defs) {
     if (!is.null(d$align) & d$var_c %in% nms)
       ret[d$var_c] <- d$align
+    
+    if (!is.null(d[["group_border"]])) {
+      if (d[["group_border"]] == TRUE) {
+        has_cell_border <- TRUE
+      }
+    }
+  }
+  
+  # Assign cell border to let it not be NA in pi
+  if (has_cell_border) {
+    ret[["..group_border"]] <- "left"
   }
   
   # Deal with stub
@@ -1019,6 +1053,7 @@ get_labels <- function(dat, ts){
   #print(ls)
   
   # Let any defined labels override any attribute labels
+  has_cell_border <- FALSE
   for (def in defs) {
 
     if (!is.null(def[["label"]]))
@@ -1027,6 +1062,16 @@ get_labels <- function(dat, ts){
     if (!is.null(def$n) ) {
       ls[[def$var]] <- paste0(ls[[def$var]],  nfmt(def$n))
     }
+    
+    if (!is.null(def[["group_border"]])) {
+      if (def[["group_border"]] == TRUE) {
+        has_cell_border <- TRUE
+      }
+    }
+  }
+  
+  if (has_cell_border) {
+    ls <- c(ls, ..group_border = "..group_border")
   }
   
   # Deal with stub
@@ -1132,6 +1177,11 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
   non_blank_pages <- unique(sb$..page)
   sbst <- subset(pgs, pgs$..page %in% non_blank_pages)
   
+  # If the first blank row is from blank after, then remove it
+  first_page_pos <- get_first_pos(sbst$..page)
+  rm_blank <- first_page_pos & sbst$..blank == "B"
+  sbst <- sbst[!rm_blank,]
+  
   # Split the data frame at the page indicators
   ret <- split(sbst, sbst$..page)
   
@@ -1163,8 +1213,21 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   
   pg <- 1
   counter <- 0
-  offset <- lpg_rows + content_offsets["blank_upper"]
-  ttfl <- content_offsets["upper"] + content_offsets["lower"]
+  offset <- lpg_rows + content_offsets[["blank_upper"]]
+  
+  # If the upper line has name, it means using page_by
+  using_pgby_up <- F
+  using_pgby_low <- F
+  if (is.null(names(content_offsets[["upper"]]))) {
+    ttfl <- content_offsets["upper"] + content_offsets["lower"]
+  } else {
+    using_pgby_up <- T
+    
+    if (!is.null(names(content_offsets[["lower"]]))) {
+      using_pgby_low <- T
+    }
+  }
+  
   
   # User Paging variable
   currentPage <- NA
@@ -1179,6 +1242,12 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
   
   for (i in seq_len(nrow(x))){
     
+    if (using_pgby_up & !using_pgby_low) {
+      ttfl <- content_offsets[["lower"]] + content_offsets[["upper"]][[x$..page_by[i]]]
+    } else if (using_pgby_up & using_pgby_low) {
+      ttfl <- content_offsets[["lower"]][[x$..page_by[i]]] + content_offsets[["upper"]][[x$..page_by[i]]]
+    }
+    
     if (count_row_var) {
       if (is.na(x$..row[i])) {
         counter <- counter + 1
@@ -1192,7 +1261,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       # Exception where last line is equal to number of available lines
       # Don't put the blank row in this case.
       if (counter < (page_size - ttfl)) {  
-        offset <- offset + content_offsets["blank_lower"]
+        offset <- offset + content_offsets[["blank_lower"]]
         #print(paste("Lower Blank:", offset))
       }
     }
@@ -1231,24 +1300,42 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       }
     }
     
+    # print("--------------------------------------")
+    # print(paste0("row: ", i))
+    # print(paste0("counter: ", counter))
+    # print(paste0("ttfl: ", ttfl))
+    # print(paste0("Capacity: ", page_size  - offset - ttfl))
+    # print(paste0("Page before: ", pg))
+    
     # If line count is greater than page size, start a new page
     if ((counter > (page_size  - offset - ttfl)) | userForce) {
       
       # Don't understand why this adjustment is needed.  But it is.
       # Have to figure it out, because it seems wrong.
-      if (pg == 1)
-        page_size <- page_size - 1
+      # if (pg == 1)
+      #   page_size <- page_size - 1
       
       # Increment page count
       pg <- pg + 1
       
       # Reset line counter
-      counter <- 0
-      
+      if (count_row_var) {
+        if (is.na(x$..row[i])) {
+          counter <- 1
+        } else {
+          counter <- x$..row[i]
+        }
+      } else {
+        counter <- 1
+      }
+
       # Set offset to zero on first page
       offset <- 0
 
     }
+    
+    # print(paste0("Page after: ", pg))
+    # print("--------------------------------------")
   
     x$..page[i] <- pg
     # print(pg)

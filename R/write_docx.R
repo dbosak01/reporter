@@ -64,7 +64,8 @@ write_docx <- function(src, pth) {
 # Create DOCX --------------------------------------------------------------
 
 #' @noRd
-create_new_docx <- function(font, font_size, imageCount, imagePaths) {
+create_new_docx <- function(font, font_size, imageCount, imagePaths,
+                            footer_imagePath = NULL, header_imagePath = NULL) {
   
   tdd <- file.path(tempdir(), stri_rand_strings(1, length = 6))
   
@@ -84,6 +85,15 @@ create_new_docx <- function(font, font_size, imageCount, imagePaths) {
   create_endnotes(tdd)
   create_footnotes(tdd)
   create_document_rels(tdd, imageCount, imagePaths)
+  
+  if (!is.null(footer_imagePath)) {
+    create_footer_rels(tdd, length(footer_imagePath), footer_imagePath)
+  }
+  
+  if (!is.null(header_imagePath)) {
+    create_header_rels(tdd, length(header_imagePath), header_imagePath)
+  }
+  
   create_rels(tdd)
   
   # Temporary
@@ -104,6 +114,8 @@ cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types
 	xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
 	<Default Extension="jpeg" ContentType="image/jpeg"/>
+	<Default Extension="png" ContentType="image/png"/>
+	<Default Extension="emf" ContentType="image/emf"/>
 	<Default Extension="rels" 
 	ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
 	<Default Extension="xml" 
@@ -1245,6 +1257,68 @@ create_document_rels <- function(pth, imgCnt, imagePaths) {
   close(f)
 }
 
+create_footer_rels <- function(pth, imgCnt, imagePaths) {
+  
+  imgs <- ""
+  
+  for (i in seq_len(imgCnt)) {
+    ext <- tools::file_ext(imagePaths[[i]])
+    if (ext == "jpg") {
+      ext <- "jpeg" 
+    }
+    
+    imgs <- paste0(imgs, '<Relationship Target="media/imagef', i, '.', ext, '"', 
+                   ' Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"',
+                   ' Id="rIdf', i, '"/>\n')
+    
+  }
+  
+  
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<Relationships
+	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">', imgs, '</Relationships>')
+  
+  
+  nm <- file.path(pth, "word/_rels/footer1.xml.rels")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}
+
+create_header_rels <- function(pth, imgCnt, imagePaths) {
+  
+  imgs <- ""
+  
+  for (i in seq_len(imgCnt)) {
+    ext <- tools::file_ext(imagePaths[[i]])
+    if (ext == "jpg") {
+      ext <- "jpeg" 
+    }
+    
+    imgs <- paste0(imgs, '<Relationship Target="media/imageh', i, '.', ext, '"', 
+                   ' Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"',
+                   ' Id="rIdh', i, '"/>\n')
+    
+  }
+  
+  
+  cnt <- paste0('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n
+<Relationships
+	xmlns="http://schemas.openxmlformats.org/package/2006/relationships">', imgs, '</Relationships>')
+  
+  
+  nm <- file.path(pth, "word/_rels/header1.xml.rels")
+  
+  f <- file(nm, open="w", encoding = "native.enc")
+  
+  writeLines(cnt, f,  useBytes = TRUE) 
+  
+  close(f)
+}
+
 create_rels <- function(pth) {
  
   cnt <- '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1440,7 +1514,8 @@ cell_pct <- function(txt, align = "left", width = NULL) {
 
 #' Bottom border means it is a header row
 #' @noRd
-cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL, bold = FALSE) {
+cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign = NULL, bold = FALSE,
+                     multiple = FALSE) {
   
   al <- ""
   bb <- ""
@@ -1460,17 +1535,31 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
     }
   }
   
-  
-  if (is.null(width)) {
-    ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
-                  para(txt, align),
-                  "</w:tc>\n", collapse = "")
-    
+  # If multiple is TRUE, use para_wp to separate different text with different styles
+  if (multiple == FALSE) {
+    if (is.null(width)) {
+      ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
+                    para(txt, align),
+                    "</w:tc>\n", collapse = "")
+      
+    } else {
+      ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
+                    para(txt, align, bold = bold),
+                    "</w:tc>\n", collapse = "")
+    }
   } else {
-    ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
-                  para(txt, align, bold = bold),
-                  "</w:tc>\n", collapse = "")
+    if (is.null(width)) {
+      ret <- paste0('<w:tc><w:tcPr>', bb, al, '</w:tcPr>', 
+                    para_wp(txt, align),
+                    "</w:tc>\n", collapse = "")
+      
+    } else {
+      ret <- paste0('<w:tc><w:tcPr><w:tcW w:w="', width,'"/>', bb, al, '</w:tcPr>', 
+                    para_wp(txt, align, bold = bold),
+                    "</w:tc>\n", collapse = "")
+    }
   }
+
   
   return(ret)
 }
@@ -1544,6 +1633,119 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
 }
 
 #' @noRd
+para_wp <- function(txt, align = "left", font_size = NULL, bold = FALSE, 
+                    italics = FALSE, indent_left = NA, indent_right = NA, borders = "") {
+  
+  ret <- ""
+  
+  if (align == "centre") {
+    align <- "center"
+  }
+  
+  indent_c <- ""
+  if (!is.na(indent_left) | !is.na(indent_right)) {
+    indent_left <- ifelse(is.na(indent_left), 0, indent_left)
+    indent_right <- ifelse(is.na(indent_right),0,indent_right)
+    
+    indent_c <- sprintf('<w:ind w:left="%s" w:right="%s"/>', indent_left, indent_right)
+  }
+  
+  # Process multiple <wr> tags
+  wr <- para_wr(txt, font_size, bold, italics)
+  
+  ret <- paste0(ret, '<w:p>',
+                '<w:pPr><w:jc w:val="', align, '"/>',
+                '<w:spacing w:after="0"/>',
+                indent_c,
+                borders,
+                '</w:pPr>',
+                wr,
+                "</w:p>\n")
+  
+  return(ret)
+  
+}
+
+#' @noRd
+para_wr <- function(txt, font_size, bold, italics){
+  vl <- encodeDOCX(txt)
+  
+  if (all(nchar(txt) == 0)) {
+    vl <- " "
+  }
+  
+  splt <- strsplit(vl, split = "\n", fixed = TRUE)
+  
+  ret <- ""
+  
+  # 1st loop is for different text
+  for (i in seq_len(length(splt))) {
+    b <- ""
+    if (length(bold) > 1){
+      if (bold[i] == TRUE) {
+        b <-  '<w:b/><w:bCs/>'
+      }
+    } else {
+      if (bold == TRUE) {
+        b <-  '<w:b/><w:bCs/>'
+      }
+    }
+    
+    it <- ""
+    if (length(italics) > 1) {
+      if (italics[i] == TRUE) {
+        it <- '<w:i/><w:iCs/>'
+      }
+    } else {
+      if (italics == TRUE) {
+        it <- '<w:i/><w:iCs/>'
+      }
+    }
+    
+    
+    fs <- ""
+    if (length(font_size) > 1){
+      if (!is.na(font_size[i])) {
+        fs <- paste0('<w:sz w:val="', font_size[i] * 2, 
+                     '"/><w:szCs w:val="', font_size[i] * 2, '"/>')
+      }
+    } else {
+      if (!is.null(font_size)) {
+        fs <- paste0('<w:sz w:val="', font_size[i] * 2, 
+                     '"/><w:szCs w:val="', font_size[i] * 2, '"/>')
+      }
+    }
+    
+    
+    rpr <- ""
+    if (any(!is.na(font_size)) | any(bold == TRUE) | any(italics == TRUE)) {
+      rpr <- paste0('<w:rPr>', b, it, fs, '</w:rPr>')
+    }
+    
+    # 2nd loop is for multiple line in same text
+    for (j in seq_len(length(splt[[i]]))) {
+      if (j == 1){
+        wr <- paste0('<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
+                     '</w:t></w:r>')
+      } else {
+        line_break <- "<w:r><w:br/></w:r>"
+        wr <- paste0(wr, line_break, '<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
+                     '</w:t></w:r>')
+      }
+    }
+    
+    if (substr(wr, 1, 1) != " " & substr(ret, nchar(ret), nchar(ret)) != " ") {
+      sep <- " "
+    } else {
+      sep <- ""
+    }
+    ret <- paste0(ret, sep, wr)
+  }
+  
+  return(ret)
+}
+
+#' @noRd
 run <- function(txt) {
   
   ret <- paste0('<w:r><w:t xml:space="preserve">', encodeDOCX(txt), '</w:t></w:r>', collapse = "")
@@ -1553,7 +1755,8 @@ run <- function(txt) {
 }
 
 #' @noRd
-get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
+get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL,
+                                  cell_border = NULL) {
   
   ret <- ""
   r <- ""
@@ -1561,37 +1764,75 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL) {
   b <- ""
   t <- ""
   
-  if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left", "top"))) {
-    
-    if (row == 1 & any(brdrs %in% c("top", "outside", "body"))) {
-      t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (row == trow & any(brdrs %in% c("bottom", "outside", "body"))) {
-      b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (col == 1 & any(brdrs %in% c("left", "body"))) {
-      l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (col == tcol & any(brdrs %in% c("right", "body"))) {
-      r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-    }
-    
-    if (!is.null(flg)) {
-      if (flg %in% c("L", "B", "A")) {
-        if (col == 1 & any(brdrs %in% c("right", "body"))) {
-          r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
-        }
+  # if (any(brdrs %in% c("bottom", "outside", "all", "body", "right", "left", "top"))) {
+  #   
+  #   if (row == 1 & any(brdrs %in% c("top", "outside", "body"))) {
+  #     t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (row == trow & any(brdrs %in% c("bottom", "outside", "body"))) {
+  #     b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (col == 1 & any(brdrs %in% c("left", "body"))) {
+  #     l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (col == tcol & any(brdrs %in% c("right", "body"))) {
+  #     r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #   }
+  #   
+  #   if (!is.null(flg)) {
+  #     if (flg %in% c("L", "B", "A")) {
+  #       if (col == 1 & any(brdrs %in% c("right", "body"))) {
+  #         r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  #       }
+  #     }
+  #   }
+  #   
+  #   if (b != "" | l != "" | r != "" | t!= "") {
+  #             
+  #     ret <-  paste0('<w:tcBorders>', r, l, t, b,
+  #                    '</w:tcBorders>')
+  #   }
+  # }
+  
+  if ((row == 1 & any(brdrs %in% c("top", "outside", "body"))) |
+      any(cell_border %in% c("top", "outside", "body"))
+      ) {
+    t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (row == trow & any(brdrs %in% c("bottom", "outside", "body")) |
+      any(cell_border %in% c("bottom", "outside", "body"))
+      ) {
+    b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (col == 1 & any(brdrs %in% c("left", "body")) |
+      any(cell_border %in% c("left", "body"))
+      ) {
+    l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (col == tcol & any(brdrs %in% c("right", "body")) |
+      any(cell_border %in% c("right", "body"))
+      ) {
+    r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
+  }
+  
+  if (!is.null(flg)) {
+    if (flg %in% c("L", "B", "A")) {
+      if (col == 1 & any(brdrs %in% c("right", "body"))) {
+        r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
       }
     }
+  }
+  
+  if (b != "" | l != "" | r != "" | t!= "") {
     
-    if (b != "" | l != "" | r != "" | t!= "") {
-              
-      ret <-  paste0('<w:tcBorders>', r, l, t, b,
-                     '</w:tcBorders>')
-    }
+    ret <-  paste0('<w:tcBorders>', r, l, t, b,
+                   '</w:tcBorders>')
   }
 
   

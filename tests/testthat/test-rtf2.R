@@ -3686,6 +3686,496 @@ test_that("rtf2-102: Three level stub and indentation work as expected.", {
   }
 })
 
+
+test_that("rtf2-103: Page footers with one assigned width work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test103.rtf")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "Center footer", right = "Right footer",
+                  width = c(5.5))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
+test_that("rtf2-104: Page footers with multiple assigned widths work as expected.",{
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test104.rtf")
+    
+    dat <- mtcars[,c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      footnotes("This is testing footnote", blank_row = "none")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      titles("Table 1.0") %>%
+      add_content(tbl) %>%
+      page_footer(left = "this is a very long sentence whose length exceeds the limitation of the left part", 
+                  center = "", right = "Right Footer",
+                  width = c(5.5, 0 , 2))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+}
+)
+
+test_that("rtf2-105: Page by with bold label and value works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test105.rtf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-106: Page by with bold label as expected.", {
+  
+  if (dev) {
+    # Label and Value are bold
+    fp <- file.path(base_path, "rtf2/test106.rtf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-107: Page by with bold value as expected.", {
+  
+  if (dev) {
+    # Label and Value are bold
+    fp <- file.path(base_path, "rtf2/test107.rtf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type: ", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-108: Page by with bold long label and value works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test108.rtf")
+
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- "This is a long page by label which should take more than one sentence: "
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = TRUE, blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "rtf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-109: Page by with bold long label works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test109.rtf")
+
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- "This is a long page by label which should take more than one sentence: "
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "rtf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-110: Page by with bold long value works as expected.", {
+
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test110.rtf")
+
+    dat <- iris
+    long_string <- "This is long page by value which should take more than one sentence - "
+    dat$Pgby <- paste0(long_string, dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+
+    long_label <- "This is a long page by label which should take more than one sentence:"
+
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = "Flower Type:", bold = "value", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+
+    rpt <- create_report(fp, output_type = "rtf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-111: Page by with bold long label filling one line works as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test111.rtf")
+    
+    dat <- iris
+    dat$Pgby <- as.character(dat$Species)
+    dat <- dat[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Pgby")]
+    
+    long_label <- "This is a long page by label which should take more: "
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a Page By") %>%
+      page_by(Pgby, label = long_label, bold = "label", blank_row = "none") %>%
+      define(Pgby, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "rtf", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+
+test_that("rtf2-112: Group border works as as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test112.rtf")
+    
+    # Setup
+    arm <- c(rep("A", 3), rep("B", 2), rep("C", 3), rep("D", 2))
+    subjid <- 100:109
+    name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+              "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+              "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+              "Smith, Shaileigh")
+    sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+    age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)
+    
+    
+    # Create data frame
+    df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+    df <- rbind(df, df, df, df)
+    
+    tbl1 <- create_table(df, first_row_blank = FALSE, borders = "outside") %>%
+      define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+             width = 1) %>%
+      define(name, label = "Subject Name", width = 1) %>%
+      define(sex, label = "Sex", n = 10, align = "center") %>%
+      define(age, label = "Age", n = 10) %>%
+      define(arm, label = "Arm",
+             dedupe = TRUE,
+             group_border = TRUE) %>%
+      footnotes("This is the footnote")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz) %>%
+      titles(c("Table 1.0", "This is a table with group border"), align = "center") %>%
+      add_content(tbl1) %>%
+      footnotes(c("This is the footnote 1")) %>%
+      page_header(left = "Test header", right = "Test header") %>%
+      set_margins(top = 1, bottom = 1)
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-113: Group border with blank after works as as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test113.rtf")
+    
+    # Setup
+    arm <- c(rep("A", 3), rep("B", 2), rep("C", 3), rep("D", 2))
+    subjid <- 100:109
+    name <- c("Quintana, Gabriel", "Allison, Blas", "Minniear, Presley",
+              "al-Kazemi, Najwa \nand more and more", "Schaffer, Ashley", "Laner, Tahma",
+              "Perry, Sean", "Crews, Deshawn Joseph", "Person, Ladon",
+              "Smith, Shaileigh")
+    sex <- c("M", "F", "F", "M", "M", "F", "M", "F", "F", "M")
+    age <- c(41, 53, 43, 39, 47, 52, 21, 38, 62, 26)    
+    
+    # Create data frame
+    df <- data.frame(arm, subjid, name, sex, age, stringsAsFactors = FALSE)
+    df <- rbind(df, df, df, df)
+    
+    tbl1 <- create_table(df, first_row_blank = FALSE, borders = "outside") %>%
+      define(subjid, label = "Subject ID for a patient", n = 10, align = "left",
+             width = 1) %>%
+      define(name, label = "Subject Name", width = 1) %>%
+      define(sex, label = "Sex", n = 10, align = "center") %>%
+      define(age, label = "Age", n = 10) %>%
+      define(arm, label = "Arm",
+             dedupe = TRUE,
+             blank_after = TRUE,
+             group_border = TRUE) %>%
+      footnotes("This is the footnote")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz) %>%
+      titles(c("Table 1.0", "This is a table with group border"), align = "center") %>%
+      add_content(tbl1) %>%
+      footnotes(c("This is the footnote 1")) %>%
+      page_header(left = "Test header", right = "Test header") %>%
+      set_margins(top = 1, bottom = 1)
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-114: Center page header works as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test114.rtf")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a center header", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header(left = "", center = "center", right = "right",
+                  width = c(0, 5, 4)) %>%
+      page_footer(left = "Left", center = "center", right = "right",
+                  width = c(3, 4, 2))
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-115: Images in page header/footer work as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test115.rtf")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/logo.png")
+    image_path2 <- file.path(base_path, "data/logo.jpg")
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture")
+      
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header() %>%
+      header_image(image_path, height = 0.5, width = 0.8, align = "left") %>%
+      header_image(image_path, height = 0.6, width = 0.85, align = "right") %>%
+      header_image(c(image_path, image_path2), height = 0.38, width = 0.7, align = "center") %>%
+      page_footer() %>%
+      footer_image(c(image_path2, image_path), height = 0.38, width = 0.7, align = "left") %>%
+      footer_image(image_path, height = 0.5, width = 0.8, align = "right") %>%
+      footer_image(image_path, height = 0.6, width = 0.85, align = "center")
+
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-116: Spanned images in page header/footer work as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test116.rtf")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/span_logo.png")
+
+    tbl <- create_table(dat, borders = "outside") 
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      page_header(width = c(0, 9, 0), left = "No display because width is 0") %>%
+      header_image(image_path, height = 1, width = 7.5, align = "centre") %>%
+      page_footer(width = c(0, 0, 9), center = "No display because width is 0") %>%
+      footer_image(image_path, height = 0.8, width = 7, align = "right")
+
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-117: Return error when header_image/footer_image is used without page_header/page_footer.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test117.rtf")
+    
+    dat <- iris[1:50,]
+    dat <- dat[, c("Species" ,"Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")]
+    
+    image_path <- file.path(base_path, "data/span_logo.png")
+    
+    tbl <- create_table(dat, borders = "outside") 
+    
+    # page_header is not set
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      header_image(image_path, height = 1, width = 7.5, align = "centre")
+
+    expect_error(
+      res <- write_report(rpt),
+      "`page_header` must be used when using `header_image`."
+    )
+    
+    # page_footer is not set
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with a page header picture", header = T) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none") %>%
+      footer_image(image_path, height = 0.8, width = 7, align = "right")
+    
+    expect_error(
+      res <- write_report(rpt),
+      "`page_footer` must be used when using `footer_image`."
+    )
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
 # User Tests --------------------------------------------------------------
 
 test_that("user1: demo table works.", {

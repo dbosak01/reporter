@@ -53,24 +53,91 @@ get_page_header_pdf <- function(rs) {
   cnt <- 0
   pnts <- 0
   
-  hl <- rs$page_header_left
-  hr <- rs$page_header_right
+  if ((!is.null(rs$header_image_left) & is.null(rs$page_header_left)) |
+      (!is.null(rs$header_image_center) & is.null(rs$page_header_center)) |
+      (!is.null(rs$header_image_right) & is.null(rs$page_header_right))) {
+    
+    stop("`page_header` must be used when using `header_image`.")
+  }
+  
+  # Make sure the length is 3, NA will be imputed later.
+  width <- c(rs$page_header_width, rep(NA, 3 - length(rs$page_header_width)))
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$header_image_left)) {
+    image_left <- TRUE
+    hl <- rs$header_image_left
+  } else{
+    hl <- rs$page_header_left
+  }
+  
+  if (!is.null(rs$header_image_right)) {
+    image_right <- TRUE
+    hr <- rs$header_image_right
+  } else {
+    hr <- rs$page_header_right
+  }
+  
+  if (!is.null(rs$header_image_center)) {
+    image_center <- TRUE
+    hc <- rs$header_image_center
+    
+    # Default center cell is not displayed, open it when picture exists
+    if (width[2] == 0) {
+      width[2] <- NA
+    }
+  } else {
+    hc <- rs$page_header_center
+  }
+  
   lh <- rs$row_height
   
   rb <- rs$content_size[["width"]] 
   
   # User controlled width of left column
-  lwdth <- rs$page_header_width
-  if (is.null(lwdth))
-    lwdth <- rs$content_size[["width"]]/2
-  
-  # Calculate right column width
-  rwdth <- rs$content_size[["width"]] - lwdth
+  # lwdth <- rs$page_header_width
+  # if (is.null(lwdth))
+  #   lwdth <- rs$content_size[["width"]]/2
+  # 
+  # # Calculate right column width
+  # rwdth <- rs$content_size[["width"]] - lwdth
   # lpct <- round(5000 * lwdth / rs$content_size[["width"]])
   # rpct <- round(5000 * rwdth / rs$content_size[["width"]])
   
 
-  maxh <- max(length(hl), length(hr))
+  # maxh <- max(length(hl), length(hr))
+  
+  # Calculate the widths
+  total_width <- sum(width, na.rm = T)
+  if (total_width > rs$content_size[["width"]]) {
+    
+    stop(sprintf("Total width of page header %s %s cannot be greater than content width %s %s.",
+                 total_width,
+                 rs$units,
+                 rs$content_size[["width"]],
+                 rs$units))
+    
+  } else {
+    na_num <- sum(is.na(width))
+    imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+    
+    left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+    center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+    right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+    
+    rb1 <- left_width
+    rb2 <- (left_width + center_width)
+    rb3 <- (left_width + center_width + right_width)
+  }
+  
+  hl_num <- ifelse(image_left, length(hl$image_path), length(hl))
+  hc_num <- ifelse(image_center, length(hc$image_path), length(hc))
+  hr_num <- ifelse(image_right, length(hr$image_path) , length(hr))
+  
+  maxh <- max(hl_num, hc_num, hr_num)
 
   if (maxh > 0) {
 
@@ -78,65 +145,158 @@ get_page_header_pdf <- function(rs) {
     par(family = get_font_family(rs$font), ps = rs$font_size)
 
     lyline <- 0 
-    ryline <- 0 
+    ryline <- 0
+    cyline <- 0
     
     for (i in seq(1, maxh)) {
 
-
-      if (length(hl) >= i) {
-
-        # Split strings if they exceed width
-        tmp <- split_string_text(hl[[i]], lwdth, rs$units)
-        
-        
-        for (ln in seq_len(tmp$lines)) {
-        
-          ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
-                                xpos = get_points_left(0, 
-                                                       rb,
-                                                       tmp$widths[ln],
-                                                       units = rs$units),
-                                            ypos = lyline, 
-                                align = "left", 
-                                alignx = 0)
-          lyline <- lyline + lh
+      lcnt <- 0
+      ccnt <- 0
+      rcnt <- 0
+      
+      if (left_width > 0) {
+        if (hl_num >= i) {
+          
+          if (image_left == FALSE) {
+            
+            # Split strings if they exceed width
+            tmp <- split_string_text(hl[[i]], left_width, rs$units)
+            
+            
+            for (ln in seq_len(tmp$lines)) {
+              
+              ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+                                                  xpos = get_points_left(0, 
+                                                                         rb1,
+                                                                         tmp$widths[ln],
+                                                                         units = rs$units),
+                                                  ypos = lyline, 
+                                                  align = "left", 
+                                                  alignx = 0)
+              lyline <- lyline + lh
+            }
+            
+            lcnt <- tmp$lines
+          } else {
+            
+            # Read image
+            if (i == 1) {
+              lnstrt <- ceiling(lyline / lh)
+              lcnt <- round((hl$height * rs$point_conversion) / lh)
+            } else {
+              lnstrt <- lnstrt + ceiling((hl$height * rs$point_conversion)/lh)
+              # From second picture, use ceiling instead of round to leave some
+              # space between pictures
+              lcnt <- lcnt + ceiling((hl$height * rs$point_conversion)/lh)
+            }
+            
+            ret[[length(ret) + 1]] <- page_image(hl$image_path[i],
+                                                 height = hl$height,
+                                                 width = min(hl$width, left_width),
+                                                 align = "left",
+                                                 line_start = lnstrt)
+          }
+        } else {
+          
+          lcnt <- 1
         }
-
-        lcnt <- tmp$lines
-
-      } else {
-        
-        lcnt <- 1
       }
-
-      if (length(hr) >= i) {
-
-        # Split strings if they exceed width
-        tmp2 <- split_string_text(hr[[i]], rwdth, rs$units)
-
-        for (ln in seq_len(tmp2$lines)) {
-          ret[[length(ret) + 1]] <- page_text(tmp2$text[ln], rs$font_size, 
-              xpos = get_points_right(0,
-                                      rb, 
-                                      tmp2$widths[ln], 
-                                      rs$units),
-                                      ypos = ryline, 
-              align = "right", 
-              alignx = rb)
-          ryline <- ryline + lh
+      
+      if (center_width > 0) {
+        if (hc_num >= i) {
+          
+          if (image_center == FALSE) {
+            
+            # Split strings if they exceed width
+            tmp2 <- split_string_text(hc[[i]], center_width, rs$units)
+            
+            for (ln in seq_len(tmp2$lines)) {
+              ret[[length(ret) + 1]] <- page_text(tmp2$text[ln], rs$font_size, 
+                                                  xpos = get_points_center(rb1,
+                                                                           rb2, 
+                                                                           tmp2$widths[ln], 
+                                                                           rs$units),
+                                                  ypos = cyline, 
+                                                  align = "center", 
+                                                  alignx = rb1 + ((rb1 + rb2)/2))
+              cyline <- cyline + lh
+            }
+            
+            ccnt <- tmp2$lines
+          } else {
+            
+            # Read image
+            if (i == 1) {
+              lnstrt <- ceiling(cyline / lh)
+              ccnt <- round((hc$height * rs$point_conversion) / lh)
+            } else {
+              # From second picture, use ceiling instead of round to leave some
+              # space between pictures
+              lnstrt <- lnstrt + ceiling((hc$height * rs$point_conversion)/lh)
+              ccnt <- ccnt + ceiling((hc$height * rs$point_conversion)/lh)
+            }
+            
+            ret[[length(ret) + 1]] <- page_image(hc$image_path[i],
+                                                 height = hc$height,
+                                                 width = min(hc$width, center_width),
+                                                 align = "center",
+                                                 line_start = lnstrt)
+          }
+        } else {
+          ccnt <- 1
         }
-        
-        rcnt <- tmp2$lines
-
-      } else {
-        rcnt <- 1
       }
-
-      if (lcnt > rcnt) {
-        cnt <- cnt + lcnt
-      } else {
-        cnt <- cnt + rcnt
+    
+      if (right_width > 0) {
+        if (hr_num >= i) {
+          
+          if (image_right == FALSE) {
+            # Split strings if they exceed width
+            tmp3 <- split_string_text(hr[[i]], right_width, rs$units)
+            
+            for (ln in seq_len(tmp3$lines)) {
+              ret[[length(ret) + 1]] <- page_text(tmp3$text[ln], rs$font_size, 
+                                                  xpos = get_points_right(rb2,
+                                                                          rb3, 
+                                                                          tmp3$widths[ln], 
+                                                                          rs$units),
+                                                  ypos = ryline, 
+                                                  align = "right", 
+                                                  alignx = rb3)
+              ryline <- ryline + lh
+            }
+            
+            rcnt <- tmp3$lines
+          } else {
+            
+            # Read image
+            if (i == 1) {
+              lnstrt <- ceiling(ryline / lh)
+              rcnt <- round((hr$height * rs$point_conversion) / lh)
+            } else {
+              # From second picture, use ceiling instead of round to leave some
+              # space between pictures
+              lnstrt <- lnstrt + ceiling((hr$height * rs$point_conversion)/lh)
+              rcnt <- rcnt + ceiling((hr$height * rs$point_conversion)/lh)
+            }
+            
+            ret[[length(ret) + 1]] <- page_image(hr$image_path[i],
+                                                 height = hr$height,
+                                                 width = min(hr$width, right_width),
+                                                 align = "right",
+                                                 line_start = lnstrt)
+          }
+        } else {
+          rcnt <- 1
+        }
       }
+      
+      # if (lcnt > rcnt) {
+      #   cnt <- cnt + lcnt
+      # } else {
+      #   cnt <- cnt + rcnt
+      # }
+      cnt <- cnt + max(lcnt, ccnt, rcnt)
       
     }
 
@@ -169,18 +329,74 @@ get_page_footer_pdf <- function(rs) {
   
   conv <- rs$point_conversion
   
-  fl <- rs$page_footer_left
-  fc <- rs$page_footer_center
-  fr <- rs$page_footer_right
+  if ((!is.null(rs$footer_image_left) & is.null(rs$page_footer_left)) |
+      (!is.null(rs$footer_image_right) & is.null(rs$page_footer_right)) |
+      (!is.null(rs$footer_image_center) & is.null(rs$page_footer_center))) {
+    
+    stop("`page_footer` must be used when using `footer_image`.")
+  }
+  
+  image_left <- FALSE
+  image_center <- FALSE
+  image_right <- FALSE
+  
+  if (!is.null(rs$footer_image_left)) {
+    fl <- rs$footer_image_left
+    image_left <- TRUE
+  } else {
+    fl <- rs$page_footer_left
+  }
+  
+  if (!is.null(rs$footer_image_center)) {
+    fc <- rs$footer_image_center
+    image_center <- TRUE
+  } else {
+    fc <- rs$page_footer_center
+  }
+  
+  if (!is.null(rs$footer_image_right)) {
+    fr <- rs$footer_image_right
+    image_right <- TRUE
+  } else {
+    fr <- rs$page_footer_right
+  }
+  
   lh <- rs$row_height
+  
+  fl_num <- ifelse(image_left, length(fl$image_path), length(fl))
+  fc_num <- ifelse(image_center, length(fc$image_path), length(fc))
+  fr_num <- ifelse(image_right, length(fr$image_path) , length(fr))
 
-  maxf <- max(length(fl), length(fc), length(fr))
+  maxf <- max(fl_num, fc_num, fr_num)
 
   if (maxf > 0) {
-
-    rb3 <- rs$content_size[["width"]]
-    rb1 <- round(rb3 / 3)
-    rb2 <- round(rb1 * 2)
+    
+    width <- rs$page_footer_width
+    
+    # Make sure the length is 3
+    width <- c(width, rep(NA, 3 - length(width)))
+    
+    total_width <- sum(width, na.rm = T)
+    if (total_width > rs$content_size[["width"]]) {
+      
+      stop(sprintf("Total width of page footer %s %s cannot be greater than content width %s %s.",
+                   total_width,
+                   rs$units,
+                   rs$content_size[["width"]],
+                   rs$units))
+      
+    } else {
+      na_num <- sum(is.na(width))
+      imputed_width <- (rs$content_size[["width"]] - total_width) / na_num
+      
+      left_width <- ifelse(is.na(width[1]), imputed_width, width[1])
+      center_width <- ifelse(is.na(width[2]), imputed_width, width[2])
+      right_width <- ifelse(is.na(width[3]), imputed_width, width[3])
+      
+      rb1 <- left_width
+      rb2 <- (left_width + center_width)
+      rb3 <- (left_width + center_width + right_width)
+    }
     
     tmp1 <- list()
     tmp2 <- list()
@@ -193,40 +409,70 @@ get_page_footer_pdf <- function(rs) {
     # First get all wraps
     for (i in seq(1, maxf)) {
 
+      lcnt <- 0
+      ccnt <- 0
+      rcnt <- 0
+      
+      if (fl_num >= i & left_width > 0) {
 
-      if (length(fl) >= i) {
-
-        # Split strings if they exceed width
-        tmp1[[length(tmp1) + 1]] <- split_string_text(fl[[i]], 
-                                    rs$content_size[["width"]]/3, rs$units)
-        
-        lcnt <- tmp1[[length(tmp1)]]$lines
+        if (image_left == FALSE) {
+          # Split strings if they exceed width
+          tmp1[[length(tmp1) + 1]] <- split_string_text(fl[[i]], left_width, rs$units)
+          
+          lcnt <- tmp1[[length(tmp1)]]$lines
+        } else {
+          if (i == 1) {
+            # Get image lines
+            lcnt <- round((fl$height * rs$point_conversion) / lh)
+          } else {
+            # From second picture, use ceiling instead of round to leave some
+            # space between pictures
+            lcnt <- lcnt + ceiling((fl$height * rs$point_conversion) / lh)
+          }
+        }
         
       } else {
-
         lcnt <- 1
       }
 
-      if (length(fc) >= i) {
+      if (fc_num >= i & center_width > 0) {
 
-        # Split strings if they exceed width
-        tmp2[[length(tmp2) + 1]] <- split_string_text(fc[[i]], 
-                                    rs$content_size[["width"]]/3, rs$units)
-        
-        ccnt <- tmp2[[length(tmp2)]]$lines
+        if (image_center == FALSE) {
+          # Split strings if they exceed width
+          tmp2[[length(tmp2) + 1]] <- split_string_text(fc[[i]], center_width, rs$units)
+          
+          ccnt <- tmp2[[length(tmp2)]]$lines
+          
+        } else {
+          if (i == 1) {
+            # Get image lines
+            ccnt <- round((fc$height * rs$point_conversion) / lh)
+          } else {
+            # From second picture, use ceiling instead of round to leave some
+            # space between pictures
+            ccnt <- ccnt + ceiling((fc$height * rs$point_conversion) / lh)
+          }
+        }
       } else {
-
         ccnt <- 1
       }
 
-      if (length(fr) >= i) {
+      if (fr_num >= i & right_width > 0) {
 
-        tmp3[[length(tmp3) + 1]] <- split_string_text(fr[[i]], 
-                                 rs$content_size[["width"]]/3, rs$units)
-        
-        rcnt <- tmp3[[length(tmp3)]]$lines
+        if (image_right == FALSE) {
+          tmp3[[length(tmp3) + 1]] <- split_string_text(fr[[i]], right_width, rs$units)
+          
+          rcnt <- tmp3[[length(tmp3)]]$lines
+    
+        } else {
+          if (i == 1) {
+            # Get image lines
+            rcnt <- round((fr$height * rs$point_conversion) / lh)
+          } else {
+            rcnt <- rcnt + ceiling((fr$height * rs$point_conversion) / lh)
+          }
+        }
       } else {
-
         rcnt <- 1
       }
 
@@ -244,60 +490,114 @@ get_page_footer_pdf <- function(rs) {
     cyline <- sy
     ryline <- sy
     
-    # Then create pdf text
-    for (i in seq(1, length(tmp1))) {
+    # Then create pdf text or image
     
-        
-        
-      for (ln in seq_len(tmp1[[i]]$lines)) {
-        
-        ret[[length(ret) + 1]] <- page_text(tmp1[[i]]$text[ln], rs$font_size, 
-                                            xpos = get_points_left(0, 
-                                                          rb1,
-                                                          tmp1[[i]]$widths[ln],
-                                                          units = rs$units),
-                                            ypos = lyline, 
-                                            align = "left",
-                                            alignx = 0)
-        lyline <- lyline + lh
+    if (left_width > 0) {
+      if (image_left == FALSE) {
+        # Write text
+        for (i in seq(1, length(tmp1))) {
+          for (ln in seq_len(tmp1[[i]]$lines)) {
+            
+            ret[[length(ret) + 1]] <- page_text(tmp1[[i]]$text[ln], rs$font_size, 
+                                                xpos = get_points_left(0, 
+                                                                       rb1,
+                                                                       tmp1[[i]]$widths[ln],
+                                                                       units = rs$units),
+                                                ypos = lyline, 
+                                                align = "left",
+                                                alignx = 0)
+            lyline <- lyline + lh
+          }
+          
+        }
+      } else {
+        # Write image
+        for (i in 1:fl_num){
+          if (i == 1){
+            lnstrt <- ceiling(lyline / lh)
+          } else {
+            lnstrt <- lnstrt + ceiling(fl$height * rs$point_conversion/lh)
+          }
+          
+          ret[[length(ret) + 1]] <- page_image(fl$image_path[i],
+                                               height = fl$height,
+                                               width = min(fl$width, left_width),
+                                               align = "left",
+                                               line_start = lnstrt)
+        }
       }
-
     }
     
-    for (i in seq(1, length(tmp2))) {
-      
-        
+    if (center_width > 0) {
+      if (image_center == FALSE) {
+        # Write text
+        for (i in seq(1, length(tmp2))) {}
         for (ln in seq_len(tmp2[[i]]$lines)) {
           
           ret[[length(ret) + 1]] <- page_text(tmp2[[i]]$text[ln], rs$font_size, 
                                               xpos = get_points_center(rb1, 
-                                                            rb2,
-                                                            tmp2[[i]]$widths[ln],
-                                                            units = rs$units),
+                                                                       rb2,
+                                                                       tmp2[[i]]$widths[ln],
+                                                                       units = rs$units),
                                               ypos = cyline, 
                                               align = "center",
                                               alignx = rb1 + ((rb2 - rb1)/2))
           cyline <- cyline + lh
         }
-    }
-      
-    for (i in seq(1, length(tmp3))) {
-        
-        
-      for (ln in seq_len(tmp3[[i]]$lines)) {
-        
-        ret[[length(ret) + 1]] <- page_text(tmp3[[i]]$text[ln], rs$font_size, 
-                                            xpos = get_points_right(rb2, 
-                                                                    rb3,
-                                                                    tmp3[[i]]$widths[ln],
-                                                                    units = rs$units),
-                                            ypos = ryline, 
-                                            align = "right",
-                                            alignx = rb3)
-        ryline <- ryline + lh
+      } else {
+        # Write image
+        for (i in 1:fc_num){
+          if (i == 1) {
+            lnstrt <- ceiling(cyline / lh)
+          } else {
+            lnstrt <- lnstrt + ceiling((fc$height * rs$point_conversion)/lh)
+          }
+          
+          ret[[length(ret) + 1]] <- page_image(fc$image_path[i],
+                                               height = fc$height,
+                                               width = min(fc$width, center_width),
+                                               align = "center",
+                                               line_start = lnstrt)
+        }
       }
-        
     }
+    
+    if (right_width > 0) {
+      if (image_right == FALSE) {
+        # Write text
+        for (i in seq(1, length(tmp3))) {
+          for (ln in seq_len(tmp3[[i]]$lines)) {
+            
+            ret[[length(ret) + 1]] <- page_text(tmp3[[i]]$text[ln], rs$font_size, 
+                                                xpos = get_points_right(rb2, 
+                                                                        rb3,
+                                                                        tmp3[[i]]$widths[ln],
+                                                                        units = rs$units),
+                                                ypos = ryline, 
+                                                align = "right",
+                                                alignx = rb3)
+            ryline <- ryline + lh
+          }
+          
+        }
+      } else {
+        # Write image
+        for (i in 1:fr_num){
+          if (i == 1) {
+            lnstrt <- ceiling(ryline / lh)
+          } else {
+            lnstrt <- lnstrt + ceiling((fr$height * rs$point_conversion)/lh)
+          }
+          
+          ret[[length(ret) + 1]] <- page_image(fr$image_path[i],
+                                               height = fr$height,
+                                               width = min(fr$width, right_width),
+                                               align = "right",
+                                               line_start = lnstrt)
+        }
+      }
+    }
+
   }
   
   if (any(rs$page_footer_blank_row == "above"))
@@ -2028,31 +2328,213 @@ get_page_by_pdf <- function(pgby, width, value, rs, talgn, ystart = 0,
       cnt <- cnt + 1
       pnts <- pnts + lh
     }
-
-
-    vl <- paste0( pgby$label, " ", value)
-
-    tmp <- split_string_text(vl, width, rs$units)
     
-    dev.off()
-    
-    for (ln in seq_len(tmp$lines)) {
+    if (pgby$bold %in% c(TRUE, FALSE)) {
       
-      ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
-                                          bold = FALSE,
-                                          xpos = get_points(lb, 
-                                                            rb,
-                                                            tmp$widths[ln],
-                                                            units = rs$units,
-                                                            align = pgby$align),
-                                          ypos = yline)
-      yline <- yline + lh
-      cnt <- cnt + 1
-      pnts <- pnts + lh
+      if (substr(pgby$label, nchar(pgby$label), nchar(pgby$label)) != " "){
+        sep <- " "
+      } else {
+        sep <- ""
+      }
+      
+      vl <- paste0( pgby$label, sep, value)
+      
+      tmp <- split_string_text(vl, width, rs$units)
+      
+      
+      for (ln in seq_len(tmp$lines)) {
+        
+        x_adjust <- 0
+        
+        if (pgby$bold == TRUE & pgby$align == "right") {
+          x_adjust <- -3
+        }
+        
+        ret[[length(ret) + 1]] <- page_text(tmp$text[ln], rs$font_size, 
+                                            bold = pgby$bold,
+                                            xpos = get_points(lb, 
+                                                              rb,
+                                                              tmp$widths[ln],
+                                                              units = rs$units,
+                                                              align = pgby$align) + x_adjust,
+                                            ypos = yline)
+        yline <- yline + lh
+        cnt <- cnt + 1
+        pnts <- pnts + lh
+      }
+    } else if (pgby$bold %in% c("label", "value")) {
+      
+      label_bold <- ifelse(pgby$bold == "label", TRUE, FALSE)
+      value_bold <- ifelse(pgby$bold == "value", TRUE, FALSE)
+      
+      # Process label first
+      tmp_label <- split_string_text(pgby$label, width, rs$units)
+      last_label_width <- tmp_label$widths[length(tmp_label$widths)]
+      
+      # First value split with remaining width
+      tmp_value <- split_string_text(value, width - last_label_width, rs$units)
+      
+      # If the first part is less than remaining with, it means value will 
+      # be concatenated to label in a line; otherwise, the value will start a new line
+      if (tmp_value$widths[1] <= width - last_label_width) {
+        first_value_width <- tmp_value$widths[1]
+        
+        for (ln in seq_len(tmp_label$lines)) {
+          
+          if (ln < tmp_label$lines) {
+            ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                bold = label_bold,
+                                                xpos = get_points(lb, 
+                                                                  rb,
+                                                                  tmp_label$widths[ln],
+                                                                  units = rs$units,
+                                                                  align = pgby$align),
+                                                ypos = yline)
+          } else {
+            # ----------------------------------------------------------- #
+            # Last label and first value are processed together
+            # ----------------------------------------------------------- #
+            
+            # Adjust xpos of value for some scenarios
+            x_value_adjust <- 0
+            
+            # The second label and value are too close
+            # And center label and value are too close
+            if ( (ln > 1) |
+                 (label_bold & pgby$align %in% c("center", "centre")) |
+                 (ln == 1 & label_bold & pgby$align == "left")
+                 ) {
+              x_value_adjust <- 6
+            }
+            
+            if (pgby$align == "left") {
+              # ---- Label ---- # 
+              ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                  bold = label_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_label$widths[ln],
+                                                                    units = rs$units,
+                                                                    align = pgby$align),
+                                                  ypos = yline)
+              
+              # ---- Value ---- #
+              ret[[length(ret) + 1]] <- page_text(tmp_value$text[1], rs$font_size, 
+                                                  bold = value_bold,
+                                                  xpos = get_points(lb + last_label_width, 
+                                                                    rb,
+                                                                    tmp_value$widths[1],
+                                                                    units = rs$units,
+                                                                    align = pgby$align) + x_value_adjust,
+                                                  ypos = yline)
+              
+            } else if (pgby$align == c("right")) {
+              # ---- Label ---- # 
+              x_label_right_adjust <- ifelse(label_bold, 4, 0)
+              ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                  bold = label_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_label$widths[ln] + first_value_width,
+                                                                    units = rs$units,
+                                                                    align = pgby$align) - x_label_right_adjust,
+                                                  ypos = yline)
+              # ---- Value ---- #
+              ret[[length(ret) + 1]] <- page_text(tmp_value$text[1], rs$font_size, 
+                                                  bold = value_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_value$widths[1],
+                                                                    units = rs$units,
+                                                                    align = pgby$align) + x_value_adjust,
+                                                  ypos = yline)
+              
+            } else if (pgby$align  %in% c("center", "centre")) {
+              # ---- Label ---- # 
+              ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                                  bold = label_bold,
+                                                  xpos = get_points(lb, 
+                                                                    rb,
+                                                                    tmp_label$widths[ln] + first_value_width,
+                                                                    units = rs$units,
+                                                                    align = pgby$align),
+                                                  ypos = yline)
+              # ---- Value ---- #
+              label_value_width <- tmp_label$widths[ln] + first_value_width
+              xpos_value <- cpoints(lb + ((rb - lb)/ 2) - (label_value_width/ 2) + tmp_label$widths[ln], rs$units) + 1
+              
+              ret[[length(ret) + 1]] <- page_text(tmp_value$text[1], rs$font_size, 
+                                                  bold = value_bold,
+                                                  xpos = xpos_value + x_value_adjust,
+                                                  ypos = yline)
+            }
+          }
+          yline <- yline + lh
+          cnt <- cnt + 1
+          pnts <- pnts + lh
+        }
+        
+        # Second value split with whole width
+        remain_value <- trimws(sub(tmp_value$text[1], "", value), which = "left")
+        if (nchar(remain_value) > 0) {
+          tmp_value2 <- split_string_text(remain_value, width, rs$units)
+          
+          tmp_value$text <- c(tmp_value$text[1], tmp_value2$text)
+          tmp_value$lines <- 1 + tmp_value2$lines
+          
+          for (ln in 2:tmp_value$lines) {
+            
+            ret[[length(ret) + 1]] <- page_text(tmp_value$text[ln], rs$font_size,
+                                                bold = value_bold,
+                                                xpos = get_points(lb, 
+                                                                  rb,
+                                                                  tmp_value$widths[ln],
+                                                                  units = rs$units,
+                                                                  align = pgby$align),
+                                                ypos = yline)
+            
+            yline <- yline + lh
+            cnt <- cnt + 1
+            pnts <- pnts + lh
+          }
+        }
+        
+      } else {
+        # Case when Value starts a new line in beginning
+        for (ln in seq_len(tmp_label$lines)) {
+          ret[[length(ret) + 1]] <- page_text(tmp_label$text[ln], rs$font_size, 
+                                              bold = label_bold,
+                                              xpos = get_points(lb, 
+                                                                rb,
+                                                                tmp_label$widths[ln],
+                                                                units = rs$units,
+                                                                align = pgby$align),
+                                              ypos = yline)
+          yline <- yline + lh
+          cnt <- cnt + 1
+          pnts <- pnts + lh
+        }
+        
+        tmp_value <- split_string_text(value, width, rs$units)
+        for (ln in seq_len(tmp_value$lines)) {
+          ret[[length(ret) + 1]] <- page_text(tmp_value$text[ln], rs$font_size,
+                                              bold = value_bold,
+                                              xpos = get_points(lb, 
+                                                                rb,
+                                                                tmp_value$widths[ln],
+                                                                units = rs$units,
+                                                                align = pgby$align),
+                                              ypos = yline)
+          
+          yline <- yline + lh
+          cnt <- cnt + 1
+          pnts <- pnts + lh
+        }
+      }
     }
     
+    dev.off()
 
-    
     if (pgby$blank_row %in% c("below", "both")) {
       
       

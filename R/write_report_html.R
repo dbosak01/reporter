@@ -155,6 +155,7 @@ get_html_document <- function(rs) {
                                  "border-collapse: collapse;",
                                  "}")
   ret[length(ret) + 1] <- paste0("td {padding:0px 2px 0px 2px;}")
+  ret[length(ret) + 1] <- paste0("tbody td {vertical-align: top;}")
   ret[length(ret) + 1] <- "</style>"
   
 

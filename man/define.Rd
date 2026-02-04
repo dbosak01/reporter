@@ -23,7 +23,8 @@ define(
   indent = NULL,
   label_row = FALSE,
   standard_eval = FALSE,
-  style = NULL
+  style = NULL,
+  group_border = FALSE
 )
 }
 \arguments{
@@ -119,6 +120,8 @@ value(s) using a variable.}
 \item{style}{A \code{\link{cell_style}} object that defines the desired
 style for this column.  The cell style object can be used to define 
 conditional styling.}
+
+\item{group_border}{Add bottom border in the end of a group. Default is FALSE.}
 }
 \value{
 The modified table spec.

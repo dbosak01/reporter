@@ -1428,6 +1428,46 @@ clear_labels <- Vectorize(function(vect, bvect, tw) {
   return(ret)
 }, USE.NAMES = FALSE)
 
+#' Add cell border indicator
+#' @noRd
+add_group_border_ind <- function(df, vars, border = "bottom"){
+  
+  df$..group_border <- rep("", nrow(df))
+  for (i in vars) {
+    last_pos <- get_last_pos(df[[i]])
+    df$..group_border[last_pos] <- border
+  }
+  
+  return(df)
+}
+
+#' Return the last position logical value of a group
+#' @noRd
+get_last_pos <- function(x) {
+  # Initialize all as FALSE
+  result <- logical(length(x))
+  
+  # Mark TRUE where the next value is different or at the end
+  result[c(which(x[-length(x)] != x[-1]), length(x))] <- TRUE
+  
+  return(result)
+}
+
+#' Return the first position logical value of a group
+#' @noRd
+get_first_pos <- function(x){
+  # Initialize all as FALSE
+  result <- logical(length(x))
+  
+  # Mark TRUE where the next value is different
+  result <- x[-length(x)] != x[-1]
+  
+  # The first one is always TRUE
+  result <- c(TRUE, result)
+  
+  return(result)
+}
+
 # Sizing utilities --------------------------------------------------------
 
 #' @noRd

@@ -208,7 +208,9 @@ characters and lines per unit of measure manually.
 Other report: 
 \code{\link{add_content}()},
 \code{\link{create_report}()},
+\code{\link{footer_image}()},
 \code{\link{footnotes}()},
+\code{\link{header_image}()},
 \code{\link{page_by}()},
 \code{\link{page_footer}()},
 \code{\link{page_header}()},

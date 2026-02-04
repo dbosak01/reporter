@@ -267,7 +267,7 @@ paginate_content_docx <- function(rs, ls) {
         blnks <- c()
         bl <- rs$body_line_count - last_page_lines - boff
         if (bl > 0)
-          blnks <- rep(rs$blank_row, bl)
+          blnks <- rep(rs$blank_row_below, bl)
 
         last_page <- append(last_page, blnks)
         last_page_lines <- 0
@@ -313,7 +313,8 @@ write_content_docx <- function(rs, hdr, body, pt) {
   
   
   # Create new document in temp location
-  tf <- create_new_docx(rs$font, rs$font_size, body$imageCount, body$imagePaths)
+  tf <- create_new_docx(rs$font, rs$font_size, body$imageCount, body$imagePaths, 
+                        rs$page_template$page_footer$image_path, rs$page_template$page_header$image_path)
   
   # Write out header
   create_header(tf, rs$page_template$page_header$docx)
@@ -330,6 +331,34 @@ write_content_docx <- function(rs, hdr, body, pt) {
   
   
  # writeLines(body, con = f, useBytes = TRUE)
+  
+  # Copy images to document folder for footer
+  f_imgCnt <- 0
+  if (!is.null(rs$page_template$page_footer$image_path)) {
+    for (im in rs$page_template$page_footer$image_path) { 
+      f_imgCnt <- f_imgCnt + 1
+      ext <- tools::file_ext(im)
+      if (ext == "jpg") {
+        ext <- "jpeg"
+      }
+      ifp <- file.path(tf, paste0("word/media/imagef", f_imgCnt, ".", ext))
+      file.copy(im, ifp)   
+    }
+  }
+  
+  # Copy images to document folder for header
+  h_imgCnt <- 0
+  if (!is.null(rs$page_template$page_header$image_path)) {
+    for (im in rs$page_template$page_header$image_path) { 
+      h_imgCnt <- h_imgCnt + 1
+      ext <- tools::file_ext(im)
+      if (ext == "jpg") {
+        ext <- "jpeg"
+      }
+      ifp <- file.path(tf, paste0("word/media/imageh", h_imgCnt, ".", ext))
+      file.copy(im, ifp)   
+    }
+  }
   
   for (cont in body$pages) {
     
@@ -586,6 +615,17 @@ page_setup_docx <- function(rs) {
   rs$blank_row <- paste0('<w:p><w:pPr>
               				<w:spacing w:after="8" w:line="', round(rh * conv) + radj,
               				'" w:lineRule="auto"/>
+              				<w:contextualSpacing/>
+              				<w:rPr>
+              					<w:sz w:val="', rs$font_size * 2, '"/>
+              				</w:rPr>
+              			</w:pPr></w:p>\n')
+  
+  # This is for adding extra blanks after the table, left more buffer to prevent from
+  # unexpected page break
+  rs$blank_row_below <- paste0('<w:p><w:pPr>
+              				<w:spacing w:after="8" w:line="', round(rh * conv) + radj - 3,
+                         '" w:lineRule="auto"/>
               				<w:contextualSpacing/>
               				<w:rPr>
               					<w:sz w:val="', rs$font_size * 2, '"/>
