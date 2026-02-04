@@ -11,7 +11,8 @@ page_by(
   align = "left",
   blank_row = "below",
   borders = "none",
-  format = NULL
+  format = NULL,
+  bold = FALSE
 )
 }
 \arguments{
@@ -39,7 +40,12 @@ and DOCX reports.}
 
 \item{format}{The format to use for the page by column data.  The format can 
 be a string format, a formatting function, a lookup list, a user-defined
-format, or a formatting list. 
+format, or a formatting list.}
+
+\item{bold}{A parameter to bold the page by text. Valid values are FALSE, 
+TRUE, 'label' or 'value'. Default is FALSE. TRUE to bold both label and value,
+'label' to bold only label, 'value' to bold only value. This parameter only
+applies to variable-width RTF, HTML, PDF, and DOCX output types.
 All formatting is performed by the \code{\link[fmtr]{fapply}} function from
 the \code{\link[fmtr]{fmtr}} package.  For 
 a list of common formatting codes, see \link[fmtr]{FormattingStrings}.}
@@ -182,7 +188,9 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 Other report: 
 \code{\link{add_content}()},
 \code{\link{create_report}()},
+\code{\link{footer_image}()},
 \code{\link{footnotes}()},
+\code{\link{header_image}()},
 \code{\link{options_fixed}()},
 \code{\link{page_footer}()},
 \code{\link{page_header}()},

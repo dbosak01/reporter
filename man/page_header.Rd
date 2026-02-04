@@ -4,7 +4,14 @@
 \alias{page_header}
 \title{Add a page header}
 \usage{
-page_header(x, left = "", right = "", blank_row = "none", width = NULL)
+page_header(
+  x,
+  left = "",
+  right = "",
+  blank_row = "none",
+  width = NULL,
+  center = ""
+)
 }
 \arguments{
 \item{x}{The report object.}
@@ -18,9 +25,14 @@ of strings.}
 \item{blank_row}{Whether to create a blank row below the page header.
 Valid values are 'below' and 'none'.  Default is 'none'.}
 
-\item{width}{The width of the left column of the page header, in 
-report units of measure.  The right column will adjust automatically
-to equal the page width.}
+\item{width}{Widths for left, center, and right. If only one value is assigned,
+it would be set as left width, if only two values are assigned, they would be
+set as left and center by order. The rest empty width would be imputed as the
+average of the rest of page width. If a width is set to 0, then the cell won't
+be created.}
+
+\item{center}{The center page header text.  May be a single string or a vector
+of strings. Default is not display.}
 }
 \value{
 The modified report specification.
@@ -97,7 +109,9 @@ writeLines(readLines(tmp, encoding = "UTF-8"))
 Other report: 
 \code{\link{add_content}()},
 \code{\link{create_report}()},
+\code{\link{footer_image}()},
 \code{\link{footnotes}()},
+\code{\link{header_image}()},
 \code{\link{options_fixed}()},
 \code{\link{page_by}()},
 \code{\link{page_footer}()},
