@@ -12,7 +12,7 @@ bolding on page-by text.  Has options to bold label, value, or both.
 * Improved page breaking when page by label or value is very long.
 * Improved page breaking in some special situations, especially on DOCX.
 * Fixed bug on DOCX `page_footer()` when there are multiple rows.
-* Allowed PNG image files on DOCX.
+* Allow user to insert PNG image files on DOCX, RTF, and HTML output types.
 * Removed blank group row when it appears at the top of a page.
 * Fixed vertical alignment on HTML. 
 

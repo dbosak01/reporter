@@ -98,4 +98,5 @@ write_report(rpt)
 <img src="../man/images/e14b.png" alt="Page break pg 2"/>
 <img src="../man/images/e14c.png" alt="Page break pg 3"/>
   
-Next: [More Examples](reporter-more.html)
+Next: [Example 15: Header and Footer Images](reporter-hfimage.html)
+

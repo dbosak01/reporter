@@ -2022,9 +2022,12 @@ page_by <- function(x, var, label = NULL, align = "left",
 #' widths to zero.
 #' 
 #' See the \code{\link{page_header}} function for more information on
-#' setting header column widths.
+#' setting header column widths.  For a demonstration of 
+#' a header image insertion, see \code{vignette("reporter-hfimage")}.
 #' @param x The report object.
-#' @param image_path The path of image file.
+#' @param image_path The path of image file. Function accepts JPG images 
+#' for RTF, DOCX, PDF, and HTML output types. Function also accepts 
+#' PNG images for RTF, DOCX, and HTML output types.
 #' @param height Desired height of the image, in the report units of measure.
 #' @param width Desired width of the image, in the report units of measure.
 #' @param align Alignment of the image. Valid values are "left", "right", 
@@ -2093,10 +2096,13 @@ header_image <- function(x, image_path, height, width, align = "left") {
 #' widths to zero.
 #' 
 #' See the \code{\link{page_footer}} function for more information on
-#' setting footer column widths.
+#' setting footer column widths.  For a demonstration of 
+#' a header image insertion, see \code{vignette("reporter-hfimage")}.
 #' 
 #' @param x The report object to insert the image into.
-#' @param image_path The path of image file.
+#' @param image_path The path of image file. Function accepts JPG images 
+#' for RTF, DOCX, PDF, and HTML output types. Function also accepts 
+#' PNG images for RTF, DOCX, and HTML output types.
 #' @param height Desired height of the image, in the report units of measure.
 #' @param width Desired width of the image, in the report units of measure.
 #' @param align Alignment of the image in the page footer. Valid values are 

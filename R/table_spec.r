@@ -372,7 +372,10 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' @param style A \code{\link{cell_style}} object that defines the desired
 #' style for this column.  The cell style object can be used to define 
 #' conditional styling.
-#' @param group_border Add bottom border in the end of a group. Default is FALSE.
+#' @param group_border Adds a horizontal border at the end of a group. 
+#' Valid values are TRUE or FALSE. Default is FALSE. The group border is
+#' another way to separate analysis groups, and can be used in addition
+#' to or instead of the "blank_before" and "blank_after" parameters.
 #' @return The modified table spec.
 #' @family table
 #' @examples

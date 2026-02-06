@@ -9,7 +9,9 @@ footer_image(x, image_path, height, width, align = "left")
 \arguments{
 \item{x}{The report object to insert the image into.}
 
-\item{image_path}{The path of image file.}
+\item{image_path}{The path of image file. Function accepts JPG images 
+for RTF, DOCX, PDF, and HTML output types. Function also accepts 
+PNG images for RTF, DOCX, and HTML output types.}
 
 \item{height}{Desired height of the image, in the report units of measure.}
 
@@ -52,7 +54,8 @@ align the image "center" and set the left and right page header column
 widths to zero.
 
 See the \code{\link{page_footer}} function for more information on
-setting footer column widths.
+setting footer column widths.  For a demonstration of 
+a header image insertion, see \code{vignette("reporter-hfimage")}.
 }
 \seealso{
 Other report: 

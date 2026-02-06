@@ -76,6 +76,9 @@ The image will then appear at the bottom of each page."><meta property="og:image
       <a href="../articles/reporter-break.html">Example 14: Page Break</a>
     </li>
     <li>
+      <a href="../articles/reporter-hfimage.html">Example 15: Header and Footer Images</a>
+    </li>
+    <li>
       <a href="../articles/reporter-more.html">More Examples</a>
     </li>
     <li>
@@ -130,15 +133,17 @@ The image will then appear at the bottom of each page.</p>
 
 
 <dt id="arg-image-path">image_path<a class="anchor" aria-label="anchor" href="#arg-image-path"></a></dt>
-<dd><p>The path of image file.</p></dd>
+<dd><p>The path of image file. Function accepts JPG images
+for RTF, DOCX, PDF, and HTML output types. Function also accepts
+PNG images for RTF, DOCX, and HTML output types.</p></dd>
 
 
 <dt id="arg-height">height<a class="anchor" aria-label="anchor" href="#arg-height"></a></dt>
-<dd><p>Desired height of the image.  This parameter is required.</p></dd>
+<dd><p>Desired height of the image, in the report units of measure.</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
-<dd><p>Desired width of the image.  This parameter is required.</p></dd>
+<dd><p>Desired width of the image, in the report units of measure.</p></dd>
 
 
 <dt id="arg-align">align<a class="anchor" aria-label="anchor" href="#arg-align"></a></dt>
@@ -173,7 +178,8 @@ for a wide image. For instance, to create a banner image under the entire report
 align the image "center" and set the left and right page header column
 widths to zero.</p>
 <p>See the <code><a href="page_footer.html">page_footer</a></code> function for more information on
-setting footer column widths.</p>
+setting footer column widths.  For a demonstration of
+a header image insertion, see <code><a href="../articles/reporter-hfimage.html">vignette("reporter-hfimage")</a></code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
