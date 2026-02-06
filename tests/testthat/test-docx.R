@@ -2840,6 +2840,7 @@ test_that("docx-80: Plot with header/footer images works as expected.", {
     fp <- file.path(base_path, "docx/test80.docx")
     
     p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    image_path <- file.path(base_path, "data/logo.jpg")
     
     plt <- create_plot(p, height = 4, width = 8, borders = c("none"))
     
