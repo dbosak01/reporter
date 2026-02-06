@@ -595,7 +595,7 @@ get_col_widths_variable <- function(dat, ts, labels, font,
                                font_size, uom, gutter_width,
                                merge_label_row = TRUE) {
   
-  
+  dat_orig <- dat
   defs <- ts$col_defs
   if (uom == "cm") {
     #12.7
@@ -723,7 +723,7 @@ get_col_widths_variable <- function(dat, ts, labels, font,
   #print(ret)
   
   # Let widths on orig df override defaults
-  orig <- widths(dat)
+  orig <- widths(dat_orig)
   for (nm in names(orig)) {
     ret[[nm]] <- orig[[nm]]
   }

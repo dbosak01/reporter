@@ -656,8 +656,9 @@ get_page_footer_docx <- function(rs) {
       cnt <- cnt + max(lcnt, ccnt, rcnt)
       max_height <- max_height + max(lheight, cheight, rheight)
       
-      
-      trht <- get_row_height(max(round(rs$row_height * max(lcnt, ccnt, rcnt), max(lheight, cheight, rheight)) * conv)) 
+      text_height_emu <- round(rs$row_height * max(lcnt, ccnt, rcnt) * conv)
+      image_height_emu <- round(max(lheight, cheight, rheight) * conv)
+      trht <- get_row_height(max(text_height_emu, image_height_emu)) 
       
       # <w:tr> should end here for each row
       ret <- paste0(ret, '<w:tr>', trht, tret, "</w:tr>\n")
