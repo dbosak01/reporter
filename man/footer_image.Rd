@@ -2,31 +2,57 @@
 % Please edit documentation in R/report_spec.r
 \name{footer_image}
 \alias{footer_image}
-\title{Add an image in page footer}
+\title{Insert an image into the page footer}
 \usage{
 footer_image(x, image_path, height, width, align = "left")
 }
 \arguments{
-\item{x}{The report object.}
+\item{x}{The report object to insert the image into.}
 
-\item{image_path}{The path of image}
+\item{image_path}{The path of image file.}
 
-\item{height}{Height of the image}
+\item{height}{Desired height of the image, in the report units of measure.}
 
-\item{width}{Width of the image}
+\item{width}{Desired width of the image, in the report units of measure.}
 
-\item{align}{Alignment of the image. Should be "left", "right", "center",
-or "centre". Default is "left"}
+\item{align}{Alignment of the image in the page footer. Valid values are 
+"left", "right", "center", or "centre". The default value is "left".}
 }
 \value{
 The modified report specification.
 }
 \description{
-This function adds an image in page footer to the report.  The image will appear
-at the bottom of each page of the report.
+The \code{footer_image} function inserts an image into the page footer. The function
+can be used to add a logo or other graphical element to the report.
+The image will then appear at the bottom of each page.
 }
 \details{
-If the text is also defined in page footer, the text will be ignored.
+The function assumes 
+the existence of a page footer inserted by the \code{\link{page_footer}} function. 
+If there is no page footer, an error will be generated during the rendering
+process in \code{\link{write_report}}. If there is text
+in the same cell as the image, the text will be disregarded. You may add text 
+to other cells in the footer.
+
+The "align" parameter determines which page footer cell the image will be inserted.
+That is, if you align an image "left", it will be inserted into the left
+column of the page footer. Options are "left", "right", and "center".  To
+insert images in multiple cells, you may use multiple calls to 
+\code{image_footer}.
+
+The page footer cell width will take priority over the image width.  That is,
+if you set the image width larger than the cell width, the image width
+will be reduced to fit the cell.  To make a wider image, increase the cell
+width on the page footer.  
+
+Note that page footer cells can be removed
+entirely by setting the width to zero.  This feature can give you more room
+for a wide image. For instance, to create a banner image under the entire report, 
+align the image "center" and set the left and right page header column 
+widths to zero.
+
+See the \code{\link{page_footer}} function for more information on
+setting footer column widths.
 }
 \seealso{
 Other report: 

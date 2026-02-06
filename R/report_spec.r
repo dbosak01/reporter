@@ -895,13 +895,18 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' of strings.
 #' @param blank_row Whether to create a blank row below the page header.
 #' Valid values are 'below' and 'none'.  Default is 'none'.
-#' @param width Widths for left, center, and right. If only one value is assigned,
-#' it would be set as left width, if only two values are assigned, they would be
-#' set as left and center by order. The rest empty width would be imputed as the
-#' average of the rest of page width. If a width is set to 0, then the cell won't
-#' be created.
+#' @param width Widths for left, center, and right columns of the page header, 
+#' passed as a vector of double values in the report unit of measure.  If the vector
+#' contains fewer than three widths, the widths passed will be interpreted from
+#' left to right, and any unassigned column widths will be calculated from
+#' the remaining width on the page.  For example, if two values are assigned, they will be
+#' interpreted as left and center, and the right column width will be calculated.
+#' Setting a cell width to zero (0) will remove that column from the page header
+#' entirely. To set the left and right widths only, pass a zero for the center
+#' cell, i.e. \code{width = c(6, 0, 3)} for a total width of 9 inches.
 #' @param center The center page header text.  May be a single string or a vector
-#' of strings. Default is not display.
+#' of strings. By default, the center column is not displayed.  To display it,
+#' either assign a value on this parameter, or assign a width on the "width" parameter.
 #' @return The modified report specification.
 #' @family report
 #' @examples
@@ -1681,11 +1686,15 @@ footnotes <- function(x, ..., align = "left", blank_row = "above",
 #' of strings.
 #' @param blank_row Whether to create a blank row above the page footer.
 #' Valid values are 'above' and 'none'.  Default is 'above'.
-#' @param width Widths for left, center, and right. If only one value is assigned,
-#' it would be set as left width, if only two values are assigned, they would be
-#' set as left and center by order. The rest empty width would be imputed as the
-#' average of the rest of page width. If a width is set to 0, the cell won't be 
-#' created.
+#' @param width Widths for left, center, and right columns of the page footer, 
+#' passed as a vector of double values in the report unit of measure.  If the vector
+#' contains fewer than three widths, the widths passed will be interpreted from
+#' left to right, and any unassigned column widths will be calculated from
+#' the remaining width on the page.  For example, if two values are assigned, they will be
+#' interpreted as left and center, and the right column width will be calculated.
+#' Setting a cell width to zero (0) will remove that column from the page footer
+#' entirely. To set the left and right widths only, pass a zero for the center
+#' cell, i.e. \code{width = c(6, 0, 3)} for a total width of 9 inches.
 #' @return The modified report.
 #' @family report
 #' @examples
@@ -1981,23 +1990,45 @@ page_by <- function(x, var, label = NULL, align = "left",
 }
 
 #' @title
-#' Add an image in page header
+#' Insert an image into the page header
 #'
 #' @description
-#' This function adds an image in page header to the report.  The image will appear
-#' at the top of each page of the report. It only works when page_header is used.
-#'
+#' The \code{header_image} function inserts an image into the page header. The function
+#' can be used to add a logo or other graphical element to the report.
+#' The image will then appear at the top of each page.
 #' @details
-#' This function adds an image in page header to the report.  The image will appear
-#' at the top of each page of the report. It only works when page_header is used.
-#' If the text is also defined in page header, the text will be ignored. 
+#' The function assumes 
+#' the existence of a page header inserted by the \code{\link{page_header}} function. 
+#' If there is no page header, an error will be generated during the rendering
+#' process in \code{\link{write_report}}. If there is text
+#' in the same cell as the image, the text will be disregarded. You may add text 
+#' to other cells in the header.
 #' 
+#' The "align" parameter determines which page header cell the image will be inserted.
+#' That is, if you align an image "left", it will be inserted into the left
+#' column of the page header. Options are "left", "right", and "center".  To
+#' insert images in multiple cells, you may use multiple calls to 
+#' \code{image_header}.
+#' 
+#' The page header cell width will take priority over the image width.  That is,
+#' if you set the image width larger than the cell width, the image width
+#' will be reduced to fit the cell.  To make a wider image, increase the cell
+#' width on the page header.  
+#' 
+#' Note that page header cells can be removed
+#' entirely by setting the width to zero.  This feature can give you more room
+#' for a wide image. For instance, to create a banner image over the entire report, 
+#' align the image "center" and set the left and right page header column 
+#' widths to zero.
+#' 
+#' See the \code{\link{page_header}} function for more information on
+#' setting header column widths.
 #' @param x The report object.
-#' @param image_path The path of image
-#' @param height Height of the image
-#' @param width Width of the image
-#' @param align Alignment of the image. Should be "left", "right", "center", or "centre". 
-#' Default is "left"
+#' @param image_path The path of image file.
+#' @param height Desired height of the image, in the report units of measure.
+#' @param width Desired width of the image, in the report units of measure.
+#' @param align Alignment of the image. Valid values are "left", "right", 
+#' "center", or "centre". The default value is "left".
 #' @return The modified report specification.
 #' @family report
 #' @export
@@ -2030,21 +2061,46 @@ header_image <- function(x, image_path, height, width, align = "left") {
 }
 
 #' @title
-#' Add an image in page footer
+#' Insert an image into the page footer
 #'
 #' @description
-#' This function adds an image in page footer to the report.  The image will appear
-#' at the bottom of each page of the report.  
-#'
+#' The \code{footer_image} function inserts an image into the page footer. The function
+#' can be used to add a logo or other graphical element to the report.
+#' The image will then appear at the bottom of each page.
 #' @details
-#' If the text is also defined in page footer, the text will be ignored. 
+#' The function assumes 
+#' the existence of a page footer inserted by the \code{\link{page_footer}} function. 
+#' If there is no page footer, an error will be generated during the rendering
+#' process in \code{\link{write_report}}. If there is text
+#' in the same cell as the image, the text will be disregarded. You may add text 
+#' to other cells in the footer.
 #' 
-#' @param x The report object.
-#' @param image_path The path of image
-#' @param height Height of the image
-#' @param width Width of the image
-#' @param align Alignment of the image. Should be "left", "right", "center",
-#' or "centre". Default is "left"
+#' The "align" parameter determines which page footer cell the image will be inserted.
+#' That is, if you align an image "left", it will be inserted into the left
+#' column of the page footer. Options are "left", "right", and "center".  To
+#' insert images in multiple cells, you may use multiple calls to 
+#' \code{image_footer}.
+#' 
+#' The page footer cell width will take priority over the image width.  That is,
+#' if you set the image width larger than the cell width, the image width
+#' will be reduced to fit the cell.  To make a wider image, increase the cell
+#' width on the page footer.  
+#' 
+#' Note that page footer cells can be removed
+#' entirely by setting the width to zero.  This feature can give you more room
+#' for a wide image. For instance, to create a banner image under the entire report, 
+#' align the image "center" and set the left and right page header column 
+#' widths to zero.
+#' 
+#' See the \code{\link{page_footer}} function for more information on
+#' setting footer column widths.
+#' 
+#' @param x The report object to insert the image into.
+#' @param image_path The path of image file.
+#' @param height Desired height of the image, in the report units of measure.
+#' @param width Desired width of the image, in the report units of measure.
+#' @param align Alignment of the image in the page footer. Valid values are 
+#' "left", "right", "center", or "centre". The default value is "left".
 #' @return The modified report specification.
 #' @family report
 #' @export

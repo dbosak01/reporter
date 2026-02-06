@@ -25,14 +25,19 @@ of strings.}
 \item{blank_row}{Whether to create a blank row below the page header.
 Valid values are 'below' and 'none'.  Default is 'none'.}
 
-\item{width}{Widths for left, center, and right. If only one value is assigned,
-it would be set as left width, if only two values are assigned, they would be
-set as left and center by order. The rest empty width would be imputed as the
-average of the rest of page width. If a width is set to 0, then the cell won't
-be created.}
+\item{width}{Widths for left, center, and right columns of the page header, 
+passed as a vector of double values in the report unit of measure.  If the vector
+contains fewer than three widths, the widths passed will be interpreted from
+left to right, and any unassigned column widths will be calculated from
+the remaining width on the page.  For example, if two values are assigned, they will be
+interpreted as left and center, and the right column width will be calculated.
+Setting a cell width to zero (0) will remove that column from the page header
+entirely. To set the left and right widths only, pass a zero for the center
+cell, i.e. \code{width = c(6, 0, 3)} for a total width of 9 inches.}
 
 \item{center}{The center page header text.  May be a single string or a vector
-of strings. Default is not display.}
+of strings. By default, the center column is not displayed.  To display it,
+either assign a value on this parameter, or assign a width on the "width" parameter.}
 }
 \value{
 The modified report specification.

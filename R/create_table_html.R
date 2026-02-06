@@ -1186,7 +1186,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         }
         
         # Count lines in cell
-        cl <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+        cl <- strsplit(vl, "<br>", fixed = TRUE)[[1]]
         if (length(cl) > mxrw)
           mxrw <- length(cl) 
       }

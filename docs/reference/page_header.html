@@ -18,7 +18,7 @@ at the top of each page of the report."><meta property="og:image" content="https
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.6</span>
       </span>
     </div>
 
@@ -116,7 +116,14 @@ at the top of each page of the report.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">page_header</span><span class="op">(</span><span class="va">x</span>, left <span class="op">=</span> <span class="st">""</span>, right <span class="op">=</span> <span class="st">""</span>, blank_row <span class="op">=</span> <span class="st">"none"</span>, width <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">page_header</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  left <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  right <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  blank_row <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  center <span class="op">=</span> <span class="st">""</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -143,9 +150,21 @@ Valid values are 'below' and 'none'.  Default is 'none'.</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
-<dd><p>The width of the left column of the page header, in
-report units of measure.  The right column will adjust automatically
-to equal the page width.</p></dd>
+<dd><p>Widths for left, center, and right columns of the page header,
+passed as a vector of double values in the report unit of measure.  If the vector
+contains fewer than three widths, the widths passed will be interpreted from
+left to right, and any unassigned column widths will be calculated from
+the remaining width on the page.  For example, if two values are assigned, they will be
+interpreted as left and center, and the right column width will be calculated.
+Setting a cell width to zero (0) will remove that column from the page header
+entirely. To set the left and right widths only, pass a zero for the center
+cell, i.e. <code>width = c(6, 0, 3)</code> for a total width of 9 inches.</p></dd>
+
+
+<dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
+<dd><p>The center page header text.  May be a single string or a vector
+of strings. By default, the center column is not displayed.  To display it,
+either assign a value on this parameter, or assign a width on the "width" parameter.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -177,7 +196,9 @@ within the available space.</p>
     <div class="dont-index"><p>Other report:
 <code><a href="add_content.html">add_content</a>()</code>,
 <code><a href="create_report.html">create_report</a>()</code>,
+<code><a href="footer_image.html">footer_image</a>()</code>,
 <code><a href="footnotes.html">footnotes</a>()</code>,
+<code><a href="header_image.html">header_image</a>()</code>,
 <code><a href="options_fixed.html">options_fixed</a>()</code>,
 <code><a href="page_by.html">page_by</a>()</code>,
 <code><a href="page_footer.html">page_footer</a>()</code>,

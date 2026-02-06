@@ -33,6 +33,8 @@ reference:
   - set_margins
   - write_report
   - print.report_spec
+  - header_image
+  - footer_image
 - title: Table Functions
   desc: Functions to define and lay out a table.
   contents:

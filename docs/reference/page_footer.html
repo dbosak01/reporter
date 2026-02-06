@@ -20,7 +20,7 @@ may be specified with the appropriate parameter."><meta property="og:image" cont
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.6</span>
       </span>
     </div>
 
@@ -120,7 +120,14 @@ may be specified with the appropriate parameter.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">page_footer</span><span class="op">(</span><span class="va">x</span>, left <span class="op">=</span> <span class="st">""</span>, center <span class="op">=</span> <span class="st">""</span>, right <span class="op">=</span> <span class="st">""</span>, blank_row <span class="op">=</span> <span class="st">"above"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">page_footer</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  left <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  center <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  right <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  blank_row <span class="op">=</span> <span class="st">"above"</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -149,6 +156,18 @@ of strings.</p></dd>
 <dt id="arg-blank-row">blank_row<a class="anchor" aria-label="anchor" href="#arg-blank-row"></a></dt>
 <dd><p>Whether to create a blank row above the page footer.
 Valid values are 'above' and 'none'.  Default is 'above'.</p></dd>
+
+
+<dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
+<dd><p>Widths for left, center, and right columns of the page footer,
+passed as a vector of double values in the report unit of measure.  If the vector
+contains fewer than three widths, the widths passed will be interpreted from
+left to right, and any unassigned column widths will be calculated from
+the remaining width on the page.  For example, if two values are assigned, they will be
+interpreted as left and center, and the right column width will be calculated.
+Setting a cell width to zero (0) will remove that column from the page footer
+entirely. To set the left and right widths only, pass a zero for the center
+cell, i.e. <code>width = c(6, 0, 3)</code> for a total width of 9 inches.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -182,7 +201,9 @@ within the available space.</p>
     <div class="dont-index"><p>Other report:
 <code><a href="add_content.html">add_content</a>()</code>,
 <code><a href="create_report.html">create_report</a>()</code>,
+<code><a href="footer_image.html">footer_image</a>()</code>,
 <code><a href="footnotes.html">footnotes</a>()</code>,
+<code><a href="header_image.html">header_image</a>()</code>,
 <code><a href="options_fixed.html">options_fixed</a>()</code>,
 <code><a href="page_by.html">page_by</a>()</code>,
 <code><a href="page_header.html">page_header</a>()</code>,

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.6</span>
       </span>
     </div>
 
@@ -108,6 +108,20 @@
       <small>Source: <a href="https://github.com/dbosak01/reporter/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.6" id="reporter-146">reporter 1.4.6<a class="anchor" aria-label="anchor" href="#reporter-146"></a></h2>
+<ul><li>Added ability to set width of columns in page header and page footer. When width of a column is set to zero, it will be removed.</li>
+<li>Added center column in page header.</li>
+<li>Added functions <code><a href="../reference/header_image.html">header_image()</a></code> and <code><a href="../reference/footer_image.html">footer_image()</a></code> to insert an image into the page header and footer.</li>
+<li>Added “group_border” parameter to <code><a href="../reference/define.html">define()</a></code> function to put a border line after each group.</li>
+<li>Added a “bold” parameter to <code><a href="../reference/page_by.html">page_by()</a></code> function to allow user to control bolding on page-by text. Has options to bold label, value, or both.</li>
+<li>Improved page breaking when page by label or value is very long.</li>
+<li>Improved page breaking in some special situations, especially on DOCX.</li>
+<li>Fixed bug on DOCX <code><a href="../reference/page_footer.html">page_footer()</a></code> when there are multiple rows.</li>
+<li>Allowed PNG image files on DOCX.</li>
+<li>Removed blank group row when it appears at the top of a page.</li>
+<li>Fixed vertical alignment on HTML.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.5" id="reporter-145">reporter 1.4.5<small>2025-11-22</small><a class="anchor" aria-label="anchor" href="#reporter-145"></a></h2>
 <ul><li>Added ability to import EMF files to RTF and DOCX outputs.</li>
