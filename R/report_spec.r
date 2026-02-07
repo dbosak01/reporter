@@ -1791,7 +1791,7 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above",
 #' page by variable prior to reporting.
 #'
 #' @details
-#' Only one page by is allowed per report, table, or plot.  The page by 
+#' Only one page by function is allowed per report, table, or plot.  The page by 
 #' label will 
 #' appear on all pages of the object.  The page by label may be aligned on the 
 #' left, right, or center. Use the \code{align} parameter to specify the 
@@ -1819,14 +1819,15 @@ page_footer <- function(x, left="",  center="", right="", blank_row = "above",
 #' and DOCX reports.
 #' @param format The format to use for the page by column data.  The format can 
 #' be a string format, a formatting function, a lookup list, a user-defined
-#' format, or a formatting list. 
-#' @param bold A parameter to bold the page by text. Valid values are FALSE, 
-#' TRUE, 'label' or 'value'. Default is FALSE. TRUE to bold both label and value,
-#' 'label' to bold only label, 'value' to bold only value. This parameter only
-#' applies to variable-width RTF, HTML, PDF, and DOCX output types.
-#' All formatting is performed by the \code{\link[fmtr]{fapply}} function from
+#' format, or a formatting list. All formatting is performed by the 
+#' \code{\link[fmtr]{fapply}} function from
 #' the \code{\link[fmtr]{fmtr}} package.  For 
 #' a list of common formatting codes, see \link[fmtr]{FormattingStrings}.
+#' @param bold A parameter to bold the page by text. Valid values are TRUE, FALSE, 
+#' 'label' or 'value'. Default is FALSE. A value of TRUE bolds both the label 
+#' and the page by value. The value 'label' bolds only the label, while a value
+#' of 'value' bolds only the page by value. This parameter 
+#' applies to variable-width RTF, HTML, PDF, and DOCX output types only.  
 #' @family report
 #' @seealso \code{\link{create_table}} to create a table, and 
 #' \code{\link{create_plot}} to create a plot.  
