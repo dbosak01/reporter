@@ -227,10 +227,10 @@ Now the result is as follows:
 
 <br>
 
-With the above modification, the group *"Infections and infestations"* is still split
-because it is a large group, and there is no way to avoid splitting it across
-multiple pages.  However, the other breaks have all been avoided by moving 
-groups to the next page.  In this way, the report looks nicer and 
+With the above modification, the SOC group *"Infections and infestations"* is 
+still split in default setting because it is a large group, but the preferred term 
+*"NAIL INFECTION"* is not split. However, the other SOC breaks have all been 
+avoided by moving groups to the next page.  In this way, the report looks nicer and 
 becomes more readable.
 
 ## Multiple Group Cohesion

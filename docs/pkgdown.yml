@@ -1,5 +1,5 @@
-pandoc: 3.8.3
-pkgdown: 2.1.0
+pandoc: 3.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   reporter-break: reporter-break.html
@@ -21,7 +21,7 @@ articles:
   reporter-title_header: reporter-title_header.html
   reporter-wrap: reporter-wrap.html
   reporter: reporter.html
-last_built: 2026-05-15T03:36Z
+last_built: 2026-05-21T13:38Z
 urls:
   reference: https://reporter.r-sassy.org/reference
   article: https://reporter.r-sassy.org/articles
