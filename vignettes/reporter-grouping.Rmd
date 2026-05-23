@@ -327,3 +327,5 @@ which means the requirement of proportion is 0.4. Once the previous group has re
 40% of page, the next group can be moved to a new page if the remaining space is not enough.
 That is to say, the stronger the group cohesion, the lower the required proportion,
 and the less likely the group is to split.
+
+Next: [More Examples](reporter-more.html)
