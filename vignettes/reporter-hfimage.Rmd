@@ -76,5 +76,4 @@ res <- write_report(rpt)
 And here is the generated report:
 <img src="../man/images/ImageHeader.png" alt="Image in page header"/>
 
-
-Next: [More Examples](reporter-more.html)
+Next: [Example 16: Grouping](reporter-grouping.html)
