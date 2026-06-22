@@ -1723,6 +1723,7 @@ para_wr <- function(txt, font_size, bold, italics){
     }
     
     # 2nd loop is for multiple line in same text
+    wr <- ""
     for (j in seq_len(length(splt[[i]]))) {
       if (j == 1){
         wr <- paste0('<w:r>', rpr, '<w:t xml:space="preserve">', splt[[i]][j], 
