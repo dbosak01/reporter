@@ -128,6 +128,29 @@ test_that("get_page_breaks with group_cohesion and min_page_prop works as expect
   expect_equal(mdm$..page, c(1,1,1,1,2,2,3,3,3,4,4,4,4,4,5,5,5,5,5,6))
 })
 
+test_that("get_page_breaks with userPage=TRUE works as expected", {
+  
+  dat <- iris[1:100, ]
+  
+  dat$Species <- as.character(dat$Species)
+  dat$Species[1:25] <- rep("setosa1", 25)
+  dat$Species[26:50] <- rep("setosa2", 25)
+  
+  dat$..page <- dat$Species
+  
+  off <- c(upper = 0, lower = 0, blank_upper = 0, blank_lower = 0)
+
+  # Without userPage
+  without_userPage <- get_page_breaks(dat, 24, 0, off)
+  
+  # With userPage
+  with_userPage <- get_page_breaks(dat, 24, 0, off, userPage = TRUE)
+
+  expect_equal( unique(without_userPage$..page), c(1, 2, 3, 4, 5, 6, 7))
+  expect_equal( unique(with_userPage$..page), c(1, 2, 3))
+  
+})
+
 
 test_that("get_splits_text works as expected", {
   
@@ -417,6 +440,26 @@ test_that("get_col_widths_rtf works with stub and indentation as expected.", {
   
 })
 
+test_that("get_col_widths_variable works with allow_rtf_code as expected.", {
+  
+  df <- mtcars[, c("mpg", "cyl", "disp")]
+  
+  df$disp <- paste0("\\clbrdrb\\brdrs\\clbrdrl\\brdrs\\clbrdrr\\brdrs\\cellx3413\\ql ", df$disp)
+  
+  tbl <- create_table(df) %>% 
+    define(mpg, label = "Miles Per Gallon", indent = 1) %>% 
+    define(cyl, width = 1.5) %>% 
+    define(disp, width = 2) 
+  
+  lbls <- get_labels(df, tbl)
+  
+  res_old <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2)
+  res_new <- get_col_widths_variable(df, tbl, lbls, "Arial", 12, "inches", .2,
+                                     allow_rtf_code = TRUE)
+  
+  expect_equal(res_old[["disp"]] > res_new[["disp"]], TRUE)
+  expect_equal(res_new[["disp"]], 2)
+})
 
 test_that("stub_dedupe works as expected", {
   

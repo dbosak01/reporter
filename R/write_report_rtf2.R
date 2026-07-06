@@ -71,6 +71,46 @@ get_rtf_document <- function(rs) {
   
   # Prepare header
   ret[length(ret) + 1] <- paste0("{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 ", fnt , ";}}")
+  
+  # Below table table is from SAS default settings, which are:
+  # \cf1 : Black (\red0\green0\blue0;)
+  # \cf2 : Blue (\red0\green0\blue255;)
+  # \cf3 : Cyan (\red0\green255\blue255;)
+  # \cf4 : Lime Green (\red0\green255\blue0;)
+  # \cf5 : Magenta (\red255\green0\blue255;)
+  # \cf6 : Red (\red255\green0\blue0;)
+  # \cf7 : Yellow (\red255\green255\blue0;)
+  # \cf8 : White (\red255\green255\blue255;)
+  # \cf9 : Navy Blue (\red0\green0\blue128;)
+  # \cf10 : Teal (\red0\green128\blue128;)
+  # \cf11 : Green (\red0\green128\blue0;)
+  # \cf12 : Purple (\red128\green0\blue128;)
+  # \cf13 : Maroon / Dark Red (\red128\green0\blue0;)
+  # \cf14 : Olive (\red128\green128\blue0;)
+  # \cf15 : Gray (\red128\green128\blue128;)
+  # \cf16 : Light Gray (\red192\green192\blue192;)
+  
+  colortbl <- paste0(
+    "{\\colortbl;",
+    "\\red0\\green0\\blue0;",
+    "\\red0\\green0\\blue255;",
+    "\\red0\\green255\\blue255;",
+    "\\red0\\green255\\blue0;",
+    "\\red255\\green0\\blue255;",
+    "\\red255\\green0\\blue0;",
+    "\\red255\\green255\\blue0;",
+    "\\red255\\green255\\blue255;",
+    "\\red0\\green0\\blue128;",
+    "\\red0\\green128\\blue128;",
+    "\\red0\\green128\\blue0;",
+    "\\red128\\green0\\blue128;",
+    "\\red128\\green0\\blue0;",
+    "\\red128\\green128\\blue0;",
+    "\\red128\\green128\\blue128;",
+    "\\red192\\green192\\blue192;}"
+  )
+  ret[length(ret) + 1] <- colortbl
+  
   if (rs$orientation == "landscape") {
     #ret[length(ret) + 1] <- "\\landscape\\horzdoc"
     ret[length(ret) + 1] <- "\\landscape"

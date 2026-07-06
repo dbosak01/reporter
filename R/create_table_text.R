@@ -207,7 +207,9 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # # print(widths_char)
 
   # Split long text strings into multiple rows
-  fdat <- split_cells(fdat, widths_char, ts, rs$char_width)
+  if (rs$line_break) {
+    fdat <- split_cells(fdat, widths_char, ts, rs$char_width)
+  }
   
   # Derive lines for break label if needed
   fdat <- get_break_lines(fdat, widths_char, ts, rs$char_width)
@@ -226,8 +228,22 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   fdat <- apply_widths(fdat, widths_char, aligns)
   
+  # Decide whether to use page wrap. Follow the table setting first, then follow
+  # the report setting.
+  page_wrap_flag <- TRUE
+  if (!is.null(ts$page_wrap)){
+    page_wrap_flag <- ts$page_wrap
+  } else {  
+    page_wrap_flag <- rs$page_wrap
+  }
+  
+  
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1, control_cols)
+  if (page_wrap_flag) {
+    wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1, control_cols)
+  } else {
+    wraps <- list(names(fdat))
+  }
   # print("wraps")
   # print(wraps)
 
@@ -239,6 +255,12 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   # Offsets are needed to calculate splits and page breaks
   content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row, pgby_cnt)
+  
+  # Decide whether to use page break. Follow the table setting first, then follow
+  # the report setting.
+  if (is.null(ts$auto_page)){
+    ts$auto_page <- rs$auto_page
+  }
   
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 

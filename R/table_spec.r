@@ -122,6 +122,14 @@
 #' outputs.  Also, this parameter only works for titles and footnotes that
 #' are attached to the table body.  Titles and footnotes attached to the 
 #' report will still be shown on every page. 
+#' @param page_wrap Whether to use page wrapping when columns are too many to
+#' be in the same page. Default the page wrapping is on. Set it to FALSE to turn 
+#' it off.
+#' @param auto_page Whether to use auto pagination. Default is TRUE. If it has
+#' been set in \code{\link{create_table}}, then it follows table's setting. 
+#' When `page_break` variable is set in \code{\link{define}}, users can set 
+#' `auto_page` as FALSE to let reporter follow the paging variable without any
+#' auto paging. Please note that turning off auto pagination might cause overflow.
 #' @family table
 #' @seealso \code{\link{create_report}} to create a report, 
 #' \code{\link{create_plot}} to create a plot,
@@ -196,7 +204,8 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
                          first_row_blank=FALSE,
                          n_format = upcase_parens, headerless = FALSE,
                          borders = "none", header_bold = FALSE, 
-                         continuous = FALSE) {
+                         continuous = FALSE, page_wrap = NULL,
+                         auto_page = NULL) {
   if (is.null(x)) {
     stop("Data parameter 'x' missing or invalid.") 
     
@@ -253,6 +262,22 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
     ret$use_attributes <- c("")
   else  
     ret$use_attributes <- use_attributes
+  
+  if (!is.null(page_wrap)) {
+    if (!is.logical(page_wrap)){
+      stop("`page_wrap` should be TRUE or FALSE")
+    } else {
+      ret$page_wrap <- page_wrap
+    }
+  }
+  
+  if (!is.null(auto_page)) {
+    if (!is.logical(auto_page)){
+      stop("`auto_page` should be TRUE or FALSE")
+    } else {
+      ret$auto_page <- auto_page
+    }
+  }
   
   # Apply any titles, footnotes, or spans
   # attached to the data frame itself

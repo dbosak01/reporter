@@ -505,7 +505,8 @@ split_cells <- function(x, col_widths, ts = NULL, char_width = NULL) {
 }
 
 #' @noRd
-split_strings <- function(strng, width, units, multiplier = 1.03) {
+split_strings <- function(strng, width, units, multiplier = 1.03,
+                          allow_rtf_code = FALSE) {
  
   lnlngth <- 0
   ln <- c()
@@ -531,7 +532,27 @@ split_strings <- function(strng, width, units, multiplier = 1.03) {
       #              suppressWarnings(strwidth(" ", units = un))) * multiplier
 
       if (length(wrds) > 0) {
-        lngths <- (strwdth(wrds, un) + strwdth(" ", un)) * multiplier
+        
+        if (allow_rtf_code) {
+          # includes RTF code containing numbers, letters, and the following space
+          rtf_control_regex <- "\\\\[a-z]+-?[0-9]* ?"
+          # includes RTF special control like \\*
+          rtf_symbol_regex  <- "\\\\[^a-z]"
+          # includes [] and {}
+          rtf_brace_regex   <- "[{}]"
+          
+          original_blank <- wrds == ""
+          
+          wrds_no_rtf <- gsub(rtf_control_regex, "", wrds)
+          wrds_no_rtf <- gsub(rtf_symbol_regex, "", wrds_no_rtf)
+          wrds_no_rtf <- gsub(rtf_brace_regex, "", wrds_no_rtf)
+          
+          lngths <- (strwdth(wrds_no_rtf, un) + strwdth(" ", un)) * multiplier
+          
+          lngths[wrds_no_rtf == "" & !original_blank] <- 0
+        } else {
+          lngths <- (strwdth(wrds, un) + strwdth(" ", un)) * multiplier
+        }
       } 
       
       # Loop through words and add up lines
@@ -631,7 +652,8 @@ strwdth <- Vectorize(function(wrd, un) {
 #' line ending.  
 #' @noRd
 split_string_rtf <- function(strng, width, units, font = "Arial", nm = "", 
-                             char_width = 1) {
+                             char_width = 1, allow_rtf_code = FALSE,
+                             insert_line_break = TRUE) {
   
   
   if (tolower(font) == "courier")
@@ -656,14 +678,27 @@ split_string_rtf <- function(strng, width, units, font = "Arial", nm = "",
   #   }
   # }
   
-  res <- split_strings(cstrng, width - indntw, units, multiplier = mp)
+  if (is.null(allow_rtf_code)){
+    allow_rtf_code <- FALSE
+  }
+  
+  res <- split_strings(cstrng, width - indntw, units, multiplier = mp,
+                       allow_rtf_code)
   
   
   # Concat lines and add line ending to all but last line.
   # Also translate any special characters to a unicode rtf token
   # Doing it here handles for the entire report, as every piece runs
   # through here.
-  ret <- list(rtf = paste0(blnks, encodeRTF(res$text), collapse = "\\line "),
+  if (insert_line_break) {
+    ret_string <- paste0(blnks, encodeRTF(res$text, allow_rtf_code), 
+                         collapse = "\\line ")
+  } else {
+    splits <- unlist(stri_split_fixed(as.character(cstrng), "\n"))
+    ret_string <- paste0(encodeRTF(splits, allow_rtf_code), collapse = "\\line ")
+  }
+  
+  ret <- list(rtf = ret_string,
               lines = length(res$text),
               widths = res$widths + indntw)
   
@@ -671,7 +706,8 @@ split_string_rtf <- function(strng, width, units, font = "Arial", nm = "",
 }
 
 #' @noRd
-split_string_html <- function(strng, width, units, nm = "", char_width = 1) {
+split_string_html <- function(strng, width, units, nm = "", char_width = 1,
+                              insert_line_break = TRUE) {
   
   
   # Deal with indents
@@ -694,7 +730,13 @@ split_string_html <- function(strng, width, units, nm = "", char_width = 1) {
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = 1)
   
-  ret <- list(html = paste0(blnks, res$text, collapse = "\n"),
+  if (insert_line_break) {
+    ret_string <- paste0(blnks, res$text, collapse = "\n")
+  } else {
+    ret_string <- paste0(blnks, cstrng)
+  }
+  
+  ret <- list(html = ret_string,
               lines = length(res$text),
               widths = res$widths + indntw)
   
@@ -703,7 +745,7 @@ split_string_html <- function(strng, width, units, nm = "", char_width = 1) {
 
 #' @noRd
 split_string_docx <- function(strng, width, units, nm = "", char_width = 1,
-                              font = "Arial") {
+                              font = "Arial", insert_line_break = TRUE) {
   
   if (tolower(font) == "courier") {
     mp <- 1.01
@@ -731,7 +773,13 @@ split_string_docx <- function(strng, width, units, nm = "", char_width = 1,
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = mp)
   
-  ret <- list(docx = paste0(blnks, res$text, collapse = "\n"),
+  if (insert_line_break) {
+    ret_string <- paste0(blnks, res$text, collapse = "\n")
+  } else {
+    ret_string <- paste0(blnks, cstrng)
+  }
+  
+  ret <- list(docx = ret_string,
               lines = length(res$text),
               widths = res$widths + indntw)
   
@@ -779,13 +827,20 @@ split_string_text <- function(strng, width, units, nm = "", char_width = 1) {
 #' @import grDevices
 #' @noRd
 split_cells_variable <- function(x, col_widths, font, font_size, units, 
-                                 output_type, char_width, ts) {
+                                 output_type, char_width, ts, rs = NULL) {
   
   dat <- NULL           # Resulting data frame
   wdths <- list()       # Resulting list of widths
   row_values <- list()  # A list to hold cell values for one row 
   row_widths <- list()  # A list to hold text widths for one row
   max_length <- 1       # The maximum number of splits of a cell in that row
+  
+  # Set default options when rs is null
+  if (is.null(rs)) {
+    rs <- list()
+    rs$allow_code <- FALSE
+    rs$line_break <- TRUE
+  }
   
   fnt <- "mono"
   if (tolower(font) == "arial")
@@ -825,13 +880,16 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
           }
           
           if (output_type %in% c("HTML")) {
-            break_label_res <- split_string_html(x[[i, nm]], sum(col_widths) - break_label_indent, units)
+            break_label_res <- split_string_html(x[[i, nm]], sum(col_widths) - break_label_indent, units,
+                                                 insert_line_break = rs$line_break)
             
             break_label_df[i, nm] <- break_label_res$html
             break_label_df[i, paste0("..break_label_lines",break_label_num)] <- break_label_res$lines
             
           } else if (output_type == "RTF") {
-            break_label_res <- split_string_rtf(x[[i, nm]], sum(col_widths) - break_label_indent, units, font)
+            break_label_res <- split_string_rtf(x[[i, nm]], sum(col_widths) - break_label_indent, units, font, 
+                                                allow_rtf_code = rs$allow_code,
+                                                insert_line_break = rs$line_break)
             
             break_label_df[i, nm] <- break_label_res$rtf
             break_label_df[i, paste0("..break_label_lines",break_label_num)] <- break_label_res$lines
@@ -842,7 +900,8 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             break_label_df[i, nm] <- paste0(break_label_res$text, collapse = "\n")
             break_label_df[i, paste0("..break_label_lines",break_label_num)] <- break_label_res$lines
           } else if (output_type == "DOCX") {
-            break_label_res <- split_string_docx(x[[i, nm]], sum(col_widths) - break_label_indent, units, font = font)
+            break_label_res <- split_string_docx(x[[i, nm]], sum(col_widths) - break_label_indent, units, font = font,
+                                                 insert_line_break = rs$line_break)
             
             break_label_df[i, nm] <- break_label_res$docx
             break_label_df[i, paste0("..break_label_lines",break_label_num)] <- break_label_res$lines
@@ -872,12 +931,15 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
         } else if ("..blank" %in% names(x) && x[[i, "..blank"]] == "L") {
           
           if (output_type %in% c("HTML")) {
-            res <- split_string_html(x[[i, nm]], sum(col_widths), units)
+            res <- split_string_html(x[[i, nm]], sum(col_widths), units,
+                                     insert_line_break = rs$line_break)
             
             cell <- res$html
             
           } else if (output_type == "RTF") {
-            res <- split_string_rtf(x[[i, nm]], sum(col_widths), units, font)
+            res <- split_string_rtf(x[[i, nm]], sum(col_widths), units, font, 
+                                    allow_rtf_code = rs$allow_code,
+                                    insert_line_break = rs$line_break)
             
             cell <- res$rtf
           } else if (output_type == "PDF") {
@@ -887,28 +949,33 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             cell <- paste0(res$text, collapse = "\n")
             
           } else if (output_type == "DOCX") {
-            res <- split_string_docx(x[[i, nm]], sum(col_widths), units, font = font)
+            res <- split_string_docx(x[[i, nm]], sum(col_widths), units, font = font,
+                                     insert_line_break = rs$line_break)
             
             cell <- res$docx
           }
-          
+          nch <- res$lines
         } else {
           
           if (output_type %in% c("HTML")) {
             # For indenting values, the width should be (col_widths - indentation)
             if (!is.null(defs[[nm]]$indent)) {
               res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
-                                       units, nm, char_width)
+                                       units, nm, char_width,
+                                       insert_line_break = rs$line_break)
             } else if (nm == "stub" & !is.null(ts$stub)) {
               stub_var <- x$..stub_var[i]
               if (!is.null(defs[[stub_var]]$indent)) {
                 res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
-                                         units, nm, char_width)
+                                         units, nm, char_width,
+                                         insert_line_break = rs$line_break)
               } else {
-                res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+                res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width,
+                                         insert_line_break = rs$line_break)
               }
             } else {
-              res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width)
+              res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width,
+                                       insert_line_break = rs$line_break)
             }
             
             cell <- res$html
@@ -917,17 +984,25 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             # For indenting values, the width should be (col_widths - indentation)
             if (!is.null(defs[[nm]]$indent)) {
               res <- split_string_rtf(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
-                                      units, font, nm, char_width)
+                                      units, font, nm, char_width, 
+                                      allow_rtf_code = rs$allow_code,
+                                      insert_line_break = rs$line_break)
             } else if (nm == "stub" & !is.null(ts$stub)) {
               stub_var <- x$..stub_var[i]
               if (!is.null(defs[[stub_var]]$indent)) {
                 res <- split_string_rtf(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
-                                        units, font, nm, char_width)
+                                        units, font, nm, char_width, 
+                                        allow_rtf_code = rs$allow_code,
+                                        insert_line_break = rs$line_break)
               } else {
-                res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+                res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width, 
+                                        allow_rtf_code = rs$allow_code,
+                                        insert_line_break = rs$line_break)
               }
             } else {
-              res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width)
+              res <- split_string_rtf(x[[i, nm]], col_widths[[nm]], units, font, nm, char_width, 
+                                      allow_rtf_code = rs$allow_code,
+                                      insert_line_break = rs$line_break)
             }
           
             cell <- res$rtf
@@ -954,17 +1029,21 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             # For indenting values, the width should be (col_widths - indentation)
             if (!is.null(defs[[nm]]$indent)) {
               res <- split_string_docx(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
-                                       units, nm, char_width, font = font)
+                                       units, nm, char_width, font = font,
+                                       insert_line_break = rs$line_break)
             } else if (nm == "stub" & !is.null(ts$stub)) {
               stub_var <- x$..stub_var[i]
               if (!is.null(defs[[stub_var]]$indent)) {
                 res <- split_string_docx(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
-                                         units, nm, char_width, font = font)
+                                         units, nm, char_width, font = font,
+                                         insert_line_break = rs$line_break)
               } else {
-                res <- split_string_docx(x[[i, nm]], col_widths[[nm]], units, nm, char_width, font = font)
+                res <- split_string_docx(x[[i, nm]], col_widths[[nm]], units, nm, char_width, font = font,
+                                         insert_line_break = rs$line_break)
               }
             } else {
-              res <- split_string_docx(x[[i, nm]], col_widths[[nm]], units, nm, char_width, font = font)
+              res <- split_string_docx(x[[i, nm]], col_widths[[nm]], units, nm, char_width, font = font,
+                                       insert_line_break = rs$line_break)
             }
             
             cell <- res$docx

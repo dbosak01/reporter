@@ -55,6 +55,50 @@ test_that("get_titles_rtf function works as expected with font_size.", {
   
 })
 
+test_that("get_titles_par_rtf function works as expected.", {
+  
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("My Nice Table", blank_row = "below") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  t <- get_titles_par_rtf(rpt$titles, 1, rpt)
+  t
+  expect_equal(t$rtf,
+               paste0("\\qc My Nice Table\\par\n\\sl-275\\slmult0\\par"))
+  expect_equal(t$lines, 2)
+  
+})
+
+test_that("get_titles_par_rtf function returns warnings expected.", {
+  
+  # Borders is not none
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("My Nice Table", blank_row = "below", borders = "outside") %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  expect_warning(
+    t <- get_titles_par_rtf(rpt$titles, 1, rpt),
+    "`borders = 'outside'` wouldn't work when title is in paragraph. Please set `borders` as 'none' to turn off this warning message."
+  )
+  
+  # Columns > 1
+  rpt <- create_report("", font = "Arial", font_size = 12) %>%
+    titles("My Nice Table", blank_row = "below", columns = 2) %>%
+    footnotes("Goodbye", blank_row = "below")
+  
+  rpt <- page_setup_rtf(rpt)
+  
+  expect_warning(
+    t <- get_titles_par_rtf(rpt$titles, 1, rpt),
+    "`columns` > 1 wouldn't work when title is in paragraph. Please set `columns` as 1 to turn off this warning message."
+  )
+})
+
+
 
 test_that("get_footnotes_rtf function works as expected.", {
   

@@ -553,11 +553,38 @@ test_that("utils21: split_string_rtf() works as expected.", {
   expect_equal(length(res6$rtf), 1)
   expect_equal(res6$lines, 5)
   
+  # ----------------------------------------------- #
+  #       Pass options allow_code as expected       #
+  # ----------------------------------------------- #
+  report_spec <- list()
+  report_spec$allow_code <- TRUE
+  
+  # The original string will be affected by encodeRTF
+  res7_orig <- split_string_rtf("{\\b\\li-550 [Report]} This [is] a  testing string with RTF \\li45 [code]",
+                                2, "inches")
+  expect_equal(res7_orig$rtf, paste0("\\'7b\\'5cb\\'5cli-550 [Report]\\'7d This [is] a \\line testing string with RTF \\'5cli45\\line [code]"))
+  expect_equal(res7_orig$lines, 3)
+  
+  # When set allow_rtf_code is TRUE, will keep the original RTF code
+  res7 <- split_string_rtf("{\\b\\li-550 [Report]} This [is] a  testing string with RTF \\li45 [code]",
+                           2, "inches", allow_rtf_code = report_spec$allow_code)
+  expect_equal(res7$rtf, "{\\b\\li-550 [Report]} This [is] a  testing\\line string with RTF \\li45 [code]")
+  expect_equal(res7$lines, 2)
+  
+  # ----------------------------------------------- #
+  #       Pass options line_break as expected       #
+  # ----------------------------------------------- #
+  report_spec <- list()
+  report_spec$line_break <- FALSE
+  res8 <- split_string_rtf("here is areallylongstringlongerthan one inch", 
+                           1, "inches",
+                           insert_line_break = report_spec$line_break)
+  
+  # The output should not contain any line break characters
+  expect_equal(res8$rtf, "here is areallylongstringlongerthan one inch")
+  expect_equal(res8$lines, 3)
   
   dev.off()
-  
-
-  
   
 })
 
@@ -628,6 +655,18 @@ test_that("utils25: split_strings() works as expected.", {
   expect_equal(length(res$text), 4)
   expect_equal(length(res$widths), 4)
   
+  # --------------------------- #
+  #      Allow RTF code         #
+  # --------------------------- #
+  rtf_input <- "{\\b\\li-550 [Report]} This [is] a  testing string with RTF \\li45 [code]"
+  res2_orig <- split_strings(rtf_input, 2, "inches")
+  res2_orig$text <- c("{\\b\\li-550 [Report]} This [is]",
+                      "a  testing string with RTF",
+                      "\\li45 [code]")
+  
+  res2 <- split_strings(rtf_input, 2, "inches", allow_rtf_code = TRUE)
+  res2$text <- c("{\\b\\li-550 [Report]} This [is] a  testing",
+                 "string with RTF \\li45 [code]")
 })
 
 

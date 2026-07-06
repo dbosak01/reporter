@@ -600,7 +600,8 @@ get_col_widths <- function(dat, ts, labels, char_width, uom,
 #' @noRd
 get_col_widths_variable <- function(dat, ts, labels, font, 
                                font_size, uom, gutter_width,
-                               merge_label_row = TRUE) {
+                               merge_label_row = TRUE,
+                               allow_rtf_code = FALSE) {
   
   dat_orig <- dat
   defs <- ts$col_defs
@@ -635,6 +636,20 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       if ("..blank" %in% names(dat) & merge_label_row) {
         dat[[nm]] <- ifelse(dat[["..blank"]] %in% c("L", "B", "A"), " ", dat[[nm]])
         blank_idx <- dat[["..blank"]] %in% c("L", "B", "A")
+      }
+      
+      # Remove all RTF code for accurate widths
+      if (allow_rtf_code) {
+        # includes RTF code containing numbers, letters, and the following space
+        rtf_control_regex <- "\\\\[a-z]+-?[0-9]* ?"
+        # includes RTF special control like \\*
+        rtf_symbol_regex  <- "\\\\[^a-z]"
+        # includes [] and {}
+        rtf_brace_regex   <- "[{}]"
+        
+        dat[[nm]] <- gsub(rtf_control_regex, "", dat[[nm]])
+        dat[[nm]] <- gsub(rtf_symbol_regex, "", dat[[nm]])
+        dat[[nm]] <- gsub(rtf_brace_regex, "", dat[[nm]])
       }
       
       # --------------------------------- #
@@ -1193,9 +1208,14 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
     min_page_prop <- NULL
   }
   
+  if (is.null(ts$auto_page)){
+    ts$auto_page <- TRUE
+  }
+  
   pgs <- get_page_breaks(x, page_size, lpg_rows, content_offsets, count_row_var,
                          group_cohesion = group_cohesion, 
-                         min_page_prop = min_page_prop)
+                         min_page_prop = min_page_prop,
+                         userPage = !ts$auto_page)
   
   # Eliminate pages that have only blank lines
   sb <- subset(pgs, trimws(pgs$..blank) == "")
@@ -1230,6 +1250,9 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
         temp_df[1, !grepl("^\\.\\.", names(temp_df))] <- ""
         temp_df[1,1] <- temp_df[[paste0("..break_label", r)]]
         temp_df$..temp_seq[1] <- temp_df$..temp_seq[1] - rev_order[r]*0.1
+        
+        # Put the right lines count to ..row
+        temp_df$..row[1] <- temp_df[[paste0("..break_label_lines", r)]]
         
         # Set ..break_occur for current column for later use
         temp_df$..break_occur <- r
@@ -1274,12 +1297,18 @@ get_splits_text <- function(x, widths, page_size, lpg_rows,
 #' @param page_size Available data height in number of rows.
 #' @param lpg_rows Last page rows.  Subtracted from available height.
 #' @param content_offsets Blank rows requested above or below content
+#' @param count_row_var Whether to use ..row to count lines
+#' @param group_cohesion A vector of variables for group cohesion
+#' @param min_page_prop A vector of minimum page proportions for each cohesion
+#' variable.
+#' @param userPage Whether to follow user's page and turn off auto paging
 #' @return Data frame with ..page column populated with page numbers.
 #' @noRd
 get_page_breaks <- function(x, page_size, lpg_rows, content_offsets, 
                             count_row_var = FALSE,
                             group_cohesion = NULL,
-                            min_page_prop = NULL){
+                            min_page_prop = NULL,
+                            userPage = FALSE){
   
   pg <- 1
   counter <- 0
@@ -1422,6 +1451,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
     #   }
     # }
     
+    cohesionBreak <- FALSE
     if (!is.null(group_cohesion)) {
       j <- 1
       while (j <= length(group_cohesion) & userForce == FALSE) {
@@ -1438,25 +1468,35 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
           if ((group_counts[i] > (page_size  - offset - ttfl - pre_counter)) &
               (pre_counter >= round((page_size  - offset - ttfl) * min_page_prop_j)) &
               (group_counts[i] <= (page_size - offset - ttfl))) {
-            userForce <- TRUE
+            cohesionBreak <- TRUE
           }
         }
         
         j <- j + 1
       }
     }
+
+    # If userPage is used, then follow user's pagination, or detect if line 
+    # count is greater than page size to start a new page
+    newPage <- FALSE
+    if (userPage) {
+      newPage <- userForce
+    } else if ((counter > (page_size  - offset - ttfl)) | cohesionBreak | userForce) {
+      newPage <- TRUE
+    }
     
     # print("--------------------------------------")
-    # print(paste0("userForce is ", userForce))
+    # print(paste0("newPage is ", newPage))
     # print(paste0("row: ", i))
     # print(paste0("counter: ", counter))
     # print(paste0("ttfl: ", ttfl))
     # print(paste0("page_size: ", page_size))
     # print(paste0("Capacity: ", page_size  - offset - ttfl))
     # print(paste0("Page before: ", pg))
-
+    
+    if (newPage) {
     # If line count is greater than page size, start a new page
-    if ((counter > (page_size  - offset - ttfl)) | userForce) {
+    # if ((counter > (page_size  - offset - ttfl)) | userForce) {
       
       # Don't understand why this adjustment is needed.  But it is.
       # Have to figure it out, because it seems wrong.
@@ -1525,7 +1565,7 @@ get_page_breaks <- function(x, page_size, lpg_rows, content_offsets,
       offset <- 0
 
     }
-    
+
     # print(paste0("Page after: ", pg))
     # print("--------------------------------------")
   

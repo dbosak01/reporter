@@ -1359,3 +1359,97 @@ test_that("pdf41: Page numbers work every in title, footnote, header, and footer
     expect_equal(TRUE, TRUE)
   }
 })
+
+test_that("pdf42: Page wrap can be turned off as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test42.pdf")
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+      USUBJID STUDYID  DOMAIN  SUBJID  RFSTDTC       RFENDTC       RFXSTDTC      RFXENDTC      RFICDTC       RFPENDTC
+      "001"   "ABC"    "DM"    "01"    "2021-12-01"  "2021-12-20"  "2021-12-02"  "2021-12-20"  "2021-12-01"  "2021-12-20"
+      "002"   "ABC"    "DM"    "02"    "2021-12-02"  "2021-12-21"  "2021-12-03"  "2021-12-21"  "2021-12-02"  "2021-12-20"
+      "003"   "ABC"    "DM"    "03"    "2021-12-03"  "2021-12-22"  "2021-12-04"  "2021-12-22"  "2021-12-03"  "2021-12-20"
+      "004"   "ABC"    "DM"    "04"    "2021-12-04"  "2021-12-23"  "2021-12-05"  "2021-12-23"  "2021-12-04"  "2021-12-20"
+      "005"   "ABC"    "DM"    "05"    "2021-12-05"  "2021-12-24"  "2021-12-06"  "2021-12-24"  "2021-12-05"  "2021-12-20"
+      "006"   "ABC"    "DM"    "06"    "2021-12-06"  "2021-12-25"  "2021-12-07"  "2021-12-25"  "2021-12-06"  "2021-12-20"
+      "007"   "ABC"    "DM"    "07"    "2021-12-07"  "2021-12-26"  "2021-12-08"  "2021-12-26"  "2021-12-07"  "2021-12-20"
+      "008"   "ABC"    "DM"    "08"    "2021-12-08"  "2021-12-27"  "2021-12-09"  "2021-12-27"  "2021-12-08"  "2021-12-20"')
+    
+    # Test that any assigned formats are applied
+    # attr(df$SUBJID, "width") <- 1
+    attr(df$SUBJID, "justify") <- "left"
+    attr(df$SUBJID, "format") <- "S:%s"
+    
+    # Define table
+    tbl <- create_table(df, page_wrap = FALSE) 
+    tbl2 <- create_table(df) 
+    tbl3 <- create_table(df, page_wrap = TRUE) 
+    
+    # Define Report
+    # !! Please note that when `page_wrap` is set in `create_table`. It'll be the top choice
+    # even though we set TRUE in `report_options`. Therefore, table 1 doesn't have
+    # the page wrap, but table 2 have the page wrap.
+    rpt <- create_report(fp, font = "fixed", output_type = "pdf",
+                         orientation = "portrait") %>%
+      report_options(page_wrap = FALSE) %>%
+      titles("Listing 1.0",
+             "Demographics Dataset") %>%
+      add_content(tbl, align = "left") %>%
+      add_content(tbl2, align = "left") %>%
+      add_content(tbl3, align = "left") %>%
+      page_header("Sponsor", "Drug") %>%
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>%
+      footnotes("My footnote")
+    
+    # If page is wrapped, RFICDTC will be in the next page
+    # Now page is not wrapped, we can see RFICDTC is out of the margin.
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf43: auto_page can be turned off as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "pdf/test43.pdf")
+    
+    dat <- iris[1:100, ]
+    dat$Species <- as.character(dat$Species)
+    dat$Species[1:25] <- rep("setosa1", 25)
+    dat$Species[26:50] <- rep("setosa2", 25)
+    
+    tbl <- create_table(dat, auto_page = FALSE) %>%
+      footnotes("First Table with auto_page=FALSE in create_table", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    tbl2 <- create_table(dat) %>%
+      footnotes("Second Table with auto_page=FALSE in report_options", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    tbl3 <- create_table(dat, auto_page = TRUE) %>%
+      footnotes("Third Table with auto_page=TRUE in create_table", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed", 
+                         orientation = "landscape") %>%
+      report_options(auto_page = FALSE) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+      titles("Table 1.0", "My Nice Table") %>%
+      add_content(tbl) %>%
+      add_content(tbl2) %>%
+      add_content(tbl3) %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})

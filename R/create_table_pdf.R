@@ -230,10 +230,23 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   # print("split_cells")
   # print(fdat)
   
+  # Decide whether to use page wrap. Follow the table setting first, then follow
+  # the report setting.
+  page_wrap_flag <- TRUE
+  if (!is.null(ts$page_wrap)){
+    page_wrap_flag <- ts$page_wrap
+  } else {  
+    page_wrap_flag <- rs$page_wrap
+  }
   
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, 
-                          widths_uom, 0, control_cols)  # No gutter width for RTF
+  if (page_wrap_flag) {
+    wraps <- get_page_wraps(rs$line_size, ts, 
+                            widths_uom, 0, control_cols)  # No gutter width for RTF
+  } else {
+    wraps <- list(names(fdat))
+  }
+  
   # print("wraps")
   # print(wraps)
   
@@ -248,6 +261,12 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   # Offsets are needed to calculate splits and page breaks
   content_offset <- get_content_offsets_pdf(rs, ts, tmp_pi, 
                                             content_blank_row, pgby_cnt)
+  
+  # Decide whether to use page break. Follow the table setting first, then follow
+  # the report setting.
+  if (is.null(ts$auto_page)){
+    ts$auto_page <- rs$auto_page
+  }
   
   # Need to do something with widths
   # split rows

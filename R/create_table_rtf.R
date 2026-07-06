@@ -212,11 +212,11 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   # print("Original Widths")
   # print(widths(dat))
   
-  
   # Get column widths
   widths_uom <- get_col_widths_variable(fdat, ts, labels, 
                                         rs$font, rs$font_size, rs$units, 
-                                        rs$gutter_width) 
+                                        rs$gutter_width,
+                                        allow_rtf_code = rs$allow_code) 
   
   # print("Widths UOM")
   # print(widths_uom)
@@ -224,17 +224,31 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font, 
-                                rs$font_size, rs$units, rs$output_type, rs$char_width, ts)$data 
+                               rs$font_size, rs$units, rs$output_type, 
+                               rs$char_width, ts, rs)$data
+
   # print("split_cells")
   # print(fdat)
   
+  # Decide whether to use page wrap. Follow the table setting first, then follow
+  # the report setting.
+  page_wrap_flag <- TRUE
+  if (!is.null(ts$page_wrap)){
+    page_wrap_flag <- ts$page_wrap
+  } else {  
+    page_wrap_flag <- rs$page_wrap
+  }
+  
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, 
-                          widths_uom, 0, control_cols)  # No gutter width for RTF
-  # print("wraps")
-  # print(wraps)
-  
-  
+  if (page_wrap_flag) {
+    wraps <- get_page_wraps(rs$line_size, ts, 
+                            widths_uom, 0, control_cols)  # No gutter width for RTF
+    # print("wraps")
+    # print(wraps)
+  } else {
+    wraps <- list(names(fdat))
+  }
+
   # Create a temporary page info to pass into get_content_offsets
   tmp_pi <- list(keys = keys, col_width = widths_uom, label = labels,
                  label_align = label_aligns, table_align = cntnt$align, data = fdat)
@@ -246,9 +260,16 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
   content_offset <- get_content_offsets_rtf(rs, ts, tmp_pi, 
                                             content_blank_row, pgby_cnt)
   
+  # Decide whether to use page break. Follow the table setting first, then follow
+  # the report setting.
+  if (is.null(ts$auto_page)){
+    ts$auto_page <- rs$auto_page
+  }
+  
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
-                            lpg_rows, content_offset$lines, ts, TRUE)  
+                            lpg_rows, content_offset$lines, ts, TRUE) 
+ 
   # print("splits")
   # print(splits)
   
@@ -345,10 +366,12 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   
   if (!is.null(ts$title_hdr))
     ttls <- get_title_header_rtf(ts$title_hdr, ls, rs, pi$table_align)
-  else
-    ttls <- get_titles_rtf(ts$titles, ls, rs, pi$table_align) 
-  
-  
+  else if (rs$title_block == "table") {
+    ttls <- get_titles_rtf(ts$titles, ls, rs, pi$table_align)
+  } else if (rs$title_block == "paragraph") {
+    ttls <- get_titles_par_rtf(ts$titles, ls, rs)
+  }
+     
   if (!is.null(rs$page_by)) {
     pgby <- get_page_by_rtf(rs$page_by, rs$content_size[["width"]], 
                             pi$page_by, rs, pi$table_align)
@@ -373,6 +396,7 @@ create_table_rtf <- function(rs, ts, pi, content_blank_row, wrap_flag,
   # }
     
   # Determine sum of all lines
+  # print(paste0("rws$lines: ", rws$lines))
   rc <- sum(ttls$lines, pgby$lines, shdrs$lines, 
            hdrs$lines, rws$lines,
            length(a))
@@ -520,6 +544,13 @@ get_page_footnotes_rtf <- function(rs, spec, spec_width, lpg_rows, row_count,
   ublnks <- c()
   lblnks <- c()
   
+  # print(paste0("rs$body_line_count: ", rs$body_line_count))
+  # print(paste0("row_count: ", row_count))
+  # print(paste0("ftnts$lines: ", ftnts$lines))
+  # print(paste0("lpg_rows: ", lpg_rows))
+  # print(paste0("blen: ", blen))
+  # print(paste0("boff: ", boff))
+  
   # Determine number of filler lines needed
   len_diff <- rs$body_line_count - row_count - ftnts$lines - lpg_rows - blen - boff
 
@@ -579,10 +610,15 @@ get_content_offsets_rtf <- function(rs, ts, pi, content_blank_row, pgby_cnt = NU
   }
   
   # Get title headers or titles
-  if (is.null(ts$title_hdr))
-    ttls <- get_titles_rtf(ts$titles, wdth, rs) 
-  else 
+  if (is.null(ts$title_hdr)) {
+    if (rs$title_block == "table") {
+      ttls <- get_titles_rtf(ts$titles, wdth, rs) 
+    } else if (rs$title_block == "paragraph") {
+      ttls <- get_titles_par_rtf(ts$titles, wdth, rs) 
+    }
+  } else {
     ttls <- get_title_header_rtf(ts$title_hdr, wdth, rs)
+  }
   
   # Get page by if it exists
   # if (!is.null(ts$page_by))
@@ -756,7 +792,10 @@ get_table_header_rtf <- function(rs, ts, widths, lbls, halgns, talgn) {
     if (!is.control(nms[k])) {
       
       # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font)
+      tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font, 
+                              allow_rtf_code = rs$allow_code,
+                              insert_line_break = rs$line_break)
+      
       
       tb <- tmp$rtf
       if (ts$header_bold)
@@ -954,7 +993,10 @@ get_spanning_header_rtf <- function(rs, ts, pi) {
     for(k in seq_along(lbls)) {
 
       # Split label strings if they exceed column width
-      tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font)
+      tmp <- split_string_rtf(lbls[k], widths[k], rs$units, rs$font, 
+                              allow_rtf_code = rs$allow_code,
+                              insert_line_break = rs$line_break)
+      
       
       if (s$bold[k])
         tb <- paste0("\\b ", tmp$rtf, "\\b0")
@@ -1342,6 +1384,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       
       cl <- strsplit(vl, "\\line", fixed = TRUE)[[1]]
+
       if (length(cl) > mxrw)
         mxrw <- length(cl)
       
@@ -1413,10 +1456,21 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           
           # Count lines in cell 
           cl <- strsplit(vl, "\\line", fixed = TRUE)[[1]]
+
           if (length(cl) > mxrw)
               mxrw <- length(cl)
         }
         
+      }
+    }
+    
+    # print(paste0("i: ", i))
+    # print(paste0("mxrw: ", mxrw))
+    # print(paste0("tbl$..row[i]:", tbl$..row[i]))
+    
+    if (!rs$line_break) {
+      if (mxrw < tbl$..row[i]) {
+        mxrw <- tbl$..row[i]
       }
     }
     
@@ -1440,7 +1494,7 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
 
   }
   
-  
+  # print(paste0("sum(rws): ", sum(rws)))
   res <- list(rtf = ret,
               lines = sum(rws))
   

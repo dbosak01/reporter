@@ -95,6 +95,46 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   
   # Prepare header
   hdr[length(hdr) + 1] <- "{\\rtf1\\ansi\\deff0 {\\fonttbl {\\f0 Courier;}}"
+  
+  # Below table table is from SAS default settings, which are:
+  # \cf1 : Black (\red0\green0\blue0;)
+  # \cf2 : Blue (\red0\green0\blue255;)
+  # \cf3 : Cyan (\red0\green255\blue255;)
+  # \cf4 : Lime Green (\red0\green255\blue0;)
+  # \cf5 : Magenta (\red255\green0\blue255;)
+  # \cf6 : Red (\red255\green0\blue0;)
+  # \cf7 : Yellow (\red255\green255\blue0;)
+  # \cf8 : White (\red255\green255\blue255;)
+  # \cf9 : Navy Blue (\red0\green0\blue128;)
+  # \cf10 : Teal (\red0\green128\blue128;)
+  # \cf11 : Green (\red0\green128\blue0;)
+  # \cf12 : Purple (\red128\green0\blue128;)
+  # \cf13 : Maroon / Dark Red (\red128\green0\blue0;)
+  # \cf14 : Olive (\red128\green128\blue0;)
+  # \cf15 : Gray (\red128\green128\blue128;)
+  # \cf16 : Light Gray (\red192\green192\blue192;)
+  
+  colortbl <- paste0(
+    "{\\colortbl;",
+    "\\red0\\green0\\blue0;",
+    "\\red0\\green0\\blue255;",
+    "\\red0\\green255\\blue255;",
+    "\\red0\\green255\\blue0;",
+    "\\red255\\green0\\blue255;",
+    "\\red255\\green0\\blue0;",
+    "\\red255\\green255\\blue0;",
+    "\\red255\\green255\\blue255;",
+    "\\red0\\green0\\blue128;",
+    "\\red0\\green128\\blue128;",
+    "\\red0\\green128\\blue0;",
+    "\\red128\\green0\\blue128;",
+    "\\red128\\green0\\blue0;",
+    "\\red128\\green128\\blue0;",
+    "\\red128\\green128\\blue128;",
+    "\\red192\\green192\\blue192;}"
+  )
+  hdr[length(hdr) + 1] <- colortbl
+  
   if (rs$orientation == "landscape") {
     #hdr[length(hdr) + 1] <- "\\landscape\\horzdoc"
     hdr[length(hdr) + 1] <- "\\landscape"
@@ -124,7 +164,6 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   else if (rs$font_size == 9)
     hdr[length(hdr) + 1] <- "\\sl-200\\slmult0\\fs18"
   
-  # Start with all lines
   body <- encodeRTF(ls)
   
   if (rs$has_graphics) {
@@ -214,11 +253,10 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
 }
 
 #' @noRd
-encodeRTF <- Vectorize(function(x) {
-  
-  
+encodeRTF <- Vectorize(function(x, allow_rtf_code = FALSE) {
+
   ints <- utf8ToInt(x)
-  res <- paste0(encodeRTF_internal(ints), collapse = "")
+  res <- paste0(encodeRTF_internal(ints, allow_rtf_code), collapse = "")
   
   return(res)
 })
@@ -229,19 +267,22 @@ encodeRTF <- Vectorize(function(x) {
 # Using character codes because R doesn't like 
 # non-ascii characters in the code.
 #' @noRd
-encodeRTF_internal <- Vectorize(function(x) {
+encodeRTF_internal <- Vectorize(function(x, allow_rtf_code = FALSE) {
   
   ret <- intToUtf8(x, multiple = TRUE)
-  if (ret == "}")
+  if (ret == "}" & allow_rtf_code == FALSE) {
     ret <- "\\'7d"
-  else if (ret == "{")
+  } else if (ret == "{" & allow_rtf_code == FALSE) {
     ret <- "\\'7b"
-  else if (ret == "\\")
+  } else if (ret == "\\" & allow_rtf_code == FALSE) {
     ret <- "\\'5c"
-  else if (x == 175)  # This is a macron used for underlines
+  } else if (x == 175) {
+    # This is a macron used for underlines
     ret <- "\\u175\\u175"
-  else if (x > 127)  # Any non-alphanumeric character
+  } else if (x > 127) {
+    # Any non-alphanumeric character
     ret <- paste0("\\u", x, "  ")
+  }  
   
   return(ret)
   

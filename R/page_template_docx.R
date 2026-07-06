@@ -217,7 +217,8 @@ get_page_header_docx <- function(rs) {
           
           if (image_left == FALSE) {
             # Split strings if they exceed width
-            tmp <- split_string_docx(hl[[i]], left_width, rs$units, rs$font)
+            tmp <- split_string_docx(hl[[i]], left_width, rs$units, rs$font,
+                                     insert_line_break = rs$line_break)
             
             cret <- paste0(cret, 
                            '<w:tc><w:tcPr><w:tcW w:w="', left_pct, '" w:type="pct"/></w:tcPr>', 
@@ -259,7 +260,8 @@ get_page_header_docx <- function(rs) {
           
           if (image_center == FALSE) {
             # Split strings if they exceed width
-            tmp2 <- split_string_docx(hc[[i]], center_width, rs$units, font = rs$font)
+            tmp2 <- split_string_docx(hc[[i]], center_width, rs$units, font = rs$font,
+                                      insert_line_break = rs$line_break)
             
             cret <- paste0(cret, 
                            '<w:tc><w:tcPr><w:tcW w:w="', center_pct, '" w:type="pct"/></w:tcPr>', 
@@ -301,7 +303,8 @@ get_page_header_docx <- function(rs) {
           
           if (image_right == FALSE) {
             # Split strings if they exceed width
-            tmp3 <- split_string_docx(hr[[i]], right_width, rs$units, font = rs$font)
+            tmp3 <- split_string_docx(hr[[i]], right_width, rs$units, font = rs$font,
+                                      insert_line_break = rs$line_break)
             
             
             cret <- paste0(cret, 
@@ -549,7 +552,8 @@ get_page_footer_docx <- function(rs) {
           
           if (image_left == FALSE) {
             # Split strings if they exceed width
-            tmp1 <- split_string_docx(fl[[i]], left_width, rs$units, font = rs$font)
+            tmp1 <- split_string_docx(fl[[i]], left_width, rs$units, font = rs$font,
+                                      insert_line_break = rs$line_break)
             
             
             # tret <- paste0(tret, cell_pct(tmp1$docx, "left", 1667))
@@ -588,7 +592,8 @@ get_page_footer_docx <- function(rs) {
           
           if (image_center == FALSE) {
             # Split strings if they exceed width
-            tmp2 <- split_string_docx(fc[[i]], center_width, rs$units, font = rs$font)
+            tmp2 <- split_string_docx(fc[[i]], center_width, rs$units, font = rs$font,
+                                      insert_line_break = rs$line_break)
             
             # tret <- paste0(tret,  cell_pct(tmp2$docx, "center", 1666))
             tret <- paste0(tret,  cell_pct(tmp2$docx, "center", center_pct))
@@ -624,7 +629,8 @@ get_page_footer_docx <- function(rs) {
         if (fr_num >= i) {
           
           if (image_right == FALSE) {
-            tmp3 <- split_string_docx(fr[[i]], right_width, rs$units, font = rs$font)
+            tmp3 <- split_string_docx(fr[[i]], right_width, rs$units, font = rs$font,
+                                      insert_line_break = rs$line_break)
             
             # tret <- paste0(tret, cell_pct(tmp3$docx, "right", 1667))
             tret <- paste0(tret, cell_pct(tmp3$docx, "right", right_pct))
@@ -873,7 +879,8 @@ get_titles_docx <- function(ttllst, content_width, rs, talgn = "center",
           }
 
           # Split title strings if they exceed width
-          tmp <- split_string_docx(vl, cwidth, rs$units, font = rs$font)
+          tmp <- split_string_docx(vl, cwidth, rs$units, font = rs$font,
+                                   insert_line_break = rs$line_break)
           
           # Track max lines for counting
           if (tmp$lines > mxlns)
@@ -1076,7 +1083,8 @@ get_titles_docx_back <- function(ttllst, content_width, rs, talgn = "center",
         
         
         # Split title strings if they exceed width
-        tmp <- split_string_docx(ttls$titles[[i]], width, rs$units, font = rs$font)
+        tmp <- split_string_docx(ttls$titles[[i]], width, rs$units, font = rs$font,
+                                 insert_line_break = rs$line_break)
         
         
         tstr <- para(tmp$docx, algn, ttls$font_size, ttls$bold)
@@ -1321,7 +1329,8 @@ get_footnotes_docx <- function(ftnlst, content_width, rs, talgn = "center",
           }
   
           # Split footnote strings if they exceed width
-          tmp <- split_string_docx(vl, cwidth, rs$units, font = rs$font)
+          tmp <- split_string_docx(vl, cwidth, rs$units, font = rs$font,
+                                   insert_line_break = rs$line_break)
           
           # Track max lines for counting
           if (tmp$lines > mxlns)
@@ -1542,7 +1551,8 @@ get_footnotes_docx_back <- function(ftnlst, content_width, rs, talgn = "center",
         
         
         # Split footnote strings if they exceed width
-        tmp <- split_string_docx(ftnts$footnotes[[i]], width, rs$units, font = rs$font)
+        tmp <- split_string_docx(ftnts$footnotes[[i]], width, rs$units, font = rs$font,
+                                 insert_line_break = rs$line_break)
         
         if (al != "")
           ret <- append(ret, al)
@@ -1692,7 +1702,8 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
 
         if (length(ttlhdr$titles) >= i) {
           # Split strings if they exceed width
-          tmp1 <- split_string_docx(ttlhdr$titles[[i]], width * .7, rs$units, font = rs$font)
+          tmp1 <- split_string_docx(ttlhdr$titles[[i]], width * .7, rs$units, font = rs$font,
+                                    insert_line_break = rs$line_break)
 
           ttl <-  tmp1$docx 
           tcnt <- tmp1$lines
@@ -1703,7 +1714,8 @@ get_title_header_docx <- function(thdrlst, content_width, rs, talgn = "center",
 
         if (length(ttlhdr$right) >= i) {
           tmp2 <- split_string_docx(ttlhdr$right[[i]],
-                                   width * .3, rs$units, font = rs$font)
+                                   width * .3, rs$units, font = rs$font,
+                                   insert_line_break = rs$line_break)
 
           
           hdr <- tmp2$docx
@@ -1923,7 +1935,8 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
       
       # Split label
       label_buffer <- ifelse(bold[1] == TRUE, 0.5, 0.2)
-      label_split <- split_string_docx(pgby$label, width - label_buffer, rs$units, font = rs$font)
+      label_split <- split_string_docx(pgby$label, width - label_buffer, rs$units, font = rs$font,
+                                       insert_line_break = rs$line_break)
       cnt <- cnt + label_split$lines
 
       # Split value
@@ -1935,7 +1948,8 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
       remain_value_lines <- 0
       if (value_split$widths[1] > remain_width) {
         # If the first width is greater than remain width, it means value start a new line
-        value_split <- split_string_docx(value, width, rs$units, font = rs$font)
+        value_split <- split_string_docx(value, width, rs$units, font = rs$font,
+                                         insert_line_break = rs$line_break)
         cnt <- cnt + value_split$lines
         remain_value_lines <- value_split$lines
         value_split_txt <- value_split$docx
@@ -1944,7 +1958,8 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
         splt <- strsplit(value_split$docx, split = "\n", fixed = TRUE)
         if (length(splt[[1]]) > 1) {
           remain_value <- trimws(sub(splt[[1]][1], "", value), which = "left")
-          remain_value_split <- split_string_docx(remain_value, width - value_buffer, rs$units, font = rs$font)
+          remain_value_split <- split_string_docx(remain_value, width - value_buffer, rs$units, font = rs$font,
+                                                  insert_line_break = rs$line_break)
           cnt <- cnt + remain_value_split$lines
           remain_value_lines <- remain_value_split$lines
           
@@ -1962,6 +1977,11 @@ get_page_by_docx <- function(pgby, width, value, rs, talgn,
       if (substr(label_split$docx, label_nchar, label_nchar) != " "
           & substr(value_split_txt, value_nchar, value_nchar) != " "){
         value_split_txt <- paste0(" ", value_split_txt)
+      }
+      
+      # Overwrite the value if line break is turned off
+      if (!rs$line_break) {
+        value_split_txt <- value
       }
       
       # print(paste0("w is ", w))

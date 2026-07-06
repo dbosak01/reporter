@@ -318,7 +318,7 @@ the error, you can escape the glue functionality by doubling the curly braces.
 In other words, use "{{mystring}}" instead of "{mystring}.
 
 You can also turn off the glue functionality globally by setting 
-`globals("reporter.glue" = FALSE)`.
+`options("reporter.glue" = FALSE)`.
 
 [top](#top)
 
