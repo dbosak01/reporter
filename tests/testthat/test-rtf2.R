@@ -4981,6 +4981,32 @@ test_that("rtf2-133: Titles can be output in paragraph for text as expected.", {
   
 })
 
+test_that("rtf2-134: line_count can be set in report_options as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test134.rtf")
+    
+    dat <- iris[1:100, ]
+
+    tbl <- create_table(dat) %>%
+      footnotes("line_count setting in report_options()", "My footnote 2", valign = "bottom") 
+    
+    rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                         font_size = 10, orientation = "landscape") %>%
+      report_options(line_count = 18) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+      titles("Table 1.0", "Table with line_count = 18") %>%
+      add_content(tbl) %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
 
 # User Tests --------------------------------------------------------------
 

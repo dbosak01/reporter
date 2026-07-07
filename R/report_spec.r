@@ -850,6 +850,9 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' common package, please double the braces.
 #' @param line_break Whether to use auto line breaking. Default is TRUE. This is
 #' only for RTF, DOCX, and HTML.
+#' @param line_count The number of lines that will fit on page.  Normally,
+#' the \code{line_count} is calculated automatically. You can override the 
+#' calculated value by setting the \code{line_count} directly.
 #' @param page_wrap Whether to use auto page wrapping. Default is TRUE. If it has
 #' been set in \code{\link{create_table}}, then it follows table's setting. Please
 #' note that turning off page wrapping might make the report out of margin.
@@ -888,8 +891,8 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' write_report(rpt)
 #' @export
 report_options <- function(x, allow_code = FALSE, line_break = TRUE,
-                           page_wrap = TRUE, auto_page = TRUE,
-                           title_block = "table"){
+                           line_count = NULL, page_wrap = TRUE, auto_page = TRUE,
+                           title_block = "table", font_size = NULL){
   if (!"report_spec" %in% class(x)) {
     stop("Input object must be of class 'report_spec'.") 
   }
@@ -909,6 +912,12 @@ report_options <- function(x, allow_code = FALSE, line_break = TRUE,
   if (tolower(title_block) != "table" & tolower(title_block) != "paragraph") {
     stop("`title_block` should be 'table' or 'paragraph'.")
   }
+  if (!is.null(line_count)) {
+    if (!is.numeric(line_count))
+      stop("line_count must be a number.")
+    if (line_count <= 0)
+      stop("line_count must be greater than zero.")
+  }
   
   if (!is.null(x$output_type)) {
     if (toupper(x$output_type) != "RTF") {
@@ -924,6 +933,7 @@ report_options <- function(x, allow_code = FALSE, line_break = TRUE,
   x$auto_page <- auto_page
   x$page_wrap <- page_wrap
   x$title_block <- title_block
+  x$user_line_count <- line_count
   
   return(x)
 }
