@@ -435,7 +435,7 @@ get_page_footnotes_text <- function(rs, spec, spec_width,
   ublnks <- c()
   lblnks <- c()
   
-  len_diff <- rs$body_line_count - lpg_rows - row_count - length(ftnts) - length(b)
+  len_diff <- rs$body_line_count - lpg_rows - row_count - get_vector_lines(ftnts) - length(b)
   
   if (vflag) {
     
@@ -509,7 +509,7 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row, pgby_cnt = NULL) 
   if (any(ts$borders %in% c("all", "bottom", "outside")))
     bbrdr <- 1
   
-  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb) + tbrdr
+  ret["upper"] <- get_vector_lines(shdrs) + get_vector_lines(hdrs) + get_vector_lines(ttls) + get_vector_lines(pgb) + tbrdr
   
   if (content_blank_row %in% c("above", "both"))
       ret["blank_upper"] <- 1
@@ -518,9 +518,9 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row, pgby_cnt = NULL) 
   rftnts <- get_footnotes(rs$footnotes, w, rs$line_size, rs$uchar, rs$char_width) 
   
   if (has_top_footnotes(rs)) {
-    ret["lower"] <- length(ftnts) + length(rftnts) + bbrdr
+    ret["lower"] <- get_vector_lines(ftnts) + get_vector_lines(rftnts) + bbrdr
   } else {
-    ret["lower"] <- length(ftnts) + bbrdr
+    ret["lower"] <- get_vector_lines(ftnts) + bbrdr
   }
 
   if (content_blank_row %in% c("both", "below"))

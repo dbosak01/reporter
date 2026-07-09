@@ -73,12 +73,48 @@ get_page_header <- function(rs) {
       }
       
       else {
-        stop(paste0("Page header exceeds available width\n", 
-                    "Header Left: ", hl, "\n", 
-                    "Header Right: ", hr, "\n",
-                    "Header length: ", nchar(hl) + nchar(hr), "\n",
-                    "Line length: ", rs$line_size, "\n"))
+        # stop(paste0("Page header exceeds available width\n", 
+        #             "Header Left: ", hl, "\n", 
+        #             "Header Right: ", hr, "\n",
+        #             "Header length: ", nchar(hl) + nchar(hr), "\n",
+        #             "Line length: ", rs$line_size, "\n"))
+        # ln <- ""
+        lw <- round(rs$line_size/2)
+        rw <- round(rs$line_size/2) - 1
+        
+        hl_split <- stri_wrap(unlist(
+          strsplit(hl, split = "\n", fixed = TRUE)),
+          width = lw, normalize = FALSE)
+        
+        hr_split <- stri_wrap(unlist(
+          strsplit(hr, split = "\n", fixed = TRUE)),
+          width = rw, normalize = FALSE)
+        
+        max_line <- max(length(hl_split), length(hr_split))
+        
         ln <- ""
+        for (k in 1:max_line) {
+          
+          if (k <= length(hl_split)) {
+            hl_s <- hl_split[k]
+          } else {
+            hl_s <- ""
+          }
+          
+          if (k <= length(hr_split)) {
+            hr_s <- hr_split[k]
+          } else {
+            hr_s <- ""
+          }
+          
+          cat <- ""
+          if (k > 1) {
+            cat <- "\n"
+          }
+          
+          ln <- paste0(ln, cat, pad_right(hl_s, lw + 1), hr_s)
+        }
+        
       }
       
       ret[i] <- ln
@@ -126,93 +162,173 @@ get_titles <- function(titles, content_width, page_width, uchar, char_width) {
       else if (is.numeric(ttl$width))
         width <- ceiling(ttl$width / char_width)
       
-      cll <- round(width / cols)
+      # Split the strings and distribute to columns
+      col_width <- round(width / cols)
       
-      ll <- width 
+      string_list <- vector(mode = "list", length = cols)
       
+      for (i in 1:length(ttl$titles)) {
+        
+        s <- ttl$titles[i]
+        
+        s_split <- stri_wrap(unlist(
+          strsplit(s, split = "\n", fixed = TRUE)),
+          width = col_width, normalize = FALSE)
+        
+        col_num <- i %% cols
+        col_num <- ifelse(col_num == 0, cols, col_num)
+        
+        string_list[[col_num]] <- append(string_list[[col_num]], s_split)
+      }
       
-      algn <- ttl$align
-      if (algn == "centre")
-        algn <- "center"
-          
+      string_matrix <- stri_list2matrix(string_list, byrow = FALSE, fill = "")
+
+      # Deal with blank lines and border          
       if (any(ttl$blank_row %in% c("above", "both")) & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
       
       if (any(ttl$borders %in% c("top", "all")) & length(ttl$titles) > 0)
-        ret[length(ret) + 1] <-  paste0(rep(uchar, ll), 
+        ret[length(ret) + 1] <-  paste0(rep(uchar, width), 
                                                collapse = "")
-      i <- 1
-      while (i <= length(ttl$titles)) {
-        
-        ln <- ""
-        
-        for (j in seq_len(cols)) {
       
-          # Not all cells have titles
-          if (i > length(ttl$titles))
-            t <- ""
-          else 
-            t <- ttl$titles[[i]]
+      algn <- ttl$align
+      if (algn == "centre"){
+        algn <- "center"
+      }
+      
+      # Loop through all the split strings
+      for (row in 1:nrow(string_matrix)) {
+        ln <- ""
+        for (col in 1:ncol(string_matrix)) {
           
           # Deal with column alignments
           if (cols == 1) {
-            calgn <- algn 
+            calgn <- algn
           } else if (cols == 2) {
-            if (j == 1)
+            if (col == 1) {
               calgn <- "left"
-            else 
+            } else {
               calgn <- "right"
+            }
           } else if (cols == 3) {
-            if (j == 1)
+            if (col == 1) {
               calgn <- "left"
-            else if (j == 2)
+            } else if (col == 2) {
               calgn <- "center"
-            else if (j == 3) 
+            } else if (col == 3) {
               calgn <- "right"
+            }
           }
           
-          gp <- cll - nchar(t)
-          
-          #print("titles")
-          if (gp > 0) {
-            
-            if (calgn == "left")
-              ln <- paste0(ln, pad_right(t, cll))
-            else if (calgn == "right")
-              ln <- paste0(ln, pad_left(t, cll))
-            else if (calgn == "center")
-              ln <- paste0(ln, pad_both(t, cll))
-            
-          } else {
-            warning(paste0("Title exceeds available width.",
-                        "\nTitle: ", t,
-                        "\nTitle width: ", nchar(t),
-                        "\nLine length: ", cll))
-            
-            tgp <- cll - 3
-  
-            if (tgp >= 0) {
-              if (ttl$align == "left") {
-                ln <- paste0(substr(pad_right(t, cll), 1, tgp), "...")
-              } else if (ttl$align == "right") {
-                ln <- paste0("...", substr(pad_left(t, cll), 1, tgp))
-              } else if (ttl$align == "center" | ttl$align == "centre") {
-                ln <- paste0(substr(pad_both(t, cll), 1, tgp), "...")
-              }
-              
-            } else ln <- ""
-            
+          string_value <- string_matrix[row, col]
+
+          if (calgn == "left") {
+            ln <- paste0(ln, pad_right(string_value, col_width))
+          } else if (calgn == "right") {
+            ln <- paste0(ln, pad_left(string_value, col_width))
+          } else if (calgn == "center") {
+            ln <- paste0(ln, pad_both(string_value, col_width))
           }
           
-          i <- i + 1
-        
         }
         
         ret[length(ret) + 1] <- ln
       }
       
+      # i <- 1
+      # while (i <= length(ttl$titles)) {
+      #   
+      #   ln <- ""
+      #   
+      #   for (j in seq_len(cols)) {
+      # 
+      #     # Not all cells have titles
+      #     if (i > length(ttl$titles))
+      #       t <- ""
+      #     else 
+      #       t <- ttl$titles[[i]]
+      #     
+      #     # Deal with column alignments
+      #     if (cols == 1) {
+      #       calgn <- algn 
+      #     } else if (cols == 2) {
+      #       if (j == 1)
+      #         calgn <- "left"
+      #       else 
+      #         calgn <- "right"
+      #     } else if (cols == 3) {
+      #       if (j == 1)
+      #         calgn <- "left"
+      #       else if (j == 2)
+      #         calgn <- "center"
+      #       else if (j == 3) 
+      #         calgn <- "right"
+      #     }
+      #     
+      #     gp <- cll - nchar(t)
+      #     
+      #     #print("titles")
+      #     if (gp > 0) {
+      #       
+      #       if (calgn == "left")
+      #         ln <- paste0(ln, pad_right(t, cll))
+      #       else if (calgn == "right")
+      #         ln <- paste0(ln, pad_left(t, cll))
+      #       else if (calgn == "center")
+      #         ln <- paste0(ln, pad_both(t, cll))
+      #       
+      #     } else {
+      #       # warning(paste0("Title exceeds available width.",
+      #       #             "\nTitle: ", t,
+      #       #             "\nTitle width: ", nchar(t),
+      #       #             "\nLine length: ", cll))
+      #       # 
+      #       # tgp <- cll - 3
+      #       # 
+      #       # if (tgp >= 0) {
+      #       #   if (ttl$align == "left") {
+      #       #     ln <- paste0(substr(pad_right(t, cll), 1, tgp), "...")
+      #       #   } else if (ttl$align == "right") {
+      #       #     ln <- paste0("...", substr(pad_left(t, cll), 1, tgp))
+      #       #   } else if (ttl$align == "center" | ttl$align == "centre") {
+      #       #     ln <- paste0(substr(pad_both(t, cll), 1, tgp), "...")
+      #       #   }
+      #       #   
+      #       # } else ln <- ""
+      #       
+      #       # Split string
+      #       title_split <- stri_wrap(unlist(
+      #         strsplit(t, split = "\n", fixed = TRUE)),
+      #         width = cll, normalize = FALSE)
+      #       
+      #       cat <- ""
+      #       for (k in 1:length(title_split)) {
+      #         if (k > 1) {
+      #           cat <- "\n"
+      #         }
+      #         
+      #         st <- title_split[k]
+      #         
+      #         if (calgn == "left") {
+      #           ln <- paste0(ln, cat, pad_right(st, cll))
+      #         } else if (calgn == "right") {
+      #           ln <- paste0(ln, cat, pad_left(st, cll))
+      #         } else if (calgn == "center") {
+      #           ln <- paste0(ln, cat, pad_both(st, cll))
+      #         }
+      #       }
+      #       
+      #     }
+      #     
+      #     i <- i + 1
+      #   
+      #   }
+      #   
+      #   ret[length(ret) + 1] <- ln
+      # }
+      
       if (any(ttl$borders %in% c("bottom", "all")) & length(ttl$titles) > 0)
-        ret[length(ret) + 1] <- paste0(rep(uchar, ll ),  collapse = "")
+        ret[length(ret) + 1] <- paste0(rep(uchar, width),  collapse = "")
       
       if (any(ttl$blank_row %in% c("below", "both")) & length(ttl$titles) > 0)
         ret[length(ret) + 1] <- ""
@@ -371,12 +487,24 @@ get_page_by <- function(pgby, width, value, pgby_cnt = NULL) {
         else if (pgby$align == "center" | pgby$align == "centre")
           ln <- pad_both(pbln, ll)
         
-      } else 
-        stop("Page by exceeds available width.")
-      
-      
-      ret[length(ret) + 1] <- ln
-    
+        ret[length(ret) + 1] <- ln
+      } else {
+        # stop("Page by exceeds available width.")
+        s_split <- stri_wrap(unlist(
+          strsplit(pbln, split = "\n", fixed = TRUE)),
+          width = ll, normalize = FALSE)
+        
+        for (s in s_split) {
+          if (pgby$align == "left") {
+            ln <- pad_right(s, ll)
+          } else if (pgby$align == "right") {
+            ln <- pad_left(s, ll)
+          } else if (pgby$align == "center" | pgby$align == "centre") {
+            ln <- pad_both(s, ll)
+          }
+          ret[length(ret) + 1] <- ln
+        }
+      }
     }
     
     
@@ -436,48 +564,94 @@ get_title_header <- function(title_hdr, content_width, page_width,
       
       hdr <- ttl_hdr$right
       
-      for (i in seq_len(maxlen)) {
-        
-        if (i <= length(ttl_hdr$titles))
-          t <- ttl_hdr$titles[i]
-        else 
-          t <- ""
-        
-        if (i <= length(hdr))
-          h <- hdr[i]
-        else 
-          h <- ""
-        
-        gp <- ll - nchar(t) - nchar(h)
-        
-        #print("titles")
-        if (gp >= 0) {
-          
-  
-            #ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
-            ln <- paste0(pad_right(t, ll - nchar(h)), h)
-  
-          
-        } else {
-          warning(paste0("Title header exceeds available width.\n",
-                      "Title: ", t, "\n",
-                      "Header: ", h, "\n",
-                      "Title length: ", nchar(t), "\n",
-                      "Header length: ", nchar(h), "\n",
-                      "Line length: ", ll, "\n"))
-          
-          tgp <- ll - 3
-          if (tgp >= 0) {
-            
-            ln <- paste0(substr(paste0(pad_right(t, ll - nchar(h)), h, " "), 
-                                1, tgp), "...")
-            
-          } else ln <- ""
+      lw <- round(width/2)
+      rw <- round(width/2)
+      
+      if (length(hdr) == 1){
+        if (hdr == "") {
+          lw <- width
+          rw <- 0
         }
-        
+      }
+      
+      # Split the strings and distribute to columns
+      string_list <- vector(mode = "list", length = 2)
+      
+      string_list[[1]] <- stri_wrap(unlist(
+        strsplit(ttl_hdr$titles, split = "\n", fixed = TRUE)),
+        width = lw, normalize = FALSE)
+      
+      string_list[[2]] <- stri_wrap(unlist(
+        strsplit(hdr, split = "\n", fixed = TRUE)),
+        width = lw, normalize = FALSE)
+      
+      string_matrix <- stri_list2matrix(string_list, byrow = FALSE, fill = "")
+      
+      for (row in 1:nrow(string_matrix)) {
+        ln <- ""
+        for (col in 1:ncol(string_matrix)) {
+          
+          # Deal with column alignments
+          if (col == 1) {
+            calgn <- "left"
+          } else if (col == 2) {
+            calgn <- "right"
+          }
+          
+          string_value <- string_matrix[row, col]
+          
+          if (calgn == "left") {
+            ln <- paste0(ln, pad_right(string_value, lw))
+          } else if (calgn == "right") {
+            ln <- paste0(ln, pad_left(string_value, rw))
+          } 
+          
+        }
         
         ret[length(ret) + 1] <- ln
       }
+      
+      # for (i in seq_len(maxlen)) {
+      #   
+      #   if (i <= length(ttl_hdr$titles))
+      #     t <- ttl_hdr$titles[i]
+      #   else 
+      #     t <- ""
+      #   
+      #   if (i <= length(hdr))
+      #     h <- hdr[i]
+      #   else 
+      #     h <- ""
+      #   
+      #   # gp <- ll - nchar(t) - nchar(h)
+      #   # 
+      #   # #print("titles")
+      #   # if (gp >= 0) {
+      #   #   
+      #   # 
+      #   #     #ln <- paste0(pad_right(t, ll - nchar(h)), h, " ")
+      #   #     ln <- paste0(pad_right(t, ll - nchar(h)), h)
+      #   # 
+      #   #   
+      #   # } else {
+      #   #   warning(paste0("Title header exceeds available width.\n",
+      #   #               "Title: ", t, "\n",
+      #   #               "Header: ", h, "\n",
+      #   #               "Title length: ", nchar(t), "\n",
+      #   #               "Header length: ", nchar(h), "\n",
+      #   #               "Line length: ", ll, "\n"))
+      #   # 
+      #   #   tgp <- ll - 3
+      #   #   if (tgp >= 0) {
+      #   # 
+      #   #     ln <- paste0(substr(paste0(pad_right(t, ll - nchar(h)), h, " "),
+      #   #                         1, tgp), "...")
+      #   # 
+      #   #   } else ln <- ""
+      #   # }
+      #   
+      #   ret[length(ret) + 1] <- ln
+      # }
       
       if (any(ttl_hdr$borders %in% c("bottom", "all")) & 
           length(ttl_hdr$titles) > 0) {
@@ -529,14 +703,28 @@ get_footnotes <- function(footnotes, content_width, page_width,
       else if (is.numeric(ftn$width))
         width <- ceiling(ftn$width / char_width)
       
-      cll <- round(width / cols)
+      # Split the strings and distribute to columns
+      col_width <- round(width / cols)
       
-      ll <- width 
+      string_list <- vector(mode = "list", length = cols)
       
-      algn <- ftn$align
-      if (algn == "centre")
-        algn <- "center"
+      for (i in 1:length(ftn$footnotes)) {
+        
+        s <- ftn$footnotes[i]
+        
+        s_split <- stri_wrap(unlist(
+          strsplit(s, split = "\n", fixed = TRUE)),
+          width = col_width, normalize = FALSE)
+        
+        col_num <- i %% cols
+        col_num <- ifelse(col_num == 0, cols, col_num)
+        
+        string_list[[col_num]] <- append(string_list[[col_num]], s_split)
+      }
       
+      string_matrix <- stri_list2matrix(string_list, byrow = FALSE, fill = "")
+      
+      # Deal with blank lines and border
       if (ftn$blank_row %in% c("above", "both") & length(ftn$footnotes) > 0)
         ret[length(ret) + 1] <- ""
       
@@ -544,95 +732,160 @@ get_footnotes <- function(footnotes, content_width, page_width,
         # ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll), 
         #                                       collapse = ""), " ")
         
-        ret[length(ret) + 1] <- paste0(rep(uchar, ll), collapse = "")
+        ret[length(ret) + 1] <- paste0(rep(uchar, width), collapse = "")
       }
       
-      i <- 1
-      while (i <= length(ftn$footnotes)) {
-        
-        ln <- ""
+      algn <- ftn$align
+      if (algn == "centre")
+        algn <- "center"
       
-        for (j in seq_len(cols)) {
-          
-          # Not all cells have footnotes
-          if (i > length(ftn$footnotes))
-            f <- ""
-          else 
-            f <- ftn$footnotes[[i]]
+      # Loop through all the split strings
+      for (row in 1:nrow(string_matrix)) {
+        ln <- ""
+        for (col in 1:ncol(string_matrix)) {
           
           # Deal with column alignments
           if (cols == 1) {
-            calgn <- algn 
+            calgn <- algn
           } else if (cols == 2) {
-            if (j == 1)
+            if (col == 1) {
               calgn <- "left"
-            else 
+            } else {
               calgn <- "right"
+            }
           } else if (cols == 3) {
-            if (j == 1)
+            if (col == 1) {
               calgn <- "left"
-            else if (j == 2)
+            } else if (col == 2) {
               calgn <- "center"
-            else if (j == 3) 
+            } else if (col == 3) {
               calgn <- "right"
+            }
           }
           
-          gp <- cll - nchar(f)
+          string_value <- string_matrix[row, col]
           
-          #print("footnotes")
-          if (gp > 0) {
-            
-            # if (ftn$align == "left")
-            #   ln <- pad_right(paste0(f, " "), ll + 1)
-            # else if (ftn$align == "right")
-            #   ln <- pad_left(paste0(f, " "), ll + 1)
-            # else if (ftn$align == "center" | ftn$align == "centre")
-            #   ln <- pad_both(paste0(f, " "), ll + 1)
-            
-            # if (ftn$align == "left")
-            #   ln <- pad_right(f, ll)
-            # else if (ftn$align == "right")
-            #   ln <- pad_left(f, ll)
-            # else if (ftn$align == "center" | ftn$align == "centre")
-            #   ln <- pad_both(f, ll)
-            
-            if (calgn == "left")
-              ln <- paste0(ln, pad_right(f, cll))
-            else if (calgn == "right")
-              ln <- paste0(ln, pad_left(f, cll))
-            else if (calgn == "center")
-              ln <- paste0(ln, pad_both(f, cll))
-            
-          } else {
-            warning(paste0("Footnote exceeds available width.",
-                        "\nFootnote: ", f,
-                        "\nFootnote length: ", nchar(f), 
-                        "\nLine Length: ", ll))
-            
-            tln <- cll - 3
-            
-            if (tln >= 0) {
-              
-              if (ftn$align == "left") {
-                ln <- paste0(substr(pad_right(f , cll), 1, tln), "...")
-              } else if (ftn$align == "right") {
-                ln <- paste0("...", substr(pad_left(f, cll), 1, tln))
-              } else if (ftn$align == "center" | ftn$align == "centre") {
-                ln <- paste0(substr(pad_both(f, cll), 1, tln), "...")
-              }
-            } else ln <- "" 
+          if (calgn == "left") {
+            ln <- paste0(ln, pad_right(string_value, col_width))
+          } else if (calgn == "right") {
+            ln <- paste0(ln, pad_left(string_value, col_width))
+          } else if (calgn == "center") {
+            ln <- paste0(ln, pad_both(string_value, col_width))
           }
           
-          i <- i + 1
         }
         
         ret[length(ret) + 1] <- ln
       }
       
+      # i <- 1
+      # while (i <= length(ftn$footnotes)) {
+      #   
+      #   ln <- ""
+      # 
+      #   for (j in seq_len(cols)) {
+      #     
+      #     # Not all cells have footnotes
+      #     if (i > length(ftn$footnotes))
+      #       f <- ""
+      #     else 
+      #       f <- ftn$footnotes[[i]]
+      #     
+      #     # Deal with column alignments
+      #     if (cols == 1) {
+      #       calgn <- algn 
+      #     } else if (cols == 2) {
+      #       if (j == 1)
+      #         calgn <- "left"
+      #       else 
+      #         calgn <- "right"
+      #     } else if (cols == 3) {
+      #       if (j == 1)
+      #         calgn <- "left"
+      #       else if (j == 2)
+      #         calgn <- "center"
+      #       else if (j == 3) 
+      #         calgn <- "right"
+      #     }
+      #     
+      #     gp <- cll - nchar(f)
+      #     
+      #     #print("footnotes")
+      #     if (gp > 0) {
+      #       
+      #       # if (ftn$align == "left")
+      #       #   ln <- pad_right(paste0(f, " "), ll + 1)
+      #       # else if (ftn$align == "right")
+      #       #   ln <- pad_left(paste0(f, " "), ll + 1)
+      #       # else if (ftn$align == "center" | ftn$align == "centre")
+      #       #   ln <- pad_both(paste0(f, " "), ll + 1)
+      #       
+      #       # if (ftn$align == "left")
+      #       #   ln <- pad_right(f, ll)
+      #       # else if (ftn$align == "right")
+      #       #   ln <- pad_left(f, ll)
+      #       # else if (ftn$align == "center" | ftn$align == "centre")
+      #       #   ln <- pad_both(f, ll)
+      #       
+      #       if (calgn == "left")
+      #         ln <- paste0(ln, pad_right(f, cll))
+      #       else if (calgn == "right")
+      #         ln <- paste0(ln, pad_left(f, cll))
+      #       else if (calgn == "center")
+      #         ln <- paste0(ln, pad_both(f, cll))
+      #       
+      #     } else {
+      #       # warning(paste0("Footnote exceeds available width.",
+      #       #             "\nFootnote: ", f,
+      #       #             "\nFootnote length: ", nchar(f),
+      #       #             "\nLine Length: ", ll))
+      #       # 
+      #       # tln <- cll - 3
+      #       # 
+      #       # if (tln >= 0) {
+      #       # 
+      #       #   if (ftn$align == "left") {
+      #       #     ln <- paste0(substr(pad_right(f , cll), 1, tln), "...")
+      #       #   } else if (ftn$align == "right") {
+      #       #     ln <- paste0("...", substr(pad_left(f, cll), 1, tln))
+      #       #   } else if (ftn$align == "center" | ftn$align == "centre") {
+      #       #     ln <- paste0(substr(pad_both(f, cll), 1, tln), "...")
+      #       #   }
+      #       # } else ln <- ""
+      #       
+      #       # Split string
+      #       footnote_split <- stri_wrap(unlist(
+      #         strsplit(f, split = "\n", fixed = TRUE)),
+      #         width = cll, normalize = FALSE)
+      # 
+      #       sf_cat <- ""
+      #       for (k in 1:length(footnote_split)) {
+      #         if (k > 1) {
+      #           sf_cat <- "\n"
+      #         }
+      # 
+      #         sf <- footnote_split[k]
+      # 
+      #         if (calgn == "left") {
+      #           ln <- paste0(ln, sf_cat, pad_right(sf, cll))
+      #         } else if (calgn == "right") {
+      #           ln <- paste0(ln, sf_cat, pad_left(sf, cll))
+      #         } else if (calgn == "center") {
+      #           ln <- paste0(ln, sf_cat, pad_both(sf, cll))
+      #         }
+      #       }
+      #     }
+      #     
+      #     i <- i + 1
+      #   }
+      #   
+      #   ret[length(ret) + 1] <- ln
+      # }
+      
       if (any(ftn$borders %in% c("bottom", "all")) & length(ftn$footnotes) > 0) {
         # ret[length(ret) + 1] <- paste0(paste0(rep(uchar, ll), 
         #                                       collapse = ""), " ")
-        ret[length(ret) + 1] <- paste0(rep(uchar, ll), collapse = "")
+        ret[length(ret) + 1] <- paste0(rep(uchar, width), collapse = "")
       }
       
       if (ftn$blank_row %in% c("below", "both") & length(ftn$footnotes) > 0)
@@ -813,13 +1066,60 @@ get_page_footer <- function(rs) {
       }
       else {
         
-        stop(paste0("Page footer exceeds available width\n", 
-                    "Footer Left: ", fl, "\n", 
-                    "Footer Center: ", fc, "\n",
-                    "Footer Right: ", fr, "\n",
-                    "Footer length: ", nchar(fl) + nchar(fc) + nchar(fr), "\n",
-                    "Line length: ", rs$line_size, "\n"))
+        # stop(paste0("Page footer exceeds available width\n", 
+        #             "Footer Left: ", fl, "\n", 
+        #             "Footer Center: ", fc, "\n",
+        #             "Footer Right: ", fr, "\n",
+        #             "Footer length: ", nchar(fl) + nchar(fc) + nchar(fr), "\n",
+        #             "Line length: ", rs$line_size, "\n"))
+        # ln <- ""
+        
+        lw <- round(rs$line_size/3)
+        rw <- round(rs$line_size/3)
+        cw <- round(rs$line_size/3)
+        
+        fl_split <- stri_wrap(unlist(
+          strsplit(fl, split = "\n", fixed = TRUE)),
+          width = lw, normalize = FALSE)
+        
+        fr_split <- stri_wrap(unlist(
+          strsplit(fr, split = "\n", fixed = TRUE)),
+          width = rw, normalize = FALSE)
+        
+        fc_split <- stri_wrap(unlist(
+          strsplit(fc, split = "\n", fixed = TRUE)),
+          width = cw, normalize = FALSE)
+        
+        max_line <- max(length(fl_split), length(fr_split), length(fc_split))
+        
         ln <- ""
+        for (k in 1:max_line) {
+          
+          if (k <= length(fl_split)) {
+            fl_s <- fl_split[k]
+          } else {
+            fl_s <- ""
+          }
+          
+          if (k <= length(fr_split)) {
+            fr_s <- fr_split[k]
+          } else {
+            fr_s <- ""
+          }
+          
+          if (k <= length(fc_split)) {
+            fc_s <- fc_split[k]
+          } else {
+            fc_s <- ""
+          }
+          
+          cat <- ""
+          if (k > 1) {
+            cat <- "\n"
+          }
+          
+          ln <- paste0(ln, cat, fl_s, pad_both(fc_s, cw), fr_s)
+        }
       }
       
       ret[length(ret) + 1] <- ln
@@ -932,4 +1232,3 @@ pad_any <- function(s, w, j) {
   return(ret)
   
 }
-

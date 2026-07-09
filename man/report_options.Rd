@@ -8,6 +8,7 @@ report_options(
   x,
   allow_code = FALSE,
   line_break = TRUE,
+  line_count = NULL,
   page_wrap = TRUE,
   auto_page = TRUE,
   title_block = "table"
@@ -23,6 +24,10 @@ common package, please double the braces.}
 
 \item{line_break}{Whether to use auto line breaking. Default is TRUE. This is
 only for RTF, DOCX, and HTML.}
+
+\item{line_count}{The number of lines that will fit on page.  Normally,
+the \code{line_count} is calculated automatically. You can override the 
+calculated value by setting the \code{line_count} directly.}
 
 \item{page_wrap}{Whether to use auto page wrapping. Default is TRUE. If it has
 been set in \code{\link{create_table}}, then it follows table's setting. Please

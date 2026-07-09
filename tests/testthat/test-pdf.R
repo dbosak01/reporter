@@ -683,7 +683,7 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
 
 
 
-test_that("test21: 8 pt report with units in inches works as expected.", {
+test_that("pdf21: 8 pt report with units in inches works as expected.", {
 
   if (dev == TRUE) {
 
@@ -711,7 +711,7 @@ test_that("test21: 8 pt report with units in inches works as expected.", {
 
 })
 
-test_that("test22: 8 pt report with units in cm works as expected.", {
+test_that("pdf22: 8 pt report with units in cm works as expected.", {
 
   if (dev == TRUE) {
 
@@ -1472,6 +1472,100 @@ test_that("pdf44: line_count can be set in report_options as expected.", {
       titles("Table 1.0", "Table with line_count = 18") %>%
       add_content(tbl) %>%
       page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf45: Wrapping of footnote, header, title, footer, and page_by work as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test45.pdf")
+    
+    dat <- iris[1:50, ]
+    dat$pageby_var <- paste0("This is ", dat$Species, " which will take more than one line to see wrapping works.")
+    
+    tbl <- create_table(dat, borders = "all") %>%
+      define(Species, blank_after = TRUE, visible = FALSE) %>%
+      page_by(pageby_var, label = "Label: ") %>%
+      define(pageby_var, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed") %>%
+      add_content(tbl) %>%
+      page_header("This is a long left header which will take more than one line. It is to see if the header can be wrapped.", 
+                  "This is a right header which will take more than one line. It is to see if the header can be wrapped.") %>%
+      page_footer("This is a long left footer which will take more than one line. It is to see if the footer can be wrapped.", 
+                  "Center Footer", 
+                  "This is a right footer which will take more than one line. It is to see if the footer can be wrapped.") %>%
+      titles("This is a very long title which will take more than one line. It is to see if the title can be wrapped properly.",
+             blank_row = "both", columns =  1, align = "center",
+             borders = "none") %>%
+      footnotes("Here is a very long footnote which will take more than one line. It is to see if the footnote can be wrapped properly.")
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf46: Footnote and title can be wrapped with multiple columns.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test46.pdf")
+    
+    tbl <- create_table(iris[1:100, ], borders = "all") %>%
+      define(Species, blank_after = TRUE, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed") %>%
+      add_content(tbl) %>%
+      page_header("Left header", "Right header") %>%
+      page_footer("left", "", "right") %>%
+      titles("Left title",
+             "This is a very long title which will take more than one line. It is to see if the title can be wrapped properly.",
+             "Right title will also take two lines. It should be wrapped.",
+             blank_row = "both", columns =  3, align = "center",
+             borders = "none") %>%
+      footnotes("Here is a very long footnote which will take more than one line. It is to see if the footnote can be wrapped properly.",
+                "The center footnote also take more than one lines.",
+                "column 3 footnote", columns = 3)
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf47: Title header can be wrapped.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test47.pdf")
+    
+    tbl <- create_table(iris[1:50, ], borders = "all") %>%
+      define(Species, blank_after = TRUE, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed") %>%
+      add_content(tbl) %>%
+      title_header("This is a first title header which will take more than one line to see if they can be wrapped properly.", 
+                   "This is a second title header which will take more than one line to see if they can be wrapped properly.", 
+                   right = c("Client",
+                             "Right",
+                             "More"),
+                   borders = "all") %>% 
+      page_footer("Client", 
+                  "Page", 
+                  "More") %>%
+      footnotes("Here is a very long footnote which will take more than one line. It is to see if the footnote can be wrapped properly.")
+    
     
     res <- write_report(rpt)
     

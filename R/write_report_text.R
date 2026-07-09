@@ -631,12 +631,12 @@ page_setup <- function(rs) {
   
   # Get the page template row count
   # Include all the rows associated with the page template
-  rs$page_template_header_count <- length(pt$page_header) + length(pt$titles) + 
-    length(pt$title_hdr) + length(pt$page_by)
+  rs$page_template_header_count <- get_vector_lines(pt$page_header) + get_vector_lines(pt$titles) + 
+    get_vector_lines(pt$title_hdr) + get_vector_lines(pt$page_by)
   if (debug)
     print(paste("Page Template Header Count:", rs$page_template_header_count))
 
-  rs$page_template_footer_count <- length(pt$footnotes) + length(pt$page_footer)
+  rs$page_template_footer_count <- get_vector_lines(pt$footnotes) + get_vector_lines(pt$page_footer)
   if (debug)
     print(paste("Page Template Footer Count:", rs$page_template_footer_count))
 
@@ -849,3 +849,16 @@ token_check <- function(x) {
   return(ret)
 }
 
+#' @noRd
+get_vector_lines <- function(s){
+  if (all(is.na(s)) | is.null(s)) {
+    return(0)
+  }
+  
+  s <- s[!is.na(s)]
+  
+  ret <- length(s)
+  line_change_count <- sum(stri_count_fixed(s, "\n"))
+  ret <- ret + line_change_count
+  return(ret)
+}

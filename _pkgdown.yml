@@ -37,6 +37,7 @@ reference:
   - print.report_spec
   - header_image
   - footer_image
+  - report_options
 - title: Table Functions
   desc: Functions to define and lay out a table.
   contents:

@@ -891,8 +891,8 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' write_report(rpt)
 #' @export
 report_options <- function(x, allow_code = FALSE, line_break = TRUE,
-                           line_count = NULL, page_wrap = TRUE, auto_page = TRUE,
-                           title_block = "table", font_size = NULL){
+                           line_count = NULL, page_wrap = TRUE, 
+                           auto_page = TRUE, title_block = "table"){
   if (!"report_spec" %in% class(x)) {
     stop("Input object must be of class 'report_spec'.") 
   }
