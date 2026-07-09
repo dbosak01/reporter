@@ -574,11 +574,19 @@ get_title_header <- function(title_hdr, content_width, page_width,
         }
       }
       
+      if (is.null(ttl_hdr$titles)){
+        lw <- 0
+        rw <- width
+        ttl_hdr_titles <- ""
+      } else {
+        ttl_hdr_titles <- ttl_hdr$titles
+      }
+      
       # Split the strings and distribute to columns
       string_list <- vector(mode = "list", length = 2)
       
       string_list[[1]] <- stri_wrap(unlist(
-        strsplit(ttl_hdr$titles, split = "\n", fixed = TRUE)),
+        strsplit(ttl_hdr_titles, split = "\n", fixed = TRUE)),
         width = lw, normalize = FALSE)
       
       string_list[[2]] <- stri_wrap(unlist(

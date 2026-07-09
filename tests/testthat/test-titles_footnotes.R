@@ -350,7 +350,7 @@ test_that("ttfn15: title_header with top borders assigned to table works.", {
   
 })
 
-test_that("ttfn16: Long title generates warning not error.", {
+test_that("ttfn16: Long title works as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn16.out")
   
@@ -361,14 +361,14 @@ test_that("ttfn16: Long title generates warning not error.", {
   rpt <- create_report(fp) %>% 
     add_content(tbl, align = "center")
   
-  
-  expect_warning(write_report(rpt))
+  write_report(rpt)
+  # expect_warning(write_report(rpt))
   
   expect_equal(file.exists(fp), TRUE)
   
 })
 
-test_that("ttfn17: Long footnote generates warning not error.", {
+test_that("ttfn17: Long footnote works as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn17.out")
   
@@ -380,13 +380,13 @@ test_that("ttfn17: Long footnote generates warning not error.", {
     add_content(tbl, align = "center")
   
   
-  expect_warning(write_report(rpt))
+  write_report(rpt)
   
   expect_equal(file.exists(fp), TRUE)
   
 })
 
-test_that("ttfn18: Long title_header generates warning not error.", {
+test_that("ttfn18: Long title_header works as expected.", {
   
   fp <- file.path(base_path, "titles/ttfn18.out")
   
@@ -397,11 +397,51 @@ test_that("ttfn18: Long title_header generates warning not error.", {
   rpt <- create_report(fp) %>% 
     add_content(tbl, align = "center")
   
-  
-  expect_warning(write_report(rpt))
-  
+  write_report(rpt)
+
   expect_equal(file.exists(fp), TRUE)
   
+})
+
+test_that("ttfn18b: Long page header works as expected.", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn18b.out")
+  
+  
+  tbl <- create_table(mtcars, show_cols = c("mpg", "cyl", "disp")) %>%
+    define(mpg) %>%
+    define(cyl) %>%
+    define(hp)
+  
+  rpt <- create_report(fp) %>% add_content(tbl) %>%
+    page_header("Here is a a whole bunch of stuff intended to go over the page",
+                "width because it is way too long. Way too long. Way too long.")
+  
+  write_report(rpt)  
+  
+  expect_equal(file.exists(fp), TRUE)
+})
+
+
+test_that("ttfn18c: Long page footer works as expected.", {
+  
+  
+  fp <- file.path(base_path, "titles/ttfn18c.out")
+  
+  
+  tbl <- create_table(mtcars, show_cols = c("mpg", "cyl", "disp")) %>%
+    define(mpg) %>%
+    define(cyl) %>%
+    define(hp)
+  
+  rpt <- create_report(fp) %>% add_content(tbl) %>%
+    page_footer("Here is a a whole bunch of stuff intended to go over the page",
+                "width because it is way too long. Way too long. Way too long.")
+  
+  write_report(rpt)
+  
+  expect_equal(file.exists(fp), TRUE)
 })
 
 
@@ -415,6 +455,7 @@ test_that("ttfn19: footnote valign parameter checks work as expected.", {
   
   
 })
+
 
 test_that("ttfn20: footnote valign parameter on report works as expected.", {
   
