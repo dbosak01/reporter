@@ -4100,6 +4100,8 @@ test_that("pdf2-110: group_cohesion with min page proportion works as expected."
   }
 })
 
+# Basic Tests 111 - 120 ------------------------------------------------------
+
 test_that("pdf2-111: Multiple group_cohesion work as expected.", {
   if (dev == TRUE) {
     fp <- file.path(base_path, "pdf2/test111.pdf")
