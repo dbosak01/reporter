@@ -248,6 +248,13 @@ create_report <- function(file_path = "", output_type = "TXT",
 
   # Set default margins
   x <- set_margins(x)
+  
+  # Initialize report_options values, these values can be modified by report_options
+  x$allow_code <- FALSE
+  x$line_break <- TRUE
+  x$page_wrap <- TRUE
+  x$auto_page <- TRUE
+  x$title_block <- "table"
 
   return(x)
 
@@ -826,6 +833,111 @@ set_margins <- function(x, top=NULL, bottom=NULL,
   return(x)
 }
 
+#' @title
+#' Set options for the report
+#' @description
+#' This function is to control the report for auto line breaking, auto pagination,
+#' auto page wrapping. For RTF, it provides options for allowing users to insert
+#' RTF code and deciding the structure of titles.  
+#' @details
+#' This function is to control the report for auto line breaking, auto pagination,
+#' auto page wrapping. For RTF, it provides options for allowing users to insert
+#' RTF code and deciding the structure of titles. 
+#' @param x The report spec object.
+#' @param allow_code Whether to insert code into the report. Now it's only for
+#' RTF code insertion. Default is FALSE. When it's TRUE, users can insert RTF code
+#' to the data, titles, or footnotes. If special characters are passed by the
+#' common package, please double the braces.
+#' @param line_break Whether to use auto line breaking. Default is TRUE. This is
+#' only for RTF, DOCX, and HTML.
+#' @param line_count The number of lines that will fit on page.  Normally,
+#' the \code{line_count} is calculated automatically. You can override the 
+#' calculated value by setting the \code{line_count} directly.
+#' @param page_wrap Whether to use auto page wrapping. Default is TRUE. If it has
+#' been set in \code{\link{create_table}}, then it follows table's setting. Please
+#' note that turning off page wrapping might make the report out of margin.
+#' @param auto_page Whether to use auto pagination. Default is TRUE. If it has
+#' been set in \code{\link{create_table}}, then it follows table's setting. 
+#' When `page_break` variable is set in \code{\link{define}}, users can set 
+#' `auto_page` as FALSE to let reporter follow the paging variable without any
+#' auto paging. Please note that turning off auto pagination might cause overflow.
+#' @param title_block To decide whether the structure of titles is "table" or 
+#' "paragraph". Default is "table". It's only for RTF.
+#' @return The report_spec with option settings.
+#' @family report
+#' @examples
+#' library(reporter)
+#' library(magrittr)
+#' 
+#' # Create a temporary file
+#' tmp <- file.path(tempdir(), "bod.rtf")
+#'
+#' # Define table
+#' tbl <- create_table(BOD, width = 2.5) %>% 
+#'   titles("Table 3.6", "BOD¹ Sample Report") %>% 
+#'   define(Time, format = "Day %s", align = "left") %>% 
+#'   define(demand, format = "%2.1f mg/l", label = "Demand") %>% 
+#'   footnotes("¹ Biochemical Oxygen Demand")
+#'        
+#' # Define report #1 - No blank margins
+#' rpt <- create_report(tmp, orientation="portrait", output_type = "RTF",
+#'                      font = "Arial", font_size = 9) %>%
+#'   add_content(tbl) %>%
+#'   report_options(allow_code = TRUE, line_break = FALSE, 
+#'                  auto_page = FALSE,page_wrap = FALSE, 
+#'                  title_block = "paragraph")
+#' 
+#' # Write the report
+#' write_report(rpt)
+#' @export
+report_options <- function(x, allow_code = FALSE, line_break = TRUE,
+                           line_count = NULL, page_wrap = TRUE, 
+                           auto_page = TRUE, title_block = "table"){
+  if (!"report_spec" %in% class(x)) {
+    stop("Input object must be of class 'report_spec'.") 
+  }
+  
+  # ------------------------------------------ #
+  #              Parameter check               #
+  # ------------------------------------------ #
+  if (!is.logical(allow_code)) {
+    stop("`allow_code` should be TRUE or FALSE.")
+  }
+  if (!is.logical(line_break)) {
+    stop("`line_break` should be TRUE or FALSE.")
+  }
+  if (!is.logical(page_wrap)) {
+    stop("`page_wrap` should be TRUE or FALSE.")
+  }
+  if (tolower(title_block) != "table" & tolower(title_block) != "paragraph") {
+    stop("`title_block` should be 'table' or 'paragraph'.")
+  }
+  if (!is.null(line_count)) {
+    if (!is.numeric(line_count))
+      stop("line_count must be a number.")
+    if (line_count <= 0)
+      stop("line_count must be greater than zero.")
+  }
+  
+  if (!is.null(x$output_type)) {
+    if (toupper(x$output_type) != "RTF") {
+      allow_code <- FALSE
+    }
+  }
+  
+  # ------------------------------------------ #
+  #       Pass options to report object        #
+  # ------------------------------------------ #
+  x$allow_code <- allow_code
+  x$line_break <- line_break
+  x$auto_page <- auto_page
+  x$page_wrap <- page_wrap
+  x$title_block <- title_block
+  x$user_line_count <- line_count
+  
+  return(x)
+}
+
 # Not used now.  May be used in future.
 # @noRd
 # set_char_margins <- function(rs, margin) {
@@ -981,7 +1093,7 @@ page_header <- function(x, left="", right="", blank_row = "none",
     
     x$page_header_left <- left
     x$page_header_right <- right
-    x$page_header_right <- center
+    x$page_header_center <- center
 
   }
   x$page_header_blank_row <- blank_row

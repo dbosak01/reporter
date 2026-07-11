@@ -4389,6 +4389,8 @@ test_that("rtf2-120: group_cohesion/min_page_prop return error properly.", {
   }
 })
 
+# Basic Tests 121-130 ------------------------------------------------------
+
 test_that("rtf2-121: Multiple group_cohesion work as expected.", {
   if (dev == TRUE) {
     fp <- file.path(base_path, "rtf2/test121.rtf")
@@ -4600,6 +4602,412 @@ test_that("rtf2-125: Missing stub row label won't be displayed.", {
     expect_equal(TRUE, TRUE)
   }
 })
+
+test_that("rtf2-126: RTF codes work as expected", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test126.rtf")
+    
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "\\li360 N"          "19"          "13"
+      "ampg"   "\\li360 Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "\\li360 Median"     "16.4"        "21.4"
+      "ampg"   "\\li360 Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "\\li360 Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "\\li360 8\\line Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "\\li360 6\\line Cylinder and more perhaps more" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "\\li360 4\\line Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+    
+    ll <- "Here is a super long label to see if it can span the entire table."
+    
+    # Create table
+    tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>%
+      stub(c("var", "label"), width = .8) %>%
+      # stub(c("var", "label"), width = 1.2) %>%
+      define(var, blank_after = TRUE, label_row = TRUE,
+             format = c(ampg = ll, cyl = "Cylinders")) %>%
+      # define(label, indent = .25) %>%
+      define(A, label = "Group A", align = "center", n = 19) %>%
+      define(B, label = "Group B", align = "center", n = 13)
+    
+    # Create report and add content
+    
+    # With allow_code = TRUE, line breaking wouldn't consider RTF code, but
+    # the reporter package wouldn't detect if it's indentation code and wouldn't
+    # keep the space for indentation. That it to say, users should be responsible
+    # for doing line wrapping from data set.
+    rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                         font = "Times") %>%
+      report_options(allow_code = TRUE) %>%
+      page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+      titles("Table 1.0", "MTCARS Summary Table") %>%
+      add_content(tbl) %>%
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer(left = "Left",
+                  center = "Confidential",
+                  right = "Page [pg] of [tpg]")
+    
+    
+    # The output should be the same as rtf2-58
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-127: More RTF codes work as expected", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test127.rtf")
+    
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "\\li360 N"          "19"          "13"
+      "ampg"   "\\li360 Mean"       "18.8"  "22.0 (4.9)"
+      "ampg"   "\\li360 Median"     "16.4{\\sub mm}"        "21.4{\\super 2}"
+      "ampg"   "\\li360 Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "\\li360 Range"      "{\\cf12 10.4 - 33.9}" "14.7 - 32.4"
+      "cyl"    "\\li360 8\\line Cylinder" "\\ul 10 ( 52.6%) \\ul0" "4 ( 30.8%)"
+      "cyl"    "\\li360 6\\line {\\cf10 Cylinder and more perhaps more}" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "\\li360 {\\cf6 4}\\line Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+    
+    ll <- "\\i Here is a italic label \\i0."
+    
+    # Please double the curly braces otherwise the glue will fail.
+    
+    # Create table
+    tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>%
+      stub(c("var", "label"), width = .8) %>%
+      define(var, blank_after = TRUE, label_row = TRUE,
+             format = c(ampg = ll, cyl = "\\ul Under line \\ul0")) %>%
+      define(A, label = "\\shad {{\\cf3 Group A}} {common::supsc('2')}\\shad0", align = "center", n = 19) %>%
+      define(B, label = "\\outl Group B \\outl0", align = "center", n = 13)
+    
+    # Create report and add content
+    rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                         font = "Times") %>%
+      report_options(allow_code = TRUE) %>%
+      page_header(left = "\\strike Strikethrough header \\strike0", right = "Study: Cars") %>%
+      titles("\\b\\i {{\\highlight7 This is yellow italic highlight}} \\b0\\i0", 
+             "\\fs0\\fs28 {{\\cf2 This is a blue big title}} \\fs18") %>%
+      add_content(tbl) %>%
+      footnotes("\\i * Motor Trend, 1974") %>%
+      page_footer(left = "Left",
+                  center = "Confidential",
+                  right = "Page [pg] of [tpg]")
+    
+    
+    # The output should contain bold, italic, strike through, super script,
+    # sub script, shadow, hollow
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-128: Line break can be turned off by report_options as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test128.rtf")
+    
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "N"          "19"          "13"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more perhaps more" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "4 Cylinder" "5 ( 26.3%)"  "6 ( 46.2%)"')
+    
+    ll <- "Here is a label\nwith manual line break."
+    
+    df$sub_title <- "This is a long page by value which would not be inserted any line break characters."
+    
+    # Create table
+    tbl <- create_table(df, first_row_blank = TRUE, borders = c("all")) %>%
+      stub(c("var", "label"), width = .8) %>%
+      page_by(sub_title, label = "This is a long label which would make multiple lines:",
+              bold = "label") %>%
+      define(sub_title, visible = FALSE) %>%
+      define(var, blank_after = TRUE, label_row = TRUE,
+             format = c(ampg = ll, cyl = "Cylinders")) %>%
+      define(label, indent = .25) %>%
+      define(A, label = "Group A", align = "center") %>%
+      define(B, label = "Group B", align = "center")
+    
+    
+    # Create report and add content
+    # !! Please note that `line_break` in `report_options` would affect:
+    # 1. All the data content of tables
+    # 2. All the titles and footnotes in both table objects and report objects
+    # 3. All page headers and footers
+    rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                         font = "Arial") %>%
+      report_options(line_break = FALSE) %>%
+      page_header(left = "This is a long left header which would not be inserted any line break characters.", 
+                  right = "This is a long right header which would not be inserted any line break characters.") %>%
+      titles("Table 1.0", 
+             paste0("This is a title which is turned off the automatically line breaks",
+                    " so it should not contain any line break characters and it should",
+                    " have overflow because the wrapping lines are not considered.")) %>%
+      add_content(tbl) %>%
+      footnotes(paste0("This is a long footnote which would not be inserted any line break characters even though it",
+                       " has multiple lines. Users should be responsible for the overflow.")) %>%
+      page_footer(left = "This is a long left footer which would not be inserted any line break characters.",
+                  center = "This is a long center footer which would not be inserted any line break characters.",
+                  right = "This is a long right footer which would not be inserted any line break characters.")
+    
+    
+    # The output should be overflow because the line-break characters are not inserted
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+    
+    # Check if there is only one manual line break "\line"
+    rtf <- readLines(fp, warn = FALSE)
+    manual_break_count <- 0
+    for (r in rtf) {
+      matches <- gregexpr("\\line", r, fixed = TRUE)
+      count_result <- ifelse(matches[[1]][1] == -1, 0, length(matches[[1]]))
+      manual_break_count <- manual_break_count + count_result
+    }
+    expect_equal(manual_break_count, 1)
+    # expect_equal(any(grepl("\\\\line", rtf)), FALSE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-129: Page wrap can be turned off as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "rtf2/test129.rtf")
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+      USUBJID STUDYID  DOMAIN  SUBJID  RFSTDTC       RFENDTC       RFXSTDTC      RFXENDTC      RFICDTC
+      "001"   "ABC"    "DM"    "01"    "2021-12-01"  "2021-12-20"  "2021-12-02"  "2021-12-20"  "2021-12-01"
+      "002"   "ABC"    "DM"    "02"    "2021-12-02"  "2021-12-21"  "2021-12-03"  "2021-12-21"  "2021-12-02"
+      "003"   "ABC"    "DM"    "03"    "2021-12-03"  "2021-12-22"  "2021-12-04"  "2021-12-22"  "2021-12-03"
+      "004"   "ABC"    "DM"    "04"    "2021-12-04"  "2021-12-23"  "2021-12-05"  "2021-12-23"  "2021-12-04"
+      "005"   "ABC"    "DM"    "05"    "2021-12-05"  "2021-12-24"  "2021-12-06"  "2021-12-24"  "2021-12-05"
+      "006"   "ABC"    "DM"    "06"    "2021-12-06"  "2021-12-25"  "2021-12-07"  "2021-12-25"  "2021-12-06"
+      "007"   "ABC"    "DM"    "07"    "2021-12-07"  "2021-12-26"  "2021-12-08"  "2021-12-26"  "2021-12-07"
+      "008"   "ABC"    "DM"    "08"    "2021-12-08"  "2021-12-27"  "2021-12-09"  "2021-12-27"  "2021-12-08"')
+    
+    # Test that any assigned formats are applied
+    # attr(df$SUBJID, "width") <- 1
+    attr(df$SUBJID, "justify") <- "left"
+    attr(df$SUBJID, "format") <- "S:%s"
+    
+    # Define table
+    tbl <- create_table(df, page_wrap = FALSE) |>
+      titles("page_wrap = FALSE in create_table()")
+    tbl2 <- create_table(df) |>
+      titles("page_wrap = FALSE in report_options()")
+    tbl3 <- create_table(df, page_wrap = TRUE) |>
+      titles("page_wrap = TRUE in report_options()")
+    
+    # Define Report
+    # !! Please note that when `page_wrap` is set in `create_table`. It'll be the top choice
+    # even though we set TRUE in `report_options`. Therefore, table 1 doesn't have
+    # the page wrap, but table 2 have the page wrap.
+    rpt <- create_report(fp, font = "Arial", font_size = 10, units = "cm",
+                         orientation = "portrait") %>%
+      report_options(page_wrap = FALSE) %>%
+      titles("Listing 1.0",
+             "Demographics Dataset") %>%
+      add_content(tbl, align = "left") %>%
+      add_content(tbl2, align = "left") %>%
+      add_content(tbl3, align = "left") %>%
+      page_header("Sponsor", "Drug") %>%
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>%
+      footnotes("My footnote")
+    
+    # If page is wrapped, RFICDTC will be in the next page
+    # Now page is not wrapped, we can see RFICDTC is out of the margin.
+    res <- write_report(rpt, output_type = "rtf")
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-130: auto_page can be turned off as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test130.rtf")
+    
+    dat <- iris[1:100, ]
+    dat$Species <- as.character(dat$Species)
+    dat$Species[1:25] <- rep("setosa1", 25)
+    dat$Species[26:50] <- rep("setosa2", 25)
+    
+    tbl <- create_table(dat, auto_page = FALSE) %>%
+      footnotes("First Table with auto_page=FALSE in create_table", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    tbl2 <- create_table(dat) %>%
+      footnotes("Second Table with auto_page=FALSE in report_options", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    tbl3 <- create_table(dat, auto_page = TRUE) %>%
+      footnotes("Third Table with auto_page=TRUE in create_table", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                         font_size = 10, orientation = "landscape") %>%
+      report_options(auto_page = FALSE) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+      titles("Table 1.0", "My Nice Table") %>%
+      add_content(tbl) %>%
+      add_content(tbl2) %>%
+      add_content(tbl3) %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    # If auto_page is still TRUE, setosa1 would have 2 pages because only 24 records
+    # on first page.
+    expect_equal(file.exists(fp), TRUE)
+    # Please note that res$pages would be 3 instead of 4 because versicolor is overflow
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("rtf2-131: Titles can be output in paragraph for table as expected.", {
+  
+  if (dev == TRUE) {
+    
+    fp <- file.path(base_path, "rtf2/test131.rtf")
+    
+    dat <- mtcars[1:15, ]
+    
+    tbl <- create_table(dat) %>%
+      column_defaults(width = 1) %>%
+      titles("This is subtitle")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = fsz, orientation = "portrait") %>%
+      report_options(title_block = "paragraph") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Right3"), blank_row = "below") %>%
+      titles("Table 1.0", "My Nice Table", font_size = 14) %>%
+      titles("Title in Header", header = TRUE) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "My footnote 2", valign = "top") %>% # Works!
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+    expect_equal(res$pages, 2)
+    
+  } else
+    expect_equal(TRUE, TRUE)
+})
+
+test_that("rtf2-132: Titles can be output in paragraph for figure as expected.", {
+  
+  if (dev == TRUE) {
+    library(ggplot2)
+    
+    fp <- file.path(base_path, "rtf2/test132.rtf")
+    
+    p <- ggplot(mtcars, aes(x=cyl, y=mpg)) + geom_point()
+    
+    plt <- create_plot(p, height = 4, width = 8, borders = c("top", "bottom", "all")) %>%
+      titles("This is subtitle", borders = "none") %>%
+      footnotes("* Motor Trend, 1974", borders = "none")
+    
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt, font_size =fsz) %>%
+      report_options(title_block = "paragraph") %>%
+      titles("Figure 1.0", "My Nice Figure", font_size = 14) %>%
+      titles("Title in Header", header = TRUE) %>%
+      page_header("Client", "Study: XYZ") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(plt) %>%
+      page_footer("Time", "Confidential", "Page [pg] of [tpg]")
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else
+    expect_equal(TRUE, TRUE)
+})
+
+test_that("rtf2-133: Titles can be output in paragraph for text as expected.", {
+  
+  if (dev == TRUE) {
+    
+    
+    fp <- file.path(base_path, "rtf2/test133.rtf")
+    
+    txt <- create_text(cnt, width = 6, borders = "outside", align = "right") %>%
+      titles("Text 1.0", "My Nice Text", borders = "none", font_size = 12) %>%
+      footnotes("My footnote 1", "My footnote 2", borders = "none")
+    
+    rpt <- create_report(fp, output_type = "RTF", font = fnt,
+                         font_size = 10) %>%
+      report_options(title_block = "paragraph") %>%
+      titles("Text 1.0", "My Nice Text", font_size = 14) %>%
+      titles("Title in Header", header = TRUE) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", "Right") %>%
+      add_content(txt, align = "right") %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+
+  } else
+    expect_equal(TRUE, TRUE)
+  
+})
+
+test_that("rtf2-134: line_count can be set in report_options as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "rtf2/test134.rtf")
+    
+    dat <- iris[1:100, ]
+
+    tbl <- create_table(dat) %>%
+      footnotes("line_count setting in report_options()", "My footnote 2", valign = "bottom") 
+    
+    rpt <- create_report(fp, output_type = "RTF", font = "Arial",
+                         font_size = 10, orientation = "landscape") %>%
+      report_options(line_count = 18) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+      titles("Table 1.0", "Table with line_count = 18") %>%
+      add_content(tbl) %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
 # User Tests --------------------------------------------------------------
 
 test_that("user1: demo table works.", {

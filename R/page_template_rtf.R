@@ -14,7 +14,13 @@ page_template_rtf<- function(rs) {
   
   pt$page_header <- get_page_header_rtf(rs)
   pt$title_hdr <- get_title_header_rtf(rs$title_hdr, rs$line_size, rs)
-  pt$titles <- get_titles_rtf(rs$titles, rs$line_size, rs)
+  
+  if (rs$title_block == "table") {
+    pt$titles <- get_titles_rtf(rs$titles, rs$line_size, rs)
+  } else if (rs$title_block == "paragraph") {
+    pt$titles <- get_titles_par_rtf(rs$titles, rs$line_size, rs)
+  }
+  
   pt$footnotes <- c()
   if (!is.null(rs$footnotes)) {
     if (!is.null(rs$footnotes[[1]])) {
@@ -177,7 +183,9 @@ get_page_header_rtf <- function(rs) {
             if (image_left == FALSE) {
               
               # Split strings if they exceed width
-              tmp <- split_string_rtf(hl[[i]], left_width, rs$units)
+              tmp <- split_string_rtf(hl[[i]], left_width, rs$units, 
+                                      allow_rtf_code = rs$allow_code,
+                                      insert_line_break = rs$line_break)
               
               ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp$rtf), "\\cell")
               lcnt <- tmp$lines
@@ -207,7 +215,10 @@ get_page_header_rtf <- function(rs) {
             if (image_center == FALSE) {
               
               # Split strings if they exceed width
-              tmp <- split_string_rtf(hc[[i]], center_width, rs$units)
+              tmp <- split_string_rtf(hc[[i]], center_width, rs$units, 
+                                      allow_rtf_code = rs$allow_code,
+                                      insert_line_break = rs$line_break)
+              
               
               ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp$rtf), "\\cell")
               ccnt <- tmp$lines
@@ -235,7 +246,10 @@ get_page_header_rtf <- function(rs) {
             if (image_right == FALSE) {
               
               # Split strings if they exceed width
-              tmp2 <- split_string_rtf(hr[[i]], right_width, rs$units)
+              tmp2 <- split_string_rtf(hr[[i]], right_width, rs$units, 
+                                       allow_rtf_code = rs$allow_code,
+                                       insert_line_break = rs$line_break)
+              
               
               ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
               rcnt <- tmp2$lines
@@ -285,8 +299,11 @@ get_page_header_rtf <- function(rs) {
     
     htitles <- ""
     if (!is.null(rs$header_titles)) {
-    
-      tret <- get_titles_rtf(rs$header_titles, rs$content_size[["width"]], rs)
+      if (rs$title_block == "table") {
+        tret <- get_titles_rtf(rs$header_titles, rs$content_size[["width"]], rs)
+      } else if (rs$title_block == "paragraph") {
+        tret <- get_titles_par_rtf(rs$header_titles, rs$content_size[["width"]], rs)
+      }
       htitles <- paste0(tret$rtf, "\\fs1\\sl0\\par\\pard", rs$font_rtf, 
                                               rs$spacing_multiplier) 
       cnt <- cnt + tret$lines
@@ -422,7 +439,10 @@ get_page_footer_rtf <- function(rs) {
             if (image_left == FALSE) {
               
               # Split strings if they exceed width
-              tmp1 <- split_string_rtf(fl[[i]], left_width, rs$units)
+              tmp1 <- split_string_rtf(fl[[i]], left_width, rs$units, 
+                                       allow_rtf_code = rs$allow_code,
+                                       insert_line_break = rs$line_break)
+              
               
               ret <- paste0(ret, "\\ql ", get_page_numbers_rtf(tmp1$rtf), "\\cell")
               lcnt <- tmp1$lines
@@ -451,7 +471,10 @@ get_page_footer_rtf <- function(rs) {
             if (image_center == FALSE) {
               
               # Split strings if they exceed width
-              tmp2 <- split_string_rtf(fc[[i]], center_width, rs$units)
+              tmp2 <- split_string_rtf(fc[[i]], center_width, rs$units, 
+                                       allow_rtf_code = rs$allow_code,
+                                       insert_line_break = rs$line_break)
+              
               
               ret <- paste0(ret, "\\qc ", get_page_numbers_rtf(tmp2$rtf), "\\cell")
               ccnt <- tmp2$lines
@@ -478,7 +501,9 @@ get_page_footer_rtf <- function(rs) {
             if (image_right == FALSE) {
               
               # Split strings if they exceed width
-              tmp3 <- split_string_rtf(fr[[i]], right_width, rs$units)
+              tmp3 <- split_string_rtf(fr[[i]], right_width, rs$units, 
+                                       allow_rtf_code = rs$allow_code,
+                                       insert_line_break = rs$line_break)
               
               ret <- paste0(ret, "\\qr ", get_page_numbers_rtf(tmp3$rtf), "\\cell")
               rcnt <- tmp3$lines
@@ -695,7 +720,10 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
           cwa <- cwa + cw
           
           # Split title strings if they exceed width
-          tmp <- split_string_rtf(vl, cwidth, rs$units)
+          tmp <- split_string_rtf(vl, cwidth, rs$units, 
+                                  allow_rtf_code = rs$allow_code,
+                                  insert_line_break = rs$line_break)
+          
           
           # Track max lines for counting
           if (tmp$lines > mxlns)
@@ -742,6 +770,162 @@ get_titles_rtf <- function(ttllst, content_width, rs, talgn = "center") {
   return(res)
 }
 
+#' @description
+#' This is to create table in paragraph.
+#' @import grDevices
+#' @noRd
+get_titles_par_rtf <- function(ttllst, content_width, rs) {
+  
+  ret <- c()
+  cnt <- 0
+  twps <- 0
+  
+  conv <- rs$twip_conversion
+  lh <- rs$row_height
+  border_flag <- FALSE
+  
+  if (length(ttllst) > 0) {
+    
+    for (ttls in ttllst) {
+      
+      # Put warning if borders and columns are set
+      if (ttls$borders != "none") {
+        warning(
+          paste0(sprintf("`borders = '%s'` wouldn't work when title is in paragraph.",
+                         ttls$borders),
+                 " Please set `borders` as 'none' to turn off this warning message.")
+        )
+      }
+      
+      if (ttls$columns > 1) {
+        warning(
+          paste0(sprintf("`columns` > 1 wouldn't work when title is in paragraph."),
+                 " Please set `columns` as 1 to turn off this warning message.")
+        )
+      }
+      
+      if (ttls$width == "page") {
+        cwidth <- rs$content_size[["width"]] 
+      } else if (ttls$width == "content") {
+        cwidth <- content_width 
+      } else if (is.numeric(ttls$width)) {
+        cwidth <- ttls$width 
+      }
+      
+      if (ttls$align == "center") {
+        algn <- "\\qc"
+      } else if (ttls$align == "right") {
+        algn <- "\\qr"
+      } else {
+        algn <- "\\ql"
+      }
+        
+      alcnt <- 0
+      blcnt <- 0
+      
+      # Open device context
+      pdf(NULL)
+      
+      # Set point size (ps) for strwidth to calculate string width
+      if (!is.null(ttls$font_size)) {
+        ttlfs <- ttls$font_size
+      } else {
+        ttlfs <- rs$font_size
+      }
+      par(family = get_font_family(rs$font), ps = ttlfs)
+      
+      
+      al <- ""
+      # Get blank row above
+      if (any(ttls$blank_row %in% c("above", "both"))) {
+        alcnt <- 1
+        al <- "\\par"
+        cnt <- cnt + 1 
+      }
+      
+      bl <- ""
+      # Get blank row below
+      if (any(ttls$blank_row %in% c("below", "both"))) {
+        blcnt <- 1
+        sm <- get_spacing_multiplier(rs$font_size)
+        bl <- paste0(sm, "\\par")
+        cnt <- cnt + 1
+      }
+      
+      # Append blank row above
+      if (al != "") {
+        ret <- append(ret, al)
+      }
+      
+      fz <- ""
+      fs <- ""
+      # Get font size
+      if (!is.null(ttls$font_size)) {
+        fz <- paste0("\\fs", ttls$font_size * 2, 
+                     get_spacing_multiplier(ttls$font_size)) 
+        fs <- paste0("\\fs", rs$font_size * 2)
+      }
+      
+      # Reset column width accumulation
+      cwa <- 0
+      
+      i <- 1
+      while (i <= length(ttls$titles)) {    
+        
+        mxlns <- 0
+        
+        vl <- ttls$titles[[i]] 
+          
+        
+        # Deal with column alignments
+        calgn <- algn
+        
+        # Split title strings if they exceed width
+        tmp <- split_string_rtf(vl, cwidth, rs$units, 
+                                allow_rtf_code = rs$allow_code,
+                                insert_line_break = rs$line_break)
+        
+        # Track max lines for counting
+        if (tmp$lines > mxlns) {
+          mxlns <- tmp$lines
+        }
+        
+        # Add bold if needed
+        tb <- get_page_numbers_rtf(tmp$rtf, FALSE)
+        if (ttls$bold) {
+          tb <- paste0("\\b ", get_page_numbers_rtf(tmp$rtf, FALSE), "\\b0")
+        }
+        
+        # Construct cell from constituent parts
+        # if (i < length(ttls$titles)) {
+        #   ret <- append(ret, paste0(calgn, fz, " ", tb, fs, "\\par\n"))
+        # } else {
+        #   ret <- append(ret, paste0(calgn, fz, " ", tb, fs))
+        # }
+        ret <- append(ret, paste0(calgn, fz, " ", tb, fs, "\\par\n"))
+        
+        i <- i + 1
+        
+        # Track lines
+        cnt <- cnt + mxlns
+      }
+      
+      # Append blank row below
+      if (bl != "") {
+        ret <- append(ret, bl)
+      }
+      
+      dev.off()
+    }
+  }
+  
+  res <- list(rtf = paste0(ret, collapse = ""), 
+              lines = cnt, 
+              twips = cnt * lh,
+              border_flag = border_flag)
+  
+  return(res)
+}
 
 
 #' @import grDevices
@@ -838,7 +1022,9 @@ get_titles_rtf_back <- function(ttllst, content_width, rs, talgn = "center") {
                               1, ttls$borders)
         
         # Split title strings if they exceed width
-        tmp <- split_string_rtf(ttls$titles[[i]], width, rs$units)
+        tmp <- split_string_rtf(ttls$titles[[i]], width, rs$units, 
+                                allow_rtf_code = rs$allow_code,
+                                insert_line_break = rs$line_break)
         
         fz <- ""
         fs <- ""
@@ -1040,7 +1226,10 @@ get_footnotes_rtf <- function(ftnlst, content_width, rs, talgn = "center") {
           
           
           # Split footnote strings if they exceed width
-          tmp <- split_string_rtf(vl, cwidth, rs$units)
+          tmp <- split_string_rtf(vl, cwidth, rs$units, 
+                                  allow_rtf_code = rs$allow_code,
+                                  insert_line_break = rs$line_break)
+          
         
           # Track max lines for counting
           if (tmp$lines > mxlns)
@@ -1185,7 +1374,9 @@ get_footnotes_rtf_back <- function(ftnlst, content_width, rs, talgn = "center") 
         
         
         # Split footnote strings if they exceed width
-        tmp <- split_string_rtf(ftnts$footnotes[[i]], width, rs$units)
+        tmp <- split_string_rtf(ftnts$footnotes[[i]], width, rs$units, 
+                                allow_rtf_code = rs$allow_code,
+                                insert_line_break = rs$line_break)
         
         if (al != "")
           ret <- append(ret, al)
@@ -1304,7 +1495,10 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
       
         if (length(ttlhdr$titles) >= i) {
           # Split strings if they exceed width
-          tmp1 <- split_string_rtf(ttlhdr$titles[[i]], width * .7, rs$units)
+          tmp1 <- split_string_rtf(ttlhdr$titles[[i]], width * .7, rs$units, 
+                                   allow_rtf_code = rs$allow_code,
+                                   insert_line_break = rs$line_break)
+          
           ttl <- tmp1$rtf
           tcnt <- tmp1$lines
         } else {
@@ -1314,7 +1508,10 @@ get_title_header_rtf <- function(thdrlst, content_width, rs, talgn = "center") {
         
         if (length(ttlhdr$right) >= i) {
           tmp2 <- split_string_rtf(ttlhdr$right[[i]],
-                                   width * .3, rs$units)
+                                   width * .3, rs$units, 
+                                   allow_rtf_code = rs$allow_code,
+                                   insert_line_break = rs$line_break)
+          
           hdr <- get_page_numbers_rtf(tmp2$rtf, FALSE)
           hcnt <- tmp2$lines
         } else {
@@ -1436,7 +1633,10 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
         sep <- ""
       }
       
-      tmp <- split_string_rtf(paste0(pgby$label, sep, value), width, rs$units)
+      tmp <- split_string_rtf(paste0(pgby$label, sep, value), width, rs$units, 
+                              allow_rtf_code = rs$allow_code,
+                              insert_line_break = rs$line_break)
+      
       vl <- tmp$rtf
       cnt <- cnt + tmp$lines
       
@@ -1449,17 +1649,22 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
     } else if (pgby$bold %in% c("value", "label")) {
       
       # Split label
-      label_split <- split_string_rtf(pgby$label, width, rs$units)
+      label_split <- split_string_rtf(pgby$label, width, rs$units, 
+                                      allow_rtf_code = rs$allow_code,
+                                      insert_line_break = rs$line_break)
       cnt <- cnt + label_split$lines
       
       # Use remain width to split value
       remain_width <- width - label_split$widths[length(label_split$widths)]
-      value_split <- split_string_rtf(value, remain_width, rs$units)
+      value_split <- split_string_rtf(value, remain_width, rs$units, 
+                                      allow_rtf_code = rs$allow_code)
       
       if (value_split$widths[1] > remain_width) {
         
         # If first width is bigger than remaining width, it means value starts a new line
-        value_split <- split_string_rtf(value, width, rs$units)
+        value_split <- split_string_rtf(value, width, rs$units, 
+                                        allow_rtf_code = rs$allow_code,
+                                        insert_line_break = rs$line_break)
         cnt <- cnt + value_split$lines
         value_split_txt <- value_split$rtf
         
@@ -1470,15 +1675,21 @@ get_page_by_rtf <- function(pgby, width, value, rs, talgn, pgby_cnt = NULL) {
         
         if (length(splt[[1]]) > 1) {
           remain_value <- trimws(sub(splt[[1]][1], "", value), which = "left")
-          remain_value_split <- split_string_rtf(remain_value, width, rs$units)
+          remain_value_split <- split_string_rtf(remain_value, width, rs$units, 
+                                                 allow_rtf_code = rs$allow_code,
+                                                 insert_line_break = rs$line_break)
           cnt <- cnt + remain_value_split$lines
           value_split_txt <- paste0(splt[[1]][1], "\\line", remain_value_split$rtf)
         } else {
           value_split_txt <- value_split$rtf
         }
-        
       }
       
+      # Overwrite the value if line break is turned off
+      if (!rs$line_break) {
+        value_split_txt <- value
+      }
+
       if (pgby$bold == "label") {
         page_by_text <- paste0("\\b ", label_split$rtf, " \\b0", value_split_txt)
       } else {

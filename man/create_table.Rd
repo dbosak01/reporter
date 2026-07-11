@@ -14,7 +14,9 @@ create_table(
   headerless = FALSE,
   borders = "none",
   header_bold = FALSE,
-  continuous = FALSE
+  continuous = FALSE,
+  page_wrap = NULL,
+  auto_page = NULL
 )
 }
 \arguments{
@@ -80,6 +82,16 @@ not be repeated on each page.  This parameter currently only works for RTF
 outputs.  Also, this parameter only works for titles and footnotes that
 are attached to the table body.  Titles and footnotes attached to the 
 report will still be shown on every page.}
+
+\item{page_wrap}{Whether to use page wrapping when columns are too many to
+be in the same page. Default the page wrapping is on. Set it to FALSE to turn 
+it off.}
+
+\item{auto_page}{Whether to use auto pagination. Default is TRUE. If it has
+been set in \code{\link{create_table}}, then it follows table's setting. 
+When `page_break` variable is set in \code{\link{define}}, users can set 
+`auto_page` as FALSE to let reporter follow the paging variable without any
+auto paging. Please note that turning off auto pagination might cause overflow.}
 }
 \description{
 The \code{create_table} function creates a table object to which 

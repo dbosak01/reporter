@@ -374,7 +374,12 @@ get_text_body_rtf <- function(rs, txt, width, line_count, lpg_rows,
 
 
   # Get content titles and footnotes
-  ttls <- get_titles_rtf(txt$titles, width, rs, talgn) 
+  if (rs$title_block == "table") {
+    ttls <- get_titles_rtf(txt$titles, width, rs, talgn) 
+  } else if (rs$title_block == "paragraph") {
+    ttls <- get_titles_par_rtf(txt$titles, width, rs) 
+  }
+  
   ttl_hdr <- get_title_header_rtf(txt$title_hdr, width, rs, talgn)
   ftnts <- get_footnotes_rtf(txt$footnotes, width, rs, talgn) 
   

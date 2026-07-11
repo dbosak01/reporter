@@ -207,7 +207,9 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   # # print(widths_char)
 
   # Split long text strings into multiple rows
-  fdat <- split_cells(fdat, widths_char, ts, rs$char_width)
+  if (rs$line_break) {
+    fdat <- split_cells(fdat, widths_char, ts, rs$char_width)
+  }
   
   # Derive lines for break label if needed
   fdat <- get_break_lines(fdat, widths_char, ts, rs$char_width)
@@ -226,8 +228,22 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   fdat <- apply_widths(fdat, widths_char, aligns)
   
+  # Decide whether to use page wrap. Follow the table setting first, then follow
+  # the report setting.
+  page_wrap_flag <- TRUE
+  if (!is.null(ts$page_wrap)){
+    page_wrap_flag <- ts$page_wrap
+  } else {  
+    page_wrap_flag <- rs$page_wrap
+  }
+  
+  
   # Break columns into pages
-  wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1, control_cols)
+  if (page_wrap_flag) {
+    wraps <- get_page_wraps(rs$line_size, ts, widths_char, 1, control_cols)
+  } else {
+    wraps <- list(names(fdat))
+  }
   # print("wraps")
   # print(wraps)
 
@@ -239,6 +255,12 @@ create_table_pages_text <- function(rs, cntnt, lpg_rows) {
   
   # Offsets are needed to calculate splits and page breaks
   content_offset <- get_content_offsets(rs, ts, tmp_pi, content_blank_row, pgby_cnt)
+  
+  # Decide whether to use page break. Follow the table setting first, then follow
+  # the report setting.
+  if (is.null(ts$auto_page)){
+    ts$auto_page <- rs$auto_page
+  }
   
   # split rows
   splits <- get_splits_text(fdat, widths_uom, rs$body_line_count, 
@@ -413,7 +435,7 @@ get_page_footnotes_text <- function(rs, spec, spec_width,
   ublnks <- c()
   lblnks <- c()
   
-  len_diff <- rs$body_line_count - lpg_rows - row_count - length(ftnts) - length(b)
+  len_diff <- rs$body_line_count - lpg_rows - row_count - get_vector_lines(ftnts) - length(b)
   
   if (vflag) {
     
@@ -487,7 +509,7 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row, pgby_cnt = NULL) 
   if (any(ts$borders %in% c("all", "bottom", "outside")))
     bbrdr <- 1
   
-  ret["upper"] <- length(shdrs) + length(hdrs) + length(ttls) + length(pgb) + tbrdr
+  ret["upper"] <- get_vector_lines(shdrs) + get_vector_lines(hdrs) + get_vector_lines(ttls) + get_vector_lines(pgb) + tbrdr
   
   if (content_blank_row %in% c("above", "both"))
       ret["blank_upper"] <- 1
@@ -496,9 +518,9 @@ get_content_offsets <- function(rs, ts, pi, content_blank_row, pgby_cnt = NULL) 
   rftnts <- get_footnotes(rs$footnotes, w, rs$line_size, rs$uchar, rs$char_width) 
   
   if (has_top_footnotes(rs)) {
-    ret["lower"] <- length(ftnts) + length(rftnts) + bbrdr
+    ret["lower"] <- get_vector_lines(ftnts) + get_vector_lines(rftnts) + bbrdr
   } else {
-    ret["lower"] <- length(ftnts) + bbrdr
+    ret["lower"] <- get_vector_lines(ftnts) + bbrdr
   }
 
   if (content_blank_row %in% c("both", "below"))

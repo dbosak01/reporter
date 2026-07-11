@@ -683,7 +683,7 @@ test_that("pdf19: Plot with page by on plot works as expected.", {
 
 
 
-test_that("test21: 8 pt report with units in inches works as expected.", {
+test_that("pdf21: 8 pt report with units in inches works as expected.", {
 
   if (dev == TRUE) {
 
@@ -711,7 +711,7 @@ test_that("test21: 8 pt report with units in inches works as expected.", {
 
 })
 
-test_that("test22: 8 pt report with units in cm works as expected.", {
+test_that("pdf22: 8 pt report with units in cm works as expected.", {
 
   if (dev == TRUE) {
 
@@ -1354,6 +1354,221 @@ test_that("pdf41: Page numbers work every in title, footnote, header, and footer
       page_footer("Footer: Page [pg] of [tpg]")
     
     res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf42: Page wrap can be turned off as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test42.pdf")
+    
+    # Read in prepared data
+    df <- read.table(header = TRUE, text = '
+      USUBJID STUDYID  DOMAIN  SUBJID  RFSTDTC       RFENDTC       RFXSTDTC      RFXENDTC      RFICDTC       RFPENDTC
+      "001"   "ABC"    "DM"    "01"    "2021-12-01"  "2021-12-20"  "2021-12-02"  "2021-12-20"  "2021-12-01"  "2021-12-20"
+      "002"   "ABC"    "DM"    "02"    "2021-12-02"  "2021-12-21"  "2021-12-03"  "2021-12-21"  "2021-12-02"  "2021-12-20"
+      "003"   "ABC"    "DM"    "03"    "2021-12-03"  "2021-12-22"  "2021-12-04"  "2021-12-22"  "2021-12-03"  "2021-12-20"
+      "004"   "ABC"    "DM"    "04"    "2021-12-04"  "2021-12-23"  "2021-12-05"  "2021-12-23"  "2021-12-04"  "2021-12-20"
+      "005"   "ABC"    "DM"    "05"    "2021-12-05"  "2021-12-24"  "2021-12-06"  "2021-12-24"  "2021-12-05"  "2021-12-20"
+      "006"   "ABC"    "DM"    "06"    "2021-12-06"  "2021-12-25"  "2021-12-07"  "2021-12-25"  "2021-12-06"  "2021-12-20"
+      "007"   "ABC"    "DM"    "07"    "2021-12-07"  "2021-12-26"  "2021-12-08"  "2021-12-26"  "2021-12-07"  "2021-12-20"
+      "008"   "ABC"    "DM"    "08"    "2021-12-08"  "2021-12-27"  "2021-12-09"  "2021-12-27"  "2021-12-08"  "2021-12-20"')
+    
+    # Test that any assigned formats are applied
+    # attr(df$SUBJID, "width") <- 1
+    attr(df$SUBJID, "justify") <- "left"
+    attr(df$SUBJID, "format") <- "S:%s"
+    
+    # Define table
+    tbl <- create_table(df, page_wrap = FALSE) 
+    tbl2 <- create_table(df) 
+    tbl3 <- create_table(df, page_wrap = TRUE) 
+    
+    # Define Report
+    # !! Please note that when `page_wrap` is set in `create_table`. It'll be the top choice
+    # even though we set TRUE in `report_options`. Therefore, table 1 doesn't have
+    # the page wrap, but table 2 have the page wrap.
+    rpt <- create_report(fp, font = "fixed", output_type = "pdf",
+                         orientation = "portrait") %>%
+      report_options(page_wrap = FALSE) %>%
+      titles("Listing 1.0",
+             "Demographics Dataset") %>%
+      add_content(tbl, align = "left") %>%
+      add_content(tbl2, align = "left") %>%
+      add_content(tbl3, align = "left") %>%
+      page_header("Sponsor", "Drug") %>%
+      page_footer(left = "Time", right = "Page [pg] of [tpg]") %>%
+      footnotes("My footnote")
+    
+    # If page is wrapped, RFICDTC will be in the next page
+    # Now page is not wrapped, we can see RFICDTC is out of the margin.
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf43: auto_page can be turned off as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "pdf/test43.pdf")
+    
+    dat <- iris[1:100, ]
+    dat$Species <- as.character(dat$Species)
+    dat$Species[1:25] <- rep("setosa1", 25)
+    dat$Species[26:50] <- rep("setosa2", 25)
+    
+    tbl <- create_table(dat, auto_page = FALSE) %>%
+      footnotes("First Table with auto_page=FALSE in create_table", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    tbl2 <- create_table(dat) %>%
+      footnotes("Second Table with auto_page=FALSE in report_options", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    tbl3 <- create_table(dat, auto_page = TRUE) %>%
+      footnotes("Third Table with auto_page=TRUE in create_table", "My footnote 2", valign = "bottom") %>%
+      define(Species, page_break = TRUE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed", 
+                         orientation = "landscape") %>%
+      report_options(auto_page = FALSE) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+      titles("Table 1.0", "My Nice Table") %>%
+      add_content(tbl) %>%
+      add_content(tbl2) %>%
+      add_content(tbl3) %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf44: line_count can be set in report_options as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "pdf/test44.pdf")
+    
+    dat <- iris[1:100, ]
+    
+    tbl <- create_table(dat) %>%
+      footnotes("line_count setting in report_options()", "My footnote 2", valign = "bottom") 
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed", 
+                         orientation = "landscape") %>%
+      report_options(line_count = 18) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      page_header("Left", c("Right1", "Right2", "Page [pg] of [tpg]"), blank_row = "below") %>%
+      titles("Table 1.0", "Table with line_count = 18") %>%
+      add_content(tbl) %>%
+      page_footer("Left1", "Center1", "Right1")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf45: Wrapping of footnote, header, title, footer, and page_by work as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test45.pdf")
+    
+    dat <- iris[1:50, ]
+    dat$pageby_var <- paste0("This is ", dat$Species, " which will take more than one line to see wrapping works.")
+    
+    tbl <- create_table(dat, borders = "all") %>%
+      define(Species, blank_after = TRUE, visible = FALSE) %>%
+      page_by(pageby_var, label = "Label: ") %>%
+      define(pageby_var, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed") %>%
+      add_content(tbl) %>%
+      page_header("This is a long left header which will take more than one line. It is to see if the header can be wrapped.", 
+                  "This is a right header which will take more than one line. It is to see if the header can be wrapped.") %>%
+      page_footer("This is a long left footer which will take more than one line. It is to see if the footer can be wrapped.", 
+                  "Center Footer", 
+                  "This is a right footer which will take more than one line. It is to see if the footer can be wrapped.") %>%
+      titles("This is a very long title which will take more than one line. It is to see if the title can be wrapped properly.",
+             blank_row = "both", columns =  1, align = "center",
+             borders = "none") %>%
+      footnotes("Here is a very long footnote which will take more than one line. It is to see if the footnote can be wrapped properly.")
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf46: Footnote and title can be wrapped with multiple columns.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test46.pdf")
+    
+    tbl <- create_table(iris[1:100, ], borders = "all") %>%
+      define(Species, blank_after = TRUE, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed") %>%
+      add_content(tbl) %>%
+      page_header("Left header", "Right header") %>%
+      page_footer("left", "", "right") %>%
+      titles("Left title",
+             "This is a very long title which will take more than one line. It is to see if the title can be wrapped properly.",
+             "Right title will also take two lines. It should be wrapped.",
+             blank_row = "both", columns =  3, align = "center",
+             borders = "none") %>%
+      footnotes("Here is a very long footnote which will take more than one line. It is to see if the footnote can be wrapped properly.",
+                "The center footnote also take more than one lines.",
+                "column 3 footnote", columns = 3)
+    
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("pdf47: Title header can be wrapped.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "pdf/test47.pdf")
+    
+    tbl <- create_table(iris[1:50, ], borders = "all") %>%
+      define(Species, blank_after = TRUE, visible = FALSE)
+    
+    rpt <- create_report(fp, output_type = "pdf", font = "fixed") %>%
+      add_content(tbl) %>%
+      title_header("This is a first title header which will take more than one line to see if they can be wrapped properly.", 
+                   "This is a second title header which will take more than one line to see if they can be wrapped properly.", 
+                   right = c("Client",
+                             "Right",
+                             "More"),
+                   borders = "all") %>% 
+      page_footer("Client", 
+                  "Page", 
+                  "More") %>%
+      footnotes("Here is a very long footnote which will take more than one line. It is to see if the footnote can be wrapped properly.")
+    
+    
+    res <- write_report(rpt)
+    
     expect_equal(file.exists(fp), TRUE)
   } else {
     expect_equal(TRUE, TRUE)

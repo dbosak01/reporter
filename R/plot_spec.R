@@ -586,7 +586,12 @@ get_plot_body_rtf <- function(plt, plot_path, talign, rs,
 
 
   # Get titles and footnotes
-  ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
+  if (rs$title_block == "table") {
+    ttls <- get_titles_rtf(plt$titles, wth, rs, talign) 
+  } else if (rs$title_block == "paragraph") {
+    ttls <- get_titles_par_rtf(plt$titles, wth, rs) 
+  }
+  
   ttl_hdr <- get_title_header_rtf(plt$title_hdr, wth, rs, talign)
   pgbys <- get_page_by_rtf(pgby, wth, pgval, rs, talign)
   
