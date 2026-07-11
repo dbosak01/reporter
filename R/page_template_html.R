@@ -168,7 +168,8 @@ get_page_header_html <- function(rs) {
             tmp <- split_string_html(hl[[i]], left_width, rs$units,
                                      insert_line_break = rs$line_break)
             
-            ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp$html),
+            ret <- paste0(ret, "<td style=\"text-align:left\">", 
+                          encodeHTML(tmp$html, nbsp = rs$line_break),
                           "</td>\n")
             
             lcnt <- tmp$lines
@@ -196,7 +197,8 @@ get_page_header_html <- function(rs) {
             tmp3 <- split_string_html(hc[[i]], center_width, rs$units,
                                       insert_line_break = rs$line_break)
             
-            ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp3$html),
+            ret <- paste0(ret, "<td style=\"text-align:center\">", 
+                          encodeHTML(tmp3$html, nbsp = rs$line_break),
                           "</td>\n")
             
             ccnt <- tmp3$lines
@@ -224,7 +226,8 @@ get_page_header_html <- function(rs) {
             tmp2 <- split_string_html(hr[[i]], right_width, rs$units,
                                       insert_line_break = rs$line_break)
             
-            ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp2$html), 
+            ret <- paste0(ret, "<td style=\"text-align:right\">", 
+                          encodeHTML(tmp2$html, nbsp = rs$line_break), 
                           "</td></tr>\n")
             
             rcnt <- tmp2$lines 
@@ -396,7 +399,8 @@ get_page_footer_html <- function(rs) {
             tmp1 <- split_string_html(fl[[i]], left_width, rs$units,
                                       insert_line_break = rs$line_break)
             
-            ret <- paste0(ret, "<td style=\"text-align:left\">", encodeHTML(tmp1$html),
+            ret <- paste0(ret, "<td style=\"text-align:left\">", 
+                          encodeHTML(tmp1$html, nbsp = rs$line_break),
                           "</td>")
             lcnt <- tmp1$lines
           } else {
@@ -423,7 +427,8 @@ get_page_footer_html <- function(rs) {
             tmp2 <- split_string_html(fc[[i]], center_width, rs$units,
                                       insert_line_break = rs$line_break)
             
-            ret <- paste0(ret, "<td style=\"text-align:center\">", encodeHTML(tmp2$html),
+            ret <- paste0(ret, "<td style=\"text-align:center\">", 
+                          encodeHTML(tmp2$html, nbsp = rs$line_break),
                           "</td>")
             ccnt <- tmp2$lines
           } else {
@@ -449,7 +454,8 @@ get_page_footer_html <- function(rs) {
             tmp3 <- split_string_html(fr[[i]], right_width, rs$units,
                                       insert_line_break = rs$line_break)
             
-            ret <- paste0(ret, "<td style=\"text-align:right\">", encodeHTML(tmp3$html),
+            ret <- paste0(ret, "<td style=\"text-align:right\">", 
+                          encodeHTML(tmp3$html, nbsp = rs$line_break),
                           "</td>")
             
             rcnt <- tmp3$lines
@@ -649,9 +655,9 @@ get_titles_html <- function(ttllst, content_width, rs, talgn = "center") {
             mxlns <- tmp$lines
           
           if (ttls$bold)
-            tstr <- paste0("<b>", encodeHTML(tmp$html), "</b>")
+            tstr <- paste0("<b>", encodeHTML(tmp$html, nbsp = rs$line_break), "</b>")
           else 
-            tstr <- encodeHTML(tmp$html)
+            tstr <- encodeHTML(tmp$html, nbsp = rs$line_break)
           
           fz <- ""
           if (!is.null(ttls$font_size)){
@@ -811,9 +817,9 @@ get_titles_html_back <- function(ttllst, content_width, rs, talgn = "center") {
                                  insert_line_break = rs$line_break)
         
         if (ttls$bold)
-          tstr <- paste0("<b>", encodeHTML(tmp$html), "</b>")
+          tstr <- paste0("<b>", encodeHTML(tmp$html, nbsp = rs$line_break), "</b>")
         else 
-          tstr <- encodeHTML(tmp$html)
+          tstr <- encodeHTML(tmp$html, nbsp = rs$line_break)
         
         fz <- ""
         if (!is.null(ttls$font_size)){
@@ -1023,9 +1029,9 @@ get_footnotes_html <- function(ftnlst, content_width, rs, talgn = "center",
           
           
           if (ftnts$italics)
-            txt <- paste0("<i>", encodeHTML(tmp$html), "</i>")
+            txt <- paste0("<i>", encodeHTML(tmp$html, nbsp = rs$line_break), "</i>")
           else
-            txt <- encodeHTML(tmp$html)
+            txt <- encodeHTML(tmp$html, nbsp = rs$line_break)
   
           # if (b == "")
           #   ret <- append(ret, paste0("<tr><td>", txt, 
@@ -1189,9 +1195,9 @@ get_footnotes_html_back <- function(ftnlst, content_width, rs, talgn = "center",
           ret <- append(ret, al)
         
         if (ftnts$italics)
-          txt <- paste0("<i>", encodeHTML(tmp$html), "</i>")
+          txt <- paste0("<i>", encodeHTML(tmp$html, nbsp = rs$line_break), "</i>")
         else
-          txt <- encodeHTML(tmp$html)
+          txt <- encodeHTML(tmp$html, nbsp = rs$line_break)
         
         if (b == "")
           ret <- append(ret, paste0("<tr><td>", txt, 
@@ -1346,9 +1352,9 @@ get_title_header_html <- function(thdrlst, content_width, rs, talgn = "center") 
           ret <- append(ret, al)
         
         ret <- append(ret, paste0("<tr><td style=\"text-align:left;", b1, "\">",
-                                  encodeHTML(ttl), 
+                                  encodeHTML(ttl, nbsp = rs$line_break), 
                                   "</td><td style=\"text-align:right;", b2, "\">", 
-                                  encodeHTML(hdr), 
+                                  encodeHTML(hdr, nbsp = rs$line_break), 
                                   "</td></tr>\n"))
         
         if (bl != "")
@@ -1477,9 +1483,9 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgb
       cnt <- cnt + tmp$lines
       
       if (pgby$bold ) {
-        page_by_text <- paste0("<b>", encodeHTML(vl), "</b>")
+        page_by_text <- paste0("<b>", encodeHTML(vl, nbsp = rs$line_break), "</b>")
       } else {
-        page_by_text <- encodeHTML(vl)
+        page_by_text <- encodeHTML(vl, nbsp = rs$line_break)
       }
       
     } else if (pgby$bold %in% c("value", "label")) {
@@ -1524,9 +1530,15 @@ get_page_by_html <- function(pgby, width, value, rs, talgn, ex_brdr = FALSE, pgb
       }
       
       if (pgby$bold == "label") {
-        page_by_text <- paste0("<b>", encodeHTML(paste0(label_split$html, " ")), "</b>", encodeHTML(value_split_txt))
+        page_by_text <- paste0("<b>", 
+                               encodeHTML(paste0(label_split$html, " "), nbsp = rs$line_break), 
+                               "</b>", 
+                               encodeHTML(value_split_txt, nbsp = rs$line_break))
       } else {
-        page_by_text <- paste0(encodeHTML(paste0(label_split$html, " ")), "<b>", encodeHTML(value_split_txt), "</b>")
+        page_by_text <- paste0(encodeHTML(paste0(label_split$html, " "), nbsp = rs$line_break), 
+                               "<b>", 
+                               encodeHTML(value_split_txt, nbsp = rs$line_break), 
+                               "</b>")
       }
     }
     
