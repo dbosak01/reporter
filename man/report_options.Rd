@@ -17,43 +17,56 @@ report_options(
 \arguments{
 \item{x}{The report spec object.}
 
-\item{allow_code}{Whether to insert code into the report. Now it's only for
-RTF code insertion. Default is FALSE. When it's TRUE, users can insert RTF code
-to the data, titles, or footnotes. If special characters are passed by the
-common package, please double the braces.}
+\item{allow_code}{Whether to allow the user to insert custom code into the report. 
+Currently applies only to RTF outputs. Default is FALSE. When TRUE, users can 
+insert RTF code in the data, titles, or footnotes. To insert curly braces,
+double them so as to not interfere with the glue functionality, which uses
+single curly braces as an escape.}
 
-\item{line_break}{Whether to use auto line breaking. Default is TRUE. This is
-only for RTF, DOCX, and HTML.}
+\item{line_break}{Whether to use auto line breaking. Default is TRUE. This option
+applies to RTF, DOCX, and HTML only. When "line_break" is FALSE, the rendering
+will not insert a line break code at the end of a line, and instead let the 
+editor wrap the line as needed.}
 
 \item{line_count}{The number of lines that will fit on page.  Normally,
 the \code{line_count} is calculated automatically. You can override the 
 calculated value by setting the \code{line_count} directly.}
 
-\item{page_wrap}{Whether to use auto page wrapping. Default is TRUE. If it has
-been set in \code{\link{create_table}}, then it follows table's setting. Please
-note that turning off page wrapping might make the report out of margin.}
+\item{page_wrap}{By default, columns that exceed the available width of the page
+will be wrapped to a new page. 
+The "page_wrap" parameter allows you to turn this feature off for the entire 
+report. Default is TRUE. A "page_wrap" parameter has also been added to the
+\code{\link{create_table}} function, so that page wrapping may be controlled
+at the table level.  The table level setting will override the report level 
+setting. Note that turning off page wrapping may cause the report content
+to exceed the margins.}
 
-\item{auto_page}{Whether to use auto pagination. Default is TRUE. If it has
-been set in \code{\link{create_table}}, then it follows table's setting. 
-When `page_break` variable is set in \code{\link{define}}, users can set 
-`auto_page` as FALSE to let reporter follow the paging variable without any
-auto paging. Please note that turning off auto pagination might cause overflow.}
+\item{auto_page}{By default, when there are too many lines to fit on a page,
+a new page will be automatically created. Sometimes it is desirable to turn
+this feature off.  The "auto_page" parameter allows you to turn automatic
+page breaking off for the entire report.
+There is a corresponding parameter in \code{\link{create_table}} that 
+allows you to control page breaking at a table level.  The table setting
+will override the report setting.   
+When a `page_break` variable is set in the \code{\link{define}} function, 
+you can set `auto_page` to FALSE to let reporter follow the paging variable without any
+auto paging. Note that turning off auto pagination may cause page overflows.}
 
 \item{title_block}{To decide whether the structure of titles is "table" or 
-"paragraph". Default is "table". It's only for RTF.}
+"paragraph". Default is "table". Applies only to RTF.  The "paragraph"
+structure is useful on some editors which do not render the table title 
+block appropriately.  Note that if the "paragraph" setting is applied,
+some features of the \code{\link{titles}} function may not work as expected.}
 }
 \value{
 The report_spec with option settings.
 }
 \description{
-This function is to control the report for auto line breaking, auto pagination,
-auto page wrapping. For RTF, it provides options for allowing users to insert
-RTF code and deciding the structure of titles.
-}
-\details{
-This function is to control the report for auto line breaking, auto pagination,
-auto page wrapping. For RTF, it provides options for allowing users to insert
-RTF code and deciding the structure of titles.
+A function to set options for variable-width reports (HTML, RTF, DOCS, and PDF). 
+The options include the ability to control features such as auto line breaking, 
+auto pagination, and auto page wrapping.  These features are normally on by default, 
+but sometimes it is desirable to turn them off. For RTF, it provides options for allowing 
+users to insert RTF code and decide the structure of titles.
 }
 \examples{
 library(reporter)

@@ -4900,7 +4900,7 @@ test_that("rtf2-131: Titles can be output in paragraph for table as expected.", 
     
     tbl <- create_table(dat) %>%
       column_defaults(width = 1) %>%
-      titles("This is subtitle")
+      titles("This is subtitle", align = "left")
     
     rpt <- create_report(fp, output_type = "RTF", font = fnt,
                          font_size = fsz, orientation = "portrait") %>%
