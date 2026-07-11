@@ -707,9 +707,9 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       
 
       if (ts$header_bold)
-        tstr <- paste0("<b>", encodeHTML(tmp$html), "</b>")
+        tstr <- paste0("<b>", encodeHTML(tmp$html, nbsp = rs$line_break), "</b>")
       else 
-        tstr <- encodeHTML(tmp$html)
+        tstr <- encodeHTML(tmp$html, nbsp = rs$line_break)
 
       if (b == "") {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
@@ -946,9 +946,9 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       }
       
       if (s$bold[k])
-        tstr <- paste0("<b>", encodeHTML(vl), "</b>")
+        tstr <- paste0("<b>", encodeHTML(vl, nbsp = rs$line_break), "</b>")
       else 
-        tstr <- encodeHTML(vl)
+        tstr <- encodeHTML(vl, nbsp = rs$line_break)
       
       # Check gap information
       gap <- ""
@@ -1232,7 +1232,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (all(class(vl) != "character"))
           vl <- as.character(vl)
         else 
-          vl <- encodeHTML(vl)
+          vl <- encodeHTML(vl, nbsp = rs$line_break)
         
         if (merge_label_row  & flgs[i] %in% c("B", "A", "L")) {
           if (j == 1) {
@@ -1329,7 +1329,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
 #' @description Have to check wrapping on a lot of files.  May have unintended 
 #' results.
 #' @noRd
-encodeHTML <- function(strng) {
+encodeHTML <- function(strng, nbsp = TRUE) {
   
   ret <- strng
   
@@ -1337,7 +1337,9 @@ encodeHTML <- function(strng) {
   ret <- gsub(">", "&gt;", ret , fixed = TRUE)
   ret <- gsub("<", "&lt;", ret , fixed = TRUE)
   ret <- gsub("\n", "<br>", ret , fixed = TRUE)
-  ret <- gsub(" ", "&nbsp;", ret, fixed = TRUE)
+  if (nbsp) {
+    ret <- gsub(" ", "&nbsp;", ret, fixed = TRUE)
+  }
   if (ret == "")
     ret <- "&nbsp;"
   
