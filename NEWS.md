@@ -1,3 +1,9 @@
+# reporter 1.4.8
+
+* Added ability to insert RTF codes directly into RTF documents. See the "allow_code"
+parameter on the `report_options()` function.
+
+
 # reporter 1.4.7
 
 * Added "group_cohesion" and "break_label" parameters to `define()` function. 
