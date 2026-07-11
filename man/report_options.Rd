@@ -62,7 +62,7 @@ some features of the \code{\link{titles}} function may not work as expected.}
 The report_spec with option settings.
 }
 \description{
-A function to set options for variable-width reports (HTML, RTF, DOCS, and PDF). 
+A function to set some options for the report. 
 The options include the ability to control features such as auto line breaking, 
 auto pagination, and auto page wrapping.  These features are normally on by default, 
 but sometimes it is desirable to turn them off. For RTF, it provides options for allowing 

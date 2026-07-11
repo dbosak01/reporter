@@ -836,7 +836,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @title
 #' Set options for the report
 #' @description
-#' A function to set options for variable-width reports (HTML, RTF, DOCS, and PDF). 
+#' A function to set some options for the report. 
 #' The options include the ability to control features such as auto line breaking, 
 #' auto pagination, and auto page wrapping.  These features are normally on by default, 
 #' but sometimes it is desirable to turn them off. For RTF, it provides options for allowing 
