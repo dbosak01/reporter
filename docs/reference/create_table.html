@@ -20,7 +20,7 @@ S3 object of class 'table_spec'."><meta property="og:image" content="https://rep
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.8</span>
       </span>
     </div>
 
@@ -83,6 +83,12 @@ S3 object of class 'table_spec'."><meta property="og:image" content="https://rep
       <a href="../articles/reporter-grouping.html">Example 16: Grouping</a>
     </li>
     <li>
+      <a href="../articles/reporter-RTFcode.html">Example 17: Insert RTF Code</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-report_options.html">Example 18: Report Options</a>
+    </li>
+    <li>
       <a href="../articles/reporter-more.html">More Examples</a>
     </li>
     <li>
@@ -136,7 +142,9 @@ S3 object of class 'table_spec'.</p>
 <span>  headerless <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  borders <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  header_bold <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  continuous <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  continuous <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  page_wrap <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  auto_page <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -225,6 +233,20 @@ not be repeated on each page.  This parameter currently only works for RTF
 outputs.  Also, this parameter only works for titles and footnotes that
 are attached to the table body.  Titles and footnotes attached to the
 report will still be shown on every page.</p></dd>
+
+
+<dt id="arg-page-wrap">page_wrap<a class="anchor" aria-label="anchor" href="#arg-page-wrap"></a></dt>
+<dd><p>Whether to use page wrapping when columns are too many to
+be in the same page. Default the page wrapping is on. Set it to FALSE to turn
+it off.</p></dd>
+
+
+<dt id="arg-auto-page">auto_page<a class="anchor" aria-label="anchor" href="#arg-auto-page"></a></dt>
+<dd><p>Whether to use auto pagination. Default is TRUE. If it has
+been set in <code>create_table</code>, then it follows table's setting.
+When `page_break` variable is set in <code><a href="define.html">define</a></code>, users can set
+`auto_page` as FALSE to let reporter follow the paging variable without any
+auto paging. Please note that turning off auto pagination might cause overflow.</p></dd>
 
 </dl></div>
     <div id="details">

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.8</span>
       </span>
     </div>
 
@@ -80,6 +80,12 @@
       <a href="../articles/reporter-grouping.html">Example 16: Grouping</a>
     </li>
     <li>
+      <a href="../articles/reporter-RTFcode.html">Example 17: Insert RTF Code</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-report_options.html">Example 18: Report Options</a>
+    </li>
+    <li>
       <a href="../articles/reporter-more.html">More Examples</a>
     </li>
     <li>
@@ -114,6 +120,17 @@
       <small>Source: <a href="https://github.com/dbosak01/reporter/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.8" id="reporter-148">reporter 1.4.8<a class="anchor" aria-label="anchor" href="#reporter-148"></a></h2>
+<ul><li><p>Added <code><a href="../reference/report_options.html">report_options()</a></code> function to control various features of the report. This function has the following parameters:</p></li>
+<li><p>“allow_code” to insert RTF codes directly into RTF documents.<br></p></li>
+<li><p>“line_break” to turn off automatic insertion of line breaks.</p></li>
+<li><p>“line_count” to set the number of lines on a page.</p></li>
+<li><p>“page_wrap” to turn off automatic page wrapping.</p></li>
+<li><p>“auto_page” to turn off automatic page breaking.</p></li>
+<li><p>“title_block” to insert a title paragraph in RTF outputs instead of a title table. This feature makes the output more compatible with some editors.</p></li>
+<li><p>Wrap multiple lines of titles, footnotes, headers, footers, and page by values for TXT files.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4.7" id="reporter-147">reporter 1.4.7<small>2026-05-15</small><a class="anchor" aria-label="anchor" href="#reporter-147"></a></h2>
 <ul><li>Added “group_cohesion” and “break_label” parameters to <code><a href="../reference/define.html">define()</a></code> function.</li>

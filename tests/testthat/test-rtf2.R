@@ -4760,16 +4760,14 @@ test_that("rtf2-128: Line break can be turned off by report_options as expected.
       titles("Table 1.0", 
              paste0("This is a title which is turned off the automatically line breaks",
                     " so it should not contain any line break characters and it should",
-                    " have overflow because the wrapping lines are not considered.")) %>%
+                    " prevent from overflow because the wrapping lines are turned off.")) %>%
       add_content(tbl) %>%
       footnotes(paste0("This is a long footnote which would not be inserted any line break characters even though it",
-                       " has multiple lines. Users should be responsible for the overflow.")) %>%
+                       " has multiple lines. There should be no overflow because lines have been counted.")) %>%
       page_footer(left = "This is a long left footer which would not be inserted any line break characters.",
                   center = "This is a long center footer which would not be inserted any line break characters.",
                   right = "This is a long right footer which would not be inserted any line break characters.")
     
-    
-    # The output should be overflow because the line-break characters are not inserted
     res <- write_report(rpt)
     expect_equal(file.exists(fp), TRUE)
     
@@ -4807,16 +4805,15 @@ test_that("rtf2-129: Page wrap can be turned off as expected.", {
     
     # Test that any assigned formats are applied
     # attr(df$SUBJID, "width") <- 1
-    attr(df$SUBJID, "justify") <- "left"
-    attr(df$SUBJID, "format") <- "S:%s"
+    # attr(df$SUBJID, "justify") <- "left"
+    # attr(df$SUBJID, "format") <- "S:%s"
     
     # Define table
     tbl <- create_table(df, page_wrap = FALSE) |>
       titles("page_wrap = FALSE in create_table()")
     tbl2 <- create_table(df) |>
       titles("page_wrap = FALSE in report_options()")
-    tbl3 <- create_table(df, page_wrap = TRUE) |>
-      titles("page_wrap = TRUE in report_options()")
+    tbl3 <- create_table(df, page_wrap = TRUE)
     
     # Define Report
     # !! Please note that when `page_wrap` is set in `create_table`. It'll be the top choice

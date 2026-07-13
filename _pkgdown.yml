@@ -20,6 +20,8 @@ articles:
   - reporter-break
   - reporter-hfimage
   - reporter-grouping
+  - reporter-RTFcode
+  - reporter-report_options
   - reporter-more
   - reporter-faq
 
@@ -90,5 +92,3 @@ navbar:
     faq:
       text: FAQ
       href: ./articles/reporter-faq.html
-      
-

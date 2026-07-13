@@ -116,6 +116,11 @@ list of examples:
 * [Example 11: Figure](reporter-figure.html)
 * [Example 12: Styles](reporter-styles.html)
 * [Example 13: Superscripts and Subscripts](reporter-super.html)
+* [Example 14: Page Break](reporter-break.html)
+* [Example 15: Header and Footer Images](reporter-hfimage.html)
+* [Example 16: Grouping](reporter-grouping.html)
+* [Example 17: Insert RTF Code](reporter-RTFcode.html)
+* [Example 18: Report Options](reporter-report_options.html)
 * [More Examples](https://sassy.r-sassy.org/articles/sassy.html)
 
 
