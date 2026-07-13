@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.8</span>
       </span>
     </div>
 
@@ -101,6 +101,12 @@
     </li>
     <li>
       <a href="../articles/reporter-grouping.html">Example 16: Grouping</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-RTFcode.html">Example 17: Insert RTF Code</a>
+    </li>
+    <li>
+      <a href="../articles/reporter-report_options.html">Example 18: Report Options</a>
     </li>
     <li>
       <a href="../articles/reporter-more.html">More Examples</a>
@@ -397,12 +403,18 @@ that has the desired page number for each row. Then use the
 <code>page_break</code> parameter on the <code><a href="../reference/define.html">define()</a></code> function
 to identify that variable as a page break variable. The package will
 then use that variable to break pages, instead of the automatic paging
-variable.</p>
+variable. However, if your paging variable are detected to cause an
+overflow, the <strong>reporter</strong> package package will still wrap
+to the next page on its own. You can use
+<code>report_options(auto_page = FALSE)</code> to let pagination 100%
+follow your paging variable, but you need to be responsible for the
+overflow. See <a href="reporter-report_options.html">Example 18: Report
+Options</a></p>
 <p>You can also set the number of lines on a page using the
 <code>line_count</code> parameter on the <code><a href="../reference/options_fixed.html">options_fixed()</a></code>
-function. When this parameter is set, it will use the number of lines
-specified to determine when to break a page, instead of using the
-automatically calculated value.</p>
+and <code>report_options</code> function. When this parameter is set, it
+will use the number of lines specified to determine when to break a
+page, instead of using the automatically calculated value.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
@@ -417,6 +429,11 @@ Is there a way to do that?</p>
 parameter on the <code><a href="../reference/define.html">define()</a></code> function to identify a variable
 to wrap on. See <a href="reporter-wrap.html">example 6</a> in the
 documentation for an illustration of how to wrap pages.</p>
+<p>In default, , the <strong>reporter</strong> would wrap columns across
+pages when there are too many columns to fit in one page without any
+manual setting. You can turn it off with
+<code>report_options(page_wrap = FALSE)</code> or
+<code>create_table(page_wrap = FALSE)</code>. See <a href="reporter-report_options.html">Example 18: Report Options</a></p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
@@ -447,9 +464,12 @@ glue function, which is automatically run on titles, footnotes, and
 labels. You can use the curly braces to reference a variable or run a
 function from within string. To avoid the error, you can escape the glue
 functionality by doubling the curly braces. In other words, use
-“{{mystring}}” instead of “{mystring}.</p>
+“{{mystring}}” instead of “{mystring}”. If you’re using RTF code with
+<code>report_options(allow_code = TRUE)</code>, please also double the
+curly braces if needed. See <a href="reporter-RTFcode.html">Example 17:
+Insert RTF Code</a></p>
 <p>You can also turn off the glue functionality globally by setting
-<code>globals("reporter.glue" = FALSE)</code>.</p>
+<code>options("reporter.glue" = FALSE)</code>.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>

@@ -10,6 +10,8 @@ This function has the following parameters:
 - "title_block" to insert a title paragraph in RTF outputs instead of a title
 table.  This feature makes the output more compatible with some editors.
 
+* Wrap multiple lines of titles, footnotes, headers, footers, and page by values
+for TXT files.
 
 # reporter 1.4.7
 
