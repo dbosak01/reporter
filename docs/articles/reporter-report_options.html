@@ -6,11 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Example 18: Report Options • reporter</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
-<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="icon" sizes="any" href="../favicon.ico">
-<link rel="manifest" href="../site.webmanifest">
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -103,7 +104,7 @@
       <a href="../articles/reporter-grouping.html">Example 16: Grouping</a>
     </li>
     <li>
-      <a href="../articles/reporter-RTFcode.html">Example 17: Insert RTF Code</a>
+      <a href="../articles/reporter-codeinsert.html">Example 17: Code Insertion</a>
     </li>
     <li>
       <a href="../articles/reporter-report_options.html">Example 18: Report Options</a>
@@ -154,39 +155,52 @@
 
     
     
-<p>In <a href="reporter-RTFcode.html">example 17</a>, we talked about
-inserting RTF code with <code><a href="../reference/report_options.html">report_options()</a></code>. In this section,
-we’re going to introduce other parameters in
-<code><a href="../reference/report_options.html">report_options()</a></code> to change the default settings of the
-<strong>reporter</strong> package.</p>
+<p><a href="reporter-codeinsert.html">Example 17: Code Insertion</a>
+discusses the “allow_code” parameter in <code><a href="../reference/report_options.html">report_options()</a></code>.
+In this section, we’re going to introduce the other parameters on
+<code><a href="../reference/report_options.html">report_options()</a></code>. These parameters allow you to change some
+of the default settings of the <strong>reporter</strong> package.</p>
 <div class="section level2">
 <h2 id="top">Report Options<a class="anchor" aria-label="anchor" href="#top"></a>
 </h2>
 <ul>
-<li><a href="#auto_page">Turn Off Auto Pagination</a></li>
-<li><a href="#page_wrap">Turn Off Page Wrapping</a></li>
-<li><a href="#line_break">Turn Off Line Break</a></li>
+<li><a href="#auto_page">Auto Pagination</a></li>
+<li><a href="#page_wrap">Page Wrapping</a></li>
+<li><a href="#line_break">Line Breaks</a></li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="auto_page">Turn Off Auto Pagination<a class="anchor" aria-label="anchor" href="#auto_page"></a>
+<h2 id="auto_page">Auto Pagination<a class="anchor" aria-label="anchor" href="#auto_page"></a>
 </h2>
-<p>When users set <code>define(page_break = TRUE)</code> to control the
-pagination, generally the <strong>reporter</strong> package follows the
-page settings, but it will still trigger an automatic page break when
-the <strong>reporter</strong> package detects an overflow.</p>
-<p>Users can turn off the automatic page breaks with
-<code>report_options(auto_page = FALSE)</code> or
-<code>create_table(auto_page = FALSE)</code>.</p>
+<p>Normally, <strong>reporter</strong> will insert a page break
+automatically when the number of lines meets the calculated line count.
+The line count is based on the font size, font type, margins, and page
+size.</p>
+<p>Users can also control pagination by creating a page break variable
+and identifying that variable in a define function, such as:
+<code>define(page_break = TRUE)</code>. The rendering procedure will
+then insert a page break every time the page variable changes.</p>
+<p>Observe that the rendering procedure will still insert a page break
+automatically if the page variable rows exceed the calculated line
+count. That is to say, the automatic page breaking is still on, even
+when the user has supplied a page break variable.</p>
+<p>There are times, however, when you may want to turn off the automatic
+page breaking completely, and only break the page when indicated by the
+page variable. To disable the automatic page breaking, use the
+“auto_page” parameter on either the <code>report_options</code> or
+<code>create_table</code> functions.</p>
 <ul>
 <li>
-<code>create_table(auto_page = FALSE)</code> turns off the
-auto-pagination in one particular table.</li>
+<code>report_options(auto_page = FALSE)</code> turns off
+auto-pagination for all tables in the report.</li>
 <li>
-<code>report_options(auto_page = FALSE)</code> turns off all
-auto-pagination for tables without <code>auto_page</code> setting in
-<code><a href="../reference/create_table.html">create_table()</a></code>.</li>
+<code>create_table(auto_page = FALSE)</code> turns off the
+auto-pagination for a particular table.</li>
 </ul>
+<p>Note that if the <code>create_table</code> and
+<code>report_options</code> settings conflict, the
+<code>create_table</code> value will take precedence.</p>
+<p>Let’s look at an example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example18a.rtf"</span><span class="op">)</span></span>
 <span></span>
@@ -222,7 +236,7 @@ auto-pagination for tables without <code>auto_page</code> setting in
 <span>  <span class="fu"><a href="../reference/page_footer.html">page_footer</a></span><span class="op">(</span><span class="st">"Left1"</span>, <span class="st">"Center1"</span>, <span class="st">"Right1"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span></code></pre></div>
-<p>We create three tables with different settings:</p>
+<p>The above code creates three tables with different settings:</p>
 <ul>
 <li>
 <code>tbl1</code> turns off auto-pagination with
@@ -246,41 +260,45 @@ below:</p>
 <p><img src="../man/images/example18a_3.png" alt="Example image A"></p>
 <p><img src="../man/images/example18a_4.png" alt="Example image A"></p>
 <p><em>“setosa1”</em> and <em>“setosa2”</em> fill the pages exactly.
-<em>“versicolor”</em> has too many records so there is overflow when
-auto-pagination is turned off.</p>
+<em>“versicolor”</em> has too many records so there is a page overflow
+when auto-pagination is turned off. You may remedy the page overflow by
+supplying an additional page break to the “Species” variable at the
+desired location.</p>
 </div>
 <div class="section level3">
 <h3 id="result-with-auto-pagination">Result With Auto-Pagination<a class="anchor" aria-label="anchor" href="#result-with-auto-pagination"></a>
 </h3>
 <p><code>tbl3</code> keeps auto-pagination. Let’s see the
-differences:</p>
+difference:</p>
 <p><img src="../man/images/example18a_5.png" alt="Example image A"></p>
 <p><img src="../man/images/example18a_6.png" alt="Example image A"></p>
 <p><img src="../man/images/example18a_7.png" alt="Example image A"></p>
 <p><img src="../man/images/example18a_8.png" alt="Example image A"></p>
-<p>With auto-pagination, the <strong>reporter</strong> package would
-keep a little bit buffer to prevent from unexpected overflow, so
-<em>“setosa1”</em> and <em>“setosa2”</em> across the pages instead of
-fitting the pages exactly.</p>
+<p>With auto-pagination, the <strong>reporter</strong> package keeps a
+small buffer to prevent unexpected overflows. Therefore,
+<em>“setosa1”</em> and <em>“setosa2”</em> break across pages instead of
+fitting exactly.</p>
 <p><img src="../man/images/example18a_9.png" alt="Example image A"></p>
 <p><img src="../man/images/example18a_10.png" alt="Example image A"></p>
 <p>As for <em>“versicolor”</em>, the <strong>reporter</strong> package
-breaks pages automatically.</p>
-<p>That is to say, when users want to utilize all space per page, they
-need to carefully calculate the right paging and turn off
-auto-pagination with <code>create_table(auto_page = TRUE)</code> or
-<code>report_options(auto_page = FALSE)</code>. When turning it off,
-users should be responsible for the overflow.</p>
+breaks the pages automatically.</p>
+<p>That is to say, if you have developed a paging algorithm that intends
+to utilize every line on the page, with no buffer, it may be best to
+turn off the auto-pagination. Be advised that when turning
+auto-pagination off, users will be responsible for any page
+overflows.</p>
 <p><a href="#top">top</a></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="page_wrap">Turn Off Page Wrapping<a class="anchor" aria-label="anchor" href="#page_wrap"></a>
+<h2 id="page_wrap">Page Wrapping<a class="anchor" aria-label="anchor" href="#page_wrap"></a>
 </h2>
-<p>In default, when there are too many columns to fit in one page, the
-<strong>reporter</strong> would wrap columns across pages. Users can
-turn it off with <code>report_options(page_wrap = FALSE)</code> or
-<code>create_table(page_wrap = FALSE)</code>.</p>
+<p>By default, when there are too many columns to fit on one page, the
+<strong>reporter</strong> package will wrap columns across pages. Users
+can turn it off with <code>report_options(page_wrap = FALSE)</code> or
+<code>create_table(page_wrap = FALSE)</code>. Turning the feature off
+will allow you to control page wrapping more precisely.</p>
+<p>Let’s look at an example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example18b.rtf"</span><span class="op">)</span></span>
 <span></span>
@@ -317,7 +335,8 @@ turn it off with <code>report_options(page_wrap = FALSE)</code> or
 <span>  <span class="fu"><a href="../reference/footnotes.html">footnotes</a></span><span class="op">(</span><span class="st">"My footnote"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/write_report.html">write_report</a></span><span class="op">(</span><span class="va">rpt</span>, output_type <span class="op">=</span> <span class="st">"rtf"</span><span class="op">)</span></span></code></pre></div>
-<p>We create three tables with different settings:</p>
+<p>In the above example, we created three tables with different
+settings:</p>
 <ul>
 <li>
 <code>tbl1</code> turns off page wrapping with
@@ -327,33 +346,47 @@ turn it off with <code>report_options(page_wrap = FALSE)</code> or
 it follows <code>report_options(page_wrap = FALSE)</code>, which also
 turns off page wrapping.</li>
 <li>
-<code>tbl3</code> keeps page wrapping with
-<code>create_table(page_wrap = TRUE)</code> regardless of
-<code>report_options(page_wrap = FALSE)</code>.</li>
+<code>tbl3</code> keeps page wrapping on with
+<code>create_table(page_wrap = TRUE)</code>, regardless of the report
+settings.</li>
 </ul>
 <div class="section level3">
 <h3 id="result-without-page-wrapping">Result Without Page Wrapping<a class="anchor" aria-label="anchor" href="#result-without-page-wrapping"></a>
 </h3>
-<p>The columns are out of the margin without page wrapping.</p>
+<p>For the first two tables, observe that without page wrapping the
+columns flow into the margins.</p>
 <p><img src="../man/images/example18b_1.png" alt="Example image A"></p>
+<p>You may fix the column overflow by inserting a page wrap in a
+<code><a href="../reference/define.html">define()</a></code> function, or by turning on “page_wrap”.</p>
 </div>
 <div class="section level3">
 <h3 id="result-with-page-wrapping">Result With Page Wrapping<a class="anchor" aria-label="anchor" href="#result-with-page-wrapping"></a>
 </h3>
-<p>Page is wrapped so some columns are displayed in the next page.</p>
+<p>For <code>tbl3</code>, the page is wrapped so some columns are
+displayed in the next page.</p>
 <p><img src="../man/images/example18b_2.png" alt="Example image A"></p>
 <p><img src="../man/images/example18b_3.png" alt="Example image A"></p>
 <p><a href="#top">top</a></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="line_break">Turn Off Line Break<a class="anchor" aria-label="anchor" href="#line_break"></a>
+<h2 id="line_break">Line Breaks<a class="anchor" aria-label="anchor" href="#line_break"></a>
 </h2>
-<p>In default, the <strong>reporter</strong> package would wrap the
-lines automatically. User can turn it off with
-<code>report_options(line_break = FALSE)</code>. Then it allows the
-browser to wrap the lines automatically. It supports RTF, DOCX, and HTML
+<p>To reduce the chance of page overflows, the <strong>reporter</strong>
+rendering procedure places a hard line break character at the end of
+every line. In this way, the number of lines on a page can be accurately
+counted.</p>
+<p>There may be times, however, when you do not want these hard line
+breaks. The “line_break” parameter allows you to turn them off. You can
+turn off the line breaks with
+<code>report_options(line_break = FALSE)</code>. When line breaks are
+off, line wrapping will be controlled by the editor instead of
+<strong>reporter</strong>. <strong>reporter</strong> will nevertheless
+attempt to count the number of lines as accurately as possible.
+<strong>reporter</strong> will also honor any line breaks manually
+inserted by the user. This feature is allowed on RTF, DOCX, and HTML
 file formats.</p>
+<p>Here is an example:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"example18c.rtf"</span><span class="op">)</span></span>
 <span></span>
@@ -405,23 +438,12 @@ file formats.</p>
 <div class="section level3">
 <h3 id="result-without-line-breaks">Result Without Line Breaks<a class="anchor" aria-label="anchor" href="#result-without-line-breaks"></a>
 </h3>
-<p>We can see that there is no overflow even line breaking is turned
-off. This is because the <strong>reporter</strong> still count the lines
-despite not inserting line-break characters.</p>
+<p>In the example above, observe that there are no line break characters
+in the produced RTF file. Also notice that there is no page overflow,
+even though line breaking is turned off.</p>
 <p><img src="../man/images/example18c.png" alt="Example image A"></p>
-<p>We could check that there is only one line break code which we’ve
-assigned in data.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check if there is only one manual line break "\line"</span></span>
-<span><span class="va">rtf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">fp</span>, warn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">manual_break_count</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">r</span> <span class="kw">in</span> <span class="va">rtf</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">matches</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gregexpr</a></span><span class="op">(</span><span class="st">"\\line"</span>, <span class="va">r</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="va">count_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">matches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">matches</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">manual_break_count</span> <span class="op">&lt;-</span> <span class="va">manual_break_count</span> <span class="op">+</span> <span class="va">count_result</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">manual_break_count</span></span>
-<span><span class="co"># [1] 0</span></span></code></pre></div>
+<p>If the user inserts a line break manually using <code>\n</code>, it
+is inserted as expected.</p>
 <p><a href="#top">top</a></p>
 <p>Next: <a href="reporter-more.html">More Examples</a></p>
 </div>
@@ -443,7 +465,7 @@ assigned in data.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer>

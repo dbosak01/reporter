@@ -31,6 +31,7 @@
 #'   \item \code{\link{page_header}} to add a page header to the report. 
 #'   \item \code{\link{page_footer}} to add a page_footer to the report. 
 #'   \item \code{\link{add_content}} to add content to the report.
+#'   \item \code{\link{report_options}} to set options for most reports.
 #'   \item \code{\link{options_fixed}} to set options for fixed-width output.
 #'   \item \code{\link{add_content}} to add content to the report.
 #'   \item \code{\link{write_report}} to write the report to the file system.
@@ -844,7 +845,7 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' @param x The report spec object.
 #' @param allow_code Whether to allow the user to insert custom code into the report. 
 #' Currently applies only to RTF outputs. Default is FALSE. When TRUE, users can 
-#' insert RTF code in the data, titles, or footnotes. To insert curly braces,
+#' insert code in the data, titles, or footnotes. To insert curly braces,
 #' double them so as to not interfere with the glue functionality, which uses
 #' single curly braces as an escape.
 #' @param line_break Whether to use auto line breaking. Default is TRUE. This option

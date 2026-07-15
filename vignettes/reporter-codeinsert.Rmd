@@ -1,8 +1,8 @@
 ---
-title: "Example 17: Insert RTF Code"
+title: "Example 17: Code Insertion"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example 17: Insert RTF Code}
+  %\VignetteIndexEntry{Example 17: Code Insertion}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,13 +13,13 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-The **reporter** package allows users to insert RTF code with 
-`report_options(allow_code = TRUE)` in RTF file. This gives users more flexibility 
-to design their RTF output formats.
+The **reporter** package allows users to insert code directly with 
+`report_options(allow_code = TRUE)`. This feature is currently available only
+for RTF output. 
 
-## Insert RTF Code
+## Insert Code
 
-The **reporter** package can let users insert RTF code in data sets, titles,
+The **reporter** package let's you insert code in data sets, titles,
 footnotes, headers, and footers.
 
 Let's prepare a data set with RTF code:
@@ -39,18 +39,14 @@ df <- read.table(header = TRUE, text = '
 
 <img src="../man/images/example17_1.png" alt="Example image A"/>
 
-There are some RTF formatting codes in the data set:
+Observe that there are several RTF formatting codes in the data set:
 
 * Indentation with `\\li`
 * Subscript and Superscript with `\\sub` and `\\super`
 * Coloring with `\\cf`
 * Underline with `\\ul`
 
-To use RTF code, please use `report_options(allow_code = TRUE)` to the report object. 
-While designing the RTF code, please  note that curly braces should be doubled
-such like `{{\\cf6 Group A}}`. Special characters with the 
-[**common**](https://common.r-sassy.org) package can still work with single 
-curly braces such like `{common::supsc('2')}`.
+Now let's do some more manipulation of the RTF in the **reporter** code:
 ```{r eval=FALSE, echo=TRUE}
 fp <- file.path(tempdir(), "example17.rtf")
 
@@ -79,9 +75,16 @@ rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
 
 ```
 
+Note that in the **reporter** package, curly braces are normally reserved
+for the glue replacement feature.  Therefore, if you want to use curly braces
+as part of your RTF code insertion, they must be doubled, i.e.`{{\\cf6 Group A}}`. 
+The single curly braces will still be available as glue replacements.
+
+Here is the result:
+
 <img src="../man/images/example17_2.png" alt="Example image A"/>
 
-All the RTF codes work as expected:
+As seen above, all the RTF code insertion worked as expected:
 
 * Header is formatted with strike through.
 * Titles are formatted with yellow highlight, italic, bold, blue color, and bigger font size.
@@ -91,7 +94,10 @@ All the RTF codes work as expected:
 * Data values are formatted with blue, purple, underline, and indentation.
 * Footnotes are formatted with italic and smaller font size.
 
-The color is followed by SAS color table:
+## RTF Color Table
+
+The above example contains several references to the RTF color table.
+Here is the complete color table: 
 
 * `\cf1`  : Black
 * `\cf2`  : Blue
@@ -110,8 +116,6 @@ The color is followed by SAS color table:
 * `\cf15` : Gray
 * `\cf16` : Light Gray
 
-With `report_options(allow_code = TRUE)`, users can insert RTF code to
-design their outputs flexibly. To learn more parameters in `report_options()`,
-please go to the next example.
+The above color references are the same as those used by SAS ODS RTF.
 
 Next: [Example 18: Report Options](reporter-report_options.html)

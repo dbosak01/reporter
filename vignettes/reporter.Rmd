@@ -119,7 +119,7 @@ list of examples:
 * [Example 14: Page Break](reporter-break.html)
 * [Example 15: Header and Footer Images](reporter-hfimage.html)
 * [Example 16: Grouping](reporter-grouping.html)
-* [Example 17: Insert RTF Code](reporter-RTFcode.html)
+* [Example 17: Code Insertion](reporter-codeinsert.html)
 * [Example 18: Report Options](reporter-report_options.html)
 * [More Examples](https://sassy.r-sassy.org/articles/sassy.html)
 

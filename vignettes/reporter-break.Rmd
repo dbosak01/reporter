@@ -97,6 +97,10 @@ write_report(rpt)
 <img src="../man/images/e14a.png" alt="Page break pg 1"/>
 <img src="../man/images/e14b.png" alt="Page break pg 2"/>
 <img src="../man/images/e14c.png" alt="Page break pg 3"/>
+
+Also note that automatic page breaking can be turned off, if desired.  
+See the vignette [Example 18: Report Options](reporter-report_options.html)
+for a demonstration.
   
 Next: [Example 15: Header and Footer Images](reporter-hfimage.html)
 

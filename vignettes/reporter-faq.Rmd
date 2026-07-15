@@ -266,16 +266,18 @@ page number for each row.  Then use the `page_break` parameter on the `define()`
 function to identify that variable as a page break variable.  The package
 will then use that variable to break pages, instead of the automatic 
 paging variable.
-However, if your paging variable are detected to cause an overflow, the 
-**reporter** package package will still wrap to the next page on its own. You
-can use `report_options(auto_page = FALSE)` to let pagination 100% follow your
-paging variable, but you need to be responsible for the overflow.
-See [Example 18: Report Options](reporter-report_options.html)
 
-You can also set the number of lines on a page using the `line_count`
-parameter on the `options_fixed()` and `report_options` function. When this 
-parameter is set, it will use the number of lines specified to 
-determine when to break a page, instead of using the automatically calculated value. 
+Note that, by default, **reporter** will still break 
+the page if the number of rows on a page exceeds the calculated line count. If
+you want to disable the automatic paging, and have 100% control
+over when page breaks occur, turn automatic page breaking off using 
+`report_option(auto_page = FALSE)`. 
+
+You can also control the line count on a page using the `line_count`
+parameter on the `options_fixed()` or `report_options` functions. 
+
+For a full explanation of the page breaking options, See the vignette 
+[Example 18: Report Options](reporter-report_options.html).
 
 [top](#top)
 
@@ -288,13 +290,12 @@ when to wrap a page when it is too wide.  However, sometimes I want to
 control exactly when the page wrap occurs.  Is there a way to do that?
 
 **A:** Yes. You can use the `page_wrap` parameter on the `define()` 
-function to identify a variable to wrap on. See [example 6](reporter-wrap.html) 
+function to identify a variable to wrap on. See [Example 6: Page Wrap](reporter-wrap.html) 
 in the documentation for an illustration of how to wrap pages.
 
-In default, , the **reporter** would wrap columns across pages when there are 
-too many columns to fit in one page without any manual setting. You can turn it 
-off with `report_options(page_wrap = FALSE)` or `create_table(page_wrap = FALSE)`.
-See [Example 18: Report Options](reporter-report_options.html)
+You can also turn the automatic
+page wrapping off completely with `report_options(page_wrap = FALSE)` or `create_table(page_wrap = FALSE)`. See [Example 18: Report Options](reporter-report_options.html) for more
+information.
 
 [top](#top)
 
@@ -325,9 +326,11 @@ keep getting an error.  Why?
 is automatically run on titles, footnotes, and labels. You can use the curly
 braces to reference a variable or run a function from within string. To avoid
 the error, you can escape the glue functionality by doubling the curly braces.
-In other words, use "{{mystring}}" instead of "{mystring}". If you're using RTF 
-code with `report_options(allow_code = TRUE)`, please also double the curly braces
-if needed. See [Example 17: Insert RTF Code](reporter-RTFcode.html)
+In other words, use "{{mystring}}" instead of "{mystring}". 
+
+If you're inserting RTF 
+code into your report with `report_options(allow_code = TRUE)`, please also 
+double the curly braces if needed. See [Example 17: Code Insertion](reporter-codeinsert.html)
 
 You can also turn off the glue functionality globally by setting 
 `options("reporter.glue" = FALSE)`.

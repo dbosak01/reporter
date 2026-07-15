@@ -473,11 +473,17 @@ that has the desired page number for each row. Then use the
 to identify that variable as a page break variable. The package will
 then use that variable to break pages, instead of the automatic paging
 variable.</p>
-<p>You can also set the number of lines on a page using the
-<code>line_count</code> parameter on the <code>options_fixed()</code>
-function. When this parameter is set, it will use the number of lines
-specified to determine when to break a page, instead of using the
-automatically calculated value.</p>
+<p>Note that, by default, <strong>reporter</strong> will still break the
+page if the number of rows on a page exceeds the calculated line count.
+If you want to disable the automatic paging, and have 100% control over
+when page breaks occur, turn automatic page breaking off using
+<code>report_option(auto_page = FALSE)</code>.</p>
+<p>You can also control the line count on a page using the
+<code>line_count</code> parameter on the <code>options_fixed()</code> or
+<code>report_options</code> functions.</p>
+<p>For a full explanation of the page breaking options, See the vignette
+<a href="reporter-report_options.html">Example 18: Report
+Options</a>.</p>
 <p><a href="#top">top</a></p>
 <hr />
 </div>
@@ -489,8 +495,12 @@ However, sometimes I want to control exactly when the page wrap occurs.
 Is there a way to do that?</p>
 <p><strong>A:</strong> Yes. You can use the <code>page_wrap</code>
 parameter on the <code>define()</code> function to identify a variable
-to wrap on. See <a href="reporter-wrap.html">example 6</a> in the
-documentation for an illustration of how to wrap pages.</p>
+to wrap on. See <a href="reporter-wrap.html">Example 6: Page Wrap</a> in
+the documentation for an illustration of how to wrap pages.</p>
+<p>You can also turn the automatic page wrapping off completely with
+<code>report_options(page_wrap = FALSE)</code> or
+<code>create_table(page_wrap = FALSE)</code>. See <a href="reporter-report_options.html">Example 18: Report Options</a> for
+more information.</p>
 <p><a href="#top">top</a></p>
 <hr />
 </div>
@@ -519,7 +529,11 @@ glue function, which is automatically run on titles, footnotes, and
 labels. You can use the curly braces to reference a variable or run a
 function from within string. To avoid the error, you can escape the glue
 functionality by doubling the curly braces. In other words, use
-“{{mystring}}” instead of “{mystring}.</p>
+“{{mystring}}” instead of “{mystring}”.</p>
+<p>If you’re inserting RTF code into your report with
+<code>report_options(allow_code = TRUE)</code>, please also double the
+curly braces if needed. See <a href="reporter-codeinsert.html">Example
+17: Code Insertion</a></p>
 <p>You can also turn off the glue functionality globally by setting
 <code>options(&quot;reporter.glue&quot; = FALSE)</code>.</p>
 <p><a href="#top">top</a></p>
