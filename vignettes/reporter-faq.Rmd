@@ -40,6 +40,7 @@ on the links below to navigate to the full question and answer content.
 * [Is there a way to set the width of a table?](#width)
 * [Why am I getting an error when using curly braces in my footnotes?](#curly)
 * [How can I get reporter to break/wrap long words?](#wordbreak)
+* [Is there a way to insert my own custom RTF codes?](#codes)
 
 
 ## Content
@@ -84,6 +85,10 @@ For all other output types, the `titles()` function has parameters to bold the t
 block, and set the font size independently of the main report.  Styling such
 as that for HTML will
 become available for other output types in the near future.
+
+You may also add styling via code insertion.
+See the vignette 
+[Example 17: Code Insertion](reporter-codeinsert.html) for an illustration.
 
 [top](#top) 
 
@@ -328,7 +333,7 @@ braces to reference a variable or run a function from within string. To avoid
 the error, you can escape the glue functionality by doubling the curly braces.
 In other words, use "{{mystring}}" instead of "{mystring}". 
 
-If you're inserting RTF 
+If you're inserting 
 code into your report with `report_options(allow_code = TRUE)`, please also 
 double the curly braces if needed. See [Example 17: Code Insertion](reporter-codeinsert.html)
 
@@ -350,6 +355,22 @@ and break it yourself.  You can use the `nchar()` function to check the characte
 length of the words.  Then insert a new line or blank space at the point where
 you want to break. Once the words are broken where you want, send the data
 into **reporter**.
+
+[top](#top)
+
+******
+
+
+### Is there a way to insert my own custom RTF codes? {#codes}
+
+**Q:** I'm trying to insert some RTF codes into my report, but they always
+come out visible on the output.  Is there a way to insert them directly
+into the RTF, without **reporter** interfering?
+
+**A:** Yes.  **reporter** normally prevents such code insertion. But you
+can allow it by setting `report_options(allow_code = TRUE)`.  The "allow_code"
+option will work for RTF and HTML.  See the vignette 
+[Example 17: Code Insertion](reporter-codeinsert.html) for an example.
 
 [top](#top)
 

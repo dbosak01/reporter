@@ -2,7 +2,7 @@
 
 * Added `report_options()` function to control various features of the report.
 This function has the following parameters:
-  - "allow_code" to insert RTF codes directly into RTF documents.  
+  - "allow_code" to insert codes directly into documents. Works for RTF and HTML.
   - "line_break" to turn off automatic insertion of line breaks.
   - "line_count" to set the number of lines on a page.
   - "page_wrap" to turn off automatic page wrapping.

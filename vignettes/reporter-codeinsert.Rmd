@@ -15,7 +15,8 @@ knitr::opts_chunk$set(
 ```
 The **reporter** package allows users to insert code directly with 
 `report_options(allow_code = TRUE)`. This feature is currently available only
-for RTF output. 
+for RTF and HTML outputs. This example will focus on RTF. HTML
+code insertion works similarly.
 
 ## Insert Code
 

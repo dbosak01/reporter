@@ -840,11 +840,12 @@ set_margins <- function(x, top=NULL, bottom=NULL,
 #' A function to set some options for the report. 
 #' The options include the ability to control features such as auto line breaking, 
 #' auto pagination, and auto page wrapping.  These features are normally on by default, 
-#' but sometimes it is desirable to turn them off. For RTF, it provides options for allowing 
-#' users to insert RTF code and decide the structure of titles.  
+#' but sometimes it is desirable to turn them off. It also
+#' provides options for allowing users to insert custom code and decide the 
+#' structure of titles. 
 #' @param x The report spec object.
 #' @param allow_code Whether to allow the user to insert custom code into the report. 
-#' Currently applies only to RTF outputs. Default is FALSE. When TRUE, users can 
+#' Currently applies to RTF and HTML outputs. Default is FALSE. When TRUE, users can 
 #' insert code in the data, titles, or footnotes. To insert curly braces,
 #' double them so as to not interfere with the glue functionality, which uses
 #' single curly braces as an escape.

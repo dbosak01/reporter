@@ -192,6 +192,8 @@ table?</a></li>
 in my footnotes?</a></li>
 <li><a href="#wordbreak">How can I get reporter to break/wrap long
 words?</a></li>
+<li><a href="#codes">Is there a way to insert my own custom RTF
+codes?</a></li>
 </ul>
 </div>
 <div class="section level2">
@@ -233,6 +235,8 @@ vignette</a> for more information about this exciting new feature.</p>
 parameters to bold the title block, and set the font size independently
 of the main report. Styling such as that for HTML will become available
 for other output types in the near future.</p>
+<p>You may also add styling via code insertion. See the vignette <a href="reporter-codeinsert.html">Example 17: Code Insertion</a> for an
+illustration.</p>
 <p><a href="#top">top</a></p>
 <hr>
 </div>
@@ -465,7 +469,7 @@ labels. You can use the curly braces to reference a variable or run a
 function from within string. To avoid the error, you can escape the glue
 functionality by doubling the curly braces. In other words, use
 “{{mystring}}” instead of “{mystring}”.</p>
-<p>If you’re inserting RTF code into your report with
+<p>If you’re inserting code into your report with
 <code>report_options(allow_code = TRUE)</code>, please also double the
 curly braces if needed. See <a href="reporter-codeinsert.html">Example
 17: Code Insertion</a></p>
@@ -487,6 +491,21 @@ function to check the character length of the words. Then insert a new
 line or blank space at the point where you want to break. Once the words
 are broken where you want, send the data into
 <strong>reporter</strong>.</p>
+<p><a href="#top">top</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="codes">Is there a way to insert my own custom RTF codes?<a class="anchor" aria-label="anchor" href="#codes"></a>
+</h3>
+<p><strong>Q:</strong> I’m trying to insert some RTF codes into my
+report, but they always come out visible on the output. Is there a way
+to insert them directly into the RTF, without <strong>reporter</strong>
+interfering?</p>
+<p><strong>A:</strong> Yes. <strong>reporter</strong> normally prevents
+such code insertion. But you can allow it by setting
+<code>report_options(allow_code = TRUE)</code>. The “allow_code” option
+will work for RTF and HTML. See the vignette <a href="reporter-codeinsert.html">Example 17: Code Insertion</a> for an
+example.</p>
 <p><a href="#top">top</a></p>
 <hr>
 <!-- ### Question 1? {#q1} --><!-- **Q:** I have a question? --><!-- **A:** Answer here. --><!-- [top](#top) --><!-- ****** -->
