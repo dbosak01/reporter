@@ -506,8 +506,12 @@ split_cells <- function(x, col_widths, ts = NULL, char_width = NULL) {
 
 #' @noRd
 split_strings <- function(strng, width, units, multiplier = 1.03,
-                          allow_rtf_code = FALSE) {
- 
+                          allow_rtf_code = FALSE,
+                          allow_html_code = FALSE) {
+  if (sum(c(allow_rtf_code, allow_html_code)) > 1) {
+    stop("`allow_rtf_code` and `allow_html_code` cannot both be TRUE.")
+  }
+  
   lnlngth <- 0
   ln <- c()
   lns <- c()
@@ -525,7 +529,26 @@ split_strings <- function(strng, width, units, multiplier = 1.03,
     
     for (split in splits) {
       
-      wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
+      if (allow_html_code) {
+        html_control_regex <- "(?i)<\\/?([a-z]+)[^>]*>|&[a-z0-9#]+;"
+        wrds_temp <- regmatches(split, gregexpr(html_control_regex, split), invert = NA)[[1]]
+        wrds_temp <- wrds_temp[wrds_temp != ""]
+        
+        wrds <- c()
+        wrds_html <- c()
+        for (word in wrds_temp) {
+          if (grepl(html_control_regex, word)) {
+            wrds <- c(wrds, word)
+            wrds_html <- c(wrds_html, TRUE)
+          } else {
+            split_word <- strsplit(word, " ", fixed = TRUE)[[1]]
+            wrds <- c(wrds, split_word)
+            wrds_html <- c(wrds_html, rep(FALSE, length(split_word)))
+          }
+        }
+      } else {
+        wrds <- strsplit(split, " ", fixed = TRUE)[[1]]
+      }
       
       # Old code
       # lngths <- (suppressWarnings(strwidth(wrds, units = un)) + 
@@ -550,10 +573,14 @@ split_strings <- function(strng, width, units, multiplier = 1.03,
           lngths <- (strwdth(wrds_no_rtf, un) + strwdth(" ", un)) * multiplier
           
           lngths[wrds_no_rtf == "" & !original_blank] <- 0
+        } else if (allow_html_code) {
+          lngths <- (strwdth(wrds, un) + strwdth(" ", un)) * multiplier
+
+          lngths[wrds_html] <- 0
         } else {
           lngths <- (strwdth(wrds, un) + strwdth(" ", un)) * multiplier
         }
-      } 
+      }
       
       # Loop through words and add up lines
       for (i in seq_along(wrds)) {
@@ -707,7 +734,8 @@ split_string_rtf <- function(strng, width, units, font = "Arial", nm = "",
 
 #' @noRd
 split_string_html <- function(strng, width, units, nm = "", char_width = 1,
-                              insert_line_break = TRUE) {
+                              insert_line_break = TRUE,
+                              allow_html_code = FALSE) {
   
   
   # Deal with indents
@@ -727,8 +755,12 @@ split_string_html <- function(strng, width, units, nm = "", char_width = 1,
   #   }
   # }
   
+  if (is.null(allow_html_code)) {
+    allow_html_code <- FALSE
+  }
   
-  res <- split_strings(cstrng, width - indntw, units, multiplier = 1)
+  res <- split_strings(cstrng, width - indntw, units, multiplier = 1,
+                       allow_html_code = allow_html_code)
   
   if (insert_line_break) {
     ret_string <- paste0(blnks, res$text, collapse = "\n")
@@ -881,7 +913,8 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
           
           if (output_type %in% c("HTML")) {
             break_label_res <- split_string_html(x[[i, nm]], sum(col_widths) - break_label_indent, units,
-                                                 insert_line_break = rs$line_break)
+                                                 insert_line_break = rs$line_break,
+                                                 allow_html_code = rs$allow_code)
             
             break_label_df[i, nm] <- break_label_res$html
             break_label_df[i, paste0("..break_label_lines",break_label_num)] <- break_label_res$lines
@@ -932,7 +965,8 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
           
           if (output_type %in% c("HTML")) {
             res <- split_string_html(x[[i, nm]], sum(col_widths), units,
-                                     insert_line_break = rs$line_break)
+                                     insert_line_break = rs$line_break,
+                                     allow_html_code = rs$allow_code)
             
             cell <- res$html
             
@@ -962,20 +996,24 @@ split_cells_variable <- function(x, col_widths, font, font_size, units,
             if (!is.null(defs[[nm]]$indent)) {
               res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[nm]]$indent, 
                                        units, nm, char_width,
-                                       insert_line_break = rs$line_break)
+                                       insert_line_break = rs$line_break,
+                                       allow_html_code = rs$allow_code)
             } else if (nm == "stub" & !is.null(ts$stub)) {
               stub_var <- x$..stub_var[i]
               if (!is.null(defs[[stub_var]]$indent)) {
                 res <- split_string_html(x[[i, nm]], col_widths[[nm]] - defs[[stub_var]]$indent, 
                                          units, nm, char_width,
-                                         insert_line_break = rs$line_break)
+                                         insert_line_break = rs$line_break,
+                                         allow_html_code = rs$allow_code)
               } else {
                 res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width,
-                                         insert_line_break = rs$line_break)
+                                         insert_line_break = rs$line_break,
+                                         allow_html_code = rs$allow_code)
               }
             } else {
               res <- split_string_html(x[[i, nm]], col_widths[[nm]], units, nm, char_width,
-                                       insert_line_break = rs$line_break)
+                                       insert_line_break = rs$line_break,
+                                       allow_html_code = rs$allow_code)
             }
             
             cell <- res$html

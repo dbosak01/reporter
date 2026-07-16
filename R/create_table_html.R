@@ -220,7 +220,8 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
   # Get column widths
   widths_uom <- get_col_widths_variable(fdat, ts, labels, 
                                         rs$font, rs$font_size, rs$units, 
-                                        rs$gutter_width, merge_label_row) 
+                                        rs$gutter_width, merge_label_row,
+                                        allow_html_code = rs$allow_code) 
   # print("Widths UOM")
   # print(widths_uom)
   
@@ -703,13 +704,16 @@ get_table_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units,
-                               insert_line_break = rs$line_break)
+                               insert_line_break = rs$line_break,
+                               allow_html_code = rs$allow_code)
       
 
       if (ts$header_bold)
-        tstr <- paste0("<b>", encodeHTML(tmp$html, nbsp = rs$line_break), "</b>")
+        tstr <- paste0("<b>", encodeHTML(tmp$html, nbsp = rs$line_break,
+                                         allow_html_code = rs$allow_code), "</b>")
       else 
-        tstr <- encodeHTML(tmp$html, nbsp = rs$line_break)
+        tstr <- encodeHTML(tmp$html, nbsp = rs$line_break,
+                           allow_html_code = rs$allow_code)
 
       if (b == "") {
         ret[1] <- paste0(ret[1], "<td class=\"thdr ", ha[k], "\">", 
@@ -893,7 +897,8 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       
       # Split label strings if they exceed column width
       tmp <- split_string_html(lbls[k], widths[k], rs$units,
-                               insert_line_break = rs$line_break)
+                               insert_line_break = rs$line_break,
+                               allow_html_code = rs$allow_code)
       
       
       b <- get_cell_borders_html(length(lvls) - l + 1, k, length(lvls) + 1, 
@@ -946,9 +951,11 @@ get_spanning_header_html <- function(rs, ts, pi, ex_brdr = FALSE) {
       }
       
       if (s$bold[k])
-        tstr <- paste0("<b>", encodeHTML(vl, nbsp = rs$line_break), "</b>")
+        tstr <- paste0("<b>", encodeHTML(vl, nbsp = rs$line_break,
+                                         allow_html_code = rs$allow_code), "</b>")
       else 
-        tstr <- encodeHTML(vl, nbsp = rs$line_break)
+        tstr <- encodeHTML(vl, nbsp = rs$line_break,
+                           allow_html_code = rs$allow_code)
       
       # Check gap information
       gap <- ""
@@ -1232,7 +1239,8 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (all(class(vl) != "character"))
           vl <- as.character(vl)
         else 
-          vl <- encodeHTML(vl, nbsp = rs$line_break)
+          vl <- encodeHTML(vl, nbsp = rs$line_break,
+                           allow_html_code = rs$allow_code)
         
         if (merge_label_row  & flgs[i] %in% c("B", "A", "L")) {
           if (j == 1) {
@@ -1329,15 +1337,18 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
 #' @description Have to check wrapping on a lot of files.  May have unintended 
 #' results.
 #' @noRd
-encodeHTML <- function(strng, nbsp = TRUE) {
+encodeHTML <- function(strng, nbsp = TRUE, allow_html_code = FALSE) {
   
   ret <- strng
   
-  ret <- gsub("&", "&amp;", ret , fixed = TRUE)
-  ret <- gsub(">", "&gt;", ret , fixed = TRUE)
-  ret <- gsub("<", "&lt;", ret , fixed = TRUE)
+  if (allow_html_code == FALSE) {
+    ret <- gsub("&", "&amp;", ret , fixed = TRUE)
+    ret <- gsub(">", "&gt;", ret , fixed = TRUE)
+    ret <- gsub("<", "&lt;", ret , fixed = TRUE)
+  }
+
   ret <- gsub("\n", "<br>", ret , fixed = TRUE)
-  if (nbsp) {
+  if (nbsp & allow_html_code == FALSE) {
     ret <- gsub(" ", "&nbsp;", ret, fixed = TRUE)
   }
   if (ret == "")

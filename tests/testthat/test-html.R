@@ -2628,7 +2628,9 @@ test_that("html-70: Line break can be turned off by report_options as expected."
              format = c(ampg = ll, cyl = "Cylinders")) %>%
       define(label, indent = .25) %>%
       define(A, label = "Group A", align = "center") %>%
-      define(B, label = "Group B", align = "center")
+      define(B, label = "Group B", align = "center") %>%
+      titles("Table Title: Page [pg] of [tpg]", "Second table title") %>%
+      footnotes("Table footnote: Page [pg] of [tpg]", "Second table footnote")
     
     
     # Create report and add content
@@ -2639,18 +2641,18 @@ test_that("html-70: Line break can be turned off by report_options as expected."
     rpt <- create_report(fp, orientation = "portrait", output_type = "html",
                          font = "Arial") %>%
       report_options(line_break = FALSE) %>%
-      page_header(left = "This is a long left header which would not be inserted any line break characters.", 
+      page_header(left = "This is a long left header which would not be inserted any line break characters. Page [pg] of [tpg]", 
                   right = "This is a long right header which would not be inserted any line break characters.") %>%
-      titles("Table 1.0", 
+      titles("Table 1.0 Page [pg] of [tpg]", 
              paste0("This is a title which is turned off the automatically line breaks",
                     " so it should not contain any line break characters and it should",
                     " have overflow because the wrapping lines are not considered.")) %>%
       add_content(tbl) %>%
       footnotes(paste0("This is a long footnote which would not be inserted any line break characters even though it",
-                       " has multiple lines. Users should be responsible for the overflow.")) %>%
+                       " has multiple lines. Users should be responsible for the overflow. Page [pg] of [tpg]")) %>%
       page_footer(left = "This is a long left footer which would not be inserted any line break characters.",
                   center = "This is a long center footer which would not be inserted any line break characters.",
-                  right = "This is a long right footer which would not be inserted any line break characters.")
+                  right = "This is a long right footer which would not be inserted any line break characters. Page [pg] of [tpg]")
     
     
     # The output should be overflow because the line-break characters are not inserted
@@ -2665,7 +2667,7 @@ test_that("html-70: Line break can be turned off by report_options as expected."
       count_result <- ifelse(matches[[1]][1] == -1, 0, length(matches[[1]]))
       manual_break_count <- manual_break_count + count_result
     }
-    expect_equal(manual_break_count, 23)
+    expect_equal(manual_break_count, 15)
   } else {
     expect_equal(TRUE, TRUE)
   }
@@ -2733,6 +2735,69 @@ test_that("html-72: line_count can be set in report_options as expected.", {
     
     res <- write_report(rpt)
     
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("html-73: HTML code can be inserted as expected.", {
+  
+  if (dev) {
+    fp <- file.path(base_path, "html/test73.html")
+    
+    # dat <- iris
+    
+    dat <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "N"          "19<sub>max</sub>"          "13<sup>2</sup>"
+      "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "e"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "d"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "a" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "b" "5 ( 26.3%)"  "6 ( 46.2%)"')
+    
+    a <- '<span style="color: red; font-weight: bold;">Red Words and Bold and Change Lines</span>'
+    b <- '<span style="background-color: red; font-weight: bold;">Background Color and Bold</span>'
+    e <- '<span style="margin-left: 10px;">Indent Value</span>'
+    d <- '<code style="color:purple;">Purple Code Style</code>'
+    
+    for (r in 1:nrow(dat)) {
+      for (c in 1:ncol(dat)) {
+        if (dat[r,c] == "a") {
+          dat[r,c] <- a
+        } else if (dat[r,c] == "b") {
+          dat[r,c] <- b
+        } else if (dat[r,c] == "e") {
+          dat[r,c] <- e
+        } else if (dat[r,c] == "d") {
+          dat[r,c] <- d
+        }
+      }
+    }
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      titles('<p style="color: blue; font-size: 18px;">Blue 18 px <b>Title</b>: Page [pg] of [tpg]</p>',
+             "<b>Bold table title</b>") %>%
+      footnotes("<i>Italic footnote: Page [pg] of [tpg]</i>", "Emphasize <sup>Super</sup>") %>%
+      define(var, label = "Name") %>%
+      define(A, label = "Treatment A mg<sup>2</sup>") %>%
+      define(B, label = "Treatment B mg<sup>2</sup>")
+    
+    rpt <- create_report(fp, output_type = "html", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      report_options(allow_code = TRUE) %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      add_content(tbl) %>%
+      titles("<mark>Mark Title: Page [pg] of [tpg]</mark>") %>%
+      footnotes("<small>Small footnote</small>: Page [pg] of [tpg]", borders = "none") %>%
+      page_header('<code style="color:red;">Code Style Page [pg] of [tpg]</code>') %>%
+      page_footer("Footer: Page <sub>[pg]</sub> of [tpg]")
+    
+    res <- write_report(rpt)
     expect_equal(file.exists(fp), TRUE)
   } else {
     expect_equal(TRUE, TRUE)

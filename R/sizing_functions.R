@@ -601,7 +601,8 @@ get_col_widths <- function(dat, ts, labels, char_width, uom,
 get_col_widths_variable <- function(dat, ts, labels, font, 
                                font_size, uom, gutter_width,
                                merge_label_row = TRUE,
-                               allow_rtf_code = FALSE) {
+                               allow_rtf_code = FALSE,
+                               allow_html_code = FALSE) {
   
   dat_orig <- dat
   defs <- ts$col_defs
@@ -650,6 +651,14 @@ get_col_widths_variable <- function(dat, ts, labels, font,
         dat[[nm]] <- gsub(rtf_control_regex, "", dat[[nm]])
         dat[[nm]] <- gsub(rtf_symbol_regex, "", dat[[nm]])
         dat[[nm]] <- gsub(rtf_brace_regex, "", dat[[nm]])
+      }
+      
+      # Remove all html code for accurate widths
+      if (allow_html_code) {
+        # includes html code
+        html_control_regex <- "(?i)<\\/?([a-z]+)[^>]*>|&[a-z0-9#]+;"
+        
+        dat[[nm]] <- gsub(html_control_regex, "", dat[[nm]])
       }
       
       # --------------------------------- #
