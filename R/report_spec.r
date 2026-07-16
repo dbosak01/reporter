@@ -935,7 +935,7 @@ report_options <- function(x, allow_code = FALSE, line_break = TRUE,
   }
   
   if (!is.null(x$output_type)) {
-    if (toupper(x$output_type) != "RTF") {
+    if (toupper(x$output_type) != "RTF" & toupper(x$output_type) != "HTML") {
       allow_code <- FALSE
     }
   }

@@ -667,6 +667,80 @@ test_that("utils25: split_strings() works as expected.", {
   res2 <- split_strings(rtf_input, 2, "inches", allow_rtf_code = TRUE)
   res2$text <- c("{\\b\\li-550 [Report]} This [is] a  testing",
                  "string with RTF \\li45 [code]")
+  
+  # --------------------------- #
+  #      Allow HTML code        #
+  # --------------------------- #
+  html_input <- c(
+    # 1. Standard HTML tags (mainstream format)
+    "test_01" = "<p>This is a standard paragraph.</p>",
+    "test_02" = "Hello <br/> World",                                # Self-closing tag
+    "test_03" = "<div class='container' id='main'>Content</div>",   # Tags with attributes
+    "test_04" = "<script type='text/javascript'>alert(1);</script>", # Malicious script tag
+    "test_05" = "<!-- This is a comment -->",                        # HTML Comment
+    
+    # 2. HTML Character Entities Containing "&"
+    "test_06" = "HTML space&nbsp;test",                              # Webpage whitespace
+    "test_07" = "If A &lt; B and B &gt; C",                          # Mathematical symbol escaping
+    "test_08" = "Copyright &copy; 2026",                             # Special symbols
+    "test_09" = "Registered &#174; trademark",                       # Digital entity
+    
+    # 3. The & symbol in a URL
+    "test_10" = "<a href='https://test.com'>Link</a>",   # URLs within HTML tags
+    "test_11" = "https://test.com",                      # Plain-text URL (no HTML)
+    
+    # 4. "Plain text" and "mathematical symbols" prone to misinterpretation (no HTML)
+    "test_12" = "This is normal text without any code.",
+    "test_13" = "Formula: x < 5 and y > 10",                         # Arrows easily mistaken for labels
+    "test_14" = "Research & Development Department",                 # Business Text-Only &
+    "test_15" = "Vector assignment in R: x <- c(1, 2)",              # The assignment arrow in R
+    "test_16" = "Email: person@company.com",                        # Contains special characters but is not HTML
+    
+    # 5. Extreme and ineffective conditions
+    "test_17" = "",                                                  # Empty string
+    "test_18" = "    \n    \t    ",                                  # Only line breaks and whitespace.
+    "test_19" = "<invalid_tag>Is this HTML?</invalid_tag>",          # Custom/Invalid Tags
+    "test_20" = "<p>Unclosed tag rendering test"                     # Unclosed tags
+  )
+  
+  res_allow_html <- c()
+  res_not_allow_html <- c()
+  for (h in html_input) {
+    res_allow_html <- append(res_allow_html, 
+                             split_strings(h, 2, "inches", allow_html_code = TRUE))
+    res_not_allow_html <- append(res_not_allow_html, 
+                             split_strings(h, 2, "inches"))
+  }
+  
+  for (i in 1:length(res_allow_html)) {
+    if (names(res_allow_html[i]) == "widths") {
+      allow_html_width <- as.numeric(unlist(res_allow_html[i]))
+      not_allow_html_width <- as.numeric(unlist(res_not_allow_html[i]))
+      
+      # print(paste0("This is test ", i/2))
+      # print(paste0(res_allow_html[i-1]))
+      # print(allow_html_width)
+      # print(paste0(res_not_allow_html[i-1]))
+      # print(not_allow_html_width)
+      
+      # Only test 5 and 11-18 should be the same widths
+      chk <- all(allow_html_width == not_allow_html_width)
+      
+      if (i %in% c(10, 11:18*2)) {
+        expect_equal(chk, TRUE)
+      } else {
+        expect_equal(chk, FALSE)
+      }
+    }
+  }
+  
+  test_21 <- '<p style="color: blue; font-size: 18px;">Blue 18 px <b>Title</b>: Page [pg] of [tpg]</p>'
+  result_21 <- split_strings(test_21, 4.09725, "inches", allow_html_code = TRUE)
+  
+  test_21_base <- "Blue 18 px Title: Page [pg] of [tpg]"
+  result_21_base <- split_strings(test_21_base, 4.09725, "inches", allow_html_code = TRUE)
+  
+  expect_equal(length(result_21$text), length(result_21_base$text))
 })
 
 

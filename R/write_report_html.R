@@ -392,10 +392,10 @@ write_content_html <- function(rs, hdr, body, pt) {
       
       if (!is.null(pg)) {
         # Replace page numbers in title/footnote of report/content
-        pg <- page_replace_html(pg, rs, "titles", rs$pages)
-        pg <- page_replace_html(pg, rs, "footnotes", rs$pages)
-        pg <- page_replace_html(pg, cont$object, "titles", rs$pages)
-        pg <- page_replace_html(pg, cont$object, "footnotes", rs$pages)
+        pg <- page_replace_html(pg, rs, "titles", rs$pages, rs)
+        pg <- page_replace_html(pg, rs, "footnotes", rs$pages, rs)
+        pg <- page_replace_html(pg, cont$object, "titles", rs$pages, rs)
+        pg <- page_replace_html(pg, cont$object, "footnotes", rs$pages, rs)
         # 
         # if (!is.null(rs$titles)) {
         #   for (rt in rs$titles) {
@@ -629,12 +629,18 @@ page_setup_html <- function(rs) {
 #' @description Replace page number in title and footnote
 #' @details  Replace page number in title and footnote
 #' @noRd
-page_replace_html <- function(pg, target, type = "titles", page) {
+page_replace_html <- function(pg, target, type = "titles", page, rs = NULL) {
+  if (is.null(rs)){
+    rs <- list()
+    rs$line_break <- TRUE
+  }
+  
   if (!is.null(target[[type]])) {
     for (v in target[[type]]) {
       for (v_string in v[[type]]) {
         if (v_string != "") {
-          raw_title <- encodeHTML(v_string)
+          raw_title <- encodeHTML(v_string, nbsp = rs$line_break,
+                                  allow_html_code = rs$allow_code)
           new_title <- update_page(raw_title, page)
           pg <- gsub(raw_title, new_title, pg, fixed = TRUE)
         }
