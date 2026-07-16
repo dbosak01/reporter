@@ -19,7 +19,7 @@ report_options(
 
 \item{allow_code}{Whether to allow the user to insert custom code into the report. 
 Currently applies only to RTF outputs. Default is FALSE. When TRUE, users can 
-insert RTF code in the data, titles, or footnotes. To insert curly braces,
+insert code in the data, titles, or footnotes. To insert curly braces,
 double them so as to not interfere with the glue functionality, which uses
 single curly braces as an escape.}
 

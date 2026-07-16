@@ -16,27 +16,45 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-In [example 17](reporter-RTFcode.html), we talked about inserting RTF code 
-with `report_options()`. In this section, we're going to introduce other parameters
-in `report_options()` to change the default settings of the **reporter** package.
+[Example 17: Code Insertion](reporter-codeinsert.html) discusses the "allow_code" 
+parameter in `report_options()`. In this section, we're going to introduce the other 
+parameters on `report_options()`.  These parameters allow you to change 
+some of the default settings of the **reporter** package.
 
 ## Report Options{#top}
 
-* [Turn Off Auto Pagination](#auto_page)
-* [Turn Off Page Wrapping](#page_wrap)
-* [Turn Off Line Break](#line_break)
+* [Auto Pagination](#auto_page)
+* [Page Wrapping](#page_wrap)
+* [Line Breaks](#line_break)
 
-## Turn Off Auto Pagination {#auto_page}
+## Auto Pagination {#auto_page}
 
-When users set `define(page_break = TRUE)` to control the pagination, generally
-the  **reporter** package follows the page settings, but it will still trigger
-an automatic page break when the **reporter** package detects an overflow.
+Normally, **reporter** will insert a page break automatically when the number of 
+lines meets the calculated line count.  The line count is based on the font size,
+font type, margins, and page size.
 
-Users can turn off the automatic page breaks with
-`report_options(auto_page = FALSE)` or `create_table(auto_page = FALSE)`.
+Users can also control pagination by creating a page break variable
+and identifying that variable in a define function, such as: 
+`define(page_break = TRUE)`.  The rendering procedure will then insert a page break
+every time the page variable changes.  
 
-* `create_table(auto_page = FALSE)` turns off the auto-pagination in one particular table.
-* `report_options(auto_page = FALSE)` turns off all auto-pagination for tables without `auto_page` setting in `create_table()`.
+Observe that the rendering procedure will still insert a page break automatically
+if the page variable rows exceed the calculated line count.  That is to say,
+the automatic page breaking is still on, even when the user has supplied a page
+break variable.
+
+There are times, however, when you may want to turn off the automatic page 
+breaking completely, and only break the page when indicated by the page variable.
+To disable the automatic page breaking, use the "auto_page" parameter on 
+either the `report_options` or `create_table` functions.
+
+* `report_options(auto_page = FALSE)` turns off auto-pagination for all tables in the report.
+* `create_table(auto_page = FALSE)` turns off the auto-pagination for a particular table.
+
+Note that if the `create_table` and `report_options` settings conflict, the 
+`create_table` value will take precedence.
+
+Let's look at an example:
 
 ```{r eval=FALSE, echo=TRUE}
 fp <- file.path(tempdir(), "example18a.rtf")
@@ -75,11 +93,13 @@ rpt <- create_report(fp, output_type = "RTF", font = "Arial",
 res <- write_report(rpt)
 ```
 
-We create three tables with different settings:
+The above code creates three tables with different settings:
 
 * `tbl1` turns off auto-pagination with `create_table(auto_page = FALSE)`.
-* `tbl2` has no setting in `create_table()`, so it follows `report_options(auto_page = FALSE)`, which also turns off auto-pagination.
-* `tbl3` keeps auto-pagination with `create_table(auto_page = TRUE)` regardless of `report_options(auto_page = FALSE)`.
+* `tbl2` has no setting in `create_table()`, so it follows 
+`report_options(auto_page = FALSE)`, which also turns off auto-pagination.
+* `tbl3` keeps auto-pagination with `create_table(auto_page = TRUE)` 
+regardless of `report_options(auto_page = FALSE)`.
 
 ### Result Without Auto-Pagination
 
@@ -94,12 +114,13 @@ We create three tables with different settings:
 <img src="../man/images/example18a_4.png" alt="Example image A"/>
 
 *"setosa1"* and *"setosa2"* fill the pages exactly. 
-*"versicolor"* has too many records so there is overflow when auto-pagination is
-turned off.
+*"versicolor"* has too many records so there is a page overflow when auto-pagination is
+turned off.  You may remedy the page overflow by supplying an additional page break
+to the "Species" variable at the desired location.
 
 ### Result With Auto-Pagination
 
-`tbl3` keeps auto-pagination. Let's see the differences:
+`tbl3` keeps auto-pagination. Let's see the difference:
 
 <img src="../man/images/example18a_5.png" alt="Example image A"/>
 
@@ -109,28 +130,31 @@ turned off.
 
 <img src="../man/images/example18a_8.png" alt="Example image A"/>
 
-With auto-pagination, the **reporter** package would keep a little bit buffer to
-prevent from unexpected overflow, so *"setosa1"* and *"setosa2"* across the pages
-instead of fitting the pages exactly. 
+With auto-pagination, the **reporter** package keeps a small buffer to
+prevent unexpected overflows. Therefore, *"setosa1"* and *"setosa2"* break across pages
+instead of fitting exactly. 
 
 <img src="../man/images/example18a_9.png" alt="Example image A"/>
 
 <img src="../man/images/example18a_10.png" alt="Example image A"/>
 
-As for *"versicolor"*, the **reporter** package breaks pages automatically.
+As for *"versicolor"*, the **reporter** package breaks the pages automatically.
 
-That is to say, when users want to utilize all space per page, they need to 
-carefully calculate the right paging and turn off auto-pagination with 
-`create_table(auto_page = TRUE)` or `report_options(auto_page = FALSE)`.
-When turning it off, users should be responsible for the overflow.
+That is to say, if you have developed a paging algorithm that intends to utilize
+every line on the page, with no buffer, it may be best to turn off the auto-pagination.
+Be advised that when turning auto-pagination off, users will be responsible for 
+any page overflows.
 
 [top](#top)
 
-## Turn Off Page Wrapping {#page_wrap}
+## Page Wrapping {#page_wrap}
 
-In default, when there are too many columns to fit in one page, the 
-**reporter** would wrap columns across pages. Users can turn it off with 
-`report_options(page_wrap = FALSE)` or `create_table(page_wrap = FALSE)`.
+By default, when there are too many columns to fit on one page, the 
+**reporter** package will wrap columns across pages. Users can turn it off with 
+`report_options(page_wrap = FALSE)` or `create_table(page_wrap = FALSE)`.  Turning
+the feature off will allow you to control page wrapping more precisely. 
+
+Let's look at an example:
 
 ```{r eval=FALSE, echo=TRUE}
 fp <- file.path(tempdir(), "example18b.rtf")
@@ -170,21 +194,27 @@ rpt <- create_report(fp, font = "Arial", font_size = 10, units = "cm",
 res <- write_report(rpt, output_type = "rtf")
 ```
 
-We create three tables with different settings:
+In the above example, we created three tables with different settings:
 
 * `tbl1` turns off page wrapping with `create_table(page_wrap = FALSE)`.
-* `tbl2` has no setting in `create_table()`, so it follows `report_options(page_wrap = FALSE)`, which also turns off page wrapping.
-* `tbl3` keeps page wrapping with `create_table(page_wrap = TRUE)` regardless of `report_options(page_wrap = FALSE)`.
+* `tbl2` has no setting in `create_table()`, so it follows 
+`report_options(page_wrap = FALSE)`, which also turns off page wrapping.
+* `tbl3` keeps page wrapping on with `create_table(page_wrap = TRUE)`, 
+regardless of the report settings.
 
 ### Result Without Page Wrapping
 
-The columns are out of the margin without page wrapping.
+For the first two tables, observe that without page wrapping the columns flow into 
+the margins.
 
 <img src="../man/images/example18b_1.png" alt="Example image A"/>
 
+You may fix the column overflow by inserting a page wrap in a `define()` function,
+or by turning on "page_wrap".
+
 ### Result With Page Wrapping
 
-Page is wrapped so some columns are displayed in the next page.
+For `tbl3`, the page is wrapped so some columns are displayed in the next page.
 
 <img src="../man/images/example18b_2.png" alt="Example image A"/>
 
@@ -192,12 +222,21 @@ Page is wrapped so some columns are displayed in the next page.
 
 [top](#top)
 
-## Turn Off Line Break {#line_break}
+## Line Breaks {#line_break}
 
-In default, the **reporter** package would wrap the lines automatically.
-User can turn it off with `report_options(line_break = FALSE)`. Then it allows 
-the browser to wrap the lines automatically. It supports RTF, DOCX, and HTML file
-formats.
+To reduce the chance of page overflows, the **reporter** rendering procedure
+places a hard line break character at the end of every line.  In this way,
+the number of lines on a page can be accurately counted.  
+
+There may be times, however, when you do not want these hard line breaks. The 
+"line_break" parameter allows you to turn them off.  You can turn off the line
+breaks with `report_options(line_break = FALSE)`. When line breaks are off, 
+line wrapping will be controlled by the editor instead of **reporter**. **reporter**
+will nevertheless attempt to count the number of lines as accurately as possible.
+**reporter** will also honor any line breaks manually inserted by the user.
+This feature is allowed on RTF, DOCX, and HTML file formats.  
+
+Here is an example:
 
 ```{r eval=FALSE, echo=TRUE}
 fp <- file.path(tempdir(), "example18c.rtf")
@@ -251,25 +290,13 @@ res <- write_report(rpt)
 
 ### Result Without Line Breaks
 
-We can see that there is no overflow even line breaking is turned off. This is
-because the **reporter** still count the lines despite not inserting line-break
-characters.
+In the example above, observe that there are no line break characters in the 
+produced RTF file.  Also notice that there is no page overflow, even though 
+line breaking is turned off. 
 
 <img src="../man/images/example18c.png" alt="Example image A"/>
 
-We could check that there is only one line break code which we've assigned in data.
-```{r eval=FALSE, echo=TRUE}
-# Check if there is only one manual line break "\line"
-rtf <- readLines(fp, warn = FALSE)
-manual_break_count <- 0
-for (r in rtf) {
-  matches <- gregexpr("\\line", r, fixed = TRUE)
-  count_result <- ifelse(matches[[1]][1] == -1, 0, length(matches[[1]]))
-  manual_break_count <- manual_break_count + count_result
-}
-manual_break_count
-# [1] 0
-```
+If the user inserts a line break manually using `\n`, it is inserted as expected.  
 
 [top](#top)
 

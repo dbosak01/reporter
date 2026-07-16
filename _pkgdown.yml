@@ -20,7 +20,7 @@ articles:
   - reporter-break
   - reporter-hfimage
   - reporter-grouping
-  - reporter-RTFcode
+  - reporter-codeinsert
   - reporter-report_options
   - reporter-more
   - reporter-faq

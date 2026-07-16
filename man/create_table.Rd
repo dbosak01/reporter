@@ -83,15 +83,17 @@ outputs.  Also, this parameter only works for titles and footnotes that
 are attached to the table body.  Titles and footnotes attached to the 
 report will still be shown on every page.}
 
-\item{page_wrap}{Whether to use page wrapping when columns are too many to
-be in the same page. Default the page wrapping is on. Set it to FALSE to turn 
-it off.}
+\item{page_wrap}{Whether to use automatic page wrapping when there are too 
+many columns fit within the calculated content area. Default is TRUE, meaning
+automatic page wrapping is on. Set it to FALSE to disable this feature and 
+control page wrapping yourself.}
 
-\item{auto_page}{Whether to use auto pagination. Default is TRUE. If it has
-been set in \code{\link{create_table}}, then it follows table's setting. 
-When `page_break` variable is set in \code{\link{define}}, users can set 
-`auto_page` as FALSE to let reporter follow the paging variable without any
-auto paging. Please note that turning off auto pagination might cause overflow.}
+\item{auto_page}{Whether to use auto pagination. Default is TRUE. A value
+of FALSE will disable auto pagination, and let you control page breaking yourself
+using the `page_break` variable on the \code{\link{define}} function.
+The "auto_page" value on \code{\link{create_table}} will override the 
+corresponding setting in the \code{\link{report_options}}.
+Please note that turning off auto pagination may cause page overflows.}
 }
 \description{
 The \code{create_table} function creates a table object to which 

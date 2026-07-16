@@ -61,4 +61,9 @@ write_report(rpt)
 <img src="../man/images/e6a.png"  alt="Page wrap example image 1"/>
 <img src="../man/images/e6b.png"  alt="Page wrap example image 2"/>
 
+Note that the automatic page wrapping can be turned off with 
+`report_options(page_wrap = FALSE)`.  See the vignette 
+[Example 18: Report Options](reporter-report_options.html) for a full 
+explanation.
+
 Next: [Example 7: Page By](reporter-pageby.html)
