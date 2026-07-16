@@ -9,7 +9,7 @@ This function has the following parameters:
   - "auto_page" to turn off automatic page breaking.
   - "title_block" to insert a title paragraph in RTF outputs instead of a title
 table.  This feature makes the output more compatible with some editors.
-
+* Added "page_wrap" and "auto_page" parameters to `create_table()` function.
 * Automatically wrap multiple lines of titles, footnotes, headers, footers, 
 and page by values for TXT files.
 
