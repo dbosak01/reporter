@@ -18,9 +18,14 @@ The **reporter** package allows users to insert code directly with
 for RTF and HTML outputs. This example will focus on RTF. HTML
 code insertion works similarly.
 
-## Insert Code
+### Outline{#top}
 
-The **reporter** package let's you insert code in data sets, titles,
+* [Insert RTF Code](#rtf)
+* [Insert HTML Code](#html)
+
+## Insert RTF Code{#rtf}
+
+The **reporter** package let's you insert RTF code in data sets, titles,
 footnotes, headers, and footers.
 
 Let's prepare a data set with RTF code:
@@ -95,7 +100,7 @@ As seen above, all the RTF code insertion worked as expected:
 * Data values are formatted with blue, purple, underline, and indentation.
 * Footnotes are formatted with italic and smaller font size.
 
-## RTF Color Table
+### RTF Color Table
 
 The above example contains several references to the RTF color table.
 Here is the complete color table: 
@@ -118,5 +123,63 @@ Here is the complete color table:
 * `\cf16` : Light Gray
 
 The above color references are the same as those used by SAS ODS RTF.
+
+[top](#top)
+
+## Insert HTML Code{#html}
+
+The **reporter** package let's you insert HTML code in data sets, titles,
+footnotes, headers, and footers.
+
+Let's prepare a data set with HTML code:
+
+<img src="../man/images/example17_3.png" alt="Example image A"/>
+
+Now let's do some more manipulation of the HTML in the **reporter** code:
+```{r eval=FALSE, echo=TRUE}
+fp <- file.path(tempdir(), "example17b.html")
+
+# Create table
+tbl <- create_table(dat, borders = "outside") %>%
+  titles('<p style="color: blue; font-size: 18px;">Blue 18 px <b>Title</b>: Page [pg] of [tpg]</p>',
+         "<b>Bold table title</b>") %>%
+  footnotes("<i>Italic footnote: Page [pg] of [tpg]</i>", "Emphasize <sup>Super</sup>") %>%
+  define(var, label = "Name") %>%
+  define(A, label = "Treatment A mg<sup>2</sup>") %>%
+  define(B, label = "Treatment B mg<sup>2</sup>")
+
+# Create Report
+rpt <- create_report(fp, output_type = "html", font = fnt,
+                     font_size = fsz, orientation = "landscape") %>%
+  report_options(allow_code = TRUE) %>%
+  set_margins(top = 1, bottom = 1) %>%
+  add_content(tbl) %>%
+  add_content(tbl) %>%
+  titles("<mark>Mark Title: Page [pg] of [tpg]</mark>") %>%
+  footnotes("<small>Small footnote</small>: Page [pg] of [tpg]", borders = "none") %>%
+  page_header('<code style="color:red;">Code Style Page [pg] of [tpg]</code>',
+              right = '<del>Strikethrough</del>') %>%
+  page_footer("Footer: Page <sub>[pg]</sub> of [tpg]",
+              right = "Footer: Page <sub>[pg]</sub> of [tpg]")
+
+res <- write_report(rpt)
+```
+
+<img src="../man/images/example17_4.png" alt="Example image A"/>
+
+Let zoom in to se the details in the table:
+
+<img src="../man/images/example17_5.png" alt="Example image A"/>
+
+As seen above, all the HTML code insertion worked as expected:
+
+* Headers are formatted with red code style and strike through.
+* Titles are formatted with yellow highlight, blue 18px, and bold.
+* Column headers are formatted with superscript.
+* Data values are formatted with underline, indentation, color, bold, and background color.
+* Footnotes are formatted with italic, superscript, and smaller font size.
+* Footers are formatted with subscript.
+
+[top](#top)
 
 Next: [Example 18: Report Options](reporter-report_options.html)

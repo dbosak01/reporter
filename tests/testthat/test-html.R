@@ -2750,7 +2750,7 @@ test_that("html-73: HTML code can be inserted as expected.", {
     
     dat <- read.table(header = TRUE, text = '
       var     label        A             B
-      "ampg"   "N"          "19<sub>max</sub>"          "13<sup>2</sup>"
+      "<u>Underline</u>"   "N"          "19<sub>max</sub>"          "13<sup>2</sup>"
       "ampg"   "Mean"       "18.8 (6.5)"  "22.0 (4.9)"
       "ampg"   "e"     "16.4"        "21.4"
       "ampg"   "Q1 - Q3"    "15.1 - 21.2" "19.2 - 22.8"
@@ -2778,6 +2778,7 @@ test_that("html-73: HTML code can be inserted as expected.", {
       }
     }
     
+    # Create table
     tbl <- create_table(dat, borders = "outside") %>%
       titles('<p style="color: blue; font-size: 18px;">Blue 18 px <b>Title</b>: Page [pg] of [tpg]</p>',
              "<b>Bold table title</b>") %>%
@@ -2786,6 +2787,7 @@ test_that("html-73: HTML code can be inserted as expected.", {
       define(A, label = "Treatment A mg<sup>2</sup>") %>%
       define(B, label = "Treatment B mg<sup>2</sup>")
     
+    # Create Report
     rpt <- create_report(fp, output_type = "html", font = fnt,
                          font_size = fsz, orientation = "landscape") %>%
       report_options(allow_code = TRUE) %>%
@@ -2794,8 +2796,10 @@ test_that("html-73: HTML code can be inserted as expected.", {
       add_content(tbl) %>%
       titles("<mark>Mark Title: Page [pg] of [tpg]</mark>") %>%
       footnotes("<small>Small footnote</small>: Page [pg] of [tpg]", borders = "none") %>%
-      page_header('<code style="color:red;">Code Style Page [pg] of [tpg]</code>') %>%
-      page_footer("Footer: Page <sub>[pg]</sub> of [tpg]")
+      page_header('<code style="color:red;">Code Style Page [pg] of [tpg]</code>',
+                  right = '<del>Strikethrough</del>') %>%
+      page_footer("Footer: Page <sub>[pg]</sub> of [tpg]",
+                  right = "Footer: Page <sub>[pg]</sub> of [tpg]")
     
     res <- write_report(rpt)
     expect_equal(file.exists(fp), TRUE)

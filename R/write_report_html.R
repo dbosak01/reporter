@@ -639,6 +639,29 @@ page_replace_html <- function(pg, target, type = "titles", page, rs = NULL) {
     for (v in target[[type]]) {
       for (v_string in v[[type]]) {
         if (v_string != "") {
+          
+          # Preprocess v_string to make it consistent with pg
+          if (rs$allow_code) {
+            html_control_regex <- "(?i)<\\/?([a-z]+)[^>]*>|&[a-z0-9#]+;"
+            wrds_temp <- regmatches(v_string, gregexpr(html_control_regex, v_string), invert = NA)[[1]]
+            wrds_temp <- wrds_temp[wrds_temp != ""]
+            
+            wrds <- c()
+            wrds_html <- c()
+            for (word in wrds_temp) {
+              if (grepl(html_control_regex, word)) {
+                wrds <- c(wrds, word)
+                wrds_html <- c(wrds_html, TRUE)
+              } else {
+                split_word <- strsplit(word, " ", fixed = TRUE)[[1]]
+                wrds <- c(wrds, split_word)
+                wrds_html <- c(wrds_html, rep(FALSE, length(split_word)))
+              }
+            }
+            
+            v_string <- paste(wrds, collapse = " ")
+          }
+          
           raw_title <- encodeHTML(v_string, nbsp = rs$line_break,
                                   allow_html_code = rs$allow_code)
           new_title <- update_page(raw_title, page)
