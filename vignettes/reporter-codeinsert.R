@@ -44,3 +44,31 @@ knitr::opts_chunk$set(
 #                right = "Page [pg] of [tpg]")
 #  
 
+## ----eval=FALSE, echo=TRUE----------------------------------------------------
+#  fp <- file.path(tempdir(), "example17b.html")
+#  
+#  # Create table
+#  tbl <- create_table(dat, borders = "outside") %>%
+#    titles('<p style="color: blue; font-size: 18px;">Blue 18 px <b>Title</b>: Page [pg] of [tpg]</p>',
+#           "<b>Bold table title</b>") %>%
+#    footnotes("<i>Italic footnote: Page [pg] of [tpg]</i>", "Emphasize <sup>Super</sup>") %>%
+#    define(var, label = "Name") %>%
+#    define(A, label = "Treatment A mg<sup>2</sup>") %>%
+#    define(B, label = "Treatment B mg<sup>2</sup>")
+#  
+#  # Create Report
+#  rpt <- create_report(fp, output_type = "html", font = fnt,
+#                       font_size = fsz, orientation = "landscape") %>%
+#    report_options(allow_code = TRUE) %>%
+#    set_margins(top = 1, bottom = 1) %>%
+#    add_content(tbl) %>%
+#    add_content(tbl) %>%
+#    titles("<mark>Mark Title: Page [pg] of [tpg]</mark>") %>%
+#    footnotes("<small>Small footnote</small>: Page [pg] of [tpg]", borders = "none") %>%
+#    page_header('<code style="color:red;">Code Style Page [pg] of [tpg]</code>',
+#                right = '<del>Strikethrough</del>') %>%
+#    page_footer("Footer: Page <sub>[pg]</sub> of [tpg]",
+#                right = "Footer: Page <sub>[pg]</sub> of [tpg]")
+#  
+#  res <- write_report(rpt)
+

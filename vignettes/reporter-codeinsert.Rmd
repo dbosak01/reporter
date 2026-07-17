@@ -15,8 +15,7 @@ knitr::opts_chunk$set(
 ```
 The **reporter** package allows users to insert code directly with 
 `report_options(allow_code = TRUE)`. This feature is currently available only
-for RTF and HTML outputs. This example will focus on RTF. HTML
-code insertion works similarly.
+for RTF and HTML outputs. 
 
 ### Outline{#top}
 
@@ -128,7 +127,7 @@ The above color references are the same as those used by SAS ODS RTF.
 
 ## Insert HTML Code{#html}
 
-The **reporter** package let's you insert HTML code in data sets, titles,
+The **reporter** package also allows you insert HTML code in data sets, titles,
 footnotes, headers, and footers.
 
 Let's prepare a data set with HTML code:
@@ -164,10 +163,6 @@ rpt <- create_report(fp, output_type = "html", font = fnt,
 
 res <- write_report(rpt)
 ```
-
-<img src="../man/images/example17_4.png" alt="Example image A"/>
-
-Let zoom in to se the details in the table:
 
 <img src="../man/images/example17_5.png" alt="Example image A"/>
 
