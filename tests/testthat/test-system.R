@@ -3681,3 +3681,4 @@ test_that("test109: Title header can be wrapped.", {
     expect_equal(TRUE, TRUE)
   }
 })
+

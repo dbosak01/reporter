@@ -164,7 +164,9 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
   else if (rs$font_size == 9)
     hdr[length(hdr) + 1] <- "\\sl-200\\slmult0\\fs18"
   
-  body <- encodeRTF(ls)
+  # browser()
+  
+  body <- encodeRTF(ls, FALSE)
   
   if (rs$has_graphics) {
     # Remove fill lines
@@ -254,9 +256,16 @@ write_rtf_output <- function(rs, ls, rtf_path, orig_path, tmp_dir) {
 
 #' @noRd
 encodeRTF <- Vectorize(function(x, allow_rtf_code = FALSE) {
+  
+  # browser()
 
-  ints <- utf8ToInt(x)
-  res <- paste0(encodeRTF_internal(ints, allow_rtf_code), collapse = "")
+  if (nchar(x) > 0) {
+    ints <- utf8ToInt(x)
+    res <- paste0(encodeRTF_internal(ints, allow_rtf_code), collapse = "")
+  } else {
+    
+    res <- x 
+  }
   
   return(res)
 })
