@@ -41,6 +41,7 @@ on the links below to navigate to the full question and answer content.
 * [Why am I getting an error when using curly braces in my footnotes?](#curly)
 * [How can I get reporter to break/wrap long words?](#wordbreak)
 * [Is there a way to insert my own custom RTF codes?](#codes)
+* [How come my reports are messed up on Mac?](#mac)
 
 
 ## Content
@@ -375,6 +376,27 @@ option will work for RTF and HTML.  See the vignette
 [top](#top)
 
 ******
+
+
+### How come my reports are messed up on Mac? {#mac}
+
+**Q:** I'm trying to create some reports with **reporter** on a Mac, but
+they seem to be consistently messed up.  RTF is really messed up and DOCX
+doesn't come out right either. How can I fix it?
+
+**A:** The **reporter** package was developed on Windows, and tested on Linux.  
+Those two platforms are supported best.  On a Mac,
+TXT and PDF output types should be reliable. As for RTF and DOCX, they will work
+or not depending on which editor you are using. RTF
+and DOCX are best interpreted on Microsoft Word for Mac. For HTML, the content
+produced will be correct, but usually the page breaking is off.  The reason
+is because Safari has different defaults and different interpretations of some
+HTML tags and styles. You can improve the HTML output by viewing on Chrome for Mac.
+
+[top](#top)
+
+******
+
 
 <!-- ### Question 1? {#q1} -->
 

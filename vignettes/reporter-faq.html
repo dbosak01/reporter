@@ -277,6 +277,7 @@ in my footnotes?</a></li>
 words?</a></li>
 <li><a href="#codes">Is there a way to insert my own custom RTF
 codes?</a></li>
+<li><a href="#mac">How come my reports are messed up on Mac?</a></li>
 </ul>
 </div>
 <div id="content" class="section level2">
@@ -569,6 +570,25 @@ such code insertion. But you can allow it by setting
 <code>report_options(allow_code = TRUE)</code>. The “allow_code” option
 will work for RTF and HTML. See the vignette <a href="reporter-codeinsert.html">Example 17: Code Insertion</a> for an
 example.</p>
+<p><a href="#top">top</a></p>
+<hr />
+</div>
+<div id="mac" class="section level3">
+<h3>How come my reports are messed up on Mac?</h3>
+<p><strong>Q:</strong> I’m trying to create some reports with
+<strong>reporter</strong> on a Mac, but they seem to be consistently
+messed up. RTF is really messed up and DOCX doesn’t come out right
+either. How can I fix it?</p>
+<p><strong>A:</strong> The <strong>reporter</strong> package was
+developed on Windows, and tested on Linux.<br />
+Those two platforms are supported best. On a Mac, TXT and PDF output
+types should be reliable. As for RTF and DOCX, they will work or not
+depending on which editor you are using. RTF and DOCX are best
+interpreted on Microsoft Word for Mac. For HTML, the content produced
+will be correct, but usually the page breaking is off. The reason is
+because Safari has different defaults and different interpretations of
+some HTML tags and styles. You can improve the HTML output by viewing on
+Chrome for Mac.</p>
 <p><a href="#top">top</a></p>
 <hr />
 <!-- ### Question 1? {#q1} -->
