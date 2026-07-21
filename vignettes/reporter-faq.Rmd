@@ -384,7 +384,7 @@ option will work for RTF and HTML.  See the vignette
 they seem to be consistently messed up.  RTF is really messed up and DOCX
 doesn't come out right either. How can I fix it?
 
-**A:** The **reporter** package was developed on Windows, and tested on Linux.  
+**A:** The **reporter** package was developed on Windows, and tested on Linux.
 Those two platforms are supported best.  On a Mac,
 TXT and PDF output types should be reliable. As for RTF and DOCX, they will work
 or not depending on which editor you are using. RTF
