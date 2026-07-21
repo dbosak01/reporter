@@ -164,14 +164,16 @@ rpt <- create_report(fp, output_type = "html", font = fnt,
 res <- write_report(rpt)
 ```
 
-<img src="../man/images/example17_5.png" alt="Example image A"/>
+<img src="../man/images/example17_4.png" alt="Example image A"/>
 
 As seen above, all the HTML code insertion worked as expected:
 
+* Headers are formatted with red code style and strike through.
 * Titles are formatted with yellow highlight, blue 18px, and bold.
 * Column headers are formatted with superscript.
 * Data values are formatted with underline, indentation, color, bold, and background color.
 * Footnotes are formatted with italic, superscript, and smaller font size.
+* Footers are formatted with subscript.
 
 [top](#top)
 
