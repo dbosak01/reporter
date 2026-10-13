@@ -1552,6 +1552,7 @@ viconv <- Vectorize(function(vstr) {
 
 
 #' @description Convert hex or string into RGB code 
+#' @noRd
 get_pdf_color <- function(color_input) {
   # 1. Prevent errors caused by users entering garbled strings that R does not recognize.
   rgb_matrix <- tryCatch({

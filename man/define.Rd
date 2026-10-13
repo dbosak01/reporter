@@ -124,8 +124,9 @@ FALSE.  Set this parameter to TRUE if you want to pass the \code{vars}
 value(s) using a variable.}
 
 \item{style}{A \code{\link{cell_style}} object that defines the desired
-style for this column.  The cell style object can be used to define 
-conditional styling.}
+style for this column. The cell style object can be used to define 
+conditional styling. Use a list to contain multiple \code{\link{cell_style}} 
+objects.}
 
 \item{group_border}{Adds a horizontal border at the end of a group. 
 Valid values are TRUE or FALSE. Default is FALSE. The group border is

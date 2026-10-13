@@ -30,7 +30,9 @@ FALSE.  The default is FALSE.}
 \item{italic}{Whether to italic the text in the cell.  Valid values are TRUE and
 FALSE.  The default is FALSE.}
 
-\item{font_color}{A character value to indicator the font color for the cell.}
+\item{font_color}{A character value to indicator the font color for the cell.
+For RTF, the available colors are Black, Blue, Cyan, Lime Green, Magenta, Red,
+Yellow, White, Navy Blue, Teal, Green, Purple, Maroon, Olive, Gray, Light Gray.}
 
 \item{cell_color}{A character value to indicator the background color for the cell.}
 
@@ -51,7 +53,7 @@ to identify cells for styling.
 \examples{
 library(reporter)
 library(magrittr)
-
+# Example 1 - Single cell style
 # Create temporary path
 tmp <- file.path(tempdir(), "table1.rtf")
 
@@ -83,4 +85,91 @@ write_report(rpt)
 
 # View report
 # file.show(tmp)
+
+# Example 2 - Multiple cell style
+fp <- file.path(tempdir(), "table2.rtf")
+
+df <- read.table(header = TRUE, text = '
+      var      label                          A             B
+      "ampg"   "N and more and more"          "19"          "13"
+      "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median and more and more"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder and more and more" "10 ( 52.6\%)" "4 ( 30.8\%)"
+      "cyl"    "6 Cylinder and more and more" "4 ( 21.1\%)"  "3 ( 23.1\%)"
+      "cyl"    "4 Cylinder and more and more" "5 ( 26.3\%)"  "6 ( 46.2\%)"')
+
+df$cylflg <- ifelse(df$var == "cyl", TRUE, FALSE)
+df$ampgflg <- ifelse(df$var == "ampg", TRUE, FALSE)
+
+
+# Create table
+tbl <- create_table(df, first_row_blank = TRUE) \%>\%
+  stub(c("var", "label"), width = 2.06, 
+       style = list(
+         cell_style(bold = TRUE, 
+                    italic = TRUE,
+                    cell_color = "white",
+                    borders = "all",
+                    indicator = "labelrow"),
+         cell_style(bold = FALSE, 
+                    italic = FALSE,
+                    cell_color = "cyan",
+                    indicator = "blankrow"),
+         cell_style(bold = FALSE, 
+                    italic = FALSE,
+                    cell_color = "yellow",
+                    indicator = NULL)
+       )) \%>\%
+  
+  define(var, blank_after = TRUE, label_row = TRUE,
+         format = c(ampg = "Miles Per Gallon and more bold text to be added to test function",
+                    cyl = "Cylinders")) \%>\%
+  
+  define(label, indent = .25) \%>\%
+  
+  define(A, label = "Group A", align = "center", n = 19,
+         style = list(
+           cell_style(italic = TRUE,
+                      bold = TRUE,
+                      font_color = "blue",
+                      cell_color = "Light Gray",
+                      borders = c("top", "bottom"),
+                      indicator = "ampgflg"),
+           cell_style(italic = FALSE,
+                      bold = FALSE,
+                      font_color = "white",
+                      cell_color = "olive",
+                      borders = "all",
+                      indicator = "cylflg")
+         )) \%>\%
+  
+  define(B, label = "Group B", align = "center", n = 13,
+         style = list(
+           cell_style(bold = FALSE,
+                      font_color = "red",
+                      borders = "left",
+                      indicator = "datarow"),
+           cell_style(bold = TRUE,
+                      font_color = "blue",
+                      borders = "left",
+                      indicator = "ampgflg")
+         )) \%>\%
+  define(cylflg, visible = FALSE)
+
+
+# Create report and add content
+rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+                     font = "Times") \%>\%
+  page_header(left = "Client: Motor Trend", right = "Study: Cars") \%>\%
+  titles("Table 1.0", "Various cell styles") \%>\%
+  add_content(tbl) \%>\%
+  footnotes("* Motor Trend, 1974") \%>\%
+  page_footer(left = "Left",
+              center = "Confidential",
+              right = "Page [pg] of [tpg]")
+
+res <- write_report(rpt)
+# View report
 }
