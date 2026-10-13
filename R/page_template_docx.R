@@ -265,7 +265,7 @@ get_page_header_docx <- function(rs) {
             
             cret <- paste0(cret, 
                            '<w:tc><w:tcPr><w:tcW w:w="', center_pct, '" w:type="pct"/></w:tcPr>', 
-                           get_page_numbers_docx(para(tmp2$docx)),
+                           get_page_numbers_docx(para(tmp2$docx, "center")),
                            "</w:tc>\n")
             
             ccnt <- tmp2$lines

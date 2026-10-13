@@ -1413,26 +1413,26 @@ get_cell_borders_html <- function(row, col, nrow, ncol, brdrs,
       
     }
     
-    if (row == 1 & any(brdrs %in% c("outside", "top")) |
-        any(cell_border %in% c("outside", "top"))
+    if ((row == 1 & any(brdrs %in% c("outside", "top"))) |
+        any(cell_border %in% c("outside", "top", "all"))
         ) {
       t <- paste0("border-top:thin solid ", border_color, ";")
     }
       
-    if (row == nrow & any(brdrs %in% c("bottom", "outside")) |
-        any(cell_border %in% c("bottom", "outside"))
+    if ((row == nrow & any(brdrs %in% c("bottom", "outside"))) |
+        any(cell_border %in% c("bottom", "outside", "all"))
         ) {
       b <- paste0("border-bottom:thin solid ", border_color, ";")
     }
     
-    if (col == 1 & any(brdrs %in% c("outside", "left")) |
-        any(cell_border %in% c("outside", "left"))
+    if ((col == 1 & any(brdrs %in% c("outside", "left"))) |
+        any(cell_border %in% c("outside", "left", "all"))
         ) {
       l <- paste0("border-left:thin solid ", border_color, ";")
     }
     
-    if (col == ncol & any(brdrs %in% c("outside", "right")) |
-        any(cell_border %in% c("outside", "right"))
+    if ((col == ncol & any(brdrs %in% c("outside", "right"))) |
+        any(cell_border %in% c("outside", "right", "all"))
         ) {
       r <- paste0("border-right:thin solid ", border_color, ";")
     }
@@ -1446,7 +1446,7 @@ get_cell_borders_html <- function(row, col, nrow, ncol, brdrs,
       
       if (stub_flag == FALSE & col == 1 & any(brdrs %in% c("outside", "all", "right")))
         r <- paste0("border-right:thin solid ", border_color, ";")
-      else if (col != ncol & stub_flag == FALSE)
+      else if (col != ncol & stub_flag == FALSE & !any(cell_border %in% c("outside", "right", "all")))
         r <- ""
       
       if (col != 1)

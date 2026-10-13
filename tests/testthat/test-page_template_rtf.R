@@ -300,7 +300,7 @@ test_that("get_pageby_rtf works as expected.", {
 })
 
 
-test_that("rtf2-2: get_cell_borders works as expected.", {
+test_that("get_cell_borders works as expected.", {
   
   
   expect_equal(get_cell_borders(1, 1, 4, 4, c("all")),
@@ -333,6 +333,13 @@ test_that("rtf2-2: get_cell_borders works as expected.", {
   expect_equal(get_cell_borders(2, 1, 4, 4, "all", "B"), 
                "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrl\\brdrs\\clbrdrr\\brdrs") 
   
+  # Work with cell_border
+  expect_equal(get_cell_borders(2, 4, 4, 4, c("right"), cell_border = c("top", "bottom")),
+               "\\clbrdrt\\brdrs\\clbrdrb\\brdrs\\clbrdrr\\brdrs")
+  
+  
+  get_cell_borders(3, 2, 13, 4, "none", "",
+                   cell_border = c("top", "bottom"))
 })
 
 

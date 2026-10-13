@@ -600,6 +600,243 @@ test_that("get_col_widths_variable works with Chinese as expected.", {
   expect_equal(res[["group2"]] == 1.15, TRUE)
 })
 
+test_that("get_col_widths_variable works with bold text as expected.", {
+  
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "N and more and more"          "19"          "13"
+      "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median and more and more"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder and more and more" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more and more" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "4 Cylinder and more and more" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", T, FALSE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>%
+    column_defaults(vars = c("stub", "A"),
+                    style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    stub(c("var", "label"),
+         style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19,
+           style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    define(B, label = "Group B", align = "center", n = 13,
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  rpt <- create_report("", orientation = "portrait", output_type = "RTF",
+                       font = "Times")
+  
+  rs <- page_setup_rtf(rpt)
+  
+  fdat <- prep_data(df, tbl, rs$char_width, rs$missing)
+  
+  lbls <- get_labels(df, tbl)
+  
+  styles <- get_styles(tbl)
+  
+  names(fdat)[names(fdat) == "cylflg"] <- "..x.cylflg"
+  
+  # Width considering bold
+  res <- get_col_widths_variable(fdat, tbl, lbls, 
+                                 rs$font, rs$font_size, rs$units, 
+                                 rs$gutter_width,
+                                 allow_rtf_code = rs$allow_code,
+                                 content_width = rs$content_size[["width"]],
+                                 styles = styles)
+  res
+  
+  # Width not considering bold
+  res2 <- get_col_widths_variable(fdat, tbl, lbls, 
+                                 rs$font, rs$font_size, rs$units, 
+                                 rs$gutter_width,
+                                 allow_rtf_code = rs$allow_code,
+                                 content_width = rs$content_size[["width"]])
+  res2
+  
+  expect_true(res[["stub"]] > res2[["stub"]])
+  expect_true(res[["A"]] > res2[["A"]])
+  expect_true(res[["B"]] > res2[["B"]])
+})
+
+test_that("get_col_widths_variable works with differnt bold styles in one column as expected.", {
+  
+  # The longest A is in ampg
+  df <- read.table(header = TRUE, text = '
+      var      label                          A             B
+      "ampg"   "N and more and more"          "19"          "13"
+      "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median and more and more"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder and more and more" "10( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more and more" "4( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "4 Cylinder and more and more" "5( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", T, F)
+  df$ampgflg <- ifelse(df$var == "ampg", T, F)
+  
+  # Create table
+  ts <- create_table(df, first_row_blank = TRUE) %>%
+    stub(c("var", "label"), width = 2.06, 
+         style = list(
+           cell_style(bold = TRUE, 
+                      italic = TRUE,
+                      cell_color = "white",
+                      indicator = "labelrow"),
+           cell_style(bold = FALSE, 
+                      italic = FALSE,
+                      cell_color = "blue",
+                      indicator = "blankrow"),
+           cell_style(bold = FALSE, 
+                      italic = FALSE,
+                      cell_color = "yellow",
+                      indicator = NULL)
+         )) %>%
+    
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = "Miles Per Gallon and more bold text to be added to test function",
+                      cyl = "Cylinders")) %>%
+    
+    define(label, indent = .25) %>%
+    
+    define(A, label = "Group A", align = "center", n = 19,
+           style = list(
+             cell_style(italic = TRUE,
+                        bold = TRUE,
+                        font_color = "blue",
+                        cell_color = "Light Gray",
+                        borders = c("top", "bottom"),
+                        indicator = "ampgflg"),
+             cell_style(italic = FALSE,
+                        bold = FALSE,
+                        font_color = "red",
+                        cell_color = "Yellow",
+                        borders = "all",
+                        indicator = "cylflg"),
+             cell_style(italic = FALSE,
+                        bold = FALSE),
+             cell_style(italic = FALSE,
+                        bold = FALSE,
+                        indicator = "datarow")
+           )) %>%
+    
+    define(B, label = "Group B", align = "center", n = 13,
+           style = list(
+             cell_style(bold = FALSE,
+                        font_color = "red",
+                        borders = "left",
+                        indicator = "datarow"),
+             cell_style(bold = TRUE,
+                        font_color = "blue",
+                        borders = "left",
+                        indicator = "ampgflg")
+           )) %>%
+    define(cylflg, visible = FALSE)
+  
+  # Create report and add content
+  rpt <- create_report("", orientation = "portrait", output_type = "RTF",
+                       font = "Times")
+  
+  rs <- page_setup_rtf(rpt)
+  
+  tbl <- ts
+  
+  dat <- as.data.frame(ts$data, stringsAsFactors = FALSE)  
+  dat$..blank <- ""
+  fdat <- prep_data(dat, ts, rs$char_width, rs$missing)
+  names(fdat)[names(fdat) == "cylflg"] <- "..x.cylflg"
+  
+  styles <- get_styles(ts)
+  lbls <- get_labels(df, tbl)
+  flgs <- fdat$..blank
+  
+
+  
+  styles_orig <- styles
+  
+  # Only bold A when ampg
+  res <- get_col_widths_variable(fdat, tbl, lbls, 
+                                 rs$font, rs$font_size, rs$units, 
+                                 rs$gutter_width,
+                                 allow_rtf_code = rs$allow_code,
+                                 content_width = rs$content_size[["width"]],
+                                 styles = styles)
+  res # A: 0.80
+  expect_equal(as.numeric(res["A"]), 0.8)
+  
+  # Only bold A when cylflg
+  styles$A[[1]]$bold <- F
+  styles$A[[2]]$bold <- T
+  res2 <- get_col_widths_variable(fdat, tbl, lbls, 
+                                 rs$font, rs$font_size, rs$units, 
+                                 rs$gutter_width,
+                                 allow_rtf_code = rs$allow_code,
+                                 content_width = rs$content_size[["width"]],
+                                 styles = styles)
+  res2 # A: 0.79
+  expect_equal(as.numeric(res2["A"]), 0.79)
+  
+  # All bold A
+  styles$A[[1]]$bold <- T
+  styles$A[[2]]$bold <- T
+  res3 <- get_col_widths_variable(fdat, tbl, lbls, 
+                                  rs$font, rs$font_size, rs$units, 
+                                  rs$gutter_width,
+                                  allow_rtf_code = rs$allow_code,
+                                  content_width = rs$content_size[["width"]],
+                                  styles = styles)
+  res3 # A: 0.80
+  expect_equal(as.numeric(res3["A"]), 0.8)
+  
+  # All bold A
+  styles$A[[1]]$bold <- T
+  styles$A[[2]]$bold <- T
+  styles$A[[3]]$bold <- F
+  res3_2 <- get_col_widths_variable(fdat, tbl, lbls, 
+                                  rs$font, rs$font_size, rs$units, 
+                                  rs$gutter_width,
+                                  allow_rtf_code = rs$allow_code,
+                                  content_width = rs$content_size[["width"]],
+                                  styles = styles)
+  res3_2 # A: 0.80
+  expect_equal(as.numeric(res3_2["A"]), 0.8)
+  
+  # All not bold A
+  styles$A[[1]]$bold <- F
+  styles$A[[2]]$bold <- F
+  styles$A[[3]]$bold <- T
+  res3_3 <- get_col_widths_variable(fdat, tbl, lbls, 
+                                    rs$font, rs$font_size, rs$units, 
+                                    rs$gutter_width,
+                                    allow_rtf_code = rs$allow_code,
+                                    content_width = rs$content_size[["width"]],
+                                    styles = styles)
+  res3_3 # A: 0.77
+  expect_equal(as.numeric(res3_3["A"]), 0.77)
+  
+  # Width not considering bold
+  res4 <- get_col_widths_variable(fdat, tbl, lbls, 
+                                  rs$font, rs$font_size, rs$units, 
+                                  rs$gutter_width,
+                                  allow_rtf_code = rs$allow_code,
+                                  content_width = rs$content_size[["width"]],
+                                  styles = NULL)
+  res4
+  expect_equal(as.numeric(res4["A"]), 0.77)
+  
+  expect_true(res[["A"]] > res2[["A"]])
+  expect_true(res[["A"]] == res3[["A"]])
+  expect_true(res2[["A"]] > res4[["A"]])
+})
+
+
 test_that("get_col_widths works as expected.", {
   
   base_path <- tempdir()

@@ -209,14 +209,14 @@ test_that("get_header works as expected.", {
                     font_name = "Arial",
                     page_ids = c(3))
   
-  expect_equal(length(hdr), 5)
+  expect_equal(length(hdr), 6)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 614) #369)
+    expect_equal(length(hdrtxt), 740) #369)
   # else 
   #   expect_equal(length(hdrtxt), 370)
   
@@ -226,14 +226,14 @@ test_that("get_header works as expected.", {
                     page_height = 500,
                     page_width = 600)
   
-  expect_equal(length(hdr), 5)
+  expect_equal(length(hdr), 6)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 614) #377)
+    expect_equal(length(hdrtxt), 738) #377)
   # else 
   #   expect_equal(length(hdrtxt), 378)
   
@@ -241,14 +241,14 @@ test_that("get_header works as expected.", {
   hdr <- get_header(page_count = 3,
                     page_ids = c(3, 4, 5))
   
-  expect_equal(length(hdr), 5)
+  expect_equal(length(hdr), 6)
   
   hdrtxt <- render(pdf_document(hdr))
   
   #cat(rawToChar(hdrtxt))
   
   # if (Sys.info()[["sysname"]] == "Windows")
-    expect_equal(length(hdrtxt), 620) #383)
+    expect_equal(length(hdrtxt), 744) #383)
   # else
   #   expect_equal(length(hdrtxt), 384)
   
@@ -302,7 +302,7 @@ test_that("create full document works as expected.", {
   
   doc <- pdf_document(get_header(1, page_ids = 4), pg, strm)
   
-  expect_equal(length(doc), 5)
+  expect_equal(length(doc), 6)
   expect_equal("pdf_document" %in% class(doc), TRUE)
   
   res <- render(doc)
@@ -524,7 +524,7 @@ test_that("get_pages works as expected.", {
   
   res
   
-  expect_equal(res$page_ids, c(6, 8, 10))
+  expect_equal(res$page_ids, c(7, 9, 11))
   expect_equal(length(res$objects), 7)
   
   

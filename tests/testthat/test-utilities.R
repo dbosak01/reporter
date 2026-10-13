@@ -611,6 +611,15 @@ test_that("utils21: split_string_rtf() works as expected.", {
   # The output should not contain any line break characters
   expect_equal(res8$rtf, "here is areallylongstringlongerthan one inch")
   expect_equal(res8$lines, 3)
+  
+  
+  # ----------------------------------------------- #
+  #       Split bold text as expected               #
+  # ----------------------------------------------- #
+  res9 <- split_string_rtf("8 Cylinder and more and more", 2.06 - 0.25, "inches", "Times", 
+                           bold = T)
+  
+  expect_equal(res9$rtf, "8 Cylinder and more and\\line more")
 
   dev.off()
 
@@ -637,6 +646,32 @@ test_that("utils22: split_cells_variable() works as expected.", {
   expect_equal(length(res$widths[[3]]$col1), 4)
   expect_equal(all(res$widths[[3]]$col1 < 1), TRUE)
 
+  # Break label
+  dat <- data.frame(col1 = c("hello", "there", "here is a big long\nline to wrap and wrap"),
+                    col2 = c(1, 2, 3),
+                    col3 = c("my big string I want to wrap", "fork", "bork"),
+                    ..break_label1 = rep("This is break label", 3),
+                    ..break_label_lines1 = rep(NA,3),
+                    ..row = c(NA, NA, NA), stringsAsFactors = FALSE)
+  
+  ts <- create_table(dat) %>%
+    define(col1, break_label = "(Cont.)")
+  
+  res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1),
+                              "Arial", 12, "inches", "RTF", ts = ts)
+  expect_equal(res$data$..break_label_lines1, c(1,1,1))
+  
+  res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1),
+                              "Arial", 12, "inches", "DOCX", ts = ts)
+  expect_equal(res$data$..break_label_lines1, c(1,1,1))
+  
+  res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1),
+                              "Arial", 12, "inches", "HTML", ts = ts)
+  expect_equal(res$data$..break_label_lines1, c(1,1,1))
+  
+  res <- split_cells_variable(dat, c(col1 = 1, col2 = 1, col3 = 1),
+                              "Arial", 12, "inches", "PDF", ts = ts)
+  expect_equal(res$data$..break_label_lines1, c(1,1,1))
 })
 
 

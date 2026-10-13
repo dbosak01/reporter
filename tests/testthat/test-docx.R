@@ -1354,6 +1354,118 @@ test_that("docx38: Bolding works with stub.", {
 
 })
 
+test_that("docx38b: Bolding lines wrap works with stub.", {
+  
+  
+  fp <- file.path(base_path, "docx/test38b.docx")
+  
+  
+  # Width calculation should be correct for bold text. No overflow
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "N and more and more"          "19"          "13"
+      "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median and more and more"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 38.4"
+      "cyl"    "8 Cylinder and more and more" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more and more" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "4 Cylinder and more and more" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", T, FALSE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>%
+    column_defaults(vars = c("stub", "A"),
+                    style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    stub(c("var", "label"),
+         style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = "Miles Per Gallon", cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19,
+           style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    define(B, label = "Group B", align = "center", n = 13,
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "docx",
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
+    footnotes("* Motor Trend, 1974") %>%
+    page_footer(left = "Left",
+                center = "Confidential",
+                right = "Page [pg] of [tpg]")
+  
+  
+  
+  res <- write_report(rpt)
+  
+  # file.show(res$modified_path)
+  res
+  expect_equal(file.exists(fp), TRUE)
+  
+  
+})
+
+test_that("docx38c: Bolding works with fix width.", {
+  
+  
+  fp <- file.path(base_path, "docx/test38c.docx")
+  
+  
+  # With fixed width, bold text should be wrapped correct. No overflow
+  df <- read.table(header = TRUE, text = '
+      var     label        A             B
+      "ampg"   "N and more and more"          "19"          "13"
+      "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median and more and more"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 38.4"
+      "cyl"    "8 Cylinder and more and more" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more and more" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "4 Cylinder and more and more" "5 ( 26.3%)"  "6 ( 46.2%)"')
+  
+  df$cylflg <- ifelse(df$var == "cyl", T, FALSE)
+  
+  # Create table
+  tbl <- create_table(df, first_row_blank = TRUE) %>%
+    stub(c("var", "label"), width = 2.06, style = cell_style(bold = TRUE)) %>%
+    define(var, blank_after = TRUE, label_row = TRUE,
+           format = c(ampg = "Miles Per Gallon and more bold text to be added to test function", 
+                      cyl = "Cylinders")) %>%
+    define(label, indent = .25) %>%
+    define(A, label = "Group A", align = "center", n = 19,
+           style = cell_style(bold = TRUE, indicator = cylflg)) %>%
+    define(B, label = "Group B", align = "center", n = 13,
+           style = cell_style(bold = TRUE, indicator = "datarow")) %>%
+    define(cylflg, visible = FALSE)
+  
+  
+  # Create report and add content
+  rpt <- create_report(fp, orientation = "portrait", output_type = "docx",
+                       font = "Times") %>%
+    page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+    titles("Table 1.0", "MTCARS Summary Table") %>%
+    add_content(tbl) %>%
+    footnotes("* Motor Trend, 1974", "* Motor Trend, 1974", "* Motor Trend, 1974") %>%
+    page_footer(left = "Left",
+                center = "Confidential",
+                right = "Page [pg] of [tpg]")
+  
+  
+  # Footnote position should be the same when no bold, which proves that bold
+  # line wrapping is correct.
+  res <- write_report(rpt)
+  
+  # file.show(res$modified_path)
+  res
+  expect_equal(file.exists(fp), TRUE)
+})
 
 test_that("docx39: Bold cell style with column defaults.", {
 
@@ -3250,6 +3362,55 @@ test_that("docx-86: break_label works as expected.", {
   }
 })
 
+test_that("docx-86b: Bold break_label works as expected.", {
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test86b.docx")
+    
+    dat <- iris[1:86,]
+    
+    dat$test_group <- c(
+      rep("A", 12),
+      rep("B", 6),
+      rep("C", 19),
+      rep("D", 18),
+      rep("E", 31)
+    )
+    
+    dat$test_string <- c(
+      rep("Flower A\nSubgroup A1", 12), # 24 lines + 1
+      rep("Flower B\nSubgroup B1", 6), # 12 lines + 1
+      c(rep("Flower C", 19)), # 19 lines + 1
+      c(rep("Flower D", 16), rep("Flower D\nSubgroup D1", 2)), # 20 lines + 1
+      c(rep("Flower E", 31)) # 31 lines + 1
+    )
+    
+    dat <- dat[, c("test_group", "test_string", "Sepal.Length", 
+                   "Sepal.Width", "Petal.Length","Petal.Width")]
+    
+    tbl <- create_table(dat, borders = "outside") %>%
+      define(test_group, break_label = "(Continued)", blank_before = T) %>%
+      define(test_string, 
+             break_label = paste0("(This is a long text which should take more ",
+                                  "than one line. It's to test if the package is able to handle this ",
+                                  "situation.)"),
+             indent = 0.16, style = cell_style(bold = T))
+    
+    rpt <- create_report(fp, output_type = "docx", font = fnt,
+                         font_size = fsz, orientation = "landscape") %>%
+      titles("Table 1.0", "My Nice Report with Break Label") %>%
+      set_margins(top = 1, bottom = 1) %>%
+      add_content(tbl) %>%
+      footnotes("My footnote 1", "", "My footnote 2", borders = "none",
+                blank_row = "none")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
 test_that("docx-87: Page numbers work in every title, footnote, header, and footer.", {
   
   if (dev) {
@@ -3776,6 +3937,127 @@ test_that("docx-97: Output Chinese as expected.", {
       res <- write_report(rpt)
       expect_equal(file.exists(fp), TRUE)
     }
+  } else
+    expect_equal(TRUE, TRUE)
+})
+
+test_that("docx-98: Various cell styles work as expected", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test98.docx")
+    
+    
+    # Width calculation should be correct for bold text. No overflow
+    df <- read.table(header = TRUE, text = '
+      var      label                          A             B
+      "ampg"   "N and more and more"          "19"          "13"
+      "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+      "ampg"   "Median and more and more"     "16.4"        "21.4"
+      "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+      "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 32.4"
+      "cyl"    "8 Cylinder and more and more" "10 ( 52.6%)" "4 ( 30.8%)"
+      "cyl"    "6 Cylinder and more and more" "4 ( 21.1%)"  "3 ( 23.1%)"
+      "cyl"    "4 Cylinder and more and more" "5 ( 26.3%)"  "6 ( 46.2%)"')
+    
+    df$cylflg <- ifelse(df$var == "cyl", TRUE, FALSE)
+    df$ampgflg <- ifelse(df$var == "ampg", T, F)
+    
+    
+    # Create table
+    tbl <- create_table(df, first_row_blank = TRUE) %>%
+      stub(c("var", "label"), width = 2.06, 
+           style = list(
+             cell_style(bold = TRUE, 
+                        italic = TRUE,
+                        cell_color = "#BBFFBB",
+                        borders = "all",
+                        indicator = "labelrow"),
+             cell_style(bold = FALSE, 
+                        italic = FALSE,
+                        cell_color = "cyan",
+                        indicator = "blankrow"),
+             cell_style(bold = FALSE, 
+                        italic = FALSE,
+                        cell_color = "yellow",
+                        indicator = NULL)
+           )) %>%
+      
+      define(var, blank_after = TRUE, label_row = TRUE,
+             format = c(ampg = "Miles Per Gallon and more bold text to be added to test function",
+                        cyl = "Cylinders")) %>%
+      
+      define(label, indent = .25) %>%
+      
+      define(A, label = "Group A", align = "center", n = 19,
+             style = list(
+               cell_style(italic = TRUE,
+                          bold = TRUE,
+                          font_color = "blue",
+                          cell_color = "gray",
+                          borders = c("top", "bottom"),
+                          indicator = "ampgflg"),
+               cell_style(italic = FALSE,
+                          bold = FALSE,
+                          font_color = "white",
+                          cell_color = "olive",
+                          borders = "all",
+                          indicator = "cylflg")
+             )) %>%
+      
+      define(B, label = "Group B", align = "center", n = 13,
+             style = list(
+               cell_style(bold = FALSE,
+                          font_color = "red",
+                          borders = "left",
+                          indicator = "datarow"),
+               cell_style(bold = TRUE,
+                          font_color = "blue",
+                          borders = "left",
+                          indicator = "ampgflg")
+             )) %>%
+      define(cylflg, visible = FALSE)
+    
+    
+    # Create report and add content
+    rpt <- create_report(fp, orientation = "portrait", output_type = "docx",
+                         font = "Times") %>%
+      page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+      titles("Table 1.0", "Various cell styles") %>%
+      add_content(tbl) %>%
+      footnotes("* Motor Trend, 1974") %>%
+      page_footer(left = "Left",
+                  center = "Confidential",
+                  right = "Page [pg] of [tpg]")
+    
+    
+    
+    res <- write_report(rpt)
+    expect_equal(file.exists(fp), TRUE)
+  } else {
+    expect_equal(TRUE, TRUE)
+  }
+})
+
+test_that("docx-99: Percentage column widths work with 100% as expected.", {
+  
+  if (dev == TRUE) {
+    fp <- file.path(base_path, "docx/test99.docx")
+    
+    date_location <- paste0(
+      "Date: 24 Sep 2026 (Thursday) Time: 12:30-14:00\n",
+      "Venue: Hybrid meeting (Telephone Conference / Taipei meeting room 07/08)")
+    
+    txt <- create_text(date_location, align = "center", borders = c("outside")) |>
+      titles("Theme: Sharing", blank_row = "none", borders = "none",
+             align = "center", font_size = 13, bold = T)
+    
+    rpt <- create_report(fp, output_type = "docx", font = "Arial",
+                         font_size = 11, orientation = "portrait") |>
+      add_content(txt, align = "center")
+    
+    res <- write_report(rpt)
+    
+    expect_equal(file.exists(fp), TRUE)
   } else
     expect_equal(TRUE, TRUE)
 })

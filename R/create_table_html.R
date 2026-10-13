@@ -222,7 +222,8 @@ create_table_pages_html <- function(rs, cntnt, lpg_rows) {
                                         rs$font, rs$font_size, rs$units, 
                                         rs$gutter_width, merge_label_row,
                                         allow_html_code = rs$allow_code,
-                                        content_width = rs$content_size[["width"]]) 
+                                        content_width = rs$content_size[["width"]],
+                                        styles = styles) 
   # print("Widths UOM")
   # print(widths_uom)
   
@@ -1202,6 +1203,27 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           cell_border <- NULL
         }
         
+        # Apply borders from cell_style
+        stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+        
+        if (!is.null(stl$borders)) {
+          if (is.null(cell_border)) {
+            cell_border <- stl$borders
+          } else {
+            cell_border <- c(cell_border, stl$borders)
+          }
+        }
+        
+        # If there is first blank row and cell borders contain top, draw the top
+        # line if table borders are not all or inside
+        if (i==1 & frb & any(cell_border %in% c("top", "all", "outside")) &
+            !any(brdrs %in% c("all", "inside"))) {
+          exclude_top <-  NULL
+        } else if (i > 1 & any(cell_border %in% c("top", "all", "outside")) & 
+                   !any(brdrs %in% c("all", "inside"))) {
+          exclude_top <-  NULL
+        }
+        
         b <- get_cell_borders_html(i, j, nrow(t), ncol(t), brdrs, flgs[i], 
                                    exclude = exclude_top, 
                                    border_color = get_style(rs, "border_color"),
@@ -1272,14 +1294,29 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (merge_label_row  & flgs[i] %in% c("B", "A", "L")) {
           if (j == 1) {
             
-            stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
-            
-            if ("bold" %in% stl) {
-              vl <- paste0("<b>", vl, "</b>") 
+            if (repeat_break_label) {
+              # Apply the style according to original column if no indicator or labelrow
+              stl <- get_cell_styles(cur_break_label_col, styles, flgs, i, tbl)
             }
             
-          
-            if (b == "") {
+            if (stl$bold) {
+              vl <- paste0("<b>", vl, "</b>") 
+            }
+            if (stl$italic) {
+              vl <- paste0("<i>", vl, "</i>") 
+            }
+            
+            font_color <- ""
+            if (!is.null(stl$font_color)) {
+              font_color <- sprintf("color: %s;", stl$font_color)
+            }
+            
+            cell_color <- ""
+            if (!is.null(stl$cell_color)) {
+              cell_color <- sprintf("background-color: %s;", stl$cell_color)
+            }
+            
+            if (b == "" & font_color == "" & cell_color == "") {
               
               ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\"",
                                " colspan = \"", ncol(t), "\">", 
@@ -1288,7 +1325,7 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
               
               ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\"",
                                " colspan = \"", ncol(t), "\"",
-                               " style=\"", b, "\">", 
+                               " style=\"", b, font_color, cell_color, "\">", 
                                vl, "</td>")
             }
           
@@ -1296,21 +1333,32 @@ get_table_body_html <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           }
         } else {
           
-          stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
-          
-          if ("bold" %in% stl) {
+          if (stl$bold) {
             vl <- paste0("<b>", vl, "</b>") 
           } 
+          if (stl$italic) {
+            vl <- paste0("<i>", vl, "</i>") 
+          }
+          
+          font_color <- ""
+          if (!is.null(stl$font_color)) {
+            font_color <- sprintf("color: %s;", stl$font_color)
+          }
+          
+          cell_color <- ""
+          if (!is.null(stl$cell_color)) {
+            cell_color <- sprintf("background-color: %s;", stl$cell_color)
+          }
           
           # Construct html
-          if (b == "") {
+          if (b == "" & font_color == "" & cell_color == "") {
   
             ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, "\">", 
                              vl, "</td>")
           } else { 
             
             ret[i] <- paste0(ret[i], "<td class=\"", scls, lrflg, 
-                             "\" style=\"", b, "\">", 
+                             "\" style=\"", b, font_color, cell_color, "\">", 
                              vl, "</td>")
           }
         }

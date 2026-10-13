@@ -365,8 +365,8 @@ create_styles <- function(pth, font, font_size) {
 	<w:docDefaults>
 		<w:rPrDefault>
 			<w:rPr>
-			  <w:rFonts w:ascii="', fnt, '" w:hAnsi="', fnt, 
-			  '" w:cs="', fnt, '"/>
+			  <w:rFonts w:ascii="', fnt, '" w:hAnsi="', fnt,
+			  '" w:cs="', fnt, '" w:eastAsia="', fnt, '"/>
 				<w:sz w:val="', fs, '"/>
 				<w:szCs w:val="', fs, '"/>
 				<w:lang w:val="en-US" w:eastAsia="en-US" w:bidi="ar-SA"/>
@@ -1567,7 +1567,8 @@ cell_abs <- function(txt, align = "left", width = NULL, borders = NULL, valign =
 
 #' @noRd
 para <- function(txt, align = "left", font_size = NULL, bold = FALSE, 
-                 italics = FALSE, indent_left = NA, indent_right = NA, borders = "") {
+                 italics = FALSE, indent_left = NA, indent_right = NA, 
+                 borders = "", color = NULL) {
   
   ret <- ""
   
@@ -1595,9 +1596,14 @@ para <- function(txt, align = "left", font_size = NULL, bold = FALSE,
         fs <- paste0('<w:sz w:val="', font_size * 2, 
                '"/><w:szCs w:val="', font_size * 2, '"/>')
       
+      color_code <- ""
+      if (!is.null(color)) {
+        color_code <- sprintf('<w:color w:val="%s"/>', color)
+      }
+      
       rpr <- ""
-      if (!is.null(font_size) | bold == TRUE | italics == TRUE)
-        rpr <- paste0('<w:rPr>', b, it, fs, '</w:rPr>')
+      if (!is.null(font_size) | bold == TRUE | italics == TRUE | !is.null(color))
+        rpr <- paste0('<w:rPr>', b, it, fs, color_code, '</w:rPr>')
             
             
       if (align == "centre")
@@ -1749,7 +1755,7 @@ para_wr <- function(txt, font_size, bold, italics){
 #' @noRd
 run <- function(txt) {
   
-  ret <- paste0('<w:r><w:t xml:space="preserve">', encodeDOCX(txt), '</w:t></w:r>', collapse = "")
+  ret <- paste0('<w:r><w:t xml:space="preserve">', encodeDOCX(txt), '</w:t></w:r>', collapse = "<w:r><w:br/></w:r>")
   
   return(ret)
   
@@ -1799,25 +1805,25 @@ get_cell_borders_docx <- function(row, col, trow, tcol, brdrs, flg = NULL,
   # }
   
   if ((row == 1 & any(brdrs %in% c("top", "outside", "body"))) |
-      any(cell_border %in% c("top", "outside", "body"))
+      any(cell_border %in% c("top", "outside", "body", "all"))
       ) {
     t <- '<w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
   }
   
-  if (row == trow & any(brdrs %in% c("bottom", "outside", "body")) |
-      any(cell_border %in% c("bottom", "outside", "body"))
+  if ((row == trow & any(brdrs %in% c("bottom", "outside", "body"))) |
+      any(cell_border %in% c("bottom", "outside", "body", "all"))
       ) {
     b <- '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
   }
   
-  if (col == 1 & any(brdrs %in% c("left", "body")) |
-      any(cell_border %in% c("left", "body"))
+  if ((col == 1 & any(brdrs %in% c("left", "body"))) |
+      any(cell_border %in% c("left", "body", "outside", "all"))
       ) {
     l <- '<w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
   }
   
-  if (col == tcol & any(brdrs %in% c("right", "body")) |
-      any(cell_border %in% c("right", "body"))
+  if ((col == tcol & any(brdrs %in% c("right", "body"))) |
+      any(cell_border %in% c("right", "body", "outside", "all"))
       ) {
     r <- '<w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>'
   }

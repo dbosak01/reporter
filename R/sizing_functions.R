@@ -685,7 +685,8 @@ get_col_widths_variable <- function(dat, ts, labels, font,
                                merge_label_row = TRUE,
                                allow_rtf_code = FALSE,
                                allow_html_code = FALSE,
-                               content_width = NULL) {
+                               content_width = NULL,
+                               styles = NULL) {
   
   dat_orig <- dat
   defs <- ts$col_defs
@@ -705,6 +706,8 @@ get_col_widths_variable <- function(dat, ts, labels, font,
   #print(nms)
   dwidths <- c()
   mwidths <- c()
+  
+  bold_multiplier <- 1.015
   
   # Set default widths based on length of data
   for (nm in nms) {
@@ -753,9 +756,137 @@ get_col_widths_variable <- function(dat, ts, labels, font,
       }
       
       # --------------------------------- #
+      #   Detect Bold Position
+      # --------------------------------- #
+      bold_idx <- rep(F, length(dat[[nm]]))
+      
+      if (!is.null(styles[[nm]])) {
+        
+        stl_lst <- styles[[nm]]
+        for (k in seq_len(length(stl_lst))) {
+          if (is.null(stl_lst[[k]]$bold)) {
+            stl_lst[[k]]$bold <- FALSE 
+          }
+          if (is.null(stl_lst[[k]]$indicator)) {
+            stl_lst[[k]]$indicator <- NA 
+          }
+          stl_lst[[k]] <- stl_lst[[k]][c("bold", "indicator")]
+        }
+        
+        stl <- do.call(rbind, lapply(stl_lst, as.data.frame))
+        
+        stl$seq2 <- seq_len(nrow(stl))
+        stl$seq1 <- ifelse(is.na(stl$indicator), 5,
+                           ifelse(stl$indicator == "blankrow", 4,
+                                  ifelse(stl$indicator == "labelrow", 3,
+                                         ifelse(stl$indicator == "datarow", 2, 1))))
+        stl <- stl[order(stl$seq1, stl$seq2),]
+        
+        apply_style <- rep(NA, length(dat[[nm]]))
+        style_order <- rep(NA, length(dat[[nm]]))
+        for (i in seq_len(nrow(stl))) {
+          ind <- stl$indicator[i]
+          
+          override_idx <- is.na(apply_style) | apply_style == FALSE | apply_style == ""
+          if (ind %in% names(dat)) {
+            apply_style[override_idx] <- dat[[ind]][override_idx]
+            
+          } else if (ind %in% "datarow") {
+            
+            if ("..blank" %in% names(dat)) {
+              apply_style[override_idx & dat$..blank == ""] <- TRUE
+            } else {
+              apply_style[override_idx] <- TRUE
+            }
+            
+          } else if (ind %in% "labelrow") {
+            apply_style[override_idx & dat$..blank == "L"] <- TRUE
+          } else if (is.na(ind)) {
+            apply_style[override_idx] <- TRUE
+          }
+          
+          style_order[is.na(style_order) & apply_style == TRUE] <- i
+        }
+        
+        for (b in seq_len(nrow(stl))) {
+          bold_flag <- stl$bold[b]
+          bold_idx[!is.na(style_order) & style_order == b] <- bold_flag
+        }
+      }
+      # if (!is.null(styles[[nm]])) {
+      #   if (!is.null(styles[[nm]]$bold)){
+      #     if (any(styles[[nm]]$bold) == TRUE) {
+      #       
+      #       # Locate the bolding position
+      #       # if (is.null(styles[[nm]]$indicator)) {
+      #       #   
+      #       #   bold_idx <- rep(T, length(dat[[nm]]))
+      #       #   
+      #       # } else if (styles[[nm]]$indicator == "labelrow") {
+      #       #   
+      #       #   bold_idx[dat$..blank == "L"] <- TRUE
+      #       #   
+      #       # } else if (styles[[nm]]$indicator == "datarow") {
+      #       #   
+      #       #   if ("..blank" %in% names(dat)) {
+      #       #     bold_idx[dat$..blank == ""] <- TRUE
+      #       #   } else {
+      #       #     bold_idx <- rep(T, length(dat[[nm]]))
+      #       #   }
+      #       #   
+      #       # } else if (styles[[nm]]$indicator %in% names(dat)) {
+      #       #   
+      #       #   ind_var <- styles[[nm]]$indicator
+      #       #   bold_idx[dat[[ind_var]] == TRUE & !is.na(dat[[ind_var]])] <- TRUE
+      #       #   
+      #       # }
+      #       
+      #       # Locate the bold position
+      #       if (is.null(styles[[nm]]$indicator)) {
+      #         
+      #         bold_idx <- rep(T, length(dat[[nm]]))
+      #         
+      #       } else {
+      #         apply_style <- rep(NA, length(dat[[nm]]))
+      #         style_order <- rep(NA, length(dat[[nm]]))
+      #         
+      #         for (i in seq_len(length(styles[[nm]]$indicator))) {
+      #           ind <- styles[[nm]]$indicator[i]
+      # 
+      #           if (ind %in% names(dat)) {
+      #             apply_style[is.na(apply_style) | apply_style == FALSE] <- dat[[ind]][is.na(apply_style) | apply_style == FALSE]
+      #             
+      #           } else if (ind == "datarow") {
+      #             
+      #             if ("..blank" %in% names(dat)) {
+      #               apply_style[is.na(apply_style) & dat$..blank == ""] <- TRUE
+      #             } else {
+      #               apply_style[is.na(apply_style)] <- TRUE
+      #             }
+      #             
+      #           } else if (ind == "labelrow") {
+      #             apply_style[is.na(apply_style) & dat$..blank == "L"] <- TRUE
+      #           }
+      #           
+      #           style_order[is.na(style_order) & apply_style == TRUE] <- i
+      #         }
+      #         
+      #         for (i in seq_len(length(styles[[nm]]$bold))) {
+      #           bold_flag <- styles[[nm]]$bold[i]
+      #           bold_idx[!is.na(style_order) & style_order == i] <- bold_flag
+      #         }
+      #         
+      #       }
+      #     }
+      #   }
+      # }
+      
+      # --------------------------------- #
       #   Maximum width of a column
       # --------------------------------- #
-      w_each <-  get_text_width(dat[[nm]], units=uom, font=font, font_size = font_size)
+      w_each <- rep(NA, length(dat[[nm]]))
+      w_each[!bold_idx] <-  get_text_width(dat[[nm]][!bold_idx], units=uom, font=font, font_size = font_size)
+      w_each[bold_idx] <- get_text_width(dat[[nm]][bold_idx], units=uom, font=font, font_size = font_size, multiplier = bold_multiplier)
 
       # Add indention width
       if (!is.null(defs[[nm]]$indent)) {
@@ -786,8 +917,23 @@ get_col_widths_variable <- function(dat, ts, labels, font,
         stub_var <- ts$stub$vars
         for (v in stub_var) {
           idx <- dat$..stub_var == v & !is.na(dat$stub) & blank_idx == F
-          sd <- stri_split(as.character(dat[[nm]][idx]), regex=" |\n|\r|\t", simplify = TRUE)
-          mwidth <- max(get_text_width(as.character(sd), units=uom, font=font, font_size = font_size))
+          
+          idx_non_bold <- idx & !bold_idx
+          idx_bold <- idx & bold_idx
+          
+          mwidth_non_bold <- 0
+          if (any(idx_non_bold)) {
+            sd_non_bold <- stri_split(as.character(dat[[nm]][idx_non_bold]), regex=" |\n|\r|\t", simplify = TRUE)
+            mwidth_non_bold <- max(get_text_width(as.character(sd_non_bold), units=uom, font=font, font_size = font_size))
+          }
+          
+          mwidth_bold <- 0
+          if (any(idx_bold)) {
+            sd_bold <- stri_split(as.character(dat[[nm]][idx_bold]), regex=" |\n|\r|\t", simplify = TRUE)
+            mwidth_bold <- max(get_text_width(as.character(sd_bold), units=uom, font=font, font_size = font_size, multiplier = bold_multiplier))
+          }
+          
+          mwidth <- max(mwidth_non_bold, mwidth_bold)
           
           if (!is.null(defs[[v]]$indent)) {
             mwidth <- mwidth + defs[[v]]$indent
@@ -796,11 +942,22 @@ get_col_widths_variable <- function(dat, ts, labels, font,
           mwidths[[nm]] <- max(mwidths[[nm]], mwidth)
         }
       } else {
-        sd <- stri_split(as.character(dat[[nm]]), regex=" |\n|\r|\t", simplify = TRUE)
-
-        # Would prefer to not calculate this again.  w and mwidths seem redundant.
-        mwidths[[nm]]  <- max(get_text_width(as.character(sd), units=uom,
-                              font=font, font_size = font_size))
+        
+        mwidth_non_bold <- 0
+        if (any(!bold_idx)) {
+          sd_non_bold <- stri_split(as.character(dat[[nm]][!bold_idx]), regex=" |\n|\r|\t", simplify = TRUE)
+          mwidth_non_bold  <- max(get_text_width(as.character(sd_non_bold), units=uom,
+                                                 font=font, font_size = font_size))
+        }
+        
+        mwidth_bold <- 0
+        if (any(bold_idx)) {
+          sd_bold <- stri_split(as.character(dat[[nm]][bold_idx]), regex=" |\n|\r|\t", simplify = TRUE)
+          mwidth_bold  <- max(get_text_width(as.character(sd_bold), units=uom,
+                                             font=font, font_size = font_size, multiplier = bold_multiplier))
+        }
+        
+        mwidths[[nm]] <- max(mwidth_non_bold, mwidth_bold)
         
         if (!is.null(defs[[nm]]$indent)) {
           mwidths[[nm]] <- mwidths[[nm]] + defs[[nm]]$indent

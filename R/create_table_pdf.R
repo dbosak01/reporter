@@ -217,7 +217,8 @@ create_table_pages_pdf <- function(rs, cntnt, lpg_rows) {
   widths_uom <- get_col_widths_variable(fdat, ts, labels, 
                                         rs$font, rs$font_size, rs$units, 
                                         rs$gutter_width,
-                                        content_width = rs$content_size[["width"]]) 
+                                        content_width = rs$content_size[["width"]],
+                                        styles = styles) 
   # print("Widths UOM")
   # print(widths_uom)
   
@@ -1238,13 +1239,6 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   brdrs <- strip_borders(tbrdrs)
   if (all(tbrdrs == "body"))
     brdrs <- c("top", "bottom", "left", "right")
-
-  # Get line height.  Don't want to leave editor default.
-  if (any(brdrs %in% c("all", "inside"))) {
-    rh <- rs$row_height + bh
-  } else {
-    rh <- rs$row_height
-  } 
   
   # Sum up widths 
   width <- sum(wdths, na.rm = TRUE)
@@ -1282,154 +1276,27 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   pdf(NULL)
   par(family = get_font_family(rs$font), ps = fs)
   
+  if (any(brdrs %in% c("all", "inside"))) {
+    rh <- rs$row_height + bh
+  } else {
+    rh <- rs$row_height
+  }
+  
   # Loop for rows
+  text_ret <- list()
+  borders_ret <- list()
+  cell_color_ret <- list()
   for(i in seq_len(nrow(t))) {
     
-    yline <- rline
-    mxrw <- yline
-    cnt <- cnt + 1
-  
-    # Loop for columns 
-    for(j in nms) {
-      
-      # Seems like this should be done already
-      # Need to get widths from split_cells
-      if (all(class(tbl[i, j]) != "character")) {
-        vl <- as.character(tbl[i, j])
-      } else {
-        vl <- tbl[i, j]
-      } 
-      
-      if (flgs[i] %in% c("B", "A", "L")) {
-        
-        # Strip out line feeds for label rows
-        #vl <- gsub("\n", " ", vl, fixed = TRUE)
-        
-        #browser()
-        # Recalculate based on total width of table
-        #stmp <- split_string_text(vl, sum(wdths), rs$units)
-        
-        #tmp <- stmp$text
-        
-        tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
-        
-      } else {
-      
-        tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
-      }
-        
-      
-      if (j == nms[1]) {
-        lb <- tlb
-        rb <- lb + wdths[j]
-      } else {
-        lb <- rb
-        rb <- lb + wdths[j]
-      }
-      
-      # If value is empty or blank
-      if (length(tmp) == 0) {
-        yline <- yline + rh
-      } else if (length(trimws(tmp)) == 0) {
-        yline <- yline + rh
-      } else {
-        
-        stl <- get_cell_styles(j, styles, flgs, i, tbl)
-        
-        bflg <- FALSE
-        if ("bold" %in% stl) {
-          bflg <- TRUE 
-        }
-      
-        # Loop for cell wraps
-        for (ln in seq_len(length(tmp))) {
-          lb_cell <- lb
-          # Indenting with lb
-          if (flgs[i] == "L" & any(grepl("..break_label", names(tbl)))) {
-            if (!is.na(tbl$..break_occur[i])) {
-              cur_break_label_col <- break_label_col[as.numeric(tbl$..break_occur[i])]
-              if (!is.null(defs[[cur_break_label_col]]$indent)) {
-                lb_cell <- lb_cell + defs[[cur_break_label_col]]$indent
-              }
-            }
-            width_cell <- width
-          } else if (!is.null(defs[[j]]$indent)) {
-            lb_cell <- lb_cell + defs[[j]]$indent
-            width_cell <- spwidths[[i]][[j]][ln]
-          } else if (j == "stub" & !is.null(ts$stub)) {
-            stub_var <- tbl$..stub_var[i]
-            if (!is.null(defs[[stub_var]]$indent)) {
-              lb_cell <- lb_cell + defs[[stub_var]]$indent
-            }
-            width_cell <- spwidths[[i]][[j]][ln]
-          } else {
-            width_cell <- spwidths[[i]][[j]][ln]
-          }
-          
-          ret[[length(ret) + 1]] <- page_text(tmp[ln], fs, 
-                                              bold = bflg,
-                                              xpos = get_points(lb_cell, 
-                                                                rb,
-                                                                width_cell,
-                                                                units = unts,
-                                                                align = algns[j]),
-                                              ypos = yline)
-          yline <- yline + rh
-        }
-      }
-      
-      if (yline > mxrw)
-        mxrw <- yline
-      
-      yline <- rline
-      
-    }
-    
+    # --------------------------------------------------------------------- #
+    #                Determine the row height                               #
+    #                  - Detect Group Border                                #
+    #                  - Detect Cell Border                                 #
+    # --------------------------------------------------------------------- #
 
-    # Loop for columns 
-    for(j in nms) {
-      
-      # Applies inside vertical borders
-      if (any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] 
-          & !blnks[i] %in% c("B", "A", "L")) {
-        
-        if (j == nms[1]) {
-          lb <- tlb
-          rb <- lb + wdths[j]
-        } else {
-          lb <- rb
-          rb <- lb + wdths[j]
-        }
-        
-        if (i == 1) { 
-          
-          if (is.null(frb)) {
-            ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1, 
-                                               mxrw - rline + 1)
-           } else if (frb == FALSE) {
-            ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1, 
-                                               mxrw - rline + 1)
-           } else {
-             ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
-                                                  mxrw - rline + 1)
-           }
-          
-        } else if (i == nrow(t)) {
-          
-          ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
-                                               mxrw - rline + 1)
-        
-        } else {
-          
-          ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
-                                               mxrw - rline )
-          
-        }
-        
-      }
-      
-    }
-
+    # ----------------------------------------------- #
+    #             Detect Group Border                 #
+    # ----------------------------------------------- #
     group_border <- ""
     if ("..group_border" %in% names(tbl)) {
       group_border <- tbl[["..group_border"]][i]
@@ -1445,25 +1312,440 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       group_border <- ""
     }
     
+    # ----------------------------------------------- #
+    #             Detect Cell Border                  #
+    # ----------------------------------------------- #
+    cell_left_border_lst <- c()
+    cell_right_border_lst <- c()
+    cell_top_border_lst <- c()
+    cell_bottom_border_lst <- c()
+    bottom_trigger_row_lst <- rep(NA, length(nms))
+    for(k in seq_len(length(nms))) {
+      j <- nms[k]
+      
+      cell_left_border <- FALSE
+      cell_right_border <- FALSE
+      cell_top_border <- FALSE
+      cell_bottom_border <- FALSE
+      
+      # Get borders from cell_style
+      stl <- get_cell_styles(j, styles, flgs, i, tbl)
+      
+      # For right cell border
+      # - No table "all", "inside" border
+      # - For last column, no table "outside", "right" border
+      # - Current cell's right border or righter cell's left border
+      if (!any(brdrs %in% c("all", "inside")) & 
+          !(any(brdrs %in% c("outside", "right")) & (j == nms[length(nms)] | flgs[i] %in% c("B", "A", "L")))) {
+        if (!is.null(stl$borders)) {
+          if (any(stl$borders %in% c("right", "all", "outside"))) {
+            cell_right_border <- TRUE
+          }
+        }
+        
+        if (!cell_right_border & j != nms[length(nms)]) {
+          stl_righter <- get_cell_styles(nms[k+1], styles, flgs, i, tbl)
+          if (!is.null(stl_righter$borders)) {
+            if (any(stl_righter$borders %in% c("left", "all", "outside"))) {
+              cell_right_border <- TRUE
+            }
+          }
+        }
+      }
+      
+      # For left border in first column
+      if (!any(brdrs %in% c("outside", "left", "all")) & (j == nms[1] | flgs[i] %in% c("B", "A", "L"))) {
+        if (!is.null(stl$borders)) {
+          if (any(stl$borders %in% c("left", "all", "outside"))) {
+            cell_left_border <- TRUE
+          }
+        }
+      }
+      
+      # For bottom cell border
+      bottom_border_trigger <- ""
+      if (!any(brdrs %in% c("all", "inside")) & 
+          !(any(brdrs %in% c("outside", "bottom")) & (i == nrow(t))) &
+          group_border != "bottom") {
+        if (!is.null(stl$borders)) {
+          if (any(stl$borders %in% c("bottom", "all", "outside"))) {
+            cell_bottom_border <- TRUE
+            bottom_trigger_row_lst[k] <- i
+          }
+        }
+        
+        if (!cell_bottom_border & i != nrow(t)) {
+          stl_below <- get_cell_styles(j, styles, flgs, i + 1, tbl)
+          if (!is.null(stl_below$borders)) {
+            if (any(stl_below$borders %in% c("top", "all", "outside"))) {
+              cell_bottom_border <- TRUE
+              bottom_trigger_row_lst[k] <- i + 1
+            }
+          }
+        }
+      }
+      if (cell_bottom_border & k > 1) {
+        # If the border has been drawn because blank row or label row, no need to draw for other columns
+        if (cell_bottom_border_lst[1] == TRUE & flgs[i] %in% c("B", "A", "L")) {
+          cell_bottom_border <- FALSE
+        }
+      }
+      
+      # For top border in first row
+      if (!is.null(frb)) {
+        if (frb != "FALSE" & i == 1) {
+          if (!is.null(stl$borders)) {
+            if (any(stl$borders %in% c("top", "all", "outside"))) {
+              cell_top_border <- TRUE
+            }
+          }
+        }
+      }
+      
+      cell_left_border_lst <- c(cell_left_border_lst, cell_left_border)
+      cell_right_border_lst <- c(cell_right_border_lst, cell_right_border)
+      cell_top_border_lst <- c(cell_top_border_lst, cell_top_border)
+      cell_bottom_border_lst <- c(cell_bottom_border_lst, cell_bottom_border)
+    }
+    
+    rh_pre <- rh
+    pre_bh_flg <- FALSE
+    if (rh_pre > rs$row_height & i > 1) {
+      pre_bh_flg <-  TRUE
+    }
+
+    # Dynamic Row Height
+    if (any(brdrs %in% c("all", "inside"))) {
+      rh <- rs$row_height + bh
+    } else if (any(cell_top_border_lst) | any(cell_bottom_border_lst) | group_border == "bottom") {
+      rh <- rs$row_height + bh
+    } else {
+      rh <- rs$row_height
+    }
+    
+    yline <- rline
+    mxrw <- yline
+    cnt <- cnt + 1
+    
+    # Loop for columns 
+    cell_color_lst <- c()
+    for(k in seq_len(length(nms))) {
+      j <- nms[k]
+      
+      # --------------------------------------------------------------------- #
+      #                Construct PDF Texts                                    #
+      # --------------------------------------------------------------------- #
+      
+      # Seems like this should be done already
+      # Need to get widths from split_cells
+      if (all(class(tbl[i, j]) != "character")) {
+        vl <- as.character(tbl[i, j])
+      } else {
+        vl <- tbl[i, j]
+      } 
+      
+      # Get style for cell color, bold, italic, and font color
+      stl <- get_cell_styles(j, styles, flgs, i, tbl)
+      
+      if (!is.null(stl$cell_color)) {
+        cell_color_lst <- c(cell_color_lst, stl$cell_color)
+      } else {
+        cell_color_lst <- c(cell_color_lst, NA)
+      }
+      
+      if (flgs[i] %in% c("B", "A", "L")) {
+        
+        # Strip out line feeds for label rows
+        tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+        
+      } else {
+        
+        tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+      }
+      
+      
+      if (j == nms[1]) {
+        lb <- tlb
+        rb <- tlb + wdths[j]
+      } else {
+        lb <- tlb + sum(wdths[1:(k-1)])
+        rb <- tlb + sum(wdths[1:k])
+      }
+      
+      # If value is empty or blank
+      if (length(tmp) == 0) {
+        yline <- yline + rh
+      } else if (length(trimws(tmp)) == 0) {
+        yline <- yline + rh
+      } else {
+      
+        # Loop for cell wraps
+        for (ln in seq_len(length(tmp))) {
+          lb_cell <- lb
+          # Indenting with lb
+          if (flgs[i] == "L" & any(grepl("..break_label", names(tbl)))) {
+            if (!is.na(tbl$..break_occur[i])) {
+              cur_break_label_col <- break_label_col[as.numeric(tbl$..break_occur[i])]
+              if (!is.null(defs[[cur_break_label_col]]$indent)) {
+                lb_cell <- lb_cell + defs[[cur_break_label_col]]$indent
+              }
+              
+              # Get the style again according to original column
+              stl <- get_cell_styles(cur_break_label_col, styles, flgs, i, tbl)
+            }
+            width_cell <- width
+          } else if (!is.null(defs[[j]]$indent)) {
+            lb_cell <- lb_cell + defs[[j]]$indent
+            width_cell <- spwidths[[i]][[j]][ln]
+          } else if (j == "stub" & !is.null(ts$stub)) {
+            stub_var <- tbl$..stub_var[i]
+            if (!is.null(defs[[stub_var]]$indent)) {
+              lb_cell <- lb_cell + defs[[stub_var]]$indent
+            }
+            width_cell <- spwidths[[i]][[j]][ln]
+          } else {
+            width_cell <- spwidths[[i]][[j]][ln]
+          }
+          
+          text_ret[[length(text_ret) + 1]] <- page_text(tmp[ln], 
+                                                        fs, 
+                                                        bold = stl$bold,
+                                                        italics = stl$italic,
+                                                        font_color = stl$font_color,
+                                                        xpos = get_points(lb_cell, 
+                                                                          rb,
+                                                                          width_cell,
+                                                                          units = unts,
+                                                                          align = algns[j]),
+                                                        ypos = yline)
+          yline <- yline + rh
+        }
+      }
+      
+      if (yline > mxrw)
+        mxrw <- yline
+      
+      yline <- rline
+    } # end of column loop
+
+    # --------------------------------------------------------------------- #
+    # --------------------------------------------------------------------- #
+    #          Construct Cell Background & Inside Borders                   #
+    # --------------------------------------------------------------------- #
+    # --------------------------------------------------------------------- #
+    for (k in seq_len(length(nms))) {
+      j <- nms[k]
+      
+      # ---------------------------------------------- #
+      #  Prepare Cell Width, Height, Y position        #
+      # ---------------------------------------------- #
+      # Cell Width
+      if (blnks[i] %in% c("B", "A", "L")) {
+        cell_width <- (trb - tlb) * conv
+        lb <- tlb
+      } else {
+        cell_width <- wdths[j] * conv
+        if (j == nms[1]) {
+          lb <- tlb
+        } else {
+          lb <- tlb + sum(wdths[1:(k-1)])
+        }
+      }
+      
+      # Cell Height
+      length_impute <- 0
+      has_bottom_border <- any(cell_bottom_border_lst) | group_border == "bottom" | any(brdrs %in% c("all", "inside"))
+      if (!has_bottom_border & pre_bh_flg & i > 1) {
+        length_impute <- bs - 1
+      }
+      
+      length_reduce <- 0
+      if (has_bottom_border & !pre_bh_flg & i > 1) {
+        length_reduce <- bs - 1
+      }
+      
+      cell_height <- mxrw - rline
+      if (i == nrow(t)) {
+        cell_height <- mxrw - rline + 1
+      }
+      
+      cell_height <- cell_height + length_impute - length_reduce
+      
+      # X pos
+      cell_xpos <- lb * conv
+      
+      # Y pos
+      if (i == nrow(t)) {
+        cell_ypos <- (mxrw -rh + bs) + 1
+      } else if (i == 1) {
+        cell_ypos <- (mxrw -rh + bs)
+      } else {
+        cell_ypos <- (mxrw -rh + bs)
+      }
+      if (is.null(frb)) {
+        cell_ypos <- cell_ypos - 1
+      } else if (frb == FALSE) {
+        cell_ypos <- cell_ypos - 1
+      }
+      
+      # --------------------------------------------------------------------- #
+      #                Construct Cell Background                              #
+      # --------------------------------------------------------------------- #
+      if (any(!is.na(cell_color_lst))) {
+        cell_color <- cell_color_lst[k]
+        
+        if (!is.na(cell_color)) {
+          cell_color_ret[[length(cell_color_ret) + 1]] <- page_cell_color(startx = cell_xpos, 
+                                                                          starty = cell_ypos, 
+                                                                          width = cell_width, 
+                                                                          height = cell_height, 
+                                                                          cell_color = cell_color)
+        }
+      }
+      
+      # --------------------------------------------------------------------- #
+      #                Construct Inside Borders                               #
+      # --------------------------------------------------------------------- #
+      cell_left_border <- cell_left_border_lst[k]
+      cell_right_border <- cell_right_border_lst[k]
+      cell_top_border <- cell_top_border_lst[k]
+      cell_bottom_border <- cell_bottom_border_lst[k]
+      
+      # Applies inside vertical borders & cell right border
+      if ((any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] & !blnks[i] %in% c("B", "A", "L"))) {
+        
+        if (j == nms[1]) {
+          lb <- tlb
+          rb <- tlb + wdths[j]
+        } else {
+          lb <- tlb + sum(wdths[1:(k-1)])
+          rb <- tlb + sum(wdths[1:k])
+        }
+        
+        # if (i == 1) { 
+        #   
+        #   if (is.null(frb)) {
+        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1, 
+        #                                                         mxrw - rline + 1)
+        #   } else if (frb == FALSE) {
+        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1, 
+        #                                                         mxrw - rline + 1)
+        #   } else {
+        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+        #                                                         mxrw - rline + 1)
+        #   }
+        #   
+        # } else if (i == nrow(t)) {
+        #   
+        #   borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+        #                                                       mxrw - rline + 1)
+        #   
+        # } else {
+        #   
+        #   borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+        #                                                       mxrw - rline )
+        #   
+        # }
+        borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, cell_ypos - cell_height,
+                                                             cell_height)
+      }
+      
+      # Draw cell right borders
+      if (cell_right_border) {
+        
+        if (blnks[i] %in% c("B", "A", "L")) {
+          lb <- tlb
+          rb <- trb
+        } else {
+          if (j == nms[1]) {
+            lb <- tlb
+            rb <- tlb + wdths[j]
+          } else {
+            lb <- tlb + sum(wdths[1:(k-1)])
+            rb <- tlb + sum(wdths[1:k])
+          }
+        }
+        
+        borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, cell_ypos - cell_height,
+                                                             cell_height)
+      }
+      
+      # Draw Cell left border for first column
+      if (cell_left_border) {
+        
+        borders_ret[[length(borders_ret) + 1]] <- page_vline(tlb * conv, cell_ypos - cell_height,
+                                                             cell_height)
+      }
+      
+      # Draw cell bottom border
+      if (cell_bottom_border) {
+        bottom_trigger_row <- bottom_trigger_row_lst[k]
+        
+        if (blnks[bottom_trigger_row] %in% c("B", "A", "L")) {
+          bottom_border_length <- (trb - tlb) * conv
+          lb <- tlb
+        } else {
+          bottom_border_length <- wdths[j] * conv
+          if (j == nms[1]) {
+            lb <- tlb
+          } else {
+            lb <- tlb + sum(wdths[1:(k-1)])
+          }
+        }
+        
+        bottom_border_height <- 0
+        if (any(cell_bottom_border_lst) | pre_bh_flg) {
+          bottom_border_height <- bs
+        }
+        
+        if (i == 1) {
+          borders_ret[[length(borders_ret) + 1]] <- page_hline(lb * conv, (mxrw -rh + bs),
+                                                               bottom_border_length)
+        } else if (i == nrow(t)) {
+          borders_ret[[length(borders_ret) + 1]] <- page_hline(lb * conv, (mxrw -rh + bs) + 1,
+                                                              bottom_border_length)
+        } else {
+          borders_ret[[length(borders_ret) + 1]] <- page_hline(lb * conv, (mxrw -rh + bs),
+                                                              bottom_border_length)
+        }
+      }
+      
+      # Draw cell top border
+      if (cell_top_border) {
+        
+        if (blnks[i] %in% c("B", "A", "L")) {
+          top_border_length <- (trb - tlb) * conv
+          lb <- tlb
+        } else {
+          top_border_length <- wdths[j] * conv
+          if (j == nms[1]) {
+            lb <- tlb
+          } else {
+            lb <- tlb + sum(wdths[1:(k-1)])
+          }
+        }
+        
+        borders_ret[[length(borders_ret) + 1]] <- page_hline(lb * conv, cell_ypos - cell_height,
+                                                             top_border_length)
+        
+      }
+    } # end of column loop
+    
     # Applies inside horizontal borders
     if ((any(brdrs %in% c("all", "inside")) & i < nrow(t)) |
-        group_border == "bottom"
-        ) {
-    
-      ret[[length(ret) + 1]] <- page_hline(tlb * conv, mxrw -rh + bs, 
-                                           (trb - tlb) * conv)
-    
+        (group_border == "bottom" & i < nrow(t)) 
+    ) {
+      borders_ret[[length(borders_ret) + 1]] <- page_hline(tlb * conv, mxrw -rh + bs, 
+                                                          (trb - tlb) * conv)
     }
     
     rline <- mxrw
-    
-    # Add border height if the line is drawn by group border
-    if (!any(brdrs %in% c("all", "inside")) & group_border == "bottom") {
-      rline <- rline + bh
-    }
-  }
+  
+  } # end of row loop
   
   dev.off()
+  
+  ret <- c(cell_color_ret, text_ret, borders_ret)
   
   if (frb & "body" %in% tbrdrs) {
     
@@ -1474,7 +1756,7 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
     ylen <- rline - rh + rs$row_height + bs + 1
     
   } else {
-
+    
     ypos <- ystart - rs$row_height + bh - 1
     
     #ylen <- cnt * rh
@@ -1507,13 +1789,16 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       pnts <- pnts - bh 
     }
-   # pnts <- pnts + bh
+    # pnts <- pnts + bh
     
+  } else if (group_border == "bottom") {
+    ret[[length(ret) + 1]] <- page_hline(tlb * conv, ylen, 
+                                         (trb - tlb) * conv)
   }
-
+  
   # fcntr <- fcntr + 1
   # saveRDS(ret, paste0("ret", fcntr, ".rds"))
-
+  
   
   rws <- rline
   
@@ -1526,5 +1811,547 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
   
   
 }
-
-fcntr <- 0
+#' @description This function counts lines per row independently because
+#' the ..row field does not account for page wrapping.  Need number
+#' of lines on this particular page.
+#' @noRd
+# get_table_body_pdf_back <- function(rs, tbl, widths, algns, talgn, tbrdrs,
+#                                ystart = 0, spwidths = list(),
+#                                brdr_flag = FALSE, frb = FALSE, styles, ts) {
+# 
+#   border_flag <- FALSE
+# 
+#   if ("..blank" %in% names(tbl)) {
+#     flgs <- tbl$..blank
+#   } else {
+#     flgs <- NA
+#   }
+# 
+#   # Count lines per row
+#   rws <- c()
+#   cnt <- 0
+# 
+#   nms <- names(widths)
+#   nms <- nms[!is.na(nms)]
+#   nms <- nms[!is.controlv(nms)]
+#   wdths <- widths[nms]
+# 
+#   #saveRDS(spwidths, "spwidths0a.rds")
+# 
+#   if (!"..blank" %in% names(tbl)) {
+#     blnks <- rep("", nrow(tbl))
+#   } else {
+#     blnks <- tbl$..blank
+#   }
+# 
+#   # Deal with one column situation
+#   if (length(nms) == 1) {
+#     t <- as.data.frame(tbl[[nms]])
+#     names(t) <- nms
+#   } else {
+#     t <- tbl[ , nms]
+#   }
+# 
+#   conv <- rs$point_conversion
+#   unts <- rs$units
+#   bs <- rs$border_spacing
+#   bh <- rs$border_height
+#   cp <- rs$cell_padding
+# 
+#   brdrs <- strip_borders(tbrdrs)
+#   if (all(tbrdrs == "body"))
+#     brdrs <- c("top", "bottom", "left", "right")
+# 
+#   # Get line height.  Don't want to leave editor default.
+#   if (any(brdrs %in% c("all", "inside"))) {
+#     rh <- rs$row_height + bh
+#   } else {
+#     rh <- rs$row_height
+#   }
+# 
+#   # Sum up widths
+#   width <- sum(wdths, na.rm = TRUE)
+# 
+#   # Get content alignment codes
+#   if (talgn == "right") {
+#     tlb <- rs$content_size[["width"]] - width
+#     trb <- rs$content_size[["width"]]
+#   } else if (talgn %in% c("center", "centre")) {
+#     tlb <- (rs$content_size[["width"]] - width) / 2
+#     trb <- width + tlb
+#   } else {
+#     tlb <- 0
+#     trb <- width
+#   }
+# 
+#   rline <- ystart + 1
+# 
+#   ret <- c()
+#   fs <- rs$font_size
+# 
+#   defs <- ts$col_defs
+# 
+#   # For break labels, prepare the break label columns for later use
+#   break_label_col <- c()
+#   if (any(grepl("..break_label", names(tbl)))) {
+# 
+#     for (d in 1:length(defs)) {
+#       if (!is.null(defs[[d]]$break_label)){
+#         break_label_col <- c(break_label_col, defs[[d]]$var_c)
+#       }
+#     }
+#   }
+# 
+#   pdf(NULL)
+#   par(family = get_font_family(rs$font), ps = fs)
+# 
+#   # Loop for rows
+#   for(i in seq_len(nrow(t))) {
+# 
+#     yline <- rline
+#     mxrw <- yline
+#     cnt <- cnt + 1
+# 
+#     # Loop for columns
+#     for(j in nms) {
+# 
+#       # Seems like this should be done already
+#       # Need to get widths from split_cells
+#       if (all(class(tbl[i, j]) != "character")) {
+#         vl <- as.character(tbl[i, j])
+#       } else {
+#         vl <- tbl[i, j]
+#       }
+# 
+#       if (flgs[i] %in% c("B", "A", "L")) {
+# 
+#         # Strip out line feeds for label rows
+#         #vl <- gsub("\n", " ", vl, fixed = TRUE)
+# 
+#         #browser()
+#         # Recalculate based on total width of table
+#         #stmp <- split_string_text(vl, sum(wdths), rs$units)
+# 
+#         #tmp <- stmp$text
+# 
+#         tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+# 
+#       } else {
+# 
+#         tmp <- strsplit(vl, "\n", fixed = TRUE)[[1]]
+#       }
+# 
+# 
+#       if (j == nms[1]) {
+#         lb <- tlb
+#         rb <- lb + wdths[j]
+#       } else {
+#         lb <- rb
+#         rb <- lb + wdths[j]
+#       }
+# 
+#       # If value is empty or blank
+#       if (length(tmp) == 0) {
+#         yline <- yline + rh
+#       } else if (length(trimws(tmp)) == 0) {
+#         yline <- yline + rh
+#       } else {
+# 
+#         stl <- get_cell_styles(j, styles, flgs, i, tbl)
+# 
+#         # Loop for cell wraps
+#         for (ln in seq_len(length(tmp))) {
+#           lb_cell <- lb
+#           # Indenting with lb
+#           if (flgs[i] == "L" & any(grepl("..break_label", names(tbl)))) {
+#             if (!is.na(tbl$..break_occur[i])) {
+#               cur_break_label_col <- break_label_col[as.numeric(tbl$..break_occur[i])]
+#               if (!is.null(defs[[cur_break_label_col]]$indent)) {
+#                 lb_cell <- lb_cell + defs[[cur_break_label_col]]$indent
+#               }
+# 
+#               # Get the style again according to original column
+#               stl <- get_cell_styles(cur_break_label_col, styles, flgs, i, tbl)
+#             }
+#             width_cell <- width
+#           } else if (!is.null(defs[[j]]$indent)) {
+#             lb_cell <- lb_cell + defs[[j]]$indent
+#             width_cell <- spwidths[[i]][[j]][ln]
+#           } else if (j == "stub" & !is.null(ts$stub)) {
+#             stub_var <- tbl$..stub_var[i]
+#             if (!is.null(defs[[stub_var]]$indent)) {
+#               lb_cell <- lb_cell + defs[[stub_var]]$indent
+#             }
+#             width_cell <- spwidths[[i]][[j]][ln]
+#           } else {
+#             width_cell <- spwidths[[i]][[j]][ln]
+#           }
+# 
+#           bflg <- FALSE
+#           if (stl$bold) {
+#             bflg <- TRUE
+#           }
+# 
+#           ret[[length(ret) + 1]] <- page_text(tmp[ln], fs,
+#                                               bold = bflg,
+#                                               italics = stl$italic,
+#                                               xpos = get_points(lb_cell,
+#                                                                 rb,
+#                                                                 width_cell,
+#                                                                 units = unts,
+#                                                                 align = algns[j]),
+#                                               ypos = yline)
+#           yline <- yline + rh
+#         }
+#       }
+# 
+#       if (yline > mxrw)
+#         mxrw <- yline
+# 
+#       yline <- rline
+# 
+#     }
+# 
+#     # Get group border information for later use
+#     group_border <- ""
+#     if ("..group_border" %in% names(tbl)) {
+#       group_border <- tbl[["..group_border"]][i]
+#     }
+# 
+#     # Don't draw group line for first blank row
+#     if (blnks[i] %in% c("B", "A") & i == 1){
+#       group_border <- ""
+#     }
+# 
+#     # Don't draw group line for last record when table border is all, bottom, outside
+#     if (i == nrow(t) & any(brdrs %in% c("all", "outside", "bottom"))) {
+#       group_border <- ""
+#     }
+# 
+#     # Loop for columns
+#     has_any_top_border <- FALSE
+#     has_any_bottom_border <- FALSE
+#     for(k in seq_len(length(nms))) {
+#       j <- nms[k]
+# 
+#       cell_left_border <- FALSE
+#       cell_right_border <- FALSE
+#       cell_top_border <- FALSE
+#       cell_bottom_border <- FALSE
+# 
+#       # Get borders from cell_style
+#       stl <- get_cell_styles(j, styles, flgs, i, tbl)
+# 
+#       # For right cell border
+#       # - No table "all", "inside" border
+#       # - For last column, no table "outside", "right" border
+#       # - Current cell's right border or righter cell's left border
+#       if (!any(brdrs %in% c("all", "inside")) &
+#           !(any(brdrs %in% c("outside", "right")) & (j == nms[length(nms)] | flgs[i] %in% c("B", "A", "L")))) {
+#         if (!is.null(stl$borders)) {
+#           if (any(stl$borders %in% c("right", "all", "outside"))) {
+#             # print(paste0("i: ", i, "; var: ", j, "; right border")) # to be deleted
+#             cell_right_border <- TRUE
+#           }
+#         }
+# 
+#         if (!cell_right_border & j != nms[length(nms)]) {
+#           stl_righter <- get_cell_styles(nms[k+1], styles, flgs, i, tbl)
+#           if (!is.null(stl_righter$borders)) {
+#             if (any(stl_righter$borders %in% c("left", "all", "outside"))) {
+#               # print(paste0("i: ", i, "; var: ", nms[k+1], "; left border")) # to be deleted
+#               cell_right_border <- TRUE
+#             }
+#           }
+#         }
+#       }
+# 
+#       # For left border in first column
+#       if (!any(brdrs %in% c("outside", "left", "all")) & (j == nms[1] | flgs[i] %in% c("B", "A", "L"))) {
+#         if (!is.null(stl$borders)) {
+#           if (any(stl$borders %in% c("left", "all", "outside"))) {
+#             cell_left_border <- TRUE
+#           }
+#         }
+#       }
+# 
+#       # For bottom cell border
+#       bottom_border_trigger <- ""
+#       if (!any(brdrs %in% c("all", "inside")) &
+#           !(any(brdrs %in% c("outside", "bottom")) & (i == nrow(t))) &
+#           group_border != "bottom") {
+#         if (!is.null(stl$borders)) {
+#           if (any(stl$borders %in% c("bottom", "all", "outside"))) {
+#             cell_bottom_border <- TRUE
+#             bottom_trigger_row <- i
+#           }
+#         }
+# 
+#         if (!cell_bottom_border & i != nrow(t)) {
+#           stl_below <- get_cell_styles(j, styles, flgs, i + 1, tbl)
+#           if (!is.null(stl_below$borders)) {
+#             if (any(stl_below$borders %in% c("top", "all", "outside"))) {
+#               # print(paste0("i: ", i, "; var: ", nms[k+1], "; top border")) # to be deleted
+#               cell_bottom_border <- TRUE
+#               bottom_trigger_row <- i + 1
+#             }
+#           }
+#         }
+#       }
+# 
+#       # For top border in first row
+#       if (!is.null(frb)) {
+#         if (frb != "FALSE" & i == 1) {
+#           if (!is.null(stl$borders)) {
+#             if (any(stl$borders %in% c("top", "all", "outside"))) {
+#               cell_top_border <- TRUE
+#             }
+#           }
+#         }
+#       }
+# 
+#       # Applies inside vertical borders & cell right border
+#       if ((any(brdrs %in% c("all", "inside")) & j != nms[length(nms)] & !blnks[i] %in% c("B", "A", "L"))) {
+# 
+#         if (j == nms[1]) {
+#           lb <- tlb
+#           rb <- lb + wdths[j]
+#         } else {
+#           lb <- rb
+#           rb <- lb + wdths[j]
+#         }
+# 
+#         if (i == 1) {
+# 
+#           if (is.null(frb)) {
+#             ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1,
+#                                                mxrw - rline + 1)
+#            } else if (frb == FALSE) {
+#             ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1,
+#                                                mxrw - rline + 1)
+#            } else {
+#              ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
+#                                                   mxrw - rline + 1)
+#            }
+# 
+#         } else if (i == nrow(t)) {
+# 
+#           ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
+#                                                mxrw - rline + 1)
+# 
+#         } else {
+# 
+#           ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
+#                                                mxrw - rline )
+# 
+#         }
+#       }
+# 
+#       # Draw cell right borders
+#       if (cell_right_border) {
+# 
+#         if (blnks[i] %in% c("B", "A", "L")) {
+#           lb <- tlb
+#           rb <- trb
+#         } else {
+#           if (j == nms[1]) {
+#             lb <- tlb
+#             rb <- tlb + wdths[j]
+#           } else {
+#             lb <- tlb + sum(wdths[1:(k-1)])
+#             rb <- tlb + sum(wdths[1:k])
+#           }
+#         }
+# 
+#         if (i == 1) {
+# 
+#           if (is.null(frb)) {
+#             ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1,
+#                                                  mxrw - rline + 1)
+#           } else if (frb == FALSE) {
+#             ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1,
+#                                                  mxrw - rline + 1)
+#           } else {
+#             ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
+#                                                  mxrw - rline + 1)
+#           }
+# 
+#         } else if (i == nrow(t)) {
+# 
+#           ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
+#                                                mxrw - rline + 1)
+# 
+#         } else {
+# 
+#           ret[[length(ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
+#                                                mxrw - rline )
+# 
+#         }
+#       }
+# 
+#       # Draw Cell left border for first column
+#       if (cell_left_border) {
+# 
+#         if (i == 1) {
+# 
+#           if (is.null(frb)) {
+#             ret[[length(ret) + 1]] <- page_vline(tlb * conv, (rline + bs) - rh - 1,
+#                                                  mxrw - rline + 1)
+#           } else if (frb == FALSE) {
+#             ret[[length(ret) + 1]] <- page_vline(tlb * conv, (rline + bs) - rh - 1,
+#                                                  mxrw - rline + 1)
+#           } else {
+#             ret[[length(ret) + 1]] <- page_vline(tlb * conv, (rline + bs) - rh,
+#                                                  mxrw - rline + 1)
+#           }
+# 
+#         } else if (i == nrow(t)) {
+# 
+#           ret[[length(ret) + 1]] <- page_vline(tlb * conv, (rline + bs) - rh,
+#                                                mxrw - rline + 1)
+# 
+#         } else {
+# 
+#           ret[[length(ret) + 1]] <- page_vline(tlb * conv, (rline + bs) - rh,
+#                                                mxrw - rline )
+# 
+#         }
+#       }
+# 
+#       # Draw cell bottom border
+#       if (cell_bottom_border) {
+#         has_any_bottom_border <- TRUE
+# 
+#         if (blnks[bottom_trigger_row] %in% c("B", "A", "L")) {
+#           bottom_border_length <- (trb - tlb) * conv
+#           lb <- tlb
+#         } else {
+#           bottom_border_length <- wdths[j] * conv
+#           if (j == nms[1]) {
+#             lb <- tlb
+#           } else {
+#             lb <- tlb + sum(wdths[1:(k-1)])
+#           }
+#         }
+# 
+#         if (bottom_trigger_row == nrow(t)) {
+#           ret[[length(ret) + 1]] <- page_hline(lb * conv, (rline + bs) + 1,
+#                                                bottom_border_length)
+#         } else {
+#           ret[[length(ret) + 1]] <- page_hline(lb * conv, (rline + bs),
+#                                                bottom_border_length)
+#         }
+#       }
+# 
+#       # Draw cell top border
+#       if (cell_top_border) {
+#         has_any_top_border <- TRUE
+# 
+#         if (blnks[i] %in% c("B", "A", "L")) {
+#           top_border_length <- (trb - tlb) * conv
+#           lb <- tlb
+#         } else {
+#           top_border_length <- wdths[j] * conv
+#           if (j == nms[1]) {
+#             lb <- tlb
+#           } else {
+#             lb <- tlb + sum(wdths[1:(k-1)])
+#           }
+#         }
+# 
+#         ret[[length(ret) + 1]] <- page_hline(lb * conv, (rline + bs) - rh,
+#                                              top_border_length)
+#       }
+# 
+#     } # end of column loop
+# 
+#     # Applies inside horizontal borders
+#     if ((any(brdrs %in% c("all", "inside")) & i < nrow(t)) |
+#         (group_border == "bottom" & i < nrow(t))
+#         ) {
+#       ret[[length(ret) + 1]] <- page_hline(tlb * conv, mxrw -rh + bs,
+#                                            (trb - tlb) * conv)
+#     }
+# 
+#     rline <- mxrw
+# 
+#     # Add border height if the line is drawn by group border
+#     # Only add border height inside the table. Like outside border doesn't add additional height
+#     # Group border should apply
+#     if (!any(brdrs %in% c("all", "inside")) & group_border == "bottom" & i < nrow(t)) {
+#       # rline <- rline + bh
+#     } else if (has_any_bottom_border & i < nrow(t)) {
+#       # rline <- rline + bh
+#     }
+# 
+#     # if (has_any_top_border) {
+#     #   rline <- rline + bh
+#     # }
+#   } # end of row loop
+# 
+#   dev.off()
+# 
+#   if (frb & "body" %in% tbrdrs) {
+# 
+# 
+#     ypos <- ystart - rs$row_height - rs$row_height + bh
+# 
+#     #ylen <- cnt * rh
+#     ylen <- rline - rh + rs$row_height + bs + 1
+# 
+#   } else {
+# 
+#     ypos <- ystart - rs$row_height + bh - 1
+# 
+#     #ylen <- cnt * rh
+#     ylen <- rline - rh + bs + 1
+#   }
+# 
+#   if (any(brdrs %in% c("all", "left", "outside"))) {
+# 
+#     ret[[length(ret) + 1]] <- page_vline(tlb * conv, ypos, ylen - ypos)
+#   }
+#   if (any(brdrs %in% c("all", "right", "outside"))) {
+# 
+#     ret[[length(ret) + 1]] <- page_vline(trb * conv, ypos, ylen - ypos)
+#   }
+# 
+#   # pnts <- cnt * rh
+#   pnts <- ylen - ystart + rh
+# 
+#   if (any(brdrs %in% c("all", "bottom", "outside"))) {
+# 
+# 
+#     # ret[[length(ret) + 1]] <- page_hline(tlb * conv, ypos + ylen,
+#     #                                      (trb - tlb) * conv)
+# 
+#     ret[[length(ret) + 1]] <- page_hline(tlb * conv, ylen,
+#                                          (trb - tlb) * conv)
+# 
+#     border_flag <- TRUE
+#     if (any(brdrs %in% c("all"))) {
+# 
+#       pnts <- pnts - bh
+#     }
+#    # pnts <- pnts + bh
+# 
+#   } else if (group_border == "bottom") {
+#     ret[[length(ret) + 1]] <- page_hline(tlb * conv, ylen,
+#                                          (trb - tlb) * conv)
+#   }
+# 
+#   # fcntr <- fcntr + 1
+#   # saveRDS(ret, paste0("ret", fcntr, ".rds"))
+# 
+# 
+#   rws <- rline
+# 
+#   res <- list(pdf = ret,
+#               lines = pnts / rs$row_height,
+#               points = pnts ,
+#               border_flag = border_flag)
+# 
+#   return(res)
+# 
+# 
+# }

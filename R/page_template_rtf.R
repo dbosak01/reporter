@@ -1595,25 +1595,25 @@ get_cell_borders <- function(row, col, nrow, ncol, brdrs, flag = "",
     
     # Cell border is border indicator from group_line or cell_style
     if ((row == 1 & any(brdrs %in% c("outside", "top"))) |
-        any(cell_border %in% c("outside", "top"))
+        any(cell_border %in% c("outside", "top", "all"))
         ) {
       t <- "\\clbrdrt\\brdrs"
     }
     
     if ((row == nrow & any(brdrs %in% c("bottom", "outside"))) |
-        any(cell_border %in% c("bottom", "outside"))
+        any(cell_border %in% c("bottom", "outside", "all"))
         ) {
       b <- "\\clbrdrb\\brdrs"
     }
     
     if ((col == 1 & any(brdrs %in% c("outside", "left"))) |
-        any(cell_border %in% c("outside", "left"))
+        any(cell_border %in% c("outside", "left", "all"))
         ) {
       l <- "\\clbrdrl\\brdrs"
     }
     
     if ((col == ncol & any(brdrs %in% c("outside", "right"))) |
-        any(cell_border %in% c("outside", "right"))
+        any(cell_border %in% c("outside", "right", "all"))
         ) {
       r <- "\\clbrdrr\\brdrs"
     }

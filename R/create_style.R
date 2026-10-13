@@ -671,6 +671,93 @@ get_style <- function(rs, style_name) {
   return(ret)
 }
 
+# Create a list of style specs for all columns that have styles assigned.
+get_styles <- function(ts) {
+  
+  # ret <- list()
+  # if (!is.null(ts$col_defs)) {
+  #   for (def in ts$col_defs) {
+  #     
+  #     if (!is.null(def$style)) {
+  #       if (!is.null(def$style$indicator)) {
+  #         for (i in seq_len(length(def$style$indicator))) {
+  #           ind <- def$style$indicator[i]
+  #           icol <- ts$col_defs[[ind]] 
+  #           if (!is.null(icol)) {
+  #             if (icol$visible == FALSE) {
+  #               def$style$indicator[i] <- paste0("..x.", ind)
+  #             }
+  #           }
+  #         }
+  #       }
+  #       ret[[def$var_c]] <- def$style 
+  #     }
+  #     if (!is.null(ts$stub$style)) {
+  #       if (!"stub" %in% names(styles)) { 
+  #         if (!is.null(ts$stub$style$indicator)) {
+  #           for (i in seq_len(length(ts$stub$style$indicator))) {
+  #             ind <- ts$stub$style$indicator[i]
+  #             icol <- ts$col_defs[[ind]] 
+  #             if (!is.null(icol)) {
+  #               if (icol$visible == FALSE) {
+  #                 ts$stub$style$indicator[i] <- paste0("..x.", ind)
+  #               }
+  #             }
+  #           }
+  #         }
+  #         
+  #         ret[["stub"]] <- ts$stub$style
+  #       }
+  #     }
+  #   }
+  # } 
+  # 
+  # return(ret)
+  
+  ret <- list()
+  
+  # Column Style
+  if (!is.null(ts$col_defs)) {
+    for (def in ts$col_defs) {
+      
+      if (!is.null(def$style)) {
+        for (i in seq_len(length(def$style))) {
+          if (!is.null(def$style[[i]]$indicator)) {
+            ind <- def$style[[i]]$indicator
+            icol <- ts$col_defs[[ind]] 
+            if (!is.null(icol)) {
+              if (icol$visible == FALSE) {
+                def$style[[i]]$indicator <- paste0("..x.", ind)
+              }
+            }
+          }
+        }
+        ret[[def$var_c]] <- def$style 
+      }
+    }
+  } 
+  
+  # Stub Style
+  if (!is.null(ts$stub$style)) {
+    if (!"stub" %in% names(styles)) {
+      for (i in seq_len(length(ts$stub$style))) {
+        if (!is.null(ts$stub$style[[i]]$indicator)) {
+          ind <- ts$stub$style[[i]]$indicator
+          icol <- ts$col_defs[[ind]] 
+          if (!is.null(icol)) {
+            if (icol$visible == FALSE) {
+              ts$stub$style[[i]]$indicator <- paste0("..x.", ind)
+            }
+          }
+        }
+      }
+      ret[["stub"]] <- ts$stub$style
+    }
+  }
+  
+  return(ret)
+}
+
 # A function to convert a style setting to the appropriate css.
 # Returns an empty string if the style setting is not found.
 #' @noRd
@@ -798,10 +885,19 @@ get_style_html <- function(rs, style_name, default = NULL) {
 #' meaning to apply the style to all rows.
 #' @param bold Whether to bold the text in the cell.  Valid values are TRUE and
 #' FALSE.  The default is FALSE.
+#' @param italic Whether to italic the text in the cell.  Valid values are TRUE and
+#' FALSE.  The default is FALSE.
+#' @param borders Whether and where to place borders to a cell. Valid values are 'top',
+#' 'bottom', 'left', 'right', 'all', and 'outside'.  Default is NULL.  The border 
+#' specifications only apply to RTF, HTML, PDF, and DOCX reports. 
+#' @param font_color A character value to indicator the font color for the cell.
+#' For RTF, the available colors are Black, Blue, Cyan, Lime Green, Magenta, Red,
+#' Yellow, White, Navy Blue, Teal, Green, Purple, Maroon, Olive, Gray, Light Gray.
+#' @param cell_color A character value to indicator the background color for the cell.
 #' @examples 
 #' library(reporter)
 #' library(magrittr)
-#'
+#' # Example 1 - Single cell style
 #' # Create temporary path
 #' tmp <- file.path(tempdir(), "table1.rtf")
 #' 
@@ -833,8 +929,97 @@ get_style_html <- function(rs, style_name, default = NULL) {
 #' 
 #' # View report
 #' # file.show(tmp)
+#' 
+#' # Example 2 - Multiple cell style
+#' fp <- file.path(tempdir(), "table2.rtf")
+#' 
+#' df <- read.table(header = TRUE, text = '
+#'       var      label                          A             B
+#'       "ampg"   "N and more and more"          "19"          "13"
+#'       "ampg"   "Mean and more and more"       "18.8 (6.5)"  "22.0 (4.9)"
+#'       "ampg"   "Median and more and more"     "16.4"        "21.4"
+#'       "ampg"   "Q1 - Q3 and more and more"    "15.1 - 21.2" "19.2 - 22.8"
+#'       "ampg"   "Range and more and more"      "10.4 - 33.9" "14.7 - 32.4"
+#'       "cyl"    "8 Cylinder and more and more" "10 ( 52.6%)" "4 ( 30.8%)"
+#'       "cyl"    "6 Cylinder and more and more" "4 ( 21.1%)"  "3 ( 23.1%)"
+#'       "cyl"    "4 Cylinder and more and more" "5 ( 26.3%)"  "6 ( 46.2%)"')
+#' 
+#' df$cylflg <- ifelse(df$var == "cyl", TRUE, FALSE)
+#' df$ampgflg <- ifelse(df$var == "ampg", TRUE, FALSE)
+#' 
+#' 
+#' # Create table
+#' tbl <- create_table(df, first_row_blank = TRUE) %>%
+#'   stub(c("var", "label"), width = 2.06, 
+#'        style = list(
+#'          cell_style(bold = TRUE, 
+#'                     italic = TRUE,
+#'                     cell_color = "white",
+#'                     borders = "all",
+#'                     indicator = "labelrow"),
+#'          cell_style(bold = FALSE, 
+#'                     italic = FALSE,
+#'                     cell_color = "cyan",
+#'                     indicator = "blankrow"),
+#'          cell_style(bold = FALSE, 
+#'                     italic = FALSE,
+#'                     cell_color = "yellow",
+#'                     indicator = NULL)
+#'        )) %>%
+#'   
+#'   define(var, blank_after = TRUE, label_row = TRUE,
+#'          format = c(ampg = "Miles Per Gallon and more bold text to be added to test function",
+#'                     cyl = "Cylinders")) %>%
+#'   
+#'   define(label, indent = .25) %>%
+#'   
+#'   define(A, label = "Group A", align = "center", n = 19,
+#'          style = list(
+#'            cell_style(italic = TRUE,
+#'                       bold = TRUE,
+#'                       font_color = "blue",
+#'                       cell_color = "Light Gray",
+#'                       borders = c("top", "bottom"),
+#'                       indicator = "ampgflg"),
+#'            cell_style(italic = FALSE,
+#'                       bold = FALSE,
+#'                       font_color = "white",
+#'                       cell_color = "olive",
+#'                       borders = "all",
+#'                       indicator = "cylflg")
+#'          )) %>%
+#'   
+#'   define(B, label = "Group B", align = "center", n = 13,
+#'          style = list(
+#'            cell_style(bold = FALSE,
+#'                       font_color = "red",
+#'                       borders = "left",
+#'                       indicator = "datarow"),
+#'            cell_style(bold = TRUE,
+#'                       font_color = "blue",
+#'                       borders = "left",
+#'                       indicator = "ampgflg")
+#'          )) %>%
+#'   define(cylflg, visible = FALSE)
+#' 
+#' 
+#' # Create report and add content
+#' rpt <- create_report(fp, orientation = "portrait", output_type = "RTF",
+#'                      font = "Times") %>%
+#'   page_header(left = "Client: Motor Trend", right = "Study: Cars") %>%
+#'   titles("Table 1.0", "Various cell styles") %>%
+#'   add_content(tbl) %>%
+#'   footnotes("* Motor Trend, 1974") %>%
+#'   page_footer(left = "Left",
+#'               center = "Confidential",
+#'               right = "Page [pg] of [tpg]")
+#' 
+#' res <- write_report(rpt)
+#' # View report
+#  # file.show(fp)
 #' @export
-cell_style <- function(indicator = NULL, bold = FALSE) {
+cell_style <- function(indicator = NULL, bold = FALSE, italic = FALSE,
+                       font_color = NULL, cell_color = NULL, borders = NULL) {
   
   ret <- structure(list(), class = c("cell_style", "list"))
   
@@ -842,12 +1027,31 @@ cell_style <- function(indicator = NULL, bold = FALSE) {
   # Deal with single value unquoted parameter values
   oindicator <- deparse(substitute(indicator, env = environment()))
   indicator  <- tryCatch({if (typeof(indicator) %in% c("character", "NULL")) indicator else oindicator},
-                 error = function(cond) {oindicator})
+                         error = function(cond) {oindicator})
   
+  # Error detection to be added
+  if (!is.null(bold)) {
+    if (!is.logical(bold)) {
+      stop("`bold` should be TRUE or FALSE.")
+    }
+  }
+  if (!is.null(italic)) {
+    if (!is.logical(italic)) {
+      stop("`italic` should be TRUE or FALSE.")
+    }
+  }
+  if (!is.null(borders)) {
+    if (any(!borders %in% c("top", "bottom", "left", "right", "outside", "all"))) {
+      stop("`borders` should be 'top', 'bottom', 'left', 'right', 'outside', or 'all'.")
+    }
+  }
   
   ret$indicator <- indicator
   ret$bold <- bold
-  
+  ret$italic <- italic
+  ret$font_color <- font_color
+  ret$cell_color <- cell_color
+  ret$borders <- borders
   
   return(ret)
   
@@ -881,44 +1085,298 @@ get_cell_style <- function(colnm, styles) {
 
 
 # Return vector of strings saying which styles to apply to this cell
+# get_cell_styles <- function(colnm, styles, flgs, rw, tbl) {
+#   
+#   ret <- ""
+#   
+#   style_lst <- list(
+#     bold = FALSE,
+#     italic = FALSE,
+#     font_color = NULL,
+#     cell_color = NULL
+#   )
+#   
+#   if (has_cell_style(colnm, styles)) {
+#     stl <- get_cell_style(colnm, styles)
+#     
+#     for (i in seq_len(length(style_lst))) {
+#       style_name <- names(style_lst)[i]
+#       
+#       if (!is.null(stl[[style_name]])) {
+#         if (stl[[style_name]] == TRUE) {
+#           flg <- TRUE
+#           if (!is.null(stl$indicator)) {
+#             if ("datarow" %in% stl$indicator && flgs[rw] %in% c("B", "L", "A")) {
+#               flg <- FALSE
+#             } else if ("labelrow" %in% stl$indicator && !flgs[rw] %in% "L") {
+#               flg <- FALSE
+#             } else if ("blankrow" %in% stl$indicator && !flgs[rw] %in% c("B", "A")) {
+#               flg <- FALSE
+#             } else if (stl$indicator %in% names(tbl)) {
+#               if (!is.null(tbl[[rw, stl$indicator]])) {
+#                 flg <- FALSE 
+#                 if (!is.na(tbl[[rw, stl$indicator]])) {
+#                   if (tbl[[rw, stl$indicator]] == TRUE) {
+#                     flg <- TRUE   
+#                   }
+#                 }
+#               }
+#             }
+#           }
+#           # For TRUE/FALSE flag, output the format like "bold", "italic"
+#           style_lst[[style_name]] <- flg
+#         }
+#         
+#         if (style_name %in% c("font_color", "cell_color")) {
+#           flg <- stl[[style_name]]
+#           if (!is.null(stl$indicator)) {
+#             if ("datarow" %in% stl$indicator && flgs[rw] %in% c("B", "L", "A")) {
+#               flg <- NULL
+#             } else if ("labelrow" %in% stl$indicator && !flgs[rw] %in% "L") {
+#               flg <- NULL
+#             } else if ("blankrow" %in% stl$indicator && !flgs[rw] %in% c("B", "A")) {
+#               flg <- NULL
+#             } else if (stl$indicator %in% names(tbl)) {
+#               if (!is.null(tbl[[rw, stl$indicator]])) {
+#                 flg <- NULL 
+#                 if (!is.na(tbl[[rw, stl$indicator]])) {
+#                   if (tbl[[rw, stl$indicator]] == TRUE) {
+#                     flg <- stl[[style_name]]   
+#                   }
+#                 }
+#               }
+#             }
+#           }
+#           # For color, output the color name like "red"
+#           style_lst[[style_name]] <- flg
+#         }
+#       }
+#     }
+#   }
+#   
+#   return(style_lst)
+#   
+# }
+
+
+# Return vector of strings saying which styles to apply to this cell
+# get_cell_styles <- function(colnm, styles, flgs, rw, tbl) {
+#   
+#   ret_lst <- list(
+#     bold = FALSE,
+#     italic = FALSE,
+#     font_color = NULL,
+#     cell_color = NULL,
+#     borders = NULL
+#   )
+#   
+#   if (has_cell_style(colnm, styles)) {
+#     stl <- get_cell_style(colnm, styles)
+#     
+#     # If indicator is null, apply to every cell
+#     if (is.null(stl$indicator)) {
+#       for (s in names(ret_lst)) {
+#         if (s %in% names(stl)) {
+#           ret_lst[[s]] <-  stl[[s]]
+#         }
+#       }
+#     } else {
+#       # If indicator exists, map the cell to the corresponding style
+#       apply_style <- FALSE
+#       apply_idx <- NA
+#       for (i in seq_len(length(stl$indicator))) {
+#         ind <- stl$indicator[i]
+#         
+#         if (ind %in% names(tbl)) {
+#           if (!is.null(tbl[rw, ind])) {
+#             apply_style <- !is.na(tbl[rw, ind]) & tbl[rw, ind] == TRUE
+#           }
+#         } else if ("datarow" %in% ind && !flgs[rw] %in% c("B", "L", "A")) {
+#           apply_style <- TRUE
+#         } else if ("labelrow" %in% ind && flgs[rw] %in% "L") {
+#           apply_style <- TRUE
+#         } else if ("blankrow" %in% ind && flgs[rw] %in% c("B", "A")) {
+#           apply_style <- TRUE
+#         } 
+#         
+#         if (apply_style) {
+#           apply_idx <- i
+#           break
+#         }
+#       }
+#       
+#       if (apply_style) {
+#         for (s in names(ret_lst)) {
+#           if (s %in% names(stl)) {
+#             ret_lst[[s]] <-  stl[[s]][apply_idx]
+#           }
+#         }
+#       }
+#     
+#     }
+#   }
+#   
+#   return(ret_lst)
+# }
+
 get_cell_styles <- function(colnm, styles, flgs, rw, tbl) {
   
-  ret <- ""
-  bflg <- FALSE
+  ret_lst <- list(
+    bold = FALSE,
+    italic = FALSE,
+    font_color = NULL,
+    cell_color = NULL,
+    borders = NULL
+  )
   
   if (has_cell_style(colnm, styles)) {
-    stl <- get_cell_style(colnm, styles)
-    if (stl$bold == TRUE) {
-      bflg <- TRUE
-      if (!is.null(stl$indicator)) {
-        if ("datarow" %in% stl$indicator &&
-            flgs[rw] %in% c("B", "L", "A")) {
-          bflg <- FALSE
-        } else if ("labelrow" %in% stl$indicator &&
-                   !flgs[rw] %in% "L") {
-          bflg <- FALSE
-        } else if ("blankrow" %in% stl$indicator &&
-                   !flgs[rw] %in% c("B", "A")) {
-          bflg <- FALSE
-        } else if (stl$indicator %in% names(tbl)) {
-          if (!is.null(tbl[[rw, stl$indicator]])) {
-            bflg <- FALSE 
-            if (!is.na(tbl[[rw, stl$indicator]])) {
-              if (tbl[[rw, stl$indicator]] == TRUE) {
-                bflg <- TRUE   
-              }
-            }
+    stl_lst <- get_cell_style(colnm, styles)
+    
+    # Impute NA value for binding row later
+    for (n in names(ret_lst)) {
+      for (k in seq_len(length(stl_lst))) {
+        
+        if (!"indicator" %in% names(stl_lst[[k]])){
+          stl_lst[[k]]$indicator <- NA
+        }
+        
+        if (!n %in% names(stl_lst[[k]])) {
+          stl_lst[[k]][[n]] <- NA
+        } else if (n == "borders") {
+          # Concatenate borders for later use
+          if (!is.null(stl_lst[[k]]$borders)) {
+            stl_lst[[k]]$borders <- paste0(stl_lst[[k]]$borders, collapse = ",")
           }
         }
-      } 
+      }
+    }
+    
+    stl <- do.call(rbind, lapply(stl_lst, as.data.frame))
+    stl$seq2 <- seq_len(nrow(stl))
+    stl$seq1 <- ifelse(is.na(stl$indicator), 5,
+                       ifelse(stl$indicator == "blankrow", 4,
+                              ifelse(stl$indicator == "labelrow", 3,
+                                     ifelse(stl$indicator == "datarow", 2, 1))))
+    stl <- stl[order(stl$seq1, stl$seq2),]
+    
+    apply_style <- FALSE
+    apply_idx <- NA
+    for (i in seq_len(length(stl$indicator))) {
+      ind <- stl$indicator[i]
+      
+      if (ind %in% names(tbl)) {
+        if (!is.null(tbl[rw, ind])) {
+          apply_style <- !is.na(tbl[rw, ind]) & tbl[rw, ind] == TRUE
+        }
+      } else if ("datarow" %in% ind && !flgs[rw] %in% c("B", "L", "A")) {
+        apply_style <- TRUE
+      } else if ("labelrow" %in% ind && flgs[rw] %in% "L") {
+        apply_style <- TRUE
+      } else if ("blankrow" %in% ind && flgs[rw] %in% c("B", "A")) {
+        apply_style <- TRUE
+      } else if (is.na(ind)) {
+        apply_style <- TRUE
+      }
+      
+      if (apply_style) {
+        apply_idx <- i
+        break
+      }
+    }
+    
+    if (apply_style) {
+      for (s in names(ret_lst)) {
+        if (s %in% names(stl)) {
+          if (!is.na(stl[[s]][apply_idx])) {
+            ret_lst[[s]] <-  stl[[s]][apply_idx]
+          }
+        } 
+      }
+    }
+    
+    # Split multiple borders into a vector
+    if (!is.null(ret_lst$borders)) {
+      ret_lst$borders <- unlist(strsplit(ret_lst$borders, ","))
     }
   }
   
-  if (bflg) {
-    ret[length(ret) + 1] <- "bold" 
-  }
-  
-  return(ret)
-  
+  return(ret_lst)
 }
 
+# Convert color to RTF code
+get_color_rtf <- function(color, type = "font") {
+  
+  color_lst <- c(
+    "Black",
+    "Blue",
+    "Cyan",
+    "Lime Green",
+    "Magenta",
+    "Red",
+    "Yellow",
+    "White",
+    "Navy Blue",
+    "Teal",
+    "Green",
+    "Purple",
+    "Maroon",
+    "Dark Red",
+    "Olive",
+    "Gray",
+    "Light Gray"
+  )
+  
+  font_code_lst <- c(
+    "\\cf1 ",
+    "\\cf2 ",
+    "\\cf3 ",
+    "\\cf4 ",
+    "\\cf5 ",
+    "\\cf6 ",
+    "\\cf7 ",
+    "\\cf8 ",
+    "\\cf9 ",
+    "\\cf10 ",
+    "\\cf11 ",
+    "\\cf12 ",
+    "\\cf13 ",
+    "\\cf13 ",
+    "\\cf14 ",
+    "\\cf15 ",
+    "\\cf16 "
+  )
+  
+  cell_code_lst <- c(
+    "\\clcbpat1",
+    "\\clcbpat2",
+    "\\clcbpat3",
+    "\\clcbpat4",
+    "\\clcbpat5",
+    "\\clcbpat6",
+    "\\clcbpat7",
+    "\\clcbpat8",
+    "\\clcbpat9",
+    "\\clcbpat10",
+    "\\clcbpat11",
+    "\\clcbpat12",
+    "\\clcbpat13",
+    "\\clcbpat13",
+    "\\clcbpat14",
+    "\\clcbpat15",
+    "\\clcbpat16"
+  )
+  
+  if (type == "font") {
+    ret <- font_code_lst[tolower(color_lst) == tolower(color)]
+  } else if (type == "cell") {
+    ret <- cell_code_lst[tolower(color_lst) == tolower(color)]
+  }
+  
+  
+  if (length(ret) == 0) {
+    warning(paste0(color," is not in availabel in RTF. The available colors for ",
+                   "RTF are ", paste0(color_lst, collapse = ", "), "."))
+  } else {
+    return(paste0(ret,""))
+  }
+}

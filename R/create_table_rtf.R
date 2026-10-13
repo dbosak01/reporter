@@ -217,11 +217,9 @@ create_table_pages_rtf <- function(rs, cntnt, lpg_rows) {
                                         rs$font, rs$font_size, rs$units, 
                                         rs$gutter_width,
                                         allow_rtf_code = rs$allow_code,
-                                        content_width = rs$content_size[["width"]]) 
-  
-  # print("Widths UOM")
-  # print(widths_uom)
-  
+                                        content_width = rs$content_size[["width"]],
+                                        styles = styles)
+
   # Split long text strings into multiple rows. Number of rows are stored in
   # ..row variable. If too slow, may need to be rewritten in C
   fdat <- split_cells_variable(fdat, widths_uom, rs$font, 
@@ -1293,6 +1291,15 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       if (frb == TRUE) 
         radj <- 1
       
+      # Get cell color
+      stl <- get_cell_styles(nms[1], styles, flgs, i, tbl)
+      
+      cell_color <- ""
+      if (!is.null(stl$cell_color)) {
+        cell_color <- get_color_rtf(stl$cell_color, type = "cell")
+      }
+      
+      # Get cell borders
       cell_border <- NULL
       if ("..group_border" %in% names(tbl)) {
         cell_border <- tbl[["..group_border"]][i]
@@ -1303,9 +1310,19 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         cell_border <- NULL
       }
       
+      if (!is.null(stl$borders)) {
+        if (is.null(cell_border)) {
+          cell_border <- stl$borders
+        } else {
+          cell_border <- c(cell_border, stl$borders)
+        }
+      }
+      
       b <- get_cell_borders(i + radj, 1, nrow(t) + radj, ncol(t), brdrs, flgs[i],
                             cell_border = cell_border)
-      ret[i] <- paste0(ret[i], b, "\\cellx", max(sz))
+  
+      
+      ret[i] <- paste0(ret[i], b, cell_color, "\\cellx", max(sz))
       
       
     } else {
@@ -1317,14 +1334,32 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           if (frb == TRUE) 
             radj <- 1
           
+          # Get cell color
+          stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+          
+          cell_color <- ""
+          if (!is.null(stl$cell_color)) {
+            cell_color <- get_color_rtf(stl$cell_color, type = "cell")
+          }
+          
+          # Get cell borders
           cell_border <- NULL
           if ("..group_border" %in% names(tbl)) {
             cell_border <- tbl[["..group_border"]][i]
           }
           
+          if (!is.null(stl$borders)) {
+            if (is.null(cell_border)) {
+              cell_border <- stl$borders
+            } else {
+              cell_border <- c(cell_border, stl$borders)
+            }
+          }
+          
           b <- get_cell_borders(i + radj, j, nrow(t) + radj, ncol(t), brdrs, flgs[i],
                                 cell_border = cell_border)
-          ret[i] <- paste0(ret[i], b, "\\cellx", sz[j])
+
+          ret[i] <- paste0(ret[i], b, cell_color, "\\cellx", sz[j])
         }
       }
     }
@@ -1340,31 +1375,6 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       vl <- t[i, 1]
       
       # Deal with styles
-      # if (nms[1] %in% names(styles)) {
-      #   stl <- styles[[nms[1]]]
-      #   if (stl$bold == TRUE) {
-      #     bflg <- FALSE
-      #     if (!is.null(stl$indicator)) {
-      #       if ("labelrow" %in% stl$indicator) {
-      #         if (flgs[i] %in% c("L"))
-      #           bflg <- TRUE
-      #       } 
-      #       if (stl$indicator %in% names(tbl)) {
-      #         if (!is.null(tbl[[i, stl$indicator]] )) {
-      #           if (tbl[[i, stl$indicator]] == TRUE) {
-      #             bflg <- TRUE   
-      #           }
-      #         }
-      #       } 
-      #     } else {
-      #       bflg <- TRUE 
-      #     }
-      #     if (bflg) {
-      #       vl <- paste0("\\b ", vl, "\\b0")
-      #     }
-      #   }
-      # }
-      
       stl <- get_cell_styles(nms[1], styles, flgs, i, tbl)
       
       # Get indenting information
@@ -1380,6 +1390,9 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
             rtf_ind <- paste0("\\li", ind, " ")
           }
           repeat_break_label <- TRUE
+          
+          # Get the style again according to original column
+          stl <- get_cell_styles(cur_break_label_col, styles, flgs, i, tbl)
         }
       }
       
@@ -1401,10 +1414,18 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       
       vl <- paste0(rtf_ind, vl)
       
-      if ("bold" %in% stl) {
+      # Apply the style
+      if (stl$bold) {
         vl <- paste0("\\b ", vl, "\\b0")
       }
-      
+      if (stl$italic) {
+        vl <- paste0("\\i ", vl, "\\i0")
+      }
+      if (!is.null(stl$font_color)) {
+        color_code <- get_color_rtf(stl$font_color)
+        vl <- paste0(color_code, vl, "\\cf1")
+      }
+
       ret[i] <- paste0(ret[i], ca[1], " ", vl, "\\cell\\li", rs$cell_padding)
       
       
@@ -1422,32 +1443,6 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         if (!is.control(nms[j])) {
           
           tb <- t[i, j]
-          # if (nms[j] %in% names(styles)) {
-          #   stl <- styles[[nms[j]]]
-          #   if (stl$bold == TRUE) {
-          #     bflg <- TRUE
-          #     if (!is.null(stl$indicator)) {
-          #       if ("datarow" %in% stl$indicator) {
-          #         if (flgs[i] %in% c("B", "L"))
-          #           bflg <- FALSE
-          #         
-          #       } else {
-          #         bflg <- FALSE
-          #         if (stl$indicator %in% names(tbl)) {
-          #           if (!is.null(tbl[[i, stl$indicator]] )) {
-          #             if (tbl[[i, stl$indicator]] == TRUE) {
-          #               bflg <- TRUE   
-          #             }
-          #           }
-          #         } 
-          #         
-          #       }
-          #     } 
-          #     if (bflg) {
-          #       tb <- paste0("\\b ", tb, "\\b0")
-          #     }
-          #   }
-          # }
           
           stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
           
@@ -1468,8 +1463,16 @@ get_table_body_rtf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           }
           tb <- paste0(rtf_ind, tb)
           
-          if ("bold" %in% stl) {
-            tb <- paste0("\\b ", tb, "\\b0") 
+          # Apply the style
+          if (stl$bold) {
+            tb <- paste0("\\b ", tb, "\\b0")
+          }
+          if (stl$italic) {
+            tb <- paste0("\\i ", tb, "\\i0")
+          }
+          if (!is.null(stl$font_color)) {
+            color_code <- get_color_rtf(stl$font_color)
+            tb <- paste0(color_code, tb, "\\cf1")
           }
           
           # Construct rtf

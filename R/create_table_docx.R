@@ -216,7 +216,8 @@ create_table_pages_docx <- function(rs, cntnt, lpg_rows) {
   widths_uom <- get_col_widths_variable(fdat, ts, labels, 
                                         rs$font, rs$font_size, rs$units, 
                                         rs$gutter_width,
-                                        content_width = rs$content_size[["width"]]) 
+                                        content_width = rs$content_size[["width"]],
+                                        styles = styles) 
   # print("Widths UOM")
   # print(widths_uom)
   
@@ -1210,6 +1211,17 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           cell_border <- NULL
         }
         
+        # Apply borders from cell_style
+        stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
+        
+        if (!is.null(stl$borders)) {
+          if (is.null(cell_border)) {
+            cell_border <- stl$borders
+          } else {
+            cell_border <- c(cell_border, stl$borders)
+          }
+        }
+        
         b <- get_cell_borders_docx(i + badj, j, nrow(t) + badj, 
                                    length(nms), brdrs, tb[i],
                                    cell_border = cell_border)
@@ -1220,8 +1232,15 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           cs <-  paste0('<w:gridSpan w:val="', length(nms) , '"/>')
         }
         
-        if (b != "" | cs != "") {
-          b <- paste0('<w:tcPr>', b, cs, '</w:tcPr>')
+        # Get cell color
+        cell_color <- ""
+        if (!is.null(stl$cell_color)) {
+          cell_color <- sprintf('<w:shd w:val="clear" w:color="auto" w:fill="%s"/>',
+                                stl$cell_color)
+        }
+        
+        if (b != "" | cs != "" | cell_color != "") {
+          b <- paste0('<w:tcPr>', b, cs, cell_color, '</w:tcPr>')
         }
         
         vl <- t[i, j]
@@ -1238,14 +1257,6 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
         #   vl <- vtmp$docx
         #   
         # }
-        
-        
-        stl <- get_cell_styles(nms[j], styles, flgs, i, tbl)
-        
-        bflg <- FALSE
-        if ("bold" %in% stl) {
-          bflg <- TRUE
-        }
         
         
         if (!(tb[i] %in% c("B", "A", "L") & j > 1)) {
@@ -1268,7 +1279,15 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
                 ind_twips <- defs[[cur_break_label_col]]$indent*twips_conv
               }
               repeat_break_label <- TRUE
+              
+              # Get the style again according to original column
+              stl <- get_cell_styles(cur_break_label_col, styles, flgs, i, tbl)
             }
+          }
+          
+          bflg <- FALSE
+          if (stl$bold) {
+            bflg <- TRUE
           }
           
           if (!repeat_break_label) {
@@ -1288,7 +1307,9 @@ get_table_body_docx <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           }
  
           ret[i] <- paste0(ret[i], "<w:tc>", b,
-                           para(vl, ca[j], bold = bflg, indent_left = ind_twips), "</w:tc>")
+                           para(vl, ca[j], bold = bflg, indent_left = ind_twips,
+                                italics = stl$italic, color = stl$font_color),
+                           "</w:tc>")
         }
 
         

@@ -106,7 +106,8 @@ add_info <- function(x,
 page_text <- function(text, font_size = NULL, 
                       xpos = NULL, ypos = NULL, bold = FALSE,
                       align = NULL, alignx = NULL, has_page_numbers = NULL,
-                      italics = FALSE, footnotes = FALSE, titles = FALSE) {
+                      italics = FALSE, footnotes = FALSE, titles = FALSE,
+                      font_color = NULL) {
   
   txt <- structure(list(), class = c("page_text", "page_content", "list"))
   
@@ -120,6 +121,7 @@ page_text <- function(text, font_size = NULL,
   txt$alignx <- alignx  # In units of measure
   txt$footnotes <- footnotes
   txt$titles <- titles
+  txt$font_color <- font_color
   
   res1 <- grepl("[pg]", text, fixed = TRUE)
   res2 <- grepl("[tpg]", text, fixed = TRUE)
@@ -244,6 +246,19 @@ page_grid <- function(startx, starty, rows, cols, pheights, pwidths) {
   
 }
 
+page_cell_color <- function(startx, starty, width, height, cell_color) {
+  
+  ret <- structure(list(), class = c("page_cell_color", "page_content", "list"))
+  
+  ret$startx <- startx
+  ret$starty <- starty
+  ret$width <- width
+  ret$height <- height
+  ret$cell_color <- cell_color
+  
+  return(ret)
+}
+
 # Write PDF ---------------------------------------------------------------
 
 #' A function to write out a PDF file
@@ -364,20 +379,23 @@ get_header <- function(page_count = 1,
   lst <- list()
   
   lst[[1]] <- pdf_object(1, pdf_dictionary(Type = "/Catalog",
-                                           Pages = ref(5)))
+                                           Pages = ref(6)))
 
   # 
   fn <- "Courier"
   fb <- "Courier-Bold"
   fi <- "Courier-Oblique"
+  fbi <- "Courier-BoldOblique"
   if (tolower(font_name) == "times") {
     fn <- "Times-Roman"
     fb <- "Times-Bold"
     fi <- "Times-Italic"
+    fbi <- "Times-BoldItalic"
   } else if (tolower(font_name) == "arial") {
     fn <- "Helvetica"
     fb <- "Helvetica-Bold"
     fi <- "Helvetica-Oblique"
+    fbi <- "Helvetica-BoldOblique"
   }
 
   
@@ -395,6 +413,11 @@ get_header <- function(page_count = 1,
                                            Subtype = "/Type1", 
                                            BaseFont = paste0("/", fi),
                                            Encoding = "/WinAnsiEncoding"))
+  
+  lst[[5]] <- pdf_object(5, pdf_dictionary(Type = "/Font", 
+                                           Subtype = "/Type1", 
+                                           BaseFont = paste0("/", fbi),
+                                           Encoding = "/WinAnsiEncoding"))
 
   
   if (page_count > 10)
@@ -402,7 +425,7 @@ get_header <- function(page_count = 1,
   else 
     kds <- paste(page_ids, "0 R", collapse = " ")
   
-  lst[[5]] <- pdf_object(5, pdf_dictionary(Type = "/Pages",
+  lst[[6]] <- pdf_object(6, pdf_dictionary(Type = "/Pages",
                                            Kids = pdf_array(kds),
                                            Count = page_count,                                                 
                                            MediaBox = pdf_array(0, 0, 
@@ -462,10 +485,10 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
   # Also trial and error
   lh <- fontsize  + round(fontsize * .19, 2) 
   
-  # Starting ID is 6 because of standard header objects.
+  # Starting ID is 7 because of standard header objects.
   # This id variable will be incremented along the way 
   # as needed to get unique ids for the objects. 
-  id <- 6
+  id <- 7
   
   pgnum <- 0
   tpg <- length(pages)
@@ -533,7 +556,8 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                    stx + nx, sty - cnt$ypos, 
                                    lh, ifelse(is.null(cnt$font_size), 
                                               fontsize, cnt$font_size),
-                                   fontscale, cnt$bold, cnt$italics)
+                                   fontscale, cnt$bold, cnt$italics,
+                                   font_color = cnt$font_color)
             
           } else if (cnt$has_page_numbers & cnt$footnotes) {
             
@@ -570,7 +594,8 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                    stx + cnt$xpos + nx, sty - cnt$ypos, 
                                    lh, ifelse(is.null(cnt$font_size), 
                                               fontsize, cnt$font_size),
-                                   fontscale, cnt$bold, cnt$italics)
+                                   fontscale, cnt$bold, cnt$italics,
+                                   font_color = cnt$font_color)
             
           } else if (cnt$titles & cnt$has_page_numbers) {
             
@@ -579,7 +604,8 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                    stx + cnt$xpos, sty - cnt$ypos, 
                                    lh, ifelse(is.null(cnt$font_size), 
                                               fontsize, cnt$font_size),
-                                   fontscale, cnt$bold, cnt$italics)
+                                   fontscale, cnt$bold, cnt$italics,
+                                   font_color = cnt$font_color)
             
           }else {
             
@@ -588,7 +614,8 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                                    stx + cnt$xpos, sty - cnt$ypos, 
                                    lh, ifelse(is.null(cnt$font_size), 
                                               fontsize, cnt$font_size),
-                                   fontscale, cnt$bold, cnt$italics)
+                                   fontscale, cnt$bold, cnt$italics,
+                                   font_color = cnt$font_color)
             
           }
           
@@ -650,6 +677,14 @@ get_pages <- function(pages, margin_left, margin_top, page_height, page_width,
                         cols = cnt$cols,
                         pheights = cnt$pheight,
                         pwidths = cnt$pwidth)
+        
+      } else if ("page_cell_color" %in% class(cnt)) {
+        
+        tmp <- get_pdf_cell_color(cell_color = cnt$cell_color,
+                                  startx = stx + cnt$startx,
+                                  starty = sty - cnt$starty, 
+                                  width = cnt$width,
+                                  height = cnt$height)
         
       }
       
@@ -1129,12 +1164,13 @@ pdf_page <- function(id, content_id, graphic_ids = NULL) {
     
     res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2),
                                                 F2 = ref(3),
-                                                F3 = ref(4)), 
+                                                F3 = ref(4),
+                                                F4 = ref(5)), 
                           ProcSet = procs,
                           XObject = xobj)
     
     parms <-  pdf_dictionary(Type = "/Page",
-                             Parent = ref(5),
+                             Parent = ref(6),
                              Contents = ref(content_id),
                              Resources = res)
                              
@@ -1144,11 +1180,12 @@ pdf_page <- function(id, content_id, graphic_ids = NULL) {
     
     res <- pdf_dictionary(Font = pdf_dictionary(F1 = ref(2),
                                                 F2 = ref(3),
-                                                F3 = ref(4)), 
+                                                F3 = ref(4),
+                                                F4 = ref(5)), 
                           ProcSet = procs)
     
     parms <-  pdf_dictionary(Type = "/Page",
-                             Parent = ref(5),
+                             Parent = ref(6),
                              Contents = ref(content_id),
                              Resources = res)
   }
@@ -1276,7 +1313,7 @@ ref <- function(id) {
 #' @noRd
 get_byte_stream <- function(contents, startx, starty, 
                             lineheight, fontsize, fontscale, bold = FALSE, 
-                            italics = FALSE) {
+                            italics = FALSE, font_color = NULL) {
   
   # Calculate y positions
   ypos <- seq(from = starty, length.out = length(contents), by = -lineheight)
@@ -1302,10 +1339,21 @@ get_byte_stream <- function(contents, startx, starty,
   if (italics == TRUE)
     bld <- "/F3 "
   
+  if (bold == TRUE & italics == TRUE) {
+    bld <- "/F4 "
+  }
+  
+  rg_start <- ""
+  rg_end <- ""
+  if (!is.null(font_color)) {
+    rg_start <- paste0(get_pdf_color(font_color), " ")
+    rg_end <- "0 0 0 rg "
+  }
+  
   # Create report line
   ret <- paste0("BT ", bld , fontsize, 
-                " Tf ", fontscale, " Tz ", startx, " ", ypos, " Td <", 
-                cnts, ">Tj ET")
+                " Tf ", rg_start, fontscale, " Tz ", startx, " ", ypos, " Td <", 
+                cnts, ">Tj ", rg_end, "ET")
   
   return(ret)
 }
@@ -1336,6 +1384,7 @@ get_text_stream <- function(contents, startx, starty,
   return(ret)
   
 }
+
 
 #' Utility function to create content for an image stream.
 #' Has to be a JPEG, as that is the only format that PDF supports natively.
@@ -1371,6 +1420,25 @@ get_image_text <- function(img_ref, height, width, xpos, ypos) {
   ret[2] <- paste(width, 0, 0, height, (xpos - 5), ypos, "cm")
   ret[3] <- paste0("/X", img_ref, " Do")
   ret[4] <- "Q"
+  
+  
+  return(ret)
+  
+}
+
+#' Utility function to create cell background color
+#' @noRd
+get_pdf_cell_color <- function(cell_color, startx, starty, width, height) {
+  
+  ret <- c()
+  
+  color_code <- get_pdf_color(cell_color)
+  
+  ret[1] <- "q"
+  ret[2] <- color_code
+  ret[3] <- paste0(startx, " ", starty, " ", width, " ", height, " re")
+  ret[4] <- "f"
+  ret[5] <- "Q"
   
   
   return(ret)
@@ -1481,3 +1549,27 @@ viconv <- Vectorize(function(vstr) {
   return(ret)
   
 }, USE.NAMES = FALSE, SIMPLIFY = TRUE)
+
+
+#' @description Convert hex or string into RGB code 
+#' @noRd
+get_pdf_color <- function(color_input) {
+  # 1. Prevent errors caused by users entering garbled strings that R does not recognize.
+  rgb_matrix <- tryCatch({
+    col2rgb(color_input)
+  }, error = function(e) {
+    # If an error occurs (e.g., inputting "abc"), it falls back to the default black.
+    warning(paste("Unsupported color name: ", color_input, ", has automatically switched back to black."))
+    matrix(c(0, 0, 0), ncol = 1, dimnames = list(c("red", "green", "blue")))
+  })
+  
+  # 2. Divide the value (0–255) by 255 to convert it to the 0.0–1.0 scale used in PDF.
+  r <- rgb_matrix["red", 1] / 255
+  g <- rgb_matrix["green", 1] / 255
+  b <- rgb_matrix["blue", 1] / 255
+  
+  # 3. Format as a PDF instruction string 
+  # (retaining three decimal places to ensure both precision and conciseness).
+  pdf_rg <- sprintf("%.3f %.3f %.3f rg", r, g, b)
+  return(pdf_rg)
+}
