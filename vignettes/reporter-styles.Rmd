@@ -16,8 +16,8 @@ knitr::opts_chunk$set(
 
 ## Styles and Themes
 
-The **reporter** package now supports styles and themes for HTML reports.
-Styling for more output types will be supported in future versions.
+The **reporter** package now supports styles and themes for HTML reports, 
+and conditional cell styling for HTML, RTF, DOCX, and PDF.
 
 ## Custom Style
 To create a custom style, use the `create_style()` function.  This function
@@ -349,8 +349,9 @@ write_report(rpt)
 <img src="../man/images/example12k.png" alt="Styles example image K"/>
 
 Note that cell styling is available for all output types except TXT.
-Also note that the `cell_style()` object currently only supports "bold" styling.
-More styling options will be added in future releases of **reporter**.
+Also note that the `cell_style()` object also supports italics, cell color,
+font color, and border styling. See the `cell_style()` function documentation
+for further information.
 
 
 Next: [Example 13: Superscripts and Subscripts](reporter-super.html)

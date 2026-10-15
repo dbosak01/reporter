@@ -125,8 +125,8 @@ value(s) using a variable.}
 
 \item{style}{A \code{\link{cell_style}} object that defines the desired
 style for this column. The cell style object can be used to define 
-conditional styling. Use a list to contain multiple \code{\link{cell_style}} 
-objects.}
+conditional styling. You can apply multiple cell style objects to the same
+column by wrapping them in a list.}
 
 \item{group_border}{Adds a horizontal border at the end of a group. 
 Valid values are TRUE or FALSE. Default is FALSE. The group border is

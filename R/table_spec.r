@@ -402,8 +402,8 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' value(s) using a variable.
 #' @param style A \code{\link{cell_style}} object that defines the desired
 #' style for this column. The cell style object can be used to define 
-#' conditional styling. Use a list to contain multiple \code{\link{cell_style}} 
-#' objects.
+#' conditional styling. You can apply multiple cell style objects to the same
+#' column by wrapping them in a list.  
 #' @param group_border Adds a horizontal border at the end of a group. 
 #' Valid values are TRUE or FALSE. Default is FALSE. The group border is
 #' another way to separate analysis groups, and can be used in addition
@@ -751,7 +751,7 @@ define_c <- function(var, label = NULL, format = NULL,
 #' to pass the column names as variables. Default is FALSE, meaning it
 #' will use non-standard (unquoted) evaluation.
 #' @param style A \code{\link{cell_style}} object that defines a style 
-#' for all columns associated with the column defaults.  
+#' for all columns associated with the column defaults. 
 #' @return The modified table spec.
 #' @family table
 #' @examples
@@ -1324,7 +1324,8 @@ spanning_header <- function(x, from, to, label = "",
 #' to pass the column names as variables. Default is FALSE, meaning it
 #' will use non-standard (unquoted) evaluation.
 #' @param style A \code{\link{cell_style}} object that contains the style
-#' specifications for the stub.
+#' specifications for the stub. You may apply multiple \code{\link{cell_style}} 
+#' objects to the stub using a list.
 #' @return The modified table spec.
 #' @family table
 #' @examples 

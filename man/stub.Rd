@@ -43,7 +43,8 @@ to pass the column names as variables. Default is FALSE, meaning it
 will use non-standard (unquoted) evaluation.}
 
 \item{style}{A \code{\link{cell_style}} object that contains the style
-specifications for the stub.}
+specifications for the stub. You may apply multiple \code{\link{cell_style}} 
+objects to the stub using a list.}
 }
 \value{
 The modified table spec.

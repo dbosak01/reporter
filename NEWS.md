@@ -1,6 +1,6 @@
 # reporter 1.5.0
 
-* Added conditional cell styling for RTF, PDF, DOCX. Previously only HTML was supported. 
+* Added conditional cell styling for RTF, PDF, and DOCX. Previously only HTML was supported. 
 * Added the following parameters to the `cell_style()` function:
   - italic
   - font_color
@@ -8,7 +8,7 @@
   - borders
 * Added bold style detection to automatic column width calculation.
 * Fixed bug related to "SimSun" font on DOCX for computers from East Asia. 
-* Fixed bug to to center middle cell in page header.
+* Fixed bug to center middle cell content in page header.
 * Fixed bug to enable user-defined line breaks ("\n") in `create_text()` for DOCX.
 
 # reporter 1.4.9
