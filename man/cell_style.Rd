@@ -53,6 +53,7 @@ to identify cells for styling.
 \examples{
 library(reporter)
 library(magrittr)
+
 # Example 1 - Single cell style
 # Create temporary path
 tmp <- file.path(tempdir(), "table1.rtf")

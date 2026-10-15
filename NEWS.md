@@ -9,7 +9,7 @@
 * Added bold style detection to automatic column width calculation.
 * Fixed bug related to "SimSun" font on DOCX for computers from East Asia. 
 * Fixed bug to center middle cell content in page header.
-* Fixed bug to enable user-defined line breaks ("\n") in `create_text()` for DOCX.
+* Fixed bug to enable user-defined line breaks in `create_text()` for DOCX.
 
 # reporter 1.4.9
 

@@ -897,6 +897,7 @@ get_style_html <- function(rs, style_name, default = NULL) {
 #' @examples 
 #' library(reporter)
 #' library(magrittr)
+#' 
 #' # Example 1 - Single cell style
 #' # Create temporary path
 #' tmp <- file.path(tempdir(), "table1.rtf")

@@ -228,31 +228,46 @@ knitr::opts_chunk$set(
 
 ## ----eval=FALSE, echo=TRUE----------------------------------------------------
 # library(reporter)
+# library(magrittr)
 # 
 # # Create temporary path
-# tmp <- file.path(tempdir(), "example12k.rtf")
+# tmp <- file.path(tempdir(), "table1.rtf")
 # 
 # # Prepare data
 # df <- data.frame(names = rownames(mtcars), mtcars[, 1:3])
 # 
-# # Set style indicator variable
-# df$mpgind <- ifelse(df$mpg > 20, TRUE, FALSE)
+# # Set indicator variable
+# df$mpgind1 <- ifelse(df$mpg > 20, TRUE, FALSE)
+# df$mpgind2 <- ifelse(df$mpg < 12, TRUE, FALSE)
+# df$mpgind3 <- ifelse(df$mpg > 30, TRUE, FALSE)
 # 
 # # Create table
 # tbl <- create_table(df, first_row_blank = TRUE,
 #                     header_bold = TRUE, borders = c("top", "bottom")) %>%
-#   define(names, label = "Car Name") %>%
+#   column_defaults(style = list(cell_style(bold = TRUE, font_color = "green",
+#                                      indicator = "mpgind1"),
+#                                cell_style(bold = TRUE, font_color = "red",
+#                                           indicator = "mpgind2"))) %>%
+#   define(names, label = "Car Name", width = 1.5) %>%
 #   define(mpg, label = "Miles Per Gallon",
-#          style = cell_style(bold = TRUE, indicator = "mpgind")) %>%
+#          style = list(cell_style(cell_color = "yellow",
+#                                  font_color = "green",
+#                                  borders = "all",
+#                                  indicator = "mpgind3"),
+#                       cell_style(bold = TRUE, font_color = "green",
+#                                  indicator = "mpgind1"),
+#                       cell_style(bold = TRUE, font_color = "red",
+#                                  indicator = "mpgind2"))) %>%
 #   define(cyl, label = "Cylinders") %>%
 #   define(disp, label = "Displacement")  %>%
-#   define(mpgind, visible = FALSE) %>%
-#   titles("Table 1.0", "MTCARS with Indicator Variable",
+#   define(c(mpgind1, mpgind2, mpgind3), visible = FALSE) %>%
+#   titles("Table 1.0", "MTCARS with Cell Styles",
 #          borders = "none", bold = TRUE, font_size = 11) %>%
 #   footnotes("* Motor Trend, 1974", borders = "none", blank_row = "none")
 # 
 # # Create report and add custom style
-# rpt <- create_report(tmp, output_type = "RTF", font = "Arial") %>%
+# rpt <- create_report(tmp, output_type = "RTF", font = "Arial",
+#                      orientation = "portrait") %>%
 #   add_content(tbl)
 # 
 # # Write out report

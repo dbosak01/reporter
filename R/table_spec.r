@@ -751,7 +751,8 @@ define_c <- function(var, label = NULL, format = NULL,
 #' to pass the column names as variables. Default is FALSE, meaning it
 #' will use non-standard (unquoted) evaluation.
 #' @param style A \code{\link{cell_style}} object that defines a style 
-#' for all columns associated with the column defaults. 
+#' for all columns associated with the column defaults. To apply multiple
+#' default cell styles, pass them in a list.
 #' @return The modified table spec.
 #' @family table
 #' @examples

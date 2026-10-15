@@ -72,7 +72,8 @@ to pass the column names as variables. Default is FALSE, meaning it
 will use non-standard (unquoted) evaluation.}
 
 \item{style}{A \code{\link{cell_style}} object that defines a style 
-for all columns associated with the column defaults.}
+for all columns associated with the column defaults. To apply multiple
+default cell styles, pass them in a list.}
 }
 \value{
 The modified table spec.
