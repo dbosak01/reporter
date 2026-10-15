@@ -90,7 +90,8 @@
 #'   can be added to RTF, PDF, HTML, and DOCX output types.  Plots from other
 #'   packages can be added to a report by rendering the plot as a JPEG file,
 #'   and adding it to plot as a static image.
-#'   \item The package currently supports styling for HTML reports.  
+#'   \item The package currently supports full styling for HTML reports, and
+#'   conditional styling for RTF, DOCX, and PDF.
 #'   This styling allows setting background colors, font colors, border
 #'   colors, and some font sizing and bolding.   
 #' }

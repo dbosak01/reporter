@@ -1,22 +1,35 @@
+# reporter 1.5.0
+
+* Added conditional cell styling for RTF, PDF, DOCX. Previously only HTML was supported. 
+* Added the following parameters to the `cell_style()` function:
+  - italic
+  - font_color
+  - cell_color
+  - borders
+* Added bold style detection to automatic column width calculation.
+* Fixed bug related to "SimSun" font on DOCX for computers from East Asia. 
+* Fixed bug to to center middle cell in page header.
+* Fixed bug to enable user-defined line breaks ("\n") in `create_text()` for DOCX.
+
 # reporter 1.4.9
 
-- Enhanced "dedupe" parameter on `define()` function to accept a vector of 
+* Enhanced "dedupe" parameter on `define()` function to accept a vector of 
 columns to dedupe by.
-- Output "Courier New" font whenever "Courier" is requested, to ensure compliance
+* Output "Courier New" font whenever "Courier" is requested, to ensure compliance
 with regulatory submissions.
-- Added "line_height" parameter to `report_options()` to let user set a custom
+* Added "line_height" parameter to `report_options()` to let user set a custom
 line height.
-- Added line height and line count setting to print function on the report object,
+* Added line height and line count setting to print function on the report object,
 so user can see what the current values are.
-- Allow percentage style column widths on the `define()` function, passed as a 
+* Allow percentage style column widths on the `define()` function, passed as a 
 character string with a percent sign, i.e "10%".
-- Added "SimSun" font for Chinese language support.
-- Fixed bug that caused an error on numeric page by values.
-- Fixed line break counting on RTF/HTML code insertion. 
-- Fixed bug to allow missing values in the page by variable.
-- Fixed pagination of page by when lines are wrapped in TXT.
-- Fixed padding of "centre" alignment in TXT.
-- Fixed footer location when font size is different content size in PDF.
+* Added "SimSun" font for Chinese language support.
+* Fixed bug that caused an error on numeric page by values.
+* Fixed line break counting on RTF/HTML code insertion. 
+* Fixed bug to allow missing values in the page by variable.
+* Fixed pagination of page by when lines are wrapped in TXT.
+* Fixed padding of "centre" alignment in TXT.
+* Fixed footer location when font size is different content size in PDF.
 
 # reporter 1.4.8
 

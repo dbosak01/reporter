@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">reporter</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5.0</span>
       </span>
     </div>
 
@@ -121,7 +121,21 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.4.9" id="reporter-149">reporter 1.4.9<a class="anchor" aria-label="anchor" href="#reporter-149"></a></h2>
+<h2 class="page-header" data-toc-text="1.5.0" id="reporter-150">reporter 1.5.0<a class="anchor" aria-label="anchor" href="#reporter-150"></a></h2>
+<ul><li>Added conditional cell styling for RTF, PDF, DOCX. Previously only HTML was supported.</li>
+<li>Added the following parameters to the <code><a href="../reference/cell_style.html">cell_style()</a></code> function:
+<ul><li>italic</li>
+<li>font_color</li>
+<li>cell_color</li>
+<li>borders</li>
+</ul></li>
+<li>Added bold style detection to automatic column width calculation.</li>
+<li>Fixed bug related to “SimSun” font on DOCX for computers from East Asia.</li>
+<li>Fixed bug to to center middle cell in page header.</li>
+<li>Fixed bug to enable user-defined line breaks (“”) in <code><a href="../reference/create_text.html">create_text()</a></code> for DOCX.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.9" id="reporter-149">reporter 1.4.9<small>2026-09-12</small><a class="anchor" aria-label="anchor" href="#reporter-149"></a></h2>
 <ul><li>Enhanced “dedupe” parameter on <code><a href="../reference/define.html">define()</a></code> function to accept a vector of columns to dedupe by.</li>
 <li>Output “Courier New” font whenever “Courier” is requested, to ensure compliance with regulatory submissions.</li>
 <li>Added “line_height” parameter to <code><a href="../reference/report_options.html">report_options()</a></code> to let user set a custom line height.</li>
