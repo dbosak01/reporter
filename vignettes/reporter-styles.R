@@ -250,14 +250,14 @@ knitr::opts_chunk$set(
 #                                           indicator = "mpgind2"))) %>%
 #   define(names, label = "Car Name", width = 1.5) %>%
 #   define(mpg, label = "Miles Per Gallon",
-#          style = list(cell_style(cell_color = "yellow",
-#                                  font_color = "green",
-#                                  borders = "all",
-#                                  indicator = "mpgind3"),
-#                       cell_style(bold = TRUE, font_color = "green",
+#          style = list(cell_style(bold = TRUE, font_color = "green",
 #                                  indicator = "mpgind1"),
 #                       cell_style(bold = TRUE, font_color = "red",
-#                                  indicator = "mpgind2"))) %>%
+#                                  indicator = "mpgind2"),
+#                       cell_style(cell_color = "yellow",
+#                                  font_color = "green",
+#                                  borders = "all",
+#                                  indicator = "mpgind3"))) %>%
 #   define(cyl, label = "Cylinders") %>%
 #   define(disp, label = "Displacement")  %>%
 #   define(c(mpgind1, mpgind2, mpgind3), visible = FALSE) %>%
