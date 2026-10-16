@@ -155,14 +155,20 @@
     
     
 <div class="section level2">
-<h2 id="styles-and-themes">Styles and Themes<a class="anchor" aria-label="anchor" href="#styles-and-themes"></a>
+<h2 id="top">Styles and Themes<a class="anchor" aria-label="anchor" href="#top"></a>
 </h2>
 <p>The <strong>reporter</strong> package now supports styles and themes
 for HTML reports, and conditional cell styling for HTML, RTF, DOCX, and
 PDF.</p>
+<ul>
+<li><a href="#create_style">Create Style</a></li>
+<li><a href="#theme">Theme</a></li>
+<li><a href="#mod_theme">View/Modify a Theme</a></li>
+<li><a href="#cell_style">Cell Styles</a></li>
+</ul>
 </div>
 <div class="section level2">
-<h2 id="custom-style">Custom Style<a class="anchor" aria-label="anchor" href="#custom-style"></a>
+<h2 id="create_style">Create Style<a class="anchor" aria-label="anchor" href="#create_style"></a>
 </h2>
 <p>To create a custom style, use the <code><a href="../reference/create_style.html">create_style()</a></code>
 function. This function allows you to control colors and bolding for
@@ -230,9 +236,10 @@ of a custom style:</p>
 <span><span class="co"># View report</span></span>
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/example12a.png" alt="Styles example image A"></p>
+<p><a href="#top">top</a></p>
 </div>
 <div class="section level2">
-<h2 id="themes">Themes<a class="anchor" aria-label="anchor" href="#themes"></a>
+<h2 id="theme">Themes<a class="anchor" aria-label="anchor" href="#theme"></a>
 </h2>
 <p>A Theme may be applied to a report using the function
 <code><a href="../reference/add_style.html">add_style()</a></code> and passing a theme name to the theme
@@ -283,9 +290,10 @@ parameter. Currently there are seven themes available: “MidnightBlue”,
 <span><span class="co"># View report</span></span>
 <span><span class="co"># file.show(tmp)</span></span></code></pre></div>
 <p><img src="../man/images/example12b.png" alt="Styles example image B"></p>
+<p><a href="#top">top</a></p>
 </div>
 <div class="section level2">
-<h2 id="viewmodify-a-theme">View/Modify a Theme<a class="anchor" aria-label="anchor" href="#viewmodify-a-theme"></a>
+<h2 id="mod_theme">View/Modify a Theme<a class="anchor" aria-label="anchor" href="#mod_theme"></a>
 </h2>
 <p>Sometimes you may want to look at or modify an existing theme. The
 function <code><a href="../reference/get_theme.html">get_theme()</a></code> allows you to do this. Simply pass the
@@ -376,7 +384,7 @@ themes. Here is a sample of each:</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="cell-styles">Cell Styles<a class="anchor" aria-label="anchor" href="#cell-styles"></a>
+<h2 id="cell_style">Cell Styles<a class="anchor" aria-label="anchor" href="#cell_style"></a>
 </h2>
 <p>To modify styles for a particular cell in a table, use the
 <code><a href="../reference/cell_style.html">cell_style()</a></code> object. The <code><a href="../reference/cell_style.html">cell_style()</a></code> object
@@ -473,14 +481,14 @@ multiple styles to the same column or set of columns:</p>
 <span>                                          indicator <span class="op">=</span> <span class="st">"mpgind2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">names</span>, label <span class="op">=</span> <span class="st">"Car Name"</span>, width <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">mpg</span>, label <span class="op">=</span> <span class="st">"Miles Per Gallon"</span>, </span>
-<span>         style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/cell_style.html">cell_style</a></span><span class="op">(</span>cell_color <span class="op">=</span> <span class="st">"yellow"</span>, </span>
-<span>                                 font_color <span class="op">=</span> <span class="st">"green"</span>,</span>
-<span>                                 borders <span class="op">=</span> <span class="st">"all"</span>,</span>
-<span>                                 indicator <span class="op">=</span> <span class="st">"mpgind3"</span><span class="op">)</span>,</span>
-<span>                      <span class="fu"><a href="../reference/cell_style.html">cell_style</a></span><span class="op">(</span>bold <span class="op">=</span> <span class="cn">TRUE</span>, font_color <span class="op">=</span> <span class="st">"green"</span>,</span>
+<span>         style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/cell_style.html">cell_style</a></span><span class="op">(</span>bold <span class="op">=</span> <span class="cn">TRUE</span>, font_color <span class="op">=</span> <span class="st">"green"</span>,</span>
 <span>                                 indicator <span class="op">=</span> <span class="st">"mpgind1"</span><span class="op">)</span>,</span>
 <span>                      <span class="fu"><a href="../reference/cell_style.html">cell_style</a></span><span class="op">(</span>bold <span class="op">=</span> <span class="cn">TRUE</span>, font_color <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>                                 indicator <span class="op">=</span> <span class="st">"mpgind2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>                                 indicator <span class="op">=</span> <span class="st">"mpgind2"</span><span class="op">)</span>,</span>
+<span>                      <span class="fu"><a href="../reference/cell_style.html">cell_style</a></span><span class="op">(</span>cell_color <span class="op">=</span> <span class="st">"yellow"</span>, </span>
+<span>                                 font_color <span class="op">=</span> <span class="st">"green"</span>,</span>
+<span>                                 borders <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>                                 indicator <span class="op">=</span> <span class="st">"mpgind3"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">cyl</span>, label <span class="op">=</span> <span class="st">"Cylinders"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="va">disp</span>, label <span class="op">=</span> <span class="st">"Displacement"</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpgind1</span>, <span class="va">mpgind2</span>, <span class="va">mpgind3</span><span class="op">)</span>, visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -502,6 +510,7 @@ multiple styles to the same column or set of columns:</p>
 <p>Cell styling is available for all output types except TXT. See the
 <code><a href="../reference/cell_style.html">cell_style()</a></code> function documentation for further
 information.</p>
+<p><a href="#top">top</a></p>
 <p>Next: <a href="reporter-super.html">Example 13: Superscripts and
 Subscripts</a></p>
 </div>

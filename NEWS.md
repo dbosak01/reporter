@@ -6,7 +6,8 @@
   - font_color
   - cell_color
   - borders
-* Added bold style detection to automatic column width calculation.
+* Allow multiple `cell_style()` on `style()` parameter of `define()`, `column_defaults()`, and `stub()` functions.
+* Added bold style detection to automatic column width calculation and line wrapping.
 * Fixed bug related to "SimSun" font on DOCX for computers from East Asia. 
 * Fixed bug to center middle cell content in page header.
 * Fixed bug to enable user-defined line breaks in `create_text()` for DOCX.
