@@ -1253,7 +1253,7 @@ get_cell_styles <- function(colnm, styles, flgs, rw, tbl) {
     }
     
     stl <- do.call(rbind, lapply(stl_lst, as.data.frame))
-    stl$seq2 <- seq_len(nrow(stl))
+    stl$seq2 <- nrow(stl):1
     stl$seq1 <- ifelse(is.na(stl$indicator), 5,
                        ifelse(stl$indicator == "blankrow", 4,
                               ifelse(stl$indicator == "labelrow", 3,

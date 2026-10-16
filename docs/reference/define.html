@@ -297,7 +297,9 @@ value(s) using a variable.</p></dd>
 <dd><p>A <code><a href="cell_style.html">cell_style</a></code> object that defines the desired
 style for this column. The cell style object can be used to define
 conditional styling. You can apply multiple cell style objects to the same
-column by wrapping them in a list.</p></dd>
+column by wrapping them in a list. For multiple styles on the same cell,
+the priority is custom indicator, "datarow", "labelrow", "blankrow", and NULL.
+For multiple custom indicators on the same cell, the last one takes priority.</p></dd>
 
 
 <dt id="arg-group-border">group_border<a class="anchor" aria-label="anchor" href="#arg-group-border"></a></dt>
