@@ -405,7 +405,7 @@ create_table <- function(x, show_cols = "all", use_attributes = "all",
 #' conditional styling. You can apply multiple cell style objects to the same
 #' column by wrapping them in a list. For multiple styles on the same cell, 
 #' the priority is custom indicator, "datarow", "labelrow", "blankrow", and NULL.
-#' For same type of indicators on the same cell, the last one takes priority. 
+#' For the same type of indicators on the same cell, the last one takes priority. 
 #' @param group_border Adds a horizontal border at the end of a group. 
 #' Valid values are TRUE or FALSE. Default is FALSE. The group border is
 #' another way to separate analysis groups, and can be used in addition
