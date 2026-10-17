@@ -1582,10 +1582,15 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       } else {
         cell_ypos <- (mxrw -rh + bs)
       }
-      if (is.null(frb)) {
-        cell_ypos <- cell_ypos - 1
-      } else if (frb == FALSE) {
-        cell_ypos <- cell_ypos - 1
+      
+      if (i == 1 & ts$headerless == FALSE) {
+        if (is.null(frb)) {
+          # cell_ypos <- cell_ypos - 1
+          cell_height <- cell_height + 1
+        } else if (frb == FALSE) {
+          # cell_ypos <- cell_ypos - 1
+          cell_height <- cell_height + 1
+        }
       }
       
       # --------------------------------------------------------------------- #
@@ -1594,11 +1599,20 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
       if (any(!is.na(cell_color_lst))) {
         cell_color <- cell_color_lst[k]
         
+        color_height_reduce <- 0
+        if (i==1 & ts$headerless == FALSE) {
+          if (is.null(frb)) {
+            color_height_reduce <- bs - 1.3
+          } else if (frb == FALSE) {
+            color_height_reduce <- bs - 1.3
+          }
+        }
+        
         if (!is.na(cell_color)) {
           cell_color_ret[[length(cell_color_ret) + 1]] <- page_cell_color(startx = cell_xpos, 
                                                                           starty = cell_ypos, 
                                                                           width = cell_width, 
-                                                                          height = cell_height, 
+                                                                          height = cell_height - color_height_reduce, 
                                                                           cell_color = cell_color)
         }
       }
@@ -1622,29 +1636,29 @@ get_table_body_pdf <- function(rs, tbl, widths, algns, talgn, tbrdrs,
           rb <- tlb + sum(wdths[1:k])
         }
         
-        # if (i == 1) { 
-        #   
+        # if (i == 1) {
+        # 
         #   if (is.null(frb)) {
-        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1, 
+        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1,
         #                                                         mxrw - rline + 1)
         #   } else if (frb == FALSE) {
-        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1, 
+        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh - 1,
         #                                                         mxrw - rline + 1)
         #   } else {
-        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+        #     borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
         #                                                         mxrw - rline + 1)
         #   }
-        #   
+        # 
         # } else if (i == nrow(t)) {
-        #   
-        #   borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+        # 
+        #   borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
         #                                                       mxrw - rline + 1)
-        #   
+        # 
         # } else {
-        #   
-        #   borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh, 
+        # 
+        #   borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, (rline + bs) - rh,
         #                                                       mxrw - rline )
-        #   
+        # 
         # }
         borders_ret[[length(borders_ret) + 1]] <- page_vline(rb * conv, cell_ypos - cell_height,
                                                              cell_height)

@@ -930,7 +930,7 @@ split_string_text <- function(strng, width, units, nm = "", char_width = 1,
   
   mp <- 1
   if (bold) {
-    mp <- mp + 0.05 # See rtf2/test83b, test123b 
+    mp <- mp + 0.09 # See rtf2/test83b, test123b 
   }
   
   res <- split_strings(cstrng, width - indntw, units, multiplier = mp)
