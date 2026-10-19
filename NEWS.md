@@ -6,7 +6,7 @@
   - font_color
   - cell_color
   - borders
-* Allow multiple `cell_style()` on `style()` parameter of `define()`, `column_defaults()`, and `stub()` functions.
+* Allow multiple `cell_style()` on `style` parameter of `define()`, `column_defaults()`, and `stub()` functions.
 * Added bold style detection to automatic column width calculation and line wrapping.
 * Fixed bug related to "SimSun" font on DOCX for computers from East Asia. 
 * Fixed bug to center middle cell content in page header.

@@ -23,6 +23,7 @@ and conditional cell styling for HTML, RTF, DOCX, and PDF.
 * [Theme](#theme)
 * [View/Modify a Theme](#mod_theme)
 * [Cell Styles](#cell_style)
+* [Multiple Cell Styles](#multi_cell_style)
 
 ## Create Style {#create_style}
 To create a custom style, use the `create_style()` function.  This function
@@ -249,7 +250,7 @@ Here is a sample of each:
 
 <img src="../man/images/example12h.png" alt="Styles example image H"/>
 
-## Cell Styles {#cell_style}
+## Cell Style {#cell_style}
 
 To modify styles for a particular cell in a table, use the `cell_style()`
 object.  The `cell_style()` object can be passed into the style parameter on
@@ -316,6 +317,10 @@ When a variable name is passed as the indicator value, this variable should
 exist on the input dataset.  The indicator column should have TRUE or FALSE
 values for each row where you want the style applied.  This feature gives you
 complete control over cell styling.  
+
+[top](#top)
+
+## Multiple Cell Styles {#multi_cell_style}
 
 Now let's look at and example of setting styles on a variable based on the
 variable value.  This example also demonstrates how to apply multiple 
